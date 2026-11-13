@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13T06:35:02.286Z",
+  "updatedAt": "2026-11-13T14:30:25.562Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -11421,6 +11421,1092 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-13T06:35:02.281Z"
+    },
+    {
+      "id": "b48c39eb50602742",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 23,
+      "section": "Physics",
+      "question": "A Carnot engine operates between two reservoirs at temperatures 500 K and 300 K. What is the efficiency of the engine?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0.4",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "0.6",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0.8",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the high temperature reservoir T_h = 500 K and low temperature reservoir T_c = 300 K.",
+        "Apply the Carnot efficiency formula: η = 1 - (T_c / T_h).",
+        "Substitute values: η = 1 - (300 / 500).",
+        "Calculate the fraction: 300/500 = 0.6.",
+        "Compute final efficiency: 1 - 0.6 = 0.4."
+      ],
+      "verifierCheck": "The efficiency (η) of a Carnot engine is determined solely by the absolute temperatures of the hot reservoir (T_h) and the cold reservoir (T_c) using the formula η = 1 - (T_c / T_h). Given T_h = 500 K and T_c = 300 K, the calculation proceeds as follows: η = 1 - (300 / 500) = 1 - 0.6 = 0.4. Therefore, the correct efficiency is 0.4, which corresponds to option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick Fraction Calc",
+          "idea": "Convert temps to simple fraction",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Write efficiency formula: e = 1 - Tc/Th.",
+            "Substitute values: e = 1 - 300/500.",
+            "Reduce fraction 300/500 to 3/5 or 0.6.",
+            "Compute final value: 1 - 0.6 = 0.4"
+          ]
+        },
+        {
+          "name": "Temp Ratio Sub",
+          "idea": "Subtract cold from hot, divide by hot",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify T_hot (500 K) and T_cold (300 K).",
+            "Calculate difference: 500 - 300 = 200.",
+            "Divide difference by T_hot: 200 / 500.",
+            "Simplify fraction: 2/5 = 0.4"
+          ]
+        },
+        {
+          "name": "Decimal Estimation",
+          "idea": "Estimate gap percentage directly",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Note T_hot is 500, T_cold is 300.",
+            "Recognize 300 is 60% of 500 (3/5).",
+            "Efficiency = 1 - (T_cold/T_hot) = 1 - 0.6.",
+            "Subtract: 1 - 0.6 = 0.4"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:14:15.972Z"
+    },
+    {
+      "id": "738dff60b0e089fe",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 24,
+      "section": "Physics",
+      "question": "A thermodynamic system undergoes a process where the internal energy change is 100 J and the heat added to the system is 200 J. What is the work done by the system?",
+      "options": [
+        {
+          "label": "A",
+          "text": "-100 J",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "100 J",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "200 J",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "300 J",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Identify given values: ΔU = 100 J, Q = 200 J.",
+        "Apply the First Law of Thermodynamics formula: ΔU = Q - W.",
+        "Rearrange the formula to solve for work done by the system: W = Q - ΔU.",
+        "Substitute the values: W = 200 J - 100 J.",
+        "Calculate the result: W = 100 J.",
+        "Match the result with Option B."
+      ],
+      "verifierCheck": "According to the First Law of Thermodynamics, the change in internal energy (ΔU) is equal to the heat added to the system (Q) minus the work done by the system (W), expressed as ΔU = Q - W. Given that the internal energy change is 100 J and the heat added is 200 J, we substitute these values into the equation: 100 J = 200 J - W. Solving for W yields W = 200 J - 100 J = 100 J. Therefore, the work done by the system is 100 J, which corresponds to option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Energy Balance Shortcut",
+          "idea": "Balance input vs output",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Total energy entering system is heat Q = 200 J.",
+            "Net energy stored is internal change ΔU = 100 J.",
+            "Remaining energy must leave as work done BY system.",
+            "Calculate difference: 200 J - 100 J = 100 J.",
+            "Match result to option B."
+          ]
+        },
+        {
+          "name": "First Law Direct",
+          "idea": "Apply U=Q-W directly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify internal energy change ΔU = 100 J.",
+            "Identify heat added Q = 200 J.",
+            "Rearrange formula W = Q - ΔU to 200 - 100.",
+            "Calculate result W = 100 J.",
+            "Select option B."
+          ]
+        },
+        {
+          "name": "Sign Convention Check",
+          "idea": "Ensure work is by system",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Recall standard sign convention: Q positive for heat in.",
+            "Recall standard sign convention: ΔU positive for energy gain.",
+            "Apply First Law: ΔU = Q - W (where W is work done BY system).",
+            "Substitute values: 100 = 200 - W.",
+            "Solve for W: W = 100 J.",
+            "Confirm option B matches positive work output."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:16:04.366Z"
+    },
+    {
+      "id": "0b61e3361ef7068c",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 25,
+      "section": "Physics",
+      "question": "Two resistors 4 and 6 are connected in series. The total resistance is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "2.4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "24",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the resistors as R1 = 4 and R2 = 6.",
+        "Recall that for resistors in series, total resistance is the sum of individual resistances.",
+        "Calculate the sum: 4 + 6 = 10.",
+        "Match the result with Option B."
+      ],
+      "verifierCheck": "In a series circuit, the total resistance is the sum of individual resistances; thus R_total = 4 + 6 = 10 ohms, which matches option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental Math",
+          "idea": "Quick mental addition",
+          "kind": "estimate",
+          "seconds": 1,
+          "steps": [
+            "Visualize 4 plus 6.",
+            "Count up from 4 by 6 to reach 10 immediately.",
+            "Confirm 10 is option B."
+          ]
+        },
+        {
+          "name": "Series Sum",
+          "idea": "Add values directly",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Identify resistors are in series.",
+            "Sum their resistance values: 4 + 6.",
+            "The total is 10, matching option B."
+          ]
+        },
+        {
+          "name": "Ignore Distractors",
+          "idea": "Skip non-series traps",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recognize 'series' implies simple addition.",
+            "Discard multiplication (24) and parallel formulas (2.4).",
+            "Select the sum 10 as option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:17:08.733Z"
+    },
+    {
+      "id": "9aa66ee474e04ebb",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 26,
+      "section": "Chemistry",
+      "question": "The most abundant element in Earth's crust is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Iron",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Oxygen",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Silicon",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Aluminum",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the composition of Earth's crust by mass.",
+        "Recall that Oxygen constitutes approximately 46% to 47% of the crust.",
+        "Compare this with Silicon (~28%), Aluminum (~8%), and Iron (~5%).",
+        "Conclude that Oxygen is the most abundant element."
+      ],
+      "verifierCheck": "To determine the most abundant element in Earth's crust by mass, we examine standard geochemical data which lists Oxygen at approximately 46.6%, followed by Silicon at roughly 27.7%, Aluminum at about 8.1%, and Iron at approximately 5.0%. Since 46.6% is significantly higher than the percentages for all other listed elements, Oxygen is definitively the most abundant element in Earth's crust.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Crust Composition Rule",
+          "idea": "Recall top 3 elements directly",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Identify Earth's crust as the target layer.",
+            "Recall Oxygen is ~46% and Silicon is ~28% of mass.",
+            "Eliminate Iron, Aluminum as less abundant than Oxygen.",
+            "Select Option B for Oxygen."
+          ]
+        },
+        {
+          "name": "Abundance Ranking Shortcut",
+          "idea": "Use known ranking order",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Access memory of Earth crust element abundance order.",
+            "Remember sequence: Oxygen > Silicon > Aluminum > Iron.",
+            "Compare options against this fixed sequence.",
+            "Confirm Oxygen (Option B) is first in list."
+          ]
+        },
+        {
+          "name": "Mass Fraction Elimination",
+          "idea": "Filter by percentage knowledge",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Recall Oxygen comprises nearly half crust mass.",
+            "Note Silicon and Aluminum are significantly less than 50%.",
+            "Discard Iron as minor component compared to top two.",
+            "Choose Option B representing the dominant element."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:18:21.624Z"
+    },
+    {
+      "id": "1e17793abd561dfe",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 27,
+      "section": "Chemistry",
+      "question": "The pH of 0.001 M NaOH is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "10",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "11",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify NaOH as a strong base that dissociates completely in water.",
+        "Calculate the hydroxide ion concentration [OH-] as equal to the initial molarity, 0.001 M.",
+        "Calculate pOH using the formula -log[OH-], which yields 3.",
+        "Determine pH by subtracting pOH from 14 (at 25°C), resulting in 11."
+      ],
+      "verifierCheck": "To determine the pH of a 0.001 M NaOH solution, we first recognize that sodium hydroxide (NaOH) is a strong base that dissociates completely in water according to the equation NaOH → Na⁺ + OH⁻. Therefore, the concentration of hydroxide ions [OH⁻] is equal to the initial concentration of the NaOH, which is 0.001 M or 1 × 10⁻³ M. Next, we calculate the pOH using the formula pOH = -log[OH⁻], which yields pOH = -log(10⁻³) = 3. Finally, since the relationship between pH and pOH at standard conditions (25°C) is given by pH + pOH = 14, we subtract the pOH from 14 to find the pH: pH = 14 - 3 = 11. This calculated value matches option D.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "pH Scale Estimate",
+          "idea": "Count zeros in molarity",
+          "kind": "estimate",
+          "seconds": 2,
+          "steps": [
+            "Note concentration is 10^-3 M.",
+            "Recall strong bases give pOH equal to negative exponent (3).",
+            "Estimate pH as 14 minus that pOH value.",
+            "Determine result is 11.",
+            "Choose option D."
+          ]
+        },
+        {
+          "name": "Strong Base Logic",
+          "idea": "NaOH fully dissociates",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Identify NaOH as a strong base.",
+            "Recognize 0.001 M concentration yields [OH-] = 0.001 M.",
+            "Calculate pOH = -log(0.001) = 3.",
+            "Subtract from 14 to get pH = 11.",
+            "Select option D."
+          ]
+        },
+        {
+          "name": "Inverse Acid Rule",
+          "idea": "pH + pOH = 14",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Start with known pH+pOH=14 constant.",
+            "Convert 0.001 M to pOH of 3 instantly.",
+            "Apply formula: 14 - 3 = 11.",
+            "Verify answer matches option D.",
+            "Confirm choice is D."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:20:00.077Z"
+    },
+    {
+      "id": "fe452b0e1c35c6e9",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 28,
+      "section": "Chemistry",
+      "question": "The oxidation state of Mn in KMnO4 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "+5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "+6",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "+7",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "+4",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the known oxidation states of Potassium (K) as +1 and Oxygen (O) as -2.",
+        "Set up the equation for the neutral compound KMnO4: (+1) + Mn + 4*(-2) = 0.",
+        "Simplify the equation to find the sum of oxidation states: 1 + Mn - 8 = 0.",
+        "Solve for Mn by adding 7 to both sides, resulting in an oxidation state of +7.",
+        "Match the calculated value with option C."
+      ],
+      "verifierCheck": "To determine the oxidation state of manganese (Mn) in potassium permanganate (KMnO₄), we assign known oxidation states to the other elements: potassium (K) is an alkali metal with a fixed charge of +1, and oxygen (O) typically has an oxidation state of -2. The sum of oxidation states in a neutral compound must equal zero. Setting up the equation: (+1 for K) + (x for Mn) + 4*(-2 for O) = 0, which simplifies to 1 + x - 8 = 0. Solving for x yields x = +7, confirming that the oxidation state of Mn is +7.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "MnO4- Group",
+          "idea": "Treat permanganate as unit",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Identify compound as K+ and MnO4- ion.",
+            "Recall standard charge of permanganate is -1.",
+            "Add cation charge (+1) to anion charge (-1) = 0.",
+            "Isolate Mn: +1 (K) + x (Mn) + (-8) (O) = 0 -> x=+7."
+          ]
+        },
+        {
+          "name": "Algebraic Balance",
+          "idea": "Sum of charges equals zero",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Assign K as +1 and O as -2.",
+            "Calculate total oxygen charge: 4 * (-2) = -8.",
+            "Set equation: (+1) + Mn + (-8) = 0.",
+            "Solve for Mn: Mn = +7."
+          ]
+        },
+        {
+          "name": "Quick Oxygen Rule",
+          "idea": "Subtract oxygen deficit from zero",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Count 4 Oxygen atoms at -2 each (total -8).",
+            "Recognize Potassium is +1.",
+            "Sum knowns: +1 + (-8) = -7.",
+            "Mn must be +7 to neutralize the -7 net charge."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:21:38.163Z"
+    },
+    {
+      "id": "b87619412aef1c89",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 29,
+      "section": "Chemistry",
+      "question": "The coordination number in NaCl crystal structure is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "6",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "8",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "12",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the crystal structure of NaCl as face-centered cubic (FCC) with alternating ions.",
+        "Determine that each sodium ion is surrounded by six chloride ions and vice versa in a regular octahedral geometry.",
+        "Conclude that this arrangement defines a coordination number of 6 for both cations and anions."
+      ],
+      "verifierCheck": "In the sodium chloride (NaCl) crystal structure, which adopts a face-centered cubic (FCC) lattice arrangement where each ion is surrounded by ions of the opposite charge, the coordination number represents the number of nearest neighbors of opposite charge surrounding a central ion. Visualizing the unit cell or the close-packed layers reveals that any given Na⁺ ion is positioned at the center of an octahedron formed by six Cl⁻ ions (located at the face centers and edge midpoints relative to the cation), and conversely, every Cl⁻ ion is surrounded by six Na⁺ ions. This 1:6 ratio defines the coordination number for both cations and anions in this specific rock-salt structure, distinguishing it from zinc blende (4) or cesium chloride (8).",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Lattice Invariant",
+          "idea": "Use standard crystal data",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Recognize NaCl structure from name or context.",
+            "Recall standard coordination number for rock salt is fixed at 6.",
+            "No calculation needed; this is a known constant.",
+            "Select option corresponding to value 6."
+          ]
+        },
+        {
+          "name": "Octahedral Rule",
+          "idea": "NaCl forms octahedral holes",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify NaCl as a rock salt structure.",
+            "Recall ions occupy octahedral voids in FCC lattice.",
+            "An octahedron has exactly 6 vertices.",
+            "Each ion touches 6 oppositely charged neighbors."
+          ]
+        },
+        {
+          "name": "Space-Filling Count",
+          "idea": "Visualize nearest neighbors",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Imagine a central Na+ ion surrounded by Cl- ions.",
+            "Count the ions touching it directly along axes.",
+            "There are 3 in the plane, plus 1 above and 1 below.",
+            "Total count equals 6 nearest neighbors."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:23:03.627Z"
+    },
+    {
+      "id": "8a7967fbc269bd55",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 30,
+      "section": "Chemistry",
+      "question": "Which element has the highest ionization energy?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Li",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Na",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "He",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Ne",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify that ionization energy generally increases across a period and decreases down a group in the periodic table.",
+        "Note that Helium (He) is located at the top of Group 18 (noble gases) with a full 1s² electron shell.",
+        "Recognize that Neon (Ne) is also a noble gas but has a higher principal quantum number (n=2) than Helium (n=1).",
+        "Recall that effective nuclear charge and proximity to the nucleus make removing an electron from He significantly harder than from Ne or any alkali metals like Li or Na.",
+        "Conclude that Helium possesses the highest first ionization energy of all elements due to its small atomic radius and stable, filled shell.",
+        "Verify that Lithium (Li) and Sodium (Na) have very low ionization energies as they are alkali metals eager to lose an electron."
+      ],
+      "verifierCheck": "Ionization energy generally increases across a period and decreases down a group due to increasing nuclear charge and shielding effects respectively. Helium (He) is located at the top of Group 18 with an electron configuration of 1s², meaning its two electrons are held in the first principal energy level very close to the nucleus without any inner-shell shielding. Neon (Ne), while also a noble gas with a high ionization energy, has its outer electrons in the second shell (2p⁶), experiencing greater distance from the nucleus and more shielding than Helium's electrons. Lithium (Li) and Sodium (Na) are alkali metals with significantly lower ionization energies because they have single valence electrons in higher energy levels that are easily removed. Comparing the specific values, Helium's first ionization energy is approximately 2372 kJ/mol, which is higher than Neon's (~2080 kJ/mol), Sodium's (~496 kJ/mol), and Lithium's (~520 kJ/mol). Therefore, Helium possesses the highest ionization energy among the given options.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Noble Gas Rule",
+          "idea": "Noble gases have highest IE",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Identify noble gases: He and Ne.",
+            "Recall noble gases have full shells, maximizing ionization energy.",
+            "Compare He vs Ne: smaller size in He means higher attraction to electrons.",
+            "Select Helium (He) as the highest.",
+            "Final answer is C. He."
+          ]
+        },
+        {
+          "name": "Atomic Size Logic",
+          "idea": "Small radius equals high IE",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Recall ionization energy drops as atoms get larger.",
+            "Compare sizes: Li/Na are large; Ne is medium; He is smallest.",
+            "Smallest atom (He) holds electrons tightest, requiring most energy to remove one.",
+            "Conclude Helium has the highest ionization energy.",
+            "Final answer is C. He."
+          ]
+        },
+        {
+          "name": "Period Trend Check",
+          "idea": "Top-left vs top-right corners",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Locate elements on periodic table positions.",
+            "Note ionization energy increases right and up.",
+            "Rightmost column (noble gases) has highest values.",
+            "He is at the very top of this group, making it highest overall.",
+            "Final answer is C. He."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:24:52.387Z"
+    },
+    {
+      "id": "0fa62523f305d848",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 31,
+      "section": "Chemistry",
+      "question": "Which of the following is an aromatic compound?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Cyclohexane",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Benzene",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Cyclohexene",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1,3-Butadiene",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the structural requirements for aromaticity (cyclic, planar, fully conjugated, and following Hückel's rule with 4n+2 π electrons).",
+        "Analyze Cyclohexane: It is a saturated cyclic alkane with no double bonds, so it lacks conjugation and is not aromatic.",
+        "Analyze Cyclohexene: It contains one double bond but is not fully conjugated around the ring, making it non-aromatic.",
+        "Analyze 1,3-Butadiene: It is an acyclic diene, lacking the necessary cyclic structure for aromaticity.",
+        "Analyze Benzene: It is a cyclic, planar molecule with alternating double bonds forming a continuous conjugated system containing 6 π electrons (where n=1 in 4n+2), satisfying all criteria for aromaticity."
+      ],
+      "verifierCheck": "To determine aromaticity, a compound must satisfy Hückel's rule (4n+2 π electrons), be cyclic, planar, and fully conjugated. Cyclohexane (A) is saturated with no π system; cyclohexene (C) has one double bond but lacks full conjugation around the ring; 1,3-butadiene (D) is an acyclic diene. Benzene (B) is a planar, cyclic hexagon with alternating double bonds providing 6 delocalized π electrons (where n=1 in 4n+2), fulfilling all criteria for aromaticity.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Match",
+          "idea": "Match name to standard aromatic definition",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Scan options for the specific word 'Benzene'.",
+            "Recall that Benzene is the parent structure of all aromatics.",
+            "Ignore structural details; the name alone confirms aromaticity."
+          ]
+        },
+        {
+          "name": "Ring + Pi Check",
+          "idea": "Look for 6-carbon ring with alternating bonds",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify if molecule has a six-membered carbon ring.",
+            "Check for a circle inside or alternating double bonds within the ring.",
+            "Confirm the ring is planar and fully conjugated (Benzene fits this)."
+          ]
+        },
+        {
+          "name": "Eliminate Aliphatics",
+          "idea": "Discard non-aromatic rings and chains quickly",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Reject Cyclohexane as a saturated ring with no pi bonds.",
+            "Reject Cyclohexene as having only one double bond (not fully conjugated).",
+            "Reject 1,3-Butadiene as an open-chain molecule.",
+            "Select Benzene as the only aromatic candidate remaining."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:26:25.369Z"
+    },
+    {
+      "id": "0ce377b1f2a7fc14",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 32,
+      "section": "Chemistry",
+      "question": "The color of phenolphthalein in basic medium is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Colorless",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Pink",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Blue",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Yellow",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify phenolphthalein as a common acid-base indicator.",
+        "Recall that phenolphthalein is colorless in acidic and neutral solutions (pH < 8.2).",
+        "Note that upon reaching a basic medium (pH > 8.2), the molecular structure changes to form a quinonoid ion.",
+        "This structural change results in the absorption of visible light, producing a distinct pink or magenta color.",
+        "Confirm that this color persists until the solution becomes strongly alkaline (pH > 12), where it may turn colorless again, but 'basic' generally implies the pink range for standard indicators.",
+        "Select option B as the correct answer for phenolphthalein in a basic medium."
+      ],
+      "verifierCheck": "Phenolphthalein is a pH indicator commonly used in acid-base titrations that exists in a colorless form (lactone ring structure) in acidic and neutral solutions (pH < 8.2). Upon reaching a basic medium with a pH greater than approximately 8.2 to 10, the molecule undergoes a structural change where the lactone ring opens to form a quinonoid structure, which absorbs light in the visible spectrum and appears pink or magenta; therefore, the correct option is B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Association",
+          "idea": "link indicator name to color",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall phenolphthalein is a standard acid-base indicator.",
+            "Associate 'phenolphthalein' with its classic pink color in bases.",
+            "Select option B as the result of this association."
+          ]
+        },
+        {
+          "name": "Acid-Base Rule",
+          "idea": "apply basic rule to indicators",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify medium as 'basic' from the question text.",
+            "Recall that phenolphthalein turns pink in basic solutions.",
+            "Confirm option B matches the known reaction."
+          ]
+        },
+        {
+          "name": "Process of Elimination",
+          "idea": "remove wrong colors quickly",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "List common indicator colors: litmus (red/blue), methyl orange (yellow/red).",
+            "Note phenolphthalein is not blue, yellow, or colorless in base.",
+            "Deduce pink is the only remaining valid option."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:27:56.006Z"
+    },
+    {
+      "id": "f7a9d1eb33b800e2",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 33,
+      "section": "Chemistry",
+      "question": "The pH of 10⁻³ M HCl solution is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "11",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify HCl as a strong acid that dissociates completely in water.",
+        "Determine the hydrogen ion concentration [H⁺] equals the initial acid concentration, which is 10⁻³ M.",
+        "Apply the pH formula: pH = -log₁₀([H⁺]).",
+        "Calculate pH = -log₁₀(10⁻³) = 3."
+      ],
+      "verifierCheck": "To determine the pH of a strong acid solution like hydrochloric acid (HCl), we assume complete dissociation in water, meaning the concentration of hydrogen ions [H⁺] equals the initial molarity of the acid. Given a concentration of 10⁻³ M for HCl, the [H⁺] is also 10⁻³ M. The pH is calculated using the formula pH = -log₁₀[H⁺]. Substituting the value: pH = -log₁₀(10⁻³) = -(-3) = 3. Therefore, the correct option is B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Power-of-10",
+          "idea": "Direct log conversion",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Match concentration exponent -3 to pH.",
+            "Apply rule: pH equals absolute value of exponent for strong acids.",
+            "Select option corresponding to value 3"
+          ]
+        },
+        {
+          "name": "Concent-HCl",
+          "idea": "Strong acid fully dissociates",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Identify HCl as a strong acid.",
+            "Recall pH = -log[H⁺] for complete dissociation.",
+            "Calculate pH = -log(10⁻³) = 3"
+          ]
+        },
+        {
+          "name": "Process-Of-Elimination",
+          "idea": "Rule out impossible values",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Discard 7 (neutral) and 11 (basic) for acid.",
+            "Reject 1 as it implies 0.1 M concentration.",
+            "Confirm remaining option is 3"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:29:16.448Z"
+    },
+    {
+      "id": "54649772d9be1dde",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 34,
+      "section": "Chemistry",
+      "question": "Which of the following elements is liquid at room temperature?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Sodium",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Mercury",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Gold",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Silver",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the standard room temperature range (approx. 20-25°C).",
+        "Check the physical state of Sodium at room temperature (solid metal).",
+        "Check the physical state of Gold at room temperature (solid metal).",
+        "Check the physical state of Silver at room temperature (solid metal).",
+        "Check the physical state of Mercury at room temperature (liquid metal)."
+      ],
+      "verifierCheck": "To determine which element is liquid at room temperature (approximately 20–25°C), we must compare the melting points of the given options: Sodium melts at 97.8°C, Gold at 1064°C, and Silver at 961.8°C, all of which are solid at standard conditions. Mercury, however, has a melting point of -38.83°C, meaning it remains in a liquid state well below room temperature, making it the only element among the choices that is liquid under these conditions.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Metal Exception Rule",
+          "idea": "Only one metal is liquid",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall standard states: Na, Au, Ag are solids.",
+            "Identify Mercury as the unique metallic exception that is liquid.",
+            "Select option B based on this fact."
+          ]
+        },
+        {
+          "name": "Eliminate Solids",
+          "idea": "Rule out common solid metals",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Note Sodium (A), Gold (C), and Silver (D) are hard solids.",
+            "Recognize Mercury (B) is the only element listed that is liquid.",
+            "Choose B immediately after eliminating the others."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T14:30:25.559Z"
     }
   ]
 }
