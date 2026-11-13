@@ -91,8 +91,14 @@ function processFile(fp) {
   if (kc !== -1) {
     insAt = kc + '<h3>Key Concepts</h3>'.length;
   } else {
-    var firstH3 = out.indexOf('<h3', lbOpen);
-    insAt = firstH3 === -1 ? -1 : firstH3;
+    // First non-boilerplate h3 after lesson-body opens (Learning Objectives
+    // and Key Concepts chrome no longer precede the body).
+    var h3re = /<h3([^>]*)>([\s\S]*?)<\/h3>/g, hm;
+    insAt = -1;
+    while ((hm = h3re.exec(out.slice(lbOpen))) !== null) {
+      var t = stripTags(hm[2]).toLowerCase().replace(/[^a-z ]/g, '').trim();
+      if (!BOILERPLATE[t] && stripTags(hm[2]).length >= 3) { insAt = lbOpen + hm.index; break; }
+    }
   }
   if (insAt === -1) return 'no-anchor';
   out = out.slice(0, insAt) + '\n' + toc + '\n' + out.slice(insAt);

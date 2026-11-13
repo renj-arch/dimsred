@@ -258,6 +258,9 @@ function generateExam(examKey) {
   console.log('[' + examKey + '] Wrote: course/index.html');
 
   // ========== LESSON PAGES ==========
+  // Some exams (e.g. the standalone English course) have no mock-tests dir;
+  // emitting the button anyway ships a dead link on every lesson.
+  var HAS_MOCK_TESTS = fs.existsSync(path.join(ROOT, cfg.dir, 'mock-tests', 'index.html'));
   var globalQId = 1;
   for (var mi = 0; mi < modKeys.length; mi++) {
     var mk = modKeys[mi];
@@ -329,7 +332,7 @@ function generateExam(examKey) {
       h += '                    </div>\n';
       h += '                    <div style="display:flex;gap:8px;margin-top:10px">\n';
       h += '                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>\n';
-      h += '                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>\n';
+      if (HAS_MOCK_TESTS) h += '                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>\n';
       h += '                    </div>\n';
       h += '                </div>\n';
 
@@ -341,7 +344,6 @@ function generateExam(examKey) {
       h += '                        <li>Apply key formulas and techniques to solve problems</li>\n';
       h += '                        <li>Practice with exam-level questions to build speed and accuracy</li>\n';
       h += '                    </ul>\n';
-      h += '                    <h3>Key Concepts</h3>\n';
 
       if (lessonContent) {
         h += lessonBody;
