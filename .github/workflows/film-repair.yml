@@ -198,7 +198,7 @@ jobs:
           fi
           git commit -m "film(${{ steps.context.outputs.film }}): repair plate map (attempt ${{ steps.context.outputs.attempt }})"
           for i in 1 2 3; do
-            git fetch origin main 2>/dev/null || true
+            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
             if git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
               : # clean merge
             else

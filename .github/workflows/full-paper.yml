@@ -182,7 +182,7 @@ jobs:
           git diff --staged --quiet || git commit -m "full-paper: ${{ steps.target.outputs.exam }} ${{ steps.target.outputs.paper }} $(date +'%Y-%m-%d')"
           pushed=""
           for i in 1 2 3; do
-            git fetch origin main 2>/dev/null || true
+            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
               node scripts/merge-full-paper-status.js
               git add data/full-paper-status.json

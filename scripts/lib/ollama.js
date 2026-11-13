@@ -6,6 +6,15 @@ const HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const FAKE = process.env.OD_FAKE_TEXT || '';
 
+// Optional GitHub Models backend (free tier, OpenAI-compatible). A lane opts in
+// with GH_MODELS=1 and GH_MODELS_TOKEN; every call then tries the hosted model
+// first and falls back to the local Ollama model on any error, so an exhausted
+// rate limit or outage degrades quality instead of stalling the chain.
+const GH_MODELS = process.env.GH_MODELS === '1';
+const GH_MODEL = process.env.GH_MODELS_MODEL || 'gpt-4o-mini';
+const GH_TOKEN = process.env.GH_MODELS_TOKEN || process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
+const GH_URL = 'https://models.github.ai/inference/chat/completions';
+
 function log(msg) { console.log('[model] ' + msg); }
 
 function curlChat(payload) {
@@ -68,9 +77,50 @@ function parseChatStream(out) {
   return { text: text.trim() || thinking.trim(), httpCode: httpCode, doneReason: doneReason };
 }
 
+async function callGHModels(messages, opts) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(function () { ctrl.abort(); }, opts.timeoutMs || 240000);
+  try {
+    const res = await fetch(GH_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GH_TOKEN,
+        'X-GitHub-Api-Version': '2022-11-28'
+      },
+      body: JSON.stringify({
+        model: GH_MODEL,
+        messages: messages,
+        temperature: opts.temperature == null ? 0.4 : opts.temperature,
+        max_tokens: opts.numPredict || 2400
+      }),
+      signal: ctrl.signal
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(function () { return ''; });
+      throw new Error('GitHub Models HTTP ' + res.status + ' ' + detail.slice(0, 200));
+    }
+    const j = await res.json();
+    const text = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+    if (!text) throw new Error('GitHub Models returned no text');
+    return { text: String(text).trim(), httpCode: '200', doneReason: 'stop' };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
+  if (GH_MODELS && GH_TOKEN) {
+    try {
+      const gh = await callGHModels(messages, opts);
+      log('served by GitHub Models ' + GH_MODEL);
+      return gh;
+    } catch (e) {
+      log('GitHub Models failed (' + e.message + ') - falling back to Ollama ' + MODEL);
+    }
+  }
   const body = {
     model: MODEL, stream: true, think: false,
     options: {
