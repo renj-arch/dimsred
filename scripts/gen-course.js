@@ -430,4 +430,19 @@ var only = (process.env.COURSE_EXAMS || '').split(',').map(function (s) { return
 if (only.length) examKeys = examKeys.filter(function (k) { return only.indexOf(k) !== -1; });
 examKeys.forEach(generateExam);
 courseVersions.save(VERSIONS);
+
+// Every generated lesson gets the crafted-course treatment: a Contents block,
+// numbered sections and anchor ids, derived from the h3 outline it already
+// has. Idempotent and skipped on hand-built pages that carry their own TOC.
+try {
+  var toc = require('./add-lesson-toc');
+  examKeys.forEach(function (k) {
+    var cfg = configs[k];
+    if (!cfg || !cfg.dir) return;
+    var res = toc.run(path.join(ROOT, cfg.dir, 'course'));
+    console.log('[' + k + '] lesson-toc: ' + (res.stats.toc || 0) + ' pages indexed');
+  });
+} catch (e) {
+  console.log('lesson-toc pass skipped: ' + e.message);
+}
 console.log('\n=== Course pages generated: ' + (examKeys.join(', ') || 'none') + ' ===');
