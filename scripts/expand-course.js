@@ -707,6 +707,18 @@ function addonSource(key) {
   return entry && entry.html ? String(entry.html) : '';
 }
 
+// Gold-standard style exemplar: a compact slice of the hand-built UPSC
+// polity lesson showing the target density — a real h3 section with a
+// table, a worked example-box and exam-relevant specifics. Injected into
+// deepen/enrich prompts so generated sections match the crafted pages
+// instead of drifting into generic prose.
+var STYLE_EXEMPLAR = [
+  '<h3>Parliamentary Sovereignty vs Constitutional Sovereignty</h3>',
+  '<p>The UK follows <strong>parliamentary sovereignty</strong>: Parliament can make or unmake any law, and no court can strike it down. India follows <strong>constitutional sovereignty</strong>: the Constitution is the supreme law, and even Parliament is bound by it (Art. 13). This distinction explains why Indian courts can invalidate laws but British courts (before Factortame) could not.</p>',
+  '<div class="table-wrap"><table><caption>Key Differences</caption><tr><th>Feature</th><th>UK (Parliamentary Sovereignty)</th><th>India (Constitutional Sovereignty)</th></tr><tr><td>Source of authority</td><td>Parliament (convention + statute)</td><td>Constitution (written, Art. 368 amendment)</td></tr><tr><td>Court power over legislation</td><td>None (pre-Factortame)</td><td>Judicial review (Art. 13, 32, 226)</td></tr><tr><td>Amendment rigidity</td><td>Ordinary legislation</td><td>Special majority + sometimes state ratification</td></tr></table></div>',
+  '<div class="example-box"><div class="ex-title">Examiner\'s trap</div><div class="ex-text">A common error is saying India has "parliamentary sovereignty" because Parliament is supreme in its sphere. Correct answer: parliamentary supremacy exists only <em>within</em> constitutional limits; the Constitution itself is beyond Parliament\'s ordinary reach (basic structure, Kesavananda 1973).</div></div>'
+].join('\n');
+
 function deepenPrompt(gap) {
   var source = gap.role === 'deepen' ? String(courseData[gap.key] || '') : pageSource(gap);
   // Pass 2 and 3 must see what pass 1 already added, or the model repeats it.
@@ -727,6 +739,9 @@ function deepenPrompt(gap) {
     '',
     'End of the existing lesson for tone and continuity:',
     digest || '(no text available)',
+    '',
+    'Target quality — match this density and specificity (a real section from the hand-built polity lesson):',
+    STYLE_EXEMPLAR,
     '',
     gap.targetWords
       ? ('Progress: the lesson currently has about ' + gap.words + ' words of prose; the depth target is ' +
