@@ -158,6 +158,10 @@ jobs:
         env:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
+          # Prefer the hosted GitHub Models free tier (gpt-4o-mini by default)
+          # for lesson prose; falls back to the local model on any error.
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'

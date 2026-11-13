@@ -65,7 +65,7 @@ jobs:
           git commit -m "magazine: set issue $(date -u +'%Y-%m-%dT%H:%MZ')"
           pushed=""
           for i in 1 2 3; do
-            git fetch origin main 2>/dev/null || true
+            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
             git add -A 2>/dev/null || true
             git commit --no-edit 2>/dev/null || true

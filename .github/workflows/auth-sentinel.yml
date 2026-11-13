@@ -61,7 +61,7 @@ jobs:
             echo "No auth status change"
           else
             git commit -m "auth-sentinel: PAT status check" 2>/dev/null || true
-            git fetch origin main 2>/dev/null || true
+            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
             git add -A 2>/dev/null || true
             git commit --no-edit 2>/dev/null || true
