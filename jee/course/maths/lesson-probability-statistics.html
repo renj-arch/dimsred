@@ -280,13 +280,16 @@
 
                     <p>There's no single answer! It depends on what you mean by "typical." Here are the three best answers:</p>
 
-                    <h3>Mean = Average = "Fair Share"</h3>
+                    
+
+<!-- lesson-toc --><style>.lesson-toc{background:var(--card2,#111);border:1px solid var(--border,rgba(255,255,255,.08));border-radius:12px;padding:14px 18px;margin:14px 0}.lesson-toc .t{font-weight:700;font-size:.8em;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted,#71717a);margin-bottom:8px}.lesson-toc ol{margin:0;padding-left:20px}.lesson-toc li{font-size:.88em;line-height:1.9}.lesson-toc a{color:var(--purple,#a78bfa);text-decoration:none}.lesson-toc a:hover{text-decoration:underline}</style><nav class="lesson-toc"><div class="t">Contents</div><ol><li><a href="#ls-1">Mean = Average = "Fair Share"</a></li><li><a href="#ls-2">Median = "The Middle Person"</a></li><li><a href="#ls-3">Mode = "The Most Popular"</a></li><li><a href="#ls-4">The Addition Rule: "A or B"</a></li><li><a href="#ls-5">Independent Events: "The Coin Doesn't Remember"</a></li><li><a href="#ls-6">The Formal Definition</a></li><li><a href="#ls-7">The Multiplication Theorem</a></li><li><a href="#ls-8">Independent Events — When P(A|B) = P(A)</a></li><li><a href="#ls-9">Pairwise vs Mutual Independence — JEE Trap</a></li><li><a href="#ls-10">The Theorem of Total Probability</a></li><li><a href="#ls-11">Bayes Theorem — The Full Form</a></li><li><a href="#ls-12">Discrete vs Continuous</a></li><li><a href="#ls-13">Probability Mass Function (PMF)</a></li><li><a href="#ls-14">Cumulative Distribution Function (CDF)</a></li><li><a href="#ls-15">Mean (Expected Value) and Variance</a></li><li><a href="#ls-16">Binomial Distribution — Deeper Dive</a></li><li><a href="#ls-17">Poisson Distribution — The Rare Event Model</a></li><li><a href="#ls-18">Normal Distribution — The Bell Curve (Brief Intro)</a></li><li><a href="#ls-19">Covariance — The Starting Point</a></li><li><a href="#ls-20">Correlation Coefficient — The Clean Version</a></li><li><a href="#ls-21">Regression Line — Predicting y from x</a></li></ol></nav>
+<h3 id="ls-1">1. Mean = Average = "Fair Share"</h3>
                     <p>Imagine everyone in a group has some amount of money. The <strong>mean</strong> is what each person would have if you pooled all the money and redistributed it equally.</p>
 
-                    <h3>Median = "The Middle Person"</h3>
+                    <h3 id="ls-2">2. Median = "The Middle Person"</h3>
                     <p>Line everyone up in order. The <strong>median</strong> is the person standing right in the middle. Half are above, half are below.</p>
 
-                    <h3>Mode = "The Most Popular"</h3>
+                    <h3 id="ls-3">3. Mode = "The Most Popular"</h3>
                     <p>The value that shows up <strong>the most</strong> times. The most frequent, the most common.</p>
 
                     <div class="diagram-box">
@@ -569,7 +572,7 @@
                     </div>
 
                     <!-- Addition Rule & Venn -->
-                    <h3>The Addition Rule: "A or B"</h3>
+                    <h3 id="ls-4">4. The Addition Rule: "A or B"</h3>
                     <p>What if you want the probability of <strong>either</strong> event A <strong>or</strong> event B happening? You can't just add them — because they might overlap!</p>
 
                     <div class="diagram-box">
@@ -613,7 +616,7 @@
                         <div class="diagram-caption">When adding P(A) and P(B), the overlap (A∩B) gets counted twice. Subtract it once to correct. The overlap region pulses in amber.</div>
                     </div>
 
-                    <h3>Independent Events: "The Coin Doesn't Remember"</h3>
+                    <h3 id="ls-5">5. Independent Events: "The Coin Doesn't Remember"</h3>
                     <p>If you flip a coin and get heads 5 times in a row, what's the chance of heads on the 6th flip? If you think "surely tails is due!" — you're falling for the <strong>gambler's fallacy</strong>.</p>
 
                     <p>The coin has no memory! <strong>P(A and B) = P(A) × P(B)</strong> for independent events.</p>
@@ -790,7 +793,7 @@
 
                     <p>"Given that it's cloudy, what's the chance of rain?" — This is <strong>conditional probability</strong>: how does knowing one thing change the probability of another?</p>
 
-                    <h3>The Formal Definition</h3>
+                    <h3 id="ls-6">6. The Formal Definition</h3>
                     <div class="math-block">P(A | B) = P(A ∩ B) / P(B), &nbsp; P(B) ≠ 0</div>
                     <p><strong>Read out loud:</strong> "Probability of A given B equals P(A and B together) divided by P(B)."</p>
                     <p>Think of it this way: we've entered a new universe where B has already happened. The only outcomes that matter are those in B. Among those, which also have A?</p>
@@ -826,7 +829,7 @@
                         </div>
                     </div>
 
-                    <h3>The Multiplication Theorem</h3>
+                    <h3 id="ls-7">7. The Multiplication Theorem</h3>
                     <div class="math-block">P(A ∩ B) = P(A) · P(B|A) = P(B) · P(A|B)</div>
                     <p>This flows directly from the definition. It's useful when you know the conditional probability and need the joint probability.</p>
 
@@ -843,12 +846,12 @@
                         <div class="story-moral">🎯 When events are dependent, use P(A∩B) = P(A) × P(B|A). Only multiply directly when independent!</div>
                     </div>
 
-                    <h3>Independent Events — When P(A|B) = P(A)</h3>
+                    <h3 id="ls-8">8. Independent Events — When P(A|B) = P(A)</h3>
                     <p>If knowing B doesn't change P(A), then A and B are <strong>independent</strong>:</p>
                     <div class="math-block">P(A|B) = P(A) &nbsp; ⇔ &nbsp; P(A ∩ B) = P(A) · P(B)</div>
                     <p>This is the formal test. Coin flips are independent. Rain and umbrella-use are <strong>not</strong> — you check the forecast before deciding.</p>
 
-                    <h3>Pairwise vs Mutual Independence — JEE Trap</h3>
+                    <h3 id="ls-9">9. Pairwise vs Mutual Independence — JEE Trap</h3>
 
                     <div class="diagram-box">
                         <div class="diagram-title">⚠️ Pairwise ≠ Mutual Independence</div>
@@ -878,7 +881,7 @@
                     <span class="section-label part1">🔄 Part 5B: Total Probability & Bayes Theorem — The Full Picture</span>
                     <h2>From Partitions to Reversals</h2>
 
-                    <h3>The Theorem of Total Probability</h3>
+                    <h3 id="ls-10">10. The Theorem of Total Probability</h3>
                     <p>If events A₁, A₂, ..., Aₙ form a <strong>partition</strong> of the sample space (they're disjoint and cover everything), then for any event B:</p>
                     <div class="math-block">P(B) = Σ P(Aᵢ) · P(B | Aᵢ)</div>
                     <p>This is just the Law of Total Probability: B's total probability is the weighted average of its probability across each partition piece.</p>
@@ -918,7 +921,7 @@
                         </div>
                     </div>
 
-                    <h3>Bayes Theorem — The Full Form</h3>
+                    <h3 id="ls-11">11. Bayes Theorem — The Full Form</h3>
                     <p>Bayes reverses the conditional. Given that we observed B, what's the chance it came from partition piece Aᵢ?</p>
                     <div class="math-block">P(Aᵢ | B) = P(Aᵢ) · P(B | Aᵢ) / P(B) = P(Aᵢ) · P(B | Aᵢ) / Σ P(Aⱼ) · P(B | Aⱼ)</div>
                     <p>The denominator is just the total probability of B. This is the <strong>full Bayes formula</strong> — it normalizes the numerator so probabilities sum to 1.</p>
@@ -982,14 +985,14 @@
 
                     <p>A <strong>random variable</strong> assigns a number to each outcome of a random experiment. It's a bridge between random events and mathematics.</p>
 
-                    <h3>Discrete vs Continuous</h3>
+                    <h3 id="ls-12">12. Discrete vs Continuous</h3>
                     <p><strong>Discrete:</strong> Countable values (number of heads, dice roll). <strong>Continuous:</strong> Any value in a range (height, temperature, time).</p>
 
-                    <h3>Probability Mass Function (PMF)</h3>
+                    <h3 id="ls-13">13. Probability Mass Function (PMF)</h3>
                     <p>The PMF gives the probability that a discrete random variable equals a specific value:</p>
                     <div class="math-block">P(X = xᵢ) = pᵢ, &nbsp; where Σ pᵢ = 1</div>
 
-                    <h3>Cumulative Distribution Function (CDF)</h3>
+                    <h3 id="ls-14">14. Cumulative Distribution Function (CDF)</h3>
                     <p>The CDF gives the probability that X is ≤ some value:</p>
                     <div class="math-block">F(x) = P(X ≤ x)</div>
                     <p>The CDF starts at 0 and climbs to 1 as x increases. For discrete variables, it's a step function.</p>
@@ -1027,7 +1030,7 @@
                         </div>
                     </div>
 
-                    <h3>Mean (Expected Value) and Variance</h3>
+                    <h3 id="ls-15">15. Mean (Expected Value) and Variance</h3>
                     <div class="math-block">E(X) = Σ xᵢ · pᵢ</div>
                     <p>The expected value is a probability-weighted average — the "center of mass" of the distribution.</p>
                     <div class="math-block">Var(X) = E(X²) − [E(X)]²</div>
@@ -1053,7 +1056,7 @@
                     <span class="section-label part3">🎲 Part 6C: Standard Distributions — The Building Blocks</span>
                     <h2>Binomial, Poisson, and Normal — The Big Three</h2>
 
-                    <h3>Binomial Distribution — Deeper Dive</h3>
+                    <h3 id="ls-16">16. Binomial Distribution — Deeper Dive</h3>
                     <p>The Binomial model: <strong>n</strong> independent trials, each with success probability <strong>p</strong>.</p>
                     <div class="math-block">P(X = r) = ⁿCᵣ · pʳ · qⁿ⁻ʳ, &nbsp; q = 1−p</div>
                     <div class="math-block">Mean = np, &nbsp; Variance = npq</div>
@@ -1083,7 +1086,7 @@
                         </div>
                     </div>
 
-                    <h3>Poisson Distribution — The Rare Event Model</h3>
+                    <h3 id="ls-17">17. Poisson Distribution — The Rare Event Model</h3>
                     <p>The Poisson distribution models the number of events in a fixed interval of time or space, when events happen independently at a constant average rate λ.</p>
                     <div class="math-block">P(X = r) = e⁻λ · λʳ / r!</div>
                     <div class="math-block">Mean = λ, &nbsp; Variance = λ</div>
@@ -1123,7 +1126,7 @@
                         <div class="story-moral">📊 Poisson is the go-to model for counting rare, independent events over time or space.</div>
                     </div>
 
-                    <h3>Normal Distribution — The Bell Curve (Brief Intro)</h3>
+                    <h3 id="ls-18">18. Normal Distribution — The Bell Curve (Brief Intro)</h3>
                     <p>The Normal distribution is the most important distribution in statistics. It's symmetric, bell-shaped, and appears everywhere in nature.</p>
 
                     <div class="diagram-box">
@@ -1162,11 +1165,11 @@
                     <span class="section-label part2">📉 Part 6D: Correlation & Regression — How Variables Move Together</span>
                     <h2>Do Tall Parents Have Tall Children? The Power of Correlation</h2>
 
-                    <h3>Covariance — The Starting Point</h3>
+                    <h3 id="ls-19">19. Covariance — The Starting Point</h3>
                     <div class="math-block">Cov(X, Y) = E[(X − μₓ)(Y − μᵧ)]</div>
                     <p>Covariance measures how two variables <strong>move together</strong>. Positive = both go up together. Negative = one goes up, the other goes down. But it's hard to interpret because units are messy.</p>
 
-                    <h3>Correlation Coefficient — The Clean Version</h3>
+                    <h3 id="ls-20">20. Correlation Coefficient — The Clean Version</h3>
                     <div class="math-block">r = Cov(X, Y) / (σₓ · σᵧ), &nbsp; −1 ≤ r ≤ 1</div>
                     <p>Correlation is unitless and always between -1 and 1. This makes it easy to interpret.</p>
 
@@ -1216,7 +1219,7 @@
                         </div>
                     </div>
 
-                    <h3>Regression Line — Predicting y from x</h3>
+                    <h3 id="ls-21">21. Regression Line — Predicting y from x</h3>
                     <p>The regression line is the best-fit line through the scatter plot:</p>
                     <div class="math-block">y = a + bx, &nbsp; where b = Cov(X, Y) / Var(X)</div>
                     <p><strong>b</strong> is the slope: "For each unit increase in x, y changes by b units." <strong>a</strong> is the intercept: "The predicted y when x = 0."</p>
