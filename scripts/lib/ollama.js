@@ -26,10 +26,16 @@ const GH_URL = 'https://models.github.ai/inference/chat/completions';
 //                               key will authorize it". Playground only, so it
 //                               is deliberately NOT the default here.
 const NVAPI = process.env.NVAPI === '1';
-const NVIDIA_MODEL = process.env.NVIDIA_MODEL || 'moonshotai/kimi-k3';
+// Short aliases (deepseek-v4-pro, kimi-k3, glm-5.3, ...) resolve through the
+// curated catalogue in ./nvidia-models.js. A full id passes through untouched,
+// so a model NVIDIA adds tomorrow works without a code change.
+const _nvModel = require('./nvidia-models').resolve(process.env.NVIDIA_MODEL || 'kimi-k3');
+const NVIDIA_MODEL = _nvModel.id;
+const NVIDIA_MODEL_TIER = _nvModel.tier;
 const NVIDIA_KEY = process.env.NVIDIA_API_KEY || '';
 const NVIDIA_URL = process.env.NVIDIA_URL || 'https://integrate.api.nvidia.com/v1/chat/completions';
 const NVIDIA_MAX_TOKENS = 16384;
+let warnedUnknownNvidia = false;
 
 function log(msg) { console.log('[model] ' + msg); }
 
@@ -126,6 +132,10 @@ async function callGHModels(messages, opts) {
 }
 
 async function callNvidia(messages, opts) {
+  if (!_nvModel.known && !warnedUnknownNvidia) {
+    warnedUnknownNvidia = true;
+    log('NVIDIA_MODEL "' + NVIDIA_MODEL + '" is not in the curated catalogue (docs/model-backends.md) - sending it anyway');
+  }
   const ctrl = new AbortController();
   const timer = setTimeout(function () { ctrl.abort(); }, opts.timeoutMs || 240000);
   try {

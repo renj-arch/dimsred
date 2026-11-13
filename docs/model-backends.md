@@ -26,12 +26,41 @@ output. That is why both hosted backends are opt-in and both degrade to Ollama.
 env:
   NVAPI: '1'
   NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-  NVIDIA_MODEL: moonshotai/kimi-k3
+  NVIDIA_MODEL: deepseek-v4-pro   # short alias, or a full id
 ```
 
 Endpoint: `https://integrate.api.nvidia.com/v1/chat/completions` (OpenAI
 compatible). `NVIDIA_URL` overrides it. `max_tokens` is clamped to 16384,
 which is the documented ceiling.
+
+### Choosing a model
+
+`NVIDIA_MODEL` accepts a short alias from `scripts/lib/nvidia-models.js` or a
+full id (a value containing `/` passes through, so a model NVIDIA adds
+tomorrow works without a code change). An unrecognised value is sent anyway
+and logged once, so a typo shows up instead of silently falling back.
+
+Tiers are a suitability judgement for this repo's work, not a benchmark.
+Source: the callable catalogue at
+`https://docs.api.nvidia.com/nim/reference/llm-apis`.
+
+| Tier | Alias | Full id |
+| --- | --- | --- |
+| recommended | `deepseek-v4-pro` | `deepseek-ai/deepseek-v4-pro` |
+| recommended | `kimi-k3` | `moonshotai/kimi-k3` |
+| recommended | `glm-5.3` | `z-ai/glm-5.3` |
+| trial | `nemotron-3-ultra` | `nvidia/nemotron-3-ultra-550b-a55b` |
+| trial | `nemotron-3-super` | `nvidia/nemotron-3-super-120b-a12b` |
+| trial | `minimax-m2.7` | `minimaxai/minimax-m2.7` |
+| trial | `qwen3-next-80b-thinking` | `qwen/qwen3-next-80b-a3b-thinking` |
+| trial | `gpt-oss-120b` | `openai/gpt-oss-120b` |
+| trial | `glm-5.2` | `z-ai/glm-5.2` |
+| trial | `kimi-k2-thinking` | `moonshotai/kimi-k2-thinking` |
+| baseline | `deepseek-v4-flash` | `deepseek-ai/deepseek-v4-flash` |
+| weaker | `gpt-oss-20b`, `llama-3.3-70b`, `gemma-7b`, ... | smaller/older, listed only so nobody picks one by accident |
+
+The default is `kimi-k3`. Run `node scripts/lib/ollama-nvapi.test.js` after
+changing it; the catalogue tests assert every alias resolves to a full id.
 
 ### Kimi K3.1 Pro is not callable
 
