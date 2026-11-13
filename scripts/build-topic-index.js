@@ -20,7 +20,7 @@ var EXAM_NAMES = {
   cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG',
   gate: 'GATE', upsc: 'UPSC CSE', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk',
   'ssc-gd': 'SSC GD', ctet: 'CTET', agniveer: 'Agniveer', nda: 'NDA',
-  cds: 'CDS', clat: 'CLAT'
+  cds: 'CDS', clat: 'CLAT', apfc: 'UPSC APFC'
 };
 
 var previous = null;
