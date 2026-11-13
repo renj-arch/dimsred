@@ -37,11 +37,11 @@ function captureLogs(fn) {
     seen = { url: url, body: JSON.parse(init.body), auth: init.headers.Authorization };
     return { ok: true, json: async () => ({ choices: [{ message: { content: '  hello from nvidia  ' } }] }) };
   };
-  let m = fresh({ NVAPI: '1', NVIDIA_API_KEY: 'nvapi-test', NVIDIA_MODEL: 'moonshotai/kimi-k3' });
+  let m = fresh({ NVAPI: '1', NVIDIA_API_KEY: 'nvapi-test', NVIDIA_MODEL: 'nvidia/nemotron-3-ultra-550b-a55b' });
   let out = await m.callLLM([{ role: 'user', content: 'hi' }], { numPredict: 100 });
   ok('returns the model text, trimmed', out.text === 'hello from nvidia', JSON.stringify(out.text));
   ok('posts to the NVIDIA chat endpoint', /integrate\.api\.nvidia\.com\/v1\/chat\/completions/.test(seen.url), seen.url);
-  ok('sends the configured model', seen.body.model === 'moonshotai/kimi-k3', seen.body.model);
+  ok('sends the configured model', seen.body.model === 'nvidia/nemotron-3-ultra-550b-a55b', seen.body.model);
   ok('sends the bearer key', seen.auth === 'Bearer nvapi-test', seen.auth);
   ok('never streams (NVIDIA json path)', seen.body.stream === false);
 
@@ -76,19 +76,29 @@ function captureLogs(fn) {
     seen = { body: JSON.parse(init.body) };
     return { ok: true, json: async () => ({ choices: [{ message: { content: 'ok' } }] }) };
   };
-  m = fresh({ NVAPI: '1', NVIDIA_API_KEY: 'nvapi-test', NVIDIA_MODEL: 'deepseek-v4-pro' });
+  m = fresh({ NVAPI: '1', NVIDIA_API_KEY: 'nvapi-test', NVIDIA_MODEL: 'nemotron-3-ultra' });
   await m.callLLM([{ role: 'user', content: 'hi' }], {});
-  ok('alias sent as the full id', seen.body.model === 'deepseek-ai/deepseek-v4-pro', seen.body.model);
-  ok('module exports the resolved id', m.NVIDIA_MODEL === 'deepseek-ai/deepseek-v4-pro', m.NVIDIA_MODEL);
+  ok('alias sent as the full id', seen.body.model === 'nvidia/nemotron-3-ultra-550b-a55b', seen.body.model);
+  ok('module exports the resolved id', m.NVIDIA_MODEL === 'nvidia/nemotron-3-ultra-550b-a55b', m.NVIDIA_MODEL);
+
+  console.log('\nCASE 5b: an empty NVIDIA_MODEL resolves to the catalogue default');
+  m = fresh({ NVAPI: '1', NVIDIA_API_KEY: 'nvapi-test' });
+  ok('default is a verified-live model', m.NVIDIA_MODEL === 'nvidia/nemotron-3-ultra-550b-a55b', m.NVIDIA_MODEL);
 
   console.log('\nCASE 6: the catalogue itself');
   const cat = require(path.join(__dirname, 'nvidia-models.js'));
-  ok('kimi-k3 -> recommended', cat.resolve('kimi-k3').id === 'moonshotai/kimi-k3' && cat.resolve('kimi-k3').tier === 'recommended');
-  ok('glm-5.3 -> recommended', cat.resolve('glm-5.3').id === 'z-ai/glm-5.3' && cat.resolve('glm-5.3').tier === 'recommended');
+  ok('nemotron-3-ultra -> recommended', cat.resolve('nemotron-3-ultra').id === 'nvidia/nemotron-3-ultra-550b-a55b' && cat.resolve('nemotron-3-ultra').tier === 'recommended');
+  ok('glm-5.3-flash -> trial', cat.resolve('glm-5.3-flash').id === 'z-ai/glm-5.3-flash' && cat.resolve('glm-5.3-flash').tier === 'trial');
   ok('every alias maps to a full id', Object.keys(cat.all()).every(a => /^[a-z0-9.-]+\/[a-z0-9._-]+$/.test(cat.all()[a])));
-  ok('full id passes through', cat.resolve('deepseek-ai/deepseek-v4-pro').id === 'deepseek-ai/deepseek-v4-pro');
+  ok('full id passes through', cat.resolve('nvidia/nemotron-3-ultra-550b-a55b').id === 'nvidia/nemotron-3-ultra-550b-a55b');
   ok('unknown alias passes through unaltered', cat.resolve('does-not-exist').id === 'does-not-exist' && cat.resolve('does-not-exist').known === false);
   ok('k3.1-pro is NOT in the callable catalogue', cat.resolve('moonshotai/kimi-k3.1-pro').known === false);
+  // These were the stale-docs "recommended" set. All returned 410 end-of-life
+  // on a real call (2026-11-13), so none may resolve as usable.
+  ok('retired kimi-k3 is not a usable alias', cat.resolve('kimi-k3').known === false);
+  ok('retired deepseek-v4-pro is not a usable alias', cat.resolve('deepseek-v4-pro').known === false);
+  ok('retired glm-5.3 is not a usable alias', cat.resolve('glm-5.3').known === false);
+  ok('the default id is in the catalogue', Object.keys(cat.all()).some(a => cat.all()[a] === cat.DEFAULT_ID));
 
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);

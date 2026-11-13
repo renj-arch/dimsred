@@ -40,17 +40,17 @@ const GH_URL = 'https://models.github.ai/inference/chat/completions';
 // Opt in per lane with NVAPI=1 and NVIDIA_API_KEY; never required, and any
 // failure falls through to the local Ollama model exactly like GH Models does.
 //
-// Model ids, as published by NVIDIA on 2026-11-13:
-//   moonshotai/kimi-k3          callable
-//   moonshotai/kimi-k3.1-pro    403/404 - build.nvidia.com states "API access
-//                               for this model is not available yet ... no API
-//                               key will authorize it". Playground only, so it
-//                               is deliberately NOT the default here.
+// Model choice lives in ./nvidia-models.js, where every entry was verified with
+// a real call. NVIDIA's own docs page was stale on 2026-11-13 (it listed models
+// that return 410 end-of-life), so do not add an id from the docs alone.
+// moonshotai/kimi-k3.1-pro is playground-only and 404s with any key.
 const NVAPI = process.env.NVAPI === '1';
-// Short aliases (deepseek-v4-pro, kimi-k3, glm-5.3, ...) resolve through the
+// Short aliases (nemotron-3-ultra, glm-5.3-flash, ...) resolve through the
 // curated catalogue in ./nvidia-models.js. A full id passes through untouched,
-// so a model NVIDIA adds tomorrow works without a code change.
-const _nvModel = require('./nvidia-models').resolve(process.env.NVIDIA_MODEL || 'kimi-k3');
+// so a model NVIDIA adds tomorrow works without a code change. An empty value
+// resolves to the catalogue default; every catalogue entry answered a live
+// call on 2026-11-13 (see that file - the docs page was stale).
+const _nvModel = require('./nvidia-models').resolve(process.env.NVIDIA_MODEL);
 const NVIDIA_MODEL = _nvModel.id;
 const NVIDIA_MODEL_TIER = _nvModel.tier;
 const NVIDIA_KEY = process.env.NVIDIA_API_KEY || '';

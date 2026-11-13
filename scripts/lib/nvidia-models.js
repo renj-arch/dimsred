@@ -1,63 +1,64 @@
 // Curated NVIDIA NIM chat models, for scripts/lib/ollama.js.
 //
-// Source: https://docs.api.nvidia.com/nim/reference/llm-apis (read 2026-11-13).
-// Only models that appear in that callable catalogue are listed here. Models
-// that are playground-only on build.nvidia.com (e.g. moonshotai/kimi-k3.1-pro)
-// are deliberately absent: a valid key still returns 404 for them.
+// EVERY entry here answered a real POST /v1/chat/completions with HTTP 200 on
+// 2026-11-13 (probe: probe-live-models.js). "Listed in /v1/models" is NOT
+// enough: that endpoint also returns models this account cannot invoke (404
+// "Function ... Not found for account") and models that are retired (410).
+//
+// Do not add a model from the docs page alone. https://docs.api.nvidia.com/
+// nim/reference/llm-apis was badly stale on 2026-11-13: it advertised a whole
+// "recommended" set that returned 410 end-of-life, including the previous
+// default in this file. Verify with a real call before adding anything.
+//
+// Retired / unusable on 2026-11-13 (do NOT re-add; kept only as a warning):
+//   410 end of life:
+//     deepseek-ai/deepseek-v4-pro            EOL 2026-08-07
+//     moonshotai/kimi-k3                     EOL 2026-10-15
+//     z-ai/glm-5.3                           EOL 2026-10-28
+//     deepseek-ai/deepseek-v4-flash, deepseek-ai/deepseek-v4-flash-0731
+//     minimaxai/minimax-m2.7, minimaxai/minimax-m2.5
+//     qwen/qwen3-next-80b-a3b-thinking, qwen/qwen3-next-80b-a3b-instruct
+//     openai/gpt-oss-120b, z-ai/glm-5.2, moonshotai/kimi-k2-thinking
+//     qwen/qwq-32b, stepfun-ai/step-3.5-flash, poolside/laguna-xs-2-1
+//     moonshotai/kimi-k2-instruct, meta/llama-3.3-70b-instruct
+//     meta/llama-3.1-70b-instruct, meta/llama-3.1-8b-instruct
+//     microsoft/phi-4-mini-instruct, google/gemma-7b
+//     mistralai/mixtral-8x7b-instruct, nvidia/nemotron-3-nano-30b-a3b
+//     nvidia/nvidia-nemotron-nano-9b-v2
+//   404 "not found for account" (listed, but this key cannot call it):
+//     nvidia/nemotron-3-super-120b-a12b, nvidia/nemotron-nano-3-30b-a3b
+//     nvidia/nemotron-4-340b-instruct, nvidia/llama-3.1-nemotron-ultra-253b-v1
+//     nvidia/llama-3.1-nemotron-70b-instruct, moonshotai/kimi-k2.6
+//     mistralai/mistral-large-2-instruct, writer/palmyra-creative-122b
+//     01-ai/yi-large
+//   404 playground-only (never API-callable at all):
+//     moonshotai/kimi-k3.1-pro
+//   Unverified - answered no probe within 180s, so NOT listed as usable:
+//     deepseek-ai/deepseek-v4.1-flash, mistralai/mistral-large-4-1t-a52b,
+//     openai/gpt-oss-20b, meta/muse-glimmer-30b, stepfun-ai/step-5-preview,
+//     google/gemma-4-31b-it
 //
 // Tiers are a suitability judgement for this repo's work (long sourced lesson
-// prose, HTML/code edits, agentic multi-step), not a benchmark. Re-check the
-// catalogue before trusting an entry; NVIDIA adds and retires models quickly.
+// prose, HTML/code edits, agentic multi-step), not a benchmark - the only
+// measured fact is that the entry answered.
 //
 // Usage in a workflow:
-//   NVIDIA_MODEL: deepseek-v4-pro        # short alias
-//   NVIDIA_MODEL: deepseek-ai/deepseek-v4-pro   # full id also works
+//   NVIDIA_MODEL: nemotron-3-ultra          # short alias
+//   NVIDIA_MODEL: nvidia/nemotron-3-ultra-550b-a55b   # full id also works
 const CATALOG = {
-  // Clear upgrades over the previous default (qwen3.5:9b) and over a
-  // DeepSeek v4 flash tier: stronger reasoning, same or better instruction
-  // following.
+  // Verified live and the most capable of the surviving set: 550B (A55B active)
+  // general model. Default for the backend.
   recommended: {
-    'deepseek-v4-pro': 'deepseek-ai/deepseek-v4-pro',
-    'kimi-k3': 'moonshotai/kimi-k3',
-    'glm-5.3': 'z-ai/glm-5.3'
+    'nemotron-3-ultra': 'nvidia/nemotron-3-ultra-550b-a55b'
   },
 
-  // Worth A/B testing for a specific lane; no clear winner without data.
+  // Verified live; pick by cost/latency or by modality, not by a quality claim.
   trial: {
-    'nemotron-3-ultra': 'nvidia/nemotron-3-ultra-550b-a55b',
-    'nemotron-3-super': 'nvidia/nemotron-3-super-120b-a12b',
-    'minimax-m2.7': 'minimaxai/minimax-m2.7',
-    'minimax-m2.5': 'minimaxai/minimax-m2.5',
-    'qwen3-next-80b-thinking': 'qwen/qwen3-next-80b-a3b-thinking',
-    'qwen3-next-80b': 'qwen/qwen3-next-80b-a3b-instruct',
-    'gpt-oss-120b': 'openai/gpt-oss-120b',
-    'glm-5.2': 'z-ai/glm-5.2',
-    'kimi-k2-thinking': 'moonshotai/kimi-k2-thinking',
-    'qwq-32b': 'qwen/qwq-32b',
-    'step-3.5-flash': 'stepfun-ai/step-3.5-flash',
-    'laguna-xs-2-1': 'poolside/laguna-xs-2-1'
-  },
-
-  // Same generation as the flash tier this repo used to rely on. Useful as a
-  // control in an A/B run, not as an upgrade.
-  baseline: {
-    'deepseek-v4-flash': 'deepseek-ai/deepseek-v4-flash',
-    'deepseek-v4-flash-0731': 'deepseek-ai/deepseek-v4-flash-0731',
-    'kimi-k2-instruct': 'moonshotai/kimi-k2-instruct'
-  },
-
-  // Smaller or older than the current default. Listed so a lane does not pick
-  // one by accident; no reason to choose these for content generation.
-  weaker: {
-    'gpt-oss-20b': 'openai/gpt-oss-20b',
-    'llama-3.3-70b': 'meta/llama-3.3-70b-instruct',
-    'llama-3.1-70b': 'meta/llama-3.1-70b-instruct',
-    'llama-3.1-8b': 'meta/llama-3.1-8b-instruct',
-    'phi-4-mini': 'microsoft/phi-4-mini-instruct',
-    'gemma-7b': 'google/gemma-7b',
-    'mixtral-8x7b': 'mistralai/mixtral-8x7b-instruct',
-    'nemotron-3-nano': 'nvidia/nemotron-3-nano-30b-a3b',
-    'nemotron-nano-9b': 'nvidia/nvidia-nemotron-nano-9b-v2'
+    'nemotron-3.5-super-vl': 'nvidia/nemotron-3.5-super-vl-120b-a12b',
+    'nemotron-3.5-lightning': 'nvidia/nemotron-3.5-lightning-30b-a3b',
+    'nemotron-3.5-bolt': 'nvidia/nemotron-3.5-bolt-e4b',
+    'minimax-m3.1-flash': 'minimaxai/minimax-m3.1-flash',
+    'glm-5.3-flash': 'z-ai/glm-5.3-flash'
   }
 };
 
@@ -69,6 +70,9 @@ for (const tier of Object.keys(CATALOG)) {
   }
 }
 
+// Default model id, exported so the client and tests agree on one source.
+const DEFAULT_ID = 'nvidia/nemotron-3-ultra-550b-a55b';
+
 /**
  * Resolve a configured model name to a full NVIDIA model id.
  * A value containing "/" is assumed to be a full id and passes through, so a
@@ -77,7 +81,7 @@ for (const tier of Object.keys(CATALOG)) {
  */
 function resolve(name) {
   const raw = String(name == null ? '' : name).trim();
-  if (!raw) return { id: '', tier: 'unknown', known: false };
+  if (!raw) return { id: DEFAULT_ID, tier: 'recommended', known: true };
   if (raw.indexOf('/') !== -1) {
     const hit = Object.keys(INDEX).find(function (a) { return INDEX[a].id === raw; });
     return { id: raw, tier: hit ? INDEX[hit].tier : 'unknown', known: !!hit };
@@ -96,4 +100,4 @@ function all() {
   return out;
 }
 
-module.exports = { CATALOG: CATALOG, resolve: resolve, all: all };
+module.exports = { CATALOG: CATALOG, DEFAULT_ID: DEFAULT_ID, resolve: resolve, all: all };
