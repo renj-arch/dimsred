@@ -110,6 +110,7 @@ function renderUI() {
   h += '<button onclick="window._mockTest.prevQuestion()" class="mt-btn mt-btn-secondary" id="mt-prev">&#x2190; Previous</button>';
   h += '<div style="display:flex;gap:8px">';
   h += '<button onclick="window._mockTest.showAnswer()" class="mt-btn mt-btn-secondary" id="mt-reveal">Show Answer</button>';
+  h += '<button onclick="window._mockTest.revealAll()" class="mt-btn mt-btn-secondary" id="mt-reveal-all">Reveal All</button>';
   h += '<button onclick="window._mockTest.markForReview()" class="mt-btn mt-btn-warning" id="mt-review">Mark for Review</button>';
   h += '<button onclick="window._mockTest.nextQuestion()" class="mt-btn mt-btn-primary" id="mt-next">Save & Next &#x2192;</button>';
   h += '</div>';
@@ -246,6 +247,14 @@ function showAnswer() {
   var q = flatQs[qIdx];
   if (!q) return;
   state.revealed[q.id] = !state.revealed[q.id];
+  renderQuestion();
+}
+
+function revealAll() {
+  if (!state.isActive) return;
+  var all = true;
+  flatQs.forEach(function(q){ if (!state.revealed[q.id]) all = false; });
+  flatQs.forEach(function(q){ state.revealed[q.id] = !all; });
   renderQuestion();
 }
 
@@ -522,6 +531,7 @@ window._mockTest = {
   selectOption: selectOption,
   markForReview: markForReview,
   showAnswer: showAnswer,
+  revealAll: revealAll,
   switchSection: switchSection,
   goToQuestion: goToQuestion,
   prevQuestion: prevQuestion,
