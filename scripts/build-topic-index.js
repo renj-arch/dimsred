@@ -16,6 +16,13 @@ var indexFile = path.join(dataDir, 'topic-index.json');
 // page, even though their data/topics/<key>.json files were still in the repo.
 // Preserve any entry this script does not own, refreshing its counts from its
 // own topic file so the numbers stay honest.
+var EXAM_NAMES = {
+  cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG',
+  gate: 'GATE', upsc: 'UPSC CSE', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk',
+  'ssc-gd': 'SSC GD', ctet: 'CTET', agniveer: 'Agniveer', nda: 'NDA',
+  cds: 'CDS', clat: 'CLAT'
+};
+
 var previous = null;
 try { previous = JSON.parse(fs.readFileSync(indexFile, 'utf-8')); } catch (e) { /* first run */ }
 var curatedKeys = [];
@@ -24,13 +31,6 @@ if (previous && previous.exams) {
     if (!EXAM_NAMES[pk]) curatedKeys.push(pk);
   }
 }
-
-var EXAM_NAMES = {
-  cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG',
-  gate: 'GATE', upsc: 'UPSC CSE', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk',
-  'ssc-gd': 'SSC GD', ctet: 'CTET', agniveer: 'Agniveer', nda: 'NDA',
-  cds: 'CDS', clat: 'CLAT'
-};
 
 if (!fs.existsSync(topicDir)) fs.mkdirSync(topicDir, { recursive: true });
 
