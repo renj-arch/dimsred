@@ -1,0 +1,51 @@
+name: Site Audit
+
+# Whole-site defect sweep (scripts/audit-site.js): dead internal links,
+# broken anchors, invalid JSON, JS syntax errors. Runs weekly and on
+# demand; fails loudly on structural defects so regressions cannot sit
+# silently on the site. Placeholder/thin-page heuristics are reported in
+# the artifact but do not fail the run (they carry known false positives).
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run site audit
+        run: node scripts/audit-site.js
+
+      - name: Fail on structural defects
+        run: |
+          node -e "
+            const j=require('./data/audit-findings.json');
+            const hard=['deadLinks','deadAnchors','badJson','badJs'];
+            let bad=0;
+            for(const k of hard){
+              const n=j.findings[k].length;
+              console.log(k+': '+n);
+              if(n){bad+=n;j.findings[k].slice(0,10).forEach(x=>console.log('  '+x))}
+            }
+            if(bad){console.error('audit found '+bad+' structural defect(s)');process.exit(1)}
+            console.log('audit clean');
+          "
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: audit-findings
+          path: data/audit-findings.json
+          retention-days: 30
