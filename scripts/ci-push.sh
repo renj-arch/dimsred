@@ -159,14 +159,18 @@ try_push() {
 }
 
 PAT_AUTH=0
-for i in 1 2 3; do
+# Parallel lanes finish within the same minute and race the push: each
+# attempt re-syncs, but another lane can land in the pull->push gap. Eight
+# jittered attempts (~2 min of coverage) beat the observed collision rate;
+# three fixed 5s retries lost whole 90-minute runs on 2026-11-13.
+for i in 1 2 3 4 5 6 7 8; do
   echo "[ci-push] push attempt $i (PAT)..."
   try_push "pat"
   ST=$?
   if [ $ST -eq 0 ]; then echo "[ci-push] Pushed with PAT"; exit 0; fi
   if [ $ST -eq 2 ]; then PAT_AUTH=1; echo "[ci-push] PAT looks dead"; break; fi
   echo "[ci-push] transient push failure, retrying..."
-  sleep 5
+  sleep $((4 + RANDOM % 12))
 done
 
 # --- Fallback: same push via GITHUB_TOKEN ---
@@ -191,7 +195,7 @@ if [ "$PAT_AUTH" = "1" ]; then
   git add data/auth-status.json 2>/dev/null || true
   git commit -m "ci-push: PAT-dead fallback marker" 2>/dev/null || true
 fi
-for i in 1 2 3; do
+for i in 1 2 3 4 5 6 7 8; do
   echo "[ci-push] fallback push attempt $i (GITHUB_TOKEN)..."
   sync_remote
   union_invented
@@ -214,7 +218,9 @@ for i in 1 2 3; do
       exit 0
     fi
   fi
-  sleep 5
+  sleep $((4 + RANDOM % 12))
 done
-echo "::error::ci-push: TOTAL AUTH FAILURE — neither PAT nor GITHUB_TOKEN can push. Renew secrets. Work is committed in the runner workspace only."
+# Not necessarily auth: sustained non-fast-forward races between parallel
+# lanes land here too. The message says both so nobody chases a dead secret.
+echo "::error::ci-push: push failed after all retries (auth OR sustained push races between lanes). Check for a live-branch/main lock or renew secrets if auth-shaped. Work is committed in the runner workspace only."
 exit 1
