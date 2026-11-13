@@ -108,7 +108,7 @@ jobs:
           git commit -m "Films: restore full 720p previews from release masters"
           pushed=0
           for attempt in 1 2 3; do
-            git fetch origin main 2>/dev/null || true
+            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
             if git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
               : # clean merge
             else

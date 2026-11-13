@@ -144,7 +144,7 @@ jobs:
             # unstaged; a plain `pull --rebase` refuses to run with a dirty
             # tree (2026-11-07 run 42373324262). Autostash carries them
             # across the rebase instead of losing the publish.
-            git fetch origin main 2>/dev/null || true
+            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
             git add -A 2>/dev/null || true
             git commit --no-edit 2>/dev/null || true
@@ -161,7 +161,7 @@ jobs:
           # every run even when the push had succeeded (run 43031735754 pushed
           # 4b8b5c84..4405e5dc, then this step reported "could not be pushed").
           # Check the remote state instead of a variable we cannot see.
-          git fetch origin main 2>/dev/null || true
+          timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
           if git merge-base --is-ancestor HEAD origin/main 2>/dev/null; then
             echo "Already published to main"
             exit 0
@@ -176,7 +176,7 @@ jobs:
             fi
             echo "push attempt $i failed, retrying..."
             sleep 5
-            git fetch origin main 2>/dev/null || true
+            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
           done
           echo "::error::research methods could not be pushed to main"

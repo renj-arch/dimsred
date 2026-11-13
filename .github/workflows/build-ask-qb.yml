@@ -215,7 +215,7 @@ jobs:
             for i in 1 2 3; do
               git merge --abort 2>/dev/null || true
               git rebase --abort 2>/dev/null || true
-              git fetch origin main 2>/dev/null || true
+              timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
               git merge -X ours --no-edit origin/main 2>/dev/null || { echo "merge attempt failed - cleaning state"; git merge --abort 2>/dev/null || true; }
               if git push 2>/dev/null; then pushed=1; echo "Pushed question-bank rebuild"; break; fi
               echo "push attempt $i failed, retrying..."

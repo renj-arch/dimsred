@@ -44,7 +44,7 @@ jobs:
       - name: Commit and push
         run: |
           git stash --include-untracked
-          git fetch origin main 2>/dev/null || true
+          timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
           git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
           git stash pop || true
           git stash pop || true
@@ -54,7 +54,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Daily PIB feed update $(date +'%Y-%m-%d')"
             for i in 1 2 3; do
-              git fetch origin main 2>/dev/null || true
+              timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
               git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
               git add -A 2>/dev/null || true
               git commit --no-edit 2>/dev/null || true
