@@ -1,0 +1,149 @@
+name: Deep Rewrite (27B local lane)
+
+# Nightly local-only deepening lane. Each run pulls ONE lesson from
+# data/deep-rewrite-queue.json, asks the local 27B Ollama model for new
+# exam-level sections, splices them into the lesson HTML before the
+# practice block, and commits. No external APIs — the model runs on the
+# runner itself (batiai/qwen3.8-27b:iq3, same pin as archive-27b).
+#
+# CPU economics: ~17GB pull + ~5000-token generation at swap-speed is slow
+# (est. 60-120 min per lesson), which is exactly why this is a nightly
+# single-item lane rather than a bulk pipeline.
+on:
+  schedule:
+    - cron: '47 4 * * *'   # daily 04:47 UTC, off-peak vs other lanes
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'TRIAL ONLY: model tag to test instead of the pinned default'
+        required: false
+        default: ''
+
+concurrency:
+  group: deep-rewrite
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  deepRewrite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - name: Free runner disk space (swap + 17GB model + course files)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/deep-rewrite-queue.json
+            upsc/course
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create swap (same as the other 27B lane)
+        run: |
+          bash scripts/ci-make-swap.sh
+
+      - name: Install Ollama (runner-home service, 27B-tuned env)
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\nEnvironment=OLLAMA_NUM_PARALLEL=1\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      - name: Start Ollama server
+        run: |
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull model (digest-pinned; trial dispatches may override)
+        env:
+          TRIAL_MODEL: ${{ github.event_name == 'workflow_dispatch' && inputs.model || '' }}
+        run: |
+          PINNED_MODEL='batiai/qwen3.8-27b:iq3'
+          PINNED_DIGEST='abca93dece6899e6b1f4a98dfb8089c328fadc65a3df825d33ca5e39e0961d64'
+          MODEL_INPUT="${TRIAL_MODEL:-$PINNED_MODEL}"
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          if [ "$MODEL_INPUT" = "$PINNED_MODEL" ]; then
+            want="${PINNED_MODEL%%:*}"; tag="${PINNED_MODEL##*:}"
+            got=''
+            for i in 1 2 3; do
+              got=$(curl -fsSL -I "https://registry.ollama.ai/v2/${want}/manifests/${tag}" | tr -d '\r' | awk -F': ' 'tolower($1)=="ollama-content-digest" {print $2}' | head -1)
+              [ -n "$got" ] && break
+              sleep 3
+            done
+            got="${got#sha256:}"
+            if [ "$got" != "$PINNED_DIGEST" ]; then
+              echo "::error::DIGEST PIN REFUSED: ${PINNED_MODEL} upstream digest is '${got}', pinned '${PINNED_DIGEST}'."
+              exit 1
+            fi
+            echo "digest pin OK: $got"
+          else
+            echo "::warning::TRIAL MODEL: $MODEL_INPUT (digest pin not enforced for trials)"
+          fi
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          echo "OLLAMA_MODEL=$MODEL_INPUT" >> "$GITHUB_ENV"
+          echo "Warming $MODEL_INPUT..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+
+      - name: Ensure Ollama is up before rewrite
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready" || echo "WARNING: server still down"
+
+      - name: Deep-rewrite one lesson (local 27B)
+        timeout-minutes: 300
+        env:
+          OLLAMA_HOST: http://127.0.0.1:11434
+          OLLAMA_MODEL: ${{ env.OLLAMA_MODEL }}
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          DEEP_NUM_PREDICT: '5000'
+        run: node scripts/deep-rewrite.js
+
+      - name: Publish rewritten lesson + queue
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add -f data/deep-rewrite-queue.json 2>/dev/null || true
+          git add upsc/course 2>/dev/null || true
+          bash scripts/ci-push.sh "deep-rewrite: ${OLLAMA_MODEL:-27b} deepened one lesson (run #${{ github.run_number }})"
