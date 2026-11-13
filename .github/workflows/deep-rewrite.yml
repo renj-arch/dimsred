@@ -132,6 +132,12 @@ jobs:
           OLLAMA_MODEL: ${{ env.OLLAMA_MODEL }}
           NODE_OPTIONS: '--max-old-space-size=2048'
           DEEP_NUM_PREDICT: '5000'
+          # The client's default guard is 55 min, but this lane is documented
+          # above as 60-120 min per lesson on CPU. Run 43457466546 died with
+          # "transport: hard cap 55min" ~2 min before finishing. Raise the cap
+          # to sit above the documented worst case; the 12-minute idle guard
+          # still catches a genuinely stalled stream.
+          OLLAMA_HARD_CAP_MIN: '150'
         run: node scripts/deep-rewrite.js
 
       - name: Publish rewritten lesson + queue
