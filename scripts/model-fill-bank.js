@@ -75,7 +75,7 @@ async function verifyItem(item, opts, correct, section) {
   ].join('\n');
   try {
     const r = await llm.callLLM([{ role: 'user', content: 'You are an independent exam verifier. Solve from scratch; never trust a stated answer. Return ONLY JSON: {"answer":"A|B|C|D","check":"one line of arithmetic"}\n' + block }],
-      { temperature: 0.15, numPredict: 400 });
+      { temperature: 0.15, numPredict: 1500 });
     const obj = extractObject(r.text || '');
     const a = String((obj && obj.answer) || '').toUpperCase().match(/\b([A-D])\b/);
     return !!(a && a[1] === 'ABCD'[correct]);
@@ -182,7 +182,7 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
     let items;
     try {
       items = await llm.callArray([{ role: 'user', content: promptFor(section, ask, examName, paperName, seeds.concat(batch.map(function (q) { return q.text; }))) }],
-        { temperature: 0.55, numPredict: Math.min(4200, 260 + ask * 260) }, 'fill/' + section);
+        { temperature: 0.55, numPredict: Math.min(6000, Math.max(3000, 260 + ask * 260)) }, 'fill/' + section);
     } catch (e) {
       llm.log(section + ': generation failed - ' + e.message);
       emptyRounds++;
