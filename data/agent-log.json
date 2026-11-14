@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-14T13:17:50.930Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-14T13:41:02.235Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -226,8 +214,35 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-14T21:27:16.784Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "ctet/papers/practice-set-09.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-14T17:44:31.935Z",
+ "lastRun": "2026-11-14T21:27:16.784Z",
  "model": "qwen3.5:9b"
 }
