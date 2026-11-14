@@ -49,7 +49,7 @@ jobs:
 
       - name: Pull latest changes
         run: |
-          timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
+          timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
           git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
 
       - name: Build practice papers (all exams)
@@ -87,7 +87,7 @@ jobs:
           git commit -m "Weekly PDF digest $(date +'%Y-%m-%d')"
           pushed=""
           for i in 1 2 3; do
-            timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
+            timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
             git add -A 2>/dev/null || true
             git commit --no-edit 2>/dev/null || true
