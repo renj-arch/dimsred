@@ -48,6 +48,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+            languages
+            ctet/course/language
+            upsc/mains/language
+            data/language-expansion.json
+          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
         with:
