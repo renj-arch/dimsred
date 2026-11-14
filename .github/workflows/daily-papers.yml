@@ -67,14 +67,23 @@ jobs:
               echo "exams=all" >> $GITHUB_OUTPUT
             fi
           else
-            H=$(date +%H)
-            case "$H" in
-              04|05) echo "exams=cgl rbi jee neet gate" ;;
-              10|11) echo "exams=agniveer upsc ibps-po sbi-clerk ssc-gd" ;;
-              16|17) echo "exams=ctet nda cds clat apfc" ;;
-              *) echo "exams=skip" ;;
-            esac
-          fi >> $GITHUB_OUTPUT
+            # Use the cron slot that FIRED, not the wall clock. GitHub can delay
+            # a scheduled run by hours; run #546 was the 16:00 slot but executed
+            # at 20:28, hit the old "skip" branch, and every producing step was
+            # skipped while the run still reported success.
+            case "${{ github.event.schedule }}" in
+              "0 4 * * *")  echo "exams=cgl rbi jee neet gate" ;;
+              "0 10 * * *") echo "exams=agniveer upsc ibps-po sbi-clerk ssc-gd" ;;
+              "0 16 * * *") echo "exams=ctet nda cds clat apfc" ;;
+              *) echo "exams=all" ;;
+            esac >> $GITHUB_OUTPUT
+          fi
+          EXAMS=$(grep '^exams=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2)
+          echo "slot=${{ github.event.schedule }} exams=$EXAMS"
+          if [ -z "$EXAMS" ] || [ "$EXAMS" = "skip" ]; then
+            echo "::error::no exam batch for this slot (schedule='${{ github.event.schedule }}')"
+            exit 1
+          fi
 
       - name: Backfill missing question banks from existing papers
         if: steps.batch.outputs.exams != 'skip'
