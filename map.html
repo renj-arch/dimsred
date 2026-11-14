@@ -360,7 +360,7 @@ function render() {
     TOP = uExpand ? 356 : 136;
     var shownU = uExpand ? undated : undated.slice(0, 120);
     html += '<div class="undated" style="top:0;height:' + (TOP - 10) + 'px">'
-      + '<div class="undated-label">No date / timeless (' + undated.length + ')'
+      + '<div class="undated-label">No dated position / deep time (' + undated.length + ')'
       + (undated.length > 120 ? ' <button class="chip" style="cursor:pointer" onclick="toggleUndated()">' + (uExpand ? 'show fewer' : 'show all ' + undated.length + ' \u2192') + '</button>' : '')
       + '</div>'
       + '<div class="undated-chips"' + (uExpand ? ' style="max-height:310px"' : '') + '>'
@@ -410,16 +410,34 @@ function render() {
   var counts = {};
   for (var s0 of secs) counts[s0.id] = 0;
   for (var f0 of filtered) counts[eraForNode(f0).id]++;
+  // Largest same-year cluster per era. A cluster is what the two-column stack
+  // has to absorb, so the body must reserve room for it at the bottom; without
+  // this, nodes near an era's end stack past the body and the next era's label.
+  var yearClusters = {};
+  for (var fy of filtered) {
+    var fe = eraForNode(fy);
+    var yk = fe.id + '|' + fy.span.min;
+    yearClusters[yk] = (yearClusters[yk] || 0) + 1;
+    if (!fe._maxCluster || yearClusters[yk] > fe._maxCluster) fe._maxCluster = yearClusters[yk];
+  }
   var totalSpan = 0;
   for (var s1 of secs) { s1._vs = Math.min(s1.max, WINDOW.end) - Math.max(s1.min, WINDOW.start); totalSpan += s1._vs; }
   var pxPerYr = secs.length ? Math.max(0, BASE_H - secs.length * LABEL_H) / Math.max(1, totalSpan) : 0;
   // Initial era bodies: at least the chronological height, but inflated to node
   // density (two nodes per row) so a dense era can always hold its own nodes.
+  // The reserve keeps the bottom of the band free for a same-year stack.
   var curY = TOP;
   for (var s2 of secs) {
     var chronoH = Math.max(0, s2._vs * pxPerYr);
     s2._chronoH = chronoH;
-    s2._bodyH = Math.max(chronoH, Math.ceil((counts[s2.id] || 0) / 2) * ROW_H + 6);
+    s2._rows = Math.ceil((counts[s2.id] || 0) / 2);
+    s2._reserve = Math.max(ROW_H * 4, Math.ceil((s2._maxCluster || 1) / 2) * ROW_H + ROW_H * 2);
+    // Dense era: fill the band by chronological rank. Year-proportional
+    // placement cannot both fit 100k+ nodes and stay inside the band, which is
+    // what produced blank tails. Sparse era: keep true year positioning.
+    s2._rankMode = s2._rows * ROW_H >= chronoH;
+    s2._bodyH = Math.max(chronoH, s2._rows * ROW_H + 6)
+      + (s2._rankMode ? ROW_H * 2 : s2._reserve);
   }
   function buildEraChain() {
     var cy = TOP;
@@ -436,9 +454,18 @@ function render() {
     var desired;
     if (secs.length) {
       es = eraForNode(nd);
-      // desired is anchored to the FIXED chronological height (_chronoH), not the
-      // inflatable body height, so growing a body afterwards never moves its nodes.
-      desired = es._bodyTop + ((nd.span.min - Math.max(es.min, WINDOW.start)) / Math.max(1, es._vs)) * es._chronoH;
+      if (es._rankMode) {
+        var idx = es._seen || 0;
+        es._seen = idx + 1;
+        var rcol = idx % 2;
+        var ry = es._bodyTop + Math.floor(idx / 2) * ROW_H;
+        es._pb[rcol] = ry + ROW_H;
+        return { es: es, col: rcol, y: ry, bottom: ry + NODE_H + 2 };
+      }
+      // Sparse era: keep true year positioning inside the band, with the
+      // bottom reserve held back for a same-year stack.
+      var usable = Math.max(1, es._bodyH - (es._reserve || 0));
+      desired = es._bodyTop + ((nd.span.min - Math.max(es.min, WINDOW.start)) / Math.max(1, es._vs)) * usable;
       if (desired < secs[0]._bodyTop) desired = secs[0]._bodyTop;
     } else {
       es = null;
@@ -463,6 +490,7 @@ function render() {
   // bodies grow; rebuilding the chain and re-running the deterministic placement
   // in the second pass keeps every node inside its own era's band.
   curY = buildEraChain();
+  for (var sr0 of secs) sr0._seen = 0;
   var maxBottom = {};
   for (var i = 0; i < filtered.length; i++) {
     var p1 = placeNode(filtered[i]);
@@ -494,6 +522,7 @@ function render() {
   var placed = [];
   var ys = [];
   var cols = [];
+  for (var sr1 of secs) sr1._seen = 0;
   for (var i = 0; i < filtered.length; i++) {
     var pl = placeNode(filtered[i]);
     placed.push(filtered[i]);
@@ -1449,18 +1478,28 @@ loadTimelineData().then(function (t) {
     _eadj[rj.b].push({ target: rj.a, rel: rj.rel, dir: 'in' });
   }
   buildCatOptions();
-  // The time axis spans every topic in the data, oldest at the very top, so the
-  // scale never hides a year that content exists for. The floor is the oldest
-  // real topic (Toba catastrophe theory, c. 74000 BC) and the ceiling the
-  // newest. Prehistory is a thin band at the top of a tall canvas; pan and zoom
-  // reach it, and detailThreshold() no longer filters those topics away, which
-  // is what used to make this axis look like a lie ("74000 BC" on screen, but
-  // nothing older than 4000 BC anywhere in it).
+  // The axis floor is 4000 BC: the Sumerian/Indus horizon the course actually
+  // teaches. Deep-time outliers (Toba, 74000 BC) used to set the scale, which
+  // squeezed 473,984 real topics into 190 px of a 2400 px canvas. They are now
+  // handled honestly instead of stretching the axis:
+  //   - a topic that also exists in recorded history is clamped to the floor;
+  //   - a wholly prehistoric topic moves to the deep-time strip at the top.
+  var AXIS_FLOOR = -4000;
+  for (var _fn of NODES) {
+    if (!_fn.span || _fn.span.min >= AXIS_FLOOR) continue;
+    if (_fn.span.max < AXIS_FLOOR) {
+      _fn.timebase = 'undated';
+      _fn.deepOnly = true;
+    } else {
+      _fn.span.min = AXIS_FLOOR;
+      _fn._clampedMin = true;
+    }
+  }
   var _dmin = Infinity, _dmax = -Infinity;
   for (var _nd of NODES) { if (_nd.span) { if (_nd.span.min < _dmin) _dmin = _nd.span.min; if (_nd.span.max > _dmax) _dmax = _nd.span.max; } }
   MAX_LEVEL = measureMaxLevel();
   if (isFinite(_dmin)) {
-    MIN_YEAR = _dmin;
+    MIN_YEAR = Math.max(_dmin, AXIS_FLOOR);
     MAX_YEAR = Math.max(_dmax, 2026);
     WINDOW = { start: MIN_YEAR, end: MAX_YEAR };
     FULL = { start: MIN_YEAR, end: MAX_YEAR };
