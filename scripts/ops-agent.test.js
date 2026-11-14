@@ -37,6 +37,23 @@ ok('patch validation accepts a small allowlisted unified diff', function () {
   assert.strictEqual(ops.validatePatch({ patch: { file: 'scripts/x.js', diff: diff } }), null);
 });
 
+ok('normalizeDiff adds missing a/ b/ headers to a bare hunk', function () {
+  const out = ops.normalizeDiff('scripts/x.js', '@@ -1 +1 @@\n-a\n+b');
+  assert.match(out, /^--- a\/scripts\/x\.js/);
+  assert.match(out, /^\+\+\+ b\/scripts\/x\.js/m);
+  assert.match(out, /^@@ -1 \+1 @@/m);
+});
+
+ok('normalizeDiff prefixes plain file headers', function () {
+  const out = ops.normalizeDiff('scripts/x.js', '--- scripts/x.js\n+++ scripts/x.js\n@@ -1 +1 @@\n-a\n+b');
+  assert.match(out, /^--- a\/scripts\/x\.js/m);
+  assert.match(out, /^\+\+\+ b\/scripts\/x\.js/m);
+});
+
+ok('validatePatch rejects a diff with no hunk header', function () {
+  assert.match(ops.validatePatch({ patch: { file: 'scripts/x.js', diff: '--- a/x\n+++ b/x\n' } }), /no hunk header/);
+});
+
 ok('stripAnsi removes terminal colour codes', function () {
   assert.strictEqual(ops.stripAnsi('\u001b[31mred\u001b[0m'), 'red');
 });
