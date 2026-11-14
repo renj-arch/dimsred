@@ -481,8 +481,21 @@ function extractLooseItems(text) {
 
 async function callArray(messages, opts, tag) {
   const first = await callLLM(messages, opts);
-  try { return extractArray(first.text); }
-  catch (e) {
+  try {
+    const arr = extractArray(first.text);
+    if (arr.length) return arr;
+    // A reasoning model can obey the JSON instruction yet return []. Treat that
+    // as a failed generation, not a valid empty batch: the caller would silently
+    // produce a paper with zero model questions.
+    log(tag + ': model returned an empty array - retrying. raw=' + String(first.text || '').slice(0, 500));
+    const retryEmpty = await callLLM(messages.concat([
+      { role: 'assistant', content: String(first.text).slice(0, 500) },
+      { role: 'user', content: 'Your previous reply was an empty array. Return a NON-EMPTY JSON array of the requested NEW questions. Never return [].' }
+    ]), { temperature: 0.3, numPredict: opts && opts.numPredict });
+    const arr2 = extractArray(retryEmpty.text);
+    if (arr2.length) return arr2;
+    throw new Error('model returned an empty array twice');
+  } catch (e) {
     const salvaged = extractLooseItems(first.text);
     if (salvaged.length) { log(tag + ': salvaged ' + salvaged.length + ' item(s)'); return salvaged; }
     const retry = await callLLM(messages.concat([
