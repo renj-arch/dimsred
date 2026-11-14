@@ -171,7 +171,7 @@ jobs:
             echo "No timeline changes to commit"
           else
             git commit -m "Timeline + mind-tree + geography rebuild $(date +'%Y-%m-%d %H:%M UTC')"
-            timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
+            timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
             git add -A 2>/dev/null || true
             git commit --no-edit 2>/dev/null || true

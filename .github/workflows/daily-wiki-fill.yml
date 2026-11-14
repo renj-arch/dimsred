@@ -568,33 +568,36 @@ jobs:
           fi
           git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') — run #{{ github.run_number }$'}'}"
 
-      - name: Pull and merge (rebase-free to avoid infinite conflict loops)
-        timeout-minutes: 10
-        run: |
-          timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
-          git merge --no-edit -X ours origin/main 2>/dev/null || {
-            echo "Merge conflict — running union merge to keep BOTH runs' data."
-            node scripts/resolve-data-merge.js
-            git add -A -- data archive.html
-            git commit --no-edit 2>/dev/null || true
-          }
-
       - name: Guard question count
         timeout-minutes: 2
         run: node scripts/guard-question-count.js || { echo "Question count guard failed - aborting push"; exit 1; }
 
-      - name: Push with retries
-        timeout-minutes: 10
+      - name: Push with retries (fresh shallow fetch before every attempt)
+        timeout-minutes: 15
         run: |
-          for i in 1 2 3; do
+          # 2026-11-14: the old loop retried `git push` three times against a
+          # stale ref. The preceding `git fetch origin main` had timed out on
+          # this ~18 GB repository, so every attempt was rejected with
+          # "fetch first" and the run died with the wiki data committed only on
+          # the runner. Fetch the tip shallowly inside the loop instead, and
+          # merge (keeping our data on conflict) before each push.
+          for i in 1 2 3 4 5; do
+            timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null \
+              || echo "shallow fetch timed out on attempt $i - using last-known main"
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
+              echo "Merge conflict - running union merge to keep BOTH runs' data."
+              node scripts/resolve-data-merge.js
+              git add -A -- data archive.html
+              git commit --no-edit 2>/dev/null || true
+            }
             if git push; then
-              echo "Push succeeded"
+              echo "Push succeeded on attempt $i"
               exit 0
             fi
-            echo "Push attempt $i failed, retrying..."
-            sleep 5
+            echo "Push attempt $i rejected, retrying..."
+            sleep $((5 + RANDOM % 10))
           done
-          echo "::error::Could not push wiki data after 3 attempts"
+          echo "::error::Could not push wiki data after 5 attempts"
           exit 1
 
       - name: Queue the next fill before this run ends
