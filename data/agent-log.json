@@ -1,52 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-13T20:41:52.272Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "questioncats",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 226753 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 52 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-13T22:35:34.264Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 2,
@@ -228,8 +182,39 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-14T03:11:37.490Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+       "fix": "Nav: \"JEE\" → /jee/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/index.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-14T03:00:44.268Z",
+ "lastRun": "2026-11-14T03:11:37.490Z",
  "model": "qwen3.5:9b"
 }
