@@ -39,6 +39,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn, execSync } = require('child_process');
 const { auditQuestion } = require('./lib/invented-quality');
+const hosted = require('./lib/hosted');
 
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
@@ -311,6 +312,10 @@ const QUESTION_SCHEMA = {
 
 async function callLLM(system, user, opts) {
   if (FAKE) return callFake();
+  // Hosted lane: the shared router owns retries, fallbacks and the
+  // reasoning-only guard. The prompt already demands strict JSON, and the
+  // extractor + validator below reject anything that is not a valid item.
+  if (hosted.enabled()) return hosted.chat(system, user, opts);
   const o = opts || {};
   const payload = JSON.stringify({
     model: MODEL,

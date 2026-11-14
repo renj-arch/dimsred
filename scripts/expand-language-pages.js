@@ -30,6 +30,7 @@ var cp = require('child_process');
 var ROOT = path.join(__dirname, '..');
 var HTML_REPAIR = require('./lib/html-repair');
 var LANG_VERIFY = require('./lib/language-verify');
+var hosted = require('./lib/hosted');
 
 var HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 var MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
@@ -190,6 +191,11 @@ function promptFor(page, existing) {
 }
 
 function callModel(prompt, timeoutMs) {
+  // Hosted lane: the shared router owns retries and fallbacks.
+  if (hosted.enabled()) {
+    return hosted.chat('You are an expert language teacher writing practice material.', prompt,
+      { numPredict: 4200, temperature: 0.5 });
+  }
   return new Promise(function (resolve, reject) {
     var payload = JSON.stringify({
       model: MODEL,
@@ -240,7 +246,10 @@ function callModel(prompt, timeoutMs) {
       var httpCode = lines.pop();
       var body = lines.join('\n');
       if (httpCode !== '200') return fail('HTTP ' + httpCode, +httpCode);
-      try { resolve(JSON.parse(body).message || ''); }
+      // /api/chat returns {message:{role,content}}; the old code resolved the
+      // whole message object, so cleanReply() saw "[object Object]" and every
+      // page was skipped as unparseable. Take the content string.
+      try { resolve(((JSON.parse(body) || {}).message || {}).content || ''); }
       catch (e) { fail('unparseable model reply', 502); }
     });
   });

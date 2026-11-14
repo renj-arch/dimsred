@@ -1,6 +1,12 @@
-// Server-side Ollama client shared by the model-only paper lanes.
-// The model runs on the GitHub runner; no API key is involved.
+// Server-side model client shared by the model-only paper lanes.
+//
+// A lane always has a working local path (Ollama on the runner). Hosted
+// backends are optional upgrades: each is opt-in, each is free-tier only, and
+// any failure falls through to the next one and finally to the local model.
+// The order is strongest-first, because a 9B local model is not good enough for
+// authored lesson prose and the owner asked for the hosted models to lead.
 const { spawn } = require('child_process');
+const opencodeZen = require('./opencode-zen');
 
 const HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
@@ -57,6 +63,24 @@ const NVIDIA_KEY = process.env.NVIDIA_API_KEY || '';
 const NVIDIA_URL = process.env.NVIDIA_URL || 'https://integrate.api.nvidia.com/v1/chat/completions';
 const NVIDIA_MAX_TOKENS = 16384;
 let warnedUnknownNvidia = false;
+
+// Optional Groq backend (free tier, OpenAI-compatible, very low latency).
+// Verified live on 2026-11-14: the account exposes openai/gpt-oss-120b and
+// qwen/qwen3.8-27b; llama-3.3-70b-versatile is gone (404 model_not_found), so
+// do not copy an old model name from a blog post.
+const GROQ = process.env.GROQ === '1';
+const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
+const GROQ_KEY = process.env.GROQ_API_KEY || '';
+const GROQ_URL = process.env.GROQ_URL || 'https://api.groq.com/openai/v1/chat/completions';
+
+// Optional OpenRouter backend (free models only). The default is the same
+// Nemotron 550B that NVIDIA serves directly, reached through a second provider
+// so one outage or rate limit does not stop a lane. Free ids carry the ":free"
+// suffix; a paid id here would violate the no-paid-keys rule in AGENTS.md.
+const OPENROUTER = process.env.OPENROUTER === '1';
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3-ultra-550b-a55b:free';
+const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
+const OPENROUTER_URL = process.env.OPENROUTER_URL || 'https://openrouter.ai/api/v1/chat/completions';
 
 function log(msg) { console.log('[model] ' + msg); }
 
@@ -120,6 +144,28 @@ function parseChatStream(out) {
   return { text: text.trim() || thinking.trim(), httpCode: httpCode, doneReason: doneReason };
 }
 
+// Reasoning models (Nemotron, gpt-oss) put chain-of-thought in
+// message.reasoning_content or message.reasoning and the actual answer in
+// message.content. When max_tokens is too small the whole budget is spent on
+// reasoning, content is empty, and finish_reason is "length". Returning the
+// reasoning text would splice the model's private deliberation into a lesson,
+// so that case must fail loudly and fall through to the next backend instead.
+function answerText(j, label) {
+  const choice = j && j.choices && j.choices[0];
+  const msg = choice && choice.message;
+  if (!msg) throw new Error(label + ' returned no message');
+  const content = typeof msg.content === 'string' ? msg.content.trim() : '';
+  if (content) return content;
+  const reasoning = msg.reasoning_content || msg.reasoning;
+  if (reasoning) {
+    throw new Error(
+      label + ' spent its whole token budget on reasoning before answering ' +
+      '(finish_reason=' + (choice.finish_reason || 'unknown') + ') - raise the token budget'
+    );
+  }
+  throw new Error(label + ' returned no text');
+}
+
 async function callGHModels(messages, opts) {
   const ctrl = new AbortController();
   const timer = setTimeout(function () { ctrl.abort(); }, opts.timeoutMs || 240000);
@@ -144,9 +190,7 @@ async function callGHModels(messages, opts) {
       throw new Error('GitHub Models HTTP ' + res.status + ' ' + detail.slice(0, 200));
     }
     const j = await res.json();
-    const text = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-    if (!text) throw new Error('GitHub Models returned no text');
-    return { text: String(text).trim(), httpCode: '200', doneReason: 'stop' };
+    return { text: answerText(j, 'GitHub Models'), httpCode: '200', doneReason: 'stop' };
   } finally {
     clearTimeout(timer);
   }
@@ -186,16 +230,114 @@ async function callNvidia(messages, opts) {
       throw new Error('NVIDIA NIM HTTP ' + res.status + hint + ' ' + detail.slice(0, 200));
     }
     const j = await res.json();
-    const text = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-    if (!text) throw new Error('NVIDIA NIM returned no text');
-    return { text: String(text).trim(), httpCode: '200', doneReason: 'stop' };
+    return { text: answerText(j, 'NVIDIA NIM'), httpCode: '200', doneReason: 'stop' };
   } finally {
     clearTimeout(timer);
   }
 }
+
+// One OpenAI-compatible chat call, used by the Groq and OpenRouter backends.
+// Their payloads are identical to NVIDIA's; only the URL, key and headers
+// differ, so a single function keeps the three routes honest about limits.
+async function callOpenAICompatible(label, url, key, model, messages, opts, extraHeaders) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(function () { ctrl.abort(); }, opts.timeoutMs || 240000);
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + key,
+        ...(extraHeaders || {})
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: messages,
+        temperature: opts.temperature == null ? 0.4 : opts.temperature,
+        max_tokens: opts.numPredict || 2400,
+        stream: false
+      }),
+      signal: ctrl.signal
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(function () { return ''; });
+      throw new Error(label + ' HTTP ' + res.status + ' ' + detail.slice(0, 200));
+    }
+    const j = await res.json();
+    return { text: answerText(j, label), httpCode: '200', doneReason: 'stop' };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function callGroq(messages, opts) {
+  return callOpenAICompatible('Groq', GROQ_URL, GROQ_KEY, GROQ_MODEL, messages, opts);
+}
+
+function callOpenRouter(messages, opts) {
+  // OpenRouter asks for an identifying referer/title; they are attribution, not
+  // authentication, and are safe to send from CI.
+  return callOpenAICompatible('OpenRouter', OPENROUTER_URL, OPENROUTER_KEY, OPENROUTER_MODEL, messages, opts, {
+    'HTTP-Referer': 'https://vlymbooq.qzz.io',
+    'X-Title': 'vlymbooq study course'
+  });
+}
+
+// The OpenCode CLI takes one prompt, not a message array. Keep the role labels
+// so a system instruction is not silently merged into the user turn.
+function flattenPrompt(messages) {
+  return (messages || []).map(function (m) {
+    const role = m && m.role === 'system' ? 'SYSTEM' : 'USER';
+    return role + ':\n' + String((m && m.content) || '');
+  }).join('\n\n');
+}
+
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
+  // The owner asked for the free DeepSeek route first. It runs through the
+  // OpenCode CLI because Zen's raw API rejects free models with HTTP 429.
+  // A missing CLI, exhausted free quota or any other failure falls through.
+  if (opencodeZen.ENABLED && opencodeZen.KEY) {
+    try {
+      const zen = await opencodeZen.run(flattenPrompt(messages));
+      log('served by OpenCode Zen ' + opencodeZen.MODEL);
+      return zen;
+    } catch (e) {
+      log('OpenCode Zen failed (' + e.message + ') - trying the next backend');
+    }
+  }
+  // Strongest free HTTP route next. The owner explicitly rejected letting the
+  // 9B local model lead when a hosted key is available; GitHub Models stays
+  // last because gpt-4o-mini is the weakest of the hosted options.
+  if (NVAPI && NVIDIA_KEY) {
+    try {
+      const nv = await callNvidia(messages, opts);
+      log('served by NVIDIA NIM ' + NVIDIA_MODEL);
+      return nv;
+    } catch (e) {
+      log('NVIDIA NIM failed (' + e.message + ') - trying the next backend');
+    }
+  }
+  if (GROQ && GROQ_KEY) {
+    try {
+      const gq = await callGroq(messages, opts);
+      log('served by Groq ' + GROQ_MODEL);
+      return gq;
+    } catch (e) {
+      log('Groq failed (' + e.message + ') - trying the next backend');
+    }
+  }
+  if (OPENROUTER && OPENROUTER_KEY) {
+    try {
+      const or = await callOpenRouter(messages, opts);
+      log('served by OpenRouter ' + OPENROUTER_MODEL);
+      return or;
+    } catch (e) {
+      log('OpenRouter failed (' + e.message + ') - trying the next backend');
+    }
+  }
   if (GH_MODELS && GH_TOKEN) {
     try {
       const gh = await callGHModels(messages, opts);
@@ -203,15 +345,6 @@ async function callLLM(messages, opts) {
       return gh;
     } catch (e) {
       log('GitHub Models failed (' + e.message + ') - falling back to Ollama ' + MODEL);
-    }
-  }
-  if (NVAPI && NVIDIA_KEY) {
-    try {
-      const nv = await callNvidia(messages, opts);
-      log('served by NVIDIA NIM ' + NVIDIA_MODEL);
-      return nv;
-    } catch (e) {
-      log('NVIDIA NIM failed (' + e.message + ') - falling back to Ollama ' + MODEL);
     }
   }
   const body = {
@@ -379,4 +512,4 @@ function leak(text) {
 function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
 function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
 
-module.exports = { HOST: HOST, MODEL: MODEL, NVIDIA_MODEL: NVIDIA_MODEL, transportGuards: transportGuards, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };
+module.exports = { HOST: HOST, MODEL: MODEL, NVIDIA_MODEL: NVIDIA_MODEL, GROQ_MODEL: GROQ_MODEL, OPENROUTER_MODEL: OPENROUTER_MODEL, transportGuards: transportGuards, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };

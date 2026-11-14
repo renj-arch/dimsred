@@ -1,17 +1,21 @@
 // Deep-rewrite lane: each run takes one (or, with DEEP_BATCH, several)
-// lesson(s) from data/deep-rewrite-queue.json, asks the local model for new
+// lesson(s) from data/deep-rewrite-queue.json, asks a model for new
 // exam-level sections, splices them into the lesson HTML before the practice
 // block, and writes the queue back (finished items removed).
 //
-// Local-only: talks to Ollama on the runner. No external APIs.
+// The model can be local Ollama or any hosted backend configured in
+// ./lib/ollama.js (NVIDIA NIM, Groq, OpenRouter, GitHub Models). The lane does
+// not care which one answers; it only requires sourced, non-invented prose.
 const fs = require('fs');
 const path = require('path');
 const { callLLM } = require('./lib/ollama');
 const handwritten = require('./lib/handwritten');
+const { stripHeadingPrefixes } = require('./lib/heading-text');
 
 const ROOT = path.resolve(__dirname, '..');
 const QUEUE = path.join(ROOT, 'data', 'deep-rewrite-queue.json');
 const MAX_SECTIONS = parseInt(process.env.DEEP_MAX_SECTIONS || '4', 10);
+const TARGET_WORDS = process.env.DEEP_TARGET_WORDS || '1200-2000';
 const MARKER = '<!-- deep-rewrite';
 
 function loadJson(f, dflt) {
@@ -49,9 +53,11 @@ function buildPrompt(info, focus, startId) {
     'Write ' + MAX_SECTIONS + ' NEW sections that add genuine depth: more detail, worked examples, data, constitutional provisions, schemes, committees, maps-to-remember, or examiner traps - whichever fits the topic.',
     'Rules:',
     '- Output ONLY HTML fragments: <h2 id="deep-N">...</h2> followed by <h3>, <p>, <ul><li>, <table>, and optionally <div class="example-box"> or <div class="tip-box"> blocks.',
-    '- Number section headings continuing the lesson style: use ids deep-' + startId + ', deep-' + (startId + 1) + ', ...',
-    '- Total output ~1200-2000 words. Dense, factual, exam-relevant.',
+    '- Give each <h2> an id continuing the lesson style: deep-' + startId + ', deep-' + (startId + 1) + ', ... The id is for links only.',
+    '- The VISIBLE heading text must be a plain descriptive title. Never start it with "Deep-N:", "Section N:", "Part N:" or any other numeric label - that scaffolding has already leaked into public pages once.',
+    '- Total output ~' + TARGET_WORDS + ' words. Dense, factual, exam-relevant.',
     '- NO invented facts, dates, quotes, or statistics. If unsure of a specific, keep it general.',
+    '- Prefer named, checkable instruments: Article numbers, amendment years, Act years, landmark case names, committee names, scheme names. Never invent a source, a quotation or a casualty figure.',
     '- No markdown fences, no commentary, no <html>/<body> tags.'
   ].join('\n');
 }
@@ -144,6 +150,7 @@ async function rewriteOne(item) {
     console.log('deep-rewrite: model output unusable (' + frag.length + ' chars) - keeping queue item for retry');
     return 'failed';
   }
+  frag = stripHeadingPrefixes(frag);
   frag = renumberDeepIds(frag, startId);
 
   const at = findSplicePoint(info.html);

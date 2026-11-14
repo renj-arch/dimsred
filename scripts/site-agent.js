@@ -19,6 +19,7 @@ const path = require('path');
 const { execSync, spawn } = require('child_process');
 const memory = require('./agent-memory');
 const mainsPlan = require('./lib/mains-plan');
+const hosted = require('./lib/hosted');
 
 // Seed initial rules from hard-won experience
 memory.addRule('NEVER replace a dead link with href="#" — link to a real page or convert to plain text', 'Replacing with # broke the homepage navigation');
@@ -213,6 +214,12 @@ async function callLLM(system, user, maxTokens) {
       const lessons = (memory.getLessonsPrompt() || '').slice(0, 1200);
       if (lessons.trim()) sysOut = lessons + '\n\n' + system;
     } catch (e) { /* memory unreadable — proceed without */ }
+  }
+  // Hosted lane: hand the same system+user pair to the shared router. The
+  // memory lessons above are already folded into sysOut, so experience still
+  // compounds. Local Ollama stays the fallback when no route flag is set.
+  if (hosted.enabled()) {
+    return hosted.chat(sysOut, user, { numPredict: maxTokens || 2048, temperature: 0.3 });
   }
   const payload = JSON.stringify({
     model: model,

@@ -31,6 +31,7 @@ var path = require('path');
 var cp = require('child_process');
 var htmlRepair = require('./lib/html-repair');
 var handwritten = require('./lib/handwritten');
+var hosted = require('./lib/hosted');
 
 var ROOT = path.join(__dirname, '..');
 var CONFIGS_FILE = path.join(__dirname, 'exam-configs.json');
@@ -927,6 +928,13 @@ function restartServe() {
 }
 
 function callModel(prompt, numPredict, timeoutMs, temp) { // timeoutMs kept for callers; the watchdogs own the time policy
+  // Hosted lane: one branch to the shared router (NVIDIA -> Groq ->
+  // OpenRouter -> GitHub Models), which owns retries and fallbacks. The local
+  // curl path below stays for a laptop run with no hosted key.
+  if (hosted.enabled()) {
+    return hosted.chat('You are an expert UPSC teacher writing course material.', prompt,
+      { numPredict: numPredict || 3400, temperature: temp == null ? 0.4 : temp });
+  }
   var payload = JSON.stringify({
     model: MODEL,
     stream: true,
@@ -1228,7 +1236,7 @@ function mergePractice(key, qs) {
 // ---- generation per gap ----------------------------------------------------
 
 function isStructuralReject(msg) {
-  return /^html rejected: (needs at least|needs an example-box|needs a tip-box|too short|too thin for a full lesson|template heading reused|note-form, not prose|needs at least one <table>)/.test(msg);
+  return /^html rejected: (needs at least|needs a two-level outline|needs at least 6 <h3>|needs an example-box|needs a tip-box|too short|too thin for a full lesson|template heading reused|note-form, not prose|needs at least one <table>)/.test(msg);
 }
 
 function generateQuestions(gap, html, timeoutMs) {
@@ -1315,6 +1323,9 @@ function generateOne(gap, timeoutMs) {
           var fixHint = /example-box|tip-box/.test(err)
             ? ' Put BOTH the example-box and the tip-box immediately after your second <h3> section this time -- boxes placed at the end get truncated and rejected.'
             : '';
+          if (/two-level outline|6 <h3>/.test(err)) {
+            fixHint += ' Structure the lesson as at least three <h2> topic groups, each followed by at least two <h3> sub-sections. Do not use a flat run of <h3> headings.';
+          }
           return attempt('\n\nYour previous reply was rejected by the validator: ' + err + '. Return the COMPLETE corrected HTML fragment again. Keep every valid section and fix the structure.' + fixHint, n + 1);
         }
         throw e;
