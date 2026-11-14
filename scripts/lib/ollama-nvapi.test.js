@@ -1,6 +1,8 @@
 // Tests the optional NVIDIA NIM backend in scripts/lib/ollama.js.
 // Plain node, no framework: exits non-zero on failure so it can gate CI.
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
 const MOD = path.resolve(__dirname, 'ollama.js');
 let pass = 0, fail = 0;
@@ -13,8 +15,9 @@ function ok(name, cond, extra) {
 // The module reads its env at require time, so each case loads a fresh copy.
 function fresh(env) {
   delete require.cache[require.resolve(MOD)];
+  delete require.cache[require.resolve(path.join(__dirname, 'opencode-zen.js'))];
   for (const k of Object.keys(process.env)) {
-    if (/^(NVAPI|NVIDIA_|GROQ|OPENROUTER|OLLAMA_|GH_MODELS|OD_FAKE_TEXT)/.test(k)) delete process.env[k];
+    if (/^(NVAPI|NVIDIA_|GROQ|OPENROUTER|OPENCODE|OLLAMA_|GH_MODELS|OD_FAKE_TEXT)/.test(k)) delete process.env[k];
   }
   Object.assign(process.env, env);
   return require(MOD);
@@ -168,6 +171,32 @@ function captureLogs(fn) {
   out = await m.callLLM([{ role: 'user', content: 'hi' }], {});
   ok('returns the OpenRouter answer', out.text === 'from openrouter', JSON.stringify(out.text));
   ok('tried Groq then OpenRouter', calls.length === 2 && /groq/.test(calls[0]) && /openrouter/.test(calls[1]), JSON.stringify(calls));
+
+  console.log('\nCASE 12: OpenCode Zen route gating, event parsing and auth file');
+  delete require.cache[require.resolve(path.join(__dirname, 'opencode-zen.js'))];
+  const zen = require(path.join(__dirname, 'opencode-zen.js'));
+  const parsed = zen.parseEvents([
+    '{"type":"step_start"}',
+    '{"type":"text","part":{"text":"Here is the section:\\n"}}',
+    '{"type":"text","part":{"text":"<h2 id=\\"deep-1\\">Heading</h2><p>Body</p>"}}',
+    'not json'
+  ].join('\n'));
+  ok('parses text events', /<h2 id="deep-1">Heading<\/h2><p>Body<\/p>/.test(parsed), parsed);
+  ok('strips the preamble', parsed.startsWith('<h2'), parsed.slice(0, 24));
+  ok('default model is the free DeepSeek id', zen.MODEL === 'opencode/deepseek-v4.1-flash-free#max', zen.MODEL);
+  ok('disabled unless OPENCODE_ZEN=1', zen.ENABLED === false, String(zen.ENABLED));
+
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zen-auth-'));
+  process.env.OPENCODE_DATA_DIR = tmpDir;
+  process.env.OPENCODE_API_KEY = 'zen-test-key';
+  delete require.cache[require.resolve(path.join(__dirname, 'opencode-zen.js'))];
+  const zen2 = require(path.join(__dirname, 'opencode-zen.js'));
+  zen2.ensureAuth();
+  const authJson = JSON.parse(fs.readFileSync(path.join(tmpDir, 'auth.json'), 'utf8'));
+  ok('writes the CLI auth file', authJson.opencode && authJson.opencode.type === 'api' && authJson.opencode.key === 'zen-test-key', JSON.stringify(authJson));
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+  delete process.env.OPENCODE_DATA_DIR;
+  delete process.env.OPENCODE_API_KEY;
 
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);

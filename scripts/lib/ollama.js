@@ -6,6 +6,7 @@
 // The order is strongest-first, because a 9B local model is not good enough for
 // authored lesson prose and the owner asked for the hosted models to lead.
 const { spawn } = require('child_process');
+const opencodeZen = require('./opencode-zen');
 
 const HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
@@ -283,12 +284,33 @@ function callOpenRouter(messages, opts) {
   });
 }
 
+// The OpenCode CLI takes one prompt, not a message array. Keep the role labels
+// so a system instruction is not silently merged into the user turn.
+function flattenPrompt(messages) {
+  return (messages || []).map(function (m) {
+    const role = m && m.role === 'system' ? 'SYSTEM' : 'USER';
+    return role + ':\n' + String((m && m.content) || '');
+  }).join('\n\n');
+}
+
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
-  // Strongest free route first. The owner explicitly rejected letting the 9B
-  // local model lead when a hosted key is available; GitHub Models stays last
-  // because gpt-4o-mini is the weakest of the hosted options.
+  // The owner asked for the free DeepSeek route first. It runs through the
+  // OpenCode CLI because Zen's raw API rejects free models with HTTP 429.
+  // A missing CLI, exhausted free quota or any other failure falls through.
+  if (opencodeZen.ENABLED && opencodeZen.KEY) {
+    try {
+      const zen = await opencodeZen.run(flattenPrompt(messages));
+      log('served by OpenCode Zen ' + opencodeZen.MODEL);
+      return zen;
+    } catch (e) {
+      log('OpenCode Zen failed (' + e.message + ') - trying the next backend');
+    }
+  }
+  // Strongest free HTTP route next. The owner explicitly rejected letting the
+  // 9B local model lead when a hosted key is available; GitHub Models stays
+  // last because gpt-4o-mini is the weakest of the hosted options.
   if (NVAPI && NVIDIA_KEY) {
     try {
       const nv = await callNvidia(messages, opts);
