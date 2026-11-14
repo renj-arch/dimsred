@@ -16,13 +16,22 @@ name: Lesson Writer (cloud API lane)
 # Every route is free-tier. A missing key simply skips that route, and a failed
 # call falls through to the next one.
 #
+# Optional DeepSeek route: set the manual input `deepseek: true` to try the
+# free DeepSeek V4.1 Flash model through the OpenCode CLI first. It is off by
+# default because the CLI boots a full agent/server per call and is much slower
+# than the direct NVIDIA API. Any failure falls through to NVIDIA.
+#
+# Checkout is sparse on purpose: the repository is ~18 GB, and a full
+# actions/checkout hung for 13+ minutes. Only scripts, the course tree and two
+# data files are needed, so the clone is ~40 MB.
+#
 # Safety: the lane refuses to touch any lesson listed in
 # data/handwritten-lessons.json (scripts/lib/handwritten.js), and the guard
 # test runs first so a broken manifest fails the run before any writing.
 #
 # Triggers:
 #   repository_dispatch  type "lesson-writer"  (from the Telegram control plane)
-#   workflow_dispatch    manual, optional batch size
+#   workflow_dispatch    manual, optional batch size and DeepSeek toggle
 
 on:
   repository_dispatch:
@@ -33,6 +42,10 @@ on:
         description: 'How many queued lessons to write in this run'
         required: false
         default: '2'
+      deepseek:
+        description: 'Try the free DeepSeek CLI route first (slow; default is NVIDIA)'
+        type: boolean
+        default: false
 
 concurrency:
   group: lesson-writer
@@ -51,10 +64,21 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+            upsc/course
+            data/deep-rewrite-queue.json
+            data/handwritten-lessons.json
+          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Install OpenCode CLI (only for the optional DeepSeek route)
+        if: inputs.deepseek == true
+        run: curl -fsSL https://opencode.ai/install | bash
 
       - name: Protected-lesson guard must pass before any writing
         run: node scripts/lib/handwritten.test.js
@@ -64,8 +88,9 @@ jobs:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         run: |
-          for v in NVIDIA_API_KEY GROQ_API_KEY OPENROUTER_API_KEY; do
+          for v in NVIDIA_API_KEY GROQ_API_KEY OPENROUTER_API_KEY OPENCODE_API_KEY; do
             if [ -n "${!v}" ]; then
               echo "::notice::$v is set"
             else
@@ -75,6 +100,9 @@ jobs:
 
       - name: Hand-write queued lessons with a hosted model
         env:
+          OPENCODE_ZEN: ${{ inputs.deepseek && '1' || '0' }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_ZEN_MODEL: ${{ vars.OPENCODE_ZEN_MODEL || 'opencode/deepseek-v4.1-flash-free#max' }}
           NVAPI: '1'
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           NVIDIA_MODEL: ${{ vars.NVIDIA_MODEL || 'nemotron-3-ultra' }}
