@@ -1,0 +1,142 @@
+name: Local model
+
+# The writer tier, running from open weights only.
+#
+# There is no API key in this workflow and no hosted endpoint in the path. The
+# model is Qwen3.6-35B-A3B (Apache-2.0, 36B total / 3B active) fetched from one
+# fixed Hugging Face commit and checked against a recorded sha256, then served
+# by one fixed llama.cpp build. Nothing in that chain can be deprecated: if the
+# Hub ever vanishes the same bytes come off the R2 mirror or the owner's drive
+# and the run is unchanged.
+#
+# The free runner has 4 vCPU and 16 GB of RAM, so the quant is chosen to fit
+# RAM rather than to win a benchmark. A film is authored once, which means
+# 4 tokens per second is acceptable and an extra gigabyte is not.
+#
+# Manual runs only. This job is a measurement, not a publishing step.
+
+on:
+  workflow_dispatch:
+    inputs:
+      quant:
+        description: Q2_K_XL fits 16 GB; IQ4_XS is the quality probe that pages
+        required: true
+        default: Q2_K_XL
+        type: choice
+        options:
+          - Q2_K_XL
+          - IQ4_XS
+      film:
+        description: Film storyboard id
+        required: true
+        default: bhopal-gas-tragedy
+        type: string
+      scene:
+        description: Scene to design
+        required: true
+        default: S02
+        type: string
+      tokens:
+        description: Maximum generated tokens
+        required: true
+        default: '900'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-model-${{ github.ref }}-${{ inputs.quant }}
+  cancel-in-progress: false
+
+jobs:
+  writer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+
+    env:
+      LLAMA_BUILD: b11890
+      HF_REPO: unsloth/Qwen3.6-35B-A3B-GGUF
+      HF_REV: a483e9e6cbd595906af30beda3187c2663a1118c
+      LM_SOURCE: unsloth/Qwen3.6-35B-A3B-GGUF@a483e9e6cbd595906af30beda3187c2663a1118c
+      LM_BUILD: b11890
+      LM_THREADS: '4'
+      LM_CTX: '8192'
+
+    steps:
+      - name: Checkout (skip the giant question bank)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Report the runner
+        run: |
+          nproc
+          lscpu | grep -E 'Model name|^CPU\(s\)' || true
+          free -g
+          df -h / /mnt 2>/dev/null || df -h /
+
+      - name: Reclaim disk for the weights
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" || true
+          sudo apt-get clean
+          df -h / /mnt 2>/dev/null || df -h /
+
+      - name: Install pinned llama.cpp
+        run: |
+          curl -fL --retry 3 -o /tmp/llama.tar.gz \
+            "https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_BUILD}/llama-${LLAMA_BUILD}-bin-ubuntu-x64.tar.gz"
+          mkdir -p /opt/llama
+          tar -xzf /tmp/llama.tar.gz -C /opt/llama
+          BIN=$(find /opt/llama -name llama-cli -type f | head -n 1)
+          test -n "$BIN"
+          chmod +x "$BIN"
+          echo "LLAMA_LIB=$(dirname "$BIN")" >> "$GITHUB_ENV"
+          echo "$(dirname "$BIN")" >> "$GITHUB_PATH"
+          "$BIN" --version
+
+      - name: Download pinned weights and verify the digest
+        env:
+          QUANT: ${{ inputs.quant }}
+        run: |
+          case "$QUANT" in
+            Q2_K_XL) SHA=96b9c0af5c77a4ecaabe3983175112b5ece763261c1ece12b2494b692a70dad7 ;;
+            IQ4_XS)  SHA=649d7508507b84638732c4f52c24c8b15843c6dca2f3ff793ae07c14a67ebbb3 ;;
+            *) echo "Unknown quant $QUANT"; exit 1 ;;
+          esac
+          sudo mkdir -p /mnt/lm
+          sudo chown "$USER" /mnt/lm
+          MODEL="/mnt/lm/Qwen3.6-35B-A3B-UD-${QUANT}.gguf"
+          curl -fL --retry 3 --retry-delay 5 -C - \
+            -o "$MODEL" \
+            "https://huggingface.co/${HF_REPO}/resolve/${HF_REV}/Qwen3.6-35B-A3B-UD-${QUANT}.gguf"
+          echo "${SHA}  ${MODEL}" | sha256sum -c -
+          ls -lh "$MODEL"
+          echo "LM_MODEL=${MODEL}" >> "$GITHUB_ENV"
+          echo "LM_SHA256=${SHA}" >> "$GITHUB_ENV"
+
+      - name: Design the scene with the local model
+        env:
+          FILM: ${{ inputs.film }}
+          SCENE: ${{ inputs.scene }}
+          TOKENS: ${{ inputs.tokens }}
+        run: |
+          export LD_LIBRARY_PATH="$LLAMA_LIB"
+          mkdir -p out/local-model
+          /usr/bin/time -v node scripts/film/local-model.js \
+            --film "$FILM" --scene "$SCENE" --tokens "$TOKENS" \
+            2> out/local-model/time.log
+          grep -E 'Maximum resident set size|Elapsed \(wall clock\)' out/local-model/time.log || true
+
+      - name: Upload the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-model-${{ inputs.quant }}-${{ inputs.scene }}
+          path: out/local-model/
+          if-no-files-found: warn
+          retention-days: 30

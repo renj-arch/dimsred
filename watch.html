@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Watch — vlymbooq</title>
+<meta name="description" content="Watch a vlymbooq film: short, sourced cinematic history, one object at a time." />
+<style>
+  :root{
+    --bg:#070707; --panel:#0f0d0a; --panel2:#16110c; --bone:#f2e6d0;
+    --muted:rgba(242,230,208,.62); --faint:rgba(242,230,208,.36);
+    --gold:#d6a14a; --teal:#143f47; --line:rgba(214,161,74,.2);
+    --serif:Georgia,"Liberation Serif","Times New Roman",serif;
+    --sans:"Liberation Sans",Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--bone);font-family:var(--sans);line-height:1.6;
+    background-image:radial-gradient(75% 45% at 50% -8%,rgba(214,161,74,.11),transparent 70%),
+      radial-gradient(45% 35% at 100% 25%,rgba(20,63,71,.18),transparent 70%)}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;
+    border-bottom:1px solid rgba(255,255,255,.07)}
+  .brand{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .brand b{color:var(--gold)}
+  .back{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;
+    border:1px solid rgba(255,255,255,.12);padding:9px 14px;border-radius:999px;white-space:nowrap}
+  .back:hover{border-color:var(--gold);color:var(--bone)}
+  main{padding:44px 0 90px}
+  .kicker{font-size:.68rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  h1{font-family:var(--serif);font-weight:900;letter-spacing:-.05em;line-height:.92;
+    font-size:clamp(34px,5.4vw,72px);margin:0 0 14px}
+  .sub{font-family:var(--serif);font-size:clamp(19px,2.2vw,28px);line-height:1.2;color:var(--muted);
+    margin:0 0 28px;max-width:820px;letter-spacing:-.01em}
+  .stage{position:relative;border:1px solid rgba(255,255,255,.09);border-radius:16px;overflow:hidden;
+    background:#000;box-shadow:0 40px 120px rgba(0,0,0,.6)}
+  video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
+  .stage .status{position:absolute;left:14px;top:14px;font-size:.58rem;letter-spacing:.22em;
+    text-transform:uppercase;color:rgba(242,230,208,.85);background:rgba(7,7,7,.72);
+    border:1px solid rgba(214,161,74,.35);border-radius:999px;padding:7px 12px;backdrop-filter:blur(6px)}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin:20px 0 0;font-size:.66rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--faint)}
+  .dek{max-width:820px;color:var(--muted);margin:18px 0 0}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 0}
+  .btn{display:inline-block;text-decoration:none;border:1px solid rgba(242,230,208,.2);color:var(--bone);
+    padding:11px 15px;border-radius:999px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+  .btn:hover{border-color:var(--gold)}
+  .btn.strong{background:var(--gold);color:#17110a;border-color:var(--gold);font-weight:800}
+  .note{border-left:3px solid var(--teal);padding:16px 20px;color:var(--muted);font-size:.9rem;max-width:820px;
+    background:linear-gradient(90deg,rgba(20,63,71,.14),transparent);border-radius:0 10px 10px 0;margin:34px 0 0}
+  .note b{color:var(--bone)}
+  .others{border-top:1px solid rgba(255,255,255,.08);margin-top:56px;padding-top:24px}
+  .others h2{font-family:var(--serif);font-size:1.1rem;letter-spacing:-.01em;margin:0 0 14px}
+  .others a{display:inline-block;margin:0 18px 8px 0;text-decoration:none;color:var(--muted);
+    font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid transparent}
+  .others a:hover{color:var(--bone);border-color:var(--gold)}
+  .empty{border:1px dashed rgba(242,230,208,.2);border-radius:16px;padding:34px;color:var(--muted)}
+  footer{border-top:1px solid rgba(255,255,255,.08);padding:28px 0 48px;color:var(--faint);font-size:.72rem}
+  @media(max-width:820px){
+    .wrap{padding:0 18px}
+    main{padding:28px 0 60px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="index.html"><b>vlymbooq</b> · watch</a>
+    <a class="back" href="films.html">&larr; All films</a>
+  </div>
+</div>
+
+<main class="wrap" id="main">
+  <section id="film" hidden>
+    <div class="kicker" id="kicker">Film</div>
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+    <div class="stage">
+      <video id="video" controls playsinline preload="metadata">
+        <track id="captions" kind="captions" srclang="en" label="English" default />
+        Your browser does not support the video tag.
+      </video>
+      <div class="status" id="status"></div>
+    </div>
+    <div class="meta" id="meta"></div>
+    <p class="dek" id="logline"></p>
+    <div class="actions">
+      <a class="btn strong" id="master" href="#">1080p master &rarr;</a>
+      <a class="btn" id="making" href="#">Inside the making</a>
+      <a class="btn" id="argument" href="#">Open the argument</a>
+    </div>
+    <div class="note" id="note"></div>
+  </section>
+
+  <section id="missing" class="empty" hidden>
+    <h1 style="font-size:clamp(28px,4vw,48px);margin:0 0 12px">Not published yet</h1>
+    <p id="missingText">This film is still in production. Nothing is shown until it passes QC.</p>
+    <p><a class="btn" href="films.html">&larr; Back to the films</a></p>
+  </section>
+
+  <section class="others" id="others" hidden>
+    <h2>Other films</h2>
+    <div id="otherLinks"></div>
+  </section>
+</main>
+
+<div class="wrap">
+  <footer>vlymbooq · every number sourced · a 720p preview on this page, the 1080p master on the release.</footer>
+</div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var wanted = params.get('film');
+
+  function pick(data) {
+    var films = (data && data.films) || [];
+    if (!films.length) return null;
+    if (!wanted) return films[0];
+    for (var i = 0; i < films.length; i++) if (films[i].id === wanted) return films[i];
+    return null;
+  }
+
+  function fill(film) {
+    document.getElementById('film').hidden = false;
+    document.title = film.title + ' — watch | vlymbooq';
+    document.getElementById('kicker').textContent = film.kicker || 'Film';
+    document.getElementById('title').textContent = film.title;
+    document.getElementById('subtitle').textContent = film.subtitle || '';
+    document.getElementById('status').textContent = film.status || '';
+    document.getElementById('logline').textContent = film.logline || '';
+
+    var meta = [];
+    if (film.duration) meta.push(film.duration);
+    if (film.scenes) meta.push(film.scenes + ' scenes');
+    if (film.shots) meta.push(film.shots + ' shots');
+    if (film.sources) meta.push(film.sources + ' sources');
+    if (film.date) meta.push(film.date);
+    document.getElementById('meta').innerHTML = meta.map(function (m) {
+      return '<span>' + String(m).replace(/[<>&]/g, '') + '</span>';
+    }).join('');
+
+    var video = document.getElementById('video');
+    if (film.poster) video.setAttribute('poster', film.poster);
+    if (film.preview) {
+      video.setAttribute('src', film.preview);
+    } else {
+      video.classList.add('empty');
+      document.getElementById('status').textContent = 'Preview not published yet';
+    }
+    if (film.captions) document.getElementById('captions').setAttribute('src', film.captions);
+
+    if (film.master) {
+      var master = document.getElementById('master');
+      master.href = film.master;
+      master.textContent = '1080p master →';
+    } else {
+      document.getElementById('master').style.display = 'none';
+    }
+    if (film.making) document.getElementById('making').href = film.making;
+    else document.getElementById('making').style.display = 'none';
+    if (film.argument) document.getElementById('argument').href = film.argument;
+    else document.getElementById('argument').style.display = 'none';
+
+    document.getElementById('note').innerHTML = film.note ||
+      'The 720p preview here is for watching. The <b>1080p master</b> with the full bitrate lives on the release.';
+  }
+
+  function others(data, current) {
+    var list = ((data && data.films) || []).filter(function (f) { return f.id !== current.id; });
+    if (!list.length) return;
+    document.getElementById('others').hidden = false;
+    document.getElementById('otherLinks').innerHTML = list.map(function (f) {
+      return '<a href="watch.html?film=' + encodeURIComponent(f.id) + '">' + f.title.replace(/[<>&]/g, '') + '</a>';
+    }).join('');
+  }
+
+  fetch('data/film-watch.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('no film index'); return r.json(); })
+    .then(function (data) {
+      var film = pick(data);
+      if (!film || !film.preview) {
+        document.getElementById('missing').hidden = false;
+        if (film && film.title) document.getElementById('missingText').textContent =
+          film.title + ' is still in production. Nothing is shown until it passes QC.';
+        return;
+      }
+      fill(film);
+      others(data, film);
+    })
+    .catch(function () {
+      document.getElementById('missing').hidden = false;
+      document.getElementById('missingText').textContent =
+        'The film index could not be loaded. Try the films page.';
+    });
+})();
+</script>
+</body>
+</html>

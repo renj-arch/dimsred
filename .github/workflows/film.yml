@@ -1,0 +1,193 @@
+name: Film pipeline
+
+# Every frame is generated on a GitHub-hosted CPU runner. Nothing is rendered
+# on the owner's machine. The free runner has no GPU, so the film is built from
+# high-quality Blender stills plus frame-accurate motion graphics in Chromium;
+# ffmpeg then encodes the master and Piper supplies the narration.
+#
+# Manual runs only: a full master is expensive, and a broken storyboard should
+# never start a render automatically.
+
+on:
+  workflow_dispatch:
+    inputs:
+      film:
+        description: Film storyboard id
+        required: true
+        default: salt-march
+        type: string
+      quality:
+        description: Draft is 720p/12fps; final is 1080p/24fps
+        required: true
+        default: draft
+        type: choice
+        options:
+          - draft
+          - final
+      release:
+        description: Publish the MP4, SRT and thumbnail as a GitHub release
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: film-${{ github.ref }}-${{ inputs.film }}
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    env:
+      FILM: ${{ inputs.film }}
+      QUALITY: ${{ inputs.quality }}
+      BLENDER: /opt/blender-4.2.3-linux-x64/blender
+      PYTHON: python3
+
+    steps:
+      - name: Checkout (skip the giant question bank)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install ffmpeg, fonts and Blender runtime libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ffmpeg fonts-liberation libxi6 libxxf86vm1 libxfixes3 \
+            libxkbcommon0 libsm6 libice6 libgl1 libegl1 libgomp1 \
+            libx11-6 libxext6 libxrender1
+
+      - name: Install Blender 4.2.3 LTS
+        run: |
+          curl -fL --retry 3 -o /tmp/blender.tar.xz \
+            https://download.blender.org/release/Blender4.2/blender-4.2.3-linux-x64.tar.xz
+          tar -xf /tmp/blender.tar.xz -C /opt
+          "$BLENDER" --version | head -n 3
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Chromium for frame capture
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Piper
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install piper-tts==1.8.0
+
+      - name: Cache the Piper voice
+        uses: actions/cache@v4
+        with:
+          path: .cache/piper
+          key: piper-en_US-lessac-medium-v1
+
+      - name: Resolve quality settings
+        run: |
+          set -euo pipefail
+          case "$QUALITY" in
+            draft)
+              echo "WIDTH=1280" >> "$GITHUB_ENV"
+              echo "HEIGHT=720" >> "$GITHUB_ENV"
+              echo "SAMPLES=16" >> "$GITHUB_ENV"
+              echo "CAPTURE_FPS=12" >> "$GITHUB_ENV"
+              echo "CRF=22" >> "$GITHUB_ENV"
+              echo "OUT_NAME=${FILM}-draft.mp4" >> "$GITHUB_ENV"
+              ;;
+            final)
+              echo "WIDTH=1920" >> "$GITHUB_ENV"
+              echo "HEIGHT=1080" >> "$GITHUB_ENV"
+              echo "SAMPLES=32" >> "$GITHUB_ENV"
+              echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
+              echo "CRF=18" >> "$GITHUB_ENV"
+              echo "OUT_NAME=${FILM}-master.mp4" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unknown quality: $QUALITY" >&2
+              exit 2
+              ;;
+          esac
+
+      - name: Validate storyboard
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-film.js "data/films/${FILM}.json"
+
+      - name: Validate political argument map
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-debates.js "data/films/${FILM}-debates.json"
+
+      - name: Render 3D plates with Blender
+        run: |
+          node scripts/film/render-plates.js \
+            --film "$FILM" \
+            --out-dir "out/film/$FILM/plates" \
+            --width "$WIDTH" \
+            --height "$HEIGHT" \
+            --samples "$SAMPLES"
+
+      - name: Build film (map, Piper, Chromium frames, ffmpeg)
+        run: |
+          node scripts/film/build-film.js \
+            --film "$FILM" \
+            --work "out/film/$FILM" \
+            --out "out/film/$FILM/$OUT_NAME" \
+            --width "$WIDTH" \
+            --height "$HEIGHT" \
+            --fps 24 \
+            --capture-fps "$CAPTURE_FPS" \
+            --crf "$CRF" \
+            --samples "$SAMPLES" \
+            --skip-plates \
+            --tts piper \
+            --voice en_US-lessac-medium
+
+      - name: Upload film artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: film-${{ inputs.film }}-${{ inputs.quality }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            out/film/${{ inputs.film }}/*.mp4
+            out/film/${{ inputs.film }}/*.srt
+            out/film/${{ inputs.film }}/*-thumb.jpg
+            out/film/${{ inputs.film }}/metadata.json
+            out/film/${{ inputs.film }}/youtube.md
+            out/film/${{ inputs.film }}/script.md
+
+      - name: Publish film release
+        if: ${{ inputs.release == true }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: film-${{ inputs.film }}-${{ inputs.quality }}-${{ github.run_number }}
+          name: ${{ inputs.film }} · ${{ inputs.quality }} · run ${{ github.run_number }}
+          prerelease: true
+          generate_release_notes: false
+          body: |
+            Generated on a GitHub-hosted CPU runner by the Film pipeline.
+
+            - Blender 4.2.3 LTS (Cycles CPU)
+            - Piper local narration
+            - Chromium frame capture
+            - ffmpeg H.264/AAC master
+
+            Download the MP4, SRT and thumbnail below. YouTube upload remains a
+            deliberate owner action.
+          files: |
+            out/film/${{ inputs.film }}/*.mp4
+            out/film/${{ inputs.film }}/*.srt
+            out/film/${{ inputs.film }}/*-thumb.jpg
+            out/film/${{ inputs.film }}/metadata.json
+            out/film/${{ inputs.film }}/youtube.md
+            out/film/${{ inputs.film }}/script.md

@@ -1,0 +1,80 @@
+{
+ "status": "done",
+ "kind": "tutor-questions",
+ "model": "qwen3.5:9b",
+ "finishedAt": "2026-10-19T07:02:27.319Z",
+ "questions": [
+  {
+   "q": "A simply supported beam of 6 m span carries a 10 kN point load at the mid-span. What is the maximum bending moment in the beam?",
+   "a": "15 kN·m",
+   "h": "For a central point load on a simply supported beam, the max moment occurs at the center and equals half the product of load and span.",
+   "s": "The reaction forces at each support are R = P/2 = 5 kN. The maximum bending moment occurs at the mid-span where M_max = R * (L/2) = 5 kN * 3 m = 15 kN·m. Wait, re-calculation: M = (P/2)*(L/2) = P*L/4. Using P=10 and L=6, M = 10*6/4 = 15 kN·m. Final answer: 15 kN·m"
+  },
+  {
+   "q": "Two masses of 2 kg and 3 kg are connected by a light inextensible string passing over a smooth pulley. What is the acceleration of the system?",
+   "a": "1.96 m/s²",
+   "h": "Use Newton's second law for Atwood machine: a = g(m₂ - m₁)/(m₁ + m₂).",
+   "s": "The net driving force is the difference in weights: F_net = (m₂ - m₁)g = (3-2)*9.8 = 9.8 N. The total mass being accelerated is m₁ + m₂ = 5 kg. Thus, acceleration a = F_net / total_mass = 9.8 / 5 = 1.96 m/s². Wait, let's re-evaluate the standard formula derivation. Tension T acts up on both. For m1: T - m1g = m1a. For m2: m2g - T = m2a. Adding them: (m2-m1)g = (m1+m2)a. So a = g(m2-m1)/(m1+m2). With g=9.8, m1=2, m2=3: a = 9.8*(1)/5 = 1.96 m/s². Final answer: 1.96 m/s²"
+  },
+  {
+   "q": "A body slides down a frictionless inclined plane from rest at a height h. Which statement about its velocity at the bottom is correct?",
+   "a": "Velocity depends only on height h and gravity g, not on the angle of inclination",
+   "h": "Apply conservation of energy: Potential Energy at top equals Kinetic Energy at bottom (mgh = 1/2 mv²).",
+   "s": "Since there is no friction, mechanical energy is conserved. The potential energy lost mgh is entirely converted into kinetic energy 1/2 mv². Therefore, v = sqrt(2gh). This shows velocity is independent of the path or angle. Final answer: Velocity depends only on height h and gravity g, not on the angle of inclination."
+  },
+  {
+   "q": "In a system of concurrent forces in equilibrium, what is the resultant moment about any point?",
+   "a": "Zero",
+   "h": "For a body to be in static equilibrium under concurrent forces, both force sum and moment sum must vanish.",
+   "s": "According to the conditions for static equilibrium, the vector sum of all external forces must be zero (ΣF = 0) and the sum of moments about any point must also be zero (ΣM = 0). If there were a non-zero resultant moment, the body would rotate. Final answer: Zero"
+  },
+  {
+   "q": "A spring extends 40 mm when a 50 N load is applied. What is the stiffness constant of the spring?",
+   "a": "1.25 N/mm",
+   "h": "Use Hooke's Law F = kx, where x must be in consistent units.",
+   "s": "Given Force F = 50 N and extension x = 40 mm. Using Hooke's Law F = kx, we get k = F/x = 50 N / 40 mm = 1.25 N/mm. Final answer: 1.25 N/mm"
+  },
+  {
+   "q": "Which of the following best describes the nature of frictional force acting on a body at rest on an inclined plane?",
+   "a": "It is a self-adjusting force that varies from zero up to a maximum limiting value",
+   "h": "Static friction adjusts to oppose impending motion until it reaches its limit μN.",
+   "s": "Friction acts to prevent relative motion. Static friction is not constant; it increases exactly as much as the component of gravity pulling the body down the slope, up to a maximum limit defined by μ_s * N. Once this limit is exceeded, motion begins. Final answer: It is a self-adjusting force that varies from zero up to a maximum limiting value."
+  },
+  {
+   "q": "A projectile is launched with an initial velocity of 20 m/s at an angle of 30° to the horizontal. What is the time of flight?",
+   "a": "2 seconds (approx)",
+   "h": "Time of flight T = (2u sinθ) / g.",
+   "s": "Using the formula for time of flight T = (2 * u * sin(θ)) / g. Substituting u=20 m/s, θ=30°, and g=9.81 m/s²: T = (2 * 20 * 0.5) / 9.81 = 20 / 9.81 ≈ 2.04 s. Rounding to nearest integer for exam context often yields 2s, but precise is 2.04s. Let's stick to the calculated value or standard approximation. Final answer: 2 seconds (approx)"
+  },
+  {
+   "q": "What is the moment of inertia of a thin circular ring of mass M and radius R about an axis passing through its center and perpendicular to its plane?",
+   "a": "MR²",
+   "h": "All mass elements of a thin ring are at the same distance R from the central axis.",
+   "s": "The moment of inertia I = Σmr². For a thin ring, every particle is at a distance R from the axis. Thus, I = M * R². This is distinct from a solid disk where I = 0.5 MR². Final answer: MR²"
+  },
+  {
+   "q": "In a perfectly elastic head-on collision between two equal masses, one initially at rest, what happens to the moving mass?",
+   "a": "It comes to rest immediately after collision",
+   "h": "Conservation of momentum and kinetic energy dictates that the moving mass transfers all its velocity to the stationary mass.",
+   "s": "Let m1 = m2 = m. Initial momentum = mv. Final momentum = m*v1 + m*v2. Since it's elastic, KE is also conserved. Solving the equations shows v1 = 0 and v2 = v. The moving mass stops, and the stationary mass moves with the initial velocity. Final answer: It comes to rest immediately after collision."
+  },
+  {
+   "q": "A constant force of 25 N acts for 0.2 s on a 2 kg body initially at rest. What is its final velocity?",
+   "a": "2.5 m/s",
+   "h": "Impulse (Force × time) equals change in momentum (mass × velocity).",
+   "s": "Impulse J = F * t = 25 N * 0.2 s = 5 N·s. Change in momentum Δp = m * v_f - m * v_i. Since v_i = 0, 5 = 2 * v_f. Therefore, v_f = 5 / 2 = 2.5 m/s. Final answer: 2.5 m/s"
+  },
+  {
+   "q": "Which statement correctly defines the center of gravity for a uniform rectangular plate?",
+   "a": "It lies at the geometric intersection of its diagonals",
+   "h": "For bodies with uniform density and simple shapes, the centroid coincides with the center of gravity.",
+   "s": "The center of gravity is the point where the total weight of the body acts. For a uniform rectangular plate, due to symmetry, this point is exactly at the geometric center, which is the intersection of the two diagonals. Final answer: It lies at the geometric intersection of its diagonals."
+  },
+  {
+   "q": "A ladder rests against a smooth vertical wall and on a rough horizontal floor. If the ladder is on the verge of slipping, what is the relationship between the friction force and the normal reaction at the floor?",
+   "a": "Friction force equals the coefficient of static friction times the normal reaction (f = μ_s N)",
+   "h": "At the point of impending motion, static friction reaches its maximum possible value.",
+   "s": "When a body is on the verge of slipping, the frictional force is no longer self-adjusting but has reached its limiting value. This limiting friction is given by the equation f_max = μ_s * N, where μ_s is the coefficient of static friction and N is the normal reaction. Final answer: Friction force equals the coefficient of static friction times the normal reaction (f = μ_s N)."
+  }
+ ]
+}
