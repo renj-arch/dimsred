@@ -154,6 +154,10 @@ jobs:
           # evidence sentence. A missing or malformed store leaves the page with
           # no relationship layer, which is how it shipped for months.
           node scripts/validate-relations.js
+          # Cloud ops agent: the path allowlist is a security boundary. A
+          # regression here would let an automated patch touch reader-facing
+          # content or data.
+          node scripts/ops-agent.test.js
       - name: Rebuild slim live tree (orphan root)
         run: |
           set -euo pipefail
