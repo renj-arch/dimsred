@@ -5,24 +5,29 @@
 // the tag does.
 //
 // Rules: only the lesson whitelist survives. Attributes are dropped from every
-// tag except a class list on <div>/<span>; <h1>/<h2> become <h3>; common
+// tag except a class list on <div>/<span>; <h1> becomes <h3>; common
 // sectioning wrappers become <div>; stray single-letter tags such as the <j>
 // a model writes for "i < j" are escaped as text; missing closing tags are
 // appended in stack order. The result is then checked by expand-course.js's
 // validateHtml as before.
+//
+// <h2> is deliberately preserved: validateHtml requires a two-level outline
+// (3+ <h2> topic groups, 6+ <h3> sub-sections). The old h2->h3 rewrite made
+// that requirement impossible to satisfy, so every generated lesson was
+// rejected with "found 0" h2 groups even when the model followed the prompt.
 const ALLOWED_TAGS = {
-  h3: 1, h4: 1, p: 1, ul: 1, ol: 1, li: 1, strong: 1, em: 1, br: 1,
+  h2: 1, h3: 1, h4: 1, p: 1, ul: 1, ol: 1, li: 1, strong: 1, em: 1, br: 1,
   div: 1, span: 1, sup: 1, sub: 1,
   table: 1, caption: 1, thead: 1, tbody: 1, tr: 1, th: 1, td: 1
 };
 const BALANCE_TAGS = {
-  p: 1, div: 1, ul: 1, ol: 1, li: 1, h3: 1, h4: 1,
+  p: 1, div: 1, ul: 1, ol: 1, li: 1, h2: 1, h3: 1, h4: 1,
   strong: 1, em: 1, span: 1, sup: 1, sub: 1,
   table: 1, caption: 1, thead: 1, tbody: 1, tr: 1, th: 1, td: 1
 };
 // Common wrappers a model reaches for even when the prompt says not to.
 const TAG_MAP = {
-  h1: 'h3', h2: 'h3', h5: 'h4', h6: 'h4',
+  h1: 'h3', h5: 'h4', h6: 'h4',
   section: 'div', article: 'div', main: 'div', header: 'div', footer: 'div',
   blockquote: 'div', pre: 'span', code: 'span', kbd: 'span', samp: 'span',
   b: 'strong', i: 'em'
