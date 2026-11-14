@@ -216,6 +216,10 @@ async function callNvidia(messages, opts) {
         messages: messages,
         temperature: opts.temperature == null ? 0.4 : opts.temperature,
         max_tokens: Math.min(opts.numPredict || 2400, NVIDIA_MAX_TOKENS),
+        // Nemotron is a reasoning model. Without this, a question batch spends
+        // its whole max_tokens on private reasoning and returns empty content
+        // with finish_reason=length.
+        reasoning_effort: opts.reasoningEffort || 'low',
         stream: false
       }),
       signal: ctrl.signal
@@ -239,7 +243,7 @@ async function callNvidia(messages, opts) {
 // One OpenAI-compatible chat call, used by the Groq and OpenRouter backends.
 // Their payloads are identical to NVIDIA's; only the URL, key and headers
 // differ, so a single function keeps the three routes honest about limits.
-async function callOpenAICompatible(label, url, key, model, messages, opts, extraHeaders) {
+async function callOpenAICompatible(label, url, key, model, messages, opts, extraHeaders, extraBody) {
   const ctrl = new AbortController();
   const timer = setTimeout(function () { ctrl.abort(); }, opts.timeoutMs || 240000);
   try {
@@ -256,7 +260,8 @@ async function callOpenAICompatible(label, url, key, model, messages, opts, extr
         messages: messages,
         temperature: opts.temperature == null ? 0.4 : opts.temperature,
         max_tokens: opts.numPredict || 2400,
-        stream: false
+        stream: false,
+        ...(extraBody || {})
       }),
       signal: ctrl.signal
     });
@@ -272,7 +277,9 @@ async function callOpenAICompatible(label, url, key, model, messages, opts, extr
 }
 
 function callGroq(messages, opts) {
-  return callOpenAICompatible('Groq', GROQ_URL, GROQ_KEY, GROQ_MODEL, messages, opts);
+  return callOpenAICompatible('Groq', GROQ_URL, GROQ_KEY, GROQ_MODEL, messages, opts, null, {
+    reasoning_effort: opts.reasoningEffort || 'low'
+  });
 }
 
 function callOpenRouter(messages, opts) {
@@ -281,6 +288,8 @@ function callOpenRouter(messages, opts) {
   return callOpenAICompatible('OpenRouter', OPENROUTER_URL, OPENROUTER_KEY, OPENROUTER_MODEL, messages, opts, {
     'HTTP-Referer': 'https://vlymbooq.qzz.io',
     'X-Title': 'vlymbooq study course'
+  }, {
+    reasoning: { effort: opts.reasoningEffort || 'low' }
   });
 }
 
