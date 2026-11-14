@@ -145089,6 +145089,141 @@
         }
       ],
       "sol": "Voltage stability occurs when the system cannot maintain acceptable voltages, often due to reactive power demand exceeding supply under heavy loading. The lesson explicitly lists solutions involving installing static VAR compensators (SVC), FACTS devices, or upgrading transmission capacity. Distance relays are for protection, LC circuits for harmonics, and governors for frequency/torque control."
+    },
+    {
+      "id": 4011,
+      "text": "According to Faraday's Law and Lenz's Law as described in the lesson, what is the physical significance of the negative sign in the equation e = -N (dφ)/(dt) for a coil?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It indicates that the induced EMF direction opposes the change in flux producing it.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "It signifies that mechanical work must be done to rotate the conductor.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It implies that the terminal voltage is always less than the generated EMF.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It represents the conversion of electrical energy into kinetic energy.",
+          "c": false
+        }
+      ],
+      "sol": "The negative sign in Faraday's Law equation e = -N (dφ)/(dt) specifically represents Lenz's Law. The lesson states that this sign indicates the direction of the induced electromotive force (EMF) opposes the change in magnetic flux that produced it. This opposition is a fundamental consequence of energy conservation, ensuring that the induced EMF does not create energy from nothing but rather requires an external source (mechanical work for generators or electrical input for motors) to sustain the process."
+    },
+    {
+      "id": 4012,
+      "text": "In a DC machine operating as a motor, why is the back EMF (E_b) considered crucial for the safe operation of the armature winding?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It ensures the terminal voltage V_t is greater than the generated EMF.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It limits the armature current by opposing the applied voltage against internal resistance.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It converts the alternating EMF in the armature into unidirectional output voltage.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It allows the machine to operate at unity power factor regardless of load.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that without back EMF, the armature current would be limited only by the small resistance of the winding (R_a). Since V_t = E_b + I_a R_a, if E_b were zero or negligible, a massive short-circuit current would flow instantly, destroying the machine. The back EMF acts as a counter-voltage that opposes the applied terminal voltage, thereby limiting the magnitude of the armature current to safe levels under normal operating conditions."
+    },
+    {
+      "id": 4013,
+      "text": "When analyzing a synchronous motor with constant mechanical load, what happens to the armature current and power factor if the field current is increased from an under-excited state?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Armature current decreases continuously while power factor remains lagging.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Armature current first decreases to a minimum at unity PF then increases as PF becomes leading.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Armature current increases immediately and power factor shifts directly to leading.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Real power output changes significantly to maintain the new equilibrium.",
+          "c": false
+        }
+      ],
+      "sol": "Increasing field current increases the internal generated voltage (E_f). Initially, if the motor is under-excited (lagging PF), increasing excitation reduces reactive power drawn. The armature current magnitude decreases until it reaches a minimum at unity power factor. If excitation continues to increase further (over-excited), the machine draws leading reactive power, causing the armature current to increase again. Crucially, real power remains constant because the mechanical load is unchanged; only the reactive component of the current changes."
+    },
+    {
+      "id": 4014,
+      "text": "In the context of rotor construction for synchronous machines, why do hydroelectric generators typically use salient pole rotors while thermal/gas turbine generators use cylindrical rotors?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Salient poles are required to withstand high centrifugal forces at high speeds.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Cylindrical rotors allow for more slots to accommodate winding distribution for low-speed operation.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Salient poles are used in high-speed applications to reduce mechanical stress on the shaft.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Cylindrical rotors are necessary for hydroelectric generators to handle large torque variations.",
+          "c": false
+        }
+      ],
+      "sol": "The choice of rotor construction depends on the operating speed. Hydroelectric generators operate at low speeds and use salient pole constructions, which allow for many slots to be accommodated for winding distribution. Conversely, thermal or gas turbine generators operate at high speeds; they use non-salient cylindrical rotors because this design is structurally stronger and can withstand the high centrifugal forces generated during rapid rotation."
+    },
+    {
+      "id": 4015,
+      "text": "Which criterion provides a graphical solution for rotor angle stability by comparing accelerating and decelerating energy areas within one cycle of oscillation?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The P-V curve analysis.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Equal Area Criterion.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The Eigenvalue analysis of the state matrix.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The Automatic Generation Control (AGC) scheme.",
+          "c": false
+        }
+      ],
+      "sol": "Rotor angle stability, often synonymous with transient stability following large disturbances like short circuits, is analyzed using the swing equation. The lesson states that the Equal Area Criterion provides a graphical solution for this problem. It dictates that the area under the accelerating power curve (P_m - P_e1) must be less than or equal to the area under the decelerating power curve (P_e2 - P_m) within one cycle of oscillation to ensure the system remains in synchronism."
     }
   ],
   "opt-chemistry/paper3": [
