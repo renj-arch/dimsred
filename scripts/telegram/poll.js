@@ -37,8 +37,12 @@ const STATE = path.join(ROOT, 'data', 'telegram-state.json');
 const QUEUE = path.join(ROOT, 'data', 'deep-rewrite-queue.json');
 
 if (!TOKEN) {
-  console.error('poll: TELEGRAM_TOKEN is not set — add it as a repository secret.');
-  process.exit(1);
+  // Do not fail the scheduled run: the workflow is merged before the owner has
+  // necessarily created the bot. A red run every five minutes is noise, so
+  // warn once per poll and exit green. Commands do nothing until the secret
+  // exists, which is the correct behaviour.
+  console.log('::warning::poll: TELEGRAM_TOKEN is not set — add it as a repository secret to enable the control plane.');
+  process.exit(0);
 }
 
 const TG = 'https://api.telegram.org/bot' + TOKEN;
