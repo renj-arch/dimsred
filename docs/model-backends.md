@@ -16,6 +16,9 @@ call never stalls a lane; it only costs quality. The order is deliberate: the
 9B local model is the fallback, not the lead, because it is not good enough for
 authored lesson prose.
 
+When `OPENCODE_ZEN=1`, an optional OpenCode CLI route runs **before** NVIDIA.
+It is off by default because it is much slower; see below.
+
 ## Why the local model is still the floor
 
 `AGENTS.md` forbids depending on paid API keys, and every hosted tier above is
@@ -155,21 +158,32 @@ Probed on 2026-11-14, because the owner asked for it by name:
 | OpenRouter | 20 DeepSeek ids, **all paid**; none carry `:free` |
 | Groq | no DeepSeek model on the account |
 
-So DeepSeek is not a free CI option. It works inside OpenCode (the free Zen
-model this session runs on), but that free tier is client-locked, as above.
-Nemotron 550B is the strongest model that actually answers on a free API key.
+So DeepSeek is not a free **HTTP** option. It does work through the OpenCode
+CLI (the optional route below), which is the only free path; the direct NVIDIA,
+OpenRouter and Groq APIs do not serve it for free. Nemotron 550B remains the
+default because it answers on a plain API key and is much faster.
 
-## Not wired: OpenCode Zen
+## Optional: OpenCode Zen via the CLI
 
-The local OpenCode install has an `opencode` API key, but Zen's own docs say:
+The owner's free DeepSeek V4.1 Flash model is real, but Zen gates it:
 
-> Free-tier chat models require OpenCode; use paid models or Go from other
-> clients.
+| Route | Result (2026-11-14) |
+| --- | --- |
+| raw API, `deepseek-v4.1-flash-free` | HTTP 429 `FreeUsageLimitError` — "Free models work in OpenCode" |
+| `opencode run -m opencode/deepseek-v4.1-flash-free#max` | works |
+| raw API, `nemotron-3-ultra-free` | HTTP 400 "Model is unavailable" |
 
-So the free Zen models cannot be called from a GitHub Actions script, and the
-paid ones cost money, which `AGENTS.md` forbids. Zen is therefore deliberately
-absent. If the owner ever accepts billing, add it as another
-`callOpenAICompatible` route rather than changing the free chain.
+`scripts/lib/opencode-zen.js` shells out to the CLI, writes the key to
+`~/.local/share/opencode/auth.json`, parses the CLI's JSON event stream, and
+returns the text. It is **off by default** and enabled per lane with
+`OPENCODE_ZEN=1` + `OPENCODE_API_KEY`.
+
+Why off by default: the CLI boots a full agent/server per call, so a short
+reply took tens of seconds versus roughly one second for the direct NVIDIA
+API, and the free quota is shared with the owner's OpenCode session. The
+lesson-writer exposes it as a manual `deepseek: true` toggle, with automatic
+fallback to NVIDIA if the quota is exhausted. The key is personal; remove the
+`OPENCODE_API_KEY` secret to disable the route entirely.
 
 ## Tests
 
