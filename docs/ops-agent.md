@@ -76,3 +76,9 @@ optional run id.
 
 Actions -> **Ops Agent** -> **Disable workflow**. The scheduled pipelines are
 separate and keep running.
+
+## Repo Agent
+
+A scheduled repository agent audits the codebase, applies small fixes to
+`scripts/`, `.github/workflows/`, `docs/` or `.gitignore`, and opens PRs
+for review. It never pushes to `main` or merges.
