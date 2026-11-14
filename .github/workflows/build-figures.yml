@@ -402,7 +402,7 @@ jobs:
               data/figure-gaps.json
             )
             for attempt in 1 2 3; do
-              git fetch origin "$GITHUB_REF_NAME" 2>/dev/null || true
+              git fetch --depth=1 --no-tags origin "$GITHUB_REF_NAME" 2>/dev/null || true
               git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
               git add -- "${PUBLISH_PATHS[@]}" 2>/dev/null || true
               git commit --no-edit 2>/dev/null || true
