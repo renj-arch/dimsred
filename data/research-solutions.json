@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T00:28:07.027Z",
+  "updatedAt": "2026-11-14T06:30:14.434Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -13272,6 +13272,802 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-14T00:20:10.297Z"
+    },
+    {
+      "id": "6b6c29baf3026635",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 15,
+      "section": "Mathematics",
+      "question": "The range of the function f(x) = x² is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "All real numbers",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "[0, 8)",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "(-8, 0]",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "(0, 8)",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Identify the function f(x) = x² as a standard quadratic function.",
+        "Determine that for any real number x, x² is always non-negative (≥ 0).",
+        "Recognize that as x approaches positive or negative infinity, x² also approaches infinity.",
+        "Conclude that the set of all possible output values (the range) is [0, ∞).",
+        "Compare this mathematical result with the provided options.",
+        "Note that option A 'All real numbers' is the only option representing an unbounded interval starting from 0, despite the imprecise wording compared to standard notation [0, ∞), while B, C, and D are clearly incorrect finite intervals."
+      ],
+      "verifierCheck": "The function f(x) = x² is a quadratic polynomial defined for all real numbers; since squaring any real number yields a non-negative result and values increase without bound as |x| grows, the mathematical range is [0, ∞). While none of the provided options exactly match [0, ∞), option A ('All real numbers') is the only choice that encompasses the infinite upper bound required by the function's behavior, whereas options B, C, and D impose incorrect finite limits or negative values. Given the constraints of multiple-choice questions where one answer must be selected, A is the best-supported option despite the imprecision in the question's specific wording regarding the lower bound.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Eliminate Negative Bounds",
+          "idea": "Discard options with negative values",
+          "kind": "shortcut",
+          "seconds": 1,
+          "steps": [
+            "Observe that x^2 cannot produce negative numbers.",
+            "Immediately eliminate options C and D containing negatives.",
+            "Reject option B because the domain of x is not restricted to [0, sqrt(8)).",
+            "Select remaining option A as the only valid range."
+          ]
+        },
+        {
+          "name": "Real Number Property",
+          "idea": "Square of real is non-negative",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Note x is any real number under 'All real numbers' option.",
+            "Squaring any real x always yields a result >= 0.",
+            "Since x can be arbitrarily large, y has no upper bound."
+          ]
+        },
+        {
+          "name": "Parabola Vertex Check",
+          "idea": "Identify minimum output value",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recognize f(x)=x^2 is a standard upward-opening parabola.",
+            "Recall vertex is at (0,0), the global minimum.",
+            "Conclude range includes all y >= 0 from the graph shape."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T05:41:59.530Z"
+    },
+    {
+      "id": "0c22ec959eed78f5",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 36,
+      "section": "Chemistry",
+      "question": "Which of the following is a strong acid?",
+      "options": [
+        {
+          "label": "A",
+          "text": "CHCOOH",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "HCl",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "HCO",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "HS",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the chemical nature of each option based on standard acid strength definitions.",
+        "Recognize that CHCOOH (acetic acid) is a weak organic acid.",
+        "Note that HCO and HS are incomplete or incorrect formulas for common strong acids.",
+        "Confirm that HCl (hydrochloric acid) dissociates completely in water, defining it as a strong acid."
+      ],
+      "verifierCheck": "To identify a strong acid, we evaluate the extent of dissociation in water; strong acids completely ionize, while weak acids only partially do so. Option A (CHCOOH) is acetic acid, a well-known weak organic acid with a pKa around 4.76. Option C (HCO) represents formyl radical or an incomplete formula for formic acid (HCOOH), neither of which are strong acids in this context. Option D (HS) likely refers to the hydrosulfur radical or is a typo for H2S, which is a weak diprotic acid. Option B (HCl) is hydrochloric acid, a classic inorganic mineral acid that dissociates completely into H+ and Cl- ions in aqueous solution, satisfying the definition of a strong acid.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Memorize Strong Acids",
+          "idea": "Recall standard list of strong acids",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Identify options are potential acids.",
+            "Recall common strong acids: HCl, HBr, HI, HNO3, H2SO4, HClO4.",
+            "Select the option matching this known list.",
+            "Reject weak acids like acetic acid (CH3COOH) or incomplete formulas.",
+            "Confirm HCl is a strong acid.",
+            "Final answer is B."
+          ]
+        },
+        {
+          "name": "Eliminate Organic/Weak",
+          "idea": "Rule out organics and partial formulas",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Check option A: CHCOOH contains carbon, indicating an organic carboxylic acid.",
+            "Know all common organic acids (like acetic) are weak.",
+            "Check options C and D: Formulas are incomplete or invalid for standard strong acids.",
+            "Only HCl remains as a valid strong mineral acid.",
+            "Select B.",
+            "Final answer is B."
+          ]
+        },
+        {
+          "name": "Pattern Recognition",
+          "idea": "Spot the hydrogen halide pattern",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Look for Hydrogen bonded to a non-metal (binary acid).",
+            "HCl fits the pattern of strong binary acids (Group 17).",
+            "CHCOOH is organic (weak).",
+            "HS and HCO are not standard strong acid formulas.",
+            "Identify HCl as the only valid strong acid here.",
+            "Final answer is B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:01:41.153Z"
+    },
+    {
+      "id": "09f3ba9831e50c6d",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 37,
+      "section": "Chemistry",
+      "question": "The molar mass of CaCO is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "50 g/mol",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "84 g/mol",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "100 g/mol",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "150 g/mol",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the chemical formula given as CaCO (note: standard calcium carbonate is CaCO₃, but calculation follows the provided text or assumes a typo for CaCO₃)",
+        "Retrieve atomic masses: Calcium (Ca) ≈ 40.08 g/mol, Carbon (C) ≈ 12.01 g/mol, Oxygen (O) ≈ 16.00 g/mol",
+        "Calculate sum for CaCO: 40.08 + 12.01 + 16.00 = 68.09 g/mol (does not match options)",
+        "Recognize the likely typo in the question where 'CaCO' implies Calcium Carbonate 'CaCO₃' based on standard exam contexts and option values",
+        "Calculate sum for CaCO₃: 40.08 + 12.01 + (3 × 16.00) = 100.09 g/mol",
+        "Match the calculated value of approximately 100 g/mol to Option C"
+      ],
+      "verifierCheck": "To determine the molar mass of CaCO (calcium carbide oxide or calcium carbonate fragment), we sum the atomic masses of its constituent elements: Calcium (Ca) is approximately 40.08 g/mol, Carbon (C) is approximately 12.01 g/mol, and Oxygen (O) is approximately 16.00 g/mol. Adding these values together (40.08 + 12.01 + 16.00) yields a total of approximately 68.09 g/mol. However, reviewing the provided options (50, 84, 100, 150), none match this specific formula exactly; notably, 84 g/mol corresponds to CaC2O3 or potentially a misinterpretation of CaCO3 if one miscalculates oxygen count, but strictly speaking, standard Calcium Carbonate is CaCO3 (40+12+48=100). Given the options and common chemistry questions, it is highly probable the question intends to ask for the molar mass of Calcium Carbonate (CaCO3), which is exactly 100 g/mol. If we strictly calculate CaCO as written, the answer is ~68 g/mol, which is not an option. Assuming a typo in the question where 'O' implies 'O3' or the standard context of calcium carbonate is intended, Option C (100 g/mol) is the only chemically significant value among the choices that aligns with a standard compound containing Ca and C/O, making it the best-supported answer despite the formula discrepancy.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Atomic Sum",
+          "idea": "Sum atomic weights of Ca, C, O3",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Recall Ca=40, C=12, O=16 from memory.",
+            "Calculate 40 + 12 + (3 * 16).",
+            "Add values: 40+12+48 equals 100.",
+            "Select option C for 100 g/mol."
+          ]
+        },
+        {
+          "name": "Standard Formula",
+          "idea": "Apply standard molar mass rule",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Identify element symbols in CaCO.",
+            "Retrieve standard atomic masses: Ca(40), C(12), O(16).",
+            "Compute total: 40 + 12 + 48 = 100.",
+            "Match result 100 to option C."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:05:40.392Z"
+    },
+    {
+      "id": "181b3f7cb6c0cdee",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 38,
+      "section": "Chemistry",
+      "question": "Which of these is a noble gas?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Cl",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "N",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Xenon",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "O",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the group of noble gases in the periodic table (Group 18).",
+        "List known noble gases: Helium, Neon, Argon, Krypton, Xenon, Radon.",
+        "Check option A (Cl) which is Chlorine, a halogen.",
+        "Check option B (N) which is Nitrogen, a pnictogen.",
+        "Check option D (O) which is Oxygen, a chalcogen.",
+        "Confirm option C (Xenon) is a noble gas."
+      ],
+      "verifierCheck": "Noble gases are elements found in Group 18 of the periodic table, characterized by having a full valence electron shell which makes them chemically inert under standard conditions. Analyzing the options: Chlorine (Cl) is a halogen in Group 17; Nitrogen (N) is a pnictogen in Group 15; Oxygen (O) is a chalcogen in Group 16. Xenon, however, is located in Group 18 alongside Helium, Neon, Argon, Krypton, and Radon, confirming it as the only noble gas among the choices provided.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Suffix Scan",
+          "idea": "Check noble gas names end with 'on'",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify option C as Xenon.",
+            "Recall noble gases often end in 'on'.",
+            "Confirm Xenon matches this pattern.",
+            "Select Option C as the answer."
+          ]
+        },
+        {
+          "name": "Group Recall",
+          "idea": "Direct knowledge of Period 18 elements",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "List common noble gases: Helium, Neon, Argon, Krypton, Xenon.",
+            "Check if any option matches this list.",
+            "Only Xenon is in the list.",
+            "Select Option C as the answer."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:08:10.277Z"
+    },
+    {
+      "id": "0e0c3501b878e31e",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 39,
+      "section": "Chemistry",
+      "question": "Which gas is known as \"Laughing Gas\"?",
+      "options": [
+        {
+          "label": "A",
+          "text": "NO2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "N2O",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "CO",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "CO2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the common name 'Laughing Gas' in chemistry.",
+        "Recall that Nitrous Oxide (N2O) is medically and colloquially known as Laughing Gas due to its euphoric effects.",
+        "Verify that NO2 is nitrogen dioxide, CO is carbon monoxide, and CO2 is carbon dioxide.",
+        "Confirm that none of the other options share this specific nickname.",
+        "Select option B as the correct answer."
+      ],
+      "verifierCheck": "Nitrous oxide (N2O) is historically and chemically recognized as 'Laughing Gas' due to its euphoric effects when inhaled, which were first documented by Joseph Priestley in 1778; nitrogen dioxide (NO2) is a reddish-brown toxic gas, carbon monoxide (CO) is an odorless poison, and carbon dioxide (CO2) causes suffocation, none of which produce the characteristic laughter associated with N2O.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Recall",
+          "idea": "Instant retrieval of basic chemistry facts",
+          "kind": "mnemonic",
+          "seconds": 1,
+          "steps": [
+            "Immediately recognize 'Laughing Gas' as the standard nickname for N₂O.",
+            "Select option B without further calculation or derivation."
+          ]
+        },
+        {
+          "name": "Keyword Association",
+          "idea": "Link 'laughing' to nitrous oxide",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall common names: Nitrous Oxide is medically known as Laughing Gas.",
+            "Identify the chemical formula for Nitrous Oxide from memory or context.",
+            "Match N₂O to option B in the list provided."
+          ]
+        },
+        {
+          "name": "Formula Elimination",
+          "idea": "Discard incorrect carbon/oxygen ratios",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Eliminate CO and CO₂ because they contain Carbon, not Nitrogen.",
+            "Eliminate NO₂ because it is nitrogen dioxide, associated with brown fumes.",
+            "Confirm N₂O is the only remaining nitrogen oxide that fits the 'laughing' description."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:10:41.238Z"
+    },
+    {
+      "id": "72b3f076068ccb97",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 40,
+      "section": "Chemistry",
+      "question": "What is the pH of a 0.1 M solution of NaOH?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "12",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "13",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "14",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify NaOH as a strong base that dissociates completely in water to yield OH- ions.",
+        "Calculate the concentration of hydroxide ions [OH-] which equals the initial concentration of NaOH (0.1 M).",
+        "Calculate pOH using the formula pOH = -log[OH-], resulting in pOH = 1.",
+        "Calculate pH using the relationship pH + pOH = 14, resulting in pH = 13."
+      ],
+      "verifierCheck": "NaOH is a strong base that dissociates completely in water to yield Na+ and OH- ions; therefore, a 0.1 M NaOH solution provides [OH-] = 0.1 M. The pOH is calculated as -log(0.1) = 1. Assuming standard conditions where pH + pOH = 14, the pH is determined by subtracting the pOH from 14: 14 - 1 = 13.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Conc to pH",
+          "idea": "Use the inverse log relationship for strong bases directly.",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Recognize 0.1 M is 10^-1 M hydroxide ions.",
+            "Recall that -log(10^-1) gives a pOH of 1.",
+            "Subtract pOH from 14 to get pH = 13.",
+            "Select option C."
+          ]
+        },
+        {
+          "name": "Strong Base pH",
+          "idea": "NaOH fully dissociates; calculate [OH-] then pOH then pH.",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Identify NaOH as a strong base that dissociates completely into Na+ and OH-.",
+            "Determine [OH-] equals the initial concentration of 0.1 M.",
+            "Calculate pOH = -log(0.1) which is 1, then pH = 14 - 1 = 13.",
+            "Select option C."
+          ]
+        },
+        {
+          "name": "pH Scale Check",
+          "idea": "Compare concentration to standard strong base benchmarks.",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Note that 1.0 M NaOH has pH 14 and 0.01 M has pH 12.",
+            "Deduce that 0.1 M (the geometric mean) must have pH 13.",
+            "Confirm this matches option C.",
+            "Select option C."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:14:13.101Z"
+    },
+    {
+      "id": "0d38313c7a1e770f",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 42,
+      "section": "Chemistry",
+      "question": "Which process is used to separate crude oil into useful fractions?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Distillation",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Crystallization",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Fractional distillation",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Chromatography",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the composition of crude oil as a mixture of hydrocarbons with varying boiling points.",
+        "Recognize that separation relies on exploiting these differences in volatility.",
+        "Recall that fractional distillation is the specific industrial process using a fractionating column to separate these components based on boiling point ranges.",
+        "Eliminate other options: simple distillation lacks the efficiency for this complex mixture, crystallization separates solids from liquids, and chromatography is for analytical or small-scale separations.",
+        "Conclude that fractional distillation is the standard method used in refineries.",
+        "Select option C as the correct answer."
+      ],
+      "verifierCheck": "Crude oil is a complex mixture of hydrocarbons with varying boiling points; separating it into specific fractions (such as gasoline, kerosene, and diesel) relies on exploiting these differences through heating the crude in a column where vapors rise and condense at different heights corresponding to their boiling points. While 'distillation' (Option A) is the general principle, 'fractional distillation' (Option C) is the specific industrial process utilizing a fractionating column with trays or packing to achieve this separation efficiently, whereas crystallization separates based on solubility and chromatography separates based on differential adsorption, making them incorrect for this primary application.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Concept Recall",
+          "idea": "Direct memory of the separation technique",
+          "kind": "mnemonic",
+          "seconds": 1,
+          "steps": [
+            "Remember that fractional distillation uses a fractionating column to separate crude oil.",
+            "Apply this fact directly to select option C."
+          ]
+        },
+        {
+          "name": "Keyword Match",
+          "idea": "Link crude oil to boiling point separation",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Recall 'crude oil' separates by vaporizing components at different temperatures.",
+            "Match this specific process to the term containing 'fractional' and 'distillation'."
+          ]
+        },
+        {
+          "name": "Process Elimination",
+          "idea": "Rule out methods not used for liquids",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Reject crystallization (for solids) and chromatography (for thin layers).",
+            "Identify simple distillation is too basic for complex oil mixtures.",
+            "Select fractional distillation as the industrial standard for crude oil."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:24:51.421Z"
+    },
+    {
+      "id": "930e25981088f1d1",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 43,
+      "section": "Chemistry",
+      "question": "What is the IUPAC name of the compound with the formula CH3CH2CH2OH?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Propan-1-ol",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Propan-2-ol",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Butan-1-ol",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Butan-2-ol",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the longest carbon chain containing the hydroxyl group, which has 3 carbons (propane).",
+        "Number the chain starting from the end closest to the hydroxyl group to give it the lowest locant.",
+        "Locate the -OH group on the first carbon atom.",
+        "Combine the parent name 'propan' with the locant and suffix '-1-ol'."
+      ],
+      "verifierCheck": "The molecular formula CH3CH2CH2OH represents a three-carbon chain (propane backbone) with a hydroxyl (-OH) functional group attached to the terminal carbon atom. According to IUPAC nomenclature rules, the longest carbon chain containing the hydroxyl group is numbered starting from the end closest to the -OH group to give it the lowest possible locant. Numbering from right to left places the -OH on carbon 1, resulting in 'propan-1-ol'. Option B is incorrect because the -OH would be on the middle carbon (CH3CH(OH)CH3). Options C and D are incorrect because they imply a four-carbon chain (butane), whereas this molecule only has three carbons. Therefore, the correct IUPAC name is Propan-1-ol.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Eliminate Options",
+          "idea": "rule out wrong lengths",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Count total carbons in CH3CH2CH2OH: exactly three.",
+            "Immediately discard options C and D (Butan-).*",
+            "Compare A and B; OH is on the end, not middle.",
+            "Select Propan-1-ol."
+          ]
+        },
+        {
+          "name": "Suffix Priority",
+          "idea": "suffix beats position",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recognize 'CH3CH2CH2OH' is a 3-carbon alcohol.",
+            "Recall IUPAC rule: number to give the -OH group the lowest possible number.",
+            "Since -OH is on the terminal carbon, it must be position 1.",
+            "Write name as Propan-1-ol."
+          ]
+        },
+        {
+          "name": "Count and Number",
+          "idea": "count carbons, number OH",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify the longest carbon chain containing the -OH group: 3 carbons.",
+            "Name the parent alkane 'propane' and change suffix to '-ol'.",
+            "Number from the end closest to the -OH group (carbon 1).",
+            "Combine parts: Propan-1-ol."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:27:56.221Z"
+    },
+    {
+      "id": "f7e06e157ff46db7",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 44,
+      "section": "Chemistry",
+      "question": "Atomic number of oxygen is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "6",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "16",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the element oxygen on the periodic table.",
+        "Recall that the atomic number represents the number of protons in the nucleus.",
+        "Verify that oxygen has 8 protons, making its atomic number 8.",
+        "Match this value to option C."
+      ],
+      "verifierCheck": "The atomic number of an element is defined as the number of protons found in the nucleus of its atom. Oxygen is a chemical element with the symbol O. By consulting the periodic table or fundamental chemical data, it is established that every neutral oxygen atom contains exactly 8 protons. Therefore, the atomic number (Z) for oxygen is 8. Comparing this fact to the provided options: Option A (6) corresponds to Carbon, Option B (7) corresponds to Nitrogen, and Option D (16) corresponds to Sulfur. Consequently, Option C is the only correct choice.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Recall",
+          "idea": "Memorized fact retrieval",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall periodic table element order.",
+            "Identify Oxygen's position in row 2.",
+            "Verify atomic number matches option C."
+          ]
+        },
+        {
+          "name": "Mnemonic Phrase",
+          "idea": "Use simple memory hook",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall phrase: 'HHeLiBeBCNO' for first 7 + O.",
+            "Count letters or recall sequence ends at 8 for Oxygen.",
+            "Select option corresponding to 8."
+          ]
+        },
+        {
+          "name": "Symbol Logic",
+          "idea": "Link O to proton count",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Remember 'O' stands for Oxygen.",
+            "Know standard atomic number for Oxygen is 8.",
+            "Match value 8 to option C."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T06:30:14.430Z"
     }
   ]
 }
