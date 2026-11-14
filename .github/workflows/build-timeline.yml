@@ -65,11 +65,12 @@ jobs:
       # parts, so no npm install is needed.
       - name: Rebuild timeline map from question data
         env:
-          # Carry each relation's mining sentence on the edge (`src`) so
-          # build-timeline.js can emit data/relations.json — the verified-arrow
-          # store flowchart.html fetches. Without it every corpus edge is
-          # evidence-free and the store's own gate would refuse all of them.
-          REL_SRC: '1'
+          # Carry each relation's mining sentence on the edge (`src`) so the
+          # corpus edge table stays self-describing. data/relations.json is a
+          # tracked, hand-curated store now; build-timeline deliberately does
+          # NOT overwrite it, or every rebuild would replace the arrows the
+          # owner reviewed with corpus co-mentions.
+          REL_SRC: '0'
         run: node scripts/build-timeline.js
 
       # Rebuild the Ask engine's retrieval index from the timeline nodes the step
