@@ -63,6 +63,10 @@ const NVIDIA_KEY = process.env.NVIDIA_API_KEY || '';
 const NVIDIA_URL = process.env.NVIDIA_URL || 'https://integrate.api.nvidia.com/v1/chat/completions';
 const NVIDIA_MAX_TOKENS = 16384;
 let warnedUnknownNvidia = false;
+// The actual backend/model that answered the most recent call. Provenance
+// fields must use this, not OLLAMA_MODEL, or hosted questions are mislabelled
+// as qwen3.5:9b.
+let LAST_SERVED = '';
 
 // Optional Groq backend (free tier, OpenAI-compatible, very low latency).
 // Verified live on 2026-11-14: the account exposes openai/gpt-oss-120b and
@@ -311,6 +315,7 @@ async function callLLM(messages, opts) {
   if (opencodeZen.ENABLED && opencodeZen.KEY) {
     try {
       const zen = await opencodeZen.run(flattenPrompt(messages));
+      LAST_SERVED = 'OpenCode Zen ' + opencodeZen.MODEL;
       log('served by OpenCode Zen ' + opencodeZen.MODEL);
       return zen;
     } catch (e) {
@@ -323,6 +328,7 @@ async function callLLM(messages, opts) {
   if (NVAPI && NVIDIA_KEY) {
     try {
       const nv = await callNvidia(messages, opts);
+      LAST_SERVED = 'NVIDIA NIM ' + NVIDIA_MODEL;
       log('served by NVIDIA NIM ' + NVIDIA_MODEL);
       return nv;
     } catch (e) {
@@ -332,6 +338,7 @@ async function callLLM(messages, opts) {
   if (GROQ && GROQ_KEY) {
     try {
       const gq = await callGroq(messages, opts);
+      LAST_SERVED = 'Groq ' + GROQ_MODEL;
       log('served by Groq ' + GROQ_MODEL);
       return gq;
     } catch (e) {
@@ -341,6 +348,7 @@ async function callLLM(messages, opts) {
   if (OPENROUTER && OPENROUTER_KEY) {
     try {
       const or = await callOpenRouter(messages, opts);
+      LAST_SERVED = 'OpenRouter ' + OPENROUTER_MODEL;
       log('served by OpenRouter ' + OPENROUTER_MODEL);
       return or;
     } catch (e) {
@@ -350,6 +358,7 @@ async function callLLM(messages, opts) {
   if (GH_MODELS && GH_TOKEN) {
     try {
       const gh = await callGHModels(messages, opts);
+      LAST_SERVED = 'GitHub Models ' + GH_MODEL;
       log('served by GitHub Models ' + GH_MODEL);
       return gh;
     } catch (e) {
@@ -375,6 +384,7 @@ async function callLLM(messages, opts) {
   }
   if (parsed.httpCode && parsed.httpCode !== '200') throw new Error('Ollama HTTP ' + parsed.httpCode);
   if (!parsed.text) throw new Error('model returned no text');
+  LAST_SERVED = 'Ollama ' + MODEL;
   return parsed;
 }
 
@@ -534,4 +544,4 @@ function leak(text) {
 function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
 function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
 
-module.exports = { HOST: HOST, MODEL: MODEL, NVIDIA_MODEL: NVIDIA_MODEL, GROQ_MODEL: GROQ_MODEL, OPENROUTER_MODEL: OPENROUTER_MODEL, transportGuards: transportGuards, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };
+module.exports = { HOST: HOST, MODEL: MODEL, NVIDIA_MODEL: NVIDIA_MODEL, GROQ_MODEL: GROQ_MODEL, OPENROUTER_MODEL: OPENROUTER_MODEL, transportGuards: transportGuards, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm, lastServed: function () { return LAST_SERVED; } };

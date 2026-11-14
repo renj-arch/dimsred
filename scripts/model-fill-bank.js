@@ -13,6 +13,13 @@ const fs = require('fs');
 const path = require('path');
 const bp = require('./lib/exam-blueprint');
 const llm = require('./lib/ollama');
+
+function modelLabel() {
+  try {
+    const live = typeof llm.lastServed === 'function' ? llm.lastServed() : '';
+    return live || llm.MODEL;
+  } catch (e) { return llm.MODEL; }
+}
 const qd = require('./lib/question-dedupe');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -210,7 +217,7 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
         topic: llm.clean(item.topic) || section,
         difficulty: llm.clean(item.difficulty) || 'medium',
         source: 'model',
-        model: llm.MODEL,
+        model: modelLabel(),
         generatedAt: new Date().toISOString(),
         reviewed: false,
         imageUrl: item.imageUrl || null,
@@ -276,7 +283,7 @@ async function fillExam(examKey, opts) {
 
   if (!batch.length) {
     llm.log(examKey + ': the model produced no valid question - nothing written');
-    return { exam: examKey, paper: paper.id, requested: plan, added: 0, model: llm.MODEL };
+    return { exam: examKey, paper: paper.id, requested: plan, added: 0, model: modelLabel() };
   }
 
   let id = maxId(bank);
@@ -293,10 +300,10 @@ async function fillExam(examKey, opts) {
       bank.sections.push({ name: q.section, color: COLORS[bank.sections.length % COLORS.length] });
     }
   });
-  bank.modelFill = { lastRun: new Date().toISOString(), model: llm.MODEL, added: batch.length };
+  bank.modelFill = { lastRun: new Date().toISOString(), model: modelLabel(), added: batch.length };
   fs.writeFileSync(bankPath, JSON.stringify(bank, null, 2), 'utf-8');
-  llm.log(examKey + ': +' + batch.length + ' model questions (bank ' + bank.questions.length + ', model ' + llm.MODEL + ')');
-  return { exam: examKey, paper: paper.id, requested: plan, added: batch.length, model: llm.MODEL, bankSize: bank.questions.length };
+  llm.log(examKey + ': +' + batch.length + ' model questions (bank ' + bank.questions.length + ', model ' + modelLabel() + ')');
+  return { exam: examKey, paper: paper.id, requested: plan, added: batch.length, model: modelLabel(), bankSize: bank.questions.length };
 }
 
 if (require.main === module) {
