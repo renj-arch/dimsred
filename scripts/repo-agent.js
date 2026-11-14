@@ -336,7 +336,7 @@ async function comment(body) {
 if (require.main === module) {
   (async function main() {
     if (!TOKEN) die('GH_TOKEN/GITHUB_TOKEN is required');
-    if (MODE === 'task' && ['OWNER', 'MEMBER', 'COLLABORATOR'].indexOf(AUTHOR_ASSOC) === -1) {
+    if (MODE === 'task' && ISSUE && ['OWNER', 'MEMBER', 'COLLABORATOR'].indexOf(AUTHOR_ASSOC) === -1) {
       await comment('Only a repository owner, member or collaborator can task the agent.');
       return;
     }
