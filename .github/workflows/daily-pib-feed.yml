@@ -23,6 +23,17 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+            data/pib-feed.json
+            data/quiz.json
+            data/knowledge-base.json
+            current-affairs.html
+            package.json
+            package-lock.json
+            .gitignore
+          sparse-checkout-cone-mode: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

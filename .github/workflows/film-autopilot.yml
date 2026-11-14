@@ -43,6 +43,18 @@ jobs:
           # can only be defined on the default branch, but it can check out the
           # branch it dispatches, so both halves agree on one tree.
           ref: film-ci
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+            data/film-slate.json
+            data/films
+            docs
+            film.html
+            films.html
+            package.json
+            package-lock.json
+            .gitignore
+          sparse-checkout-cone-mode: false
 
       - name: Set up Node
         uses: actions/setup-node@v4
