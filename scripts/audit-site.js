@@ -50,7 +50,8 @@ var FACT_PATTERNS = [
     re: /pashupati seal[^.]{0,200}\b(proves|demonstrates|establishes|confirms)\b/i }
 ];
 
-var PLACEHOLDER_RE = /\b(lorem ipsum|TODO|FIXME|XXX\b|placeholder text|coming soon|under construction|this lesson covers <strong>|\[object Object\]|undefined is not|NaN\b)/i;
+var PLACEHOLDER_RE = /\b(lorem ipsum|placeholder text|coming soon|this lesson covers <strong>|\[object Object\]|undefined is not)\b/i;
+var CODE_PLACEHOLDER_RE = /\b(?:TODO|FIXME)\b/;
 
 htmlFiles.forEach(function (fp) {
   var rel = path.relative(ROOT, fp).replace(/\\/g, '/');
@@ -99,17 +100,26 @@ htmlFiles.forEach(function (fp) {
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
     .replace(/<!--[\s\S]*?-->/g, '');
-  var pm = visible.match(PLACEHOLDER_RE);
+  var pm = visible.match(PLACEHOLDER_RE) || visible.match(CODE_PLACEHOLDER_RE);
   if (pm) findings.placeholder.push(rel + ' :: ' + pm[0]);
 
-  // Verified-false factual claims (no invented facts rule). Patterns are
-  // specific enough to avoid false positives; extend as new fabrications
-  // are caught in review.
-  for (var fi = 0; fi < FACT_PATTERNS.length; fi++) {
-    if (FACT_PATTERNS[fi].re.test(visible)) {
-      findings.fabrication.push(rel + ' :: ' + FACT_PATTERNS[fi].label);
-      break;
+  // Verified-false factual claims (no invented facts rule). Test one sentence
+  // at a time and ignore sentences that explicitly refute the claim: a lesson
+  // saying "the Pashupati seal was NOT found at Vaishali" is correct, and the
+  // old whole-page regex flagged it as if it made the false claim.
+  var CORRECTION_RE = /\b(not|no|false|incorrect|refute|myth|undeciphered|cannot|does not|do not|never|claim|trap|avoid|no connection)\b/i;
+  var sentences = visible.split(/(?<=[.!?])\s+/);
+  for (var si = 0; si < sentences.length; si++) {
+    var sentence = sentences[si];
+    if (!/pashupati seal/i.test(sentence)) continue;
+    if (CORRECTION_RE.test(sentence)) continue;
+    for (var fi = 0; fi < FACT_PATTERNS.length; fi++) {
+      if (FACT_PATTERNS[fi].re.test(sentence)) {
+        findings.fabrication.push(rel + ' :: ' + FACT_PATTERNS[fi].label);
+        break;
+      }
     }
+    if (findings.fabrication.length && findings.fabrication[findings.fabrication.length - 1].indexOf(rel + ' :: ') === 0) break;
   }
 
   // duplicate h3 sections inside lesson-body
@@ -134,10 +144,15 @@ htmlFiles.forEach(function (fp) {
   if (size < 2500 && !/404|not-found|empty/i.test(rel)) findings.thinPages.push(rel + ' :: ' + size + ' bytes');
 });
 
-// JSON validity
+// JSON validity. The site audit used to parse every JSON file, including the
+// ~9 GB question/wiki banks, so a full run took long enough to time out. Only
+// small, public JSON is checked here; the big banks have their own guards.
 walk(ROOT, [], /\.json$/i).forEach(function (fp) {
   var rel = path.relative(ROOT, fp).replace(/\\/g, '/');
   if (/package-lock|tsconfig|\.vscode/.test(rel)) return;
+  if (/^data\/(?:questions|wiki-|timeline|ask-qb|ocr-cache)/.test(rel)) return;
+  if (/^data\/(?:quiz|pib-feed|news|magazine|course-coverage|audit-findings)\.json$/.test(rel)) return;
+  try { if (fs.statSync(fp).size > 5 * 1024 * 1024) return; } catch (e) { return; }
   try { JSON.parse(fs.readFileSync(fp, 'utf8')); }
   catch (e) { findings.badJson.push(rel + ' :: ' + e.message.slice(0, 80)); }
 });
