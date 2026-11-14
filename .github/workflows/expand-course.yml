@@ -1,6 +1,6 @@
 name: Expand Course Content
 
-# The site's course-writing agent: qwen3.5:9b (Ollama on the runner) writes
+# The site's course-writing agent: a hosted free-tier model writes
 # the lesson bodies and practice MCQs that the exam courses are missing, and
 # ONLY those lesson pages are regenerated afterwards.
 #
@@ -78,6 +78,7 @@ jobs:
             nda
             cds
             clat
+            data/handwritten-lessons.json
           sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
@@ -85,7 +86,7 @@ jobs:
           node-version: 22
 
       # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
-      - name: Write course lessons (${{ inputs.model || 'qwen3.5:9b' }} as teacher)
+      - name: Write course lessons (hosted model as teacher)
         env:
           NVAPI: '1'
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
