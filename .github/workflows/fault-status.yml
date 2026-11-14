@@ -102,7 +102,7 @@ jobs:
           else
             git commit -m "Improve board refresh $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
             for i in 1 2 3; do
-              timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
+              timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
               git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
               git add -A 2>/dev/null || true
               git commit --no-edit 2>/dev/null || true
