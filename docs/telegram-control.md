@@ -54,15 +54,27 @@ commit to main (scripts/ci-push.sh)  →  scripts/telegram/notify.js → Telegra
 
 `scripts/lib/ollama.js` tries, in order:
 
-1. **NVIDIA NIM** — when `NVIDIA_API_KEY` is set and `NVAPI=1`.
-2. **GitHub Models** — when `GH_MODELS=1`; uses the built-in `GITHUB_TOKEN`
-   with `permissions: models: read`. Free, no extra secret.
-3. **Local Ollama** — not present on a hosted runner, so if 1 and 2 both fail
-   the run ends by reporting the failure rather than hanging.
+1. **NVIDIA NIM** — `NVIDIA_API_KEY` + `NVAPI=1` (default
+   `nemotron-3-ultra`, a 550B model).
+2. **Groq** — `GROQ_API_KEY` + `GROQ=1` (default `openai/gpt-oss-120b`).
+3. **OpenRouter** — `OPENROUTER_API_KEY` + `OPENROUTER=1` (free
+   `nvidia/nemotron-3-ultra-550b-a55b:free`).
+4. **GitHub Models** — `GH_MODELS=1`; uses the built-in `GITHUB_TOKEN` with
+   `permissions: models: read`. Free, no extra secret.
+5. **Local Ollama** — not present on a hosted runner, so if 1-4 all fail the
+   run ends by reporting the failure rather than hanging.
 
-Override the model per repo (Settings → Variables): `NVIDIA_MODEL` (a short
-alias from `scripts/lib/nvidia-models.js`, e.g. `recommended`) or
-`GH_MODELS_MODEL` (default `gpt-4o-mini`).
+All four hosted routes are free-tier. A missing key skips that route; a failed
+call falls through to the next one. The preflight step logs which keys are set
+(names only, never values).
+
+Override a model per repo (Settings → Variables): `NVIDIA_MODEL` (a short alias
+from `scripts/lib/nvidia-models.js`, e.g. `nemotron-3-ultra`), `GROQ_MODEL`,
+`OPENROUTER_MODEL`, or `GH_MODELS_MODEL` (default `gpt-4o-mini`).
+
+**OpenCode Zen is not used**: its free models only work inside the OpenCode
+client, and its paid models would break the no-paid-keys rule. See
+`docs/model-backends.md`.
 
 ## Cost and limits
 

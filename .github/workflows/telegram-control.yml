@@ -40,7 +40,20 @@ jobs:
         with:
           node-version: 22
 
+      - name: Is the control plane configured?
+        id: cfg
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        run: |
+          if [ -n "$TELEGRAM_TOKEN" ]; then
+            echo "ready=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=0" >> "$GITHUB_OUTPUT"
+            echo "::notice::TELEGRAM_TOKEN is not set - control plane idle. Add the secret to enable it."
+          fi
+
       - name: Poll Telegram and dispatch commands
+        if: steps.cfg.outputs.ready == '1'
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           DISPATCH_TOKEN: ${{ secrets.PAT }}
@@ -48,7 +61,7 @@ jobs:
         run: node scripts/telegram/poll.js
 
       - name: Persist the Telegram cursor
-        if: always()
+        if: always() && steps.cfg.outputs.ready == '1'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
