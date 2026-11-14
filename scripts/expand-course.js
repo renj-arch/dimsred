@@ -30,6 +30,7 @@ var fs = require('fs');
 var path = require('path');
 var cp = require('child_process');
 var htmlRepair = require('./lib/html-repair');
+var handwritten = require('./lib/handwritten');
 
 var ROOT = path.join(__dirname, '..');
 var CONFIGS_FILE = path.join(__dirname, 'exam-configs.json');
@@ -311,6 +312,9 @@ function collectDeepen() {
         var files = users.map(function (u) { return u.dir + '/course/' + mk + '/lesson-' + lesson.slug + '.html'; });
         var existing = files.filter(function (f) { return fs.existsSync(path.join(ROOT, f)); });
         if (!existing.length) return;
+        // Hand-written lessons are off-limits to every machine lane. Their depth
+        // must be authored, not generated (see scripts/lib/handwritten.js).
+        if (existing.some(function (f) { return handwritten.isProtected(f); })) return;
         var content = String(courseData[key] || '');
         // No source + auto filler is a fill job, not a depth job.
         var allFiller = existing.every(function (f) { return isFillerPage(path.join(ROOT, f)); });
