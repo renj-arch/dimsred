@@ -19,6 +19,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const hosted = require('../lib/hosted');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const TOPIC_BANK = path.join(ROOT, 'data', 'films', 'topic-bank.json');
@@ -169,7 +170,14 @@ function buildPrompt(t) {
   ].join('\n');
 }
 
-function callModel(prompt) {
+async function callModel(prompt) {
+  // Hosted lane: NVIDIA NIM -> Groq -> OpenRouter -> GitHub Models. The film
+  // pipeline used to require a local Ollama install on the runner; that made
+  // the "autonomous" lane fail on every clean runner.
+  if (hosted.enabled()) {
+    return (await hosted.chat('You are a documentary film director writing a sourced storyboard.', prompt,
+      { numPredict: 4000, temperature: 0.4 })).trim();
+  }
   const payload = JSON.stringify({
     model: 'qwen3.5:9b',
     stream: false,
@@ -238,7 +246,7 @@ function extractJson(text) {
   throw new Error('Unbalanced JSON in model output');
 }
 
-function main() {
+async function main() {
   const topicId = arg('topic');
   const title = arg('title');
   const angle = arg('angle');
@@ -252,22 +260,24 @@ function main() {
 
   const t = readTopic(topicId);
 
-  // Ensure Ollama is running
-  const ping = spawnSync('curl', ['-sf', '--max-time', '5', 'http://127.0.0.1:11434/api/tags'], { encoding: 'utf8' });
-  if (ping.status !== 0) {
-    console.log('Ollama not running — starting...');
-    spawnSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { shell: true });
-    for (let i = 0; i < 30; i++) {
-      const p2 = spawnSync('curl', ['-sf', '--max-time', '5', 'http://127.0.0.1:11434/api/tags'], { encoding: 'utf8' });
-      if (p2.status === 0) break;
-      spawnSync('sleep', ['1']);
+  // Local fallback only: a hosted route needs no server on the runner.
+  if (!hosted.enabled()) {
+    const ping = spawnSync('curl', ['-sf', '--max-time', '5', 'http://127.0.0.1:11434/api/tags'], { encoding: 'utf8' });
+    if (ping.status !== 0) {
+      console.log('Ollama not running — starting...');
+      spawnSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { shell: true });
+      for (let i = 0; i < 30; i++) {
+        const p2 = spawnSync('curl', ['-sf', '--max-time', '5', 'http://127.0.0.1:11434/api/tags'], { encoding: 'utf8' });
+        if (p2.status === 0) break;
+        spawnSync('sleep', ['1']);
+      }
     }
   }
 
   console.log('topic-to-film: generating storyboard for ' + t.title + '...');
 
   const prompt = buildPrompt(t);
-  const raw = callModel(prompt);
+  const raw = await callModel(prompt);
 
   if (!raw || raw.length < 100) {
     fail('model returned empty or too-short response');
@@ -413,8 +423,6 @@ function main() {
   console.log('topic-to-film: wrote ' + out + ' (' + film.scenes.length + ' scenes, ' + film.targetDuration + 's)');
 }
 
-try {
-  main();
-} catch (err) {
+main().catch(function (err) {
   fail(err.message);
-}
+});

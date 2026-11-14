@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawn } = require('child_process');
+const hosted = require('./lib/hosted');
 
 const LOG = 'data/autofix-log.json';
 const MAX_FIXES_PER_RUN = 3; // large models on CPU are slow — keep runs within timeout
@@ -198,6 +199,9 @@ async function callLLM(system, user, maxTokens) {
       if (lessons.trim()) sysOut = lessons + '\n\n' + system;
     } catch (e) { /* proceed without */ }
   }
+  // Hosted lane: the shared router owns retries, fallbacks and the
+  // reasoning-only guard. sysOut already carries the recalled lessons.
+  if (hosted.enabled()) return hosted.chat(sysOut, user, { numPredict: maxTokens || 1600, temperature: 0.3 });
   // Primary: local Ollama — no keys, no rate limits, runs on runner CPU.
   // Transport + stall policy live in streamChat above. On stall (status 28):
   // restart the server (clears wedged server-side work — killing curl does

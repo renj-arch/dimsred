@@ -41,6 +41,10 @@
 const fs = require('fs');
 const path = require('path');
 const { callLLM, loadJson, saveJson, EXAMINER_STYLE } = require('./site-agent.js');
+const hosted = require('./lib/hosted');
+// Provenance label: the old fallback named the 9B local model even when a
+// hosted route answered. Keep OLLAMA_MODEL when a local run sets it.
+const MODEL_LABEL = process.env.OLLAMA_MODEL || (hosted.enabled() ? 'hosted-router' : 'qwen3.5:9b');
 const IMP = require('./lib/importance.js');
 
 const QDIR = 'data/questions';
@@ -387,7 +391,7 @@ async function gapFill(sidecar, tax) {
           importance: IMP.validLevel(it.importance),
           importantFor: IMP.validExams(it.importantFor),
           autoGen: true, origin: 'agent-made',
-          writtenBy: process.env.OLLAMA_MODEL || 'qwen3.5:9b', writtenAt: new Date().toISOString()
+          writtenBy: MODEL_LABEL, writtenAt: new Date().toISOString()
         };
         sidecarQs.push(qq);
         created++;
@@ -427,7 +431,7 @@ async function main() {
       importantFor: w.importantFor,
       autoGen: true,
       origin: 'enriched',
-      writtenBy: process.env.OLLAMA_MODEL || 'qwen3.5:9b',
+      writtenBy: MODEL_LABEL,
       writtenAt: new Date().toISOString()
     };
     wrote++;
@@ -455,7 +459,7 @@ async function main() {
     log.lastRun = new Date().toISOString();
     log.runs.push({
       at: log.lastRun,
-      model: process.env.OLLAMA_MODEL || 'qwen3.5:9b',
+      model: MODEL_LABEL,
       totalFixes: wrote + created,
       byAgent: [{ agent: 'archive-writer', count: wrote + created }],
       details: [{
