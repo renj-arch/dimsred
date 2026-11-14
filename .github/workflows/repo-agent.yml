@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           fetch-depth: 1
           filter: blob:none
           sparse-checkout: |
@@ -98,7 +98,7 @@ jobs:
 
       - name: Work the task
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT }}
           REPO_MODE: ${{ github.event_name == 'schedule' && 'audit' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.mode || 'task') || 'task') }}
           REPO_TASK: ${{ github.event.issue.body || github.event.comment.body || github.event.inputs.task || '' }}
           REPO_ISSUE: ${{ github.event.issue.number || '' }}
