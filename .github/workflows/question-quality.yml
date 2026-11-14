@@ -23,6 +23,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  models: read
   contents: write
 
 jobs:
@@ -55,75 +56,6 @@ jobs:
           node-version: 22
 
       # Swap kept as a safety net; the 9b tier fits RAM without it.
-      - name: Create swap (16GB safety net)
-        run: |
-          bash scripts/ci-make-swap.sh
-
-      - name: Install Ollama
-        run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-          ollama --version
-          mkdir -p ~/.ollama/models
-          # The install script starts a systemd service running as the
-          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
-          # outside the Actions cache. Run the service as the runner user,
-          # pointed at the runner home: models become cache-visible and owned
-          # by the same user that restores/saves the cache.
-          sudo mkdir -p /etc/systemd/system/ollama.service.d
-          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
-          sudo systemctl daemon-reload
-          sudo systemctl restart ollama
-
-      # Model cache: the "mid" entry is the qwen3.5:9b blob store (~6.6GB).
-      - name: Cache Ollama models (mid tier)
-        continue-on-error: true
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-mid-v1
-          restore-keys: |
-            ollama-${{ runner.os }}-mid-
-
-      # EXACT same start as llm-autofix: no flash-attn, no q8 KV.
-      # KEEP_ALIVE=60m: without it Ollama unloads the model after 5 min idle
-      # and the next agent pays a full reload. Public-repo runners are
-      # 4 vCPU / 16GB RAM; the 9b tier fits RAM comfortably.
-      - name: Start Ollama server
-        run: |
-          # Same as llm-smoke: stop the kernel from paging model weights out
-          # under memory pressure.
-          sudo sysctl -w vm.swappiness=10 || true
-          export OLLAMA_KEEP_ALIVE=60m
-          nohup ollama serve > /tmp/ollama.log 2>&1 &
-          echo $! > /tmp/ollama.pid
-          for i in $(seq 1 30); do
-            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
-              echo "Ollama server ready after ${i}s"
-              break
-            fi
-            sleep 1
-          done
-          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
-          free -h
-
-      - name: Pull qwen3.5:9b
-        run: |
-          ollama pull qwen3.5:9b
-          echo "MODEL=qwen3.5:9b" >> $GITHUB_ENV
-          ollama list
-          du -sh /home/runner/.ollama/models 2>/dev/null || true
-          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
-          # Warm the model into RAM now so the agent + writer calls start warm.
-          echo "Warming 9b into RAM..."
-          ollama run qwen3.5:9b "Reply with exactly: OK" 2>&1 | tail -3
-          # Verify residency — a silent warmup failure would surface minutes
-          # later as cold loads mid-run in the agent
-          curl -s http://127.0.0.1:11434/api/ps | grep -q qwen3.5 && echo "Warmup done (model resident)" || echo "WARNING: model NOT resident after warmup"
-
-      # Official papers supply line (ingestor needs no model — pure parsing).
-      # pip + pypdf are tiny; the runners already have python3. Older UPSC
-      # PDFs are scans with no text layer, so the OCR lane needs tesseract +
-      # pymupdf/pytesseract/Pillow as well.
       - name: Setup Python PDF tools
         run: |
           pip install --quiet pypdf pymupdf pytesseract pillow
@@ -148,24 +80,6 @@ jobs:
       - name: Ingest official papers
         run: python3 scripts/ingest-official-paper.py
 
-      - name: Ensure Ollama is up before agent
-        run: |
-          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
-            echo "Server down before agent — restarting"
-            export OLLAMA_KEEP_ALIVE=60m
-            nohup ollama serve > /tmp/ollama.log 2>&1 &
-            echo $! > /tmp/ollama.pid
-            for i in $(seq 1 60); do
-              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
-              sleep 1
-            done
-          fi
-          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
-
-      # Deterministic, reviewable category moves. Runs before the LLM so a bad
-      # declaration fails the job instead of letting a stale shard publish. The
-      # registry requires literal evidence and an existing target category;
-      # nothing is guessed from a title.
       - name: Apply curated question-category moves
         run: node scripts/apply-question-category-moves.js
 
@@ -177,8 +91,14 @@ jobs:
         # checkpoint publish below runs anyway (if: always()).
         timeout-minutes: 165
         env:
-          OLLAMA_MODEL: qwen3.5:9b
-          OLLAMA_HOST: http://127.0.0.1:11434
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_OPTIONS: '--max-old-space-size=2048'
           # Signals site-agent.js to run ONLY the Questions+Content agents
           AGENT_ONLY: questions
@@ -225,8 +145,14 @@ jobs:
       - name: Convert proper quiz MCQs (9b)
         timeout-minutes: 60
         env:
-          OLLAMA_MODEL: qwen3.5:9b
-          OLLAMA_HOST: http://127.0.0.1:11434
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_OPTIONS: '--max-old-space-size=2048'
           MAX_CONVERT: '6'
         run: node scripts/convert-quiz-proper.js

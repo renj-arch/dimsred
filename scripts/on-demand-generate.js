@@ -39,6 +39,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
+const hosted = require('./lib/hosted');
 
 const HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'batiai/qwen3.8-27b:iq3';
@@ -166,6 +167,8 @@ function parseChatStream(out) {
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
+  // Hosted lane: same return shape as the local parser below.
+  if (hosted.enabled()) return hosted.messages(messages, opts);
   const payload = JSON.stringify({
     model: MODEL,
     stream: true,
