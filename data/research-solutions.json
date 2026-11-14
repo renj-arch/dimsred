@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13T14:30:25.562Z",
+  "updatedAt": "2026-11-14T00:28:07.027Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -12507,6 +12507,771 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-13T14:30:25.559Z"
+    },
+    {
+      "id": "65e1210b8f93d832",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "The number of permutations of 3 objects taken 2 at a time is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "6",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "9",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify n=3 (total objects) and r=2 (objects to choose)",
+        "Apply the permutation formula P(n,r) = n! / (n-r)!",
+        "Calculate 3! / (3-2)! = 6 / 1 = 6"
+      ],
+      "verifierCheck": "The number of permutations of $n$ objects taken $r$ at a time is calculated using the formula $P(n, r) = \\frac{n!}{(n-r)!}$. Here, $n=3$ and $r=2$, so we compute $\\frac{3!}{(3-2)!} = \\frac{3!}{1!} = \\frac{3 \\times 2 \\times 1}{1} = 6$. Alternatively, listing the permutations of distinct objects {A, B, C} taken 2 at a time yields AB, AC, BA, BC, CA, CB, which is exactly 6 arrangements. Thus, option B is correct.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Formula Plug",
+          "idea": "Direct permutation formula",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recall P(n,r) = n!/(n-r)!.",
+            "Substitute n=3 and r=2.",
+            "Calculate 3!/1! which is 3*2=6.",
+            "Match result 6 to option B."
+          ]
+        },
+        {
+          "name": "Slot Logic",
+          "idea": "Fill positions stepwise",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Pick first slot: 3 choices.",
+            "Pick second slot: 2 remain.",
+            "Multiply choices: 3 * 2 = 6.",
+            "Select option B for 6."
+          ]
+        },
+        {
+          "name": "List All",
+          "idea": "Enumerate pairs quickly",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Write object labels A, B, C.",
+            "Form ordered pairs: AB, AC, BA, BC.",
+            "Add remaining: CA, CB.",
+            "Count total items: 6.",
+            "Choose option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:31:52.160Z"
+    },
+    {
+      "id": "fe9b8fb15a2a97e7",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "The slope of line passing through (1,2) and (3,6) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify coordinates (x1, y1) = (1, 2) and (x2, y2) = (3, 6).",
+        "Apply slope formula m = (y2 - y1) / (x2 - x1).",
+        "Calculate difference in y: 6 - 2 = 4.",
+        "Calculate difference in x: 3 - 1 = 2.",
+        "Divide y-difference by x-difference: 4 / 2 = 2.",
+        "Match result with option B."
+      ],
+      "verifierCheck": "To find the slope of the line passing through points (1,2) and (3,6), we use the formula m = (y2 - y1) / (x2 - x1). Substituting the coordinates where (x1, y1) = (1, 2) and (x2, y2) = (3, 6), we calculate m = (6 - 2) / (3 - 1) = 4 / 2 = 2. This result matches option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Delta Ratio",
+          "idea": "Count vertical rise over horizontal run directly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Subtract y-coordinates: 6 minus 2 equals 4.",
+            "Subtract x-coordinates: 3 minus 1 equals 2.",
+            "Divide the vertical change by the horizontal change.",
+            "Final answer is option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:34:16.917Z"
+    },
+    {
+      "id": "0792d729909be74c",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 5,
+      "section": "Mathematics",
+      "question": "The value of i² (where i = √-1) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "-1",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "i",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "-i",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Define i as the imaginary unit where i = √-1.",
+        "Square both sides of the definition to get i² = (√-1)².",
+        "Simplify the expression to conclude that i² equals -1.",
+        "Match the result with option B."
+      ],
+      "verifierCheck": "By definition, the imaginary unit i is the solution to the equation x² = -1, or equivalently i = √-1. Squaring both sides of this definition yields i² = (√-1)². In the complex number system, squaring the imaginary unit results in the real number -1, which corresponds to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Square Root Definition",
+          "idea": "Direct application of definition",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Recall i is defined as the square root of -1.",
+            "Therefore i times i equals -1 by definition.",
+            "Select option B which is -1"
+          ]
+        },
+        {
+          "name": "Power Cycle Rule",
+          "idea": "Use cyclic pattern of powers",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Remember powers of i cycle: 1, i, -1, -i.",
+            "Check exponent 2 in the list (1st position).",
+            "The value at exponent 2 is always -1.",
+            "Select option B which is -1"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:37:13.757Z"
+    },
+    {
+      "id": "e068911c8c55a967",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "The value of x^2 dx is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1/2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1/3",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "1",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the integral as ∫x^2 dx over the standard interval [0,1] implied by the options.",
+        "Apply the power rule for integration: ∫x^n dx = x^(n+1)/(n+1).",
+        "Substitute n=2 to get x^3/3.",
+        "Evaluate at the upper limit 1: (1)^3/3 = 1/3.",
+        "Evaluate at the lower limit 0: (0)^3/3 = 0.",
+        "Calculate the definite integral: 1/3 - 0 = 1/3."
+      ],
+      "verifierCheck": "The expression provided is 'x^2 dx', which represents an indefinite integral or a differential term rather than a definite integral with specified limits of integration. Without explicit bounds (e.g., from 0 to 1), the value cannot be calculated as a single numerical constant like 1/3 or 1; however, in the context of multiple-choice questions where '0' is an option and no limits are given, it often implies a definite integral over a symmetric interval [-a, a] for an odd function (which x^2 is not) or simply that the expression as written lacks the necessary components to yield a non-zero constant without further context. Alternatively, if this refers to the integral of x^2 dx from 0 to 1, the result would be 1/3. If it refers to the integral from -1 to 1, the result is 2/3. Given the options and the lack of limits, there is a high probability the question implies a definite integral over a symmetric interval where the integrand might have been intended to be odd (like x) or the limits are missing. However, strictly mathematically, 'x^2 dx' has no single value. But looking at standard trick questions, if the limits were 0 to 1, answer is C (1/3). If the question implies the integral of an odd function over symmetric bounds, it's 0. Since x^2 is even, integrating from -a to a gives 2*a^3/3. Let's re-evaluate: Is it possible the question meant 'x dx'? If it were 'x dx' from -1 to 1, the answer is 0. If the question is exactly as stated without limits, it is technically undefined. However, in many automated test banks, if limits are omitted for x^2, they might mistakenly assume 0 to 1 (answer C) or imply a symmetric interval for an odd function (answer A). Let's assume the standard definite integral from 0 to 1 is intended but limits were dropped, making C correct. BUT, if the question is 'The value of integral x^2 dx' and options include 0, it might be a trick where the user forgot limits. Wait, let's look at the options again: 0, 1/2, 1/3, 1. If we integrate x^2 from 0 to 1, we get [x^3/3] = 1/3. This matches option C perfectly. If we integrate from -1 to 1, we get 2/3 (not an option). If we integrate x from -1 to 1, we get 0 (option A). Given the explicit text 'x^2', the most logical mathematical completion with standard bounds yielding one of the options is [0,1], resulting in 1/3. However, if the prompt implies a specific context where the answer is 0, it would require an odd function or symmetric limits for x^2 (which yields non-zero). Therefore, assuming standard bounds [0,1] is the only path to a definitive option among the choices that fits the function x^2. Wait, actually, without limits, the expression is indefinite. But if forced to choose based on common errors in such datasets, C is the result of the most common default interval [0,1]. However, there is another possibility: the question might be asking for the integral from -1 to 1 of x^2 dx? No, that's 2/3. What if the question is actually about the integral of x dx? Then A is correct. But I must solve 'x^2'. Let's assume the limits are 0 to 1. Integral = 1/3. Option C.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Pattern Recall",
+          "idea": "Recognize standard form",
+          "kind": "mnemonic",
+          "seconds": 1,
+          "steps": [
+            "Recall that integral of x^n is x^(n+1)/(n+1).",
+            "Substitute n=2 to get coefficient 1/3.",
+            "Conclude answer is 1/3 directly.",
+            "Select option C."
+          ]
+        },
+        {
+          "name": "Definite Integral",
+          "idea": "Assume standard limits [0,1]",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Identify integrand x^2 dx.",
+            "Apply power rule: integral is x^3/3.",
+            "Evaluate at limits 0 to 1: (1^3/3) - 0 = 1/3.",
+            "Match result to option C."
+          ]
+        },
+        {
+          "name": "Dimension Check",
+          "idea": "Verify units and magnitude",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Check degree: x^2 integrated adds +1 power, becoming x^3.",
+            "Divide by new degree (3) gives factor 1/3.",
+            "Estimate value between 0 and 1 is roughly 1/3.",
+            "Select option C."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:44:12.999Z"
+    },
+    {
+      "id": "4d32439ddf92de18",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 7,
+      "section": "Mathematics",
+      "question": "If the equation x^2 + 2x + 1 = 0 has two equal roots, what is the value of the discriminant?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the coefficients of the quadratic equation x^2 + 2x + 1 = 0 as a=1, b=2, c=1.",
+        "Calculate the discriminant using the formula D = b^2 - 4ac.",
+        "Substitute values: D = (2)^2 - 4(1)(1) = 4 - 4 = 0.",
+        "Confirm that a discriminant of 0 corresponds to two equal roots.",
+        "Select option A which matches the calculated value."
+      ],
+      "verifierCheck": "For a quadratic equation of the form ax^2 + bx + c = 0, the discriminant is defined as Δ = b^2 - 4ac. The nature of the roots depends on the value of the discriminant: if Δ > 0, there are two distinct real roots; if Δ < 0, there are no real roots; and if Δ = 0, there are exactly two equal (or one repeated) real roots. The question explicitly states that the equation x^2 + 2x + 1 = 0 has two equal roots. By definition, the condition for having equal roots is that the discriminant must be zero. Calculating it directly confirms this: a=1, b=2, c=1, so Δ = (2)^2 - 4(1)(1) = 4 - 4 = 0. Therefore, the value of the discriminant is 0.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Definition Recall",
+          "idea": "Discriminant defines root multiplicity",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Memorize the rule: Discriminant > 0 means two roots, = 0 means one root (equal).",
+            "Apply this rule to the problem statement 'two equal roots'.",
+            "Deduce the discriminant must be exactly zero and choose option A."
+          ]
+        },
+        {
+          "name": "Root-Discriminant Rule",
+          "idea": "Equal roots imply zero discriminant",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recall quadratic formula condition: equal roots occur when discriminant is zero.",
+            "Directly conclude discriminant value based on the 'equal roots' statement.",
+            "Select option A as the result of this invariant property."
+          ]
+        },
+        {
+          "name": "Factorization Check",
+          "idea": "Perfect square has zero difference",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Recognize x^2 + 2x + 1 factors to (x+1)^2.",
+            "Identify that a perfect square polynomial corresponds to a discriminant of zero.",
+            "Map this condition directly to option A without calculation."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:48:11.826Z"
+    },
+    {
+      "id": "948c0f136cda5996",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 8,
+      "section": "Mathematics",
+      "question": "If A = {1, 2, 3} and B = {2, 3, 4}, find A n B.",
+      "options": [
+        {
+          "label": "A",
+          "text": "{1}",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "{2, 3}",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "{2, 3, 4}",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "{1, 2, 3, 4}",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify set A as {1, 2, 3}",
+        "Identify set B as {2, 3, 4}",
+        "Define intersection (A n B) as elements common to both sets",
+        "Compare elements of A and B to find common values"
+      ],
+      "verifierCheck": "The intersection of two sets, denoted as A ∩ B, consists of all elements that are present in both set A and set B simultaneously. Given A = {1, 2, 3} and B = {2, 3, 4}, we compare the elements: 1 is only in A; 2 is in both A and B; 3 is in both A and B; 4 is only in B. Therefore, the common elements are 2 and 3, resulting in the set {2, 3}.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental Overlap",
+          "idea": "visualize shared region instantly",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall intersection means 'shared'.",
+            "Look for the number 2 present in both sets.",
+            "Look for the number 3 present in both sets.",
+            "Combine them to get {2, 3}."
+          ]
+        },
+        {
+          "name": "Visual Scan",
+          "idea": "spot common elements directly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify elements in set A: 1, 2, 3.",
+            "Identify elements in set B: 2, 3, 4.",
+            "Select numbers appearing in both lists (intersection)."
+          ]
+        },
+        {
+          "name": "Filter List",
+          "idea": "discard unique items quickly",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Write all numbers from A and B together.",
+            "Cross out '1' because it is only in A.",
+            "Cross out '4' because it is only in B.",
+            "Keep remaining numbers: 2, 3.",
+            "Match result to option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:51:26.074Z"
+    },
+    {
+      "id": "ea7463dc953b8267",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 11,
+      "section": "Mathematics",
+      "question": "The value of log10 1000 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the base of the logarithm as 10.",
+        "Express 1000 as a power of 10, which is 10^3.",
+        "Apply the logarithmic property log_b(b^x) = x to find the value."
+      ],
+      "verifierCheck": "To determine the value of log₁₀ 1000, we apply the definition of a logarithm, which asks for the exponent to which the base (10) must be raised to produce the argument (1000). We know that 10¹ = 10 and 10² = 100. Continuing this pattern, 10³ = 10 × 10 × 10 = 1000. Therefore, since 10 raised to the power of 3 equals 1000, log₁₀ 1000 is exactly 3, which corresponds to option C.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Powers of Ten",
+          "idea": "Match exponent to value",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Recall 10^3 equals 1000.",
+            "Equate log base 10 of 1000 to exponent 3."
+          ]
+        },
+        {
+          "name": "Count Zeros",
+          "idea": "Base 10 zeros rule",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify base is 10.",
+            "Count zeros in integer 1000 (three)."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:54:04.411Z"
+    },
+    {
+      "id": "9c510f21c49fe2ed",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 13,
+      "section": "Mathematics",
+      "question": "If the probability of an event A is 0.4 and of B is 0.5, and A and Bare independent, then P(A n B) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.9",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0.1",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.2",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "0.02",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify P(A) = 0.4 and P(B) = 0.5.",
+        "Note that events A and B are independent.",
+        "Apply the multiplication rule for independent events: P(A ∩ B) = P(A) × P(B).",
+        "Calculate 0.4 × 0.5 = 0.2.",
+        "Match the result with option C."
+      ],
+      "verifierCheck": "Since events A and B are independent, the probability of their intersection P(A ∩ B) is calculated by multiplying their individual probabilities: P(A) × P(B). Given P(A) = 0.4 and P(B) = 0.5, the calculation is 0.4 × 0.5 = 0.2. This result corresponds to option C.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ignore Redundant Info",
+          "idea": "Focus only on needed values",
+          "kind": "invariant",
+          "seconds": 1,
+          "steps": [
+            "Note 'independent' allows direct multiplication.",
+            "Discard sum or other complex operations.",
+            "Calculate 0.4 times 0.5 immediately."
+          ]
+        },
+        {
+          "name": "Multiply Probabilities",
+          "idea": "Use independence rule directly",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Identify P(A)=0.4 and P(B)=0.5.",
+            "Apply formula P(A n B) = P(A) * P(B)."
+          ]
+        },
+        {
+          "name": "Quick Decimal Product",
+          "idea": "Estimate product in head",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Multiply 4 by 5 to get 20.",
+            "Place decimal two spots left: 0.20.",
+            "Match result 0.2 to option C."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T23:56:50.074Z"
+    },
+    {
+      "id": "77442d87adbf3828",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-13-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-13-jee-paper2b.html",
+      "paperFile": "full-2026-11-13-jee-paper2b.json",
+      "questionNumber": 23,
+      "section": "Mathematics",
+      "question": "Find the derivative of f(x) = sin(x²).",
+      "options": [
+        {
+          "label": "A",
+          "text": "cos(x²)",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2x cos(x)",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2x cos(x²)",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "x² cos(x²)",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the outer function as sin(u) and inner function as u = x².",
+        "Apply the chain rule: d/dx[f(g(x))] = f'(g(x)) * g'(x).",
+        "Differentiate the outer sine function to get cos(x²).",
+        "Differentiate the inner x² to get 2x.",
+        "Multiply the results: cos(x²) * 2x."
+      ],
+      "verifierCheck": "To find the derivative of f(x) = sin(x²), we apply the chain rule. Let u = x², so f(x) = sin(u). The derivative is f'(x) = cos(u) * du/dx. Since du/dx = 2x, substituting back gives f'(x) = cos(x²) * 2x, which simplifies to 2x cos(x²). This matches option C.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Pattern Recognition",
+          "idea": "Match standard composite function form",
+          "kind": "estimate",
+          "seconds": 2,
+          "steps": [
+            "Recognize pattern d/dx[sin(g(x))] = g'(x)cos(g(x)).",
+            "Identify g(x) = x², so g'(x) = 2x.",
+            "Apply formula: 2x cos(x²)."
+          ]
+        },
+        {
+          "name": "Chain Rule Shortcut",
+          "idea": "Outer derivative times inner derivative",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify outer function sin(u) where u = x².",
+            "Derivative of sin(u) is cos(u), so keep cos(x²).",
+            "Multiply by derivative of inner u=x², which is 2x.",
+            "Combine to get 2x cos(x²)."
+          ]
+        },
+        {
+          "name": "Substitution Method",
+          "idea": "Replace complex argument with simple variable",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Let u = x², making function f(u) = sin(u).",
+            "Differentiate sin(u) to get cos(u).",
+            "Substitute u back as x²: cos(x²).",
+            "Multiply by du/dx (2x) from chain rule.",
+            "Result is 2x cos(x²)."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T00:20:10.297Z"
     }
   ]
 }
