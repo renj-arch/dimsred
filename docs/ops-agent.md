@@ -76,3 +76,5 @@ optional run id.
 
 Actions -> **Ops Agent** -> **Disable workflow**. The scheduled pipelines are
 separate and keep running.
+
+Repo Agent: the scheduled audit-fix agent opens PRs and never merges.
