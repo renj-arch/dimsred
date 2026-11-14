@@ -171,7 +171,190 @@
         }catch(e){}})();
         </script>
                 </div>
-                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                
+<!-- deep-rewrite 2026-11-14 -->
+<h2 id="deep-1">Advanced Syllogism Patterns and Exception Handling</h2>
+<h3>1.1  Four‑Term and Distributed‑Term Pitfalls</h3>
+<p>Standard three‑term syllogisms assume exactly three distinct terms. In UPSC‑type questions, examiners often embed a hidden fourth term (e.g., “All A are B; Some B are C; No C are D”). The conclusion must be tested for the *distribution* of each term. A term is distributed if the statement makes a claim about *all* members of that class. The distribution table below is a quick reference.</p>
+<table>
+<thead><tr><th>Proposition</th><th>Subject Distributed?</th><th>Predicate Distributed?</th></tr></thead>
+<tbody>
+<tr><td>All S are P (A)</td><td>Yes</td><td>No</td></tr>
+<tr><td>No S are P (E)</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Some S are P (I)</td><td>No</td><td>No</td></tr>
+<tr><td>Some S are not P (O)</td><td>No</td><td>Yes</td></tr>
+</tbody>
+</table>
+<div class="tip-box"><strong>Examiner Trap:</strong> A conclusion that distributes a term not distributed in any premise is invalid. Always mark distribution before drawing Venn diagrams.</div>
+
+<h3>1.2  Existential Import and the “Some” Assumption</h3>
+<p>Classical Aristotelian logic treats “All S are P” as having existential import (i.e., at least one S exists). Modern Boolean logic does not. UPSC follows the Boolean convention unless the question explicitly states “Assume existential import”. When existential import is absent, an A‑type premise cannot yield an I‑type conclusion.</p>
+<div class="example-box">
+<h4>Worked Example</h4>
+<p><strong>Premises:</strong> (1) All M are N. (2) No N are O.</p>
+<p><strong>Proposed Conclusions:</strong> (a) Some M are not O. (b) No M are O.</p>
+<p><strong>Analysis:</strong> From (1) and (2) we derive “No M are O” (valid E‑type). Conclusion (a) is an O‑type that distributes O (predicate) but O is not distributed in any premise → invalid under Boolean rules. If existential import were assumed, (a) would also follow, but UPSC expects the stricter Boolean answer.</p>
+</div>
+
+<h3>1.3  Handling “Only”, “Only If”, and “Unless”</h3>
+<ul>
+<li><strong>Only A are B</strong> ⇔ All B are A (A‑type with reversed terms).</li>
+<li><strong>A only if B</strong> ⇔ If A then B (A → B).</li>
+<li><strong>Unless A, B</strong> ⇔ If not A then B (¬A → B).</li>
+</ul>
+<p>Translate each phrasing into standard categorical form before applying Venn diagrams.</p>
+
+<h2 id="deep-2">Multi‑Statement Syllogisms and Chain Reasoning</h2>
+<h3>2.1  Sorites (Chain Syllogisms)</h3>
+<p>A sorites links several premises where the predicate of one becomes the subject of the next. The valid conclusion connects the first subject with the last predicate, provided every intermediate term is distributed at least once.</p>
+<div class="example-box">
+<h4>Chain Example</h4>
+<p>1. All A are B. 2. All B are C. 3. No C are D. 4. Some D are E.</p>
+<p><strong>Valid conclusion:</strong> No A are D (from 1‑3). The final premise (4) introduces a new term E that cannot be linked to A without additional premises.</p>
+</div>
+
+<h3>2.2  Distributed‑Term Checklist for Chains</h3>
+<ol>
+<li>List all terms with their positions (subject/predicate) in each premise.</li>
+<li>Mark distribution using the table in Section 1.1.</li>
+<li>Every middle term must be distributed in at least one premise.</li>
+<li>The conclusion’s subject and predicate must not be distributed unless they are distributed in the premises.</li>
+</ol>
+
+<h3>2.3  Venn‑Diagram Shortcut for Chains</h3>
+<p>Draw a single composite Venn diagram with all distinct terms (maximum 5‑6 circles). Shade/place X‑marks sequentially. The final diagram reveals whether the required region is empty (universal) or occupied (particular). This avoids redrawing for each step.</p>
+
+<h2 id="deep-3">Seating Arrangement: Linear, Circular, and Hybrid Configurations – Systematic Mapping</h2>
+<h3>3.1  Classification of Arrangement Types</h3>
+<table>
+<thead><tr><th>Type</th><th>Key Features</th><th>Typical Constraints</th></tr></thead>
+<tbody>
+<tr><td>Single‑Row Linear</td><td>Persons face same direction</td><td>Left/Right, Immediate neighbours, Ends</td></tr>
+<tr><td>Double‑Row Linear</td><td>Two rows facing each other</td><td>Opposite, Diagonal, Same‑row neighbours</td></tr>
+<tr><td>Circular (Unidirectional)</td><td>All face centre</td><td>Clockwise/anticlockwise, Immediate left/right</td></tr>
+<tr><td>Circular (Bidirectional)</td><td>Some face centre, some outward</td><td>Facing direction adds “facing” constraints</td></tr>
+<tr><td>Rectangular / Square</td><td>Four sides, corners distinct</td><td>Side‑wise neighbours, Opposite corners</td></tr>
+<tr><td>Hybrid (Linear + Circular)</td><td>Combination in a single puzzle</td><td>Requires mapping each sub‑arrangement separately then linking</td></tr>
+</tbody>
+</table>
+
+<h3>3.2  Reference‑Point Anchoring Technique</h3>
+<p>Identify the most restrictive clue (e.g., “A sits third to the left of B” in a circle). Place that pair first; it fixes a reference frame. All subsequent clues are expressed relative to this anchor, reducing branching.</p>
+<div class="tip-box"><strong>Shortcut:</strong> In circular puzzles, convert “X is third to the left of Y” into a fixed offset of +3 (clockwise) or –3 (anticlockwise) depending on facing direction. Write offsets as integers modulo N.</div>
+
+<h3>3.3  Constraint‑Propagation Table</h3>
+<p>Create a table with seats as columns and persons as rows. Fill cells with “✓” (must sit), “✗” (cannot sit), or “?” (undetermined). Apply each clue to eliminate impossibilities. When a row or column has a single “✓”, the placement is forced.</p>
+<div class="example-box">
+<h4>Mini‑Illustration (8‑person circle)</h4>
+<p>Clues: (1) P sits opposite Q. (2) R is immediate left of P. (3) S sits two places right of Q.</p>
+<p>Step 1: Place P at seat 1 → Q at seat 5 (opposite). Step 2: R at seat 8 (left of P). Step 3: S at seat 7 (two right of Q). Remaining seats 2,3,4,6 for T,U,V,W – solved by further clues.</p>
+</div>
+
+<h2 id="deep-4">Seating Arrangement Shortcuts: Relative Position Coding and Constraint Propagation</h2>
+<h3>4.1  Offset Coding System</h3>
+<p>Assign each person a variable \(x_i\) representing seat index (0 … N‑1). Translate clues into modular equations:</p>
+<ul>
+<li>“A is third to the left of B” → \(x_A \equiv x_B - 3 \pmod N\) (if all face centre).</li>
+<li>“C sits opposite D” → \(x_C \equiv x_D + N/2 \pmod N\) (N even).</li>
+<li>“E and F are neighbours” → \(|x_E - x_F| \equiv 1 \pmod N\).</li>
+</ul>
+<p>Solving the system of congruences (by substitution or simple back‑tracking) yields all valid seat maps in seconds.</p>
+
+<h3>4.2  Gender / Attribute Tagging</h3>
+<p>When clues involve gender, profession, or colour, add a second attribute vector \(a_i\). Use a 2‑D grid (seat × attribute) to cross‑eliminate. Example: “The doctor sits immediately left of the engineer” couples two attribute constraints with one positional offset.</p>
+
+<h3>4.3  “If‑Then” Conditional Clues</h3>
+<p>Conditional clues (“If A sits at an end, then B sits opposite C”) are handled by *case splitting*: create two branches (A at end / A not at end) and propagate each independently. Discard branches that violate any absolute clue. The surviving branch gives the unique arrangement.</p>
+<div class="tip-box"><strong>Examiner Trap:</strong> Conditional clues often hide a *biconditional* (“A sits at an end **iff** B sits opposite C”). Verify wording; “only if” makes it one‑way.</div>
+
+<h3>4.4  Speed‑Practice Drill</h3>
+<ol>
+<li>Pick a 10‑person circular puzzle from previous UPSC papers.</li>
+<li>Write all clues as modular equations.</li>
+<li>Solve using a spreadsheet (columns = seats, rows = persons) – auto‑filter eliminates impossibilities.</li>
+<li>Time yourself; aim < 3 minutes per puzzle.</li>
+</ol>
+
+<h2 id="deep-5">Data Sufficiency: Decision Framework and Elimination Matrix</h2>
+<h3>5.1  UPSC Data‑Sufficiency Question Structure</h3>
+<p>Each item presents a question stem followed by two statements (I and II). The answer options are fixed:</p>
+<ul>
+<li>(A) Statement I alone sufficient.</li>
+<li>(B) Statement II alone sufficient.</li>
+<li>(C) Both statements together sufficient, but neither alone.</li>
+<li>(D) Each statement alone sufficient.</li>
+<li>(E) Statements together not sufficient.</li>
+</ul>
+
+<h3>5.2  The “Sufficiency Matrix” Method</h3>
+<p>Draw a 2 × 2 matrix with rows = statements (I, II) and columns = “Alone sufficient?” / “Together sufficient?”. Fill after evaluating each statement independently, then together.</p>
+<table>
+<thead><tr><th></th><th>Alone Sufficient?</th><th>Together Sufficient?</th></tr></thead>
+<tbody>
+<tr><td>Statement I</td><td>Yes / No</td><td rowspan="2">Yes / No</td></tr>
+<tr><td>Statement II</td><td>Yes / No</td></tr>
+</tbody>
+</table>
+<p>The pattern of Yes/No directly maps to options A–E.</p>
+
+<h3>5.3  Logical Independence Test</h3>
+<p>Before combining, check whether the two statements are *logically independent* (i.e., neither implies the other). If one statement logically entails the other, the “together” column adds no new information – the answer collapses to the stronger single statement.</p>
+<div class="example-box">
+<h4>Illustration</h4>
+<p><strong>Question:</strong> Is x > 0?<br>
+<strong>I.</strong> x² = 4.<br>
+<strong>II.</strong> x = 2.</p>
+<p>Statement II alone gives x = 2 → x > 0 (Yes). Statement I alone gives x = ±2 (insufficient). Together they are still just x = 2 (II dominates). Answer = (B).</p>
+</div>
+
+<h3>5.4  Quantitative vs. Logical Sufficiency</h3>
+<ul>
+<li><strong>Quantitative:</strong> Requires a unique numeric value (e.g., “What is the area?”). Sufficiency = ability to compute a single number.</li>
+<li><strong>Logical:</strong> Requires a true/false or yes/no answer (e.g., “Is P older than Q?”). Sufficiency = ability to determine the truth value unequivocally.</li>
+</ul>
+<p>Apply the same matrix; the only difference is the *type* of conclusion you test for.</p>
+
+<h2 id="deep-6">Data Sufficiency: Complex Quantitative and Logical Variants with Worked Examples</h2>
+<h3>6.1  Multi‑Variable Algebraic Sufficiency</h3>
+<p>When the question asks for a relationship among several variables (e.g., “Is a + b > c?”), each statement may provide an equation or inequality. Treat the system as a linear feasibility problem.</p>
+<div class="example-box">
+<h4>Worked Example</h4>
+<p><strong>Question:</strong> Is a + b > c?<br>
+<strong>I.</strong> a = 2b.<br>
+<strong>II.</strong> c = b + 1.</p>
+<p>From I: a + b = 3b. From II: c = b + 1. Together: 3b > b + 1 ⇔ 2b > 1 ⇔ b > 0.5. Since b’s sign is unknown, together still insufficient. Answer = (E).</p>
+</div>
+
+<h3>6.2  Geometry‑Based Sufficiency</h3>
+<p>Typical UPSC geometry DS items involve triangles, circles, or coordinate geometry. The key is to identify *minimal* data needed for a unique measurement (side, angle, area).</p>
+<ul>
+<li>Triangle: Three independent pieces (SSS, SAS, ASA, AAS, RHS) → unique triangle.</li>
+<li>Circle: Radius or diameter alone determines all linear measures.</li>
+<li>Coordinate: Two points fix a line; three non‑collinear points fix a circle.</li>
+</ul>
+<div class="tip-box"><strong>Examiner Trap:</strong> “The triangle is right‑angled” + “One side = 5” is *not* sufficient for area (need second side). Many candidates assume Pythagoras gives the other side, but the 5 could be hypotenuse or leg.</div>
+
+<h3>6.3  Logical‑Quantitative Hybrid</h3>
+<p>Some DS questions blend a logical condition with a numeric query (e.g., “If x and y are integers, is x > y?”). Treat the logical condition as a domain restriction before testing numeric sufficiency.</p>
+<div class="example-box">
+<h4>Hybrid Example</h4>
+<p><strong>Question:</strong> Is x > y? (x, y integers)<br>
+<strong>I.</strong> x + y = 10.<br>
+<strong>II.</strong> x – y = 2.</p>
+<p>From II alone: x = y + 2 → x > y (always true for integers). Statement I alone gives multiple pairs (6,4), (7,3)… both satisfy x > y but also (4,6) violates. Hence I insufficient, II sufficient → Answer (B).</p>
+</div>
+
+<h3>6.4  Practice Set – 5 Representative UPSC‑Style DS Items</h3>
+<ol>
+<li><strong>Q:</strong> What is the value of k? I. k² – 5k + 6 = 0 II. k > 2</li>
+<li><strong>Q:</strong> Is the quadrilateral a parallelogram? I. Opposite sides are equal. II. Diagonals bisect each other.</li>
+<li><strong>Q:</strong> Find the remainder when N is divided by 7. I. N ≡ 3 (mod 5) II. N ≡ 2 (mod 3)</li>
+<li><strong>Q:</strong> Who is the tallest among A, B, C? I. A > B. II. C > A.</li>
+<li><strong>Q:</strong> Is the product xy positive? I. x > 0. II. y < 0.</li>
+</ol>
+<p>Apply the Sufficiency Matrix to each; the answer keys are (C), (D), (E), (C), (C) respectively. Use these as timed drills (90 seconds per item).</p>
+
+<h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
                 <div id="practice-qs"></div>
                 <div style="display:flex;gap:10px;margin-top:10px">
                     <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
