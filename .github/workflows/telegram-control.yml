@@ -1,0 +1,59 @@
+name: Telegram Control
+
+# Remote control for the cloud agent. Polls Telegram every 5 minutes, turns a
+# small command vocabulary into GitHub dispatches, and replies in the same
+# chat. The owner's laptop is never involved.
+#
+# Required secret: TELEGRAM_TOKEN  (from @BotFather)
+# Optional secrets: TELEGRAM_CHAT_ID (pre-pin the owner chat), NVIDIA_API_KEY
+#                   (the writer lane prefers it; GitHub Models is the fallback)
+# Existing secret used here: PAT (to dispatch workflows)
+#
+# The cursor + pinned owner chat live in data/telegram-state.json, force-added
+# because data/* is gitignored. The file is only rewritten when a message is
+# actually handled, so idle polls create no commits.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: telegram-control
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Poll Telegram and dispatch commands
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          DISPATCH_TOKEN: ${{ secrets.PAT }}
+          OWNER_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/telegram/poll.js
+
+      - name: Persist the Telegram cursor
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -f data/telegram-state.json 2>/dev/null || true
+          bash scripts/ci-push.sh "telegram: advance control cursor"

@@ -1,0 +1,91 @@
+name: Lesson Writer (cloud API lane)
+
+# Hand-writes queued lessons with a FREE hosted model, so the work continues
+# with no laptop and no local Ollama. Reuses the proven deep-rewrite engine
+# (scripts/deep-rewrite.js): it takes items from data/deep-rewrite-queue.json,
+# asks the model for new exam-level sections, splices them before the practice
+# block, and removes finished items from the queue.
+#
+# Model preference, in the order scripts/lib/ollama.js tries them:
+#   1. NVIDIA NIM       when secrets.NVIDIA_API_KEY is set (NVAPI=1)
+#   2. GitHub Models    via the built-in GITHUB_TOKEN (GH_MODELS=1, models: read)
+#   3. local Ollama     NOT available on a hosted runner; if 1 and 2 both fail
+#                       the run reports the failure instead of hanging.
+#
+# Safety: the lane refuses to touch any lesson listed in
+# data/handwritten-lessons.json (scripts/lib/handwritten.js), and the guard
+# test runs first so a broken manifest fails the run before any writing.
+#
+# Triggers:
+#   repository_dispatch  type "lesson-writer"  (from the Telegram control plane)
+#   workflow_dispatch    manual, optional batch size
+
+on:
+  repository_dispatch:
+    types: [lesson-writer]
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: 'How many queued lessons to write in this run'
+        required: false
+        default: '2'
+
+concurrency:
+  group: lesson-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Protected-lesson guard must pass before any writing
+        run: node scripts/lib/handwritten.test.js
+
+      - name: Hand-write queued lessons with a hosted model
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          NVIDIA_MODEL: ${{ vars.NVIDIA_MODEL || 'recommended' }}
+          GH_MODELS: '1'
+          GH_MODELS_MODEL: ${{ vars.GH_MODELS_MODEL || 'gpt-4o-mini' }}
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEEP_BATCH: ${{ github.event.client_payload.batch || inputs.batch || '2' }}
+          DEEP_NUM_PREDICT: '8000'
+          NODE_OPTIONS: '--max-old-space-size=2048'
+        run: node scripts/deep-rewrite.js
+
+      - name: Publish lessons and queue
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add -f data/deep-rewrite-queue.json 2>/dev/null || true
+          git add upsc/course 2>/dev/null || true
+          bash scripts/ci-push.sh "lesson-writer: hosted model hand-wrote queued lessons (run #${{ github.run_number }})"
+
+      - name: Report to Telegram
+        if: always()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          LEFT=$(node -e 'try{console.log(require("./data/deep-rewrite-queue.json").length)}catch(e){console.log("?")}')
+          node scripts/telegram/notify.js "lesson-writer ${{ job.status }} — run #${{ github.run_number }} — $LEFT lesson(s) left in queue"
