@@ -7763,7 +7763,126 @@
         }
       ],
       "solution": "Moment of inertia (area) has units of m."
+    },
+    {
+      "section": "Core Subject",
+      "text": "The characteristic equation of a closed-loop control system is s³ + 4s² + 5s + K = 0. The range of K for the system to be stable is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0 < K < 20",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "0 < K < 10",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "K > 20",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "K < 0",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For a 3rd-order characteristic equation s³ + a₁s² + a₂s + a₃ = 0, Routh-Hurwitz stability requires all coefficients > 0 and a₁a₂ > a₃. Here a₁=4, a₂=5, a₃=K → 4×5 > K ⇒ K < 20, and K > 0. Thus 0 < K < 20. Full solution: Construct Routh array: s³: 1 5 s²: 4 K s¹: (20−K)/4 0 s⁰: K For stability, all first-column elements must be positive: 1 > 0, 4 > 0, (20−K)/4 > 0 ⇒ K < 20, and K > 0. Hence 0 < K < 20.",
+      "topic": "Control Systems - Stability Analysis",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:02:11.014Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1937,
+      "q": 266
+    },
+    {
+      "section": "Core Subject",
+      "text": "If x(t) is a real-valued signal with Fourier Transform X(ω), which of the following properties is always satisfied?",
+      "options": [
+        {
+          "label": "A",
+          "text": "X(ω) is purely real",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "X(ω) = X*(−ω)",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "X(ω) = −X*(−ω)",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "X(ω) is purely imaginary",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For any real-valued time-domain signal, its Fourier Transform exhibits conjugate symmetry: X(ω) = X*(−ω). This single property eliminates options A, C, and D immediately. Full solution: By definition, X(ω) = ∫ x(t)e^(−jωt) dt. Since x(t) is real, x(t) = x*(t). Compute X*(−ω) = [∫ x(t)e^(jωt) dt]* = ∫ x*(t)e^(−jωt) dt = ∫ x(t)e^(−jωt) dt = X(ω). Therefore X(ω) = X*(−ω) holds for all real x(t).",
+      "topic": "Signals and Systems - Fourier Transform Properties",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:02:11.019Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1938,
+      "q": 267
+    },
+    {
+      "section": "General Aptitude",
+      "text": "A shopkeeper marks up the price of an article by 40% and then offers a discount of 20% on the marked price. What is his profit percentage?",
+      "options": [
+        {
+          "label": "A",
+          "text": "8%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "12%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "15%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20%",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For successive percentage changes of a% and b%, net change = a + b + ab/100. Here a = +40% (markup), b = -20% (discount). Net = 40 - 20 + (40 × -20)/100 = 20 - 8 = 12% profit. Step-by-step: Assume CP = ₹100. Marked Price = 100 + 40% of 100 = ₹140. Selling Price after 20% discount = 140 - 20% of 140 = 140 - 28 = ₹112. Profit = 112 - 100 = ₹12. Profit% = (12/100) × 100 = 12%.",
+      "topic": "Profit and Loss / Successive Percentage Change",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:02:29.056Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1939,
+      "q": 268
     }
   ],
-  "generatedPapers": []
+  "generatedPapers": [],
+  "modelFill": {
+    "lastRun": "2026-11-14T22:02:29.056Z",
+    "model": "qwen3.5:9b",
+    "added": 3
+  }
 }
