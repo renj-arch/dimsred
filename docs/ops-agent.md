@@ -8,7 +8,7 @@ required.
 
 Every 15 minutes `ops-agent.yml`:
 
-1. lists Actions runs that failed in the last two hours;
+1. lists Actions runs that failed in the last 45 minutes;
 2. skips runs already reported and its own workflow;
 3. reads the failed log tail, the workflow YAML and the script named in the
    log;
