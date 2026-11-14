@@ -147,7 +147,7 @@ function promptFor(section, count, examName, paperName, seeds) {
     '{"text":"question stem","options":["A text","B text","C text","D text"],"correct":0,"solution":"2-4 sentences","topic":"sub-topic","difficulty":"easy|medium|hard","imageUrl":"https://...png","tableData":{"headers":["A","B"],"rows":[["x","1"]]}","chartData":{"type":"bar","labels":["x"],"datasets":[{"label":"y","data":[1]}]}}',
     '',
     'Rules:',
-    '- "correct" is the 0-based index of the right option.',
+    '- "correct" is the 0-based index of the right option: valid values are 0, 1, 2, 3 ONLY. Do not use 1-4 or letters.',
     '- The solution must be self-contained and must not mention "the model", "the prompt" or rewriting.',
     '- Vary the correct index across items; do not always use 0.',
     '- Every question must be answerable from the stem and options alone.',
@@ -178,12 +178,12 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
   let emptyRounds = 0;
   while (added < want && budget.left > 0 && attempts < 12) {
     attempts++;
-    const ask = Math.min(want - added, budget.left, 12);
+    const ask = Math.min(want - added, budget.left, 5);
     llm.log('generating ' + ask + ' x ' + section + ' (' + (paperName || examName) + ') attempt ' + attempts);
     let items;
     try {
       items = await llm.callArray([{ role: 'user', content: promptFor(section, ask, examName, paperName, seeds.concat(batch.map(function (q) { return q.text; }))) }],
-        { temperature: 0.55, numPredict: Math.min(6000, Math.max(3000, 260 + ask * 260)) }, 'fill/' + section);
+        { temperature: 0.55, numPredict: Math.min(8000, Math.max(5000, 800 + ask * 500)) }, 'fill/' + section);
     } catch (e) {
       llm.log(section + ': generation failed - ' + e.message);
       emptyRounds++;
