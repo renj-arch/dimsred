@@ -7,6 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 const { callLLM } = require('./lib/ollama');
+const handwritten = require('./lib/handwritten');
 
 const ROOT = path.resolve(__dirname, '..');
 const QUEUE = path.join(ROOT, 'data', 'deep-rewrite-queue.json');
@@ -111,6 +112,14 @@ async function rewriteOne(item) {
     return 'dropped';
   }
   const info = lessonInfo(file);
+
+  // A hand-written lesson is off-limits: splicing model sections into authored
+  // prose despoils it, and the owner rejected machine-expanded content for these
+  // pages. Drop it from the queue so the lane does not retry it every night.
+  if (handwritten.isProtected(rel)) {
+    console.log('deep-rewrite: ' + rel + ' is hand-written - dropping from queue');
+    return 'dropped';
+  }
 
   // A lesson that already carries the marker was spliced by an earlier run but
   // the queue write did not land. Re-running would duplicate the sections, so

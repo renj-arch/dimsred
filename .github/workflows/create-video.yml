@@ -279,8 +279,20 @@ jobs:
             git push
           fi
 
-      - name: Validate political argument map
-        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-debates.js "data/films/${TOPIC_ID}-debates.json"
+      - name: Validate political argument map (when one has been authored)
+        run: |
+          # topic-to-film.js writes the storyboard only. The debate map is a
+          # separate editorial artefact (scripts/film/author.js writes it for
+          # published films), so the exploratory create-video lane has no map
+          # to validate. validate-debates.js exits 1 on a missing file, which
+          # made this step impossible to pass for any new topic, so the run
+          # passed the storyboard and then died here. Validate it when present
+          # and skip it loudly when not; the storyboard is still gated above.
+          if [ -f "data/films/${TOPIC_ID}-debates.json" ]; then
+            NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-debates.js "data/films/${TOPIC_ID}-debates.json"
+          else
+            echo "No debate map authored for ${TOPIC_ID}; skipping debate validation."
+          fi
 
       - name: Render 3D plates with Blender
         run: |
