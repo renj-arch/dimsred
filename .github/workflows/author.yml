@@ -164,7 +164,7 @@ jobs:
             exit 0
           fi
           git commit -m "author $FILM from its sourced ledger"
-          timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
+          timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
           if git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
             : # clean merge
           else

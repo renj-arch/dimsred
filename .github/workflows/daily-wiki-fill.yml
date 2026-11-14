@@ -603,7 +603,7 @@ jobs:
           # the runner. Fetch the tip shallowly inside the loop instead, and
           # merge (keeping our data on conflict) before each push.
           for i in 1 2 3 4 5; do
-            timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null \
+            timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null \
               || echo "shallow fetch timed out on attempt $i - using last-known main"
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
               echo "Merge conflict - running union merge to keep BOTH runs' data."

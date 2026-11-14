@@ -61,7 +61,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Write language page sections (${{ inputs.model || 'qwen3.5:9b' }} as teacher)
+      - name: Write language page sections (hosted model as teacher)
         env:
           NVAPI: '1'
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}

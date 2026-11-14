@@ -173,18 +173,11 @@ jobs:
             echo "No changes to publish"
             exit 0
           fi
-          git commit -m "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
-          pushed=""
-          for i in 1 2 3; do
-            timeout 180 git fetch --depth=1 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
-            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-            git add -A 2>/dev/null || true
-            git commit --no-edit 2>/dev/null || true
-            if git push; then pushed=1; echo "Pushed"; break; fi
-            echo "push attempt $i failed, retrying..."
-            sleep 5
-          done
-          if [ -z "$pushed" ]; then
-            echo "::error::generated practice paper could not be pushed to main"
-            exit 1
-          fi
+          # ci-push.sh owns the commit/fetch/merge/push retry. The old custom
+          # loop merged a depth-1 FETCH_HEAD with no common ancestor, so the
+          # branch stayed diverged and every push was rejected after the paper
+          # had been built. Deepen enough to find the merge base first.
+          git fetch --depth=100 --no-tags origin main 2>/dev/null || true
+          bash scripts/ci-push.sh "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

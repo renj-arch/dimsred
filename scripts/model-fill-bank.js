@@ -13,6 +13,13 @@ const fs = require('fs');
 const path = require('path');
 const bp = require('./lib/exam-blueprint');
 const llm = require('./lib/ollama');
+
+function modelLabel() {
+  try {
+    const live = typeof llm.lastServed === 'function' ? llm.lastServed() : '';
+    return live || llm.MODEL;
+  } catch (e) { return llm.MODEL; }
+}
 const qd = require('./lib/question-dedupe');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -147,7 +154,7 @@ function promptFor(section, count, examName, paperName, seeds) {
     '{"text":"question stem","options":["A text","B text","C text","D text"],"correct":0,"solution":"2-4 sentences","topic":"sub-topic","difficulty":"easy|medium|hard","imageUrl":"https://...png","tableData":{"headers":["A","B"],"rows":[["x","1"]]}","chartData":{"type":"bar","labels":["x"],"datasets":[{"label":"y","data":[1]}]}}',
     '',
     'Rules:',
-    '- "correct" is the 0-based index of the right option.',
+    '- "correct" is the 0-based index of the right option: valid values are 0, 1, 2, 3 ONLY. Do not use 1-4 or letters.',
     '- The solution must be self-contained and must not mention "the model", "the prompt" or rewriting.',
     '- Vary the correct index across items; do not always use 0.',
     '- Every question must be answerable from the stem and options alone.',
@@ -178,12 +185,12 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
   let emptyRounds = 0;
   while (added < want && budget.left > 0 && attempts < 12) {
     attempts++;
-    const ask = Math.min(want - added, budget.left, 12);
+    const ask = Math.min(want - added, budget.left, 5);
     llm.log('generating ' + ask + ' x ' + section + ' (' + (paperName || examName) + ') attempt ' + attempts);
     let items;
     try {
       items = await llm.callArray([{ role: 'user', content: promptFor(section, ask, examName, paperName, seeds.concat(batch.map(function (q) { return q.text; }))) }],
-        { temperature: 0.55, numPredict: Math.min(6000, Math.max(3000, 260 + ask * 260)) }, 'fill/' + section);
+        { temperature: 0.55, numPredict: Math.min(8000, Math.max(5000, 800 + ask * 500)) }, 'fill/' + section);
     } catch (e) {
       llm.log(section + ': generation failed - ' + e.message);
       emptyRounds++;
@@ -210,7 +217,7 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
         topic: llm.clean(item.topic) || section,
         difficulty: llm.clean(item.difficulty) || 'medium',
         source: 'model',
-        model: llm.MODEL,
+        model: modelLabel(),
         generatedAt: new Date().toISOString(),
         reviewed: false,
         imageUrl: item.imageUrl || null,
@@ -276,7 +283,7 @@ async function fillExam(examKey, opts) {
 
   if (!batch.length) {
     llm.log(examKey + ': the model produced no valid question - nothing written');
-    return { exam: examKey, paper: paper.id, requested: plan, added: 0, model: llm.MODEL };
+    return { exam: examKey, paper: paper.id, requested: plan, added: 0, model: modelLabel() };
   }
 
   let id = maxId(bank);
@@ -293,10 +300,10 @@ async function fillExam(examKey, opts) {
       bank.sections.push({ name: q.section, color: COLORS[bank.sections.length % COLORS.length] });
     }
   });
-  bank.modelFill = { lastRun: new Date().toISOString(), model: llm.MODEL, added: batch.length };
+  bank.modelFill = { lastRun: new Date().toISOString(), model: modelLabel(), added: batch.length };
   fs.writeFileSync(bankPath, JSON.stringify(bank, null, 2), 'utf-8');
-  llm.log(examKey + ': +' + batch.length + ' model questions (bank ' + bank.questions.length + ', model ' + llm.MODEL + ')');
-  return { exam: examKey, paper: paper.id, requested: plan, added: batch.length, model: llm.MODEL, bankSize: bank.questions.length };
+  llm.log(examKey + ': +' + batch.length + ' model questions (bank ' + bank.questions.length + ', model ' + modelLabel() + ')');
+  return { exam: examKey, paper: paper.id, requested: plan, added: batch.length, model: modelLabel(), bankSize: bank.questions.length };
 }
 
 if (require.main === module) {
