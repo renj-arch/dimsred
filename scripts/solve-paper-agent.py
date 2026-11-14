@@ -34,6 +34,43 @@ CANDIDATES = os.path.join(ROOT, 'data', 'paper-solve-candidates.json')
 TMP = os.environ.get('TMPDIR', '/tmp')
 HOST = (os.environ.get('OLLAMA_HOST') or 'http://127.0.0.1:11434').rstrip('/')
 MODEL = os.environ.get('OLLAMA_MODEL') or 'qwen3.5:9b'
+
+# Hosted routes, tried strongest-first exactly like scripts/lib/ollama.js.
+# The lane used to need a local Ollama server on the runner; a clean runner
+# therefore failed before solving a single question.
+NVIDIA_KEY = os.environ.get('NVIDIA_API_KEY') or ''
+NVIDIA_MODEL = os.environ.get('NVIDIA_MODEL') or 'nvidia/nemotron-3-ultra-550b-a55b'
+GROQ_KEY = os.environ.get('GROQ_API_KEY') or ''
+GROQ_MODEL = os.environ.get('GROQ_MODEL') or 'openai/gpt-oss-120b'
+OPENROUTER_KEY = os.environ.get('OPENROUTER_API_KEY') or ''
+OPENROUTER_MODEL = os.environ.get('OPENROUTER_MODEL') or 'nvidia/nemotron-3-ultra-550b-a55b:free'
+GH_TOKEN = (os.environ.get('GH_MODELS_TOKEN') or os.environ.get('GH_TOKEN')
+            or os.environ.get('GITHUB_TOKEN') or '')
+GH_MODEL = os.environ.get('GH_MODELS_MODEL') or 'gpt-4o-mini'
+SERVED_BY = MODEL
+
+
+def _openai_compatible(url, key, model, system, user, max_tokens, extra_headers=None):
+    payload = {
+        'model': model,
+        'messages': [
+            {'role': 'system', 'content': system},
+            {'role': 'user', 'content': user},
+        ],
+        'temperature': 0.1,
+        'max_tokens': max_tokens,
+    }
+    headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key, **UA}
+    if extra_headers:
+        headers.update(extra_headers)
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode('utf-8'),
+        headers=headers,
+    )
+    with urllib.request.urlopen(req, timeout=600) as r:
+        d = json.load(r)
+    return ((d.get('choices') or [{}])[0].get('message') or {}).get('content', '').strip()
 BATCH = int(os.environ.get('SOLVE_BATCH') or '5')
 DEADLINE_MIN = float(os.environ.get('SOLVE_DEADLINE_MIN') or '100')
 START = time.time()
@@ -121,6 +158,30 @@ def download(url, dest, tries=4):
 
 
 def call_llm(system, user, max_tokens=2048):
+    global SERVED_BY
+    routes = []
+    if os.environ.get('NVAPI') == '1' and NVIDIA_KEY:
+        routes.append(('NVIDIA NIM', 'https://integrate.api.nvidia.com/v1/chat/completions',
+                       NVIDIA_KEY, NVIDIA_MODEL, None))
+    if os.environ.get('GROQ') == '1' and GROQ_KEY:
+        routes.append(('Groq', 'https://api.groq.com/openai/v1/chat/completions',
+                       GROQ_KEY, GROQ_MODEL, None))
+    if os.environ.get('OPENROUTER') == '1' and OPENROUTER_KEY:
+        routes.append(('OpenRouter', 'https://openrouter.ai/api/v1/chat/completions',
+                       OPENROUTER_KEY, OPENROUTER_MODEL,
+                       {'HTTP-Referer': 'https://vlymbooq.qzz.io', 'X-Title': 'vlymbooq paper solve'}))
+    if os.environ.get('GH_MODELS') == '1' and GH_TOKEN:
+        routes.append(('GitHub Models', 'https://models.github.ai/inference/chat/completions',
+                       GH_TOKEN, GH_MODEL, None))
+    for label, url, key, model, extra in routes:
+        try:
+            text = _openai_compatible(url, key, model, system, user, max_tokens, extra)
+            if text:
+                SERVED_BY = model
+                log('served by ' + label + ' ' + model)
+                return text
+        except Exception as ex:
+            log(label + ' failed (' + str(ex)[:160] + ') - trying the next backend')
     payload = {
         'model': MODEL,
         'stream': False,
@@ -137,6 +198,7 @@ def call_llm(system, user, max_tokens=2048):
     )
     with urllib.request.urlopen(req, timeout=3600) as r:
         d = json.load(r)
+    SERVED_BY = MODEL
     return ((d.get('message') or {}).get('content') or '').strip()
 
 
@@ -272,7 +334,7 @@ def main():
                 'letter': a['letter'],
                 'answer': q['options'][idx],
                 'solution': a['solution'],
-                'model': MODEL,
+                'model': SERVED_BY,
                 'solvedAt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
             })
             added += 1

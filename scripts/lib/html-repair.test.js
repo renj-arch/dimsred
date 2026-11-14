@@ -20,7 +20,7 @@ h = repair.sanitize('<ul class="nav"><li>a</li></ul><p style="color:red">x</p>')
 assert.strictEqual(h, '<ul><li>a</li></ul><p>x</p>', 'disallowed attributes are dropped');
 
 h = repair.sanitize('<h2>Topic</h2><p>x</p>');
-assert.strictEqual(h, '<h3>Topic</h3><p>x</p>', 'h2 is normalised to h3');
+assert.strictEqual(h, '<h2>Topic</h2><p>x</p>', 'h2 is preserved for the two-level outline');
 
 h = repair.sanitize('<p>a</p></div><p>b</p>');
 assert.strictEqual((h.match(/<\/div>/g) || []).length, 0, 'stray closer is dropped');

@@ -25,6 +25,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  models: read
   contents: write
 
 jobs:
@@ -59,106 +60,20 @@ jobs:
       # pulls — the 27B stays in the writing workflows (invent-questions,
       # expand-course). This also removes the ~1.5-min dd and the OOM-death
       # class where the swap-thrashing model took the Ollama server with it.
-      - name: Report memory (no swap needed for small models)
-        run: free -h
-
-      # Install Ollama — free, open-source, runs models on CPU.
-      - name: Install Ollama
-        run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-          ollama --version
-          mkdir -p ~/.ollama/models
-          # The install script starts a systemd service running as the
-          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
-          # invisible to the Actions cache (first cache save was a 197-byte
-          # empty dir). Run the service as the runner user, pointed at the
-          # runner home: models become cache-visible and owned by the same
-          # user that restores/saves the cache.
-          sudo mkdir -p /etc/systemd/system/ollama.service.d
-          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
-          sudo systemctl daemon-reload
-          sudo systemctl restart ollama
-
-      # Model cache: one shared "fast" entry for the small-model chain
-      # (Ollama's blob store is content-addressed). First run stores the
-      # blobs; later runs restore instead of re-downloading.
-      # continue-on-error: a cache hiccup must never fail a run.
-      - name: Cache Ollama models
-        continue-on-error: true
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-fast-v2
-          restore-keys: |
-            ollama-${{ runner.os }}-fast-
-
-      # Start Ollama server in background and wait until it responds.
-      # `ollama pull` above briefly starts the server, but it shuts down
-      # when the step ends — the fixer then sees "Ollama not reachable".
-      # KEEP_ALIVE=60m keeps the model loaded between calls. Public-repo
-      # runners are 4 vCPU / 16GB RAM so 27B nearly fits in RAM.
-      - name: Start Ollama server
-        run: |
-          export OLLAMA_KEEP_ALIVE=60m
-          nohup ollama serve > /tmp/ollama.log 2>&1 &
-          echo $! > /tmp/ollama.pid
-          for i in $(seq 1 30); do
-            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
-              echo "Ollama server ready after ${i}s"
-              break
-            fi
-            sleep 1
-          done
-          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
-          free -h
-
-      # MECHANICAL WORK RUNS SMALL (the model split): autofix generates JSON
-      # fixes and captions — no long-form writing — so it runs on the fast
-      # small models: qwen3:4b first, then lfm2.5:1.2b, then qwen3.5:4b.
-      # All fit easily in RAM: no swap, no 20-min 17GB pull, and no OOM
-      # taking the server down mid-run (the "fetch failed" class that hit
-      # this workflow on the 27B). Writing-quality work stays in the mid
-      # tier (qwen3.5:9b): invent-questions and expand-course. First successful pull
-      # wins; a bad small-model reply still dies safely in the script's
-      # JSON validation (it applies no fix it cannot parse).
-      - name: Pull fast model (mechanical fixes)
-        run: |
-          MODEL=""
-          for m in qwen3:4b lfm2.5:1.2b qwen3.5:4b; do
-            echo "trying $m ..."
-            if ollama pull "$m"; then MODEL="$m"; break; fi
-          done
-          if [ -z "$MODEL" ]; then echo "no fast model could be pulled"; exit 1; fi
-          echo "MODEL=$MODEL" >> $GITHUB_ENV
-          echo "Using fast model: $MODEL"
-          ollama list
-          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
-          # Warm it: seconds for small models, and the first real call then
-          # never pays a cold load.
-          ollama run "$MODEL" "Reply with exactly: OK" 2>&1 | tail -2
-          echo "Warmup done"
-
-      - name: Ensure Ollama is up before agent
-        run: |
-          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
-            echo "Server down before agent — restarting"
-            nohup ollama serve >> /tmp/ollama.log 2>&1 &
-            echo $! > /tmp/ollama.pid
-            for i in $(seq 1 60); do
-              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
-              sleep 1
-            done
-          fi
-          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
-
       - name: Run auto-fixer (fast local model, zero API keys)
         # 300 min was sized for the 27B on CPU. The fast model answers in
         # seconds, so this normally finishes in minutes; the generous cap and
         # the always() publish below still protect a stuck run.
         timeout-minutes: 300
         env:
-          OLLAMA_MODEL: ${{ env.MODEL }}
-          OLLAMA_HOST: http://127.0.0.1:11434
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/llm-autofix.js
 
       - name: Publish fixes

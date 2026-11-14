@@ -28,6 +28,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn, execSync } = require('child_process');
+const hosted = require('./lib/hosted');
 
 const ROOT = path.join(__dirname, '..');
 const LOG = path.join(ROOT, 'data/agent-log.json');
@@ -169,6 +170,9 @@ function parseChatStream(out) {
 
 async function callLLM(system, user, maxTokens) {
   if (pastDeadline()) throw new Error('deadline reached before the model call');
+  // Hosted lane: the router handles retries and fallbacks; the local Ollama
+  // path below stays for a laptop run with no hosted key.
+  if (hosted.enabled()) return hosted.chat(system, user, { numPredict: maxTokens || 1600, temperature: 0.4 });
   const payload = JSON.stringify({
     model: MODEL,
     messages: [
