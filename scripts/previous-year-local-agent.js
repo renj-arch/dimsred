@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
+const hosted = require('./lib/hosted');
 
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
@@ -223,6 +224,7 @@ function parseChatStream(out) {
 }
 
 async function callLLM(system, user) {
+  if (hosted.enabled()) return hosted.chat(system, user, { numPredict: 2048, temperature: 0.7 });
   const payload = JSON.stringify({
     model: MODEL,
     stream: true,

@@ -31,6 +31,7 @@ var path = require('path');
 var cp = require('child_process');
 var htmlRepair = require('./lib/html-repair');
 var handwritten = require('./lib/handwritten');
+var hosted = require('./lib/hosted');
 
 var ROOT = path.join(__dirname, '..');
 var CONFIGS_FILE = path.join(__dirname, 'exam-configs.json');
@@ -927,6 +928,13 @@ function restartServe() {
 }
 
 function callModel(prompt, numPredict, timeoutMs, temp) { // timeoutMs kept for callers; the watchdogs own the time policy
+  // Hosted lane: one branch to the shared router (NVIDIA -> Groq ->
+  // OpenRouter -> GitHub Models), which owns retries and fallbacks. The local
+  // curl path below stays for a laptop run with no hosted key.
+  if (hosted.enabled()) {
+    return hosted.chat('You are an expert UPSC teacher writing course material.', prompt,
+      { numPredict: numPredict || 3400, temperature: temp == null ? 0.4 : temp });
+  }
   var payload = JSON.stringify({
     model: MODEL,
     stream: true,
