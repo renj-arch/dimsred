@@ -1,17 +1,47 @@
 {
  "meta": {
-  "generatedAt": "2026-11-13T08:53:12.164Z",
+  "generatedAt": "2026-11-14T08:19:00.570Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 50,
+  "count": 53,
   "lastAttempt": {
-   "at": "2026-11-13T08:53:12.164Z",
+   "at": "2026-11-14T08:19:00.570Z",
    "ok": true,
-   "count": 1,
-   "dropped": 4
+   "count": 3,
+   "dropped": 2
   }
  },
  "proposals": [
+  {
+   "id": "prp-mwg4wjmi-1",
+   "at": "2026-11-14T08:19:00.570Z",
+   "title": "Implement retry logic for failed 'mains-fresh' lane",
+   "why": "The digest lists a recent failure for 'mains-fresh' on 2026-11-07 where the model could not write an acceptable question due to missing checkable anchors. This is a specific validation failure that needs a retry mechanism.",
+   "idea": "Modify the GitHub Actions workflow for the writer lane to detect failures in the 'mains-fresh' category specifically related to anchor validation. Configure the runner to automatically re-trigger the generation with a slightly modified prompt (e.g., explicitly requesting an 'act' or 'scheme' anchor) up to 3 times before marking the request as failed.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mwg4wjmi-2",
+   "at": "2026-11-14T08:19:00.570Z",
+   "title": "Visualize fault board trends on homepage",
+   "why": "The fault board shows 83 critical and 39 warn items, but users currently see only a static list. Visualizing trends helps prioritize which content pools need immediate attention.",
+   "idea": "Add a simple HTML/JS widget to the homepage that reads data/fault-board.json and renders a bar chart or progress bars showing 'Critical' vs 'Warn' counts over the last 7 days. Use Chart.js via CDN for rendering, ensuring no external API keys are needed.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mwg4wjmi-3",
+   "at": "2026-11-14T08:19:00.570Z",
+   "title": "Fix flow-skipped on Ask Engine with explicit Next button",
+   "why": "Browser tests identified 'flow-skipped' issues on the Ask Engine because there is no visible 'Next' button, preventing users from exercising the quiz flow.",
+   "idea": "Locate the Ask Engine HTML template and inject a standard 'Next Question' button that triggers the next state in the quiz logic. Ensure the button is visible by default and handles the transition to the next question object from the current session data.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mweqonz8-1",
    "at": "2026-11-13T08:53:12.164Z",
