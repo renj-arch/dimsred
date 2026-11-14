@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var ROOT = path.resolve(__dirname, '..');
 var courseVersions = require('./lib/course-versions');
+var handwritten = require('./lib/handwritten');
 
 var TODAY = new Date().toISOString().slice(0, 10);
 var VERSIONS = courseVersions.load();
@@ -416,6 +417,13 @@ function generateExam(examKey) {
       h += foot();
 
       var fp = path.join(modDir, 'lesson-' + lesson.slug + '.html');
+      // Hand-written lessons are authored in place; their content is not in
+      // course-data.json, so regenerating from course-data would overwrite the
+      // authored prose with a thin stub. Never write over one.
+      if (handwritten.isProtected(path.relative(ROOT, fp))) {
+        console.log('[' + examKey + '] SKIP hand-written: ' + mk + '/lesson-' + lesson.slug + '.html');
+        continue;
+      }
       fs.writeFileSync(fp, h, 'utf-8');
       console.log('[' + examKey + '] Wrote: ' + mk + '/lesson-' + lesson.slug + '.html');
     }
