@@ -158,7 +158,8 @@ function promptFor(section, count, examName, paperName, seeds) {
     '- Quantitative: show percentage shortcuts, ratio elimination, unit-digit tricks, approximation methods.',
     '- Reasoning: show pattern-recognition shortcuts (letter positions, mirror positions, coded relationships).',
     '- English: show elimination technique (eliminate wrong options first, then choose between remaining).',
-    '- Return exactly ' + count + ' items.'
+    '- Return exactly ' + count + ' items.',
+    '- Never return an empty array. If the seed list feels exhausted, choose a different sub-topic and write the requested count.'
   ].join('\n');
 }
 
