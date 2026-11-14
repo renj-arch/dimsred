@@ -143,11 +143,13 @@ function systemPrompt(task) {
     'Tools (return STRICT JSON only, one tool per reply):',
     '{"thought":"...","tool":"read_file","path":"relative/path"}',
     '{"thought":"...","tool":"write_file","path":"relative/path","content":"FULL new file content"}',
+    '{"thought":"...","tool":"append_file","path":"relative/path","content":"text to append"}',
     '{"thought":"...","tool":"run","command":"node scripts/audit-site.js"}',
     '{"thought":"...","tool":"finish","summary":"what changed and why"}',
     '',
     'Rules of the loop:',
-    '- Read a file before writing it.',
+    '- Read a file ONCE before writing it. Never read the same file twice; use write_file or append_file.',
+    '- Use append_file for a small addition; use write_file for a rewrite.',
     '- Prefer a targeted repair over a rewrite.',
     '- Run the smallest relevant test before finishing.',
     '- If the task cannot be completed without inventing facts, use finish with a clear explanation and make no edit.',
@@ -169,6 +171,7 @@ async function runLoop(task) {
     { role: 'user', content: 'Begin. Return one JSON tool call.' }
   ];
   const readFiles = new Set();
+  const readCount = {};
   const changed = new Set();
   let summary = '';
 
@@ -202,8 +205,13 @@ async function runLoop(task) {
         continue;
       }
       readFiles.add(p);
-      const text = fs.readFileSync(abs, 'utf8').slice(0, 80000);
+      readCount[p] = (readCount[p] || 0) + 1;
       messages.push({ role: 'assistant', content: raw });
+      if (readCount[p] > 1) {
+        messages.push({ role: 'user', content: 'You have already read ' + p + '. Do not read it again. Use write_file or append_file, or finish.' });
+        continue;
+      }
+      const text = fs.readFileSync(abs, 'utf8').slice(0, 80000);
       messages.push({ role: 'user', content: 'Contents of ' + p + ':\n```\n' + text + '\n```' });
       continue;
     }
@@ -232,6 +240,37 @@ async function runLoop(task) {
       changed.add(p);
       messages.push({ role: 'assistant', content: raw });
       messages.push({ role: 'user', content: 'Wrote ' + p + '. Continue with tests or finish.' });
+      continue;
+    }
+
+    if (plan.tool === 'append_file') {
+      const p = String(plan.path || '');
+      if (!pathAllowed(p)) {
+        messages.push({ role: 'assistant', content: raw });
+        messages.push({ role: 'user', content: 'Path is not allowed: ' + p });
+        continue;
+      }
+      if (!readFiles.has(p)) {
+        messages.push({ role: 'assistant', content: raw });
+        messages.push({ role: 'user', content: 'Read the file before appending to it: ' + p });
+        continue;
+      }
+      const content = String(plan.content == null ? '' : plan.content);
+      if (!content || content.length > 20000) {
+        messages.push({ role: 'assistant', content: raw });
+        messages.push({ role: 'user', content: 'Append content must be between 1 and 20,000 chars.' });
+        continue;
+      }
+      const abs = path.join(ROOT, p);
+      if (!fs.existsSync(abs)) {
+        messages.push({ role: 'assistant', content: raw });
+        messages.push({ role: 'user', content: 'File does not exist: ' + p });
+        continue;
+      }
+      fs.appendFileSync(abs, content, 'utf8');
+      changed.add(p);
+      messages.push({ role: 'assistant', content: raw });
+      messages.push({ role: 'user', content: 'Appended to ' + p + '. Continue with tests or finish.' });
       continue;
     }
 
