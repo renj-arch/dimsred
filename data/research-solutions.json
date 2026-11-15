@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-15T13:48:32.149Z",
+  "updatedAt": "2026-11-15T22:46:03.991Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -16706,6 +16706,1003 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-15T13:48:32.143Z"
+    },
+    {
+      "id": "8c079aeeb8637e63",
+      "exam": "clat",
+      "paperSlug": "practice-set-04",
+      "paperTitle": "CLAT Practice Set 4",
+      "paperPath": "clat/papers/practice-set-04.html",
+      "paperFile": "practice-set-04.json",
+      "questionNumber": 1,
+      "section": "Legal Reasoning",
+      "question": "In a criminal trial, the prosecution presents a witness who testifies that they saw the accused commit the crime. However, it is later revealed that the witness had a motive to lie against the accused due to a personal grudge. How does this affect the admissibility of the testimony?",
+      "options": [
+        {
+          "label": "A",
+          "text": "The testimony becomes inadmissible as hearsay because it relies on a biased source.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "The testimony remains admissible but carries less weight; the judge or jury may consider the bias during evaluation.",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "The court must automatically dismiss the entire prosecution case due to the witness's credibility issue.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "The testimony is inadmissible unless corroborated by independent physical evidence.",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the legal issue: admissibility of testimony when witness has a motive to lie.",
+        "Recall that witness bias affects credibility, not admissibility.",
+        "Note that hearsay rule does not apply to in-court testimony based on personal knowledge.",
+        "Understand that the trier of fact evaluates credibility and assigns weight.",
+        "Eliminate options that incorrectly state inadmissibility or automatic dismissal.",
+        "Conclude that the testimony remains admissible but its weight is diminished."
+      ],
+      "verifierCheck": "Under the rules of evidence, a witness's testimony based on personal knowledge is admissible if relevant. Bias or motive to lie affects the witness's credibility, which is a matter for the trier of fact to weigh, not a ground for exclusion. The testimony is not hearsay because it is given in court under oath. The case is not automatically dismissed, and corroboration is not a prerequisite for admissibility. Therefore, the testimony remains admissible but its weight is diminished by the bias.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Weight vs Admissibility",
+          "idea": "Core evidence rule: bias affects credibility (weight), not admissibility",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Spot 'bias/grudge' → credibility issue",
+            "Recall: credibility = weight for jury",
+            "Eliminate A (hearsay error), C (auto-dismiss), D (corroboration rule)",
+            "Select B: admissible, less weight"
+          ]
+        },
+        {
+          "name": "Extreme Option Elimination",
+          "idea": "Eliminate legally extreme/absolute answers; bias never auto-excludes or auto-dismisses",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Flag absolute words: 'inadmissible' (A,D), 'automatically dismiss' (C)",
+            "Know bias goes to weight, not admissibility",
+            "Only B reflects judicial discretion on weight",
+            "Pick B"
+          ]
+        },
+        {
+          "name": "Hearsay vs Credibility",
+          "idea": "Distinguish hearsay (out-of-court statement) from in-court witness bias",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Witness testifies in court → not hearsay",
+            "A wrongly calls it hearsay",
+            "Bias = credibility attack → jury weighs it",
+            "B matches"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:36:33.704Z"
+    },
+    {
+      "id": "abf22a725186f0fd",
+      "exam": "ctet",
+      "paperSlug": "practice-set-10",
+      "paperTitle": "CTET Practice Set 10",
+      "paperPath": "ctet/papers/practice-set-10.html",
+      "paperFile": "practice-set-10.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "What is the unit digit of the product (327)^51 × (654)^62?",
+      "options": [
+        {
+          "label": "A",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "6",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "8",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Unit digit of 327 is 7; unit digit of 654 is 4.",
+        "Cycle of 7^n: 7,9,3,1 (period 4). 51 mod 4 = 3 → unit digit of 7^51 is 3.",
+        "Cycle of 4^n: 4,6 (period 2). 62 mod 2 = 0 → unit digit of 4^62 is 6.",
+        "Multiply unit digits: 3 × 6 = 18 → unit digit 8.",
+        "Option D corresponds to 8."
+      ],
+      "verifierCheck": "The unit digit of 327 is 7, and the unit digit of 654 is 4. The cycle of 7^n unit digits is 7,9,3,1 with period 4; 51 mod 4 = 3, so 7^51 ends in 3. The cycle of 4^n unit digits is 4,6 with period 2; 62 is even, so 4^62 ends in 6. Multiplying the unit digits: 3 × 6 = 18, giving a final unit digit of 8.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Cycle Method",
+          "idea": "Use repeating last-digit cycles for 7 and 4",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Unit digit of 327 is 7; of 654 is 4.",
+            "7^51: cycle 7,9,3,1 → 51 mod 4 = 3 → unit 3.",
+            "4^62: cycle 4,6 → 62 mod 2 = 0 → unit 6.",
+            "Multiply 3×6=18 → unit 8."
+          ]
+        },
+        {
+          "name": "Mod 10 Direct",
+          "idea": "Compute each factor modulo 10 using congruences",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Compute (7^51 mod 10) × (4^62 mod 10) mod 10.",
+            "7^2=49≡-1 → 7^4≡1 → 7^51≡7^3≡343≡3.",
+            "4^2=16≡6 → 4^62≡(4^2)^31≡6^31≡6.",
+            "3×6=18≡8."
+          ]
+        },
+        {
+          "name": "Power Pairing",
+          "idea": "Break exponents into full cycles plus remainder",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Note 7^4 ends in 1, 4^2 ends in 6.",
+            "7^51 = (7^4)^12 × 7^3 → 1 × 343 → 3.",
+            "4^62 = (4^2)^31 → 6^31 → 6 (6^n always ends in 6).",
+            "3 × 6 = 18 → unit 8."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:37:41.327Z"
+    },
+    {
+      "id": "c9114e8ed13af741",
+      "exam": "nda",
+      "paperSlug": "practice-set-05",
+      "paperTitle": "NDA Practice Set 5",
+      "paperPath": "nda/papers/practice-set-05.html",
+      "paperFile": "practice-set-05.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "The modulus of the complex number (1 + i)^8 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "16",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "8",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "32",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compute modulus of 1+i: |1+i| = sqrt(1^2+1^2) = sqrt(2).",
+        "Use property |z^n| = |z|^n: |(1+i)^8| = |1+i|^8 = (sqrt(2))^8.",
+        "Simplify (sqrt(2))^8 = (2^(1/2))^8 = 2^4 = 16.",
+        "Thus modulus is 16, corresponding to option A."
+      ],
+      "verifierCheck": "The modulus of a complex number z is |z|, and |z^n| = |z|^n. For z = 1+i, |1+i| = sqrt(1^2 + 1^2) = sqrt(2). Then |(1+i)^8| = (sqrt(2))^8 = 2^4 = 16.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Modulus Power Rule",
+          "idea": "Use |z^n| = |z|^n",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "|1+i| = √(1^2+1^2) = √2",
+            "(√2)^8 = 2^4 = 16"
+          ]
+        },
+        {
+          "name": "Repeated Squaring",
+          "idea": "Square stepwise to avoid binomial",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "(1+i)^2 = 2i",
+            "(1+i)^4 = (2i)^2 = -4",
+            "(1+i)^8 = (-4)^2 = 16",
+            "|16| = 16"
+          ]
+        },
+        {
+          "name": "Polar Form",
+          "idea": "Convert to polar, raise modulus",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "1+i = √2 e^{iπ/4}",
+            "(√2)^8 e^{i2π} = 16·1 = 16"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:38:59.869Z"
+    },
+    {
+      "id": "4e7ccf116b5f2da2",
+      "exam": "sbi-clerk",
+      "paperSlug": "practice-set-07",
+      "paperTitle": "SBI Clerk Practice Set 7",
+      "paperPath": "sbi-clerk/papers/practice-set-07.html",
+      "paperFile": "practice-set-07.json",
+      "questionNumber": 1,
+      "section": "Reasoning Ability",
+      "question": "Pointing to a photograph, Rekha said, \"He is the only son of my grandfather's only daughter.\" How is the person in the photograph related to Rekha?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Father",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Uncle",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Brother",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Cousin",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify 'my grandfather's only daughter' as Rekha's mother (since the grandfather has only one daughter, who must be Rekha's mother).",
+        "Interpret 'the only son of my grandfather's only daughter' as the only son of Rekha's mother.",
+        "The only son of Rekha's mother is Rekha's brother (given Rekha is female).",
+        "Conclude the person in the photograph is Rekha's brother."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Gender Shortcut",
+          "idea": "Use gender cues to jump to sibling",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "\"He\" indicates male",
+            "\"Only son of my mother\" = brother (since Rekha is sister)",
+            "Answer: Brother"
+          ]
+        },
+        {
+          "name": "Chain Reduction",
+          "idea": "Reduce phrase stepwise to immediate family",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Grandfather's only daughter = mother",
+            "Only son of mother = brother (Rekha is female)",
+            "Person is male => brother"
+          ]
+        },
+        {
+          "name": "Reverse Engineering",
+          "idea": "Start from the person and trace back to Rekha",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Person is male, so he is a son",
+            "His mother is grandfather's only daughter = Rekha's mother",
+            "Thus he is mother's only son = Rekha's brother"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:40:38.581Z"
+    },
+    {
+      "id": "2c0d99f17f61f622",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "SSC GD Constable Practice Set 9",
+      "paperPath": "ssc-gd/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 1,
+      "section": "General Intelligence & Reasoning",
+      "question": "Pointing to a photograph, a man said, 'She is the only daughter of the only son of my grandfather.' How is the woman in the photograph related to the man?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Sister",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Mother",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Daughter",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Niece",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the man's grandfather.",
+        "The only son of the grandfather is the man's father.",
+        "The only daughter of that father is the man's sister (since the man is male).",
+        "Therefore, the woman in the photograph is the man's sister."
+      ],
+      "verifierCheck": "The man's grandfather's only son must be the man's father (the man is a grandson, not a son). The only daughter of that father is the man's sister (since the man is male). Thus the woman in the photograph is the man's sister.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Gender Filter",
+          "idea": "Use male/female pronouns to pinpoint relation",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Speaker is male → 'my grandfather'",
+            "Only son of grandfather = father (male)",
+            "Only daughter of father = sister (female)",
+            "Answer: Sister"
+          ]
+        },
+        {
+          "name": "Father Chain",
+          "idea": "Collapse grandfather's only son to father",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Only son of my grandfather = my father",
+            "Only daughter of my father = my sister",
+            "Answer: Sister"
+          ]
+        },
+        {
+          "name": "Mini Tree",
+          "idea": "Sketch three generations in two lines",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "Grandfather → only son (Father)",
+            "Father → only daughter (Sister)",
+            "Speaker (male) and Sister share father",
+            "Answer: Sister"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:41:51.998Z"
+    },
+    {
+      "id": "ae4570112ca03841",
+      "exam": "clat",
+      "paperSlug": "practice-set-04",
+      "paperTitle": "CLAT Practice Set 4",
+      "paperPath": "clat/papers/practice-set-04.html",
+      "paperFile": "practice-set-04.json",
+      "questionNumber": 2,
+      "section": "Legal Reasoning",
+      "question": "In a dispute over a disputed will, the plaintiff argues that the testator was of sound mind when signing the document. The defendant counters that the testator had recently suffered from severe depression. Which legal principle does the defendant's argument invoke to challenge the validity of the will?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Mental Capacity at the time of execution",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Formalities of Execution",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Witness Testimony",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Statute of Frauds",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the core issue: validity of a will challenged based on testator's mental state.",
+        "Recognize that the defendant argues the testator suffered from severe depression, which impairs mental capacity.",
+        "Match this to the legal principle that a testator must have mental capacity at the time of execution.",
+        "Eliminate other options: Formalities of Execution deals with signing/witnessing procedures; Witness Testimony is about evidence; Statute of Frauds requires certain contracts to be in writing, not directly about mental capacity.",
+        "Conclude that the correct principle is Mental Capacity at the time of execution."
+      ],
+      "verifierCheck": "The defendant's argument that the testator suffered from severe depression directly challenges the testator's mental capacity at the time the will was executed. Testamentary capacity requires the testator to be of sound mind, and evidence of severe depression is relevant to whether the testator understood the nature of the act, the extent of the property, and the natural objects of bounty. This invokes the legal principle of mental capacity at the time of execution, not formalities, witness testimony, or the Statute of Frauds.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Core Issue ID",
+          "idea": "Identify the core legal principle challenged by depression claim",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Defendant argues depression undermines validity",
+            "This directly invokes mental capacity at execution",
+            "Choose A"
+          ]
+        },
+        {
+          "name": "Keyword Match",
+          "idea": "Match 'sound mind' and 'depression' to mental capacity",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Spot keywords: 'sound mind' and 'depression'",
+            "Link both to testator's mental capacity",
+            "Select option A"
+          ]
+        },
+        {
+          "name": "Eliminate Irrelevant",
+          "idea": "Discard options unrelated to mental state",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "B: Formalities of Execution concerns signing formalities, not mental state",
+            "C: Witness Testimony concerns witnesses, not mental state",
+            "D: Statute of Frauds concerns writing requirement, not mental state",
+            "Only A addresses mental capacity"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:42:33.948Z"
+    },
+    {
+      "id": "5e1e29bbd93fc583",
+      "exam": "nda",
+      "paperSlug": "practice-set-05",
+      "paperTitle": "NDA Practice Set 5",
+      "paperPath": "nda/papers/practice-set-05.html",
+      "paperFile": "practice-set-05.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "In a right-angled triangle, if one acute angle is 30°, what is the measure of the other acute angle?",
+      "options": [
+        {
+          "label": "A",
+          "text": "45°",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "60°",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "75°",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "90°",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Sum of angles in a triangle is 180°",
+        "Right angle is 90°",
+        "Sum of the two acute angles = 180° - 90° = 90°",
+        "Given one acute angle = 30°",
+        "Other acute angle = 90° - 30° = 60°",
+        "Option B is 60°"
+      ],
+      "verifierCheck": "In a right-angled triangle, one angle is 90°. The sum of all angles in a triangle is 180°, so the sum of the two acute angles is 180° - 90° = 90°. Given one acute angle is 30°, the other acute angle is 90° - 30° = 60°.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "30-60-90 Triangle",
+          "idea": "Standard special right triangle",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recognize 30° angle",
+            "Other acute must be 60°"
+          ]
+        },
+        {
+          "name": "Complementary Acute Angles",
+          "idea": "Acute angles in right triangle sum to 90°",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Right angle = 90°",
+            "Acute angles sum to 90°",
+            "Subtract 30° from 90° = 60°"
+          ]
+        },
+        {
+          "name": "Triangle Angle Sum",
+          "idea": "All triangles sum to 180°",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Sum of angles = 180°",
+            "Right angle = 90°",
+            "Given acute = 30°",
+            "180 - 90 - 30 = 60°"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:43:04.329Z"
+    },
+    {
+      "id": "cd5ac2adca8bd145",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-08",
+      "paperTitle": "IBPS PO Practice Set 8",
+      "paperPath": "ibps-po/papers/practice-set-08.html",
+      "paperFile": "practice-set-08.json",
+      "questionNumber": 3,
+      "section": "Reasoning Ability",
+      "question": "In a row of students, A is 7th from the left and B is 9th from the right. If they interchange positions, A becomes 11th from the left. How many students are there in the row?",
+      "options": [
+        {
+          "label": "A",
+          "text": "18",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "19",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "20",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "21",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let total number of students be N.",
+        "Initially, A is 7th from left. B is 9th from right, so B's position from left is N - 9 + 1 = N - 8.",
+        "After interchange, A moves to B's original position, so A's new position from left is N - 8.",
+        "Given that after interchange A becomes 11th from left, so N - 8 = 11.",
+        "Solving gives N = 19.",
+        "Verification: Initially B at position 11 from left (9th from right in 19), after interchange A at 11, B at 7, consistent."
+      ],
+      "verifierCheck": "Initially, A is 7th from the left and B is 9th from the right. Let the total number of students be N. B's position from the left is N - 9 + 1 = N - 8. After interchanging, A moves to B's original position, so A's new position from the left becomes N - 8. This is given as 11th from the left. Therefore, N - 8 = 11, giving N = 19. Verification: With 19 students, B is initially at position 19 - 9 + 1 = 11 from the left; after swapping, A occupies position 11 from the left, matching the condition.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Swap Sum Shortcut",
+          "idea": "Add A's new left rank and B's original right rank, subtract 1",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "After interchange, A is 11th from left → this was B's original left rank.",
+            "B was originally 9th from right.",
+            "Total students = left rank + right rank - 1 = 11 + 9 - 1 = 19."
+          ]
+        },
+        {
+          "name": "Left-Right Invariant",
+          "idea": "For any student, left position + right position - 1 = total",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "After swap, A occupies B's original spot, so A's new left (11) = B's original left.",
+            "B's original right = 9.",
+            "Apply invariant: total = 11 + 9 - 1 = 19."
+          ]
+        },
+        {
+          "name": "Option Check",
+          "idea": "Plug each option into B's left rank formula; only B fits",
+          "kind": "estimate",
+          "seconds": 6,
+          "steps": [
+            "For a total N, B's left rank = N - 9 + 1 = N - 8.",
+            "After swap, A's left rank becomes B's left rank = N - 8.",
+            "Given A's new left rank = 11, so N - 8 = 11 → N = 19."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:43:53.332Z"
+    },
+    {
+      "id": "774cc68546415590",
+      "exam": "nda",
+      "paperSlug": "practice-set-05",
+      "paperTitle": "NDA Practice Set 5",
+      "paperPath": "nda/papers/practice-set-05.html",
+      "paperFile": "practice-set-05.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "The equation of the circle passing through the points (0,0), (a,0) and (0,b) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "x^2 + y^2 + ax + by = 0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "x^2 + y^2 - 2ax - 2by = 0",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "x^2 + y^2 + 2ax + 2by = 0",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "x^2 + y^2 - ax - by = 0",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Write general circle equation: x^2 + y^2 + 2gx + 2fy + c = 0",
+        "Substitute (0,0) to get c = 0",
+        "Substitute (a,0): a^2 + 2ga = 0 => g = -a/2",
+        "Substitute (0,b): b^2 + 2fb = 0 => f = -b/2",
+        "Form equation: x^2 + y^2 - ax - by = 0",
+        "Compare with options: matches D"
+      ],
+      "verifierCheck": "The general circle equation is x^2+y^2+2gx+2fy+c=0. Substituting (0,0) gives c=0. Substituting (a,0) gives a^2+2ga=0 => g=-a/2. Substituting (0,b) gives b^2+2fb=0 => f=-b/2. Thus the equation is x^2+y^2-ax-by=0, which matches option D.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Intercept Form Mnemonic",
+          "idea": "Circle through origin and axes intercepts a,b has fixed equation",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall standard result: circle through (0,0), (a,0), (0,b) is x²+y² - ax - by =0.",
+            "Directly select option D."
+          ]
+        },
+        {
+          "name": "Right Triangle Diameter",
+          "idea": "Right angle at origin implies hypotenuse is diameter",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Points (0,0), (a,0), (0,b) form a right triangle with right angle at origin.",
+            "The segment joining (a,0) and (0,b) is the diameter.",
+            "Center is midpoint (a/2, b/2); radius² = (a²+b²)/4.",
+            "Equation: (x - a/2)² + (y - b/2)² = (a²+b²)/4.",
+            "Expand and simplify to x² + y² - ax - by = 0."
+          ]
+        },
+        {
+          "name": "General Form Substitution",
+          "idea": "Plug points into x²+y²+2gx+2fy+c=0",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Let circle be x²+y²+2gx+2fy+c=0.",
+            "Substitute (0,0) → c=0.",
+            "Substitute (a,0) → a²+2ga=0 → g=-a/2.",
+            "Substitute (0,b) → b²+2fb=0 → f=-b/2.",
+            "Equation: x²+y² - ax - by = 0."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:44:28.517Z"
+    },
+    {
+      "id": "67dc8a3a66f791a5",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "SSC GD Constable Practice Set 9",
+      "paperPath": "ssc-gd/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 3,
+      "section": "Elementary Mathematics",
+      "question": "The difference between Compound Interest (compounded annually) and Simple Interest on a certain sum for 2 years at 10% per annum is Rs. 120. Find the principal sum.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 12,000",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Rs. 10,000",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Rs. 15,000",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 8,000",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let principal be P.",
+        "Simple Interest for 2 years at 10% = P * 10/100 * 2 = 0.2P.",
+        "Compound Interest compounded annually for 2 years at 10% = P(1+10/100)^2 - P = 0.21P.",
+        "Difference = CI - SI = 0.21P - 0.2P = 0.01P.",
+        "Given difference = 120, so 0.01P = 120 => P = 12000.",
+        "Therefore principal is Rs. 12,000, which corresponds to option A."
+      ],
+      "verifierCheck": "Let principal be P. Simple Interest for 2 years at 10% = P × 10/100 × 2 = 0.2P. Compound Interest compounded annually = P(1+10/100)^2 - P = 1.21P - P = 0.21P. Difference = 0.21P - 0.2P = 0.01P = 120 ⇒ P = 120/0.01 = 12,000. Hence principal is Rs. 12,000, option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Difference Formula",
+          "idea": "CI-SI for 2 years equals P*(r/100)^2",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Difference = P*(10/100)^2 = P/100",
+            "Set P/100 = 120 => P = 12000",
+            "Select option A"
+          ]
+        },
+        {
+          "name": "Interest on Interest",
+          "idea": "Difference is interest earned on first year's interest",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "First year interest = 10% of P = 0.1P",
+            "Interest on that = 10% of 0.1P = 0.01P = 120",
+            "P = 120/0.01 = 12000",
+            "Option A"
+          ]
+        },
+        {
+          "name": "Direct SI & CI",
+          "idea": "Compute both interests and subtract",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "SI = P*10*2/100 = 0.2P",
+            "CI = P(1.1)^2 - P = 0.21P",
+            "Difference = 0.01P = 120 => P=12000",
+            "Option A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:45:24.308Z"
+    },
+    {
+      "id": "15efd3b0af70ea37",
+      "exam": "clat",
+      "paperSlug": "practice-set-04",
+      "paperTitle": "CLAT Practice Set 4",
+      "paperPath": "clat/papers/practice-set-04.html",
+      "paperFile": "practice-set-04.json",
+      "questionNumber": 4,
+      "section": "Legal Reasoning",
+      "question": "Which of the following scenarios best illustrates the legal concept of 'Laches' as a defense against a claim for specific performance?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A plaintiff files a suit three years after the breach occurred, during which time the defendant purchased and renovated the property in good faith.",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "A plaintiff sues immediately after discovering a breach of contract.",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "A defendant argues that the statute of limitations has expired based on the date of the breach.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "A plaintiff fails to produce documentary evidence despite having access to it for over a decade.",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Define laches as an equitable defense requiring unreasonable delay and prejudice to the opposing party.",
+        "Evaluate each option for presence of delay and prejudice.",
+        "Option A shows a three-year delay and defendant's good faith purchase and renovation, constituting prejudice.",
+        "Option B shows no delay.",
+        "Option C relies on statute of limitations, not laches.",
+        "Option D concerns evidence production, not delay in filing suit."
+      ],
+      "verifierCheck": "Laches is an equitable defense requiring unreasonable delay by the plaintiff and resulting prejudice to the defendant. Option A shows a three-year delay in filing suit during which the defendant purchased and renovated the property in good faith, constituting prejudice. Option B involves no delay. Option C relies on the statute of limitations, a legal defense distinct from laches. Option D concerns failure to produce evidence, not delay in asserting a claim.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Prejudice Spotlight",
+          "idea": "Focus on defendant's detrimental reliance",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Laches requires defendant changed position due to delay.",
+            "Only A shows defendant bought/renovated property relying on delay.",
+            "Select A."
+          ]
+        },
+        {
+          "name": "Equity vs Law Filter",
+          "idea": "Laches is equitable defense; specific performance is equitable remedy",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Specific performance = equity → laches applies.",
+            "Statute of limitations (C) is legal, not laches.",
+            "Immediate suit (B) no delay.",
+            "Missing evidence (D) not laches."
+          ]
+        },
+        {
+          "name": "Laches Element Match",
+          "idea": "Check for delay + prejudice in equitable claim",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall laches = unreasonable delay + prejudice to defendant in equity.",
+            "Scan options for plaintiff delay and defendant reliance.",
+            "Option A: 3-year delay, defendant renovated in good faith → prejudice.",
+            "Others lack delay or prejudice."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-15T22:46:03.986Z"
     }
   ]
 }
