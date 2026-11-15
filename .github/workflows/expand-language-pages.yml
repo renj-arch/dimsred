@@ -9,10 +9,11 @@ name: Expand Language Pages
 # It is a SEPARATE plugin from expand-course (AGENTS.md: languages are not
 # part of expand-course.js).
 #
-# Sharding: the job runs as a matrix of 8 runners, each handling a disjoint
+# Sharding: the job runs as a matrix of 16 runners, each handling a disjoint
 # slice of pages, so the 34 thin pages reach EXPAND_LANG_TARGET_WORDS in one
 # day instead of two weeks. Each shard has its own ledger file so concurrent
-# writers never race on one JSON.
+# writers never race on one JSON. Within a page, several model passes run back
+# to back (EXPAND_LANG_PASSES) because one pass only adds ~500 words.
 #
 # Safety:
 #   - Only appends new sections; never deletes or overwrites human content.
@@ -87,6 +88,7 @@ jobs:
           EXPAND_LANG_DEADLINE_MIN: '90'
           EXPAND_LANG_TARGET_WORDS: '4000'
           EXPAND_LANG_RETRIES: '3'
+          EXPAND_LANG_PASSES: '4'
           EXPAND_LANG_SHARD: ${{ matrix.shard }}
           EXPAND_LANG_SHARDS: ${{ github.event.inputs.shards || '16' }}
           EXPAND_LANG_LEDGER: '/tmp/language-expansion.shard-${{ matrix.shard }}.json'
