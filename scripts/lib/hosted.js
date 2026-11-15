@@ -9,12 +9,12 @@
 // opt in with one branch, while a developer's laptop keeps the local path.
 //
 // A lane is "hosted" when it sets any of the route flags the router reads:
-//   NVAPI=1  GROQ=1  OPENROUTER=1  GH_MODELS=1  OPENCODE_ZEN=1
+//   NVAPI=1  GROQ=1  OPENROUTER=1  GH_MODELS=1  OPENCODE_ZEN=1  GEMINI=1
 // The router itself decides which of those actually has a key and falls
 // through on failure, so this module never needs the keys.
 const router = require('./ollama');
 
-const FLAGS = ['NVAPI', 'GROQ', 'OPENROUTER', 'GH_MODELS', 'OPENCODE_ZEN'];
+const FLAGS = ['NVAPI', 'GROQ', 'OPENROUTER', 'GH_MODELS', 'OPENCODE_ZEN', 'GEMINI'];
 
 function enabled() {
   for (const k of FLAGS) {
