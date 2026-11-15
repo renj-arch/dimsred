@@ -185,6 +185,27 @@ lesson-writer exposes it as a manual `deepseek: true` toggle, with automatic
 fallback to NVIDIA if the quota is exhausted. The key is personal; remove the
 `OPENCODE_API_KEY` secret to disable the route entirely.
 
+## Optional: Refuseless (paid, off by default)
+
+`REFUSELESS=1` adds an OpenAI-compatible backend at
+`https://api.refuseless.com/v1/chat/completions` (override with `REFUSELESS_URL`).
+This one is **paid**: credit-based, per-million-token pricing, so it is off by
+default and sits **last before the local model**, after every free route.
+Enable it only after a top-up.
+
+- `REFUSELESS_API_KEY` (repo secret) — key starts with `abl_`.
+- `REFUSELESS_MODEL` — default `deepseek-v4.1-flash-fast` (cheapest paid id,
+  $0.01/$0.08 per M). The lineup also lists `glm-5.3-abliterated`,
+  `glm-5.3-flash-abliterated`, `deepseek-v4.1-flash-abliterated`,
+  `minimax-m3.1-flash`, `kimi-k3.1-pro` and a `-free` DeepSeek variant.
+- `reasoning_effort` accepts `off`, `low`, `high`, `max`.
+
+Live state on **2026-11-15** for the owner's key: `GET /v1/models` returns 8
+models, the `-free` model answers **429 `model_busy`** ("Free slots at
+capacity. Top up or retry later."), and the paid models answer **402
+`insufficient_credits`**. Until either changes, enabling `REFUSELESS=1` only
+adds a failed attempt before the local fallback.
+
 ## Tests
 
 `node scripts/lib/ollama-nvapi.test.js` covers routing, alias resolution, the
