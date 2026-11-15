@@ -41,6 +41,13 @@ git commit -m "$MSG" || { echo "[ci-push] commit failed"; exit 1; }
 # data/invented/questions.json is unioned (see union_invented) because there
 # a dropped line IS a lost question.
 sync_remote() {
+  # The checkout is typically fetch-depth: 1. A depth-1 fetch has no common
+  # ancestor with a local commit, so `git pull --rebase` and the fallback merge
+  # both fail and the push is rejected even though the work is good. Deepen
+  # first: 100 commits is enough to find the base and costs no blobs.
+  git fetch --deepen=100 --no-tags origin main 2>/dev/null \
+    || git fetch --depth=100 --no-tags origin main 2>/dev/null \
+    || true
   git pull --rebase --autostash 2>/dev/null && return 0
   git rebase --abort 2>/dev/null || true
   # -X ours resolves content conflicts, but git still refuses modify/delete
@@ -146,7 +153,7 @@ guard_archive_index() {
 # key instead. Only runs when this checkout carries the files.
 union_course_state() {
   local f ref cand
-  for f in scripts/course-versions.json scripts/course-depth.json; do
+  for f in scripts/course-versions.json scripts/course-depth.json scripts/course-data.json scripts/course-practice.json; do
     [ -f "$f" ] || continue
     ref=""
     for cand in FETCH_HEAD origin/main MERGE_HEAD; do
