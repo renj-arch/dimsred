@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Permutations, Combinations &amp; Probability — JEE Mathematics Lesson | vlymbooq</title>
     <meta name="description" content="Free JEE Mathematics Permutations, Combinations &amp; Probability lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
@@ -114,7 +116,8 @@
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Permutations, Combinations &amp; Probability</h1>
-                    <div id="lesson-meta" hidden data-version="52adb862ab4d" data-updated="" data-updated-label="" data-headings="[&quot;Key Concepts Covered&quot;,&quot;Important Formulas &amp; Rules&quot;,&quot;Common Question Types&quot;]"></div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 15 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="4b486eaca52a" data-updated="2026-11-15" data-updated-label="15 Nov 2026" data-headings="[&quot;Fundamental Counting Principles&quot;,&quot;1.1 The Multiplication Principle&quot;,&quot;1.2 The Addition Principle&quot;,&quot;1.3 Applications to Arrangements&quot;,&quot;Permutations&quot;,&quot;2.1 Definition and Notation&quot;,&quot;2.2 Permutations of Distinct Objects&quot;,&quot;2.3 Permutations with Repetition&quot;,&quot;Combinations&quot;,&quot;3.1 Definition and Notation&quot;,&quot;3.2 Combinations of Distinct Objects&quot;,&quot;3.3 Combinations with Repetition&quot;,&quot;Probability Foundations&quot;,&quot;4.1 Sample Space and Events&quot;,&quot;4.2 Axioms of Probability&quot;,&quot;4.3 Classical and Empirical Probability&quot;,&quot;Conditional Probability, Bayes&#39; Theorem and Distributions&quot;,&quot;5.1 Conditional Probability and Independence&quot;,&quot;5.2 Bayes&#39; Theorem&quot;,&quot;5.3 Common Discrete Distributions&quot;]"></div>
                     <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>
                     <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Counting principles, combinations, and conditional probability with Bayes and distributions.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
@@ -132,23 +135,112 @@
                         <li>Apply key formulas and techniques to solve problems</li>
                         <li>Practice with exam-level questions to build speed and accuracy</li>
                     </ul>
-<p>This lesson covers <strong>Permutations, Combinations & Probability</strong>, a key topic in Mathematics for JEE. Below is a structured overview of the core concepts you need to master.</p>
-<h3>Key Concepts Covered</h3>
-<ul>
-  <li><strong>Permutations:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Combinations:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Probability:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-</ul>
-<h3>Important Formulas & Rules</h3>
-<p>Focus on understanding the core formulas and when to apply them. Practice identifying the correct formula based on question type. Create a formula sheet for quick revision before the exam.</p>
-<h3>Common Question Types</h3>
-<ul>
-  <li>Direct application of formulas and concepts</li>
-  <li>Multi-step problems requiring combination of concepts</li>
-  <li>Data interpretation and analysis-based questions</li>
-</ul>
-<div class="tip-box"><div class="tip-title">Exam Strategy</div><div class="tip-text">Practice topic-wise questions first, then attempt mixed sets. Focus on accuracy before speed. Review your mistakes and maintain an error log.</div></div>
-        <script>
+<h2>Fundamental Counting Principles</h2>
+
+<h3>1.1 The Multiplication Principle</h3>
+<p>The multiplication principle states that if a task can be broken into a sequence of independent stages, and the first stage can be performed in m ways while the second stage can be performed in n ways for each outcome of the first stage, then the whole task can be performed in m × n ways. This principle follows directly from the idea that each choice in the first stage can be paired with every choice in the second stage, producing a Cartesian product of the two sets of possibilities. When more than two stages are involved, the total number of ways is the product of the numbers of ways for each individual stage, provided the choices at each stage do not depend on earlier choices except through the already fixed outcomes.</p>
+<p>In practice, the multiplication principle is the engine behind counting arrangements, selections, and many probability calculations. For example, to form a three‑digit code where the first digit cannot be zero, there are 9 choices for the first digit, 10 for the second, and 10 for the third, giving 9 × 10 × 10 = 900 possible codes. The principle also underlies the derivation of factorial notation, because arranging n distinct objects in a line can be seen as n successive choices: n ways for the first position, n−1 for the second, and so on, yielding n × (n−1) × … × 1 = n!.</p>
+
+<h3>1.2 The Addition Principle</h3>
+<p>The addition principle applies when a task can be completed by exactly one of several mutually exclusive methods. If method A can be carried out in a ways and method B in b ways, and the two methods cannot both be used for the same outcome, then the total number of ways to complete the task is a + b. This principle is essentially a statement about the cardinality of a disjoint union of finite sets: the size of the union equals the sum of the sizes of the individual sets. It is crucial when a problem naturally splits into cases that do not overlap, such as counting the number of ways to choose a committee that either includes a particular person or excludes that person.</p>
+<p>Care must be taken to ensure the cases are truly disjoint; otherwise the simple sum would double‑count outcomes that belong to more than one case. In such situations the principle of inclusion–exclusion extends the addition principle by subtracting the sizes of intersections. The addition principle also appears in probability when computing the probability of the union of mutually exclusive events, because the probability of the union equals the sum of the individual probabilities.</p>
+
+<h3>1.3 Applications to Arrangements</h3>
+<p>Arrangements of objects in a line, around a circle, or in a row with restrictions are classic applications of the multiplication and addition principles. For linear arrangements of n distinct objects, the multiplication principle gives n! directly. When some objects are identical, the number of distinct permutations reduces because swapping identical objects does not produce a new arrangement; the formula becomes n! divided by the product of the factorials of the multiplicities of each identical type. Circular arrangements introduce a further division by n, since rotating the whole circle does not change the relative order, leading to (n−1)! for n distinct objects around a circle.</p>
+<p>Restrictions such as “two particular persons must not sit together” are handled by first counting the total arrangements without restriction and then subtracting the arrangements where the restriction is violated. The latter is often counted by treating the restricted pair as a single combined object, applying the multiplication principle to the reduced set, and then multiplying by the internal permutations of the pair. This complementary counting technique is a direct consequence of the addition principle applied to the partition of the sample space into “restriction satisfied” and “restriction violated” cases.</p>
+
+<h2>Permutations</h2>
+<h3>2.1 Definition and Notation</h3>
+<p>A permutation is an ordered arrangement of a selection of objects taken from a larger set. The notation P(n, r) or ⁿPᵣ denotes the number of ways to choose r objects from n distinct objects and arrange them in a sequence. By the multiplication principle, the first position can be filled in n ways, the second in n−1 ways, continuing until the r‑th position, which can be filled in n−r+1 ways. Hence P(n, r) = n × (n−1) × … × (n−r+1) = n! / (n−r)!. This formula makes explicit the relationship between permutations and factorials, and it reduces to n! when r = n, i.e., when all objects are arranged.</p>
+<p>The notation ⁿPᵣ is read as “n permute r” and is standard in combinatorial textbooks. It emphasizes that order matters: the arrangement (a, b, c) is considered different from (b, a, c). This distinction is the defining feature that separates permutations from combinations, where order is irrelevant. Understanding this notation is essential for translating word problems into algebraic expressions that can be evaluated or simplified.</p>
+
+<h3>2.2 Permutations of Distinct Objects</h3>
+<p>When all n objects are distinct, the number of permutations of all n objects is n!. This follows immediately from the multiplication principle applied to n successive choices. For a partial permutation of length r, the formula P(n, r) = n!/(n−r)! gives the count. For instance, the number of ways to award gold, silver, and bronze medals to 10 athletes is P(10, 3) = 10 × 9 × 8 = 720. The reasoning is that the gold medal can go to any of the 10 athletes, the silver to any of the remaining 9, and the bronze to any of the remaining 8.</p>
+<p>Permutations of distinct objects also appear in problems involving seating arrangements, password formation, and scheduling. In each case, the key is to identify the number of positions to fill and the pool of available distinct items for each position, then apply the product rule. If additional constraints such as “person A must sit at the left end” are present, the constrained position is fixed first, reducing the effective pool for the remaining positions, and the multiplication principle is applied to the reduced problem.</p>
+
+<h3>2.3 Permutations with Repetition</h3>
+<p>When objects are not all distinct, the number of distinct permutations decreases because swapping identical objects does not create a new arrangement. If a multiset contains n objects with n₁ of type 1, n₂ of type 2, …, n_k of type k (where Σ n_i = n), the number of distinct permutations is n! / (n₁! n₂! … n_k!). This formula is derived by starting with n! permutations of n labelled objects and then dividing by the factorial of each multiplicity to eliminate the overcounting caused by permutations among identical objects.</p>
+<p>A classic example is the word “MISSISSIPPI”, which has 11 letters with multiplicities M=1, I=4, S=4, P=2. The number of distinct arrangements is 11! / (1! 4! 4! 2!) = 34 650. The same principle applies to arranging coloured balls, distributing identical gifts, or any scenario where some items are indistinguishable. It is important to verify that the objects within each type are truly identical; if any subtle distinction exists, the simple division by factorials would undercount the true number of arrangements.</p>
+
+<div class="example-box">
+<div class="ex-title">Example: Arranging Letters with Repetition</div>
+<div class="ex-text">Find the number of distinct arrangements of the letters in the word “BANANA”.</div>
+<div class="ex-soln">The word BANANA has 6 letters. The letter A appears 3 times, N appears 2 times, and B appears once. Using the formula for permutations with repetition, the number of distinct arrangements is 6! / (3! 2! 1!) = 720 / (6 × 2 × 1) = 720 / 12 = 60. Therefore, there are 60 distinct arrangements of the letters in BANANA.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Insight</div>
+<div class="tip-text">When a problem asks for arrangements with repeated items, first write down the total number of items and the frequency of each distinct item. Then apply the division by factorials of the frequencies. A common mistake is to forget the factorial for items that appear only once; including 1! does not change the value but reinforces the habit of accounting for every type.</div>
+</div>
+
+<h2>Combinations</h2>
+<h3>3.1 Definition and Notation</h3>
+<p>A combination is a selection of objects from a larger set where the order of selection does not matter. The notation C(n, r) or ⁿCᵣ (also written as binom{n}{r}) denotes the number of ways to choose r objects from n distinct objects without regard to order. Since each combination of r objects corresponds to r! permutations of those same objects, the relationship between permutations and combinations is C(n, r) = P(n, r) / r! = n! / [r! (n−r)!]. This formula is symmetric: C(n, r) = C(n, n−r), reflecting the fact that choosing r objects to include is equivalent to choosing n−r objects to exclude.</p>
+<p>The binomial coefficient binom{n}{r} appears in the binomial theorem, in Pascal’s triangle, and in many probability calculations. It is read as “n choose r”. The symmetry property is often used to simplify calculations, for example by replacing C(100, 97) with C(100, 3). Understanding the combinatorial interpretation of binom{n}{r} as the number of r‑element subsets of an n‑element set is fundamental for solving selection problems.</p>
+
+<h3>3.2 Combinations of Distinct Objects</h3>
+<p>When selecting r objects from n distinct objects, the number of possible selections is binom{n}{r}. For example, the number of ways to form a committee of 4 members from a group of 12 people is binom{12}{4} = 495. The reasoning is that we first count ordered selections (permutations) which would be P(12, 4) = 12 × 11 × 10 × 9 = 11 880, and then divide by 4! = 24 because each committee can be ordered in 4! ways, leaving 495 distinct committees.</p>
+<p>Combinations are used whenever the problem asks for “groups”, “teams”, “subsets”, or “selections” without any ordering. If the problem later imposes an order on the chosen objects (e.g., assigning distinct roles to the chosen members), the count must be multiplied by the number of ways to order the chosen objects, effectively converting the combination back into a permutation. Recognizing whether order matters is the first decision point in any counting problem.</p>
+
+<h3>3.3 Combinations with Repetition</h3>
+<p>Sometimes we are allowed to choose the same type of object more than once, as in selecting r scoops of ice cream from n flavours where multiple scoops of the same flavour are permitted. The number of such combinations with repetition is binom{n+r-1}{r}. This result is derived by a stars‑and‑bars argument: represent the r selections as r stars and the n−1 dividers between flavours as bars; the total number of arrangements of r stars and n−1 bars is binom{n+r-1}{r}. Each arrangement corresponds uniquely to a multiset of size r drawn from n types.</p>
+<p>For instance, the number of ways to buy 6 donuts from 4 varieties is binom{4+6-1}{6} = binom{9}{6} = 84. The stars‑and‑bars method also provides a visual intuition: the positions of the bars determine how many of each variety are chosen. This technique extends to solving integer equations of the form x₁ + x₂ + … + x_n = r with non‑negative integer solutions, where the number of solutions is exactly binom{n+r-1}{r}.</p>
+
+<table>
+<caption>Comparison of Permutations and Combinations</caption>
+<thead>
+<tr><th>Aspect</th><th>Permutations</th><th>Combinations</th></tr>
+</thead>
+<tbody>
+<tr><td>Order matters</td><td>Yes</td><td>No</td></tr>
+<tr><td>Formula (distinct objects)</td><td>P(n, r) = n!/(n−r)! </td><td>C(n, r) = n!/[r!(n−r)!]</td></tr>
+<tr><td>Typical wording</td><td>Arrange, order, sequence, schedule</td><td>Select, choose, group, committee</td></tr>
+<tr><td>Relation</td><td>P(n, r) = C(n, r) × r!</td><td>C(n, r) = P(n, r) / r!</td></tr>
+</tbody>
+</table>
+
+<h2>Probability Foundations</h2>
+<h3>4.1 Sample Space and Events</h3>
+<p>The sample space of a random experiment is the set of all possible outcomes. An event is any subset of the sample space, including the empty set (impossible event) and the sample space itself (certain event). For a finite sample space with equally likely outcomes, the probability of an event E is defined as the ratio of the number of outcomes in E to the total number of outcomes in the sample space. This classical definition connects directly to counting principles: the numerator and denominator are often computed using permutations or combinations.</p>
+<p>When outcomes are not equally likely, the probability measure must assign a non‑negative weight to each elementary outcome such that the sum of all weights equals 1. The probability of an event is then the sum of the weights of the outcomes it contains. This axiomatic approach, formalized by Kolmogorov, provides a rigorous foundation that accommodates continuous sample spaces, where outcomes are points in a continuum and probabilities are defined via density functions rather than simple counting.</p>
+
+<h3>4.2 Axioms of Probability</h3>
+<p>The three Kolmogorov axioms state: (1) For any event A, 0 ≤ P(A) ≤ 1. (2) P(S) = 1, where S is the sample space. (3) For any countable sequence of mutually exclusive events A₁, A₂, …, the probability of their union equals the sum of their probabilities: P(∪ A_i) = Σ P(A_i). These axioms imply several useful rules, such as the complement rule P(Aᶜ) = 1 − P(A), the addition rule for non‑exclusive events P(A ∪ B) = P(A) + P(B) − P(A ∩ B), and the monotonicity property that if A ⊆ B then P(A) ≤ P(B).</p>
+<p>The axioms also justify the definition of conditional probability and the multiplication rule for intersections. They are the logical bedrock upon which all further probability theory, including Bayes’ theorem and the theory of random variables, is built. In problem solving, the axioms are rarely invoked explicitly, but they guarantee that any probability computed by legitimate counting or integration will satisfy the basic consistency requirements.</p>
+
+<h3>4.3 Classical and Empirical Probability</h3>
+<p>Classical probability applies when the sample space is finite and all outcomes are equally likely, as in tossing a fair coin, rolling a fair die, or drawing a card from a well‑shuffled deck. In such cases, probability reduces to a counting problem: P(E) = |E| / |S|. Empirical probability, on the other hand, is based on observed frequencies from repeated trials. If an experiment is performed N times and event E occurs f times, the empirical probability is f/N. As N grows, the law of large numbers ensures that the empirical probability converges to the true (theoretical) probability, provided the trials are independent and identically distributed.</p>
+<p>Both viewpoints are essential. Classical probability gives exact answers for idealized models, while empirical probability provides estimates when the model is unknown or too complex. In many practical situations, such as quality control or medical trials, empirical probabilities are used to infer the underlying theoretical probabilities, often with confidence intervals derived from the binomial or normal approximations.</p>
+
+<h2>Conditional Probability, Bayes' Theorem and Distributions</h2>
+<h3>5.1 Conditional Probability and Independence</h3>
+<p>Conditional probability quantifies the likelihood of an event A given that another event B has occurred. It is defined as P(A|B) = P(A ∩ B) / P(B), provided P(B) > 0. This definition reflects the idea of restricting the sample space to the outcomes in B and then measuring the proportion of those outcomes that also belong to A. The multiplication rule P(A ∩ B) = P(A|B) P(B) = P(B|A) P(A) follows directly and is a powerful tool for computing joint probabilities when conditional probabilities are known.</p>
+<p>Two events A and B are independent if the occurrence of one does not affect the probability of the other, i.e., P(A|B) = P(A) and P(B|A) = P(B). Equivalently, independence means P(A ∩ B) = P(A) P(B). Independence simplifies calculations dramatically because the joint probability factorizes. However, independence is an assumption that must be justified by the physical context; many real‑world events exhibit dependence, and assuming independence incorrectly can lead to severe errors in risk assessment.</p>
+
+<h3>5.2 Bayes' Theorem</h3>
+<p>Bayes’ theorem provides a way to update the probability of a hypothesis H in light of new evidence E. It states P(H|E) = P(E|H) P(H) / P(E), where P(E) can be expanded using the law of total probability: P(E) = Σ P(E|H_i) P(H_i) over a partition {H_i} of the sample space. The theorem is a direct consequence of the definition of conditional probability and the multiplication rule. It is widely used in medical diagnosis, spam filtering, and machine learning, where prior probabilities are updated with observed data.</p>
+<p>A classic illustration is the disease testing problem: suppose a disease affects 1 % of the population, a test has 99 % sensitivity (true positive rate) and 99 % specificity (true negative rate). If a randomly selected person tests positive, Bayes’ theorem gives the posterior probability of actually having the disease as (0.99 × 0.01) / (0.99 × 0.01 + 0.01 × 0.99) = 0.5, i.e., only a 50 % chance despite the high accuracy of the test. This counter‑intuitive result highlights the importance of the prior probability (prevalence) in interpreting diagnostic tests.</p>
+
+<h3>5.3 Common Discrete Distributions</h3>
+<p>Discrete probability distributions assign probabilities to countable outcomes. The binomial distribution models the number of successes in n independent Bernoulli trials with constant success probability p. Its probability mass function is P(X = k) = binom{n}{k} p^k (1−p)<sup>n−k</sup> for k = 0, 1, …, n. The mean is np and the variance is np(1−p). The Poisson distribution models the number of events occurring in a fixed interval of time or space when events happen independently at a constant average rate λ. Its mass function is P(X = k) = e<sup>−λ</sup> λ^k / k! for k = 0, 1, 2, …, with mean and variance both equal to λ.</p>
+<p>The geometric distribution describes the number of trials needed to obtain the first success in independent Bernoulli trials, with P(X = k) = (1−p)<sup>k−1</sup> p for k = 1, 2, … . The negative binomial generalizes this to the number of trials needed for the r‑th success. The hypergeometric distribution models sampling without replacement from a finite population, giving the probability of k successes in n draws from a population of size N containing K successes. Each distribution arises from a specific random mechanism, and recognizing the underlying mechanism is the key to selecting the correct model for a given problem.</p>
+
+<table>
+<caption>Comparison of Binomial and Poisson Distributions</caption>
+<thead>
+<tr><th>Feature</th><th>Binomial</th><th>Poisson</th></tr>
+</thead>
+<tbody>
+<tr><td>Underlying experiment</td><td>Fixed number n of independent Bernoulli trials</td><td>Events occurring randomly in continuous interval</td></tr>
+<tr><td>Parameters</td><td>n (trials), p (success probability)</td><td>λ (average rate)</td></tr>
+<tr><td>Support</td><td>k = 0, 1, …, n</td><td>k = 0, 1, 2, …</td></tr>
+<tr><td>Mean</td><td>np</td><td>λ</td></tr>
+<tr><td>Variance</td><td>np(1−p)</td><td>λ</td></tr>
+<tr><td>Limit relationship</td><td>Poisson approximates Binomial when n large, p small, np = λ</td><td>—</td></tr>
+</tbody>
+</table>
+
+<p>Mastering the interplay between counting principles, probability axioms, and the standard discrete distributions equips a student to tackle a wide spectrum of problems in competitive examinations and in practical data analysis.</p>        <script>
         (function(){try{
           var m=document.getElementById("lesson-meta");if(!m)return;
           var cur=m.getAttribute("data-version")||"";
@@ -185,7 +277,7 @@
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":121,"text":"What is the primary concept tested in Permutations, Combinations & Probability?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":122,"text":"Which of the following best describes the approach to solve Permutations, Combinations & Probability problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":123,"text":"In Permutations, Combinations & Probability, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":124,"text":"How can you improve your speed in Permutations, Combinations & Probability questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":125,"text":"What is the best strategy for attempting Permutations, Combinations & Probability questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."}];
+        var practiceQs = [{"id":1,"text":"What is the primary concept tested in Permutations, Combinations & Probability?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":2,"text":"Which of the following best describes the approach to solve Permutations, Combinations & Probability problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":3,"text":"In Permutations, Combinations & Probability, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":4,"text":"How can you improve your speed in Permutations, Combinations & Probability questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":5,"text":"What is the best strategy for attempting Permutations, Combinations & Probability questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."}];
         var answered={},correctCount=0,lessonSlug="permutations-probability";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
