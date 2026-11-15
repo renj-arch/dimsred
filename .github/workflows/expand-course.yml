@@ -181,13 +181,31 @@ jobs:
 
       # Queue the next deepen run as soon as this one finishes ΓÇö chained
       # instead of waiting for a fixed 6-hour cron slot.
+      # The lane scope is computed, not hardcoded.
+      #
+      # The old step re-dispatched with a frozen key list. Once that list
+      # reached its depth target the lane kept re-queuing itself every 25
+      # seconds and wrote nothing -- "Course worklist: 0 empty slot(s), 0
+      # thin lesson(s), 0 depth candidate(s)" -- while hundreds of lessons
+      # stayed under target and only one lane was still working.
+      # scripts/course-lane.js asks the expander for the live worklist and
+      # returns this lane's slice, so every queued run has work to do. An
+      # empty slice ends the chain honestly instead of spinning.
       - name: Queue the next deepen run
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXPAND_THIN_THRESHOLD: '6000'
+          EXPAND_DEPTH_TARGET_WORDS: '8000'
+          EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
         run: |
+          KEYS=$(node scripts/course-lane.js --lane 0 --lanes 4 --limit 20)
+          if [ -z "$KEYS" ]; then
+            echo "::notice title=Lane 0 complete::No lesson under target is left in this lane's slice."
+            exit 0
+          fi
           for i in 1 2 3; do
-            if gh workflow run expand-course.yml --ref main; then
+            if gh workflow run expand-course.yml --ref main -f keys="$KEYS" -f per_run=20; then
               echo "Queued the next course-deepen run (starts when this run completes)"
               exit 0
             fi
