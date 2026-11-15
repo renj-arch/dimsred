@@ -103,11 +103,11 @@ a.back-link:hover{text-decoration:underline}
   </div>
 </div>
 
-<script src="js/mock-test.js"></script>
 <script>
+function getParam(name){const u=new URLSearchParams(location.search);return u.get(name);}
 document.body.setAttribute('data-exam', getParam('exam') || '');
 document.body.setAttribute('data-paper', getParam('paper') || '');
-function getParam(name){const u=new URLSearchParams(location.search);return u.get(name);}
 </script>
+<script src="js/mock-test.js"></script>
 </body>
 </html>
