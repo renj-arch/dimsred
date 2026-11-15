@@ -1246,7 +1246,7 @@ function generateQuestions(gap, html, timeoutMs) {
       var rawQs = parseQuestions(raw);
       var qs = filterFresh(rawQs, gap.mk);
       console.log('expand: ' + gap.key + ' questions raw ' + rawQs.length + ', kept ' + qs.length + (n > 1 ? ' (retry)' : ''));
-      if (qs.length >= 3 || n >= 2) return qs;
+      if (qs.length >= 3 || n >= 3) return qs;
       return attempt('\n\nYour previous reply had only ' + qs.length + ' valid question(s). Return exactly 5 valid questions as a JSON array.', n + 1);
     });
   }
@@ -1483,6 +1483,9 @@ async function main() {
   }, DEADLINE_MIN * 60000 + 60000).unref();
   var added = 0;
   var addedKeys = [];
+  // Lessons stored this run whose practice block came back empty. Counted so a
+  // run reports the defect instead of it being invisible in a long log.
+  var noQuestions = [];
   var addedFiles = [];
   var touchedExams = {};
 
@@ -1553,13 +1556,23 @@ async function main() {
         : res.questions.length + ' validated MCQs';
       console.log('[' + gap.examName + '] ' + gap.key + verb +
         '(' + res.html.length + ' chars, ' + qNote + ')');
+      // The body is real and already validated; only its practice block is
+      // empty. That is not a reason to throw the prose away, but it IS a defect
+      // a reader sees, so it is counted and annotated instead of being logged
+      // as an ordinary deepen. Seen on 2026-11-15: opt-bodo/paper1 was stored
+      // with 0 validated MCQs after both question attempts returned none.
+      if (gap.role !== 'deepen-page' && res.questions.length === 0) {
+        noQuestions.push(gap.key);
+        console.log('::warning::' + gap.key + ' stored with 0 validated MCQs - its practice block will be empty');
+      }
     } catch (e) {
       console.log('[' + gap.examName + '] ' + gap.key + ' skipped: ' + e.message);
     }
   }
 
   writeTouched(addedKeys, addedFiles, Object.keys(touchedExams));
-  console.log('EXPAND-RESULT {"added":' + added + ',"keys":' + JSON.stringify(addedKeys) + '}');
+  console.log('EXPAND-RESULT {"added":' + added + ',"noQuestions":' + noQuestions.length +
+    ',"noQuestionKeys":' + JSON.stringify(noQuestions) + ',"keys":' + JSON.stringify(addedKeys) + '}');
 }
 
 if (require.main === module) {
