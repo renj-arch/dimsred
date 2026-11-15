@@ -102,7 +102,7 @@ function errorDetail(stdout, stderr, err) {
     try { j = JSON.parse(t); } catch (e) { continue; }
     if (!j || j.type !== 'error' || !j.error) continue;
     const d = j.error.data || {};
-    events.push([j.error.name, d.message, d.statusCode ? 'HTTP ' + d.statusCode : '']
+    events.push([j.error.name, d.message, d.statusCode ? 'HTTP ' + d.statusCode : '', d.ref ? d.ref : '']
       .filter(Boolean).join(': '));
   }
   const parts = [String(stderr || '').replace(/\s+/g, ' ').trim(), events.join(' | ')]

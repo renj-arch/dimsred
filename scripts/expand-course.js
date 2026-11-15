@@ -101,6 +101,69 @@ var configs = JSON.parse(fs.readFileSync(CONFIGS_FILE, 'utf8'));
 var courseData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 var coursePractice = JSON.parse(fs.readFileSync(PRACTICE_FILE, 'utf8'));
 
+// Load previous exam questions as pattern examples so generated MCQs match
+// the exam's real style, not generic textbook patterns. Cached per exam key.
+var qbCache = {};
+function examKeyFor(gap) {
+  // Map exam display name back to its config key (dir) so we can load
+  // question-bank/<key>.json as the pattern source.
+  for (var ek in configs) {
+    if (configs[ek].examName === gap.examName) return ek;
+  }
+  return null;
+}
+function previousExamExamples(gap, maxExamples) {
+  maxExamples = maxExamples || 4;
+  var ek = examKeyFor(gap);
+  if (!ek) return '';
+  var f = path.join(ROOT, 'question-bank', ek + '.json');
+  if (!fs.existsSync(f)) return '';
+  if (!qbCache[ek]) {
+    try {
+      var raw = JSON.parse(fs.readFileSync(f, 'utf8'));
+      var qs = raw.questions || raw || [];
+      // Shuffle deterministically by question id for stable sampling.
+      qs.sort(function (a, b) { return (a.id || 0) - (b.id || 0); });
+      qbCache[ek] = qs.slice(0, 60); // first 60 by id = early/simple questions
+    } catch (e) { return ''; }
+  }
+  var pool = qbCache[ek];
+  if (!pool.length) return '';
+  // Pick examples spread across sections for pattern variety.
+  var seen = {}, picked = [];
+  var step = Math.ceil(pool.length / maxExamples);
+  for (var i = 0; i < pool.length && picked.length < maxExamples; i += step) {
+    var q = pool[i];
+    if (!q || !q.text || !q.options) continue;
+    var key = q.text.slice(0, 60);
+    if (seen[key]) continue;
+    seen[key] = 1;
+    picked.push(q);
+  }
+  if (!picked.length) return '';
+  var lines = [
+    '',
+    'PREVIOUS EXAM PATTERN — match this question style exactly:',
+    'The following are REAL ' + gap.examName + ' questions. New questions must',
+    'follow the same phrasing, difficulty, option structure, and subject focus:',
+  ];
+  picked.forEach(function (q, i) {
+    var opts = (q.options || []).map(function (o, j) {
+      return '  ' + String.fromCharCode(65 + j) + ') ' + (o.text || o);
+    }).join('\n');
+    var ansIdx = q.correct != null ? q.correct : (q.answer != null ? q.answer : 0);
+    lines.push('');
+    lines.push('  Example ' + (i + 1) + ' (' + (q.section || 'General') + '):');
+    lines.push('  Q: ' + q.text);
+    lines.push(opts);
+    lines.push('  Correct: ' + String.fromCharCode(65 + ansIdx));
+  });
+  lines.push('');
+  lines.push('END PATTERN. Write new questions in this same style — same brevity,');
+  lines.push('same option design, same subject emphasis. Do not copy the examples.');
+  return lines.join('\n');
+}
+
 function loadJson(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return fallback; }
 }
@@ -794,7 +857,7 @@ function questionsPrompt(gap, html) {
     'You are a senior ' + gap.examName + ' ' + gap.modName + ' examiner.',
     'Lesson: "' + gap.lesson.title + '".',
     'Sections: ' + (heads.length ? heads.join('; ') : gap.lesson.topics) + '.',
-    '',
+    previousExamExamples(gap),
     'Lesson text (use only facts stated here; do not invent statistics or quotations):',
     digest,
     '',
@@ -1595,5 +1658,6 @@ module.exports = {
   overlapMax: overlapMax,
   theoryPrompt: theoryPrompt,
   deepenPrompt: deepenPrompt,
-  questionsPrompt: questionsPrompt
+  questionsPrompt: questionsPrompt,
+  previousExamExamples: previousExamExamples
 };
