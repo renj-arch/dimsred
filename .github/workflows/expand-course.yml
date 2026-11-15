@@ -85,6 +85,14 @@ jobs:
         with:
           node-version: 22
 
+      # Fifth model route: OpenCode Zen serves the free DeepSeek V4.1 Flash
+      # through its CLI (the raw HTTP API refuses free models). It is purely
+      # additive -- hosted.js falls through to NVIDIA, Groq, OpenRouter and
+      # GitHub Models on any error -- but it is a separate quota from Groq's
+      # 200k tokens/day, which is the limit the lanes exhaust first.
+      - name: Install OpenCode CLI (optional DeepSeek route)
+        run: curl -fsSL https://opencode.ai/install | bash
+
       # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
       - name: Write course lessons (hosted model as teacher)
         env:
@@ -96,6 +104,9 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENCODE_ZEN: '1'
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_ZEN_MODEL: ${{ vars.OPENCODE_ZEN_MODEL || 'opencode/deepseek-v4.1-flash-free#max' }}
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
