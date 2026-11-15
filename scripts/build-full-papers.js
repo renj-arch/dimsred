@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const researchStore = require('./lib/research-store');
+const qd = require('./lib/question-dedupe');
 
 const ROOT = path.resolve(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'papers-data');
@@ -171,6 +172,21 @@ function run() {
     try { data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, f), 'utf-8')); } catch (e) { return; }
     if (data.kind !== 'full') return;
     if (onlySlug && data.slug !== onlySlug) return;
+    // Last gate before a paper becomes a page. full-paper-lane.js removes
+    // duplicates as it assembles, so finding one here means a regression in
+    // that gate -- and a reader would see the same question twice. Papers
+    // published before the checker existed are reported but not blocked; the
+    // one this run assembled is refused.
+    const dupe = qd.findDuplicates(data.questions || []);
+    if (dupe.duplicates.length) {
+      const msg = f + ' carries ' + dupe.duplicates.length + ' duplicate question(s) (' + dupe.duplicates[0].reason + ')';
+      if (onlySlug) {
+        console.error('::error::' + msg + ' - refusing to publish it in this state');
+        process.exitCode = 1;
+        return;
+      }
+      console.error('::warning::' + msg + ' - pre-existing paper, left for the cleanup pass');
+    }
     const dir = path.join(ROOT, data.folder, 'mock-tests');
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, data.slug + '.html'), build(data), 'utf-8');
