@@ -17,7 +17,7 @@
 // rejected with "found 0" h2 groups even when the model followed the prompt.
 const ALLOWED_TAGS = {
   h2: 1, h3: 1, h4: 1, p: 1, ul: 1, ol: 1, li: 1, strong: 1, em: 1, br: 1,
-  code: 1, div: 1, span: 1, sup: 1, sub: 1,
+  code: 1, pre: 1, div: 1, span: 1, sup: 1, sub: 1,
   table: 1, caption: 1, thead: 1, tbody: 1, tr: 1, th: 1, td: 1
 };
 const BALANCE_TAGS = {

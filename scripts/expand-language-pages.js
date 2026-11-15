@@ -36,6 +36,9 @@ var HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 var MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 var DEADLINE_MIN = parseInt(process.env.EXPAND_LANG_DEADLINE_MIN || '70', 10);
 var TARGET_WORDS = parseInt(process.env.EXPAND_LANG_TARGET_WORDS || '4000', 10);
+// A single model pass adds only ~500 words. Several passes per page, back to
+// back, are what actually reach the target inside one scheduled run.
+var PASSES_PER_PAGE = Math.max(1, parseInt(process.env.EXPAND_LANG_PASSES || '4', 10) || 4);
 var DRY = !!process.env.EXPAND_LANG_DRY;
 var FIRST_BYTE_MIN = parseFloat(process.env.EXPAND_LANG_FIRST_BYTE_MIN || '25') || 25;
 var STALL_MIN = parseFloat(process.env.EXPAND_LANG_STALL_MIN || '12') || 12;
@@ -198,6 +201,7 @@ function promptFor(page, existing) {
     '- Include one <div class="tip-box"> with div.tip-title / div.tip-text.',
     '- 400-700 words of explanation. Accuracy over volume; never invent a rule.',
     '- No links, images, scripts, styles, inline event handlers, external URLs.',
+    '- No style, id, data-* or event attributes. Only div/span may carry a class, and only example-box, ex-title, ex-text, ex-soln, tip-box, tip-title, tip-text.',
     '- Do not claim this is an official exam paper or a previous-year question.',
     'Reply with the HTML only. No markdown fences and no commentary.'
   ].join('\n');
@@ -209,11 +213,27 @@ function promptFor(page, existing) {
   return base;
 }
 
-function callModel(prompt, timeoutMs) {
-  // Hosted lane: the shared router owns retries and fallbacks.
+async function callModel(prompt, timeoutMs) {
+  // Hosted lane: the shared router owns retries and fallbacks, but 12-16
+  // parallel shards can still exhaust a provider's per-minute limit. Retry the
+  // whole route chain with jitter before giving the page up.
   if (hosted.enabled()) {
-    return hosted.chat('You are an expert language teacher writing practice material.', prompt,
-      { numPredict: 4200, temperature: 0.5 });
+    var tries = Math.max(1, parseInt(process.env.EXPAND_LANG_RETRIES || '3', 10) || 3);
+    var lastErr;
+    for (var attempt = 0; attempt < tries; attempt++) {
+      try {
+        return await hosted.chat('You are an expert language teacher writing practice material.', prompt,
+          { numPredict: 4200, temperature: 0.5 });
+      } catch (e) {
+        lastErr = e;
+        if (attempt < tries - 1) {
+          var wait = 20000 + Math.floor(Math.random() * 20000);
+          console.log('model call failed (' + (e.message || e) + '); retry ' + (attempt + 1) + '/' + (tries - 1) + ' in ' + Math.round(wait / 1000) + 's');
+          await new Promise(function (r) { setTimeout(r, wait); });
+        }
+      }
+    }
+    throw lastErr || new Error('model call failed');
   }
   return new Promise(function (resolve, reject) {
     var payload = JSON.stringify({
@@ -392,44 +412,58 @@ async function main() {
 
   var added = 0;
   for (var i = 0; i < candidates.length; i++) {
-    if (Date.now() > runStopAt) {
-      console.log('Deadline reached; stopping with ' + added + ' page(s) extended this run.');
-      break;
-    }
     var page = candidates[i];
     var fp = path.join(ROOT, page.file);
-    var html = fs.readFileSync(fp, 'utf8');
-    var existing = existingSections(html);
-    var prompt = promptFor(page, existing);
-    try {
-      var raw = await callModel(prompt, 90 * 60000);
-      var newHtml = cleanReply(raw);
-      var err = validateHtml(newHtml);
-      if (err) {
-        console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + err);
-        continue;
+    // One model pass adds only ~500 words, so a page needs several passes to
+    // reach the target. Do them back to back in this job (bounded by
+    // EXPAND_LANG_PASSES and the run deadline) instead of waiting for the next
+    // scheduled run.
+    for (var pass = 0; pass < PASSES_PER_PAGE; pass++) {
+      if (Date.now() > runStopAt) {
+        console.log('Deadline reached; stopping with ' + added + ' page(s) extended this run.');
+        return finishRun(candidates, byFile, added);
       }
-      var merged = applyInsertion(html, page, newHtml);
-      if (!merged) {
-        console.log('[' + page.kind + '] ' + page.file + ' skipped: no insertion point');
-        continue;
+      var words;
+      try { words = visibleWords(fs.readFileSync(fp, 'utf8')); } catch (e) { words = 0; }
+      if (words >= TARGET_WORDS) break;
+      var html = fs.readFileSync(fp, 'utf8');
+      var existing = existingSections(html);
+      var prompt = promptFor(page, existing);
+      try {
+        var raw = await callModel(prompt, 90 * 60000);
+        var newHtml = cleanReply(raw);
+        var err = validateHtml(newHtml);
+        if (err) {
+          console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + err);
+          break;
+        }
+        var merged = applyInsertion(html, page, newHtml);
+        if (!merged) {
+          console.log('[' + page.kind + '] ' + page.file + ' skipped: no insertion point');
+          break;
+        }
+        // The section itself was already validated above. Writing the merged page.
+        fs.writeFileSync(fp, merged, 'utf8');
+        var entry = byFile[page.file] || { file: page.file, kind: page.kind, passes: 0, at: 0 };
+        entry.passes = (parseInt(entry.passes || 0, 10) || 0) + 1;
+        entry.at = new Date().toISOString();
+        entry.lastSectionCount = (newHtml.match(/<h3\b/gi) || []).length;
+        byFile[page.file] = entry;
+        ledger.pages = Object.values(byFile);
+        saveLedger(ledger);
+        added++;
+        console.log('[' + page.kind + '] ' + page.file + ' extended (' + newHtml.length + ' chars, ' +
+          entry.lastSectionCount + ' new section(s), now ' + visibleWords(merged) + '/' + TARGET_WORDS + ' words)');
+      } catch (e) {
+        console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + (e.message || e));
+        break;
       }
-      // The section itself was already validated above. Writing the merged page.
-      fs.writeFileSync(fp, merged, 'utf8');
-      var entry = byFile[page.file] || { file: page.file, kind: page.kind, passes: 0, at: 0 };
-      entry.passes = (parseInt(entry.passes || 0, 10) || 0) + 1;
-      entry.at = new Date().toISOString();
-      entry.lastSectionCount = (newHtml.match(/<h3\b/gi) || []).length;
-      byFile[page.file] = entry;
-      ledger.pages = Object.values(byFile);
-      saveLedger(ledger);
-      added++;
-      console.log('[' + page.kind + '] ' + page.file + ' extended (' + newHtml.length + ' chars, ' +
-        entry.lastSectionCount + ' new section(s))');
-    } catch (e) {
-      console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + (e.message || e));
     }
   }
+  return finishRun(candidates, byFile, added);
+}
+
+function finishRun(candidates, byFile, added) {
 
   writeTouched(Object.keys(byFile));
   var remaining = 0;
