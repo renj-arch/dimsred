@@ -35,6 +35,7 @@ var hosted = require('./lib/hosted');
 var HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 var MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 var DEADLINE_MIN = parseInt(process.env.EXPAND_LANG_DEADLINE_MIN || '70', 10);
+var TARGET_WORDS = parseInt(process.env.EXPAND_LANG_TARGET_WORDS || '6000', 10);
 var DRY = !!process.env.EXPAND_LANG_DRY;
 var FIRST_BYTE_MIN = parseFloat(process.env.EXPAND_LANG_FIRST_BYTE_MIN || '25') || 25;
 var STALL_MIN = parseFloat(process.env.EXPAND_LANG_STALL_MIN || '12') || 12;
@@ -132,6 +133,15 @@ function visibleLength(html) {
   return stripTags(html || '').length;
 }
 
+// Visible prose words, ignoring script/style bodies. Used to stop extending a
+// page that has already reached the target.
+function visibleWords(html) {
+  return stripTags(String(html || '')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' '))
+    .split(/\s+/).filter(Boolean).length;
+}
+
 // Returns the editable prose container of a page: div.lesson-body for CTET
 // lessons, or a best-effort prose region for the other kinds. Returns null
 // when there is no safe container to extend.
@@ -185,7 +195,7 @@ function promptFor(page, existing) {
 
   if (page.kind === 'mains' && page.lang && LANG_META[page.lang]) {
     var lm = LANG_META[page.lang];
-    return base.join('\n') + '\n\n- Add one model-generated practice passage in the page language, clearly labelled "Model-generated practice (not an official UPSC question)", with 3 comprehension questions. The passage must be written in the native script of ' + page.lang + ' (' + lm.script + ', ' + lm.unicode + '). Label it sourceType: model-generated-practice so it is never mistaken for an official PYQ.';
+    return base + '\n\n- Add one model-generated practice passage in the page language, clearly labelled "Model-generated practice (not an official UPSC question)", with 3 comprehension questions. The passage must be written in the native script of ' + page.lang + ' (' + lm.script + ', ' + lm.unicode + '). Label it sourceType: model-generated-practice so it is never mistaken for an official PYQ.';
   }
   return base;
 }
@@ -344,7 +354,9 @@ async function main() {
   (ledger.pages || []).forEach(function (e) { byFile[e.file] = e; });
 
   var candidates = PAGES.filter(function (p) {
-    return fs.existsSync(path.join(ROOT, p.file));
+    var fp = path.join(ROOT, p.file);
+    if (!fs.existsSync(fp)) return false;
+    try { return visibleWords(fs.readFileSync(fp, 'utf8')) < TARGET_WORDS; } catch (e) { return true; }
   }).sort(function (a, b) {
     var pa = byFile[a.file], pb = byFile[b.file];
     var ta = pa ? (pa.at || 0) : 0, tb = pb ? (pb.at || 0) : 0;
@@ -410,7 +422,11 @@ async function main() {
   }
 
   writeTouched(Object.keys(byFile));
-  console.log('LANG-EXPAND-RESULT {"added":' + added + ',"pages":' + JSON.stringify(Object.keys(byFile)) + '}');
+  var remaining = 0;
+  candidates.forEach(function (p) {
+    try { if (visibleWords(fs.readFileSync(path.join(ROOT, p.file), 'utf8')) < TARGET_WORDS) remaining++; } catch (e) { remaining++; }
+  });
+  console.log('LANG-EXPAND-RESULT {"added":' + added + ',"remaining":' + remaining + ',"target":' + TARGET_WORDS + ',"pages":' + JSON.stringify(Object.keys(byFile)) + '}');
 }
 
 function writeTouched(files) {
