@@ -261,6 +261,121 @@ details p{color:var(--text-sec);font-size:13px;line-height:1.7;margin-top:6px}
 <li>Why is clarity emphasized in official Sindhi letters?</li>
 </ol>
 </div>
+<div class="language-section">
+<h3>Advanced Morphosyntax: Ergative Alignment in Sindhi Official Texts</h3>
+<p>Sindhi exhibits a split‑ergative pattern that surfaces prominently in formal administrative writing. In perfective clauses the subject of a transitive verb receives the ergative marker <code>‑अ</code> (or <code>‑आ</code> after vowels) while the object remains unmarked, and the verb agrees with the object in gender and number. In imperfective or habitual aspects the alignment reverts to nominative‑accusative, and the verb agrees with the subject. Recognising the aspect‑conditioned switch is essential for producing grammatically correct orders, notifications and reports.</p>
+<ul>
+<li>Perfective transitive: <strong>अधिकारी‑अ</strong> पत्र <strong>लिख्यो</strong>। (The officer wrote the letter.)</li>
+<li>Imperfective transitive: <strong>अधिकारी</strong> पत्र <strong>लिखे</strong> छे। (The officer writes the letter.)</li>
+</ul>
+<p>When a clause contains a ditransitive verb, the indirect object may appear in the dative case <code>‑कें</code> while the direct object follows the ergative‑object agreement rule. Official style guides recommend retaining the ergative marker even in passive constructions to preserve the formal register.</p>
+
+<div class="example-box">
+<div class="ex-title">Ergative‑Object Agreement Example</div>
+<div class="ex-text">सचिव‑अ आदेश जारी कर्यो।</div>
+<div class="ex-soln">सचिव (ergative) agrees with आदेश (masculine singular) → कर्यो.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Quick Check</div>
+<div class="tip-text">Identify the aspect first; then apply ergative marking only in perfective transitive clauses.</div>
+</div>
+
+
+<h3>Corpus‑Based Error Detection for Administrative Sindhi</h3>
+<p>Large‑scale digitised corpora of government gazettes, circulars and legislative records enable systematic error mining. Frequency lists reveal recurrent mismatches such as missing ergative markers, incorrect gender agreement on participles, and over‑use of the honorific plural <code>‑जो</code> where singular is required. Automated scripts can flag sentences where the verb agreement does not match the highest‑ranked argument according to the split‑ergative hierarchy.</p>
+<ol>
+<li>Extract all perfective transitive clauses.</li>
+<li>Verify ergative suffix on the subject.</li>
+<li>Confirm verb agreement with the direct object.</li>
+</ol>
+<p>Integrating this pipeline into the drafting workflow reduces post‑publication corrections and aligns output with the Official Language Commission’s style sheet.</p>
+
+<div class="example-box">
+<div class="ex-title">Corpus‑Flagged Error</div>
+<div class="ex-text">मंत्री आदेश जारी करे।</div>
+<div class="ex-soln">Missing ergative on मंत्री; verb should agree with आदेश → कर्यो.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Automation Hint</div>
+<div class="tip-text">Use a part‑of‑speech tagger trained on Sindhi Devanagari to pre‑label arguments before agreement checking.</div>
+</div>
+
+<h4>Model‑generated practice (not an official UPSC question) – sourceType: model-generated-practice</h4>
+<p>सचिव‑अ नवनिर्मित भवन‑जो उद्घाटन कर्यो। विकास अधिकारी‑अ योजना‑जो विवरण प्रस्तुत कर्यो। जनता‑कें सूचना देई गयो।</p>
+<ol>
+<li>कौन‑से अधिकारी‑ने भवन‑जो उद्घाटन कर्यो?</li>
+<li>विकास अधिकारी‑ने के प्रस्तुत कर्यो?</li>
+<li>जनता‑कें के देई गयो?</li>
+</ol>
+</div>
+<div class="language-section">
+<h3>Advanced Pragmatics: Politeness Strategies in Official Sindhi</h3>
+<h4>Key Concepts</h4>
+<p>Official Sindhi writing employs a layered system of politeness that reflects hierarchical relationships between the writer, the addressee, and the institutional context. The primary markers are honorific pronouns (<strong>तुहان</strong>, <strong>तुहنجو</strong>), respectful verb morphology (e.g., <strong>करيو</strong> vs. <strong>कर</strong>), and lexical choices such as <strong>मेहरबاني</strong> and <strong>कृपा</strong>. These devices operate simultaneously at the morphological, syntactic, and discourse levels.</p>
+<p>At the morphological level, the addition of the suffix <code>-يو</code> to the verb stem signals deference. Syntactically, the use of passive constructions (<strong>काम ڪيو ويو</strong>) distances the agent and softens directives. Discourse‑wise, pre‑emptive apologies (<strong>معاف ڪجو</strong>) and gratitude formulas (<strong>شكرية</strong>) frame the request as a collaborative act rather than an imposition.</p>
+
+<div class="example-box">
+  <div class="ex-title">Example: Politeness Marker Usage</div>
+  <div class="ex-text">तुहان مهرباني ڪري تقرير پेश ڪريو।</div>
+  <div class="ex-soln">The honorific pronoun <strong>तुहान</strong> and the polite verb form <strong>پيش ڪريو</strong> combine with the lexical politeness marker <strong>مهرباني</strong> to produce a highly deferential request.</div>
+</div>
+
+<div class="tip-box">
+  <div class="tip-title">Tip</div>
+  <div class="tip-text">When drafting official letters, always pair an honorific pronoun with a respectful verb form; omission of either reduces the politeness level noticeably.</div>
+</div>
+
+<h3>Comparative Syntax: Sindhi and Hindi in Administrative Registers</h3>
+<h4>Structural Parallels and Divergences</h4>
+<p>Both Sindhi and Hindi share an SOV base order, yet their treatment of ergativity in perfective clauses diverges. Sindhi retains a split‑ergative pattern where the subject of a transitive perfective verb appears in the oblique case marked by <strong>‑े</strong> (e.g., <strong>अफسر‑े</strong>), while Hindi uses the postposition <strong>ने</strong>. This difference influences the formation of passive‑like constructions in official texts.</p>
+<ul>
+  <li>Sindhi: <strong>अफसर‑े पत्र लिखيو</strong> (The officer wrote the letter.)</li>
+  <li>Hindi: <strong>अफ़सर ने पत्र लिखा</strong>.</li>
+</ul>
+<p>In formal correspondence, Sindhi prefers the impersonal passive <strong>पत्र लिखيو ويو</strong> to avoid naming the agent, whereas Hindi often employs the <strong>किया गया</strong> construction. Understanding these contrasts helps translators preserve the intended level of formality and agency attribution.</p>
+
+<h3>Model‑generated Practice Passage (Sindhi Devanagari)</h3>
+<p>Model-generated practice (not an official UPSC question) – sourceType: model-generated-practice</p>
+<p>सिन्धي سرڪار جي taraf سان ايڪ نئون تعليمي پروگرام شروڪ ڪيو ويو आहे، جنهن جي مقصد گهرون جي بٽيئن کي مدرس ۾ داخل ڪرڻو आहे। هڪ سال جو مٽي مٽيٽي، سرڪار ڏس ہزار بٽيئن کي مفت ڪٽاب ۽ وٽي فراہم ڪري، جنهن کي سکول جي فيصل کي آسان ڪرڻ لاءِ خاص طےِ اہمियت ڏئي ويو आहे। پروگرام جي کاميابي لاءِ ضلعي ادارو ۽ غير سرڪاري ادارون کي ملڪ کي مشترڪ کوشش ڪرڻ کي طلب ڪيو ويو आहे.</p>
+<h4>Comprehension Questions</h4>
+<ul>
+  <li>What is the primary objective of the new educational programme described in the passage?</li>
+  <li>How many children are targeted to receive free books and uniforms in the first year?</li>
+  <li>Which entities are requested to collaborate for the programme’s success?</li>
+</ul>
+</div>
+<div class="language-section">
+<h3>Advanced Semantics: Metaphor and Metonymy in Official Sindhi</h3>
+<p>Official Sindhi texts frequently employ metaphorical mappings to convey abstract administrative concepts through concrete imagery. A metaphor such as <em>सरकार एक बाग़ है</em> (the government is a garden) frames governance as cultivation, implying care, growth, and seasonal cycles. Metonymy operates by substituting a related term, for example using <em>दरबार</em> (court) to refer to the entire judicial apparatus. Recognising these figures of speech is essential for precise translation and for avoiding literal renderings that distort policy nuance.</p>
+<ul>
+<li>Identify the source domain (e.g., agriculture) and target domain (administration).</li>
+<li>Check whether the mapping is conventionalised in the corpus or a one‑off rhetorical flourish.</li>
+<li>Preserve the figurative force in the target language unless the register demands plain prose.</li>
+</ul>
+<div class="example-box">
+<div class="ex-title">Example</div>
+<div class="ex-text">सिन्धी प्रशासनिक पत्र मंे "न्याय का दीपक" शब्द प्रयोग थियो।</div>
+<div class="ex-soln">The phrase "lamp of justice" is a metaphor mapping illumination onto legal fairness; translate as "the lamp of justice" rather than "the light of law".</div>
+</div>
+
+<h3>Corpus‑Driven Stylistic Variation in Administrative Sindhi</h3>
+<p>Large‑scale corpora of government orders, gazettes, and circulars reveal systematic stylistic alternations. Passive constructions dominate in directives (<em>कार्य पूर्ण करयो जाए</em>), while active voice appears in ministerial speeches. Lexical density rises in technical annexes, with nominalised verbs (<em>निर्णयकरण</em>) replacing clause‑level predicates. Quantitative analysis (type‑token ratio, average sentence length) guides the writer to match the expected register for each document type.</p>
+<div class="tip-box">
+<div class="tip-title">Tip</div>
+<div class="tip-text">When drafting a circular, model the sentence length and passive frequency on the most recent 20 circulars in the corpus.</div>
+</div>
+
+<h3>Model‑generated Practice Passage (Sindhi Devanagari)</h3>
+<p>Model-generated practice (not an official UPSC question) – sourceType: model-generated-practice</p>
+<p>सिन्धी भाषा आधिकारिक पत्राचार मंे महत्वपूर्ण भूमिका निभाती है। सरकारी आदेश, अधिसूचनाएं अने परिपत्र सिन्धी मंे जारी किए जाते हथे ताकि स्थानीय जनता समझ सके। यो प्रक्रिया पारदर्शिता अने जवाबदेही सुनिश्चित करी थें।</p>
+<ol>
+<li>What is the primary reason given for issuing government orders in Sindhi?</li>
+<li>Which two qualities does the passage claim are ensured by this practice?</li>
+<li>Identify the grammatical voice used in the sentence "सरकारी आदेश ... जारी किए जाते हथे".</li>
+</ol>
+</div>
 <script src="language-practice.js"></script>
 </body>
 </html>
