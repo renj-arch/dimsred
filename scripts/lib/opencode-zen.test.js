@@ -127,7 +127,35 @@ function loadZen(bin, logFile) {
     try { await zen.run('x'); } catch (e) { msg = e.message; }
     const attempts = fs.existsSync(log) ? fs.readFileSync(log, 'utf8').trim().split('\n').length : 0;
     ok('surfaces the quota error', /429/.test(msg), msg);
-    ok('tried the form once, then asked for the version', attempts === 2, String(attempts));
+    // Terminal means terminal: one spawn, no version probe, no retry storm. The
+    // route must not spend three CLI invocations on an outage.
+    ok('one attempt only, no version probe', attempts === 1, String(attempts));
+  }
+
+  console.log('CASE 4: a build that rejects every form names its version');
+  {
+    const dir = path.join(tmp, 'allforms');
+    fs.mkdirSync(dir, { recursive: true });
+    const bin = path.join(dir, 'yargs-cli.js');
+    fs.writeFileSync(bin, [
+      '#!/usr/bin/env node',
+      "'use strict';",
+      "const fs = require('fs');",
+      "const args = process.argv.slice(2);",
+      "if (process.env.ZEN_TEST_LOG) fs.appendFileSync(process.env.ZEN_TEST_LOG, JSON.stringify(args) + '\\n');",
+      "if (args.includes('--version')) { process.stdout.write('0.9.9-yargs\\n'); process.exit(0); }",
+      "process.stderr.write('run opencode with a message Positionals: message [array] [default: []] Options: -h, --help show help [boolean]\\n');",
+      "process.exit(1);"
+    ].join('\n'));
+    fs.chmodSync(bin, 0o755);
+    const log = path.join(dir, 'allforms.log');
+    const zen = loadZen(bin, log);
+    let msg = '';
+    try { await zen.run('x'); } catch (e) { msg = e.message; }
+    const attempts = fs.readFileSync(log, 'utf8').trim().split('\n').map(function (l) { return JSON.parse(l); });
+    ok('tried every form', attempts.length === 4, String(attempts.length));
+    ok('named the CLI version', /\[cli 0\.9\.9-yargs\]/.test(msg), msg);
+    ok('kept the opening error', /Positionals|show help/.test(msg), msg);
   }
 
   fs.rmSync(tmp, { recursive: true, force: true });
