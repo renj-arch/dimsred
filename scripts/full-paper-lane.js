@@ -99,6 +99,30 @@ function assemble(examKey, paperId, date) {
     if (picked.length < s.count) gaps.push({ section: s.name, need: s.count, have: picked.length, short: s.count - picked.length });
     sections.push({ name: s.name, count: s.count, marks: s.marks, questions: picked });
   }
+  // Whole-paper gate, applied AFTER every section is picked.
+  //
+  // pickForSection already refuses a question that duplicates something already
+  // chosen, and `chosen` is shared across sections, so in theory this finds
+  // nothing. In practice papers shipped repeats anyway: the checker only landed
+  // on 2026-11-11, and the question bank still carries duplicates from imports
+  // that predate it (fourteen of nineteen published papers had at least one
+  // repeat; neet-paper1 had 64 of 200). Re-running the whole list here makes
+  // the paper clean regardless of what the bank holds, and records the removal
+  // as a gap so the run reports it instead of hiding it.
+  const gate = qd.findDuplicates(sections.reduce(function (acc, s) { return acc.concat(s.questions); }, []));
+  if (gate.duplicates.length) {
+    const drop = new Set(gate.duplicates.map(function (d) { return d.question; }));
+    sections.forEach(function (s) {
+      const before = s.questions.length;
+      s.questions = s.questions.filter(function (q) { return !drop.has(q); });
+      const removed = before - s.questions.length;
+      if (removed) {
+        gaps.push({ section: s.name, need: s.count, have: s.questions.length, short: removed, reason: 'duplicate' });
+      }
+    });
+    console.log('full-paper-lane: dropped ' + gate.duplicates.length + ' duplicate question(s) from the assembled paper (' +
+      gate.duplicates[0].reason + ')');
+  }
   return { blueprints, examDef, paper, sections, gaps };
 }
 

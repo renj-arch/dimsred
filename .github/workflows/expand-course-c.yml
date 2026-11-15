@@ -21,11 +21,18 @@
 # old 27B could not complete runs here, so nothing dispatches it anymore.
 
 on:
-  # No fixed cron: runs are chained Î“Ã‡Ã¶ each run self-dispatches the next one
-  # when it finishes (see the "Queue the next deepen run" step below). This
-  # means a new deepen cycle starts as soon as the previous one completes,
-  # instead of waiting for the next 6-hour clock slot. Use workflow_dispatch
-  # to start the chain manually.
+  # Runs are chained: each run self-dispatches the next when it finishes, so a
+  # new deepen cycle starts as soon as the previous one completes instead of
+  # waiting for a clock slot.
+  #
+  # The 6-hourly cron is a RESTART NET, not a second lane. A chain dies for
+  # real reasons -- free-tier quota exhaustion, a failed dispatch, a cancelled
+  # job -- and until now nothing ever started it again: the course simply
+  # stopped growing and no run said so. A scheduled run that finds work is
+  # never wasted, and this lane's concurrency group means it can never run
+  # beside a live chain.
+  schedule:
+    - cron: '43 */6 * * *'
   workflow_dispatch:
     inputs:
       per_run:
