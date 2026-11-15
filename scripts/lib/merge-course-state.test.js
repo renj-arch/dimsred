@@ -35,5 +35,12 @@ assert.deepStrictEqual(Object.keys(depth.keys).sort(), ['a', 'b', 'c']);
 assert.strictEqual(depth.keys.b.passes, 5, 'higher pass count wins');
 assert.strictEqual(depth.keys.c.passes, 1);
 
+const plain = run(
+  write('rc.json', { 'a/key': 'remote', 'b/key': 'remote-b' }),
+  write('oc.json', { 'b/key': 'ours-b', 'c/key': 'ours-c' })
+);
+assert.deepStrictEqual(Object.keys(plain).sort(), ['a/key', 'b/key', 'c/key']);
+assert.strictEqual(plain['b/key'], 'ours-b');
+
 fs.rmSync(dir, { recursive: true, force: true });
 console.log('PASS  merge-course-state: versions and depth union by key');
