@@ -54,7 +54,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 16
+      max-parallel: 12
       matrix:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     steps:
@@ -86,6 +86,7 @@ jobs:
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXPAND_LANG_DEADLINE_MIN: '90'
           EXPAND_LANG_TARGET_WORDS: '4000'
+          EXPAND_LANG_RETRIES: '3'
           EXPAND_LANG_SHARD: ${{ matrix.shard }}
           EXPAND_LANG_SHARDS: ${{ github.event.inputs.shards || '16' }}
           EXPAND_LANG_LEDGER: '/tmp/language-expansion.shard-${{ matrix.shard }}.json'

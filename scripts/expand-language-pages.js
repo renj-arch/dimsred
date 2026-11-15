@@ -198,6 +198,7 @@ function promptFor(page, existing) {
     '- Include one <div class="tip-box"> with div.tip-title / div.tip-text.',
     '- 400-700 words of explanation. Accuracy over volume; never invent a rule.',
     '- No links, images, scripts, styles, inline event handlers, external URLs.',
+    '- No style, id, data-* or event attributes. Only div/span may carry a class, and only example-box, ex-title, ex-text, ex-soln, tip-box, tip-title, tip-text.',
     '- Do not claim this is an official exam paper or a previous-year question.',
     'Reply with the HTML only. No markdown fences and no commentary.'
   ].join('\n');
@@ -209,11 +210,27 @@ function promptFor(page, existing) {
   return base;
 }
 
-function callModel(prompt, timeoutMs) {
-  // Hosted lane: the shared router owns retries and fallbacks.
+async function callModel(prompt, timeoutMs) {
+  // Hosted lane: the shared router owns retries and fallbacks, but 12-16
+  // parallel shards can still exhaust a provider's per-minute limit. Retry the
+  // whole route chain with jitter before giving the page up.
   if (hosted.enabled()) {
-    return hosted.chat('You are an expert language teacher writing practice material.', prompt,
-      { numPredict: 4200, temperature: 0.5 });
+    var tries = Math.max(1, parseInt(process.env.EXPAND_LANG_RETRIES || '3', 10) || 3);
+    var lastErr;
+    for (var attempt = 0; attempt < tries; attempt++) {
+      try {
+        return await hosted.chat('You are an expert language teacher writing practice material.', prompt,
+          { numPredict: 4200, temperature: 0.5 });
+      } catch (e) {
+        lastErr = e;
+        if (attempt < tries - 1) {
+          var wait = 20000 + Math.floor(Math.random() * 20000);
+          console.log('model call failed (' + (e.message || e) + '); retry ' + (attempt + 1) + '/' + (tries - 1) + ' in ' + Math.round(wait / 1000) + 's');
+          await new Promise(function (r) { setTimeout(r, wait); });
+        }
+      }
+    }
+    throw lastErr || new Error('model call failed');
   }
   return new Promise(function (resolve, reject) {
     var payload = JSON.stringify({
