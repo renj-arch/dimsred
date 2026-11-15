@@ -36,6 +36,9 @@ var HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 var MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 var DEADLINE_MIN = parseInt(process.env.EXPAND_LANG_DEADLINE_MIN || '70', 10);
 var TARGET_WORDS = parseInt(process.env.EXPAND_LANG_TARGET_WORDS || '4000', 10);
+// A single model pass adds only ~500 words. Several passes per page, back to
+// back, are what actually reach the target inside one scheduled run.
+var PASSES_PER_PAGE = Math.max(1, parseInt(process.env.EXPAND_LANG_PASSES || '4', 10) || 4);
 var DRY = !!process.env.EXPAND_LANG_DRY;
 var FIRST_BYTE_MIN = parseFloat(process.env.EXPAND_LANG_FIRST_BYTE_MIN || '25') || 25;
 var STALL_MIN = parseFloat(process.env.EXPAND_LANG_STALL_MIN || '12') || 12;
@@ -409,44 +412,58 @@ async function main() {
 
   var added = 0;
   for (var i = 0; i < candidates.length; i++) {
-    if (Date.now() > runStopAt) {
-      console.log('Deadline reached; stopping with ' + added + ' page(s) extended this run.');
-      break;
-    }
     var page = candidates[i];
     var fp = path.join(ROOT, page.file);
-    var html = fs.readFileSync(fp, 'utf8');
-    var existing = existingSections(html);
-    var prompt = promptFor(page, existing);
-    try {
-      var raw = await callModel(prompt, 90 * 60000);
-      var newHtml = cleanReply(raw);
-      var err = validateHtml(newHtml);
-      if (err) {
-        console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + err);
-        continue;
+    // One model pass adds only ~500 words, so a page needs several passes to
+    // reach the target. Do them back to back in this job (bounded by
+    // EXPAND_LANG_PASSES and the run deadline) instead of waiting for the next
+    // scheduled run.
+    for (var pass = 0; pass < PASSES_PER_PAGE; pass++) {
+      if (Date.now() > runStopAt) {
+        console.log('Deadline reached; stopping with ' + added + ' page(s) extended this run.');
+        return finishRun(candidates, byFile, added);
       }
-      var merged = applyInsertion(html, page, newHtml);
-      if (!merged) {
-        console.log('[' + page.kind + '] ' + page.file + ' skipped: no insertion point');
-        continue;
+      var words;
+      try { words = visibleWords(fs.readFileSync(fp, 'utf8')); } catch (e) { words = 0; }
+      if (words >= TARGET_WORDS) break;
+      var html = fs.readFileSync(fp, 'utf8');
+      var existing = existingSections(html);
+      var prompt = promptFor(page, existing);
+      try {
+        var raw = await callModel(prompt, 90 * 60000);
+        var newHtml = cleanReply(raw);
+        var err = validateHtml(newHtml);
+        if (err) {
+          console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + err);
+          break;
+        }
+        var merged = applyInsertion(html, page, newHtml);
+        if (!merged) {
+          console.log('[' + page.kind + '] ' + page.file + ' skipped: no insertion point');
+          break;
+        }
+        // The section itself was already validated above. Writing the merged page.
+        fs.writeFileSync(fp, merged, 'utf8');
+        var entry = byFile[page.file] || { file: page.file, kind: page.kind, passes: 0, at: 0 };
+        entry.passes = (parseInt(entry.passes || 0, 10) || 0) + 1;
+        entry.at = new Date().toISOString();
+        entry.lastSectionCount = (newHtml.match(/<h3\b/gi) || []).length;
+        byFile[page.file] = entry;
+        ledger.pages = Object.values(byFile);
+        saveLedger(ledger);
+        added++;
+        console.log('[' + page.kind + '] ' + page.file + ' extended (' + newHtml.length + ' chars, ' +
+          entry.lastSectionCount + ' new section(s), now ' + visibleWords(merged) + '/' + TARGET_WORDS + ' words)');
+      } catch (e) {
+        console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + (e.message || e));
+        break;
       }
-      // The section itself was already validated above. Writing the merged page.
-      fs.writeFileSync(fp, merged, 'utf8');
-      var entry = byFile[page.file] || { file: page.file, kind: page.kind, passes: 0, at: 0 };
-      entry.passes = (parseInt(entry.passes || 0, 10) || 0) + 1;
-      entry.at = new Date().toISOString();
-      entry.lastSectionCount = (newHtml.match(/<h3\b/gi) || []).length;
-      byFile[page.file] = entry;
-      ledger.pages = Object.values(byFile);
-      saveLedger(ledger);
-      added++;
-      console.log('[' + page.kind + '] ' + page.file + ' extended (' + newHtml.length + ' chars, ' +
-        entry.lastSectionCount + ' new section(s))');
-    } catch (e) {
-      console.log('[' + page.kind + '] ' + page.file + ' skipped: ' + (e.message || e));
     }
   }
+  return finishRun(candidates, byFile, added);
+}
+
+function finishRun(candidates, byFile, added) {
 
   writeTouched(Object.keys(byFile));
   var remaining = 0;
