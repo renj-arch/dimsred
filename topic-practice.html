@@ -174,7 +174,7 @@ a.back-link:hover{text-decoration:underline}
       detail.style.display = 'block';
       detail.innerHTML =
         '<h3 style="margin-bottom:12px">'+t.name+' — '+t.exam+' '+t.year+'</h3>' +
-        '<div class="year-filter">Paper: '+t.paper+' · '+qs.count+' questions</div>';
+        '<div class="year-filter">Paper: '+t.paper+' · '+qs.length+' questions</div>';
       qs.forEach(function(q,i){
         var correctIdx = -1;
         (q.options || []).forEach(function(o,j){ if(o.correct) correctIdx = j; });
