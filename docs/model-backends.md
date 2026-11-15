@@ -167,10 +167,11 @@ default because it answers on a plain API key and is much faster.
 
 The owner's free DeepSeek V4.1 Flash model is real, but Zen gates it:
 
-| Route | Result (2026-11-14) |
+| Route | Result (2026-11-15) |
 | --- | --- |
 | raw API, `deepseek-v4.1-flash-free` | HTTP 429 `FreeUsageLimitError` — "Free models work in OpenCode" |
-| `opencode run -m opencode/deepseek-v4.1-flash-free#max` | works |
+| `opencode run -m opencode/deepseek-v4.1-flash-free#max` | `UnknownError: Unexpected server error` — `#max` is not part of the model id |
+| `opencode run -m opencode/deepseek-v4.1-flash-free` (bare id) | resolves the model, then hangs headless for the full deadline and never answers |
 | raw API, `nemotron-3-ultra-free` | HTTP 400 "Model is unavailable" |
 
 `scripts/lib/opencode-zen.js` shells out to the CLI, writes the key to
@@ -178,12 +179,11 @@ The owner's free DeepSeek V4.1 Flash model is real, but Zen gates it:
 returns the text. It is **off by default** and enabled per lane with
 `OPENCODE_ZEN=1` + `OPENCODE_API_KEY`.
 
-Why off by default: the CLI boots a full agent/server per call, so a short
-reply took tens of seconds versus roughly one second for the direct NVIDIA
-API, and the free quota is shared with the owner's OpenCode session. The
-lesson-writer exposes it as a manual `deepseek: true` toggle, with automatic
-fallback to NVIDIA if the quota is exhausted. The key is personal; remove the
-`OPENCODE_API_KEY` secret to disable the route entirely.
+The route was removed from every expand lane in #149: even with a real key the
+CLI never answered headless, so one Zen call burned the entire 90-minute expand
+deadline before NVIDIA/Groq/OpenRouter/GitHub Models were tried. The module and
+the `zen-probe.yml` diagnostic stay; re-enable with one probe run if the CLI
+ever starts answering headless.
 
 ## Optional: Refuseless (paid, off by default)
 

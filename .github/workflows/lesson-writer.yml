@@ -100,9 +100,10 @@ jobs:
 
       - name: Hand-write queued lessons with a hosted model
         env:
-          OPENCODE_ZEN: ${{ inputs.deepseek && '1' || '0' }}
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          OPENCODE_ZEN_MODEL: ${{ vars.OPENCODE_ZEN_MODEL || 'opencode/deepseek-v4.1-flash-free#max' }}
+          # OpenCode Zen (free DeepSeek via the CLI) is NOT active in CI:
+          #   - the raw HTTP API rejects free models with HTTP 429,
+          #   - 'opencode run' hangs headless for the full deadline and never answers
+          # The hosted fallbacks (NVIDIA / Groq / OpenRouter / GitHub Models) serve instead.
           NVAPI: '1'
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           NVIDIA_MODEL: ${{ vars.NVIDIA_MODEL || 'nemotron-3-ultra' }}

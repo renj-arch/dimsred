@@ -7,7 +7,11 @@
 //     model=deepseek-v4.1-flash-free  -> HTTP 429 FreeUsageLimitError
 //     ("Free models work in OpenCode")
 //     model=nemotron-3-ultra-free     -> HTTP 400 "Model is unavailable"
-//   opencode run -m opencode/deepseek-v4.1-flash-free#max "..." -> works
+//   opencode run --format json -m opencode/deepseek-v4.1-flash-free "..." -> works
+//
+// The `--format json` flag is the one that moved; `--standalone` does not exist
+// in the build the installer ships (opencode-ai 1.19.5) at all, and asking for
+// it gets the CLI's usage text and a non-zero exit. See forms() below.
 //
 // The CLI is the client the free tier requires, so this module shells out to
 // it, parses its JSON event stream, and returns the text. Any failure is
@@ -22,7 +26,25 @@ const path = require('path');
 
 const ENABLED = process.env.OPENCODE_ZEN === '1';
 const KEY = process.env.OPENCODE_API_KEY || '';
-const MODEL = process.env.OPENCODE_ZEN_MODEL || 'opencode/deepseek-v4.1-flash-free#max';
+
+// The id is `opencode/deepseek-v4.1-flash-free`. A `#suffix` is a reasoning
+// variant, NOT part of the id, and it must not travel inside it: the gateway
+// resolves the id first, so `...#max` is an unknown model and answers
+//     {"name":"UnknownError","data":{"message":"Unexpected server error"}}
+// on every call -- the same reply an invented id gets. The bare id against the
+// same key answers `APIError 401 Invalid credential`, i.e. it resolved and only
+// the credential was wrong, which is how this was told apart from a bad key.
+// A variant is opt-in and goes through --variant, the flag the CLI documents;
+// the defaults are bare so the live path is one spawn on a known-good shape.
+function splitModel(raw) {
+  const s = String(raw == null ? '' : raw).trim();
+  const at = s.indexOf('#');
+  if (at <= 0 || at === s.length - 1) return { model: s, variant: '' };
+  return { model: s.slice(0, at).trim(), variant: s.slice(at + 1).trim() };
+}
+const PARTS = splitModel(process.env.OPENCODE_ZEN_MODEL || 'opencode/deepseek-v4.1-flash-free');
+const MODEL = PARTS.model;
+const VARIANT = String(process.env.OPENCODE_ZEN_VARIANT || PARTS.variant || '').trim();
 const BIN = process.env.OPENCODE_BIN || 'opencode';
 const TIMEOUT_MS = Math.max(30000, parseInt(process.env.OPENCODE_ZEN_TIMEOUT_MS || '900000', 10) || 900000);
 
@@ -68,12 +90,38 @@ function parseEvents(stdout) {
   return text;
 }
 
+// A non-zero exit is not always accompanied by stderr: a server-side refusal
+// arrives as {"type":"error","error":{"name":...,"data":{...}}} on stdout, and
+// reading only stderr turned it into a bare "Command failed" that named nothing.
+function errorDetail(stdout, stderr, err) {
+  const events = [];
+  for (const line of String(stdout || '').split('\n')) {
+    const t = line.trim();
+    if (t.charAt(0) !== '{') continue;
+    let j;
+    try { j = JSON.parse(t); } catch (e) { continue; }
+    if (!j || j.type !== 'error' || !j.error) continue;
+    const d = j.error.data || {};
+    events.push([j.error.name, d.message, d.statusCode ? 'HTTP ' + d.statusCode : '', d.ref ? d.ref : '']
+      .filter(Boolean).join(': '));
+  }
+  const parts = [String(stderr || '').replace(/\s+/g, ' ').trim(), events.join(' | ')]
+    .filter(function (s) { return s; });
+  // A hang leaves neither: execFile kills the child and reports just
+  // "Command failed". Name the deadline, because a 15-minute silence reads like
+  // a slow model and is usually a CLI waiting on a TTY.
+  if (!parts.length && err && (err.killed || err.signal)) {
+    parts.push('no answer before the ' + Math.round(TIMEOUT_MS / 1000) + 's deadline, killed (' + (err.signal || 'timeout') + ')');
+  }
+  return parts.length ? parts.join(' ') : String(err && err.message || '');
+}
+
 function execCli(args) {
   return new Promise(function (resolve, reject) {
     const env = Object.assign({}, process.env, { OPENCODE_API_KEY: KEY });
     execFile(BIN, args, { timeout: TIMEOUT_MS, maxBuffer: 64 * 1024 * 1024, env }, function (err, stdout, stderr) {
       if (err) {
-        const detail = String(stderr || err.message || '').replace(/\s+/g, ' ').trim();
+        const detail = errorDetail(stdout, stderr, err).replace(/\s+/g, ' ').trim();
         const e = new Error('opencode CLI: ' + detail.slice(0, 300));
         e.stdout = String(stdout || '');
         return reject(e);
@@ -87,8 +135,27 @@ function execCli(args) {
 // exit. That is the signature this route must survive rather than treat as a
 // real failure.
 function isUsageDump(msg) {
-  return /unknown option|(^|\s)usage\b|positionals:|\[array\]|show help \[boolean\]/i.test(String(msg || ''));
+  return /unknown (argument|option|flag)|(^|\s)usage\b|positionals:|\[array\]|show help \[boolean\]/i.test(String(msg || ''));
 }
+
+// The CLI shapes, most-likely-current first. An unknown FLAG costs one spawn
+// and the next form still answers; an unknown MODEL ID costs every call,
+// which is why the id is bare everywhere and the prompt always comes last.
+function forms() {
+  const out = [];
+  const json = ['run', '--format', 'json', '-m', MODEL];
+  const plain = ['run', '-m', MODEL];
+  if (VARIANT) {
+    out.push(json.concat(['--variant', VARIANT]), plain.concat(['--variant', VARIANT]));
+  }
+  out.push(json, plain);
+  if (VARIANT) {
+    // A build that wants --standalone is also old enough not to have --variant.
+    out.push(['run', '--standalone', '--format', 'json', '-m', MODEL]);
+  }
+  return out;
+}
+const FORMS = forms();
 
 // Strip ANSI and return the answer when the CLI printed prose instead of the
 // JSON event stream (older builds have no --format json).
@@ -107,49 +174,45 @@ async function run(prompt) {
   if (!KEY) throw new Error('OPENCODE_API_KEY is not set');
   ensureAuth();
   const p = String(prompt || '');
-  // The runner installs whatever https://opencode.ai/install serves, and the
-  // flags moved between releases: the yargs-era build rejects --standalone and
-  // --format, prints its usage to stderr and exits non-zero. Because the first
-  // form was the only one tried, EVERY Zen call failed and fell through to the
-  // next backend -- one wasted CLI spawn per model call, on every lane. Try the
-  // full form, then drop the two flags that moved, then drop --format.
-  const forms = [
-    ['run', '--standalone', '--format', 'json', '-m', MODEL, p],
-    ['run', '--format', 'json', '-m', MODEL, p],
-    ['run', '-m', MODEL, p]
-  ];
   let firstErr = null;
-  for (let i = 0; i < forms.length; i++) {
+  for (let i = 0; i < FORMS.length; i++) {
     try {
-      const stdout = await execCli(forms[i]);
+      const stdout = await execCli(FORMS[i].concat([p]));
       const text = parseEvents(stdout) || plainText(stdout);
       if (text) return { text: text, httpCode: '200', doneReason: 'stop' };
       const e = new Error('opencode CLI returned no text');
       if (!firstErr) firstErr = e;
-      if (i === forms.length - 1) break;
+      if (i === FORMS.length - 1) break;
     } catch (e) {
       if (!firstErr) firstErr = e;
-      const retryable = isUsageDump(e.message) || /returned no text/.test(e.message);
-      if (!retryable) throw e;            // quota, network, auth: terminal
-      if (i === forms.length - 1) break;
+      // Only a shape complaint is worth another shape: quota, auth and network
+      // mean the shape was fine and the answer is terminal.
+      const retryable = isUsageDump(e.message) || /returned no text/.test(e.message) ||
+        (VARIANT ? /\bvariant\b/i.test(e.message) : false);
+      if (!retryable) throw e;
+      if (i === FORMS.length - 1) break;
     }
   }
-  // Make the next failure diagnosable: the version says which flag set this
-  // build wanted.
+  // Make the next failure diagnosable: the id asked for, and the CLI version
+  // that decides which flag set this build wanted.
   let version = '';
   try { version = String(await execCli(['--version'])).trim().slice(0, 40); } catch (e) { /* best effort */ }
-  throw new Error(String(firstErr && firstErr.message || 'opencode CLI failed').slice(0, 220) +
-    (version ? ' [cli ' + version + ']' : ''));
+  throw new Error(String(firstErr && firstErr.message || 'opencode CLI failed').slice(0, 200) +
+    ' [model ' + MODEL + ']' + (version ? ' [cli ' + version + ']' : ''));
 }
+
 
 module.exports = {
   ENABLED: ENABLED,
   KEY: KEY,
   MODEL: MODEL,
+  VARIANT: VARIANT,
+  FORMS: FORMS,
   run: run,
   parseEvents: parseEvents,
   plainText: plainText,
   isUsageDump: isUsageDump,
+  splitModel: splitModel,
   ensureAuth: ensureAuth,
   authPath: authPath
 };
