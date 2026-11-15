@@ -31,9 +31,9 @@ on:
   workflow_dispatch:
     inputs:
       shards:
-        description: 'Parallel shards (default 8)'
+        description: 'Parallel shards (default 16)'
         required: false
-        default: '8'
+        default: '16'
       model:
         description: 'Ignored: hosted routes choose their own model'
         required: false
@@ -54,9 +54,9 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 8
+      max-parallel: 16
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -85,9 +85,9 @@ jobs:
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXPAND_LANG_DEADLINE_MIN: '90'
-          EXPAND_LANG_TARGET_WORDS: '6000'
+          EXPAND_LANG_TARGET_WORDS: '4000'
           EXPAND_LANG_SHARD: ${{ matrix.shard }}
-          EXPAND_LANG_SHARDS: ${{ github.event.inputs.shards || '8' }}
+          EXPAND_LANG_SHARDS: ${{ github.event.inputs.shards || '16' }}
           EXPAND_LANG_LEDGER: '/tmp/language-expansion.shard-${{ matrix.shard }}.json'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-language-pages.js
 
@@ -104,4 +104,4 @@ jobs:
             exit 0
           fi
           git fetch --depth=100 --no-tags origin main 2>/dev/null || true
-          bash scripts/ci-push.sh "languages: shard ${{ matrix.shard }}/${{ github.event.inputs.shards || '8' }} advanced sections (run ${{ github.run_number }})"
+          bash scripts/ci-push.sh "languages: shard ${{ matrix.shard }}/${{ github.event.inputs.shards || '16' }} advanced sections (run ${{ github.run_number }})"
