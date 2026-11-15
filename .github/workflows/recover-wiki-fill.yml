@@ -352,7 +352,7 @@ jobs:
       - name: Commit and push recovered wiki data
         if: steps.list.outputs.recoverable == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ inputs.dry-run || 'false' }}" = "true" ]; then
             echo "DRY RUN — would have committed and pushed. Showing pending changes:"
@@ -361,50 +361,25 @@ jobs:
             git reset -q
             exit 0
           fi
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -f .git/config.lock .git/index-lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
           rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           # Cheap packs: default zlib settings on ~9 GB of JSON are what made
-          # these commits crawl. See daily-wiki-fill.yml for the same settings.
+          # these commits crawl.
           git config core.compression 1
           git config pack.window 0
           git config pack.depth 0
           git config gc.auto 0
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          # Scoped staging so scratch dirs (chunks/, checkpoints/, baseline/)
-          # can never reach the commit.
+          # Scoped staging so scratch dirs never reach the commit.
           git add -A -- data archive.html
           if git diff --staged --quiet; then
             echo "No changes to commit"
-            # Already current: still let the chain continue below.
-            PUSHED=1
           else
-            git commit -m "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
-            PUSHED=0
-            # 2026-11-14: `timeout 240 git fetch origin main` timed out on this
-            # ~18 GB repository, so the merge saw a stale origin/main and every
-            # push was rejected with "fetch first". A shallow fetch of the tip
-            # is enough to merge and is fast; retry with jitter because other
-            # lanes publish to main constantly.
-            for i in 1 2 3 4 5; do
-              timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out on attempt $i - using last-known main"
-              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
-                echo "Merge conflict — running union merge to keep BOTH runs' data."
-                node scripts/resolve-data-merge.js
-                git add -A -- data archive.html
-                git commit --no-edit 2>/dev/null || true
-              }
-              if git push; then echo "Push succeeded on attempt $i"; PUSHED=1; break; fi
-              echo "Push attempt $i rejected, retrying..."
-              sleep $((5 + RANDOM % 10))
-            done
-            if [ "$PUSHED" != "1" ]; then
-              echo "::error::Could not push recovered wiki data after 5 attempts"
-              exit 1
-            fi
+            bash scripts/ci-push.sh "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
           fi
 
           # Same contract as Wiki Fill's finalize: queue the next mining run
