@@ -131,29 +131,30 @@ jobs:
 
       - name: Commit generated papers
         if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
           git add -f question-bank/*.json
-          git diff --staged --quiet || git commit -m "full-paper: ${{ steps.target.outputs.exam }} ${{ steps.target.outputs.paper }} $(date +'%Y-%m-%d')"
-          pushed=""
-          for i in 1 2 3; do
-            timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
-            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
-              node scripts/merge-full-paper-status.js
-              git add data/full-paper-status.json
-              git commit --no-edit 2>/dev/null || true
-            }
-            if git push; then pushed=1; echo "Pushed"; break; fi
-            echo "push attempt $i failed, retrying..."
-            sleep 5
-          done
-          if [ -z "$pushed" ]; then
-            echo "::error::generated paper could not be pushed to main"
-            exit 1
+          if git diff --staged --quiet; then
+            echo "No changes to publish"
+            exit 0
           fi
+          # ci-push.sh owns the commit, the deepen, the rebase/merge retry and
+          # the PAT -> GITHUB_TOKEN fallback.
+          #
+          # The custom loop that used to live here retried three times with a
+          # fixed 5s sleep and merged a depth-1 FETCH_HEAD that had no common
+          # ancestor with the local commit. The branch stayed diverged, so
+          # every push was rejected -- after the paper had been built. Five of
+          # the last eight runs died on exactly that and threw the paper away.
+          # daily-papers.yml was moved onto ci-push.sh for the same reason; this
+          # lane was left behind.
+          git fetch --depth=100 --no-tags origin main 2>/dev/null || true
+          bash scripts/ci-push.sh "full-paper: ${{ steps.target.outputs.exam }} ${{ steps.target.outputs.paper }} $(date +'%Y-%m-%d')"
 
       - name: Report
         if: always()
