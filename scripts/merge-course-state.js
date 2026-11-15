@@ -48,8 +48,11 @@ if (remote && remote.lessons || ours && ours.lessons) {
   });
   out = { keys: keys };
 } else {
-  // Unknown shape: keep ours if readable, otherwise remote.
-  out = ours || remote;
+  // Plain key -> value maps (scripts/course-data.json, course-practice.json):
+  // one entry per lesson, so a union by key keeps both lanes' work.
+  const r = remote && typeof remote === 'object' && !Array.isArray(remote) ? remote : {};
+  const o = ours && typeof ours === 'object' && !Array.isArray(ours) ? ours : {};
+  out = Object.assign({}, r, o);
 }
 
 if (!out) {
