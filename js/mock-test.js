@@ -1,545 +1,274 @@
-(function(){
-var MOCK = window._mockTestData;
-if (!MOCK) return;
+'use strict';
+// Mock test engine: timer, scoring, review, percentile simulation.
+// Usage: data-exam="upsc" data-paper="upsc-prelims-2023-gs1" on the page body.
 
-var state = {
-  answers: {},
-  markedForReview: [],
-  revealed: {},
-  currentSection: 0,
-  currentQ: 0,
-  timeLeft: MOCK.duration * 60,
-  isActive: true,
-  startTime: Date.now()
-};
-
-var sections = MOCK.sections;
-var questions = MOCK.questions;
-var flatQs = [];
-sections.forEach(function(s, si){
-  s.qStart = flatQs.length;
-  questions.forEach(function(q){
-    if (q.section === s.name) flatQs.push(q);
-  });
-  s.qEnd = flatQs.length - 1;
-});
-
-var sectionBounds = [];
-var idx = 0;
-sections.forEach(function(s){
-  var start = idx;
-  while (idx < flatQs.length && flatQs[idx].section === s.name) idx++;
-  sectionBounds.push({start: start, end: idx - 1});
-});
-
-function init() {
-  renderUI();
-  startTimer();
-  renderQuestion();
-  renderPalette();
-}
-
-function formatTime(sec) {
-  var m = Math.floor(sec / 60);
-  var s = sec % 60;
-  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-}
-
-function startTimer() {
-  var timerEl = document.getElementById('mt-timer');
-  if (!timerEl) return;
-  var interval = setInterval(function(){
-    if (!state.isActive) { clearInterval(interval); return; }
-    state.timeLeft--;
-    timerEl.textContent = formatTime(state.timeLeft);
-    if (state.timeLeft <= 300) timerEl.style.color = '#ef4444';
-    if (state.timeLeft <= 60) timerEl.style.color = '#ef4444';
-    if (state.timeLeft <= 0) {
-      clearInterval(interval);
-      submitTest();
-    }
-  }, 1000);
-}
-
-function renderUI() {
-  var root = document.getElementById('mt-root');
-  if (!root) return;
-  var h = '';
-  h += '<div id="mt-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:var(--bg,#09090b);display:flex;flex-direction:column;overflow:hidden">';
-
-  // Top bar
-  h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg-card,#111113);border-bottom:1px solid var(--border,rgba(255,255,255,.06));flex-shrink:0">';
-  h += '<div style="display:flex;align-items:center;gap:10px">';
-  h += '<span style="font-weight:700;font-size:.9em">' + MOCK.examName + ' Mock Test</span>';
-  h += '<span class="mt-badge mt-badge-primary">' + MOCK.totalQuestions + ' Q</span>';
-  h += '<span class="mt-badge mt-badge-secondary">' + MOCK.totalMarks + ' Marks</span>';
-  h += '</div>';
-  h += '<div style="display:flex;align-items:center;gap:12px">';
-  h += '<span id="mt-timer" style="font-size:1.1em;font-weight:700;font-family:monospace">' + formatTime(state.timeLeft) + '</span>';
-  h += '<button onclick="window._mockTest.submitTest()" class="mt-btn mt-btn-danger" style="padding:6px 14px;font-size:.82em">Submit</button>';
-  h += '</div>';
-  h += '</div>';
-
-  // Main layout
-  h += '<div style="display:flex;flex:1;overflow:hidden">';
-
-  // Left: section tabs + question list
-  h += '<div style="width:200px;flex-shrink:0;border-right:1px solid var(--border,rgba(255,255,255,.06));display:flex;flex-direction:column;background:var(--bg-card,#111113)">';
-  // Section tabs
-  h += '<div id="mt-section-tabs" style="display:flex;flex-direction:column;gap:2px;padding:8px">';
-  sections.forEach(function(s, i){
-    h += '<button class="mt-section-tab' + (i === 0 ? ' mt-section-tab-active' : '') + '" data-si="' + i + '" onclick="window._mockTest.switchSection(' + i + ')">';
-    h += '<span class="mt-section-dot" style="background:' + (s.color || '#a78bfa') + '"></span>';
-    h += s.name;
-    h += '<span style="font-size:.7em;opacity:.6;margin-left:auto">' + s.count + 'Q</span>';
-    h += '</button>';
-  });
-  h += '</div>';
-  // Question grid palette
-  h += '<div id="mt-palette" style="flex:1;overflow-y:auto;padding:8px"></div>';
-  h += '</div>';
-
-  // Right: question area
-  h += '<div style="flex:1;display:flex;flex-direction:column;overflow:hidden">';
-  // Question nav
-  h += '<div id="mt-qnav" style="display:flex;gap:4px;padding:8px 12px;border-bottom:1px solid var(--border,rgba(255,255,255,.06));flex-wrap:wrap;flex-shrink:0"></div>';
-  // Question display
-  h += '<div id="mt-question" style="flex:1;overflow-y:auto;padding:16px 20px"></div>';
-  // Bottom nav
-  h += '<div style="display:flex;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border,rgba(255,255,255,.06));flex-shrink:0">';
-  h += '<button onclick="window._mockTest.prevQuestion()" class="mt-btn mt-btn-secondary" id="mt-prev">&#x2190; Previous</button>';
-  h += '<div style="display:flex;gap:8px">';
-  h += '<button onclick="window._mockTest.showAnswer()" class="mt-btn mt-btn-secondary" id="mt-reveal">Show Answer</button>';
-  h += '<button onclick="window._mockTest.revealAll()" class="mt-btn mt-btn-secondary" id="mt-reveal-all">Reveal All</button>';
-  h += '<button onclick="window._mockTest.markForReview()" class="mt-btn mt-btn-warning" id="mt-review">Mark for Review</button>';
-  h += '<button onclick="window._mockTest.nextQuestion()" class="mt-btn mt-btn-primary" id="mt-next">Save & Next &#x2192;</button>';
-  h += '</div>';
-  h += '</div>';
-
-  h += '</div>'; // end question area
-  h += '</div>'; // end main layout
-  h += '</div>'; // end overlay
-
-  // Results overlay (hidden)
-  h += '<div id="mt-results" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:10000;background:var(--bg,#09090b);overflow-y:auto;padding:24px"></div>';
-
-  root.innerHTML = h;
-}
-
-function renderQuestion() {
-  var si = state.currentSection;
-  var qi = state.currentQ;
-  var bounds = sectionBounds[si];
-  var qIdx = bounds.start + qi;
-  var q = flatQs[qIdx];
-  if (!q) return;
-
-  var qEl = document.getElementById('mt-question');
-  var navEl = document.getElementById('mt-qnav');
-  if (!qEl) return;
-
-  // Navigation numbers
-  var nav = '';
-  for (var i = bounds.start; i <= bounds.end; i++) {
-    var qq = flatQs[i];
-    var cls = 'mt-qnum';
-    if (state.answers[qq.id] !== undefined) cls += ' mt-qnum-answered';
-    if (state.markedForReview.indexOf(qq.id) !== -1) cls += ' mt-qnum-reviewed';
-    if (i === qIdx + bounds.start) cls += ' mt-qnum-active';
-    nav += '<div class="' + cls + '" onclick="window._mockTest.goToQuestion(' + i + ')">' + (i - bounds.start + 1) + '</div>';
+(function () {
+  // Read data attributes lazily — they are set by the inline config script
+  // which runs after this IIFE. Use getters so values are always current.
+  function cfg() {
+    return {
+      exam: document.body.getAttribute('data-exam') || '',
+      paper: document.body.getAttribute('data-paper') || ''
+    };
   }
-  navEl.innerHTML = nav;
-
-  // Question
-  var h = '';
-  h += '<div class="mt-section-badge" style="background:' + (sections[si].color || '#a78bfa') + ';display:inline-block;padding:3px 10px;border-radius:100px;font-size:.72em;font-weight:600;margin-bottom:10px">' + sections[si].name + '</div>';
-  h += '<div class="mt-qtext" style="font-size:1em;line-height:1.7;margin-bottom:16px;font-weight:500">Q' + (qIdx + 1) + '. ' + q.text + '</div>';
-  var revealed = !!state.revealed[q.id];
-  h += '<div class="mt-opts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
-  q.options.forEach(function(o, oi){
-    var selected = state.answers[q.id] === oi;
-    var cls = 'mt-opt';
-    if (selected) cls += ' mt-opt-selected';
-    if (revealed && o.correct) cls += ' mt-opt-correct';
-    if (revealed && selected && !o.correct) cls += ' mt-opt-wrong';
-    h += '<div class="' + cls + '" onclick="window._mockTest.selectOption(' + q.id + ',' + oi + ')"><span class="mt-opt-label">' + o.label + '.</span> ' + o.text + '</div>';
-  });
-  h += '</div>';
-  if (revealed) {
-    var correctOpt = q.options.filter(function(o){ return o.correct; })[0];
-    h += '<div class="mt-answer">' +
-      '<div class="mt-answer-head">Answer: ' + (correctOpt ? correctOpt.label : '') + '</div>' +
-      '<div class="mt-answer-sol">' + (q.solution || '') + '</div>' +
-      '</div>';
+  function paperDataPath() {
+    return 'papers-data/' + cfg().paper + '.json';
   }
-  if (state.markedForReview.indexOf(q.id) !== -1) {
-    h += '<div style="margin-top:10px;font-size:.8em;color:#f59e0b">&#9873; Marked for Review</div>';
-  }
-  qEl.innerHTML = h;
-  var revealBtn = document.getElementById('mt-reveal');
-  if (revealBtn) revealBtn.textContent = revealed ? 'Hide Answer' : 'Show Answer';
 
-  // Update palette
-  renderPalette();
+  var state = {
+    questions: [],
+    current: 0,
+    answers: {},        // qIndex -> option index
+    marked: {},         // qIndex -> true
+    timeLeft: 0,        // seconds
+    timerId: null,
+    started: false,
+    submitted: false,
+    totalTime: 0
+  };
 
-  // Update nav buttons
-  document.getElementById('mt-prev').style.display = (qi > 0 || si > 0) ? '' : 'none';
-  var isLast = (si === sections.length - 1 && qi >= sectionBounds[si].end - sectionBounds[si].start);
-  var nextBtn = document.getElementById('mt-next');
-  if (isLast) {
-    nextBtn.textContent = 'Submit';
-    nextBtn.onclick = function(){ window._mockTest.submitTest(); };
-  } else {
-    nextBtn.textContent = 'Save & Next \u2192';
-    nextBtn.onclick = function(){ window._mockTest.nextQuestion(); };
-  }
-}
+  var els = {
+    grid: document.getElementById('questionGrid'),
+    timer: document.getElementById('timerDisplay'),
+    currentQ: document.getElementById('currentQuestion'),
+    qText: document.getElementById('qText'),
+    options: document.getElementById('options'),
+    markBtn: document.getElementById('markBtn'),
+    nextBtn: document.getElementById('nextBtn'),
+    prevBtn: document.getElementById('prevBtn'),
+    submitBtn: document.getElementById('submitBtn'),
+    resultPanel: document.getElementById('resultPanel'),
+    scoreDisplay: document.getElementById('scoreDisplay'),
+    percentileDisplay: document.getElementById('percentileDisplay'),
+    accuracyDisplay: document.getElementById('accuracyDisplay'),
+    reviewList: document.getElementById('reviewList'),
+    testWrapper: document.getElementById('testWrapper'),
+    introPanel: document.getElementById('introPanel'),
+    startBtn: document.getElementById('startBtn'),
+    paperTitle: document.getElementById('paperTitle'),
+    paperMeta: document.getElementById('paperMeta')
+  };
 
-function renderPalette() {
-  var el = document.getElementById('mt-palette');
-  if (!el) return;
-  var h = '<div style="font-size:.72em;text-transform:uppercase;color:var(--text-muted,#52525b);margin-bottom:6px;padding:0 4px">Question Palette</div>';
-  h += '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">';
-  flatQs.forEach(function(q, i){
-    var cls = 'mt-palette-num';
-    if (state.answers[q.id] !== undefined) cls += ' mt-palette-answered';
-    else if (state.markedForReview.indexOf(q.id) !== -1) cls += ' mt-palette-reviewed';
-    else cls += ' mt-palette-unanswered';
-    h += '<div class="' + cls + '" onclick="window._mockTest.goToQuestion(' + i + ')" title="Q' + (i+1) + '">' + (i+1) + '</div>';
-  });
-  h += '</div>';
-  h += '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;font-size:.68em">';
-  h += '<span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(52,211,153,.3);margin-right:3px;vertical-align:middle"></span>Answered</span>';
-  h += '<span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(245,158,11,.3);margin-right:3px;vertical-align:middle"></span>Reviewed</span>';
-  h += '<span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.08);margin-right:3px;vertical-align:middle"></span>Unanswered</span>';
-  h += '</div>';
-  el.innerHTML = h;
-}
+  function loadPaper() {
+    fetch(paperDataPath())
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var meta = d;
+        state.questions = (d.questions || d || []).map(function (q, i) {
+          return {
+            index: i,
+            text: q.q || q.text,
+            options: q.options || [],
+            correct: q.correct != null ? q.correct : (q.answer != null ? q.answer : 0),
+            section: q.section || '',
+            solution: q.solution || q.explain || ''
+          };
+        });
+        // Determine timer minutes from meta or default 60
+        var mins = 60;
+        if (d.timerMinutes) mins = d.timerMinutes;
+        else if (d.meta && d.meta.timerMinutes) mins = d.meta.timerMinutes;
+        else if (d.totalQuestions) mins = Math.max(30, Math.round(d.totalQuestions / 1.5));
+        state.totalTime = mins * 60;
+        state.timeLeft = state.totalTime;
 
-function selectOption(qId, oi) {
-  if (!state.isActive) return;
-  state.answers[qId] = oi;
-  // Remove from review if answered
-  var ri = state.markedForReview.indexOf(qId);
-  if (ri !== -1) state.markedForReview.splice(ri, 1);
-  renderQuestion();
-}
-
-function markForReview() {
-  if (!state.isActive) return;
-  var si = state.currentSection;
-  var qi = state.currentQ;
-  var bounds = sectionBounds[si];
-  var qIdx = bounds.start + qi;
-  var q = flatQs[qIdx];
-  if (!q) return;
-  var ri = state.markedForReview.indexOf(q.id);
-  if (ri === -1) state.markedForReview.push(q.id);
-  else state.markedForReview.splice(ri, 1);
-  renderQuestion();
-}
-
-function showAnswer() {
-  var si = state.currentSection;
-  var qi = state.currentQ;
-  var bounds = sectionBounds[si];
-  var qIdx = bounds.start + qi;
-  var q = flatQs[qIdx];
-  if (!q) return;
-  state.revealed[q.id] = !state.revealed[q.id];
-  renderQuestion();
-}
-
-function revealAll() {
-  if (!state.isActive) return;
-  var all = true;
-  flatQs.forEach(function(q){ if (!state.revealed[q.id]) all = false; });
-  flatQs.forEach(function(q){ state.revealed[q.id] = !all; });
-  renderQuestion();
-}
-
-function switchSection(si) {
-  if (si < 0 || si >= sections.length) return;
-  state.currentSection = si;
-  state.currentQ = 0;
-  // Update tab active
-  document.querySelectorAll('.mt-section-tab').forEach(function(el, i){
-    el.classList.toggle('mt-section-tab-active', i === si);
-  });
-  renderQuestion();
-}
-
-function goToQuestion(globalIdx) {
-  for (var si = 0; si < sectionBounds.length; si++) {
-    var b = sectionBounds[si];
-    if (globalIdx >= b.start && globalIdx <= b.end) {
-      state.currentSection = si;
-      state.currentQ = globalIdx - b.start;
-      document.querySelectorAll('.mt-section-tab').forEach(function(el, i){
-        el.classList.toggle('mt-section-tab-active', i === si);
+        if (els.paperTitle) els.paperTitle.textContent = (meta.pageTitle || meta.paper || cfg().paper);
+        if (els.paperMeta) {
+          els.paperMeta.textContent =
+            (meta.exam || '') + ' · ' + state.totalQuestions + ' Q · ' +
+            mins + ' min · ' + (d.pageDesc || '');
+        }
+        renderGrid();
+        showQuestion(0);
+      })
+      .catch(function (e) {
+        console.error('Mock test: failed to load paper', e);
+        if (els.qText) els.qText.textContent = 'Could not load paper: ' + paperDataPath();
       });
-      renderQuestion();
-      return;
+  }
+
+  function renderGrid() {
+    if (!els.grid) return;
+    els.grid.innerHTML = '';
+    state.questions.forEach(function (q, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'q-chip';
+      btn.textContent = i + 1;
+      btn.onclick = function () { showQuestion(i); };
+      els.grid.appendChild(btn);
+    });
+    updateChipStates();
+  }
+
+  function updateChipStates() {
+    if (!els.grid) return;
+    var chips = els.grid.querySelectorAll('.q-chip');
+    chips.forEach(function (chip, i) {
+      chip.className = 'q-chip';
+      if (state.marked[i]) chip.classList.add('marked');
+      if (state.answers[i] != null) chip.classList.add('answered');
+      if (i === state.current) chip.classList.add('current');
+    });
+  }
+
+  function showQuestion(i) {
+    if (i < 0 || i >= state.questions.length) return;
+    state.current = i;
+    var q = state.questions[i];
+    if (els.qText) els.qText.textContent = 'Q' + (i + 1) + '. ' + q.text;
+    if (els.currentQ) els.currentQ.textContent = 'Question ' + (i + 1) + ' of ' + state.questions.length;
+    if (els.options) {
+      els.options.innerHTML = '';
+      q.options.forEach(function (opt, j) {
+        var label = document.createElement('label');
+        label.className = 'q-option';
+        var radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'q' + i;
+        radio.value = j;
+        radio.checked = state.answers[i] === j;
+        radio.onchange = function () { selectOption(i, j); };
+        var span = document.createElement('span');
+        span.textContent = String.fromCharCode(65 + j) + ') ' + opt;
+        label.appendChild(radio);
+        label.appendChild(span);
+        els.options.appendChild(label);
+      });
     }
+    if (els.markBtn) {
+      els.markBtn.textContent = state.marked[i] ? 'Unmark' : 'Mark';
+    }
+    updateChipStates();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-}
 
-function prevQuestion() {
-  var si = state.currentSection;
-  var qi = state.currentQ;
-  if (qi > 0) {
-    state.currentQ = qi - 1;
-  } else if (si > 0) {
-    state.currentSection = si - 1;
-    state.currentQ = sectionBounds[state.currentSection].end - sectionBounds[state.currentSection].start;
-    document.querySelectorAll('.mt-section-tab').forEach(function(el, i){
-      el.classList.toggle('mt-section-tab-active', i === state.currentSection);
-    });
+  function selectOption(qIndex, optIndex) {
+    state.answers[qIndex] = optIndex;
+    updateChipStates();
   }
-  renderQuestion();
-}
 
-function nextQuestion() {
-  var si = state.currentSection;
-  var qi = state.currentQ;
-  var bounds = sectionBounds[si];
-  if (qi < bounds.end - bounds.start) {
-    state.currentQ = qi + 1;
-  } else if (si < sections.length - 1) {
-    state.currentSection = si + 1;
-    state.currentQ = 0;
-    document.querySelectorAll('.mt-section-tab').forEach(function(el, i){
-      el.classList.toggle('mt-section-tab-active', i === state.currentSection);
-    });
+  function toggleMark() {
+    state.marked[state.current] = !state.marked[state.current];
+    if (els.markBtn) els.markBtn.textContent = state.marked[state.current] ? 'Unmark' : 'Mark';
+    updateChipStates();
   }
-  renderQuestion();
-}
 
-function submitTest() {
-  if (!confirm('Are you sure you want to submit the test?')) return;
-  state.isActive = false;
+  function next() { if (state.current < state.questions.length - 1) showQuestion(state.current + 1); }
+  function prev() { if (state.current > 0) showQuestion(state.current - 1); }
 
-  var results = [];
-  var total = 0, correct = 0, wrong = 0, unattempted = 0;
-  var sectionStats = {};
+  function startTimer() {
+    if (state.timerId) return;
+    state.timerId = setInterval(function () {
+      state.timeLeft--;
+      updateTimerDisplay();
+      if (state.timeLeft <= 0) autoSubmit();
+    }, 1000);
+    updateTimerDisplay();
+  }
 
-  flatQs.forEach(function(q){
-    var ans = state.answers[q.id];
-    var isCorrect = false;
-    if (ans === undefined) {
-      unattempted++;
-    } else {
-      total++;
-      var isCorrect = q.options[ans].correct;
-      if (isCorrect) {
-        correct++;
-      } else {
-        wrong++;
+  function updateTimerDisplay() {
+    if (!els.timer) return;
+    var m = Math.floor(state.timeLeft / 60);
+    var s = state.timeLeft % 60;
+    els.timer.textContent =
+      (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    if (state.timeLeft < 300) els.timer.style.color = '#ef4444';
+  }
+
+  function autoSubmit() {
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+    submitTest();
+  }
+
+  function submitTest() {
+    state.submitted = true;
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+
+    var correct = 0, attempted = 0, wrong = 0;
+    state.questions.forEach(function (q, i) {
+      if (state.answers[i] != null) {
+        attempted++;
+        if (state.answers[i] === q.correct) correct++;
+        else wrong++;
       }
-    }
-    if (!sectionStats[q.section]) sectionStats[q.section] = {total:0, correct:0, wrong:0, unattempted:0};
-    sectionStats[q.section].total++;
-    if (ans === undefined) sectionStats[q.section].unattempted++;
-    else if (q.options[ans].correct) sectionStats[q.section].correct++;
-    else sectionStats[q.section].wrong++;
-  });
-
-  var score = correct * MOCK.perQuestionMarks;
-  if (MOCK.hasNegative) score -= wrong * parseFloat(MOCK.negativeMarking);
-  var accuracy = total > 0 ? Math.round(correct / total * 100) : 0;
-
-  // Feed to smart engines
-  if (typeof window.trackEnglishQuestion === 'function' || typeof window.trackQuantQuestion === 'function' || typeof window.trackReasoningQuestion === 'function') {
-    flatQs.forEach(function(q){
-      var ans = state.answers[q.id];
-      var isCorrect = ans !== undefined && q.options[ans].correct;
-      var chosen = ans !== undefined ? q.options[ans].text : '';
-      var correctText = '';
-      q.options.forEach(function(o){ if (o.correct) correctText = o.text; });
-      var secLower = (q.section || '').toLowerCase();
-
-      if (secLower.indexOf('english') >= 0 || secLower.indexOf('grammar') >= 0 || secLower.indexOf('vocab') >= 0 || secLower.indexOf('comprehension') >= 0) {
-        if (typeof window.trackEnglishQuestion === 'function') window.trackEnglishQuestion(q.text, chosen, correctText, [], null, 0);
-      } else if (secLower.indexOf('quant') >= 0 || secLower.indexOf('math') >= 0 || secLower.indexOf('arithmetic') >= 0 || secLower.indexOf('numerical') >= 0) {
-        if (typeof window.trackQuantQuestion === 'function') window.trackQuantQuestion(q.section, (q.text || '').substring(0, 20), 30, isCorrect, false);
-      } else if (secLower.indexOf('reasoning') >= 0 || secLower.indexOf('logical') >= 0 || secLower.indexOf('puzzle') >= 0) {
-        if (typeof window.trackReasoningQuestion === 'function') window.trackReasoningQuestion('puzzle', 30, isCorrect, false, true);
-      }
     });
-    // Refresh engine analysis caches
-    if (typeof window.runEnglishEngine === 'function') setTimeout(function(){ window.runEnglishEngine(true); }, 100);
-    if (typeof window.runQuantEngine === 'function') setTimeout(function(){ window.runQuantEngine(true); }, 200);
-    if (typeof window.runReasoningEngine === 'function') setTimeout(function(){ window.runReasoningEngine(true); }, 300);
+    var accuracy = attempted ? Math.round((correct / attempted) * 100) : 0;
+
+    // Percentile simulation: based on accuracy + speed
+    var timeTaken = state.totalTime - state.timeLeft;
+    var speedScore = timeTaken > 0 ? Math.round((attempted / timeTaken) * 60) : 0;
+    var percentile = Math.min(99, Math.max(1, Math.round(accuracy * 0.6 + speedScore * 0.4)));
+
+    // Save to performance dashboard
+    var perfKey = 'perf_' + cfg().exam + '_' + cfg().paper;
+    var perf = JSON.parse(localStorage.getItem(perfKey) || '{}');
+    perf.lastAttempt = {
+      date: new Date().toISOString(),
+      correct: correct,
+      attempted: attempted,
+      wrong: wrong,
+      accuracy: accuracy,
+      percentile: percentile,
+      timeTaken: timeTaken,
+      totalTime: state.totalTime
+    };
+    var history = perf.history || [];
+    history.push(perf.lastAttempt);
+    if (history.length > 50) history = history.slice(-50);
+    perf.history = history;
+    perf.bestAccuracy = Math.max(perf.bestAccuracy || 0, accuracy);
+    perf.bestPercentile = Math.max(perf.bestPercentile || 0, percentile);
+    localStorage.setItem(perfKey, JSON.stringify(perf));
+
+    // Show results
+    if (els.testWrapper) els.testWrapper.style.display = 'none';
+    if (els.introPanel) els.introPanel.style.display = 'none';
+    if (els.resultPanel) {
+      els.resultPanel.style.display = 'block';
+      if (els.scoreDisplay) els.scoreDisplay.textContent = correct + ' / ' + state.questions.length;
+      if (els.percentileDisplay) els.percentileDisplay.textContent = percentile + ' percentile';
+      if (els.accuracyDisplay) els.accuracyDisplay.textContent = accuracy + '% accuracy';
+      renderReview();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Sync smart caches to Supabase
-  if (typeof window.syncAllSmartCaches === 'function') setTimeout(window.syncAllSmartCaches, 500);
-
-  // Render results
-  var root = document.getElementById('mt-results');
-  if (!root) return;
-  document.getElementById('mt-overlay').style.display = 'none';
-  root.style.display = 'block';
-
-  var h = '';
-  h += '<div style="max-width:800px;margin:0 auto">';
-  h += '<h1 style="font-size:1.5em;font-weight:900;margin-bottom:4px">Test Results</h1>';
-  h += '<p style="color:var(--text-sec,#a1a1aa);font-size:.85em;margin-bottom:20px">' + MOCK.examName + ' Mock Test</p>';
-
-  // Score card
-  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px">';
-  h += '<div class="mt-stat-card"><div class="mt-stat-value" style="color:#34d399">' + score.toFixed(1) + '</div><div class="mt-stat-label">Score (' + MOCK.totalMarks + ')</div></div>';
-  h += '<div class="mt-stat-card"><div class="mt-stat-value" style="color:#a78bfa">' + accuracy + '%</div><div class="mt-stat-label">Accuracy</div></div>';
-  h += '<div class="mt-stat-card"><div class="mt-stat-value" style="color:#34d399">' + correct + '</div><div class="mt-stat-label">Correct</div></div>';
-  h += '<div class="mt-stat-card"><div class="mt-stat-value" style="color:#ef4444">' + wrong + '</div><div class="mt-stat-label">Wrong</div></div>';
-  h += '<div class="mt-stat-card"><div class="mt-stat-value" style="color:#52525b">' + unattempted + '</div><div class="mt-stat-label">Skipped</div></div>';
-  h += '<div class="mt-stat-card"><div class="mt-stat-value" style="color:#f59e0b">' + formatTime(MOCK.duration * 60 - state.timeLeft) + '</div><div class="mt-stat-label">Time Taken</div></div>';
-  h += '</div>';
-
-  // Section breakdown
-  h += '<h2 style="font-size:1em;font-weight:700;margin:20px 0 10px">Section-wise Performance</h2>';
-  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:24px">';
-  sections.forEach(function(s){
-    var st = sectionStats[s.name] || {total:0, correct:0, wrong:0, unattempted:0};
-    var secScore = st.correct * MOCK.perQuestionMarks;
-    if (MOCK.hasNegative) secScore -= st.wrong * parseFloat(MOCK.negativeMarking);
-    var secAcc = st.total > 0 ? Math.round(st.correct / (st.correct + st.wrong) * 100) : 0;
-    h += '<div style="background:var(--bg-card,#111113);border:1px solid var(--border,rgba(255,255,255,.06));border-radius:10px;padding:12px">';
-    h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:8px;height:8px;border-radius:50%;background:' + (s.color||'#a78bfa') + '"></span><span style="font-size:.82em;font-weight:600">' + s.name + '</span></div>';
-    h += '<div style="display:flex;gap:8px;font-size:.78em;color:var(--text-sec,#a1a1aa)">';
-    h += '<span>Score: <strong style="color:#34d399">' + secScore.toFixed(1) + '</strong></span>';
-    h += '<span>Acc: <strong>' + (st.correct + st.wrong > 0 ? secAcc + '%' : 'N/A') + '</strong></span>';
-    h += '<span>Correct: <strong style="color:#34d399">' + st.correct + '</strong>/' + st.total + '</span>';
-    h += '</div>';
-    h += '<div style="margin-top:6px;height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden">';
-    var pct = st.total > 0 ? (st.correct / st.total * 100) : 0;
-    h += '<div style="height:100%;width:' + pct + '%;background:' + (s.color||'#a78bfa') + ';border-radius:4px"></div>';
-    h += '</div>';
-    h += '</div>';
-  });
-  h += '</div>';
-
-  // Review button
-  h += '<h2 style="font-size:1em;font-weight:700;margin:20px 0 10px">Review All Questions</h2>';
-  h += '<div style="display:flex;gap:8px;margin-bottom:20px">';
-  h += '<button onclick="window._mockTest.showReview()" class="mt-btn mt-btn-primary">View Detailed Review</button>';
-  h += '<button onclick="window._mockTest.closeResults()" class="mt-btn mt-btn-secondary">Close</button>';
-  h += '</div>';
-
-  h += '</div>'; // end container
-
-  root.innerHTML = h;
-}
-
-function showReview() {
-  var root = document.getElementById('mt-results');
-  if (!root) return;
-  var h = '<div style="max-width:800px;margin:0 auto">';
-  h += '<h1 style="font-size:1.3em;font-weight:900;margin-bottom:4px">Answer Review</h1>';
-  h += '<p style="color:var(--text-sec,#a1a1aa);font-size:.85em;margin-bottom:20px">Review all questions with correct answers and solutions</p>';
-  h += '<button onclick="window._mockTest.showResults()" class="mt-btn mt-btn-secondary" style="margin-bottom:16px">&#x2190; Back to Results</button>';
-
-  flatQs.forEach(function(q, i){
-    var ans = state.answers[q.id];
-    var isCorrect = ans !== undefined && q.options[ans].correct;
-    var isWrong = ans !== undefined && !q.options[ans].correct;
-    var isUnattempted = ans === undefined;
-    var borderColor = isCorrect ? '#34d399' : (isWrong ? '#ef4444' : '#52525b');
-
-    h += '<div style="background:var(--bg-card,#111113);border:1px solid var(--border,rgba(255,255,255,.06));border-left:3px solid ' + borderColor + ';border-radius:0 10px 10px 0;padding:14px;margin-bottom:12px">';
-    h += '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">';
-    h += '<span style="font-weight:600;font-size:.82em">Q' + (i+1) + ' <span style="font-weight:400;color:var(--text-sec,#a1a1aa)">[' + q.section + ']</span></span>';
-    if (isCorrect) h += '<span style="font-size:.75em;padding:2px 8px;border-radius:100px;background:rgba(52,211,153,.15);color:#34d399">Correct</span>';
-    else if (isWrong) h += '<span style="font-size:.75em;padding:2px 8px;border-radius:100px;background:rgba(239,68,68,.15);color:#ef4444">Wrong</span>';
-    else h += '<span style="font-size:.75em;padding:2px 8px;border-radius:100px;background:rgba(82,82,91,.15);color:#52525b">Skipped</span>';
-    h += '</div>';
-    h += '<div style="font-size:.88em;margin-bottom:8px">' + q.text + '</div>';
-    h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">';
-    q.options.forEach(function(o, oi){
-      var cls = '';
-      if (o.correct) cls += ' style="color:#34d399;font-weight:600"';
-      else if (oi === ans) cls += ' style="color:#ef4444"';
-      h += '<div' + cls + ' style="font-size:.82em;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.03)">' + o.label + '. ' + o.text + (o.correct ? ' &#10003;' : '') + '</div>';
+  function renderReview() {
+    if (!els.reviewList) return;
+    els.reviewList.innerHTML = '';
+    state.questions.forEach(function (q, i) {
+      var userAns = state.answers[i] != null ? q.options[state.answers[i]] : null;
+      var isCorrect = state.answers[i] === q.correct;
+      var item = document.createElement('div');
+      item.className = 'review-item ' + (isCorrect ? 'correct' : 'incorrect');
+      var optLetters = q.options.map(function (_, j) { return String.fromCharCode(65 + j); });
+      var userLetter = state.answers[i] != null ? optLetters[state.answers[i]] : '--';
+      var correctLetter = optLetters[q.correct];
+      item.innerHTML =
+        '<div class="review-q">Q' + (i + 1) + '. ' + q.text + '</div>' +
+        '<div class="review-ans">Your answer: <strong>' + userLetter + '</strong> ' +
+        (userAns ? userAns : '') + '</div>' +
+        '<div class="review-correct">Correct: <strong>' + correctLetter + '</strong> ' + q.options[q.correct] + '</div>' +
+        (q.solution ? '<div class="review-sol">Solution: ' + q.solution + '</div>' : '');
+      els.reviewList.appendChild(item);
     });
-    h += '</div>';
-    if (q.solution) {
-      h += '<div style="margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.8em;color:var(--text-sec,#a1a1aa)"><strong style="color:#a78bfa">Solution:</strong> ' + q.solution + '</div>';
-    }
-    h += '</div>';
-  });
+  }
 
-  h += '<button onclick="window._mockTest.showResults()" class="mt-btn mt-btn-secondary" style="margin-top:8px">&#x2190; Back to Results</button>';
-  h += '</div>';
-  root.innerHTML = h;
-}
+  // Wire up buttons
+  function wire() {
+    if (els.startBtn) els.startBtn.onclick = function () {
+      if (els.introPanel) els.introPanel.style.display = 'none';
+      if (els.testWrapper) els.testWrapper.style.display = 'block';
+      startTimer();
+      showQuestion(0);
+    };
+    if (els.markBtn) els.markBtn.onclick = toggleMark;
+    if (els.nextBtn) els.nextBtn.onclick = next;
+    if (els.prevBtn) els.prevBtn.onclick = prev;
+    if (els.submitBtn) els.submitBtn.onclick = submitTest;
+  }
 
-function showResults() {
-  submitTest();
-}
-
-function closeResults() {
-  document.getElementById('mt-results').style.display = 'none';
-}
-
-// Styles
-var style = document.createElement('style');
-style.textContent = `
-#mt-overlay *{box-sizing:border-box}
-.mt-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;vertical-align:middle}
-.mt-badge-primary{background:rgba(167,139,250,.15);color:#a78bfa}
-.mt-badge-secondary{background:rgba(255,255,255,.06);color:#a1a1aa}
-.mt-btn{padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
-.mt-btn-primary{background:rgba(167,139,250,.15);color:#a78bfa}
-.mt-btn-primary:hover{background:rgba(167,139,250,.25)}
-.mt-btn-secondary{background:rgba(255,255,255,.06);color:#a1a1aa}
-.mt-btn-secondary:hover{background:rgba(255,255,255,.1)}
-.mt-btn-danger{background:rgba(239,68,68,.15);color:#ef4444}
-.mt-btn-danger:hover{background:rgba(239,68,68,.25)}
-.mt-btn-warning{background:rgba(245,158,11,.15);color:#f59e0b}
-.mt-btn-warning:hover{background:rgba(245,158,11,.25)}
-.mt-section-tab{display:flex;align-items:center;gap:6px;padding:7px 10px;border:none;border-radius:6px;font-size:.78em;font-weight:500;background:transparent;color:#a1a1aa;cursor:pointer;text-align:left;transition:all .15s;width:100%}
-.mt-section-tab:hover{background:rgba(255,255,255,.04);color:#fafafa}
-.mt-section-tab-active{background:rgba(167,139,250,.1);color:#a78bfa}
-.mt-section-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.mt-qnum{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:.72em;font-weight:600;cursor:pointer;background:rgba(255,255,255,.06);color:#a1a1aa;transition:all .15s}
-.mt-qnum:hover{background:rgba(255,255,255,.1);color:#fafafa}
-.mt-qnum-active{border:1px solid #a78bfa;color:#a78bfa}
-.mt-qnum-answered{background:rgba(52,211,153,.2);color:#34d399}
-.mt-qnum-reviewed{background:rgba(245,158,11,.2);color:#f59e0b}
-.mt-opt{padding:10px 14px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.06));cursor:pointer;font-size:.88em;transition:all .15s;color:var(--text-sec,#a1a1aa)}
-.mt-opt:hover{border-color:rgba(255,255,255,.15)}
-.mt-opt-selected{border-color:#a78bfa;background:rgba(167,139,250,.1);color:#fafafa}
-.mt-opt-correct{border-color:#34d399;background:rgba(52,211,153,.12);color:#fafafa}
-.mt-opt-wrong{border-color:#ef4444;background:rgba(239,68,68,.12);color:#fafafa}
-.mt-answer{margin-top:14px;padding:12px 14px;border:1px solid rgba(52,211,153,.35);background:rgba(52,211,153,.08);border-radius:10px;font-size:.88em;color:#d4d4d8;line-height:1.55}
-.mt-answer-head{font-weight:700;color:#34d399;margin-bottom:4px}
-.mt-opt-label{font-weight:600;color:var(--text-muted,#52525b)}
-.mt-palette-num{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:.68em;font-weight:600;cursor:pointer;transition:all .15s}
-.mt-palette-num:hover{opacity:.8}
-.mt-palette-answered{background:rgba(52,211,153,.25);color:#34d399}
-.mt-palette-reviewed{background:rgba(245,158,11,.25);color:#f59e0b}
-.mt-palette-unanswered{background:rgba(255,255,255,.06);color:#52525b}
-.mt-stat-card{background:var(--bg-card,#111113);border:1px solid var(--border,rgba(255,255,255,.06));border-radius:10px;padding:14px;text-align:center}
-.mt-stat-value{font-size:1.3em;font-weight:800}
-.mt-stat-label{font-size:.72em;color:var(--text-muted,#52525b);margin-top:2px;text-transform:uppercase}
-`;
-document.head.appendChild(style);
-
-// Export public API
-window._mockTest = {
-  init: init,
-  selectOption: selectOption,
-  markForReview: markForReview,
-  showAnswer: showAnswer,
-  revealAll: revealAll,
-  switchSection: switchSection,
-  goToQuestion: goToQuestion,
-  prevQuestion: prevQuestion,
-  nextQuestion: nextQuestion,
-  submitTest: submitTest,
-  showReview: showReview,
-  showResults: showResults,
-  closeResults: closeResults
-};
-
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { wire(); loadPaper(); });
+  else { wire(); loadPaper(); }
 })();
