@@ -278,6 +278,86 @@ details p{color:var(--text-sec);font-size:13px;line-height:1.7;margin-top:6px}
 <li>Identify the compound type in “कर्तव्यपरायणाः” and explain its meaning.</li>
 </ol>
 </div>
+<div class="language-section">
+<h3>Sanskrit Computational Morphology for Automated Parsing</h3>
+<p>Modern language‑technology pipelines require a precise formalisation of Sanskrit morphology. The <code>pāṇinian</code> sūtras can be mapped to finite‑state transducers that generate all valid surface forms from a lexical root and a set of morphological tags. This approach enables deterministic segmentation of sandhi‑joined words, automatic identification of <strong>kṛt</strong> and <strong>taddhita</strong> affixes, and reliable lemma extraction for large corpora.</p>
+<h4>Key Design Principles</h4>
+<ul>
+<li>Represent each dhātu with its <em>gaṇa</em> and <em>lakāra</em> features.</li>
+<li>Encode sandhi rules as rewrite rules that operate on the phonemic tier before orthographic conversion.</li>
+<li>Use a unified tagset (POS, case, number, gender, voice) compatible with the Universal Dependencies schema.</li>
+</ul>
+<div class="example-box">
+<div class="ex-title">Example: Automated Analysis of “रामस्य गृहम्”</div>
+<div class="ex-text">Input: रामस्य गृहम्<br>Morphological tags: राम/प्रातिपदिक+स्य/षष्ठी+एकवचन गृह/प्रातिपदिक+म्/द्वितीया+एकवचन</div>
+<div class="ex-soln">Output lemma list: राम, गृह; case/number tags attached for downstream syntactic parsing.</div>
+</div>
+<p>Such a pipeline reduces manual annotation effort and supports downstream tasks like machine translation and information retrieval for Sanskrit administrative texts.</p>
+
+<h3>Sanskrit Rhetorical Figures in Official Discourse</h3>
+<p>Official Sanskrit correspondence historically employs a repertoire of <em>alaṅkāra</em> to convey authority, clarity, and decorum. Mastery of these figures aids both composition and critical reading of gazettes, orders, and policy documents.</p>
+<h4>Principal Figures</h4>
+<ol>
+<li><strong>Anuprāsa</strong> – alliteration used for mnemonic headings.</li>
+<li><strong>Yamaka</strong> – repetition of a word with different meanings to stress dual aspects.</li>
+<li><strong>Śleṣa</strong> – deliberate polysemy allowing a single phrase to address multiple audiences.</li>
+</ol>
+<div class="tip-box">
+<div class="tip-title">Composition Tip</div>
+<div class="tip-text">When drafting a notification, place an <em>anuprāsa</em> in the subject line (e.g., “सुरक्षा सुव्यवस्था”) to improve recall; follow with a <em>yamaka</em> in the body to reinforce key obligations.</div>
+</div>
+<p>Recognising these devices prevents misinterpretation of ambiguous phrasing and ensures faithful translation into vernacular languages.</p>
+
+<h3>Extra Model‑Generated Practice Passage</h3>
+<p>sourceType: model-generated-practice</p>
+<p>रामः वनं गच्छति। सीता सह तत्र वसति। लक्ष्मणः रक्षां करोति।</p>
+<ol>
+<li>Who goes to the forest?</li>
+<li>Who stays there with Sītā?</li>
+<li>What does Lakṣmaṇa do?</li>
+</ol>
+</div>
+<div class="language-section">
+<h3>Sanskrit Discourse Structure in Official Reports</h3>
+<p>Official Sanskrit reports follow a predictable macro‑structure: <strong>प्रस्तावना</strong> (introduction), <strong>विषयविस्तारः</strong> (elaboration), <strong>निर्णयः</strong> (decision), and <strong>अनुबन्धः</strong> (appendices). Each segment uses a distinct register of vocabulary and a limited set of syntactic patterns, which makes the text amenable to systematic analysis.</p>
+<p>The introduction typically employs the <em>विधि</em> mood with passive constructions such as <code>कर्तव्यम् अस्ति</code>. The elaboration section favours compound nouns (<strong>समासाः</strong>) and <em>सन्धि</em>‑rich sentences to convey dense information compactly. The decision part reverts to direct imperative forms (<code>कुर्यात्</code>) for clarity.</p>
+<ul>
+<li>Identify the four macro‑segments in any given report.</li>
+<li>Mark the dominant mood and voice in each segment.</li>
+<li>Note recurring compound types (e.g., <em>तत्पुरुष</em>, <em>बहुव्रीहि</em>).</li>
+</ul>
+
+<div class="example-box">
+<div class="ex-title">Example: Segment Identification</div>
+<div class="ex-text">प्रस्तावना: अधीनस्थानां कार्यानि समीक्ष्यन्ते। विषयविस्तारः: राजकीययोजनानां क्रियान्वयनं विवृणोति। निर्णयः: सर्वे अधिकारीणां सहमति आवश्यकम्। अनुबन्धः: सांख्यिकाः तालिकाः संलग्नाः।</div>
+<div class="ex-soln">Solution: The passage contains all four macro‑segments in order. The introduction uses passive <code>समीक्ष्यन्ते</code>, the elaboration uses a tatpurusha compound <code>राजकीययोजनानां</code>, the decision uses imperative <code>आवश्यकम्</code>, and the appendix lists attachments.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Tip</div>
+<div class="tip-text">When drafting, keep each macro‑segment under 150 words; this mirrors the brevity expected in UPSC answer scripts.</div>
+</div>
+
+<h3>Sanskrit Lexical Registers for Legal Terminology</h3>
+<p>Legal Sanskrit draws on a specialised register that blends classical <em>धर्मशास्त्र</em> vocabulary with modern administrative coinages. Core terms such as <strong>अधिकारः</strong>, <strong>दायित्वम्</strong>, <strong>न्यायः</strong> retain their classical semantics but acquire procedural nuances.</p>
+<p>Key strategies for mastering this register:</p>
+<ol>
+<li>Compile a bilingual glossary of the 200 most frequent legal lemmas.</li>
+<li>Practice converting Hindi/English legal clauses into Sanskrit using the glossary.</li>
+<li>Analyse at least three authentic government notifications for collocation patterns.</li>
+</ol>
+<p>Regular exposure to the <em>भारतस्य राजपत्रम्</em> (Gazette of India) Sanskrit editions accelerates internalisation of the register.</p>
+
+<h3>New Model‑Generated Practice Passage</h3>
+<p>Model-generated practice (not an official UPSC question)</p>
+<p>sourceType: model-generated-practice</p>
+<p>प्रस्तावना: ग्रामपञ्चायत् अधिनियमस्य नवीनसंशोधनं प्रकाशितम् अभवत्। विषयविस्तारः: ग्रामसभाया: अधिकाराः विस्तारिताः, जलसंरक्षणं च अनिवार्यम् कृतम्। निर्णयः: सर्वे ग्रामप्रमुखाः त्रैमासिकं प्रतिवेदनं समर्पयन्तु। अनुबन्धः: संशोधनसूची संलग्ना।</p>
+<ol>
+<li>किम् ग्रामसभाया: अधिकाराः विस्तारिताः?</li>
+<li>कः अनिवार्यः कृतः जलसंरक्षणे?</li>
+<li>कति मासानि अन्तरेण प्रतिवेदनं समर्पयितव्यम्?</li>
+</ol>
+</div>
 <script src="language-practice.js"></script>
 </body>
 </html>
