@@ -8113,139 +8113,139 @@
   ],
   "reasoning/puzzles": [
     {
-      "id": 1381,
-      "text": "Five persons sit in a row facing north: A is at the left end. B is third to the right of A. C is immediate right of B. D is immediate left of E. Where is E?",
+      "id": 101,
+      "text": "In a linear seating arrangement, the concepts of leftmost and rightmost are described as absolute references. What does this imply about the ends of the row?",
       "options": [
         {
           "l": "a",
-          "t": "Right end",
+          "t": "The leftmost position changes depending on the perspective of the seated persons.",
           "c": false
         },
         {
           "l": "b",
-          "t": "Second from left",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "Third from left",
+          "t": "The leftmost and rightmost positions are fixed and do not change regardless of perspective.",
           "c": true
         },
         {
+          "l": "c",
+          "t": "Only the rightmost position is absolute; the leftmost is relative.",
+          "c": false
+        },
+        {
           "l": "d",
-          "t": "Fourth from left",
+          "t": "Neither end is fixed; both are relative to the observer.",
           "c": false
         }
       ],
-      "sol": "A=1, B=4 (third to right), C=5 (immediate right of B = right end). Remaining positions 2,3 for D,E. D immediate left of E → D=2, E=3. E is third from left."
+      "sol": "The lesson states that because the row has two distinct ends, the concepts of leftmost and rightmost are absolute references that never change regardless of the perspective of the individuals seated. This absolute frame of reference makes linear puzzles straightforward. Therefore, the ends are fixed and do not vary with viewpoint."
     },
     {
-      "id": 1382,
-      "text": "In a circle of 6 facing center, who is opposite P if Q is opposite P?",
+      "id": 102,
+      "text": "Which category of clue does the statement \"A sits third to the left of B\" belong to in a linear arrangement puzzle?",
       "options": [
         {
           "l": "a",
-          "t": "Q",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "R",
+          "t": "Definite clue",
           "c": false
         },
         {
+          "l": "b",
+          "t": "Relative clue",
+          "c": true
+        },
+        {
           "l": "c",
-          "t": "S",
+          "t": "Negative clue",
           "c": false
         },
         {
           "l": "d",
-          "t": "Cannot say",
+          "t": "Bridge clue",
           "c": false
         }
       ],
-      "sol": "Opposite of P is Q by definition (given Q is opposite P)."
+      "sol": "The lesson classifies clues into definite, relative, and negative. A definite clue pins an entity to a specific slot (e.g., \"D sits at the left end\"). A relative clue describes the positional relationship between two entities without fixing either absolutely; typical forms include \"A is second to the left of B\". The given statement matches this definition, so it is a relative clue."
     },
     {
-      "id": 1383,
-      "text": "'P is the son of Q's father's only daughter.' P is Q's:",
+      "id": 103,
+      "text": "What is the primary function of negative clues in linear seating arrangement puzzles?",
       "options": [
         {
           "l": "a",
-          "t": "Nephew",
-          "c": true
+          "t": "They directly assign a person to a specific seat.",
+          "c": false
         },
         {
           "l": "b",
-          "t": "Son",
+          "t": "They create a set of possible pairs of slots for two persons.",
           "c": false
         },
         {
           "l": "c",
-          "t": "Brother",
-          "c": false
+          "t": "They eliminate impossible slots and prune the search space.",
+          "c": true
         },
         {
           "l": "d",
-          "t": "Uncle",
+          "t": "They link two separate arrangement models together.",
           "c": false
         }
       ],
-      "sol": "Q's father's only daughter = Q's sister (assuming Q male); P = sister's son = Q's nephew."
+      "sol": "According to the lesson, negative clues state where an entity cannot be (e.g., \"H is not at either end\"). Although they do not place anyone directly, negative clues are powerful because they prune the search space and often resolve ambiguities left by relative clues. Thus, their main role is elimination of impossible slots."
     },
     {
-      "id": 1384,
-      "text": "Shadow falls to the west. Time of day:",
+      "id": 104,
+      "text": "In a circular seating arrangement where all persons face the centre, the direction \"clockwise\" corresponds to which relative side for each person?",
       "options": [
         {
           "l": "a",
-          "t": "Morning",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "Evening",
+          "t": "Left",
           "c": false
         },
         {
+          "l": "b",
+          "t": "Right",
+          "c": true
+        },
+        {
           "l": "c",
-          "t": "Noon",
+          "t": "Front",
           "c": false
         },
         {
           "l": "d",
-          "t": "Cannot say",
+          "t": "Back",
           "c": false
         }
       ],
-      "sol": "Sun rises in east → morning sun casts shadow to the west."
+      "sol": "The lesson explains that facing inside versus facing outside changes the mapping of clockwise/anticlockwise to left/right. When persons face the centre, their right side points in the clockwise direction and their left side points anticlockwise. Hence, clockwise is equivalent to the right side for each individual."
     },
     {
-      "id": 1385,
-      "text": "In circular arrangement facing outside, 'immediate left' is:",
+      "id": 105,
+      "text": "In a sequencing puzzle, the clue \"Event C occurs immediately after Event D\" translates into which constraints in the directed graph representation?",
       "options": [
         {
           "l": "a",
-          "t": "Clockwise",
+          "t": "Only an edge D → C.",
           "c": false
         },
         {
           "l": "b",
-          "t": "Anticlockwise",
+          "t": "An edge D → C and a restriction that no other event can be placed between D and C.",
           "c": true
         },
         {
           "l": "c",
-          "t": "Same as facing center",
+          "t": "An edge C → D.",
           "c": false
         },
         {
           "l": "d",
-          "t": "Opposite",
+          "t": "No edge is added; it only fixes the rank of C.",
           "c": false
         }
       ],
-      "sol": "Facing outside reverses left/right → immediate left = anticlockwise."
+      "sol": "The lesson states that a clue like \"C immediately after D\" adds edges D → C and also forbids any other event between D and C. This is stricter than simple precedence (which would only add D → C). Therefore, the correct representation includes both the precedence edge and the immediate‑precedence restriction."
     }
   ],
   "reasoning/calendar-clock": [
@@ -86861,139 +86861,139 @@
   ],
   "english/reading-comprehension": [
     {
-      "id": 1301,
-      "text": "When was privacy recognized as a fundamental right in India according to the passage?",
+      "id": 101,
+      "text": "According to the lesson, what is the typical function of the final paragraph in a contemporary RC passage?",
       "options": [
         {
           "l": "a",
-          "t": "2017",
-          "c": true
+          "t": "To introduce the central issue and define key terms",
+          "c": false
         },
         {
           "l": "b",
-          "t": "2018",
+          "t": "To present the author's personal biography and credentials",
           "c": false
         },
         {
           "l": "c",
-          "t": "2019",
-          "c": false
+          "t": "To offer a synthesis, recommendation, or forward-looking observation",
+          "c": true
         },
         {
           "l": "d",
-          "t": "2020",
+          "t": "To list all the sources and references cited in the passage",
           "c": false
         }
       ],
-      "sol": "Passage states privacy was recognized in 2017."
+      "sol": "The lesson explicitly states in section 1.1: 'the final paragraph often offers a synthesis, a recommendation, or a forward‑looking observation.' Option A describes the first paragraph's function. Options B and D are not mentioned as typical structural elements in the lesson."
     },
     {
-      "id": 1302,
-      "text": "Which Act establishes the framework for processing personal data?",
+      "id": 102,
+      "text": "Which question type–core skill pairing is correctly matched according to the lesson's comparison table?",
       "options": [
         {
           "l": "a",
-          "t": "IT Act, 2000",
+          "t": "Main Idea – Logical deduction from implicit information",
           "c": false
         },
         {
           "l": "b",
-          "t": "Digital Personal Data Protection Act, 2023",
-          "c": true
+          "t": "Inference – Synthesis of central thesis",
+          "c": false
         },
         {
           "l": "c",
-          "t": "GDPR",
-          "c": false
+          "t": "Vocabulary in Context – Contextual meaning determination",
+          "c": true
         },
         {
           "l": "d",
-          "t": "Right to Information Act",
+          "t": "Tone/Attitude – Fact-checking against passage",
           "c": false
         }
       ],
-      "sol": "Passage names the Digital Personal Data Protection Act, 2023."
+      "sol": "The table in section 1.2 shows: Main Idea tests 'Synthesis of central thesis', Inference tests 'Logical deduction from implicit information', Vocabulary in Context tests 'Contextual meaning determination', and Tone/Attitude tests 'Evaluative judgment of author's stance'. Only option C matches the table exactly."
     },
     {
-      "id": 1303,
-      "text": "According to supporters, the DPDP Act brings India in line with:",
+      "id": 103,
+      "text": "A candidate encounters an inference question where one option is factually true in the real world but not supported by the passage. According to the Principle of Passage‑Only Reasoning, how should this option be treated?",
       "options": [
         {
           "l": "a",
-          "t": "US law",
+          "t": "Select it because it is factually correct",
           "c": false
         },
         {
           "l": "b",
-          "t": "EU's GDPR",
+          "t": "Eliminate it because answers must be grounded exclusively in the passage",
           "c": true
         },
         {
           "l": "c",
-          "t": "UK law",
+          "t": "Select it if it aligns with the candidate's domain knowledge",
           "c": false
         },
         {
           "l": "d",
-          "t": "No global standard",
+          "t": "Mark it as correct only if the passage does not contradict it",
           "c": false
         }
       ],
-      "sol": "Supporters say the law brings India 'in line with global standards such as the EU's GDPR'."
+      "sol": "Section 1.3 states: 'A fundamental rule governing all questions is that answers must be grounded exclusively in the information presented in the passage. Options that introduce outside knowledge, even if factually correct in the real world, are considered incorrect because the examination measures reading comprehension, not general awareness.' This directly supports option B."
     },
     {
-      "id": 1304,
-      "text": "The author's tone is best described as:",
+      "id": 104,
+      "text": "When eliminating options in an inference question, what distinction does the lesson emphasize as critical for accuracy?",
       "options": [
         {
           "l": "a",
-          "t": "Furious",
+          "t": "The difference between a stated fact and an implied suggestion",
           "c": false
         },
         {
           "l": "b",
-          "t": "Balanced",
+          "t": "The difference between 'must be true' and 'could be true'",
           "c": true
         },
         {
           "l": "c",
-          "t": "Sarcastic",
+          "t": "The difference between the author's tone and the author's purpose",
           "c": false
         },
         {
           "l": "d",
-          "t": "Indifferent",
+          "t": "The difference between a synonym and an antonym in context",
           "c": false
         }
       ],
-      "sol": "Both critics' and supporters' views are presented — balanced."
+      "sol": "Section 4.3 explicitly states: 'A necessary inference is one that is unavoidable given the passage, whereas a merely plausible answer will leave room for alternative outcomes... spot the subtle difference between \"must be true\" and \"could be true.\"' This elimination strategy is highlighted as the key to inference accuracy."
     },
     {
-      "id": 1305,
-      "text": "The implementation challenge includes:",
+      "id": 105,
+      "text": "How does the lesson describe the relationship between vocabulary-in-context and tone analysis?",
       "options": [
         {
           "l": "a",
-          "t": "More laws only",
+          "t": "They are entirely separate skills tested in different question sets",
           "c": false
         },
         {
           "l": "b",
-          "t": "Enforcement capacity, public awareness, evolving technology",
-          "c": true
+          "t": "Vocabulary questions should be solved before reading for tone",
+          "c": false
         },
         {
           "l": "c",
-          "t": "Repealing GDPR",
-          "c": false
+          "t": "The precise meaning of a word often reveals the author's attitude, and tonal context narrows possible word senses",
+          "c": true
         },
         {
           "l": "d",
-          "t": "Banning state agencies",
+          "t": "Tone is determined solely by sentence structure, not by word choice",
           "c": false
         }
       ],
-      "sol": "Last sentence: enforcement capacity, public awareness, and evolving technology."
+      "sol": "Section 5.3 states: 'Vocabulary and tone are intertwined: the precise meaning of a word often reveals the author's attitude... When a vocabulary question asks for the meaning of a word that carries evaluative weight, the correct answer will usually reflect the tone established elsewhere in the passage... vocabulary questions become easier because the tonal context narrows the possible senses, and tone questions become easier because the cumulative diction provides a clear evidential base.' This matches option C exactly."
     }
   ],
   "english/grammar": [
@@ -130538,139 +130538,112 @@
   ],
   "grammar/grammar-basics": [
     {
-      "id": 1061,
-      "text": "Which of the following is a collective noun?",
+      "id": 101,
+      "text": "The jury ______ divided in their opinions regarding the verdict.",
       "options": [
         {
           "l": "a",
-          "t": "Boy",
+          "t": "is",
           "c": false
         },
         {
           "l": "b",
-          "t": "Team",
+          "t": "are",
           "c": true
         },
         {
           "l": "c",
-          "t": "Happiness",
+          "t": "has been",
           "c": false
         },
         {
           "l": "d",
-          "t": "Quickly",
+          "t": "was",
           "c": false
         }
       ],
-      "sol": "Team refers to a group considered as one unit — collective noun."
+      "sol": "The noun 'jury' is a collective noun. According to the lesson, collective nouns take a singular verb when the group acts as a unit (e.g., 'The jury has reached a verdict') but a plural verb when the members act individually. The phrase 'in their opinions' (plural possessive) signals that the members are acting individually, so the plural verb 'are' is required. Options A, C, and D are singular verbs and would be used only if the jury were acting unanimously."
     },
     {
-      "id": 1062,
-      "text": "An adverb usually modifies a",
+      "id": 102,
+      "text": "The candidate ______ the committee selected has withdrawn.",
       "options": [
         {
           "l": "a",
-          "t": "Noun only",
+          "t": "who",
           "c": false
         },
         {
           "l": "b",
-          "t": "Verb, adjective, or another adverb",
+          "t": "whom",
           "c": true
         },
         {
           "l": "c",
-          "t": "Preposition only",
+          "t": "whose",
           "c": false
         },
         {
           "l": "d",
-          "t": "Conjunction only",
+          "t": "which",
           "c": false
         }
       ],
-      "sol": "Adverbs modify verbs (runs quickly), adjectives (very tall), or other adverbs (very quickly)."
+      "sol": "The relative pronoun introduces an adjective clause modifying 'candidate' (a person). Inside the clause, the pronoun functions as the object of the verb 'selected' (the committee selected *whom*). The lesson states: 'who for people as subjects, whom for people as objects'. Therefore, the object form 'whom' is correct. 'Who' would be the subject form, 'whose' indicates possession, and 'which' is used for things, not people."
     },
     {
-      "id": 1063,
-      "text": "A group of words with a subject and verb that can stand alone is a",
+      "id": 103,
+      "text": "The manager not only demanded punctuality but also ______.",
       "options": [
         {
           "l": "a",
-          "t": "Phrase",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "Independent clause",
+          "t": "expected honesty",
           "c": true
         },
         {
+          "l": "b",
+          "t": "honesty was expected",
+          "c": false
+        },
+        {
           "l": "c",
-          "t": "Dependent clause",
+          "t": "to expect honesty",
           "c": false
         },
         {
           "l": "d",
-          "t": "Phrase fragment",
+          "t": "expecting honesty",
           "c": false
         }
       ],
-      "sol": "An independent clause has subject + verb and expresses a complete thought."
+      "sol": "The correlative conjunction 'not only... but also' requires strict parallelism: 'the structure after the first correlative must mirror the structure after the second'. The first part ('not only demanded punctuality') uses a past-tense transitive verb + noun object. Option A ('expected honesty') matches this pattern exactly (past-tense verb + noun object). Option B is a passive clause, Option C is an infinitive phrase, and Option D is a gerund phrase — none parallel the structure of the first element."
     },
     {
-      "id": 1064,
-      "text": "Which sentence is complex?",
+      "id": 104,
+      "text": "Identify the structural classification of this sentence: 'Although it was raining, the match continued, and the spectators cheered.'",
       "options": [
         {
           "l": "a",
-          "t": "She sings.",
+          "t": "Simple",
           "c": false
         },
         {
           "l": "b",
-          "t": "She sings and he dances.",
+          "t": "Compound",
           "c": false
         },
         {
           "l": "c",
-          "t": "She sings because she is happy.",
-          "c": true
-        },
-        {
-          "l": "d",
-          "t": "Wow! What a song!",
-          "c": false
-        }
-      ],
-      "sol": "Complex = one independent clause (She sings) + one dependent clause (because she is happy)."
-    },
-    {
-      "id": 1065,
-      "text": "In 'The book on the table is mine,' the phrase 'on the table' is a",
-      "options": [
-        {
-          "l": "a",
-          "t": "Noun phrase",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "Prepositional phrase",
-          "c": true
-        },
-        {
-          "l": "c",
-          "t": "Verb phrase",
+          "t": "Complex",
           "c": false
         },
         {
           "l": "d",
-          "t": "Adjective phrase",
-          "c": false
+          "t": "Compound-Complex",
+          "c": true
         }
       ],
-      "sol": "On the table begins with preposition 'on' — prepositional phrase functioning as adjective."
+      "sol": "The sentence contains one dependent clause ('Although it was raining' — introduced by the subordinating conjunction 'although') and two independent clauses ('the match continued' and 'the spectators cheered') joined by the coordinating conjunction 'and'. The lesson's table defines a Compound-Complex sentence as having '2+ independent clauses' and '1+ dependent clauses' with a 'Mix of coordinating and subordinating devices'. This matches exactly. A Simple sentence has one independent clause only; a Compound sentence has multiple independent clauses but no dependent clauses; a Complex sentence has one independent clause and at least one dependent clause."
     }
   ],
   "grammar/tenses": [
@@ -136554,139 +136527,139 @@
   ],
   "opt-commerce-accountancy/overview": [
     {
-      "id": 2001,
-      "text": "Which concept states that transactions are recorded when they occur, not when cash is paid?",
+      "id": 101,
+      "text": "Which General Studies papers have substantial overlap with the Commerce & Accountancy optional syllabus?",
       "options": [
         {
           "l": "a",
-          "t": "Going concern",
+          "t": "GS I and GS II",
           "c": false
         },
         {
           "l": "b",
-          "t": "Accrual",
-          "c": true
+          "t": "GS II and GS III",
+          "c": false
         },
         {
           "l": "c",
-          "t": "Conservatism",
-          "c": false
+          "t": "GS III and GS IV",
+          "c": true
         },
         {
           "l": "d",
-          "t": "Materiality",
+          "t": "GS I and GS IV",
           "c": false
         }
       ],
-      "sol": "Accrual concept — revenues & expenses recorded when earned/incurred, not when cash received/paid."
+      "sol": "The lesson states that Commerce & Accountancy overlaps with General Studies Paper III (Indian economy, inclusive growth, budgeting, financial sector reforms) and General Studies Paper IV (corporate governance, business ethics, accountability frameworks). Therefore the correct pair is GS III and GS IV."
     },
     {
-      "id": 2002,
-      "text": "Which company type has minimum 2 and maximum 200 members?",
+      "id": 102,
+      "text": "Why does Paper I of the Commerce & Accountancy optional generally yield higher average scores than Paper II?",
       "options": [
         {
           "l": "a",
-          "t": "Public company",
+          "t": "Paper I has fewer numerical problems",
           "c": false
         },
         {
           "l": "b",
-          "t": "Private company",
+          "t": "Paper I questions are direct applications of standards and statutory provisions",
           "c": true
         },
         {
           "l": "c",
-          "t": "One person company",
+          "t": "Paper II is more theoretical",
           "c": false
         },
         {
           "l": "d",
-          "t": "Small company",
+          "t": "Paper I carries more marks",
           "c": false
         }
       ],
-      "sol": "Private company — minimum 2, maximum 200 members (excluding employees)."
+      "sol": "The lesson explains that Paper I focuses on accounting, auditing, and company law where questions are often direct applications of accounting standards and statutory provisions, leading to higher average scores. Paper II demands greater numerical proficiency and conceptual integration, creating wider variance in scores."
     },
     {
-      "id": 2003,
-      "text": "Which section of Companies Act 2013 deals with CSR?",
+      "id": 103,
+      "text": "How many additional months of foundational study are typically required for non‑commerce graduates before they can engage with standard reference texts for this optional?",
       "options": [
         {
           "l": "a",
-          "t": "Section 135",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "Section 134",
+          "t": "1‑2 months",
           "c": false
         },
         {
+          "l": "b",
+          "t": "3‑4 months",
+          "c": true
+        },
+        {
           "l": "c",
-          "t": "Section 149",
+          "t": "5‑6 months",
           "c": false
         },
         {
           "l": "d",
-          "t": "Section 179",
+          "t": "6‑8 months",
           "c": false
         }
       ],
-      "sol": "Section 135 — Corporate Social Responsibility, 2% of average net profits of last 3 years."
+      "sol": "The lesson explicitly mentions that non‑commerce aspirants typically need an additional three to four months of foundational study before they can engage with the standard reference texts for Commerce & Accountancy."
     },
     {
-      "id": 2004,
-      "text": "Depreciation under straight line method:",
+      "id": 104,
+      "text": "Which pair of Standards on Auditing are frequently confused by candidates, leading to loss of marks?",
       "options": [
         {
           "l": "a",
-          "t": "Decreases every year",
+          "t": "SA 240 and SA 260",
           "c": false
         },
         {
           "l": "b",
-          "t": "Remains constant every year",
+          "t": "SA 240 and SA 250",
           "c": true
         },
         {
           "l": "c",
-          "t": "Increases every year",
+          "t": "SA 250 and SA 265",
           "c": false
         },
         {
           "l": "d",
-          "t": "Zero in first year",
+          "t": "SA 260 and SA 265",
           "c": false
         }
       ],
-      "sol": "SLM — equal depreciation every year = (Cost - Residual value)/Useful life."
+      "sol": "The lesson lists common presentation errors in auditing, specifically noting that confusing SA 240 (fraud) with SA 250 (laws and regulations) shows lack of precision and attracts penalty. This pair is directly mentioned as a frequent confusion."
     },
     {
-      "id": 2005,
-      "text": "Which inventory valuation method is NOT permitted under AS 2/Ind AS 2?",
+      "id": 105,
+      "text": "According to the answer writing guidelines, how should working notes be presented in the answer booklet?",
       "options": [
         {
           "l": "a",
-          "t": "FIFO",
+          "t": "As rough work on the last page",
           "c": false
         },
         {
           "l": "b",
-          "t": "Weighted average",
+          "t": "Not required for numerical questions",
           "c": false
         },
         {
           "l": "c",
-          "t": "LIFO",
+          "t": "Clearly labelled as 'Working Note 1', 'Working Note 2', etc., with references to the main calculation",
           "c": true
         },
         {
           "l": "d",
-          "t": "Specific identification",
+          "t": "Only the final answer needs to be shown",
           "c": false
         }
       ],
-      "sol": "LIFO (Last-In First-Out) is not permitted under AS 2/Ind AS 2."
+      "sol": "The lesson states that working notes are not rough work; they are part of the answer and must be shown clearly, labelled \"Working Note 1\", \"Working Note 2\", etc., with references to the main calculation. This ensures the examiner can follow the step‑by‑step computation."
     }
   ],
   "opt-commerce-accountancy/paper1": [
