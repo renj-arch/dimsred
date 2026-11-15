@@ -3,11 +3,17 @@
 // Usage: data-exam="upsc" data-paper="upsc-prelims-2023-gs1" on the page body.
 
 (function () {
-  var cfg = {
-    exam: document.body.getAttribute('data-exam') || '',
-    paper: document.body.getAttribute('data-paper') || '',
-    paperDataPath: '../papers-data/' + (document.body.getAttribute('data-paper') || '') + '.json'
-  };
+  // Read data attributes lazily — they are set by the inline config script
+  // which runs after this IIFE. Use getters so values are always current.
+  function cfg() {
+    return {
+      exam: document.body.getAttribute('data-exam') || '',
+      paper: document.body.getAttribute('data-paper') || ''
+    };
+  }
+  function paperDataPath() {
+    return 'papers-data/' + cfg().paper + '.json';
+  }
 
   var state = {
     questions: [],
@@ -44,7 +50,7 @@
   };
 
   function loadPaper() {
-    fetch(cfg.paperDataPath)
+    fetch(paperDataPath())
       .then(function (r) { return r.json(); })
       .then(function (d) {
         var meta = d;
@@ -66,7 +72,7 @@
         state.totalTime = mins * 60;
         state.timeLeft = state.totalTime;
 
-        if (els.paperTitle) els.paperTitle.textContent = (meta.pageTitle || meta.paper || cfg.paper);
+        if (els.paperTitle) els.paperTitle.textContent = (meta.pageTitle || meta.paper || cfg().paper);
         if (els.paperMeta) {
           els.paperMeta.textContent =
             (meta.exam || '') + ' · ' + state.totalQuestions + ' Q · ' +
@@ -77,7 +83,7 @@
       })
       .catch(function (e) {
         console.error('Mock test: failed to load paper', e);
-        if (els.qText) els.qText.textContent = 'Could not load paper: ' + cfg.paperDataPath;
+        if (els.qText) els.qText.textContent = 'Could not load paper: ' + paperDataPath();
       });
   }
 
@@ -195,7 +201,7 @@
     var percentile = Math.min(99, Math.max(1, Math.round(accuracy * 0.6 + speedScore * 0.4)));
 
     // Save to performance dashboard
-    var perfKey = 'perf_' + cfg.exam + '_' + cfg.paper;
+    var perfKey = 'perf_' + cfg().exam + '_' + cfg().paper;
     var perf = JSON.parse(localStorage.getItem(perfKey) || '{}');
     perf.lastAttempt = {
       date: new Date().toISOString(),
