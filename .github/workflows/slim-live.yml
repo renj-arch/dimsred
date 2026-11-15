@@ -168,8 +168,10 @@ jobs:
           # Language pages are hand-built shells; a wrong insertion point puts
           # model text outside the body. This pins Paper A and CTET insertion.
           node scripts/lib/language-insertion.test.js
-          # figures.html is generated from scripts/build-figure-library.js; the
-          # test proves every coverage row still resolves to a real card.
+          # figures/index.html is the single figure hub, generated from
+          # scripts/lib/upsc-svg-figures.js and the forge briefs. The test
+          # proves every coverage row resolves, every card is present and
+          # figures.html stays a redirect.
           node scripts/lib/figure-library.test.js
           # 2026-11-15: all 14 crash-course pages rendered "Content Coming
           # Soon" because the data engine was never included. This guard keeps
