@@ -85,7 +85,13 @@ var PAGES = [
   { file: 'upsc/mains/language/urdu.html', kind: 'mains', slug: 'urdu', lang: 'urdu' }
 ];
 
-var LEDGER_FILE = path.join(ROOT, 'data', 'language-expansion.json');
+var LEDGER_FILE = process.env.EXPAND_LANG_LEDGER
+  ? path.resolve(ROOT, process.env.EXPAND_LANG_LEDGER)
+  : path.join(ROOT, 'data', 'language-expansion.json');
+// Sharding: run N parallel jobs and give each one a disjoint slice of PAGES.
+// The ledger is per-shard so concurrent writers never race on one JSON file.
+var SHARD = Math.max(1, parseInt(process.env.EXPAND_LANG_SHARD || '1', 10) || 1);
+var SHARDS = Math.max(1, parseInt(process.env.EXPAND_LANG_SHARDS || '1', 10) || 1);
 var LANG_META_FILE = path.join(__dirname, 'language-paper-a.json');
 var ALLOWED_TAGS = HTML_REPAIR.ALLOWED_TAGS;
 
@@ -353,7 +359,9 @@ async function main() {
   var byFile = {};
   (ledger.pages || []).forEach(function (e) { byFile[e.file] = e; });
 
-  var candidates = PAGES.filter(function (p) {
+  var candidates = PAGES.filter(function (p, idx) {
+    return idx % SHARDS === (SHARD - 1);
+  }).filter(function (p) {
     var fp = path.join(ROOT, p.file);
     if (!fs.existsSync(fp)) return false;
     try { return visibleWords(fs.readFileSync(fp, 'utf8')) < TARGET_WORDS; } catch (e) { return true; }
@@ -364,7 +372,7 @@ async function main() {
     return a.file < b.file ? -1 : 1;
   });
 
-  console.log('Language expansion worklist: ' + candidates.length + ' page(s)');
+  console.log('Language expansion worklist: ' + candidates.length + ' page(s) [shard ' + SHARD + '/' + SHARDS + ']');
   candidates.slice(0, 8).forEach(function (p) {
     var e = byFile[p.file];
     console.log('  [' + p.kind + '] ' + p.file + ' (passes ' + ((e && e.passes) || 0) + ')');
