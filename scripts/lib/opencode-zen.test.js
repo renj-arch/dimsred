@@ -20,6 +20,7 @@ function ok(name, cond, detail) {
 function writeFakeCli(dir, mode) {
   const file = path.join(dir, 'fake-opencode.js');
   const body = [
+    '#!/usr/bin/env node',
     "'use strict';",
     "const fs = require('fs');",
     "const args = process.argv.slice(2);",
@@ -36,6 +37,10 @@ function writeFakeCli(dir, mode) {
     "process.exit(0);"
   ].join('\n');
   fs.writeFileSync(file, body);
+  // execFile needs the executable bit; a plain write creates 0644 and the spawn
+  // fails with EACCES on the runner. The shebang matters too: without it the
+  // kernel answers ENOEXEC however the mode is set.
+  fs.chmodSync(file, 0o755);
   return file;
 }
 
@@ -107,6 +112,7 @@ function loadZen(bin, logFile) {
     fs.mkdirSync(dir, { recursive: true });
     const bin = path.join(dir, 'quota-cli.js');
     fs.writeFileSync(bin, [
+      '#!/usr/bin/env node',
       "'use strict';",
       "const fs = require('fs');",
       "if (process.env.ZEN_TEST_LOG) fs.appendFileSync(process.env.ZEN_TEST_LOG, 'attempt\\n');",
@@ -114,6 +120,7 @@ function loadZen(bin, logFile) {
       "process.stderr.write('HTTP 429 free slots at capacity\\n');",
       "process.exit(1);"
     ].join('\n'));
+    fs.chmodSync(bin, 0o755);
     const log = path.join(dir, 'quota.log');
     const zen = loadZen(bin, log);
     let msg = '';
