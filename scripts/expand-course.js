@@ -1419,6 +1419,25 @@ async function main() {
   if (DRY && process.env.EXPAND_DRY_JSON) {
     fs.writeFileSync(path.resolve(process.env.EXPAND_DRY_JSON), JSON.stringify(deeps, null, 2) + '\n', 'utf8');
   }
+  // The lane dispatcher (scripts/course-lane.js) needs the WHOLE worklist, not
+  // just the depth candidates. A dispatcher that only ever saw `deeps` would
+  // hand out depth keys while the empty slots and stubs waited for the one lane
+  // that asks for no keys at all -- which is how a lane can run forever and
+  // still write nothing.
+  if (process.env.EXPAND_WORKLIST_JSON) {
+    var worklist = {
+      generatedAt: new Date().toISOString(),
+      fills: fills.map(function (g) { return { key: g.key, role: g.role, examCount: g.examCount }; }),
+      thins: thins.map(function (g) { return { key: g.key, role: g.role, oldLen: g.oldLen, examCount: g.examCount }; }),
+      deeps: deeps.map(function (g) {
+        return {
+          key: g.key, role: g.role, examCount: g.examCount,
+          words: g.words, targetWords: g.targetWords, deficit: g.deficit, passes: g.passes
+        };
+      })
+    };
+    fs.writeFileSync(path.resolve(process.env.EXPAND_WORKLIST_JSON), JSON.stringify(worklist, null, 1) + '\n', 'utf8');
+  }
   fills.slice(0, 10).forEach(function (g) {
     console.log('  [fill]   ' + g.key + '  (' + g.examCount + ' exam' + (g.examCount > 1 ? 's' : '') + ')');
   });

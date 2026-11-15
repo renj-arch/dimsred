@@ -188,16 +188,31 @@ jobs:
 
       # Queue the next deepen run as soon as this one finishes Î“Ã‡Ã¶ chained
       # instead of waiting for a fixed 6-hour cron slot.
+      # The lane scope is computed, not hardcoded.
+      #
+      # The old step re-dispatched with a frozen key list. Once that list
+      # reached its depth target the lane kept re-queuing itself every 25
+      # seconds and wrote nothing -- "Course worklist: 0 empty slot(s), 0
+      # thin lesson(s), 0 depth candidate(s)" -- while hundreds of lessons
+      # stayed under target and only one lane was still working.
+      # scripts/course-lane.js asks the expander for the live worklist and
+      # returns this lane's slice, so every queued run has work to do. An
+      # empty slice ends the chain honestly instead of spinning.
       - name: Queue the next deepen run
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXPAND_THIN_THRESHOLD: '6000'
+          EXPAND_DEPTH_TARGET_WORDS: '8000'
+          EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
         run: |
-          # Lane B owns the UPSC mains/CSAT keys so the two lanes never race
-          # on the same lesson. The chain re-dispatches with the same scope.
-          LANE_B_KEYS='csat/comprehension,csat/decision-making,csat/logical-reasoning,csat/quant-aptitude,mains-essay/essay-language,mains-essay/essay-practice,mains-essay/essay-structure,mains-essay/essay-topics,mains-gs1/answer-writing-gs1,mains-gs1/heritage-culture,mains-gs1/indian-geography-mains,mains-gs1/modern-history,mains-gs1/society,mains-gs1/world-geography,mains-gs1/world-history,mains-gs2/answer-writing-gs2,mains-gs2/comparative-polity,mains-gs2/constitution,mains-gs2/governance,mains-gs2/international-relations,mains-gs2/social-justice,mains-gs3/agriculture-food,mains-gs3/answer-writing-gs3,mains-gs3/environment-disaster,mains-gs3/indian-economy-mains,mains-gs3/internal-security,mains-gs3/science-tech,mains-gs4/answer-writing-gs4,mains-gs4/attitude-foundations,mains-gs4/case-studies,mains-gs4/emotional-intelligence,mains-gs4/ethics-theory,mains-interview/current-affairs-interview,mains-interview/daf-analysis,mains-interview/interview-strategy,mains-interview/mock-interview,mains-language/paper-a-indian-language,mains-language/paper-b-english,mains-language/precis-writing,mains-language/translation,mains-optional-guide/choosing-optional'
+          KEYS=$(node scripts/course-lane.js --lane 1 --lanes 4 --limit 20)
+          if [ -z "$KEYS" ]; then
+            echo "::notice title=Lane 1 complete::No lesson under target is left in this lane's slice."
+            exit 0
+          fi
           for i in 1 2 3; do
-            if gh workflow run expand-course-b.yml --ref main -f keys="$LANE_B_KEYS" -f per_run=20; then
+            if gh workflow run expand-course-b.yml --ref main -f keys="$KEYS" -f per_run=20; then
               echo "Queued the next course-deepen run (starts when this run completes)"
               exit 0
             fi

@@ -17,20 +17,55 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 
+// The library is meant to be redrawn with a pen, so every card uses one ink
+// colour and a hand-lettered stack. The stack degrades to cursive rather than
+// to a serif, because a serif reads like a printed textbook figure.
+var INK = '#1f2937';
+var SHEET = '#fffdf7';
+var FONT = "'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive";
+
 function labelLines(text, x, y, opts) {
   opts = opts || {};
   var lines = String(text == null ? '' : text).split('\n');
   var size = opts.size || 15;
   var weight = opts.weight || 600;
-  var fill = opts.fill || '#1f2937';
+  var fill = opts.fill || INK;
   var anchor = opts.anchor || 'middle';
   var lh = opts.lh || size * 1.25;
   var start = y - ((lines.length - 1) * lh) / 2;
   return '<text x="' + x + '" y="' + start + '" text-anchor="' + anchor + '" font-size="' + size +
-    '" font-weight="' + weight + '" fill="' + fill + '" font-family="Inter, Segoe UI, sans-serif">' +
+    '" font-weight="' + weight + '" fill="' + fill + '" font-family="' + FONT + '">' +
     lines.map(function (line, i) {
       return '<tspan x="' + x + '" dy="' + (i === 0 ? 0 : lh) + '">' + esc(line) + '</tspan>';
     }).join('') + '</text>';
+}
+
+// Turn a styled item into a pen sketch: no pastel fills, square-ish corners,
+// one ink weight. Colour survives only as a thin accent on the strokes that
+// carry the argument, which is how a candidate would use a second pen.
+function inkify(it) {
+  var o = {};
+  for (var k in it) o[k] = it[k];
+  if (o.type === 'box' || o.type === 'pill') {
+    o.fill = 'none';
+    o.rx = 3;
+    o.sw = o.sw || 2;
+    if (!o.stroke || o.stroke === '#64748b') o.stroke = INK;
+  } else if (o.type === 'circle') {
+    o.fill = 'none';
+    o.sw = o.sw || 2;
+    if (!o.stroke || o.stroke === '#64748b') o.stroke = INK;
+  } else if (o.type === 'path') {
+    o.fill = 'none';
+    o.sw = o.sw || 2;
+    if (!o.stroke || o.stroke === '#475569') o.stroke = INK;
+  } else if (o.type === 'line') {
+    if (!o.stroke || o.stroke === '#94a3b8') o.stroke = INK;
+    o.sw = o.sw || 1.5;
+  } else if (o.type === 'arrow') {
+    if (!o.color || o.color === '#475569') o.color = INK;
+  }
+  return o;
 }
 
 function box(o) {
@@ -84,9 +119,10 @@ function line(o) {
 
 function svg(d) {
   var uid = String(d.id || 'fig').replace(/[^a-z0-9-]/gi, '');
+  var items = (d.items || []).map(inkify);
   var shapes = [];
   var labels = [];
-  d.items.forEach(function (it) {
+  items.forEach(function (it) {
     if (it.type === 'box' || it.type === 'pill') { shapes.push(it.type === 'pill' ? pill(it) : box(it)); }
     else if (it.type === 'arrow') shapes.push(arrow(it, uid));
     else if (it.type === 'circle') shapes.push(circle(it));
@@ -96,23 +132,23 @@ function svg(d) {
   // Box/circle labels are drawn with their shape. Free text and arrow labels
   // stay in a separate, un-filtered layer so the sketch filter cannot distort
   // the words.
-  d.items.forEach(function (it) {
+  items.forEach(function (it) {
     if (it.type === 'arrow' && it.label) {
       var mx = it.lx != null ? it.lx : ((it.x1 + it.x2) / 2);
       var my = it.ly != null ? it.ly : ((it.y1 + it.y2) / 2 - 8);
-      labels.push(labelLines(it.label, mx, my, { size: it.size || 12.5, weight: 600, fill: it.labelFill || '#475569' }));
+      labels.push(labelLines(it.label, mx, my, { size: it.size || 12.5, weight: 600, fill: it.labelFill || INK }));
     } else if (it.type === 'text') {
       labels.push(text(it));
     }
   });
   return '<svg viewBox="0 0 ' + (d.w || 760) + ' ' + (d.h || 420) + '" role="img" aria-label="' + esc(d.aria || d.title) + '">' +
     '<defs><marker id="arrowhead-' + uid + '" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">' +
-    '<path d="M0,0 L10,4 L0,8 z" fill="#475569"/></marker>' +
+    '<path d="M0,0 L10,4 L0,8 z" fill="' + INK + '"/></marker>' +
     '<filter id="rough-' + uid + '" x="-5%" y="-5%" width="110%" height="110%">' +
-    '<feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="11" result="n"/>' +
-    '<feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>' +
+    '<feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="11" result="n"/>' +
+    '<feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>' +
     '</filter></defs>' +
-    '<rect x="0" y="0" width="100%" height="100%" fill="#fbf7ec"/>' +
+    '<rect x="0" y="0" width="100%" height="100%" fill="' + SHEET + '"/>' +
     '<g filter="url(#rough-' + uid + ')">' + shapes.join('') + '</g>' +
     '<g>' + labels.join('') + '</g>' +
     '</svg>';
@@ -127,23 +163,31 @@ var FIGURES = [
     tag: 'Geography',
     intro: 'Draw the ITCZ shift first, then the two branches. This is the skeleton for almost every monsoon answer.',
     items: [
-      { type: 'box', x: 35, y: 30, w: 205, h: 72, text: 'ITCZ shifts north\n(summer heating)', fill: '#eff6ff', stroke: '#2563eb' },
-      { type: 'box', x: 285, y: 30, w: 190, h: 72, text: 'Low pressure over\nNW India / Tibet', fill: '#fef3c7', stroke: '#d97706' },
-      { type: 'box', x: 520, y: 30, w: 205, h: 72, text: 'Himalayan barrier\nforces orographic uplift', fill: '#f1f5f9', stroke: '#64748b' },
-      { type: 'arrow', x1: 240, y1: 66, x2: 282, y2: 66 },
-      { type: 'arrow', x1: 475, y1: 66, x2: 517, y2: 66 },
-      { type: 'box', x: 35, y: 160, w: 205, h: 70, text: 'Cross-equatorial flow\nSomali jet', fill: '#ecfeff', stroke: '#0891b2' },
-      { type: 'box', x: 285, y: 160, w: 190, h: 70, text: 'Arabian Sea\nbranch', fill: '#dbeafe', stroke: '#2563eb' },
-      { type: 'box', x: 520, y: 160, w: 205, h: 70, text: 'Bay of Bengal\nbranch', fill: '#dcfce7', stroke: '#16a34a' },
-      { type: 'arrow', x1: 240, y1: 195, x2: 282, y2: 195, label: 'feeds', lx: 260, ly: 183 },
-      { type: 'arrow', x1: 380, y1: 157, x2: 380, y2: 105 },
-      { type: 'arrow', x1: 520, y1: 175, x2: 480, y2: 103 },
-      { type: 'box', x: 120, y: 300, w: 265, h: 70, text: 'Orographic lift → heavy rain\nWestern Ghats (windward)', fill: '#e0f2fe', stroke: '#0284c7' },
-      { type: 'box', x: 430, y: 300, w: 265, h: 70, text: 'Rain shadow\nDeccan interior (leeward)', fill: '#fef2f2', stroke: '#dc2626' },
-      { type: 'arrow', x1: 340, y1: 233, x2: 280, y2: 297 },
-      { type: 'arrow', x1: 388, y1: 336, x2: 427, y2: 336 },
-      { type: 'text', x: 620, y: 278, text: 'NE India & east coast rainfall', size: 13, fill: '#15803d' },
-      { type: 'text', x: 380, y: 400, text: 'Withdrawal: September–October; retreating monsoon gives Tamil Nadu its main rainy season.', size: 13, fill: '#64748b' }
+      // One cross-section: sea, peninsula, Gangetic plain, Himalaya. A
+      // candidate can draw this in four strokes, then add the two branches.
+      { type: 'path', d: 'M 40 300 L 220 300 L 340 282 L 450 266 L 540 254 L 560 254 L 585 180 L 605 130 L 625 165 L 645 115 L 670 175 L 695 250 L 720 258 L 740 300 Z', fill: 'none', stroke: '#1f2937', sw: 2.2 },
+      { type: 'path', d: 'M 58 314 q 12 -8 24 0 t 24 0 t 24 0 t 24 0', fill: 'none', stroke: '#1f2937', sw: 1.2 },
+      { type: 'path', d: 'M 58 330 q 12 -8 24 0 t 24 0 t 24 0 t 24 0', fill: 'none', stroke: '#1f2937', sw: 1.2 },
+      { type: 'line', x1: 262, y1: 306, x2: 262, y2: 332, stroke: '#64748b', sw: 1.2 },
+      { type: 'line', x1: 330, y1: 296, x2: 330, y2: 332, stroke: '#64748b', sw: 1.2 },
+      { type: 'line', x1: 400, y1: 284, x2: 400, y2: 332, stroke: '#64748b', sw: 1.2 },
+      { type: 'line', x1: 470, y1: 272, x2: 470, y2: 332, stroke: '#64748b', sw: 1.2 },
+      { type: 'line', x1: 520, y1: 264, x2: 520, y2: 332, stroke: '#64748b', sw: 1.2 },
+      { type: 'arrow', x1: 110, y1: 270, x2: 280, y2: 235, label: 'Arabian Sea branch', lx: 186, ly: 224 },
+      { type: 'arrow', x1: 720, y1: 296, x2: 560, y2: 276, label: 'Bay of Bengal branch', lx: 640, ly: 318 },
+      { type: 'arrow', x1: 590, y1: 222, x2: 610, y2: 145, label: 'orographic lift', lx: 664, ly: 200 },
+      { type: 'arrow', x1: 655, y1: 232, x2: 716, y2: 252, label: 'rain shadow', lx: 700, ly: 272 },
+      { type: 'circle', cx: 470, cy: 100, r: 32, fill: 'none', stroke: '#1f2937', sw: 2 },
+      { type: 'text', x: 470, y: 96, text: 'LOW', size: 15, weight: 800, fill: '#1f2937' },
+      { type: 'text', x: 470, y: 116, text: 'ITCZ', size: 12, fill: '#1f2937' },
+      { type: 'text', x: 470, y: 56, text: 'ITCZ shifts north in summer', size: 12, fill: '#475569' },
+      { type: 'text', x: 120, y: 350, text: 'Arabian Sea', size: 12, fill: '#475569' },
+      { type: 'text', x: 350, y: 318, text: 'Peninsula', size: 12, fill: '#475569' },
+      { type: 'text', x: 470, y: 248, text: 'Gangetic plain', size: 12, fill: '#475569' },
+      { type: 'text', x: 645, y: 96, text: 'Himalaya', size: 12, fill: '#475569' },
+      { type: 'text', x: 50, y: 368, text: 'Summer: the ITCZ shifts north and the low pulls the trade winds across the equator.', size: 11.5, fill: '#475569', anchor: 'start' },
+      { type: 'text', x: 50, y: 390, text: 'The Arabian Sea and Bay branches soak the west coast and the northeast.', size: 11.5, fill: '#475569', anchor: 'start' },
+      { type: 'text', x: 50, y: 412, text: 'Orographic lift wets the windward slopes; the leeward Deccan and Tibet stay dry.', size: 11.5, fill: '#475569', anchor: 'start' }
     ]
   },
   {
@@ -468,6 +512,12 @@ var FIGURES = [
     ]
   }
 ];
+
+// Second-generation diagrams (history, society, IR, public finance,
+// agriculture, sci-tech, disaster management, ethics) live in their own module
+// so this file stays readable. They use the same item format and therefore the
+// same renderer, gallery and per-topic pages.
+require('./upsc-figure-specs.js').FIGURES.forEach(function (f) { FIGURES.push(f); });
 
 module.exports = { PAPER: PAPER, FIGURES: FIGURES, svg: svg, esc: esc };
 

@@ -173,6 +173,15 @@ upsc_sorted_topics.csv
 # reason as figure-coverage.json: progress on the UPSC subject packs is only
 # reviewable when the remaining topics are diffable between runs.
 !data/figure-gaps.json
+# The figure forge. data/figure-briefs.json is the editorial input -- one small
+# brief per diagram, written by hand -- and data/figure-forge.json is its
+# deterministic render, consumed by scripts/lib/upsc-figure-specs.js. Both must
+# be tracked: without the briefs the scheduled workflow has nothing to render,
+# and without the render a fresh checkout publishes a hub missing every forged
+# diagram. The render carries no timestamp so a daily rebuild is a no-op until
+# a brief actually changes.
+!data/figure-briefs.json
+!data/figure-forge.json
 # improve.html's live board. fault-report.js writes faults.json (coverage +
 # audit + pipeline status, refreshed by fault-status.yml every 6 h) and
 # train-audit.json is the audit summary train-writer.yml publishes. Without

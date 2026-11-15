@@ -32,6 +32,7 @@ var FR = require('./lib/figure-resolve.js');
 var BULK = require('./lib/figure-bulk.js');
 var FT = require('./lib/figure-topics.js');
 var SVGFIG = require('./lib/upsc-svg-figures.js');
+var GALLERY = require('./lib/figure-gallery.js');
 
 var ROOT = path.join(__dirname, '..');
 var CAND = path.join(ROOT, 'data', 'figure-candidates.json');
@@ -392,48 +393,28 @@ function main() {
   var idx = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
     + '<meta name="viewport" content="width=device-width,initial-scale=1">'
     + '<meta name="description" content="Index of curated UPSC figures — diagrams, maps and charts across every general studies topic on vlymbooq.">'
-    + '<title>UPSC Figures Index</title><style>' + css + '</style></head><body><div class="wrap">'
-    + '<h1>UPSC Figures Index</h1>'
-    + '<p class="meta">' + displayOrder.length.toLocaleString('en-US') + ' curated figures across ' + pages.length
-    + ' pages &#183; ' + topicList.length + ' syllabus topics &#183; from Wikimedia Commons'
-    + (droppedOffTopic ? ' &#183; ' + droppedOffTopic.toLocaleString('en-US') + ' off-syllabus images excluded' : '') + '</p>'
+    + '<title>UPSC Figures Index</title><style>' + css + GALLERY.css() + '</style></head><body><div class="wrap">'
+    + '<h1>UPSC Figures</h1>'
+    + '<p class="meta">One hub: ' + GALLERY.FIGURES.length + ' exam-hall ink sketches plus '
+    + displayOrder.length.toLocaleString('en-US') + ' curated image figures across ' + pages.length
+    + ' pages &#183; ' + topicList.length + ' syllabus topics'
+    + (droppedOffTopic ? ' &#183; ' + droppedOffTopic.toLocaleString('en-US') + ' off-syllabus images excluded' : '') + '</p>';
+
+  idx += GALLERY.section();
+
+  idx += '<h2 style="font-size:18px;margin:34px 0 6px">Image figures</h2>'
+    + '<p class="meta" style="margin-bottom:12px">Photographs, maps and charts from Wikimedia Commons, '
+    + 'paged so the page stays printable. These are reference images, not exam sketches.</p>'
     + '<div class="nav">';
   pages.forEach(function (_, pi) {
     idx += '<a href="page-' + String(pi + 1).padStart(3, '0') + '.html">page ' + (pi + 1) + '</a> ';
   });
   idx += '</div>';
 
-  // Hero: the hand-drawn SVG diagrams, generated from the SAME FIGURES array
-  // that build-svg-figure-pages.js turns into figures/topic-<id>.html. A hero
-  // card can therefore never link to a diagram that does not exist -- the
-  // previous hand-injected version had mangled markup (href inside a style
-  // attribute) and slugs matching nothing, so every card was dead.
-  var PAPER_ORDER = ['GS1', 'GS2', 'GS3', 'GS4'];
-  var heroGroups = {};
-  SVGFIG.FIGURES.forEach(function (f) {
-    (heroGroups[f.paper] = heroGroups[f.paper] || []).push({ href: 'svg-' + f.id + '.html', title: f.title, tag: f.tag });
-  });
-  // Hand-authored extras keep their original topic-<slug>.html pages; they
-  // are not in the FIGURES items format, so they link explicitly.
-  (SVGFIG.EXTRA_FIGURES || []).forEach(function (f) {
-    (heroGroups[f.paper] = heroGroups[f.paper] || []).push(f);
-  });
-  idx += '<section class="hero" style="margin:24px 0;padding:16px;border:1px solid #2a2e37;border-radius:10px;background:#1a1d23">'
-    + '<h2 style="font-size:18px;margin:0 0 8px;color:#e8eaed">&#9733; Exam-Ready Hand-Drawn Diagrams — reproduce these in the hall</h2>'
-    + '<p style="font-size:12px;color:#9aa0a6;margin:0 0 12px">Label-first inline SVG sketches grouped by GS paper. Click to open the full diagram page. These are the only figures designed to be redrawn from memory in the exam.</p>';
-  PAPER_ORDER.forEach(function (p) {
-    var figs = heroGroups[p];
-    if (!figs || !figs.length) return;
-    var meta = SVGFIG.PAPER[p] || {};
-    idx += '<h3 style="font-size:13px;margin:14px 0 8px;color:' + (meta.color || '#8ab4f8') + '">' + esc(meta.label || p) + '</h3><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">';
-    figs.forEach(function (f) {
-      idx += '<a class="card tcard" href="' + f.href + '"><div class="cap" style="font-size:11px;line-height:1.3">'
-        + '<b style="font-size:12px;color:#e8eaed;display:block;margin-bottom:2px">' + esc(f.title) + '</b>'
-        + '<span style="color:#c8ccd2;font-size:10px">' + esc(f.tag) + '</span></div></a>';
-    });
-    idx += '</div>';
-  });
-  idx += '</section>';
+  // The hand-drawn gallery is rendered by GALLERY.section() above. It replaces
+  // the old link-only hero: the full sketches, the paper filter and the
+  // coverage map now live on the same page as the image packs, so /figures/
+  // is the single figure hub.
 
   // Group by GS paper so the index reads like a syllabus, not a dump. Topics
   // that match no bucket are kept under "Other" rather than hidden: an

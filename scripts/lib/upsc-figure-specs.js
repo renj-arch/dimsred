@@ -1,34 +1,15 @@
 'use strict';
-// Builds the generated half of figures.html: the hand-drawn SVG cards that sit
-// under the fourteen original sketches, plus the coverage map that proves every
-// GS syllabus theme has at least one figure.
+// The second generation of the UPSC figure library: twenty-one label-first
+// sketches that fill the gaps the original fourteen left (history, society,
+// IR, public finance, agriculture, sci-tech, disaster management, ethics).
 //
-// Why a generator: every diagram has to share one visual grammar (cream paper,
-// rounded label boxes, a single rough-pencil filter, one arrow marker) and the
-// page has to stay honest about how many figures it holds. Hand-pasting SVG
-// drifts on both. The specs below are the source of truth; `node
-// scripts/build-figure-library.js` rewrites the marked region of figures.html.
+// The specs are written against a tiny recording renderer that emits the item
+// format consumed by scripts/lib/upsc-svg-figures.js (box, arrow, path, text,
+// circle, line). That keeps one visual grammar and one page builder: the
+// gallery, the per-topic pages and the figures index all read FIGURES, so a
+// diagram added here appears everywhere.
 //
-// Nothing here fetches anything. These are label-first sketches meant to be
-// reproduced with a pen, not traced maps.
-
-const fs = require('fs');
-const path = require('path');
-
-const ROOT = path.resolve(__dirname, '..');
-const PAGE = path.join(ROOT, 'figures.html');
-const START = '<!-- figure-library:generated:start -->';
-const END = '<!-- figure-library:generated:end -->';
-
-const PAPER = {
-  GS1: { name: 'GS Paper 1', color: '#60a5fa' },
-  GS2: { name: 'GS Paper 2', color: '#a78bfa' },
-  GS3: { name: 'GS Paper 3', color: '#34d399' },
-  GS4: { name: 'GS Paper 4', color: '#fbbf24' }
-};
-
-const FONT = 'Inter, Segoe UI, sans-serif';
-const INK = '#1f2937';
+// Nothing here fetches anything, and nothing is traced from a photograph.
 
 const PALETTE = {
   blue: { fill: '#dbeafe', stroke: '#2563eb' },
@@ -41,139 +22,108 @@ const PALETTE = {
   rose: { fill: '#ffe4e6', stroke: '#e11d48' }
 };
 
-function esc(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+function tone(o) {
+  return PALETTE[o.tone || 'slate'] || PALETTE.slate;
 }
 
 function num(n) {
   const v = Math.round(Number(n) * 100) / 100;
-  return Number.isFinite(v) ? String(v) : '0';
+  if (!Number.isFinite(v)) throw new Error('non-finite coordinate: ' + n);
+  return v;
 }
 
-function makeRenderer(id) {
-  const parts = [];
-  const MARK = 'arrowhead-' + id;
-  const ROUGH = 'rough-' + id;
-
-  function textBlock(cx, cy, lines, o) {
-    o = o || {};
-    const size = o.size || 15;
-    const lh = o.lh || Math.round(size * 1.25 * 10) / 10;
-    const weight = o.weight || 650;
-    const color = o.color || INK;
-    const anchor = o.anchor || 'middle';
-    const list = Array.isArray(lines) ? lines : [lines];
-    const first = cy - ((list.length - 1) * lh) / 2 + size * 0.34;
-    const spans = list.map(function (line, i) {
-      return '<tspan x="' + num(cx) + '" dy="' + (i === 0 ? 0 : lh) + '">' + esc(line) + '</tspan>';
-    }).join('');
-    return '<text x="' + num(cx) + '" y="' + num(first) + '" text-anchor="' + anchor +
-      '" font-size="' + size + '" font-weight="' + weight + '" fill="' + color +
-      '" font-family="' + FONT + '">' + spans + '</text>';
-  }
+function makeRecorder(figureId) {
+  const items = [];
 
   function rect(x, y, w, h, o) {
     o = o || {};
-    const tone = PALETTE[o.tone || 'slate'] || PALETTE.slate;
-    const fill = o.fill || tone.fill;
-    const stroke = o.stroke || tone.stroke;
-    const rx = o.rx === undefined ? 12 : o.rx;
-    parts.push('<rect x="' + num(x) + '" y="' + num(y) + '" width="' + num(w) + '" height="' + num(h) +
-      '" rx="' + num(rx) + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + num(o.width || 2.2) + '"/>');
+    const p = tone(o);
+    items.push({
+      type: 'box', x: num(x), y: num(y), w: num(w), h: num(h),
+      rx: o.rx === undefined ? 12 : o.rx,
+      fill: o.fill || p.fill, stroke: o.stroke || p.stroke, sw: o.width || 2.2
+    });
+  }
+
+  function text(x, y, lines, o) {
+    o = o || {};
+    const value = Array.isArray(lines) ? lines.join('\n') : String(lines == null ? '' : lines);
+    if (!value) return;
+    items.push({
+      type: 'text', x: num(x), y: num(y), text: value,
+      size: o.size || 15, weight: o.weight || 650,
+      fill: o.color || '#1f2937', anchor: o.anchor || 'middle'
+    });
   }
 
   function box(x, y, w, h, lines, o) {
     o = o || {};
     rect(x, y, w, h, o);
-    if (lines) parts.push(textBlock(x + w / 2, y + h / 2, lines, o));
+    text(x + w / 2, y + h / 2, lines, {
+      size: o.size || 15, weight: o.weight || 650, color: o.color
+    });
   }
 
   function circle(cx, cy, r, lines, o) {
     o = o || {};
-    const tone = PALETTE[o.tone || 'slate'] || PALETTE.slate;
-    parts.push('<circle cx="' + num(cx) + '" cy="' + num(cy) + '" r="' + num(r) + '" fill="' +
-      (o.fill || tone.fill) + '" stroke="' + (o.stroke || tone.stroke) + '" stroke-width="' + num(o.width || 2.2) + '"/>');
-    if (lines && lines.length) parts.push(textBlock(cx, cy, lines, o));
+    const p = tone(o);
+    const item = {
+      type: 'circle', cx: num(cx), cy: num(cy), r: num(r),
+      fill: o.fill || p.fill, stroke: o.stroke || p.stroke, sw: o.width || 2.2
+    };
+    if (lines && lines.length) item.text = Array.isArray(lines) ? lines.join('\n') : String(lines);
+    items.push(item);
   }
 
   function line(x1, y1, x2, y2, o) {
     o = o || {};
-    parts.push('<path d="M ' + num(x1) + ' ' + num(y1) + ' L ' + num(x2) + ' ' + num(y2) + '" fill="none" stroke="' +
-      (o.stroke || '#94a3b8') + '" stroke-width="' + num(o.width || 2) + '" stroke-linecap="round"' +
-      (o.dash ? ' stroke-dasharray="7 6"' : '') + '/>');
+    items.push({
+      type: 'line', x1: num(x1), y1: num(y1), x2: num(x2), y2: num(y2),
+      stroke: o.stroke || '#94a3b8', sw: o.width || 2, dash: !!o.dash
+    });
   }
 
   function curve(d, o) {
     o = o || {};
-    parts.push('<path d="' + d + '" fill="' + (o.fill || 'none') + '" stroke="' + (o.stroke || '#475569') +
-      '" stroke-width="' + num(o.width || 2.2) + '" stroke-linejoin="round" stroke-linecap="round"' +
-      (o.dash ? ' stroke-dasharray="7 6"' : '') +
-      (o.marker ? ' marker-end="url(#' + MARK + ')"' : '') + '/>');
+    if (o.marker) throw new Error(figureId + ': the shared renderer cannot put a marker on a path');
+    items.push({
+      type: 'path', d: d, fill: o.fill || 'none', stroke: o.stroke || '#475569',
+      sw: o.width || 2.2, dash: !!o.dash
+    });
   }
 
   function arrow(pts, o) {
     o = o || {};
-    const d = 'M ' + pts.map(function (p) { return num(p[0]) + ' ' + num(p[1]); }).join(' L ');
-    curve(d, Object.assign({}, o, { marker: true }));
+    if (!Array.isArray(pts) || pts.length !== 2) {
+      throw new Error(figureId + ': arrows must be straight, two-point segments');
+    }
+    const item = {
+      type: 'arrow', x1: num(pts[0][0]), y1: num(pts[0][1]),
+      x2: num(pts[1][0]), y2: num(pts[1][1]),
+      color: o.stroke || '#475569', sw: o.width || 2.2, dash: !!o.dash
+    };
     if (o.label) {
-      const mid = pts[Math.floor((pts.length - 1) / 2)];
-      const next = pts[Math.floor((pts.length - 1) / 2) + 1] || pts[pts.length - 1];
-      const lx = o.labelAt ? o.labelAt[0] : (mid[0] + next[0]) / 2;
-      const ly = o.labelAt ? o.labelAt[1] : (mid[1] + next[1]) / 2 - 9;
-      parts.push(halo(lx, ly, o.label, o));
+      item.label = o.label;
+      item.lx = o.labelAt ? num(o.labelAt[0]) : num((pts[0][0] + pts[1][0]) / 2);
+      item.ly = o.labelAt ? num(o.labelAt[1]) : num((pts[0][1] + pts[1][1]) / 2 - 9);
+      item.size = o.labelSize || 12;
+      item.labelFill = o.labelColor || '#334155';
     }
+    items.push(item);
   }
 
-  function halo(x, y, text, o) {
-    o = o || {};
-    const size = o.labelSize || 12;
-    return '<text x="' + num(x) + '" y="' + num(y) + '" text-anchor="' + (o.labelAnchor || 'middle') +
-      '" font-size="' + size + '" font-weight="700" fill="' + (o.labelColor || '#334155') +
-      '" stroke="#fbf7ec" stroke-width="3.4" paint-order="stroke" font-family="' + FONT + '">' +
-      esc(text) + '</text>';
-  }
-
-  function note(x, y, text, o) {
-    o = o || {};
-    const size = o.size || 13;
-    const color = o.color || '#334155';
-    const anchor = o.anchor || 'start';
-    if (o.halo) {
-      parts.push(halo(x, y, text, { labelSize: size, labelAnchor: anchor, labelColor: color }));
-      return;
-    }
-    const list = Array.isArray(text) ? text : [text];
-    const lh = o.lh || Math.round(size * 1.35 * 10) / 10;
-    const spans = list.map(function (t, i) {
-      return '<tspan x="' + num(x) + '" dy="' + (i === 0 ? 0 : lh) + '">' + esc(t) + '</tspan>';
-    }).join('');
-    parts.push('<text x="' + num(x) + '" y="' + num(y) + '" text-anchor="' + anchor + '" font-size="' + size +
-      '" font-weight="' + (o.weight || 600) + '" fill="' + color + '" font-family="' + FONT + '">' + spans + '</text>');
-  }
-
-  function svg(label) {
-    return '<svg viewBox="0 0 760 420" role="img" aria-label="' + esc(label) + '"><defs>' +
-      '<marker id="' + MARK + '" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">' +
-      '<path d="M0,0 L10,4 L0,8 z" fill="#475569"/></marker>' +
-      '<filter id="' + ROUGH + '" x="-5%" y="-5%" width="110%" height="110%">' +
-      '<feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="11" result="n"/>' +
-      '<feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>' +
-      '</filter></defs><rect x="0" y="0" width="100%" height="100%" fill="#fbf7ec"/>' +
-      '<g filter="url(#' + ROUGH + ')">' + parts.join('') + '</g></svg>';
+  function note(x, y, value, o) {
+    text(x, y, value, o);
   }
 
   return {
-    rect: rect, box: box, circle: circle, line: line, curve: curve, arrow: arrow,
-    note: note, textBlock: textBlock, svg: svg
+    items: items, rect: rect, box: box, circle: circle, line: line,
+    curve: curve, arrow: arrow, note: note, text: text
   };
 }
 
 // ---------------------------------------------------------------------------
-// Diagram specs
+// Specs
 // ---------------------------------------------------------------------------
 
 const SPECS = [
@@ -866,125 +816,50 @@ const COVERAGE = {
   ]
 };
 
-const PAPER_LABEL = {
-  GS1: 'GS1 · Geography, History and Society',
-  GS2: 'GS2 · Polity, Governance and IR',
-  GS3: 'GS3 · Economy, Agriculture, Science and Environment',
-  GS4: 'GS4 · Ethics and Probity'
-};
-
 // ---------------------------------------------------------------------------
-// Rendering
+// Coverage map: one row per syllabus theme, every row must resolve to a figure
 // ---------------------------------------------------------------------------
 
-function card(spec) {
-  const r = makeRenderer(spec.id);
+const FIGURES = SPECS.map(function (spec) {
+  const r = makeRecorder(spec.id);
   spec.draw(r);
-  const p = PAPER[spec.paper];
-  return '<article class="fig-card" data-paper="' + spec.paper + '" id="fig-' + spec.id + '">' +
-    '<div class="fig-head"><span class="paper" style="--pc:' + p.color + '">' + p.name + '</span>' +
-    '<span class="tag">' + esc(spec.tag) + '</span></div>' +
-    '<h2>' + esc(spec.title) + '</h2>' +
-    '<p class="intro">' + esc(spec.intro) + '</p>' +
-    '<div class="canvas">' + r.svg(spec.title) + '</div></article>';
+  return {
+    id: spec.id,
+    title: spec.title,
+    paper: spec.paper,
+    tag: spec.tag,
+    intro: spec.intro,
+    items: r.items
+  };
+});
+
+// The scheduled forge writes data/figure-forge.json from the curated briefs.
+// A missing file is not fatal: the hand-authored library still renders, and
+// the forge workflow creates it on its first run. The theme groups are merged
+// into COVERAGE by name, so a forged diagram cannot sit outside the map.
+try {
+  const FORGED = require('../../data/figure-forge.json');
+  (FORGED.figures || []).forEach(function (f) {
+    const exists = FIGURES.some(function (x) { return x.id === f.id; });
+    if (!exists) FIGURES.push(f);
+  });
+  (FORGED.themes || []).forEach(function (g) {
+    const rows = COVERAGE[g.paper] || (COVERAGE[g.paper] = []);
+    let row = rows.filter(function (r) { return r.theme === g.theme; })[0];
+    if (!row) {
+      row = { theme: g.theme, figs: [] };
+      rows.push(row);
+    }
+    (g.figs || []).forEach(function (id) {
+      if (row.figs.indexOf(id) === -1) row.figs.push(id);
+    });
+  });
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e;
 }
 
-function renderCards() {
-  return SPECS.map(card).join('\n');
-}
+const THEME_COUNT = Object.keys(COVERAGE).reduce(function (n, p) {
+  return n + COVERAGE[p].length;
+}, 0);
 
-function coverageSection() {
-  const cols = Object.keys(COVERAGE).map(function (paper) {
-    const rows = COVERAGE[paper].map(function (row) {
-      const links = row.figs.map(function (id) {
-        return '<a href="#fig-' + id + '">' + id.replace(/-/g, ' ') + '</a>';
-      }).join(', ');
-      return '<li><b>' + esc(row.theme) + '</b> ' + links + '</li>';
-    }).join('');
-    return '<div class="cov-col" style="--pc:' + PAPER[paper].color + '"><h3>' + esc(PAPER_LABEL[paper]) +
-      '</h3><ul>' + rows + '</ul></div>';
-  }).join('');
-  return '<section class="coverage" id="coverage"><h2>Coverage map: every GS theme has a figure</h2>' +
-    '<p>Each row is a syllabus theme; each link is a diagram you can reproduce from memory. ' +
-    'The map is generated from the same specs as the cards, so a theme cannot silently lose its figure.</p>' +
-    '<div class="cov-grid">' + cols + '</div></section>';
-}
-
-function escapeRe(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function updateStats(html, total, themes) {
-  return html.replace(/<div class="stats">[\s\S]*?<\/div><\/header>/,
-    '<div class="stats"><div><b>' + total + '</b>core diagrams</div>' +
-    '<div><b>' + themes + '</b>syllabus themes</div>' +
-    '<div><b>GS1-GS4</b>papers covered</div>' +
-    '<div><b>100%</b>inline, printable</div></div></header>');
-}
-
-function updateHero(html) {
-  const lede = 'A working set of label-first sketches, one for every GS syllabus theme: geomorphology, ' +
-    'climatology, oceanography, soils, population, art and culture, the national movement, polity, ' +
-    'governance, international relations, the economy, money and prices, public finance, agriculture, ' +
-    'science and technology, environment, disaster management and ethics. Each one is inline SVG, so it ' +
-    'prints cleanly and does not depend on a stock photo.';
-  let out = html.replace(/(<p class="lede">)[\s\S]*?(<\/p>)/, '$1' + lede + '$2');
-  out = out.replace(/<meta name="description" content="[^"]*">/,
-    '<meta name="description" content="Free hand-drawn UPSC diagrams and flowcharts: monsoon, plate boundaries, river profiles, ocean currents, population, temples, the national movement, writs, panchayati raj, foreign policy, the UN, circular flow, the liquidity corridor, BoP, GST, MSP, disaster management, semiconductors, Kohlberg, emotional intelligence and probity.">');
-  return out;
-}
-
-function ensureCss(html) {
-  if (html.indexOf('.coverage{') !== -1) return html;
-  const css = '.coverage{max-width:1120px;margin:0 auto;padding:10px 20px 40px}' +
-    '.coverage h2{font-size:24px;letter-spacing:-.02em;margin-bottom:8px}' +
-    '.coverage p{color:var(--muted);font-size:13.5px;max-width:780px}' +
-    '.cov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:18px}' +
-    '.cov-col{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}' +
-    '.cov-col h3{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pc,#a1a1aa);margin-bottom:10px}' +
-    '.cov-col ul{list-style:none;display:flex;flex-direction:column;gap:7px}' +
-    '.cov-col li{font-size:12.5px;color:var(--muted)}' +
-    '.cov-col li b{color:var(--text);font-weight:650;margin-right:4px}' +
-    '.cov-col li a{color:var(--muted);border-bottom:1px dotted rgba(255,255,255,.18)}' +
-    '.cov-col li a:hover{color:var(--text)}' +
-    '@media print{.coverage{display:none}}';
-  return html.replace('</style>', css + '\n</style>');
-}
-
-function build(opts) {
-  opts = opts || {};
-  const original = fs.readFileSync(PAGE, 'utf8');
-  let html = original;
-
-  const cards = renderCards();
-  if (html.indexOf(START) !== -1 && html.indexOf(END) !== -1) {
-    html = html.replace(new RegExp(escapeRe(START) + '[\\s\\S]*?' + escapeRe(END)),
-      START + '\n' + cards + '\n' + END);
-  } else {
-    html = html.replace('</main>', START + '\n' + cards + '\n' + END + '\n</main>');
-  }
-
-  const section = coverageSection();
-  if (html.indexOf('<section class="coverage"') !== -1) {
-    html = html.replace(/<section class="coverage"[\s\S]*?<\/section>/, section);
-  } else {
-    html = html.replace('<footer>', section + '\n<footer>');
-  }
-
-  const total = (html.match(/<article class="fig-card"/g) || []).length;
-  const themes = Object.keys(COVERAGE).reduce(function (n, p) { return n + COVERAGE[p].length; }, 0);
-  html = updateStats(html, total, themes);
-  html = updateHero(html);
-  html = ensureCss(html);
-
-  if (!opts.dry) fs.writeFileSync(PAGE, html, 'utf8');
-  return html;
-}
-
-if (require.main === module) {
-  const out = build();
-  const cards = (out.match(/<article class="fig-card"/g) || []).length;
-  console.log('figures.html rebuilt: ' + cards + ' cards, ' + SPECS.length + ' generated');
-}
-
-module.exports = { build: build, renderCards: renderCards, coverageSection: coverageSection, SPECS: SPECS, COVERAGE: COVERAGE };
+module.exports = { FIGURES: FIGURES, COVERAGE: COVERAGE, THEME_COUNT: THEME_COUNT };
