@@ -35,7 +35,7 @@ var hosted = require('./lib/hosted');
 var HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 var MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 var DEADLINE_MIN = parseInt(process.env.EXPAND_LANG_DEADLINE_MIN || '70', 10);
-var TARGET_WORDS = parseInt(process.env.EXPAND_LANG_TARGET_WORDS || '6000', 10);
+var TARGET_WORDS = parseInt(process.env.EXPAND_LANG_TARGET_WORDS || '4000', 10);
 var DRY = !!process.env.EXPAND_LANG_DRY;
 var FIRST_BYTE_MIN = parseFloat(process.env.EXPAND_LANG_FIRST_BYTE_MIN || '25') || 25;
 var STALL_MIN = parseFloat(process.env.EXPAND_LANG_STALL_MIN || '12') || 12;
@@ -85,7 +85,13 @@ var PAGES = [
   { file: 'upsc/mains/language/urdu.html', kind: 'mains', slug: 'urdu', lang: 'urdu' }
 ];
 
-var LEDGER_FILE = path.join(ROOT, 'data', 'language-expansion.json');
+var LEDGER_FILE = process.env.EXPAND_LANG_LEDGER
+  ? path.resolve(ROOT, process.env.EXPAND_LANG_LEDGER)
+  : path.join(ROOT, 'data', 'language-expansion.json');
+// Sharding: run N parallel jobs and give each one a disjoint slice of PAGES.
+// The ledger is per-shard so concurrent writers never race on one JSON file.
+var SHARD = Math.max(1, parseInt(process.env.EXPAND_LANG_SHARD || '1', 10) || 1);
+var SHARDS = Math.max(1, parseInt(process.env.EXPAND_LANG_SHARDS || '1', 10) || 1);
 var LANG_META_FILE = path.join(__dirname, 'language-paper-a.json');
 var ALLOWED_TAGS = HTML_REPAIR.ALLOWED_TAGS;
 
@@ -169,10 +175,13 @@ function proseContainer(html) {
   var mb = reBody.exec(html);
   if (!mb) return null;
   var body = mb[1];
-  var firstProse = body.indexOf('<p>');
-  if (firstProse === -1) firstProse = body.indexOf('<h3>');
+  var bodyStart = mb.index + mb[0].indexOf('>') + 1;
+  // Pages use <p class=> and <h2>, not a bare <p>/<h3>; match any attribute.
+  var firstProse = body.search(/<p\b/i);
+  if (firstProse === -1) firstProse = body.search(/<h[23]\b/i);
   if (firstProse === -1) return null;
-  return { outer: null, inner: body.slice(firstProse), closeAt: null, kind: 'body-tail' };
+  return { outer: null, inner: body, closeAt: null, kind: 'body-tail',
+           bodyStart: bodyStart, bodyAbsStart: bodyStart + firstProse };
 }
 
 function promptFor(page, existing) {
@@ -189,6 +198,7 @@ function promptFor(page, existing) {
     '- Include one <div class="tip-box"> with div.tip-title / div.tip-text.',
     '- 400-700 words of explanation. Accuracy over volume; never invent a rule.',
     '- No links, images, scripts, styles, inline event handlers, external URLs.',
+    '- No style, id, data-* or event attributes. Only div/span may carry a class, and only example-box, ex-title, ex-text, ex-soln, tip-box, tip-title, tip-text.',
     '- Do not claim this is an official exam paper or a previous-year question.',
     'Reply with the HTML only. No markdown fences and no commentary.'
   ].join('\n');
@@ -200,11 +210,27 @@ function promptFor(page, existing) {
   return base;
 }
 
-function callModel(prompt, timeoutMs) {
-  // Hosted lane: the shared router owns retries and fallbacks.
+async function callModel(prompt, timeoutMs) {
+  // Hosted lane: the shared router owns retries and fallbacks, but 12-16
+  // parallel shards can still exhaust a provider's per-minute limit. Retry the
+  // whole route chain with jitter before giving the page up.
   if (hosted.enabled()) {
-    return hosted.chat('You are an expert language teacher writing practice material.', prompt,
-      { numPredict: 4200, temperature: 0.5 });
+    var tries = Math.max(1, parseInt(process.env.EXPAND_LANG_RETRIES || '3', 10) || 3);
+    var lastErr;
+    for (var attempt = 0; attempt < tries; attempt++) {
+      try {
+        return await hosted.chat('You are an expert language teacher writing practice material.', prompt,
+          { numPredict: 4200, temperature: 0.5 });
+      } catch (e) {
+        lastErr = e;
+        if (attempt < tries - 1) {
+          var wait = 20000 + Math.floor(Math.random() * 20000);
+          console.log('model call failed (' + (e.message || e) + '); retry ' + (attempt + 1) + '/' + (tries - 1) + ' in ' + Math.round(wait / 1000) + 's');
+          await new Promise(function (r) { setTimeout(r, wait); });
+        }
+      }
+    }
+    throw lastErr || new Error('model call failed');
   }
   return new Promise(function (resolve, reject) {
     var payload = JSON.stringify({
@@ -326,9 +352,8 @@ function insertionPoint(html, page) {
     var re = new RegExp('<!-- language-expansion:start -->[\\s\\S]*?<!-- language-expansion:end -->');
     return { mode: 'replace-marker', re: re };
   }
-  var scriptIdx = body.search(/<script\b/i);
-  var endIdx = body.lastIndexOf('</body>');
-  var at = scriptIdx !== -1 ? scriptIdx : (endIdx !== -1 ? endIdx : body.length);
+  var scriptIdx = c.inner.search(/<script\b/i);
+  var at = scriptIdx !== -1 ? c.bodyStart + scriptIdx : (c.bodyStart + c.inner.length);
   return { mode: 'append', at: at };
 }
 
@@ -353,7 +378,9 @@ async function main() {
   var byFile = {};
   (ledger.pages || []).forEach(function (e) { byFile[e.file] = e; });
 
-  var candidates = PAGES.filter(function (p) {
+  var candidates = PAGES.filter(function (p, idx) {
+    return idx % SHARDS === (SHARD - 1);
+  }).filter(function (p) {
     var fp = path.join(ROOT, p.file);
     if (!fs.existsSync(fp)) return false;
     try { return visibleWords(fs.readFileSync(fp, 'utf8')) < TARGET_WORDS; } catch (e) { return true; }
@@ -364,7 +391,7 @@ async function main() {
     return a.file < b.file ? -1 : 1;
   });
 
-  console.log('Language expansion worklist: ' + candidates.length + ' page(s)');
+  console.log('Language expansion worklist: ' + candidates.length + ' page(s) [shard ' + SHARD + '/' + SHARDS + ']');
   candidates.slice(0, 8).forEach(function (p) {
     var e = byFile[p.file];
     console.log('  [' + p.kind + '] ' + p.file + ' (passes ' + ((e && e.passes) || 0) + ')');
@@ -442,3 +469,10 @@ if (require.main === module) {
     process.exit(1);
   });
 }
+
+module.exports = {
+  proseContainer: proseContainer,
+  insertionPoint: insertionPoint,
+  applyInsertion: applyInsertion,
+  visibleWords: visibleWords
+};
