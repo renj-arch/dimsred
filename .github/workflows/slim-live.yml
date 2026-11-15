@@ -135,6 +135,11 @@ jobs:
           node scripts/lib/html-repair.test.js
           node scripts/lib/ollama.test.js
           node scripts/lib/ollama-nvapi.test.js
+          # 2026-11-15: the OpenCode Zen route only ever tried the CLI form with
+          # --standalone --format json. The installed build rejects both, prints
+          # its usage and exits non-zero, so every Zen call failed and fell
+          # through -- one wasted CLI spawn per model call, on every lane.
+          node scripts/lib/opencode-zen.test.js
           node scripts/lib/handwritten.test.js
           # 2026-11-14: the model echoed its anchor id into reader-facing
           # headings ("Deep-1: ..."), and an older prompt produced

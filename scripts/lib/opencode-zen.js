@@ -68,23 +68,78 @@ function parseEvents(stdout) {
   return text;
 }
 
-function run(prompt) {
+function execCli(args) {
   return new Promise(function (resolve, reject) {
-    if (!ENABLED) return reject(new Error('OpenCode Zen route is disabled (OPENCODE_ZEN!=1)'));
-    if (!KEY) return reject(new Error('OPENCODE_API_KEY is not set'));
-    ensureAuth();
-    const args = ['run', '--standalone', '--format', 'json', '-m', MODEL, String(prompt || '')];
     const env = Object.assign({}, process.env, { OPENCODE_API_KEY: KEY });
     execFile(BIN, args, { timeout: TIMEOUT_MS, maxBuffer: 64 * 1024 * 1024, env }, function (err, stdout, stderr) {
       if (err) {
         const detail = String(stderr || err.message || '').replace(/\s+/g, ' ').trim();
-        return reject(new Error('opencode CLI: ' + detail.slice(0, 300)));
+        const e = new Error('opencode CLI: ' + detail.slice(0, 300));
+        e.stdout = String(stdout || '');
+        return reject(e);
       }
-      const text = parseEvents(stdout);
-      if (!text) return reject(new Error('opencode CLI returned no text'));
-      resolve({ text: text, httpCode: '200', doneReason: 'stop' });
+      resolve(String(stdout || ''));
     });
   });
+}
+
+// A build that does not know a flag answers with its usage text and a non-zero
+// exit. That is the signature this route must survive rather than treat as a
+// real failure.
+function isUsageDump(msg) {
+  return /unknown option|(^|\s)usage\b|positionals:|\[array\]|show help \[boolean\]/i.test(String(msg || ''));
+}
+
+// Strip ANSI and return the answer when the CLI printed prose instead of the
+// JSON event stream (older builds have no --format json).
+function plainText(stdout) {
+  const s = String(stdout || '')
+    .replace(/\u001b\[[0-9;]*m/g, '')
+    .replace(/^\s*[\u2800-\u28FF]\s*/gm, '')
+    .trim();
+  if (!s) return '';
+  const at = s.search(/<h[23][^>]*>/i);
+  return at > 0 ? s.slice(at) : s;
+}
+
+async function run(prompt) {
+  if (!ENABLED) throw new Error('OpenCode Zen route is disabled (OPENCODE_ZEN!=1)');
+  if (!KEY) throw new Error('OPENCODE_API_KEY is not set');
+  ensureAuth();
+  const p = String(prompt || '');
+  // The runner installs whatever https://opencode.ai/install serves, and the
+  // flags moved between releases: the yargs-era build rejects --standalone and
+  // --format, prints its usage to stderr and exits non-zero. Because the first
+  // form was the only one tried, EVERY Zen call failed and fell through to the
+  // next backend -- one wasted CLI spawn per model call, on every lane. Try the
+  // full form, then drop the two flags that moved, then drop --format.
+  const forms = [
+    ['run', '--standalone', '--format', 'json', '-m', MODEL, p],
+    ['run', '--format', 'json', '-m', MODEL, p],
+    ['run', '-m', MODEL, p]
+  ];
+  let firstErr = null;
+  for (let i = 0; i < forms.length; i++) {
+    try {
+      const stdout = await execCli(forms[i]);
+      const text = parseEvents(stdout) || plainText(stdout);
+      if (text) return { text: text, httpCode: '200', doneReason: 'stop' };
+      const e = new Error('opencode CLI returned no text');
+      if (!firstErr) firstErr = e;
+      if (i === forms.length - 1) break;
+    } catch (e) {
+      if (!firstErr) firstErr = e;
+      const retryable = isUsageDump(e.message) || /returned no text/.test(e.message);
+      if (!retryable) throw e;            // quota, network, auth: terminal
+      if (i === forms.length - 1) break;
+    }
+  }
+  // Make the next failure diagnosable: the version says which flag set this
+  // build wanted.
+  let version = '';
+  try { version = String(await execCli(['--version'])).trim().slice(0, 40); } catch (e) { /* best effort */ }
+  throw new Error(String(firstErr && firstErr.message || 'opencode CLI failed').slice(0, 220) +
+    (version ? ' [cli ' + version + ']' : ''));
 }
 
 module.exports = {
@@ -93,6 +148,8 @@ module.exports = {
   MODEL: MODEL,
   run: run,
   parseEvents: parseEvents,
+  plainText: plainText,
+  isUsageDump: isUsageDump,
   ensureAuth: ensureAuth,
   authPath: authPath
 };
