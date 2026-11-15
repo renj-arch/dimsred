@@ -183,7 +183,7 @@ function captureLogs(fn) {
   ].join('\n'));
   ok('parses text events', /<h2 id="deep-1">Heading<\/h2><p>Body<\/p>/.test(parsed), parsed);
   ok('strips the preamble', parsed.startsWith('<h2'), parsed.slice(0, 24));
-  ok('default model is the free DeepSeek id', zen.MODEL === 'opencode/deepseek-v4.1-flash-free#max', zen.MODEL);
+  ok('default model is the free DeepSeek id', zen.MODEL === 'opencode/deepseek-v4.1-flash-free', zen.MODEL);
   ok('disabled unless OPENCODE_ZEN=1', zen.ENABLED === false, String(zen.ENABLED));
 
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zen-auth-'));
