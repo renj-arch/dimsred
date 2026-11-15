@@ -195,7 +195,7 @@ function promptFor(page, existing) {
 
   if (page.kind === 'mains' && page.lang && LANG_META[page.lang]) {
     var lm = LANG_META[page.lang];
-    return base.join('\n') + '\n\n- Add one model-generated practice passage in the page language, clearly labelled "Model-generated practice (not an official UPSC question)", with 3 comprehension questions. The passage must be written in the native script of ' + page.lang + ' (' + lm.script + ', ' + lm.unicode + '). Label it sourceType: model-generated-practice so it is never mistaken for an official PYQ.';
+    return base + '\n\n- Add one model-generated practice passage in the page language, clearly labelled "Model-generated practice (not an official UPSC question)", with 3 comprehension questions. The passage must be written in the native script of ' + page.lang + ' (' + lm.script + ', ' + lm.unicode + '). Label it sourceType: model-generated-practice so it is never mistaken for an official PYQ.';
   }
   return base;
 }
