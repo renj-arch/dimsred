@@ -20,6 +20,11 @@ name: Expand Language Pages
 # Hosted free-tier models (NVIDIA NIM -> Groq -> OpenRouter -> GitHub Models); no local model pull.
 
 on:
+  schedule:
+    # Four model passes a day. The 22 Paper A pages and the CTET/beginner pages
+    # are thin shells; each pass appends one validated section + practice passage
+    # until EXPAND_LANG_TARGET_WORDS. No laptop required.
+    - cron: '13 1,7,13,19 * * *'
   workflow_dispatch:
     inputs:
       per_run:
@@ -72,13 +77,23 @@ jobs:
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXPAND_LANG_DEADLINE_MIN: '90'
+          EXPAND_LANG_TARGET_WORDS: '6000'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-language-pages.js
 
       - name: Publish extended language pages
         if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git -c core.hooksPath=/dev/null commit -m "languages: expand pages with model-written advanced sections (run ${{ github.run_id }})" || true
-          git push origin HEAD:$(git rev-parse --abbrev-ref HEAD) || echo "nothing to push / push not permitted from this context"
+          if git diff --staged --quiet; then
+            echo "No language page changes this run"
+            exit 0
+          fi
+          # ci-push owns the fetch/merge/push retry. The old plain push swallowed
+          # every failure with `|| echo`, so a run could report success while
+          # nothing reached main.
+          git fetch --depth=100 --no-tags origin main 2>/dev/null || true
+          bash scripts/ci-push.sh "languages: expand pages with model-written advanced sections (run ${{ github.run_number }})"
