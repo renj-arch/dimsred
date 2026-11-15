@@ -1,36 +1,39 @@
 name: Expand Language Pages
 
-# The site's language-expansion agent: qwen3.5:9b (Ollama on the runner) writes
-# NEW advanced sections into the language HTML pages that never grow:
-#   languages/*.html       (8 hand-built beginner courses)
+# The site's language-expansion agent writes NEW advanced sections into the
+# language HTML pages that never grow:
+#   languages/*.html              (8 hand-built beginner courses)
 #   ctet/course/language/*.html   (CTET language pedagogy lessons)
 #   upsc/mains/language/*.html    (UPSC Mains Paper A practice pages)
 #
 # It is a SEPARATE plugin from expand-course (AGENTS.md: languages are not
 # part of expand-course.js).
 #
+# Sharding: the job runs as a matrix of 8 runners, each handling a disjoint
+# slice of pages, so the 34 thin pages reach EXPAND_LANG_TARGET_WORDS in one
+# day instead of two weeks. Each shard has its own ledger file so concurrent
+# writers never race on one JSON.
+#
 # Safety:
 #   - Only appends new sections; never deletes or overwrites human content.
 #   - Every section passes a hard HTML validator before anything is written.
 #   - Model-generated practice passages are labelled model-generated-practice
 #     and script-checked with scripts/lib/language-verify.js (90% threshold).
-#   - Incremental ledger (data/language-expansion.json) keeps every run's
-#     work even if the run times out.
+#   - Publishes through scripts/ci-push.sh (depth-100 fetch + union merges).
 #
-# Hosted free-tier models (NVIDIA NIM -> Groq -> OpenRouter -> GitHub Models); no local model pull.
+# Hosted free-tier models (NVIDIA NIM -> Groq -> OpenRouter -> GitHub Models).
 
 on:
   schedule:
-    # Four model passes a day. The 22 Paper A pages and the CTET/beginner pages
-    # are thin shells; each pass appends one validated section + practice passage
-    # until EXPAND_LANG_TARGET_WORDS. No laptop required.
+    # Four model passes a day. Once every page is at target the shards find
+    # nothing to do and exit cheaply.
     - cron: '13 1,7,13,19 * * *'
   workflow_dispatch:
     inputs:
-      per_run:
-        description: 'Pages to extend this run (default 6)'
+      shards:
+        description: 'Parallel shards (default 16)'
         required: false
-        default: '6'
+        default: '16'
       model:
         description: 'Ignored: hosted routes choose their own model'
         required: false
@@ -48,7 +51,12 @@ permissions:
 jobs:
   expand:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -77,10 +85,13 @@ jobs:
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXPAND_LANG_DEADLINE_MIN: '90'
-          EXPAND_LANG_TARGET_WORDS: '6000'
+          EXPAND_LANG_TARGET_WORDS: '4000'
+          EXPAND_LANG_SHARD: ${{ matrix.shard }}
+          EXPAND_LANG_SHARDS: ${{ github.event.inputs.shards || '16' }}
+          EXPAND_LANG_LEDGER: '/tmp/language-expansion.shard-${{ matrix.shard }}.json'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-language-pages.js
 
-      - name: Publish extended language pages
+      - name: Publish this shard's language pages
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -89,11 +100,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --staged --quiet; then
-            echo "No language page changes this run"
+            echo "No language page changes in shard ${{ matrix.shard }}"
             exit 0
           fi
-          # ci-push owns the fetch/merge/push retry. The old plain push swallowed
-          # every failure with `|| echo`, so a run could report success while
-          # nothing reached main.
           git fetch --depth=100 --no-tags origin main 2>/dev/null || true
-          bash scripts/ci-push.sh "languages: expand pages with model-written advanced sections (run ${{ github.run_number }})"
+          bash scripts/ci-push.sh "languages: shard ${{ matrix.shard }}/${{ github.event.inputs.shards || '16' }} advanced sections (run ${{ github.run_number }})"

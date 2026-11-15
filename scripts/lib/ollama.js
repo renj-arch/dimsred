@@ -86,6 +86,22 @@ const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3-ultr
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
 const OPENROUTER_URL = process.env.OPENROUTER_URL || 'https://openrouter.ai/api/v1/chat/completions';
 
+// Optional Refuseless backend (credit-based, OpenAI-compatible). Gated behind
+// REFUSELESS=1 because it is PAID, unlike the other hosted routes. It sits last
+// before the local model so a free route is always tried first. Current live
+// state of the owner's key on 2026-11-15: /v1/models works, the free model
+// (deepseek-v4.1-flash-abliterated-free) answers 429 "free slots at capacity",
+// and paid models answer 402 "insufficient credits". Enable it after a top-up.
+const REFUSELESS = process.env.REFUSELESS === '1';
+const REFUSELESS_KEY = process.env.REFUSELESS_API_KEY || '';
+const REFUSELESS_MODEL = process.env.REFUSELESS_MODEL || 'deepseek-v4.1-flash-fast';
+const REFUSELESS_URL = process.env.REFUSELESS_URL || 'https://api.refuseless.com/v1/chat/completions';
+function callRefuseless(messages, opts) {
+  return callOpenAICompatible('Refuseless', REFUSELESS_URL, REFUSELESS_KEY, REFUSELESS_MODEL, messages, opts, null, {
+    reasoning_effort: opts.reasoningEffort || 'low'
+  });
+}
+
 function log(msg) { console.log('[model] ' + msg); }
 
 function curlChat(payload) {
@@ -363,6 +379,16 @@ async function callLLM(messages, opts) {
       return gh;
     } catch (e) {
       log('GitHub Models failed (' + e.message + ') - falling back to Ollama ' + MODEL);
+    }
+  }
+  if (REFUSELESS && REFUSELESS_KEY) {
+    try {
+      const rf = await callRefuseless(messages, opts);
+      LAST_SERVED = 'Refuseless ' + REFUSELESS_MODEL;
+      log('served by Refuseless ' + REFUSELESS_MODEL);
+      return rf;
+    } catch (e) {
+      log('Refuseless failed (' + e.message + ') - falling back to Ollama ' + MODEL);
     }
   }
   const body = {
