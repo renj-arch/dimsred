@@ -175,10 +175,13 @@ function proseContainer(html) {
   var mb = reBody.exec(html);
   if (!mb) return null;
   var body = mb[1];
-  var firstProse = body.indexOf('<p>');
-  if (firstProse === -1) firstProse = body.indexOf('<h3>');
+  var bodyStart = mb.index + mb[0].indexOf('>') + 1;
+  // Pages use <p class=> and <h2>, not a bare <p>/<h3>; match any attribute.
+  var firstProse = body.search(/<p\b/i);
+  if (firstProse === -1) firstProse = body.search(/<h[23]\b/i);
   if (firstProse === -1) return null;
-  return { outer: null, inner: body.slice(firstProse), closeAt: null, kind: 'body-tail' };
+  return { outer: null, inner: body, closeAt: null, kind: 'body-tail',
+           bodyStart: bodyStart, bodyAbsStart: bodyStart + firstProse };
 }
 
 function promptFor(page, existing) {
@@ -332,9 +335,8 @@ function insertionPoint(html, page) {
     var re = new RegExp('<!-- language-expansion:start -->[\\s\\S]*?<!-- language-expansion:end -->');
     return { mode: 'replace-marker', re: re };
   }
-  var scriptIdx = body.search(/<script\b/i);
-  var endIdx = body.lastIndexOf('</body>');
-  var at = scriptIdx !== -1 ? scriptIdx : (endIdx !== -1 ? endIdx : body.length);
+  var scriptIdx = c.inner.search(/<script\b/i);
+  var at = scriptIdx !== -1 ? c.bodyStart + scriptIdx : (c.bodyStart + c.inner.length);
   return { mode: 'append', at: at };
 }
 
@@ -450,3 +452,10 @@ if (require.main === module) {
     process.exit(1);
   });
 }
+
+module.exports = {
+  proseContainer: proseContainer,
+  insertionPoint: insertionPoint,
+  applyInsertion: applyInsertion,
+  visibleWords: visibleWords
+};
