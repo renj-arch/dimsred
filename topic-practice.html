@@ -129,7 +129,7 @@ a.back-link:hover{text-decoration:underline}
           exam: p.exam,
           year: p.year,
           paper: p.paper,
-          paperId: p.id,
+          sourceFile: p.sourceFile,
           count: s.count,
           type: p.type
         });
@@ -166,7 +166,7 @@ a.back-link:hover{text-decoration:underline}
 
   function loadTopicQuestions(t){
     // Load the paper's questions and filter by section
-    fetch('../papers-data/' + t.paperId + '.json').then(function(r){return r.json();}).then(function(d){
+    fetch('papers-data/' + t.sourceFile + '.json').then(function(r){return r.json();}).then(function(d){
       var qs = (d.questions || d || []).filter(function(q){
         return (q.section || '') === t.name;
       });
@@ -176,14 +176,16 @@ a.back-link:hover{text-decoration:underline}
         '<h3 style="margin-bottom:12px">'+t.name+' — '+t.exam+' '+t.year+'</h3>' +
         '<div class="year-filter">Paper: '+t.paper+' · '+qs.count+' questions</div>';
       qs.forEach(function(q,i){
+        var correctIdx = -1;
+        (q.options || []).forEach(function(o,j){ if(o.correct) correctIdx = j; });
         var opts = (q.options || []).map(function(o,j){
-          return '<div class="q-opt'+(j===q.correct?' correct':'')+'">'+String.fromCharCode(65+j)+') '+o+'</div>';
+          return '<div class="q-opt'+(j===correctIdx?' correct':'')+'">'+String.fromCharCode(65+j)+') '+o.text+'</div>';
         }).join('');
         detail.innerHTML +=
           '<div class="question-detail" style="margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:8px">'+
           '<div class="q-text">Q'+(i+1)+'. '+q.text+'</div>'+
           '<div class="q-options">'+opts+'</div>'+
-          (q.solution?'<div class="q-sol">Solution: '+q.solution+'</div>':'')+
+          (q.solution||q.explain?'<div class="q-sol">Solution: '+(q.solution||q.explain)+'</div>':'')+
           '</div>';
       });
       detail.scrollIntoView({behavior:'smooth'});
