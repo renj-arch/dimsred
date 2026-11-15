@@ -86,6 +86,21 @@ const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3-ultr
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
 const OPENROUTER_URL = process.env.OPENROUTER_URL || 'https://openrouter.ai/api/v1/chat/completions';
 
+// Optional Google Gemini backend. GEMINI_API_KEY has been configured since
+// 2026-05-29 but only weekly-pdfs.yml ever used it; the shared router never
+// asked, so every writer lane ignored a key it already had. The Free Tier is
+// a separate daily quota from Groq/OpenRouter, and Gemini's OpenAI-compatible
+// endpoint means this is the same call shape as the other hosted routes.
+// Opt in per lane with GEMINI=1.
+const GEMINI = process.env.GEMINI === '1';
+const GEMINI_KEY = process.env.GEMINI_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const GEMINI_URL = process.env.GEMINI_URL ||
+  'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
+function callGemini(messages, opts) {
+  return callOpenAICompatible('Gemini', GEMINI_URL, GEMINI_KEY, GEMINI_MODEL, messages, opts, null, null);
+}
+
 // Optional Refuseless backend (credit-based, OpenAI-compatible). Gated behind
 // REFUSELESS=1 because it is PAID, unlike the other hosted routes. It sits last
 // before the local model so a free route is always tried first. Current live
@@ -349,6 +364,16 @@ async function callLLM(messages, opts) {
       return nv;
     } catch (e) {
       log('NVIDIA NIM failed (' + e.message + ') - trying the next backend');
+    }
+  }
+  if (GEMINI && GEMINI_KEY) {
+    try {
+      const gm = await callGemini(messages, opts);
+      LAST_SERVED = 'Gemini ' + GEMINI_MODEL;
+      log('served by Gemini ' + GEMINI_MODEL);
+      return gm;
+    } catch (e) {
+      log('Gemini failed (' + e.message + ') - trying the next backend');
     }
   }
   if (GROQ && GROQ_KEY) {
