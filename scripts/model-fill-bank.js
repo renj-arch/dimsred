@@ -21,6 +21,7 @@ function modelLabel() {
   } catch (e) { return llm.MODEL; }
 }
 const qd = require('./lib/question-dedupe');
+const solutionGuard = require('./lib/question-solution-guard');
 
 const ROOT = path.resolve(__dirname, '..');
 const BANK_DIR = path.join(ROOT, 'question-bank');
@@ -110,6 +111,11 @@ function validItem(item, bank, batch, section) {
   if (!/[.!?]/.test(solution)) return 'solution is not prose';
   const leak = llm.leak(text + ' ' + opts.join(' ') + ' ' + solution);
   if (leak) return 'meta text (' + leak + ')';
+  // The deploy gate rejects a solution that admits the options do not contain
+  // the computed answer. Reject it here too: otherwise one such item is saved
+  // and every deploy stays red until a human rewrites it.
+  const solutionLeak = solutionGuard.leakReason(solution);
+  if (solutionLeak) return 'solution ' + solutionLeak;
   if (/\b(?:lorem ipsum|placeholder|TODO|TBD)\b/i.test(text + ' ' + solution)) return 'placeholder text';
   // Reject a duplicate or paraphrase of any question already in the bank or
   // in this run. Exact matching alone was too weak: the model reused the same
@@ -205,7 +211,11 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
       const opts = item.options.map(function (o) { return llm.clean(typeof o === 'string' ? o : o.text); });
       const correct = typeof item.correct === 'string' && /^[A-Da-d]$/.test(item.correct)
         ? item.correct.toUpperCase().charCodeAt(0) - 65 : parseInt(item.correct, 10);
-      if (!(await verifyItem(item, opts, correct, section))) {
+      // The section name alone is too coarse: agniveer files physics under
+      // "Science", which matched none of the arithmetic/science triggers, so
+      // the independent solve was skipped for a numerical item. Include the
+      // topic so a physics question is verified even in a general section.
+      if (!(await verifyItem(item, opts, correct, section + ' ' + (item.topic || '')))) {
         llm.log('  rejected: independent verifier disagreed');
         continue;
       }
