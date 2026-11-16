@@ -24,6 +24,15 @@ on:
         description: 'NVIDIA model id or alias'
         required: false
         default: 'mistral-large-4'
+      route:
+        description: 'Which route writes: nvidia or openrouter'
+        type: choice
+        options: ['nvidia', 'openrouter']
+        default: 'nvidia'
+      openrouter_model:
+        description: 'OpenRouter model id (used when route=openrouter, and as fallback)'
+        required: false
+        default: 'google/gemma-4-31b-it'
 
 concurrency:
   group: deepen-model
@@ -56,11 +65,12 @@ jobs:
 
       - name: Write lessons with the strongest available model
         env:
-          NVAPI: '1'
+          NVAPI: ${{ inputs.route == 'nvidia' && '1' || '' }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           NVIDIA_MODEL: ${{ inputs.model }}
           OPENROUTER: '1'
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ inputs.openrouter_model }}
           EXPAND_PER_RUN: ${{ inputs.per_run }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
