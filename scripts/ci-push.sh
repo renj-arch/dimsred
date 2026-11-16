@@ -41,13 +41,31 @@ git commit -m "$MSG" || { echo "[ci-push] commit failed"; exit 1; }
 # data/invented/questions.json is unioned (see union_invented) because there
 # a dropped line IS a lost question.
 sync_remote() {
-  # The checkout is typically fetch-depth: 1. A depth-1 fetch has no common
-  # ancestor with a local commit, so `git pull --rebase` and the fallback merge
-  # both fail and the push is rejected even though the work is good. Deepen
-  # first: 100 commits is enough to find the base and costs no blobs.
-  git fetch --deepen=100 --no-tags origin main 2>/dev/null \
-    || git fetch --depth=100 --no-tags origin main 2>/dev/null \
-    || true
+  # The checkout is typically fetch-depth: 1, so the run's base commit is the
+  # shallow root. A fixed depth stops short of it once origin/main has moved
+  # further than that many commits during the run. The rebase then replays
+  # against unrelated history, the `-X ours` merge dies with "refusing to
+  # merge unrelated histories", and the push is rejected as "behind its
+  # remote counterpart" (Wiki Fill 2026-11-16, run #664: 364-368 commits
+  # ahead, five rejected pushes). Deepen from the TIP until HEAD and the
+  # fetched tip share a merge base. The checkout is a blob:none partial
+  # clone, so this transfers commits and trees only, never blobs.
+  if [ -f .git/shallow ]; then
+    git fetch --depth=1 --no-tags origin main 2>/dev/null || true
+    if ! git merge-base HEAD origin/main >/dev/null 2>&1; then
+      local have_base="" depth
+      for depth in 200 800 3200 12800; do
+        timeout 240 git fetch --depth="$depth" --no-tags origin main 2>/dev/null || continue
+        if git merge-base HEAD origin/main >/dev/null 2>&1; then
+          have_base=1
+          break
+        fi
+      done
+      if [ -z "$have_base" ]; then
+        echo "[ci-push] WARNING: no merge base with origin/main within 12,800 commits - rebase will replay unrelated history"
+      fi
+    fi
+  fi
   git pull --rebase --autostash 2>/dev/null && return 0
   git rebase --abort 2>/dev/null || true
   # -X ours resolves content conflicts, but git still refuses modify/delete
