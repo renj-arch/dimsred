@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Matrices &amp; Determinants — JEE Mathematics Lesson | vlymbooq</title>
     <meta name="description" content="Free JEE Mathematics Matrices &amp; Determinants lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
@@ -114,7 +116,8 @@
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Matrices &amp; Determinants</h1>
-                    <div id="lesson-meta" hidden data-version="15776151eca3" data-updated="" data-updated-label="" data-headings="[&quot;Key Concepts Covered&quot;,&quot;Important Formulas &amp; Rules&quot;,&quot;Common Question Types&quot;]"></div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 16 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="f7d0ea9e47c0" data-updated="2026-11-16" data-updated-label="16 Nov 2026" data-headings="[&quot;Introduction to Matrices and Basic Operations&quot;,&quot;1.1 Definition and Notation&quot;,&quot;1.2 Addition, Subtraction and Scalar Multiplication&quot;,&quot;1.3 Matrix Multiplication&quot;,&quot;Determinants and Their Properties&quot;,&quot;2.1 Definition of the Determinant&quot;,&quot;2.2 Elementary Row Operations and Determinant Behaviour&quot;,&quot;2.3 Important Properties and Theorems&quot;,&quot;Adjoint, Inverse and Rank of a Matrix&quot;,&quot;3.1 Adjoint and the Formula for the Inverse&quot;,&quot;3.2 Properties of the Inverse&quot;,&quot;3.3 Rank and Its Determination&quot;,&quot;Solution of Systems of Linear Equations&quot;,&quot;4.1 Gaussian Elimination and Row‑Echelon Form&quot;,&quot;4.2 Gauss‑Jordan Elimination and Reduced Row‑Echelon Form&quot;,&quot;4.3 Cramer&#39;s Rule, Matrix Inversion and Comparative Efficiency&quot;,&quot;Applications and Special Types of Matrices&quot;,&quot;5.1 Symmetric, Skew‑Symmetric and Orthogonal Matrices&quot;,&quot;5.2 Diagonal, Triangular and Block Matrices&quot;,&quot;5.3 Eigenvalues, Eigenvectors and Diagonalisation&quot;]"></div>
                     <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>
                     <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Matrix algebra, determinants, adjoint and inverse, and systems of linear equations.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
@@ -132,23 +135,85 @@
                         <li>Apply key formulas and techniques to solve problems</li>
                         <li>Practice with exam-level questions to build speed and accuracy</li>
                     </ul>
-<p>This lesson covers <strong>Matrices & Determinants</strong>, a key topic in Mathematics for JEE. Below is a structured overview of the core concepts you need to master.</p>
-<h3>Key Concepts Covered</h3>
-<ul>
-  <li><strong>Matrices:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Determinants:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Systems:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-</ul>
-<h3>Important Formulas & Rules</h3>
-<p>Focus on understanding the core formulas and when to apply them. Practice identifying the correct formula based on question type. Create a formula sheet for quick revision before the exam.</p>
-<h3>Common Question Types</h3>
-<ul>
-  <li>Direct application of formulas and concepts</li>
-  <li>Multi-step problems requiring combination of concepts</li>
-  <li>Data interpretation and analysis-based questions</li>
-</ul>
-<div class="tip-box"><div class="tip-title">Exam Strategy</div><div class="tip-text">Practice topic-wise questions first, then attempt mixed sets. Focus on accuracy before speed. Review your mistakes and maintain an error log.</div></div>
-        <script>
+<h2>Introduction to Matrices and Basic Operations</h2>
+
+<h3>1.1 Definition and Notation</h3>
+<p>A matrix is a rectangular array of numbers arranged in rows and columns, and it serves as a compact way to represent linear transformations and systems of linear equations. The size of a matrix is described by its order m × n, where m denotes the number of rows and n the number of columns; for example, a 3 × 2 matrix has three rows and two columns. Individual entries are denoted by a<sub>ij</sub>, where the first subscript indicates the row and the second the column. Two matrices are equal only when they have the same order and each corresponding entry is identical, a fact that underpins every algebraic manipulation that follows.</p>
+<h3>1.2 Addition, Subtraction and Scalar Multiplication</h3>
+<p>Matrix addition and subtraction are defined entry‑wise and therefore require the operands to share the same order; the result is a matrix of that order whose each element is the sum or difference of the corresponding elements. Scalar multiplication multiplies every entry of a matrix by a constant k, producing a matrix of the same order. These operations satisfy the familiar commutative, associative and distributive laws, which means that the set of all m × n matrices over a field forms a vector space. The zero matrix, whose every entry is zero, acts as the additive identity, and the additive inverse of a matrix A is simply –A, obtained by multiplying each entry by –1.</p>
+<h3>1.3 Matrix Multiplication</h3>
+<p>Unlike addition, matrix multiplication is not defined entry‑wise; the product AB of an m × p matrix A and a p × n matrix B is an m × n matrix whose (i, j) entry equals the sum over k = 1 to p of a<sub>ik</sub> b<sub>kj</sub>. This definition captures the composition of linear maps, which explains why multiplication is associative but generally not commutative; AB ≠ BA in most cases, and the order of factors matters critically when solving equations. The identity matrix I<sub>n</sub> of order n has ones on the main diagonal and zeros elsewhere, and it satisfies AI = IA = A for any compatible square matrix A. The transpose of a matrix A, denoted A<sup>T</sup>, interchanges rows and columns, and it obeys (AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup>, a property frequently used in proofs involving symmetric and orthogonal matrices.</p>
+
+<h2>Determinants and Their Properties</h2>
+<h3>2.1 Definition of the Determinant</h3>
+<p>The determinant is a scalar value associated with a square matrix that encodes important geometric and algebraic information, such as whether the matrix is invertible and the volume scaling factor of the linear transformation it represents. For a 1 × 1 matrix [a] the determinant is simply a. For a 2 × 2 matrix [[a, b], [c, d]] the determinant is ad – bc. For higher orders the determinant can be defined recursively by cofactor expansion along any row or column: det(A) = Σ<sub>j=1</sub><sup>n</sup> (–1)<sup>i+j</sup> a<sub>ij</sub> det(M<sub>ij</sub>), where M<sub>ij</sub> is the (n–1) × (n–1) submatrix obtained by deleting row i and column j. This Laplace expansion shows that the determinant is a multilinear alternating function of the rows (or columns).</p>
+<h3>2.2 Elementary Row Operations and Determinant Behaviour</h3>
+<p>Elementary row operations affect the determinant in predictable ways: swapping two rows multiplies the determinant by –1; multiplying a row by a non‑zero scalar k multiplies the determinant by k; adding a multiple of one row to another leaves the determinant unchanged. These rules allow the determinant to be computed efficiently by reducing the matrix to upper triangular form, where the determinant equals the product of the diagonal entries. Because the determinant of a triangular matrix is the product of its diagonal elements, the computation becomes straightforward once the matrix is in echelon form, and the sign changes from row swaps are tracked separately.</p>
+<h3>2.3 Important Properties and Theorems</h3>
+<p>Several fundamental theorems govern determinants. The determinant of a product equals the product of the determinants: det(AB) = det(A) det(B). Consequently, a square matrix is invertible if and only if its determinant is non‑zero. The determinant of the transpose equals the determinant of the original matrix: det(A<sup>T</sup>) = det(A). For a scalar k and an n × n matrix A, det(kA) = k<sup>n</sup> det(A). The adjugate matrix, denoted adj(A), satisfies A adj(A) = adj(A) A = det(A) I, linking determinants directly to inverses. Cramer's rule expresses the solution of a linear system AX = B in terms of determinants, provided det(A) ≠ 0, giving x<sub>i</sub> = det(A<sub>i</sub>) / det(A) where A<sub>i</sub> is A with its i‑th column replaced by B.</p>
+
+<div class="example-box">
+<div class="ex-title">Example 1</div>
+<div class="ex-text">Find the determinant of the 3 × 3 matrix A = [[2, –1, 3], [0, 4, 5], [1, 0, –2]] and use Cramer's rule to solve the system AX = [7, –3, 4]<sup>T</sup>.</div>
+<div class="ex-soln">First compute det(A) by expanding along the first row: det(A) = 2·det[[4,5],[0,–2]] – (–1)·det[[0,5],[1,–2]] + 3·det[[0,4],[1,0]] = 2·(4·(–2) – 5·0) + 1·(0·(–2) – 5·1) + 3·(0·0 – 4·1) = 2·(–8) + 1·(–5) + 3·(–4) = –16 –5 –12 = –33. Since det(A) ≠ 0, the system has a unique solution. Form A<sub>1</sub> by replacing column 1 with the constant vector: [[7, –1, 3], [–3, 4, 5], [4, 0, –2]]. Its determinant is 7·det[[4,5],[0,–2]] – (–1)·det[[–3,5],[4,–2]] + 3·det[[–3,4],[4,0]] = 7·(–8) + 1·(6 – 20) + 3·(0 – 16) = –56 –14 –48 = –118. Thus x<sub>1</sub> = (–118)/(–33) = 118/33. Similarly, A<sub>2</sub> = [[2,7,3],[0,–3,5],[1,4,–2]] gives det = 2·det[[–3,5],[4,–2]] – 7·det[[0,5],[1,–2]] + 3·det[[0,–3],[1,4]] = 2·(6 –20) –7·(0 –5) +3·(0+3) = 2·(–14) +35 +9 = –28+44 = 16, so x<sub>2</sub> = 16/(–33) = –16/33. Finally A<sub>3</sub> = [[2,–1,7],[0,4,–3],[1,0,4]] yields det = 2·det[[4,–3],[0,4]] – (–1)·det[[0,–3],[1,4]] + 7·det[[0,4],[1,0]] = 2·(16 –0) +1·(0+3) +7·(0–4) = 32 +3 –28 = 7, so x<sub>3</sub> = 7/(–33) = –7/33. The solution vector is X = [118/33, –16/33, –7/33]<sup>T</sup>.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Insight</div>
+<div class="tip-text">When a determinant question asks for the value of a parameter that makes a matrix singular, set the determinant expression to zero and solve for the parameter; this is faster than attempting row reduction with an unknown.</div>
+</div>
+
+<h2>Adjoint, Inverse and Rank of a Matrix</h2>
+<h3>3.1 Adjoint and the Formula for the Inverse</h3>
+<p>The adjoint (or adjugate) of a square matrix A is the transpose of its cofactor matrix; each cofactor C<sub>ij</sub> equals (–1)<sup>i+j</sup> det(M<sub>ij</sub>). The defining relation A adj(A) = adj(A) A = det(A) I holds for every square matrix. If det(A) ≠ 0, the inverse exists and is given by A<sup>–1</sup> = (1/det(A)) adj(A). This formula is theoretically important because it expresses the inverse entirely in terms of determinants, but for numerical computation it is usually less efficient than Gaussian elimination, especially for large matrices.</p>
+<h3>3.2 Properties of the Inverse</h3>
+<p>The inverse of a product reverses the order: (AB)<sup>–1</sup> = B<sup>–1</sup>A<sup>–1</sup>. The inverse of the transpose is the transpose of the inverse: (A<sup>T</sup>)<sup>–1</sup> = (A<sup>–1</sup>)<sup>T</sup>. If A is invertible, then (A<sup>–1</sup>)<sup>–1</sup> = A. For a non‑zero scalar k, (kA)<sup>–1</sup> = (1/k) A<sup>–1</sup>. These identities are frequently used to simplify expressions involving multiple inverses and transposes, and they also underlie the proof that the set of invertible n × n matrices forms the general linear group GL(n).</p>
+<h3>3.3 Rank and Its Determination</h3>
+<p>The rank of a matrix is the maximum number of linearly independent rows (or columns); it equals the order of the largest non‑zero minor. Row‑equivalence preserves rank, so the rank can be found by reducing the matrix to row‑echelon form and counting the non‑zero rows. The rank–nullity theorem states that for an m × n matrix A, rank(A) + nullity(A) = n, where nullity is the dimension of the solution space of AX = 0. A square matrix is invertible precisely when its rank equals its order, which is equivalent to having a non‑zero determinant. Rank also determines the consistency of a linear system: the system AX = B is consistent iff rank(A) = rank([A|B]), where [A|B] is the augmented matrix.</p>
+
+<h2>Solution of Systems of Linear Equations</h2>
+<h3>4.1 Gaussian Elimination and Row‑Echelon Form</h3>
+<p>Gaussian elimination systematically applies elementary row operations to transform the augmented matrix [A|B] into row‑echelon form, from which the solutions can be read by back‑substitution. The process proceeds column by column, selecting a pivot (a non‑zero entry) and using it to eliminate entries below. If a column lacks a pivot, the corresponding variable is free, leading to infinitely many solutions parameterised by the free variables. The algorithm terminates when all rows are processed; the resulting triangular system is straightforward to solve. The method works for any rectangular system and reveals the rank of the coefficient matrix simultaneously.</p>
+<h3>4.2 Gauss‑Jordan Elimination and Reduced Row‑Echelon Form</h3>
+<p>Gauss‑Jordan elimination continues the reduction until the matrix reaches reduced row‑echelon form, where each pivot is 1 and is the only non‑zero entry in its column. This form yields the solution directly without back‑substitution and also provides a basis for the null space of A. The reduced form is unique for a given matrix, which makes it a canonical representation useful for theoretical arguments. While Gauss‑Jordan requires more arithmetic operations than Gaussian elimination, it is often preferred when the inverse of a matrix is needed, because augmenting A with the identity and reducing to [I|A<sup>–1</sup>] produces the inverse in one pass.</p>
+<h3>4.3 Cramer's Rule, Matrix Inversion and Comparative Efficiency</h3>
+<p>Cramer's rule gives an explicit formula for each variable as a ratio of determinants, but it requires the computation of n+1 determinants of order n, which is computationally prohibitive for n > 3. Matrix inversion solves AX = B by computing X = A<sup>–1</sup>B, which is efficient when the same coefficient matrix is used with many different right‑hand sides, because the inverse (or an LU factorisation) can be reused. For a single system, Gaussian elimination is generally the method of choice due to its O(n³) complexity with a smaller constant factor. Understanding the trade‑offs among these methods is essential for selecting the appropriate technique in both theoretical problems and numerical implementations.</p>
+
+<table>
+<caption>Comparison of Solution Methods for Linear Systems</caption>
+<thead>
+<tr><th>Method</th><th>Complexity (asymptotic)</th><th>Best Use Case</th><th>Limitations</th></tr>
+</thead>
+<tbody>
+<tr><td>Gaussian Elimination</td><td>O(n³)</td><td>Single system, general matrices</td><td>Requires back‑substitution</td></tr>
+<tr><td>Gauss‑Jordan Elimination</td><td>O(n³) with larger constant</td><td>Finding inverse, multiple RHS</td><td>More arithmetic than Gaussian</td></tr>
+<tr><td>Cramer's Rule</td><td>O(n·n!) (determinant expansion)</td><td>Small n (≤3), symbolic parameters</td><td>Impractical for large n</td></tr>
+<tr><td>Matrix Inversion (via LU)</td><td>O(n³) for factorisation, O(n²) per RHS</td><td>Repeated solves with same A</td><td>Inverse may be ill‑conditioned</td></tr>
+</tbody>
+</table>
+
+<h2>Applications and Special Types of Matrices</h2>
+<h3>5.1 Symmetric, Skew‑Symmetric and Orthogonal Matrices</h3>
+<p>A symmetric matrix satisfies A = A<sup>T</sup>; its eigenvalues are real and it can be orthogonally diagonalised by the spectral theorem. A skew‑symmetric matrix satisfies A = –A<sup>T</sup>; its diagonal entries are zero and its non‑zero eigenvalues occur in pure imaginary conjugate pairs. An orthogonal matrix Q fulfills Q<sup>T</sup>Q = QQ<sup>T</sup> = I, so its inverse equals its transpose; orthogonal matrices preserve lengths and angles, making them central to rotations and reflections in Euclidean space. The determinant of an orthogonal matrix is either +1 (proper rotation) or –1 (improper rotation including a reflection).</p>
+<h3>5.2 Diagonal, Triangular and Block Matrices</h3>
+<p>A diagonal matrix has non‑zero entries only on the main diagonal; its determinant is the product of the diagonal entries, and its inverse (when it exists) is obtained by inverting each diagonal entry. Upper (or lower) triangular matrices have zeros below (or above) the diagonal; their determinants are likewise the product of diagonal entries, and they are easily inverted by forward or backward substitution. Block matrices partition a large matrix into submatrices; operations such as multiplication and inversion can sometimes be performed block‑wise, provided the blocks are conformable and certain submatrices are invertible. The Schur complement arises naturally in block inversion and is a powerful tool in numerical linear algebra and statistics.</p>
+<h3>5.3 Eigenvalues, Eigenvectors and Diagonalisation</h3>
+<p>An eigenvalue λ of a square matrix A is a scalar for which there exists a non‑zero vector v (the eigenvector) satisfying Av = λv. The characteristic polynomial det(A – λI) = 0 yields the eigenvalues; its degree equals the order of the matrix. A matrix is diagonalisable if it possesses a basis of eigenvectors, which is guaranteed when it has n distinct eigenvalues or, more generally, when the algebraic multiplicity of each eigenvalue equals its geometric multiplicity. Diagonalisation simplifies many computations: powers of A become A<sup>k</sup> = PD<sup>k</sup>P<sup>–1</sup>, where D is the diagonal matrix of eigenvalues and P the matrix of eigenvectors. This property underlies the solution of linear differential equations, Markov chains, and principal component analysis.</p>
+
+<table>
+<caption>Key Properties of Special Matrix Classes</caption>
+<thead>
+<tr><th>Class</th><th>Defining Condition</th><th>Determinant</th><th>Inverse</th><th>Typical Eigenvalues</th></tr>
+</thead>
+<tbody>
+<tr><td>Symmetric</td><td>A = A<sup>T</sup></td><td>Real, product of eigenvalues</td><td>Exists iff no zero eigenvalue</td><td>All real</td></tr>
+<tr><td>Skew‑Symmetric</td><td>A = –A<sup>T</sup></td><td>Zero for odd order; square of Pfaffian for even</td><td>Exists iff order even and Pfaffian ≠ 0</td><td>Pure imaginary pairs, zero</td></tr>
+<tr><td>Orthogonal</td><td>Q<sup>T</sup>Q = I</td><td>±1</td><td>Q<sup>–1</sup> = Q<sup>T</sup></td><td>Complex numbers of modulus 1</td></tr>
+<tr><td>Diagonal</td><td>a<sub>ij</sub>=0 for i≠j</td><td>Product of diagonal entries</td><td>Diagonal of reciprocals (if non‑zero)</td><td>Diagonal entries themselves</td></tr>
+</tbody>
+</table>
+
+<p>Mastery of matrices and determinants equips a student to tackle a wide spectrum of problems in algebra, geometry, physics and engineering, because these objects encode linear relationships in a form that is both conceptually clear and computationally tractable.</p>        <script>
         (function(){try{
           var m=document.getElementById("lesson-meta");if(!m)return;
           var cur=m.getAttribute("data-version")||"";
@@ -185,7 +250,7 @@
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":116,"text":"What is the primary concept tested in Matrices & Determinants?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":117,"text":"Which of the following best describes the approach to solve Matrices & Determinants problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":118,"text":"In Matrices & Determinants, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":119,"text":"How can you improve your speed in Matrices & Determinants questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":120,"text":"What is the best strategy for attempting Matrices & Determinants questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for Matrices & Determinants."}];
+        var practiceQs = [{"id":1,"text":"What is the primary concept tested in Matrices & Determinants?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":2,"text":"Which of the following best describes the approach to solve Matrices & Determinants problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":3,"text":"In Matrices & Determinants, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":4,"text":"How can you improve your speed in Matrices & Determinants questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for Matrices & Determinants."},{"id":5,"text":"What is the best strategy for attempting Matrices & Determinants questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for Matrices & Determinants."}];
         var answered={},correctCount=0,lessonSlug="matrices-determinants";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
