@@ -144,7 +144,7 @@ jobs:
           for p in figures *.html prototype-*.html; do
             if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
           done
-          git status --porcelain --sparse | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add --sparse 2>/dev/null || true
+          git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add --sparse 2>/dev/null || true
           # Self-diagnosis: if this pass modified tracked files but staged
           # NOTHING, the adds above were defeated (ignored path, bad glob —
           # the class that silently discarded 20h of work on 2026-10-18).

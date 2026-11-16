@@ -219,7 +219,22 @@ async function callLLM(system, user, maxTokens) {
   // memory lessons above are already folded into sysOut, so experience still
   // compounds. Local Ollama stays the fallback when no route flag is set.
   if (hosted.enabled()) {
-    return hosted.chat(sysOut, user, { numPredict: maxTokens || 2048, temperature: 0.3 });
+    // hosted.chat() is the legacy bare-text shape. Every agent expects the
+    // { text, model } contract that the local Ollama path below returns, so
+    // normalize here. Returning the raw string crashed main()'s cold-start
+    // log (`ping.text.slice(...)` -> "Cannot read properties of undefined
+    // (reading 'slice')", 2026-11-16) and made MainsFresh treat every hosted
+    // reply as empty (r.text undefined) — the mains pool froze for 9 days.
+    const r = await hosted.chat(sysOut, user, { numPredict: maxTokens || 2048, temperature: 0.3 });
+    const raw = (r && typeof r === 'object') ? r.text : r;
+    const text = String(raw == null ? '' : raw).trim();
+    if (!text) {
+      console.log('agent: hosted lane returned empty');
+      return null;
+    }
+    const modelName = (r && typeof r === 'object' && r.model) ? String(r.model) : 'hosted';
+    console.log('agent: LLM ← ' + modelName + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
+    return { text: text, model: modelName };
   }
   const payload = JSON.stringify({
     model: model,
