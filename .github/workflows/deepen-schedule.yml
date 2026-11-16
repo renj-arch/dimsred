@@ -82,11 +82,15 @@ jobs:
         run: |
           KEYS="${{ steps.pick.outputs.keys }}"
           if [ -z "$KEYS" ]; then echo "::notice::nothing thin is left"; exit 0; fi
+          # Route by what actually answers on this account (probed 2026-11-16):
+          # nemotron-3.5-super-vl (~5s) and nemotron-3.5-lightning. Token Harbor
+          # 402s ("no active plan") for real generations and mistral-large-4
+          # hangs, so neither is dispatched here.
           HOUR=$(date -u +%H)
-          if [ $((HOUR % 2)) -eq 0 ]; then ROUTE=nvidia; else ROUTE=tokenharbor; fi
-          echo "dispatching route=$ROUTE keys=$KEYS"
+          if [ $((HOUR % 2)) -eq 0 ]; then MODEL=nemotron-3.5-super-vl; else MODEL=nemotron-3.5-lightning; fi
+          echo "dispatching route=nvidia model=$MODEL keys=$KEYS"
           for i in 1 2 3; do
-            if gh workflow run deepen-model.yml --ref main -f keys="$KEYS" -f max_chapters=2 -f floor=600 -f route="$ROUTE"; then
+            if gh workflow run deepen-model.yml --ref main -f keys="$KEYS" -f max_chapters=2 -f floor=600 -f route=nvidia -f model="$MODEL"; then
               echo "queued"; exit 0
             fi
             echo "dispatch attempt $i failed; retrying"
