@@ -116,8 +116,8 @@
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Permutations, Combinations &amp; Probability</h1>
-                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 15 Nov 2026</span></div>
-                    <div id="lesson-meta" hidden data-version="4b486eaca52a" data-updated="2026-11-15" data-updated-label="15 Nov 2026" data-headings="[&quot;Fundamental Counting Principles&quot;,&quot;1.1 The Multiplication Principle&quot;,&quot;1.2 The Addition Principle&quot;,&quot;1.3 Applications to Arrangements&quot;,&quot;Permutations&quot;,&quot;2.1 Definition and Notation&quot;,&quot;2.2 Permutations of Distinct Objects&quot;,&quot;2.3 Permutations with Repetition&quot;,&quot;Combinations&quot;,&quot;3.1 Definition and Notation&quot;,&quot;3.2 Combinations of Distinct Objects&quot;,&quot;3.3 Combinations with Repetition&quot;,&quot;Probability Foundations&quot;,&quot;4.1 Sample Space and Events&quot;,&quot;4.2 Axioms of Probability&quot;,&quot;4.3 Classical and Empirical Probability&quot;,&quot;Conditional Probability, Bayes&#39; Theorem and Distributions&quot;,&quot;5.1 Conditional Probability and Independence&quot;,&quot;5.2 Bayes&#39; Theorem&quot;,&quot;5.3 Common Discrete Distributions&quot;]"></div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 16 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="91fd5af4c31f" data-updated="2026-11-16" data-updated-label="16 Nov 2026" data-headings="[&quot;Fundamental Counting Principles&quot;,&quot;1.1 The Multiplication Principle&quot;,&quot;1.2 The Addition Principle&quot;,&quot;1.3 Applications to Arrangements&quot;,&quot;Permutations&quot;,&quot;2.1 Definition and Notation&quot;,&quot;2.2 Permutations of Distinct Objects&quot;,&quot;2.3 Permutations with Repetition&quot;,&quot;Combinations&quot;,&quot;3.1 Definition and Notation&quot;,&quot;3.2 Combinations of Distinct Objects&quot;,&quot;3.3 Combinations with Repetition&quot;,&quot;Probability Foundations&quot;,&quot;4.1 Sample Space and Events&quot;,&quot;4.2 Axioms of Probability&quot;,&quot;4.3 Classical and Empirical Probability&quot;,&quot;Conditional Probability, Bayes&#39; Theorem and Distributions&quot;,&quot;5.1 Conditional Probability and Independence&quot;,&quot;5.2 Bayes&#39; Theorem&quot;,&quot;5.3 Common Discrete Distributions&quot;,&quot;Inclusion–Exclusion Principle and Its Applications&quot;,&quot;Derangements and Subfactorial Numbers&quot;,&quot;Circular Permutations and Necklace Problems&quot;,&quot;Multinomial Coefficients and the Multinomial Theorem&quot;,&quot;Advanced Probability: Expectation, Variance, and Generating Functions&quot;,&quot;Common Traps&quot;]"></div>
                     <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>
                     <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Counting principles, combinations, and conditional probability with Bayes and distributions.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
@@ -240,7 +240,91 @@
 </tbody>
 </table>
 
-<p>Mastering the interplay between counting principles, probability axioms, and the standard discrete distributions equips a student to tackle a wide spectrum of problems in competitive examinations and in practical data analysis.</p>        <script>
+<p>Mastering the interplay between counting principles, probability axioms, and the standard discrete distributions equips a student to tackle a wide spectrum of problems in competitive examinations and in practical data analysis.</p>
+<h3>Inclusion–Exclusion Principle and Its Applications</h3>
+<p>The inclusion–exclusion principle systematically counts elements in the union of finite sets that may overlap. For two sets A and B, |A ∪ B| = |A| + |B| − |A ∩ B|. For three sets A, B, C, |A ∪ B ∪ C| = |A| + |B| + |C| − |A ∩ B| − |A ∩ C| − |B ∩ C| + |A ∩ B ∩ C|. In general, for n sets A₁, A₂, …, Aₙ,</p>
+<p>|A₁ ∪ A₂ ∪ … ∪ Aₙ| = Σ|Aᵢ| − Σ|Aᵢ ∩ Aⱼ| + Σ|Aᵢ ∩ Aⱼ ∩ Aₖ| − … + (−1)ⁿ⁺¹|A₁ ∩ A₂ ∩ … ∩ Aₙ|,</p>
+<p>where sums run over all distinct indices. The term for the intersection of k sets carries sign (−1)ᵏ⁺¹.</p>
+<p>A standard application counts integers up to a bound not divisible by given primes. For positive integers ≤ 100 not divisible by 2, 3, or 5, let A₂, A₃, A₅ be the sets of multiples. Then |A₂| = ⌊100/2⌋ = 50, |A₃| = 33, |A₅| = 20. Pairwise intersections: |A₂ ∩ A₃| = ⌊100/6⌋ = 16, |A₂ ∩ A₅| = ⌊100/10⌋ = 10, |A₃ ∩ A₅| = ⌊100/15⌋ = 6. Triple intersection: |A₂ ∩ A₃ ∩ A₅| = ⌊100/30⌋ = 3. By inclusion–exclusion, numbers divisible by at least one of 2,3,5 total 50+33+20−16−10−6+3 = 74. Hence 100−74 = 26 are not divisible by any.</p>
+<p>The principle extends to probability: for events E₁, …, Eₙ, P(E₁ ∪ … ∪ Eₙ) follows the same alternating‑sum formula with probabilities replacing cardinalities. This is useful when the union probability is hard to compute directly but individual and intersection probabilities are accessible.</p>
+<p>Another application counts onto functions. The number of surjections from an m‑element set to an n‑element set is Σ<sub>k=0</sub><sup>n</sup> (−1)ᵏ C(n, k) (n−k)ᵐ, obtained by letting Aᵢ be the functions missing the i‑th codomain element and applying inclusion–exclusion.</p>
+<p>When applying inclusion–exclusion, correctly identify all intersections and maintain the alternating sign pattern. A common error is stopping at pairwise intersections when triple (or higher) intersections are non‑empty, causing overcounting.</p>
+
+<h3>Derangements and Subfactorial Numbers</h3>
+<p>A derangement is a permutation with no element in its original position. The number of derangements of n distinct objects is denoted !n (subfactorial n) or Dₙ. Inclusion–exclusion gives</p>
+<p>!n = n! Σ<sub>k=0</sub><sup>n</sup> (−1)ᵏ / k! = n! (1 − 1/1! + 1/2! − 1/3! + … + (−1)ⁿ/n!).</p>
+<p>This sum is the truncated Maclaurin series for e⁻¹, so for large n, !n ≈ n!/e. Rounding n!/e to the nearest integer yields the exact value.</p>
+<p>A useful recurrence is !n = (n−1)(!(n−1) + !(n−2)) for n ≥ 2, with !0 = 1, !1 = 0. It follows by placing element 1 in any of n−1 positions, say k. If element k goes to position 1, the remaining n−2 elements must be deranged; otherwise, element k must avoid position 1, equivalent to deranging n−1 elements with a modified forbidden position.</p>
+<p>The first few derangement numbers are:</p>
+<table>
+<caption>Derangement Numbers</caption>
+<thead>
+<tr><th>n</th><th>!n</th></tr>
+</thead>
+<tbody>
+<tr><td>0</td><td>1</td></tr>
+<tr><td>1</td><td>0</td></tr>
+<tr><td>2</td><td>1</td></tr>
+<tr><td>3</td><td>2</td></tr>
+<tr><td>4</td><td>9</td></tr>
+<tr><td>5</td><td>44</td></tr>
+<tr><td>6</td><td>265</td></tr>
+</tbody>
+</table>
+<p>Derangements appear in the hat‑check problem: n guests receive hats randomly; the probability no guest gets his own hat is !n/n! ≈ 1/e ≈ 0.3679 for large n. The same probability arises in the matching problem (letters to envelopes).</p>
+<p>For moderately large n, the factorial sum is efficient because terms decrease rapidly. For n = 10, the 11‑term sum gives !10 = 1,334,961. The approximation 10!/e ≈ 3,628,800/2.71828 ≈ 1,334,960.9 rounds correctly.</p>
+<p>In competitive problems, derangements often combine with other constraints, such as exactly k fixed points. The number of permutations of n elements with exactly k fixed points is C(n, k) × !(n−k), obtained by choosing the k fixed elements and deranging the rest.</p>
+
+<div class="example-box">
+<div class="ex-title">Technique: Derangement via Inclusion–Exclusion</div>
+<div class="ex-text">Find the number of derangements of 5 distinct letters.</div>
+<div class="ex-soln">Solution: Using !n = n! Σ<sub>k=0</sub><sup>n</sup> (−1)ᵏ / k!. For n=5, 5! = 120. Sum = 1 − 1 + 1/2 − 1/6 + 1/24 − 1/120 = (120 − 120 + 60 − 20 + 5 − 1)/120 = 44/120 = 11/30. Multiply by 120 gives 44. Alternatively, recurrence: !1=0, !2=1, !3=2(!2+!1)=2, !4=3(!3+!2)=9, !5=4(!4+!3)=44. Answer: 44.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam-Day Strategy</div>
+<div class="tip-text">Memorize the first six derangement values (0,1,2,9,44,265) and the recurrence !n = (n−1)(!(n−1)+!(n−2)). For larger n, use !n ≈ n!/e and round to the nearest integer. In multiple‑choice questions, the inclusion–exclusion sum often telescopes; write the first three terms to spot the pattern quickly.</div>
+</div>
+
+<h3>Circular Permutations and Necklace Problems</h3>
+<p>Arranging n distinct objects around a circle treats rotations as identical. The number of distinct circular permutations is (n−1)!, found by fixing one object and permuting the remaining n−1 linearly.</p>
+<p>If objects are not all distinct, divide by the factorials of multiplicities. For example, circular arrangements of "ALGEBRA" (7 letters, A twice) total (7−1)! / 2! = 720 / 2 = 360.</p>
+<p>When reflections are also identical, the objects form a necklace. For n > 2 distinct beads, the number is (n−1)!/2. For n = 1 or 2, division by 2 does not apply because a reflection coincides with a rotation. With colored beads (repetitions allowed), the problem becomes counting orbits under the dihedral group Dₙ. Burnside's lemma (Cauchy‑Frobenius lemma) gives the number of distinct colorings as (1/|G|) Σ<sub>g∈G</sub> fix(g), where G is the symmetry group (cyclic for rotations, dihedral for rotations and reflections) and fix(g) is the number of colorings fixed by g.</p>
+<p>For a binary necklace (two colors) with n beads, rotationally distinct necklaces number (1/n) Σ<sub>d|n</sub> φ(d) 2<sup>n/d</sup>, where φ is Euler's totient function. If reflections are allowed, the formula for odd n is (1/(2n)) [ Σ<sub>d|n</sub> φ(d) 2<sup>n/d</sup> + n·2<sup>⌈n/2⌉</sup> ]; for even n an analogous expression with additional terms applies. These are standard results in Polya enumeration theory.</p>
+<p>In examination problems, the symmetry group is usually explicit: "round table" implies rotations only; "necklace" or "bracelet" implies rotations and reflections. Misidentifying the group is a frequent error.</p>
+<p>Fixed positions break circular symmetry: if certain objects must occupy specific seats (e.g., host at the head), the problem reduces to a linear permutation of the remaining objects.</p>
+
+<h3>Multinomial Coefficients and the Multinomial Theorem</h3>
+<p>The multinomial coefficient generalizes the binomial coefficient to partitioning a set into more than two subsets. The number of ways to divide n distinct objects into k labeled groups of sizes n₁, n₂, …, nₖ (Σ nᵢ = n) is</p>
+<p>n! / (n₁! n₂! … nₖ!).</p>
+<p>This coefficient appears as the coefficient of x₁<sup>n₁</sup> x₂<sup>n₂</sup> … xₖ<sup>nₖ</sup> in the expansion of (x₁ + x₂ + … + xₖ)ⁿ, the multinomial theorem:</p>
+<p>(x₁ + x₂ + … + xₖ)ⁿ = Σ<sub>n₁+…+nₖ=n</sub> (n! / (n₁! … nₖ!)) x₁<sup>n₁</sup> … xₖ<sup>nₖ</sup>.</p>
+<p>The sum runs over all k‑tuples of non‑negative integers summing to n. For k = 2 this reduces to the binomial theorem.</p>
+<p>A direct combinatorial interpretation: the number of distinct permutations of a multiset with n total items, where item i appears nᵢ times, is n!/(n₁!…nₖ!). For "MISSISSIPPI" (M=1, I=4, S=4, P=2), distinct permutations = 11!/(1!4!4!2!) = 34,650.</p>
+<p>Multinomial coefficients also give the probability mass function of the multinomial distribution: for n independent trials with outcomes 1,…,k having probabilities p₁,…,pₖ (Σ pᵢ = 1), the probability of exactly nᵢ occurrences of outcome i is (n!/(n₁!…nₖ!)) p₁<sup>n₁</sup> … pₖ<sup>nₖ</sup>, generalizing the binomial distribution.</p>
+<p>An important identity: Σ<sub>n₁+…+nₖ=n</sub> n!/(n₁!…nₖ!) = kⁿ, obtained by setting x₁ = … = xₖ = 1 in the multinomial theorem.</p>
+<p>When solving problems, a multinomial coefficient can be computed sequentially as a product of binomial coefficients: choose n₁ items for the first group (C(n, n₁)), then n₂ from the remainder (C(n−n₁, n₂)), etc. This stepwise approach simplifies arithmetic and reduces overflow risk in manual calculations.</p>
+
+<h3>Advanced Probability: Expectation, Variance, and Generating Functions</h3>
+<p>The expectation of a discrete random variable X is E[X] = Σ x·P(X=x). Expectation is linear: E[aX + bY] = aE[X] + bE[Y] for any constants a, b and random variables X, Y, regardless of independence. This simplifies expectations of sums, e.g., the number of successes in n Bernoulli trials: E[X] = Σ E[Iᵢ] = n·p, where Iᵢ indicates success on trial i.</p>
+<p>Variance measures spread: Var(X) = E[(X − E[X])²] = E[X²] − (E[X])². For independent variables, variances add: Var(X+Y) = Var(X) + Var(Y). Covariance Cov(X,Y) = E[XY] − E[X]E[Y] quantifies linear dependence; the correlation coefficient ρ = Cov(X,Y)/√(Var(X)Var(Y)) lies in [−1,1].</p>
+<p>Moment generating functions (MGFs) encapsulate all moments. The MGF of X is M_X(t) = E[e<sup>tX</sup>], defined for t near 0. The k‑th moment is E[Xᵏ] = M_X<sup>(k)</sup>(0). For independent X, Y, M<sub>X+Y</sub>(t) = M_X(t) M_Y(t), making MGFs ideal for sums of independent variables.</p>
+<p>Common MGFs: Binomial(n,p): M(t) = (1−p + p e^t)ⁿ. Poisson(λ): M(t) = exp(λ(e^t−1)). Exponential(λ): M(t) = λ/(λ−t) for t<λ. Normal(μ,σ²): M(t) = exp(μt + ½σ²t²). The MGF of a sum of independent Poissons is Poisson with parameter equal to the sum of the individual parameters, confirming the reproductive property.</p>
+<p>Probability generating functions (PGFs) are used for non‑negative integer‑valued variables: G_X(s) = E[s^X] = Σ P(X=k) s^k. The PGF of a sum of independent variables is the product of their PGFs. Factorial moments come from derivatives at s=1: E[X(X−1)…(X−k+1)] = G_X<sup>(k)</sup>(1). For Binomial(n,p), G(s) = (1−p + ps)ⁿ; for Poisson(λ), G(s) = e<sup>λ(s−1)</sup>.</p>
+<p>Generating functions also solve recurrence relations for probabilities. For example, the extinction probability in a branching process is the smallest non‑negative root of s = G(s), where G is the PGF of the offspring distribution.</p>
+<p>In examinations, questions often ask for the expectation or variance of a function of a random variable, or to identify a distribution from its MGF or PGF. Recognizing standard MGFs/PGFs and using their algebraic properties (product for sums, composition for mixtures) can dramatically reduce computation.</p>
+
+<h3>Common Traps</h3>
+<ul>
+<li>Forgetting to divide by 2 when counting necklaces with reflection symmetry for n > 2.</li>
+<li>Applying the binomial coefficient formula to multinomial problems without adjusting for multiple categories.</li>
+<li>Confusing the inclusion–exclusion sign pattern: the term for k sets has sign (−1)<sup>k+1</sup>.</li>
+<li>Using the derangement approximation n!/e without rounding to the nearest integer, leading to off‑by‑one errors.</li>
+<li>Assuming independence when computing expectation of a product; E[XY] = E[X]E[Y] holds only for independent variables.</li>
+<li>Misapplying the multinomial theorem by omitting the factorial denominator for repeated items.</li>
+<li>Neglecting the condition P(B) > 0 when writing conditional probability formulas in multi‑step Bayes problems.</li>
+</ul>
+<p>Mastering these advanced counting and probability techniques ensures a robust toolkit for tackling the most challenging combinatorial problems.</p>        <script>
         (function(){try{
           var m=document.getElementById("lesson-meta");if(!m)return;
           var cur=m.getAttribute("data-version")||"";
@@ -277,7 +361,7 @@
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":1,"text":"What is the primary concept tested in Permutations, Combinations & Probability?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":2,"text":"Which of the following best describes the approach to solve Permutations, Combinations & Probability problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":3,"text":"In Permutations, Combinations & Probability, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":4,"text":"How can you improve your speed in Permutations, Combinations & Probability questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."},{"id":5,"text":"What is the best strategy for attempting Permutations, Combinations & Probability questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for Permutations, Combinations & Probability."}];
+        var practiceQs = [{"id":101,"text":"What is the number of distinct arrangements of the letters in the word MISSISSIPPI?","options":[{"l":"a","t":"34650","c":true},{"l":"b","t":"3465","c":false},{"l":"c","t":"69300","c":false},{"l":"d","t":"17325","c":false}],"sol":"The word has 11 letters: M=1, I=4, S=4, P=2. The multinomial coefficient is 11!/(1!·4!·4!·2!) = 39916800/(1·24·24·2) = 39916800/1152 = 34650."}];
         var answered={},correctCount=0,lessonSlug="permutations-probability";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
