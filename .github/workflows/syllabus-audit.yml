@@ -24,10 +24,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Check out main
+      # Partial checkout. The repo carries a ~9 GB data/questions corpus that no
+      # deploy path ships; a full checkout of it makes this job crawl. This audit
+      # only reads upsc/course/** and data/syllabus-map.json, so fetch the commit
+      # and tree (filter: blob:none) and materialise only those paths.
+      - name: Check out main (sparse, blobs on demand)
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            /scripts/
+            /data/syllabus-map.json
+            /upsc/course/
+          sparse-checkout-cone-mode: false
 
       - name: Set up Node
         uses: actions/setup-node@v4
