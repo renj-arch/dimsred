@@ -88,7 +88,7 @@ function insertBeforeNextH2(body, from, html) {
         'Do not restate the existing text. Output only the new HTML.';
       try {
         const res = await callLLM([{ role: 'system', content: SYSTEM }, { role: 'user', content: prompt }],
-          { numPredict: 14000, temperature: 0.3 });
+          { numPredict: 14000, temperature: 0.3, timeoutMs: 600000 });
         const raw = String((res && res.text) || '');
         if (/entire output budget on reasoning/i.test(raw)) { console.log('SKIP ' + key + ' / ' + ch.title + ': model spent its budget on reasoning'); continue; }
         const html = sanitize(raw);
