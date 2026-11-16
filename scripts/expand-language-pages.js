@@ -50,7 +50,7 @@ var runDeadlineAt = 0;
 // kind:
 //   'beginner'  -> languages/*.html (8 hand-built foreign-language courses)
 //   'ctet'      -> ctet/course/language/*.html (CTET language pedagogy lessons)
-//   'mains'     -> upsc/mains/language/*.html (Paper A practice pages)
+//   'mains'     -> upsc/mains/language/*.html (Paper A practice pages) — NOT expanded
 var PAGES = [
   { file: 'languages/korean.html', kind: 'beginner', slug: 'korean' },
   { file: 'languages/japanese.html', kind: 'beginner', slug: 'japanese' },
@@ -63,29 +63,15 @@ var PAGES = [
   { file: 'ctet/course/language/lesson-comprehension.html', kind: 'ctet', slug: 'comprehension' },
   { file: 'ctet/course/language/lesson-grammar-vocab.html', kind: 'ctet', slug: 'grammar-vocab' },
   { file: 'ctet/course/language/lesson-language-development.html', kind: 'ctet', slug: 'language-development' },
-  { file: 'ctet/course/language/lesson-language-pedagogy.html', kind: 'ctet', slug: 'language-pedagogy' },
-  { file: 'upsc/mains/language/assamese.html', kind: 'mains', slug: 'assamese', lang: 'assamese' },
-  { file: 'upsc/mains/language/bengali.html', kind: 'mains', slug: 'bengali', lang: 'bengali' },
-  { file: 'upsc/mains/language/bodo.html', kind: 'mains', slug: 'bodo', lang: 'bodo' },
-  { file: 'upsc/mains/language/dogri.html', kind: 'mains', slug: 'dogri', lang: 'dogri' },
-  { file: 'upsc/mains/language/gujarati.html', kind: 'mains', slug: 'gujarati', lang: 'gujarati' },
-  { file: 'upsc/mains/language/hindi.html', kind: 'mains', slug: 'hindi', lang: 'hindi' },
-  { file: 'upsc/mains/language/kannada.html', kind: 'mains', slug: 'kannada', lang: 'kannada' },
-  { file: 'upsc/mains/language/kashmiri.html', kind: 'mains', slug: 'kashmiri', lang: 'kashmiri' },
-  { file: 'upsc/mains/language/konkani.html', kind: 'mains', slug: 'konkani', lang: 'konkani' },
-  { file: 'upsc/mains/language/maithili.html', kind: 'mains', slug: 'maithili', lang: 'maithili' },
-  { file: 'upsc/mains/language/malayalam.html', kind: 'mains', slug: 'malayalam', lang: 'malayalam' },
-  { file: 'upsc/mains/language/manipuri.html', kind: 'mains', slug: 'manipuri', lang: 'manipuri' },
-  { file: 'upsc/mains/language/marathi.html', kind: 'mains', slug: 'marathi', lang: 'marathi' },
-  { file: 'upsc/mains/language/nepali.html', kind: 'mains', slug: 'nepali', lang: 'nepali' },
-  { file: 'upsc/mains/language/odia.html', kind: 'mains', slug: 'odia', lang: 'odia' },
-  { file: 'upsc/mains/language/punjabi.html', kind: 'mains', slug: 'punjabi', lang: 'punjabi' },
-  { file: 'upsc/mains/language/sanskrit.html', kind: 'mains', slug: 'sanskrit', lang: 'sanskrit' },
-  { file: 'upsc/mains/language/santali.html', kind: 'mains', slug: 'santali', lang: 'santali' },
-  { file: 'upsc/mains/language/sindhi.html', kind: 'mains', slug: 'sindhi', lang: 'sindhi' },
-  { file: 'upsc/mains/language/tamil.html', kind: 'mains', slug: 'tamil', lang: 'tamil' },
-  { file: 'upsc/mains/language/telugu.html', kind: 'mains', slug: 'telugu', lang: 'telugu' },
-  { file: 'upsc/mains/language/urdu.html', kind: 'mains', slug: 'urdu', lang: 'urdu' }
+  { file: 'ctet/course/language/lesson-language-pedagogy.html', kind: 'ctet', slug: 'language-pedagogy' }
+  // The 22 UPSC Mains Paper A pages (upsc/mains/language/*.html) are NOT
+  // expanded here. build-language-pages.js generates them wholesale from
+  // scripts/language-paper-a.json. The hosted-model expansion that used to
+  // run on them appended fabricated grammar — wrong sandhi, non-native words,
+  // invented passages — directly under a page that says "no model sample on
+  // this page". A language paper cannot afford invented examples, so the
+  // generator output is the single source of truth for these pages. Re-run
+  // scripts/build-language-pages.js to change them.
 ];
 
 var LEDGER_FILE = process.env.EXPAND_LANG_LEDGER
@@ -206,10 +192,8 @@ function promptFor(page, existing) {
     'Reply with the HTML only. No markdown fences and no commentary.'
   ].join('\n');
 
-  if (page.kind === 'mains' && page.lang && LANG_META[page.lang]) {
-    var lm = LANG_META[page.lang];
-    return base + '\n\n- Add one model-generated practice passage in the page language, clearly labelled "Model-generated practice (not an official UPSC question)", with 3 comprehension questions. The passage must be written in the native script of ' + page.lang + ' (' + lm.script + ', ' + lm.unicode + '). Label it sourceType: model-generated-practice so it is never mistaken for an official PYQ.';
-  }
+  // Paper A ('mains') pages are intentionally absent: their examples must be
+  // sourced, not model-invented. See the PAGES comment above.
   return base;
 }
 
