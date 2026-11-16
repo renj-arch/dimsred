@@ -123,13 +123,6 @@ jobs:
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
-          # Token Harbor (free DeepSeek) is opt-in via the repo variable
-          # TOKENHARBOR_ENABLE=1 and the TOKENHARBOR_URL variable; the key is a
-          # secret. Unset, the route is skipped and nothing changes.
-          TOKENHARBOR: ${{ vars.TOKENHARBOR_ENABLE || '' }}
-          TOKENHARBOR_API_KEY: ${{ secrets.TOKENHARBOR_API_KEY }}
-          TOKENHARBOR_URL: ${{ vars.TOKENHARBOR_URL }}
-          TOKENHARBOR_MODEL: ${{ vars.TOKENHARBOR_MODEL || 'deepseek-v4.1-flash' }}
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
