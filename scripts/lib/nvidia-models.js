@@ -34,9 +34,11 @@
 //   404 playground-only (never API-callable at all):
 //     moonshotai/kimi-k3.1-pro
 //   Unverified - answered no probe within 180s, so NOT listed as usable:
-//     deepseek-ai/deepseek-v4.1-flash, mistralai/mistral-large-4-1t-a52b,
+//     deepseek-ai/deepseek-v4.1-flash,
 //     openai/gpt-oss-20b, meta/muse-glimmer-30b, stepfun-ai/step-5-preview,
 //     google/gemma-4-31b-it
+//   Promoted to the frontier tier after the 2026-11-16 probe:
+//     mistralai/mistral-large-4-1t-a52b
 //
 // Tiers are a suitability judgement for this repo's work (long sourced lesson
 // prose, HTML/code edits, agentic multi-step), not a benchmark - the only
@@ -50,6 +52,14 @@ const CATALOG = {
   // general model. Default for the backend.
   recommended: {
     'nemotron-3-ultra': 'nvidia/nemotron-3-ultra-550b-a55b'
+  },
+
+  // Verified live 2026-11-16 (HTTP 200 in 609 ms; probe: scripts/probe-models.js).
+  // A 1T/A52B frontier model and the strongest this account can reach, so it is
+  // the preferred writer for long sourced prose. nemotron-3-ultra was 429 on the
+  // same probe, so keep it as the fallback rather than the default.
+  frontier: {
+    'mistral-large-4': 'mistralai/mistral-large-4-1t-a52b'
   },
 
   // Verified live; pick by cost/latency or by modality, not by a quality claim.

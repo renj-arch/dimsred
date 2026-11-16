@@ -117,6 +117,25 @@ function callRefuseless(messages, opts) {
   });
 }
 
+// Optional Token Harbor backend (OpenAI-compatible). The owner runs the free
+// DeepSeek V4.1 Flash through it locally; this makes the same route available to
+// the CI lanes. Nothing is hardcoded and nothing is guessed: it is skipped unless
+// TOKENHARBOR=1 AND TOKENHARBOR_API_KEY AND TOKENHARBOR_URL are all set. The URL
+// must be the full chat-completions endpoint (…/v1/chat/completions).
+const TOKENHARBOR = process.env.TOKENHARBOR === '1';
+const TOKENHARBOR_KEY = process.env.TOKENHARBOR_API_KEY || '';
+const TOKENHARBOR_MODEL = process.env.TOKENHARBOR_MODEL || 'deepseek-v4.1-flash';
+const TOKENHARBOR_URL = process.env.TOKENHARBOR_URL || '';
+const TOKENHARBOR_MAX_TOKENS = parseInt(process.env.TOKENHARBOR_MAX_TOKENS || '14000', 10);
+function callTokenHarbor(messages, opts) {
+  // deepseek-v4.1-flash is a reasoning model: a small max_tokens is spent
+  // entirely on hidden reasoning and returns no answer, which fails the call
+  // (correctly) and pushes the lane onto the next backend. Give it a floor big
+  // enough to reason AND answer, so an enabled route actually serves.
+  const o = Object.assign({}, opts, { numPredict: Math.max((opts && opts.numPredict) || 0, TOKENHARBOR_MAX_TOKENS) });
+  return callOpenAICompatible('TokenHarbor', TOKENHARBOR_URL, TOKENHARBOR_KEY, TOKENHARBOR_MODEL, messages, o, null, null);
+}
+
 function log(msg) { console.log('[model] ' + msg); }
 
 function curlChat(payload) {
@@ -351,6 +370,17 @@ async function callLLM(messages, opts) {
       return zen;
     } catch (e) {
       log('OpenCode Zen failed (' + e.message + ') - trying the next backend');
+    }
+  }
+  // Token Harbor (free DeepSeek V4.1 Flash), when the URL and key are provided.
+  if (TOKENHARBOR && TOKENHARBOR_KEY && TOKENHARBOR_URL) {
+    try {
+      const th = await callTokenHarbor(messages, opts);
+      LAST_SERVED = 'TokenHarbor ' + TOKENHARBOR_MODEL;
+      log('served by TokenHarbor ' + TOKENHARBOR_MODEL);
+      return th;
+    } catch (e) {
+      log('TokenHarbor failed (' + e.message + ') - trying the next backend');
     }
   }
   // Strongest free HTTP route next. The owner explicitly rejected letting the
