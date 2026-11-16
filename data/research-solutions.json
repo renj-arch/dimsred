@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-15T22:46:03.991Z",
+  "updatedAt": "2026-11-16T04:22:56.708Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -65,7 +65,8 @@
       "status": "published",
       "note": "",
       "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-07T05:15:33.371Z"
+      "generatedAt": "2026-11-07T05:15:33.371Z",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html"
     },
     {
       "id": "d5cef3cc104c9739",
@@ -146,7 +147,8 @@
       "status": "review",
       "note": "The lab answer differs from the answer key in the paper; kept for review.",
       "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-07T05:18:16.739Z"
+      "generatedAt": "2026-11-07T05:18:16.739Z",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html"
     },
     {
       "id": "ce15027bb3b31fd2",
@@ -232,7 +234,8 @@
       "status": "published",
       "note": "",
       "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-07T05:21:07.483Z"
+      "generatedAt": "2026-11-07T05:21:07.483Z",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html"
     },
     {
       "id": "1e9e5e5e770c8c3c",
@@ -15174,6 +15177,19 @@
         "verifier": "Verifier"
       },
       "methods": [
+        {
+          "name": "Half-Check Shortcut",
+          "seconds": 2,
+          "kind": "shortcut",
+          "idea": "Clothing (₹1500) is below half of Food (₹4000 = ₹2000). If it were exactly half, it would be 50% less. Since it is below half, the answer must be more than 50% less. Only option B (62.5%) is over 50%.",
+          "steps": [
+            "Half of Food = 4000 / 2 = 2000",
+            "Is Clothing below half? 1500 < 2000 → Yes",
+            "So '% less' must be > 50%",
+            "Scan options: A) 37.5% ✗ B) 62.5% ✓ C) 25% ✗ D) 40% ✗",
+            "Only B is over 50% → Answer: B (62.5%)"
+          ]
+        },
         {
           "name": "Difference-First Shortcut",
           "idea": "Use given formula: diff/original * 100",
