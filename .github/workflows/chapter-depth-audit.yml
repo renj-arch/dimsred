@@ -4,8 +4,10 @@ name: Chapter Depth Audit
 # question: "is there a real chapter, at textbook depth, with its sub-topics?"
 #
 # For each chapter in data/chapter-map.json it finds the best-matching lesson
-# section, measures its words, and checks the required sub-topics. A 20-word
-# heading is reported as a stub; a topic that appears once cannot pass.
+# chapter, measures the whole h2 block (its text plus every h3 subsection), and
+# checks the required sub-topics. A 20-word chapter is reported as a stub; a
+# topic mentioned only in passing (no chapter of its own) is reported as
+# scattered; a topic absent from the page is missing.
 #
 # Heuristic: depth is section word count, sub-topics are keyword presence.
 # Every thin/stub/missing row needs human verification. Never fails the build
@@ -74,7 +76,7 @@ jobs:
             fi
             echo '```'
             echo ''
-            echo 'Heuristic: section word count + sub-topic keywords. A stub means a heading with almost no body. Verify accuracy by hand.'
+            echo 'Heuristic: chapter word count (the whole h2 block incl. its h3 subsections) + sub-topic keywords. A stub means a chapter with almost no body; scattered means it is mentioned but has no chapter of its own. Verify by hand.'
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload report

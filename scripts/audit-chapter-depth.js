@@ -54,18 +54,37 @@ function plain(s) {
   return String(s || '').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// Return [{heading, text, words}] splitting on h2/h3. Table-of-contents
-// headings (zero body words) are kept but lose every max-words comparison.
+// Build a two-level table of contents from the page. Top-level entries are
+// <h2> chapters; each carries its <h3> subsections. A chapter's depth is the
+// whole h2 block — its own text plus every child h3 — not the sliver of text
+// before the first sub-heading. Splitting on h2 and h3 together (the first
+// version) scored a 1,000-word chapter as 0 whenever the heading was followed
+// straight by a sub-heading.
 function sections(html) {
   const h = stripNonProse(html);
   const parts = h.split(/(<h[23]\b[^>]*>[\s\S]*?<\/h[23]>)/i);
-  const out = [];
+  const tops = [];
+  let cur = null;
   for (let i = 1; i < parts.length; i += 2) {
+    const level = /^<h2/i.test(parts[i]) ? 2 : 3;
     const heading = plain(parts[i]);
-    const body = parts[i + 1] || '';
-    out.push({ heading: heading, text: prose(body), words: words(prose(body)) });
+    const body = prose(parts[i + 1] || '');
+    if (level === 2) {
+      cur = { level: 2, heading: heading, text: body, children: [] };
+      tops.push(cur);
+    } else {
+      const child = { level: 3, heading: heading, text: body, children: [] };
+      if (cur) cur.children.push(child); else tops.push(child);
+    }
   }
-  return out;
+  return tops;
+}
+
+function blockWords(block) {
+  return words(block.text) + block.children.reduce((n, c) => n + words(c.text), 0);
+}
+function blockText(block) {
+  return block.text + ' ' + block.children.map(c => c.text).join(' ');
 }
 
 function matches(heading, names) {
@@ -79,40 +98,76 @@ function hasTerm(text, term) {
   return String(text || '').toLowerCase().indexOf(t) !== -1;
 }
 
+// Best chapter match on one page: prefer an h2 whose whole block matches,
+// else an h3 subsection. Returns {words, heading, text, level} or null.
+function bestMatch(html, names) {
+  let best = null;
+  for (const t of sections(html)) {
+    if (matches(t.heading, names)) {
+      const w = blockWords(t);
+      if (!best || w > best.words) best = { words: w, heading: t.heading, text: blockText(t), level: 2 };
+    }
+    for (const c of t.children) {
+      if (!matches(c.heading, names)) continue;
+      const w = words(c.text);
+      if (!best || w > best.words) best = { words: w, heading: c.heading, text: c.text, level: 3 };
+    }
+  }
+  return best;
+}
+
 function auditChapter(chapter) {
   const minWords = Math.max(50, parseInt(chapter.minWords || 600, 10) || 600);
-  let best = { words: 0, heading: '', file: '' };
+  let best = null;
+  let bestFile = '';
   let anyLesson = false;
+  let pageText = '';
   const lessonFiles = [];
   for (const rel of chapter.lessons || []) {
     const fp = path.join(ROOT, rel);
     if (!fs.existsSync(fp)) { lessonFiles.push({ file: rel, exists: false }); continue; }
     anyLesson = true;
     lessonFiles.push({ file: rel, exists: true });
-    for (const s of sections(fs.readFileSync(fp, 'utf8'))) {
-      if (!matches(s.heading, chapter.headings)) continue;
-      if (s.words > best.words) best = { words: s.words, heading: s.heading, file: rel };
-    }
+    const html = fs.readFileSync(fp, 'utf8');
+    pageText += ' ' + prose(html);
+    const m = bestMatch(html, chapter.headings);
+    if (m && (!best || m.words > best.words)) { best = m; bestFile = rel; }
   }
-  let status;
-  if (!anyLesson || !best.heading) status = 'missing';
-  else if (best.words < minWords * 0.4) status = 'stub';
-  else if (best.words < minWords) status = 'thin';
-  else status = 'ok';
 
-  const evidence = best.heading ? best.text : '';
-  const missingSubTopics = (chapter.subTopics || []).filter(t => !hasTerm(evidence, t));
+  const subTopics = chapter.subTopics || [];
+  // Sub-topics are checked against the matched chapter text when there is one,
+  // otherwise against the whole page (so 'scattered' still reports what is
+  // there).
+  const evidence = best ? best.text : pageText;
+  const missingSubTopics = subTopics.filter(t => !hasTerm(evidence, t));
+  const pagePresent = subTopics.filter(t => hasTerm(pageText, t)).length;
+  const namePresent = hasTerm(pageText, chapter.name);
+
+  let status;
+  if (!anyLesson) status = 'missing';
+  else if (best) {
+    if (best.words < minWords * 0.4) status = 'stub';
+    else if (best.words < minWords) status = 'thin';
+    else status = 'ok';
+  } else if (namePresent || pagePresent >= 2) {
+    // Mentioned on the page but with no chapter of its own.
+    status = 'scattered';
+  } else {
+    status = 'missing';
+  }
 
   return {
     id: chapter.id,
     name: chapter.name,
     status: status,
-    words: best.words,
+    words: best ? best.words : 0,
     minWords: minWords,
-    heading: best.heading,
-    file: best.file,
+    heading: best ? best.heading : '',
+    level: best ? best.level : 0,
+    file: best ? bestFile : '',
+    pageHits: pagePresent,
     missingSubTopics: missingSubTopics,
-    subTopics: chapter.subTopics || [],
+    subTopics: subTopics,
     lessons: lessonFiles
   };
 }
@@ -127,9 +182,13 @@ function genericScan() {
       if (e.isDirectory()) walk(p);
       else if (e.name.endsWith('.html')) {
         const rel = path.relative(ROOT, p).replace(/\\/g, '/');
-        for (const s of sections(fs.readFileSync(p, 'utf8'))) {
-          if (!s.heading || s.words === 0) continue;
-          if (s.words < 200) rows.push({ words: s.words, heading: s.heading, file: rel });
+        for (const t of sections(fs.readFileSync(p, 'utf8'))) {
+          const tw = blockWords(t);
+          if (t.heading && tw > 0 && tw < 250) rows.push({ words: tw, heading: t.heading, file: rel });
+          for (const c of t.children) {
+            const cw = words(c.text);
+            if (c.heading && cw > 0 && cw < 150) rows.push({ words: cw, heading: t.heading + ' › ' + c.heading, file: rel });
+          }
         }
       }
     }
@@ -152,7 +211,7 @@ const map = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
 const chapters = [];
 const byPaper = {};
 for (const [paperId, paper] of Object.entries(map.papers || {})) {
-  byPaper[paperId] = { name: paper.name || paperId, ok: 0, thin: 0, stub: 0, missing: 0, chapters: 0 };
+  byPaper[paperId] = { name: paper.name || paperId, ok: 0, thin: 0, stub: 0, scattered: 0, missing: 0, chapters: 0 };
   for (const ch of paper.chapters || []) {
     const r = auditChapter(ch);
     r.paper = paperId;
@@ -168,6 +227,7 @@ const summary = {
   ok: chapters.filter(c => c.status === 'ok').length,
   thin: chapters.filter(c => c.status === 'thin').length,
   stub: chapters.filter(c => c.status === 'stub').length,
+  scattered: chapters.filter(c => c.status === 'scattered').length,
   missing: chapters.filter(c => c.status === 'missing').length,
   byPaper: byPaper
 };
@@ -189,16 +249,17 @@ if (asJson) {
   console.log('');
   for (const [paperId, p] of Object.entries(byPaper)) {
     console.log(p.name);
-    console.log('  chapters ' + p.chapters + '  ok ' + p.ok + '  thin ' + p.thin + '  stub ' + p.stub + '  missing ' + p.missing);
+    console.log('  chapters ' + p.chapters + '  ok ' + p.ok + '  thin ' + p.thin + '  stub ' + p.stub + '  scattered ' + p.scattered + '  missing ' + p.missing);
     chapters.filter(c => c.paper === paperId && c.status !== 'ok').forEach(c => {
       const miss = c.missingSubTopics.length ? '  missing: ' + c.missingSubTopics.slice(0, 6).join(', ') : '';
-      console.log('  ' + c.status.toUpperCase().padEnd(7) + c.id + '  ' + c.words + '/' + c.minWords + ' words' + (c.heading ? '  [' + c.heading + ']' : '') + miss);
+      const where = c.heading ? '  [' + c.heading + ']' : (c.pageHits ? '  (' + c.pageHits + ' sub-topics on page, no chapter heading)' : '');
+      console.log('  ' + c.status.toUpperCase().padEnd(10) + c.id + '  ' + c.words + '/' + c.minWords + ' words' + where + miss);
     });
     console.log('');
   }
-  console.log('Overall: ' + summary.ok + '/' + summary.chapters + ' ok, ' + summary.thin + ' thin, ' + summary.stub + ' stub, ' + summary.missing + ' missing');
+  console.log('Overall: ' + summary.ok + '/' + summary.chapters + ' ok, ' + summary.thin + ' thin, ' + summary.stub + ' stub, ' + summary.scattered + ' scattered, ' + summary.missing + ' missing');
   console.log('Report: ' + path.relative(ROOT, OUT_FILE));
-  console.log('Heuristic: section word count + sub-topic keywords. Verify accuracy by hand.');
+  console.log('Heuristic: chapter word count (h2 block incl. h3) + sub-topic keywords. Verify accuracy by hand.');
 }
 
 if (strict && (summary.missing > 0 || summary.stub > 0)) process.exit(1);
