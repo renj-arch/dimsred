@@ -24,9 +24,27 @@ const NVIDIA_MODELS = [
 
 const OR_MODELS = [
   'mistralai/mistral-large',
-  'mistralai/mistral-large-2411',
-  'meta-llama/llama-3.3-70b-instruct:free'
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'google/gemma-4-31b-it',
+  'google/gemma-4-31b-it:free',
+  'google/gemma-3-27b-it',
+  'google/gemma-3-27b-it:free'
 ];
+
+// Print the OpenRouter ids that actually exist, so a probe never tests a slug
+// the provider does not serve.
+async function discover(key) {
+  try {
+    const r = await fetch('https://openrouter.ai/api/v1/models', { headers: { authorization: 'Bearer ' + key } });
+    const j = await r.json();
+    const ids = (j.data || []).map(m => m.id);
+    console.log('=== OpenRouter ids matching gemma | mistral-large | qwen3 (' + ids.length + ' models listed) ===');
+    ids.filter(id => /gemma|mistral-large|qwen3/i.test(id)).forEach(id => console.log('  ' + id));
+    console.log('');
+  } catch (e) {
+    console.log('OpenRouter model-list discovery failed: ' + e.message + '\n');
+  }
+}
 
 async function probe(route, url, key, model, extra) {
   const t0 = Date.now();
@@ -61,6 +79,7 @@ async function probe(route, url, key, model, extra) {
   }
   const or = process.env.OPENROUTER_API_KEY;
   if (or) {
+    await discover(or);
     for (const m of OR_MODELS) results.push(['openrouter', m, await probe('openrouter', OR, or, m, { 'HTTP-Referer': 'https://vlymbooq.qzz.io', 'X-Title': 'model-probe' })]);
   } else {
     console.log('OPENROUTER_API_KEY not set — skipping OpenRouter probes');
