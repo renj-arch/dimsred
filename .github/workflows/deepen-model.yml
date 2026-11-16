@@ -73,7 +73,10 @@ jobs:
 
       - name: Write lessons with the strongest available model
         env:
-          NVAPI: ${{ inputs.route == 'nvidia' && '1' || '' }}
+          # NVAPI stays on for the nvidia and tokenharbor routes so the steady
+          # nemotron model is always available as a fallback; only the
+          # openrouter route disables it (to isolate that route).
+          NVAPI: ${{ inputs.route != 'openrouter' && '1' || '' }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           NVIDIA_MODEL: ${{ inputs.model }}
           OPENROUTER: '1'
