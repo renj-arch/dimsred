@@ -136,8 +136,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           step_summary() { { echo '### Deepen (review PR)'; echo ''; echo '```'; cat /tmp/guard.txt 2>/dev/null || echo 'no guard output'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"; }
-          if [ ! -f scripts/course-data.json ]; then echo "no worktree"; exit 0; fi
-          if git diff --quiet && git diff --cached --quiet; then echo "no changes to propose"; step_summary; exit 0; fi
+          if [ ! -f scripts/.course-touched.json ]; then echo "nothing written this run"; step_summary; exit 0; fi
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           BR="deepen/run-${{ github.run_number }}"
