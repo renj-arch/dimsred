@@ -51,8 +51,8 @@ function sanitize(html) {
   return s.trim();
 }
 
-function insertBeforeNextH2(body, blockStart, html) {
-  const next = body.indexOf('<h2', blockStart);
+function insertBeforeNextH2(body, from, html) {
+  const next = body.indexOf('<h2', from);
   if (next === -1) return body + '\n' + html;
   return body.slice(0, next) + html + '\n' + body.slice(next);
 }
@@ -93,7 +93,7 @@ function insertBeforeNextH2(body, blockStart, html) {
         if (/entire output budget on reasoning/i.test(raw)) { console.log('SKIP ' + key + ' / ' + ch.title + ': model spent its budget on reasoning'); continue; }
         const html = sanitize(raw);
         if (!html || words(html) < 60) { console.log('SKIP ' + key + ' / ' + ch.title + ': too little output (' + words(html) + 'w)'); continue; }
-        newBody = insertBeforeNextH2(newBody, blockStart, html);
+        newBody = insertBeforeNextH2(newBody, blockStart + ch.headHtml.length, html);
         changed = true;
         console.log('WROTE ' + key + ' / ' + ch.title + ' (was ' + ch.words + 'w, +' + words(html) + 'w)');
       } catch (e) {
