@@ -88,9 +88,11 @@ function insertBeforeNextH2(body, blockStart, html) {
         'Do not restate the existing text. Output only the new HTML.';
       try {
         const res = await callLLM([{ role: 'system', content: SYSTEM }, { role: 'user', content: prompt }],
-          { numPredict: 2400, temperature: 0.3 });
-        const html = sanitize(res && res.text);
-        if (!html || html.length < 80) { console.log('SKIP ' + key + ' / ' + ch.title + ': empty model output'); continue; }
+          { numPredict: 14000, temperature: 0.3 });
+        const raw = String((res && res.text) || '');
+        if (/entire output budget on reasoning/i.test(raw)) { console.log('SKIP ' + key + ' / ' + ch.title + ': model spent its budget on reasoning'); continue; }
+        const html = sanitize(raw);
+        if (!html || words(html) < 60) { console.log('SKIP ' + key + ' / ' + ch.title + ': too little output (' + words(html) + 'w)'); continue; }
         newBody = insertBeforeNextH2(newBody, blockStart, html);
         changed = true;
         console.log('WROTE ' + key + ' / ' + ch.title + ' (was ' + ch.words + 'w, +' + words(html) + 'w)');
