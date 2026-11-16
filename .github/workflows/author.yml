@@ -1,4 +1,4 @@
-name: Author
+﻿name: Author
 
 # The writer tier, end to end: fetch the slate topic's sources, cut a ledger,
 # let the local model write narration inside a fixed scene structure, assemble
@@ -46,14 +46,9 @@ jobs:
     timeout-minutes: 300
 
     env:
-      LLAMA_BUILD: b11890
-      HF_REPO: unsloth/Qwen3.6-35B-A3B-GGUF
-      HF_REV: a483e9e6cbd595906af30beda3187c2663a1118c
-      LM_SOURCE: unsloth/Qwen3.6-35B-A3B-GGUF@a483e9e6cbd595906af30beda3187c2663a1118c
-      LM_BUILD: b11890
-      LM_THREADS: '4'
-      LM_CTX: '8192'
       FILM: ${{ inputs.film }}
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      NVIDIA_MODEL: nvidia/nemotron-3.5-super-vl-120b-a12b
 
     steps:
       - name: Checkout (skip the giant question bank)
@@ -67,55 +62,45 @@ jobs:
       - name: Report the runner
         run: |
           nproc
-          lscpu | grep -E 'Model name|^CPU\(s\)' || true
           free -g
 
-      - name: Reclaim disk for the weights
-        if: ${{ !inputs.stub }}
+      - name: Propose a sourced brief
+        id: invent
+        if: ${{ inputs.film == 'invent' }}
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
-            /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" || true
-          sudo apt-get clean
-
-      - name: Install pinned llama.cpp
-        if: ${{ !inputs.stub }}
-        run: |
-          curl -fL --retry 3 -o /tmp/llama.tar.gz \
-            "https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_BUILD}/llama-${LLAMA_BUILD}-bin-ubuntu-x64.tar.gz"
-          mkdir -p /opt/llama
-          tar -xzf /tmp/llama.tar.gz -C /opt/llama
-          BIN=$(find /opt/llama -name llama-cli -type f | head -n 1)
-          test -n "$BIN"
-          chmod +x "$BIN"
-          echo "LLAMA_LIB=$(dirname "$BIN")" >> "$GITHUB_ENV"
-          echo "$(dirname "$BIN")" >> "$GITHUB_PATH"
-          "$BIN" --version
-
-      - name: Download pinned weights and verify the digest
-        if: ${{ !inputs.stub }}
-        run: |
-          SHA=96b9c0af5c77a4ecaabe3983175112b5ece763261c1ece12b2494b692a70dad7
-          sudo mkdir -p /mnt/lm
-          sudo chown "$USER" /mnt/lm
-          MODEL="/mnt/lm/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf"
-          curl -fL --retry 3 --retry-delay 5 -C - \
-            -o "$MODEL" \
-            "https://huggingface.co/${HF_REPO}/resolve/${HF_REV}/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf"
-          echo "${SHA}  ${MODEL}" | sha256sum -c -
-          ls -lh "$MODEL"
-          echo "LM_MODEL=${MODEL}" >> "$GITHUB_ENV"
+          set -euo pipefail
+          node scripts/film/topic-propose.js
+          ID=$(node -e "
+            const slate = require('./data/film-slate.json');
+            const topic = [...slate.topics].reverse().find((t) => t.status === 'research');
+            process.stdout.write(topic ? topic.id : '');
+          ")
+          # No researchable topic is a normal no-op, not a failure: the
+          # current-events digest may have nothing that clears the source
+          # gate, and the model may not return a usable pick. Stop cleanly
+          # and let the downstream steps skip instead.
+          if [ -z "$ID" ]; then
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Nothing to author::The slate has no researchable topic this run; nothing was published."
+            exit 0
+          fi
+          echo "found=true" >> "$GITHUB_OUTPUT"
+          echo "FILM=$ID" >> "$GITHUB_ENV"
+          echo "::notice title=Proposed $ID::The model chose a cited event and the source gate accepted it."
 
       - name: Fetch the sources
+        id: fetch
+        if: steps.invent.outputs.found != 'false'
         run: |
           node scripts/film/research.js --topic "$FILM" \
             --out "out/research/$FILM"
 
       - name: Author the storyboard
+        if: steps.invent.outputs.found != 'false'
         env:
           STUB: ${{ inputs.stub }}
         run: |
           set -euo pipefail
-          export LD_LIBRARY_PATH="${LLAMA_LIB:-}"
           args=(--film "$FILM" --force)
           if [ "$STUB" = "true" ]; then args+=(--stub); fi
           /usr/bin/time -v node scripts/film/author.js "${args[@]}" \
@@ -123,11 +108,12 @@ jobs:
           grep -E 'Maximum resident set size|Elapsed \(wall clock\)' "out/author-$FILM.time.log" || true
 
       - name: Show what the film will say
+        if: steps.invent.outputs.found != 'false'
         run: |
           node - <<'NODE'
           const fs = require('fs');
           const film = JSON.parse(fs.readFileSync(`data/films/${process.env.FILM}.json`, 'utf8'));
-          console.log(`${film.title} — ${film.subtitle}`);
+          console.log(`${film.title} ΓÇö ${film.subtitle}`);
           console.log(`${film.scenes.length} scenes, ${film.targetDuration}s, grammar ${film.edit.grammar}`);
           for (const scene of film.scenes) {
             console.log(`\n${scene.id} ${scene.title} (${scene.duration}s)`);
@@ -152,8 +138,38 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      - name: Clear the authoring strikes
+        if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub }}
+        run: node scripts/film/author-strike.js --pass "$FILM"
+
+      - name: Record the failed attempt
+        if: ${{ failure() && !inputs.stub && steps.fetch.outcome == 'success' }}
+        run: |
+          node scripts/film/author-strike.js --fail "$FILM" \
+            --reason "the sourced storyboard did not pass the gate"
+
+      - name: Commit the strike
+        if: ${{ failure() && !inputs.stub && steps.fetch.outcome == 'success' }}
+        run: |
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          git add data/film-slate.json
+          if git diff --cached --quiet; then
+            echo "nothing to record"
+            exit 0
+          fi
+          git commit -m "record $FILM authoring strike"
+          # The render lane may publish while this lane is still writing.
+          # Rebase onto the new tip instead of losing the strike to a race.
+          for i in 1 2 3; do
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase --autostash "origin/${GITHUB_REF_NAME}"
+          done
+          exit 1
+
       - name: Commit the storyboard to this branch
-        if: ${{ success() && !inputs.stub }}
+        if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub }}
         run: |
           git config user.name "vlymbooq"
           git config user.email "vlymbooq@users.noreply.github.com"
@@ -164,19 +180,23 @@ jobs:
             exit 0
           fi
           git commit -m "author $FILM from its sourced ledger"
-          timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
-          if git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
-            : # clean merge
-          else
-            git add -A 2>/dev/null || true
-            git commit --no-edit 2>/dev/null || true
-          fi
-          git push origin HEAD:main
+          # Same race as the strike: another lane can advance the branch while
+          # the model is still writing. Rebase, then retry the push.
+          for i in 1 2 3; do
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase --autostash "origin/${GITHUB_REF_NAME}"
+          done
+          exit 1
 
       - name: Dispatch the render
-        if: ${{ success() && !inputs.stub && inputs.render }}
+        if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub && inputs.render }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run film.yml --ref "$GITHUB_REF_NAME" \
-            -f "film=$FILM" -f "quality=draft" -f "release=false"
+            -f "film=$FILM" \
+            -f quality=final \
+            -f release=true \
+            -f publish=true
+
