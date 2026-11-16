@@ -16,10 +16,14 @@ on:
       keys:
         description: 'Lesson keys to deepen, comma-separated (e.g. mains-gs1/ancient-india)'
         required: true
-      per_run:
-        description: 'Lessons to write this run'
+      max_chapters:
+        description: 'Thin chapters to expand per lesson this run'
         required: false
-        default: '6'
+        default: '4'
+      floor:
+        description: 'A chapter under this many words is thin'
+        required: false
+        default: '600'
       model:
         description: 'NVIDIA model id or alias'
         required: false
@@ -79,15 +83,10 @@ jobs:
           TOKENHARBOR_API_KEY: ${{ secrets.TOKENHARBOR_API_KEY }}
           TOKENHARBOR_URL: ${{ vars.TOKENHARBOR_URL }}
           TOKENHARBOR_MODEL: ${{ inputs.tokenharbor_model }}
-          EXPAND_PER_RUN: ${{ inputs.per_run }}
-          EXPAND_DEADLINE_MIN: '90'
-          EXPAND_DEEPEN: '1'
-          EXPAND_DEPTH_TARGET_WORDS: '2500'
-          EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
-          EXPAND_DEPTH_PASS_MAX: '30'
-          EXPAND_ONLY_KEYS: ${{ inputs.keys }}
-          EXPAND_THIN_THRESHOLD: '6000'
-        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
+          KEYS: ${{ inputs.keys }}
+          CHAPTER_FLOOR: ${{ inputs.floor }}
+          MAX_CHAPTERS: ${{ inputs.max_chapters }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/deepen-chapters.js
 
       - name: Clean published addon content
         if: always()
