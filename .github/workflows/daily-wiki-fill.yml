@@ -596,18 +596,36 @@ jobs:
         timeout-minutes: 2
         run: node scripts/guard-question-count.js || { echo "Question count guard failed - aborting push"; exit 1; }
 
-      - name: Push with retries (fresh shallow fetch before every attempt)
-        timeout-minutes: 15
+      - name: Push with retries (deepen until the merge base exists)
+        timeout-minutes: 20
         run: |
-          # 2026-11-14: the old loop retried `git push` three times against a
-          # stale ref. The preceding `git fetch origin main` had timed out on
-          # this ~18 GB repository, so every attempt was rejected with
-          # "fetch first" and the run died with the wiki data committed only on
-          # the runner. Fetch the tip shallowly inside the loop instead, and
-          # merge (keeping our data on conflict) before each push.
+          # 2026-11-16 (run #664): this job checks out with fetch-depth: 1, so
+          # the run's base commit is the shallow root. A fixed `--depth=100`
+          # fetch stops short of it once main has moved >100 commits during
+          # the run (364-368 at the time). `git merge` then dies with
+          # "refusing to merge unrelated histories", resolve-data-merge finds
+          # no unmerged paths, and every push is rejected as "behind its
+          # remote counterpart". Deepen from the tip until HEAD and FETCH_HEAD
+          # share a merge base. The checkout is a blob:none partial clone, so
+          # this transfers commits and trees only, never blobs.
           for i in 1 2 3 4 5; do
-            timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null \
-              || echo "shallow fetch timed out on attempt $i - using last-known main"
+            MERGE_BASE=""
+            for depth in 200 800 3200 12800; do
+              if timeout 240 git fetch --depth="$depth" --no-tags origin main 2>/dev/null; then
+                if git merge-base HEAD FETCH_HEAD >/dev/null 2>&1; then
+                  MERGE_BASE=1
+                  echo "Fetched origin/main at depth $depth (merge base present)"
+                  break
+                fi
+                echo "No merge base at depth $depth - deepening"
+              else
+                echo "Fetch at depth $depth timed out - trying deeper"
+              fi
+            done
+            if [ -z "$MERGE_BASE" ]; then
+              echo "::error::origin/main shares no merge base with this run after 12,800 commits - refusing to publish blind"
+              exit 1
+            fi
             git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
               echo "Merge conflict - running union merge to keep BOTH runs' data."
               node scripts/resolve-data-merge.js
