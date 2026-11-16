@@ -1,0 +1,78 @@
+name: Chapter Depth Audit
+
+# The syllabus audit asks "is the topic mentioned?". This asks the harder
+# question: "is there a real chapter, at textbook depth, with its sub-topics?"
+#
+# For each chapter in data/chapter-map.json it finds the best-matching lesson
+# section, measures its words, and checks the required sub-topics. A 20-word
+# heading is reported as a stub; a topic that appears once cannot pass.
+#
+# Heuristic: depth is section word count, sub-topics are keyword presence.
+# Every thin/stub/missing row needs human verification. Never fails the build
+# unless run with strict=true.
+
+on:
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: 'Fail the run if any chapter is missing or stub'
+        type: choice
+        options: ['false', 'true']
+        default: 'false'
+  schedule:
+    - cron: '27 3 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run chapter depth audit
+        id: audit
+        shell: bash
+        run: |
+          set -o pipefail
+          ARGS=""
+          if [ "${{ inputs.strict }}" = "true" ]; then ARGS="--strict"; fi
+          node scripts/audit-chapter-depth.js $ARGS | tee /tmp/chapter-depth.txt
+
+      - name: Publish summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Chapter depth audit'
+            echo ''
+            echo '```'
+            if [ -f /tmp/chapter-depth.txt ]; then
+              cat /tmp/chapter-depth.txt
+            else
+              echo 'audit did not produce output'
+            fi
+            echo '```'
+            echo ''
+            echo 'Heuristic: section word count + sub-topic keywords. A stub means a heading with almost no body. Verify accuracy by hand.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter-depth
+          path: |
+            data/chapter-depth.json
+            data/chapter-map.json
+          if-no-files-found: warn
