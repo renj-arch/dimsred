@@ -333,6 +333,39 @@ details p{color:var(--text-sec);font-size:13px;line-height:1.7;margin-top:6px}
 <li><strong>سوال 3:</strong> ڈیٹا کی درستگی کیسے یقینی بنائی جائے گی؟</li>
 </ul>
 </div>
+<div class="language-section">
+<h3>Stylistic Register Shifts in Administrative Urdu</h3>
+<p>Administrative Urdu moves between a highly formal register used in gazette notifications and a slightly less rigid register employed in inter‑departmental memos. The formal register favours Persian‑derived vocabulary, extensive use of the izafat construction, and a preference for passive verb forms such as <code>کیا گیا</code> over active equivalents. In contrast, internal memos often admit Arabic‑root verbs, shorter sentences, and a higher frequency of the direct object marker <code>کو</code>. Recognising these shifts helps the candidate decide whether a translation should retain the honorific <code>جناب</code> or replace it with a neutral pronoun.</p>
+<p>When drafting a response, map each source clause to its target register by tagging the lexical tier (Persian, Arabic, Indic) and the syntactic tier (passive, active, nominalised). This two‑dimensional tagging makes it easier to preserve the official tone without over‑formalising a passage that is originally semi‑formal.</p>
+<p>Practice the register mapping on short excerpts: underline every izafat chain, circle each passive construction, and note the presence of honorifics. Over time the pattern becomes intuitive, reducing the risk of register mismatch in the exam.</p>
+
+<div class="example-box">
+<div class="ex-title">Model-generated practice (not an official UPSC question)</div>
+<div class="ex-text">وزارتِ داخلہ نے نئی پالیسی کا اعلان کیا ہے جس کے تحت تمام صوبائی حکومتوں کو اپنا ڈیجیٹل ریکارڈ اپ ڈیٹ کرنا لازمی ہوگا۔ اس مقصد کے لیے ایک آن لائن پورٹل تیار کیا گیا ہے جس پر ڈیٹا داخل کرنے کی آخری تاریخ ۳۱ دسمبر ۲۰۲۵ مقرر کی گئی ہے۔ عدم تعمیل پر جرمانہ عائد ہوگا۔</div>
+<div class="ex-soln">
+<ol>
+<li>What is the deadline for data entry on the new portal? <strong>31 December 2025</strong></li>
+<li>Which authority issued the policy announcement? <strong>Ministry of Interior (وزارتِ داخلہ)</strong></li>
+<li>What consequence is mentioned for non‑compliance? <strong>A fine will be imposed (جرمانہ عائد ہوگا)</strong></li>
+</ol>
+</div>
+</div>
+
+<h3>Corpus‑Based Frequency Analysis for Vocabulary Selection</h3>
+<p>Modern Urdu corpora such as the Urdu‑Web corpus and the National Language Authority’s balanced corpus provide frequency lists for both literary and administrative sub‑corpora. By querying the top‑500 lemmas in the administrative sub‑corpus, a candidate can identify high‑utility items like <code>اعلان</code>, <code>مقرر</code>, <code>تعمیل</code> and <code>جرمانہ</code>. Selecting these items over lower‑frequency synonyms (e.g., <code>اطلاع</code> vs <code>اعلان</code>) aligns the answer with the expected register.</p>
+<p>A practical workflow: download the frequency list, filter for part‑of‑speech tags (noun, verb, adjective), and create a personal glossary of the top 100 administrative lemmas. During translation practice, force yourself to use at least three glossary items per paragraph. This habit builds lexical automaticity and reduces the temptation to insert overly literary words.</p>
+<p>Remember that frequency alone does not guarantee appropriateness; collocational patterns matter. Use a concordance tool to verify that <code>مقرر کرنا</code> appears with dates, while <code>تعیین کرنا</code> prefers abstract nouns. Such collocational awareness sharpens the precision of your output.</p>
+
+<div class="tip-box">
+<div class="tip-title">Quick corpus check</div>
+<div class="tip-text">Before the exam, run a one‑minute script that extracts the 20 most frequent administrative verbs from the corpus and writes them to a cheat‑sheet. Review the list each morning to keep the vocabulary fresh.</div>
+</div>
+
+<h3>Automated Orthography Validation Pipelines</h3>
+<p>Consistent orthography is a scoring criterion in Paper A. An automated pipeline can be built from three stages: (1) normalisation of Unicode characters (e.g., mapping U+0649 to U+06CC), (2) rule‑based detection of missing diacritics such as zabar, zer, and pesh on ambiguous words, and (3) statistical language‑model scoring to flag low‑probability spellings. Open‑source tools like <code>hazm</code> for tokenisation and <code>urdu‑normalizer</code> for character mapping can be chained with a simple Bash script.</p>
+<p>Integrate the pipeline into your writing workflow: after each draft, run the validator and review only the flagged tokens. This targeted review saves time compared with a full manual proofread. Over weeks, the number of flags drops dramatically as internalised orthographic habits form.</p>
+<p>When configuring the language model, train it on a clean corpus of official notifications (gazettes, circulars) rather than on mixed‑genre data. A domain‑specific model yields higher precision for the formal register required in the exam.</p>
+</div>
 <script src="language-practice.js"></script>
 </body>
 </html>
