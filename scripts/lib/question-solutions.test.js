@@ -10,17 +10,10 @@
 // predate this gate and are counted so the number can only go down.
 const fs = require('fs');
 const path = require('path');
+const solutionGuard = require('./question-solution-guard');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const DIRS = ['question-bank', 'papers-data'];
-
-const LEAK = [
-  [/\bnot (?:an|among the) options?\b/i, 'solution says the true value is not an option'],
-  [/\bclosest (?:is|option)\b/i, 'solution picks the closest option instead of the exact value'],
-  [/\bdo not have the exact\b/i, 'solution admits the options do not contain the answer'],
-  [/\b(?:i (?:initially )?misread|let me re-?check|let me recalculate|that doesn.t match)\b/i, 'raw model reasoning in the solution'],
-  [/\bwait[,\s]+(?:but|the|that|it|i)\b/i, 'raw model reasoning in the solution']
-];
 
 let failed = 0;
 let warnNoSolution = 0;
@@ -48,9 +41,8 @@ DIRS.forEach(function (dir) {
       if (correct.length !== 1) { warnShape++; console.warn('WARN ' + id + ': ' + correct.length + ' correct options'); }
       if (!q.solution) warnNoSolution++;
       const sol = String(q.solution || '');
-      LEAK.forEach(function (pair) {
-        if (pair[0].test(sol)) fail(id + ': ' + pair[1]);
-      });
+      const leak = solutionGuard.leakReason(sol);
+      if (leak) fail(id + ': ' + leak);
       const isModel = q.source === 'model' || q.reviewed === false || q.origin === 'ci';
       if (isModel && !/^\d{4}-\d{2}-\d{2}/.test(String(q.generatedAt || q.at || q.inventedAt || ''))) {
         fail(id + ': model item without a generation date');
