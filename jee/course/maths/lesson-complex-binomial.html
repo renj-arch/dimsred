@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Complex Numbers &amp; Binomial Theorem — JEE Mathematics Lesson | vlymbooq</title>
     <meta name="description" content="Free JEE Mathematics Complex Numbers &amp; Binomial Theorem lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
@@ -114,7 +116,8 @@
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Complex Numbers &amp; Binomial Theorem</h1>
-                    <div id="lesson-meta" hidden data-version="711dbcd42759" data-updated="" data-updated-label="" data-headings="[&quot;Key Concepts Covered&quot;,&quot;Important Formulas &amp; Rules&quot;,&quot;Common Question Types&quot;]"></div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 16 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="6279796679cd" data-updated="2026-11-16" data-updated-label="16 Nov 2026" data-headings="[&quot;1. Introduction to Complex Numbers and Their Geometric Representation&quot;,&quot;1.1 Definition and Algebraic Form&quot;,&quot;1.2 The Argand Plane&quot;,&quot;1.3 Modulus and Argument&quot;,&quot;1.4 Consequences of the Polar Form&quot;,&quot;2. Roots of Unity and Their Algebraic Structure&quot;,&quot;2.1 Definition of n‑th Roots of Unity&quot;,&quot;2.2 Primitive Roots and Their Properties&quot;,&quot;2.3 Applications of Roots of Unity&quot;,&quot;2.4 Comparison of Primitive and Non‑Primitive Roots&quot;,&quot;3. Binomial Theorem for Real and Complex Exponents&quot;,&quot;3.1 Statement of the Binomial Theorem&quot;,&quot;3.2 Derivation Using Induction&quot;,&quot;3.3 Binomial Expansion with Complex Bases&quot;,&quot;3.4 Connection with De Moivre’s Theorem&quot;,&quot;3.5 Comparison of Real‑Coefficient and Complex‑Coefficient Expansions&quot;,&quot;4. Worked Example and Exam‑Day Tip&quot;,&quot;5. Summary and Further Connections&quot;,&quot;5.1 Key Formulae to Memorise&quot;,&quot;5.2 How These Topics Interlink&quot;,&quot;5.3 Typical Examination Focus&quot;,&quot;5.4 Suggested Further Reading&quot;]"></div>
                     <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>
                     <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Argand plane, modulus and argument, roots of unity, and binomial expansion.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
@@ -132,23 +135,109 @@
                         <li>Apply key formulas and techniques to solve problems</li>
                         <li>Practice with exam-level questions to build speed and accuracy</li>
                     </ul>
-<p>This lesson covers <strong>Complex Numbers & Binomial Theorem</strong>, a key topic in Mathematics for JEE. Below is a structured overview of the core concepts you need to master.</p>
-<h3>Key Concepts Covered</h3>
+<h2>1. Introduction to Complex Numbers and Their Geometric Representation</h2>
+
+<h3>1.1 Definition and Algebraic Form</h3>
+<p>A complex number is an ordered pair of real numbers written in the form <em>z = a + bi</em>, where <em>a</em> and <em>b</em> are real numbers and <em>i</em> denotes the imaginary unit satisfying <em>i² = –1</em>. The real part of <em>z</em> is <em>Re(z) = a</em> and the imaginary part is <em>Im(z) = b</em>. This algebraic form allows addition, subtraction, multiplication and division to be performed using the familiar rules of arithmetic together with the defining relation <em>i² = –1</em>. For example, the product of <em>(a + bi)</em> and <em>(c + di)</em> is <em>(ac – bd) + (ad + bc)i</em>. The ability to treat <em>i</em> as a number extends the real number system to a field that is algebraically closed, meaning every non‑constant polynomial with complex coefficients has a root in the complex numbers.</p>
+
+<h3>1.2 The Argand Plane</h3>
+<p>The geometric interpretation of complex numbers is provided by the Argand plane (also called the complex plane). In this plane the horizontal axis represents the real part and the vertical axis represents the imaginary part. The point <em>(a, b)</em> corresponds to the complex number <em>a + bi</em>. This representation converts algebraic operations into geometric transformations. Adding two complex numbers corresponds to the vector addition of their position vectors, while multiplication by a real scalar stretches or shrinks the vector without rotating it.</p>
+
+<h3>1.3 Modulus and Argument</h3>
+<p>The distance of the point <em>(a, b)</em> from the origin is called the modulus (or absolute value) of <em>z</em> and is denoted <em>|z|</em>. By the Pythagorean theorem, <em>|z| = √(a² + b²)</em>. The angle measured from the positive real axis to the line joining the origin to the point is the argument of <em>z</em>, written <em>arg(z)</em>. The argument is defined up to multiples of <em>2π</em> and is usually taken in the principal range <em>(–π, π]</em>. Using polar coordinates, any non‑zero complex number can be expressed as <em>z = |z|(cos θ + i sin θ)</em>, where <em>θ = arg(z)</em>. This polar form is indispensable for understanding multiplication, division, and exponentiation of complex numbers because the moduli multiply and the arguments add.</p>
+
+<h3>1.4 Consequences of the Polar Form</h3>
+<p>When two complex numbers <em>z₁ = r₁(cos θ₁ + i sin θ₁)</em> and <em>z₂ = r₂(cos θ₂ + i sin θ₂)</em> are multiplied, the product is <em>z₁z₂ = r₁r₂[cos(θ₁+θ₂) + i sin(θ₁+θ₂)]</em>. Thus multiplication corresponds to scaling by the product of the moduli and rotating by the sum of the arguments. Division works analogously: <em>z₁ / z₂ = (r₁/r₂)[cos(θ₁–θ₂) + i sin(θ₁–θ₂)]</em>. These facts lead directly to De Moivre’s theorem, which states that for any integer <em>n</em>, <em>(cos θ + i sin θ)ⁿ = cos nθ + i sin nθ</em>. De Moivre’s theorem is the bridge between complex numbers and the binomial theorem, as it provides a compact way to expand powers of complex numbers in trigonometric form.</p>
+
+<h2>2. Roots of Unity and Their Algebraic Structure</h2>
+<h3>2.1 Definition of n‑th Roots of Unity</h3>
+<p>An <em>n‑th root of unity</em> is any complex number <em>ζ</em> satisfying <em>ζⁿ = 1</em>. The equation <em>zⁿ – 1 = 0</em> has exactly <em>n</em> distinct solutions in the complex plane, a consequence of the Fundamental Theorem of Algebra. Using the polar representation of 1 as <em>1 = 1·(cos 0 + i sin 0)</em>, the solutions are obtained by dividing the full angle <em>2π</em> into <em>n</em> equal parts. Hence the roots are <em>ζ_k = cos(2πk/n) + i sin(2πk/n)</em> for <em>k = 0, 1, …, n–1</em>. These points lie on the unit circle and are equally spaced, forming the vertices of a regular <em>n</em>-gon inscribed in the circle.</p>
+
+<h3>2.2 Primitive Roots and Their Properties</h3>
+<p>A root <em>ζ</em> is called <em>primitive</em> if its smallest positive integer exponent that yields 1 is exactly <em>n</em>. In other words, <em>ζⁿ = 1</em> but <em>ζ^k ≠ 1</em> for any <em>0 < k < n</em>. The primitive roots are precisely those <em>ζ_k</em> for which <em>k</em> and <em>n</em> are coprime. The set of all primitive <em>n‑th</em> roots forms a multiplicative group of order φ(n), where φ denotes Euler’s totient function. This group structure is useful when solving cyclotomic equations and when applying the binomial theorem to expressions such as <em>(x – ζ)</em>.</p>
+
+<h3>2.3 Applications of Roots of Unity</h3>
+<p>Roots of unity appear in many areas of mathematics. In polynomial factorisation, the factor <em>xⁿ – 1</em> can be written as the product of linear factors <em>(x – ζ_k)</em>. In discrete Fourier analysis, the complex exponentials used as basis functions are precisely the roots of unity, enabling the conversion between time and frequency domains. Moreover, the symmetry of roots of unity simplifies the evaluation of certain trigonometric sums, because the sum of all <em>n‑th</em> roots is zero, a fact that follows from the geometric series formula applied to the complex exponential form.</p>
+
+<h3>2.4 Comparison of Primitive and Non‑Primitive Roots</h3>
+<table>
+<caption>Primitive versus Non‑Primitive n‑th Roots of Unity</caption>
+<thead>
+<tr><th>Aspect</th><th>Primitive Roots</th><th>Non‑Primitive Roots</th></tr>
+</thead>
+<tbody>
+<tr><td>Order</td><td>Exactly n</td><td>Divides n, less than n</td></tr>
+<tr><td>Number</td><td>φ(n)</td><td>n – φ(n)</td></tr>
+<tr><td>Coprime Index</td><td>k such that gcd(k,n)=1</td><td>k with gcd(k,n)>1</td></tr>
+<tr><td>Group Generated</td><td>Full cyclic group of order n</td><td>Proper subgroup</td></tr>
+</tbody>
+</table>
+
+<h2>3. Binomial Theorem for Real and Complex Exponents</h2>
+<h3>3.1 Statement of the Binomial Theorem</h3>
+<p>The binomial theorem provides a formula for expanding powers of a sum: for any integer <em>n ≥ 0</em>, <em>(a + b)ⁿ = Σ<sub>k=0</sub><sup>n</sup> C(n,k) a<sup>n‑k</sup> b<sup>k</sup></em>, where <em>C(n,k) = n! / [k!(n‑k)!]</em> are the binomial coefficients. The theorem holds not only for real numbers <em>a</em> and <em>b</em> but also when they are complex, because the algebraic proof relies solely on the distributive law and the definition of factorial, both of which are valid in the complex field.</p>
+
+<h3>3.2 Derivation Using Induction</h3>
+<p>One common proof proceeds by mathematical induction on <em>n</em>. The base case <em>n = 1</em> is trivial: <em>(a + b)¹ = a + b</em>. Assuming the formula holds for some <em>n</em>, multiply both sides by <em>(a + b)</em> and rearrange the resulting double sum. The combinatorial identity <em>C(n,k) + C(n,k‑1) = C(n+1,k)</em> emerges naturally, completing the inductive step. Because the proof uses only algebraic manipulation, it remains valid when <em>a</em> and <em>b</em> are complex numbers such as <em>i</em> or a root of unity.</p>
+
+<h3>3.3 Binomial Expansion with Complex Bases</h3>
+<p>When the base involves complex numbers, the expansion yields terms that combine real and imaginary parts. For instance, expanding <em>(1 + i)⁴</em> gives <em>1 + 4i + 6i² + 4i³ + i⁴</em>. Substituting <em>i² = –1</em>, <em>i³ = –i</em>, and <em>i⁴ = 1</em> simplifies the expression to a purely real number, illustrating how complex conjugate pairs often cancel imaginary contributions. This phenomenon is central to many competition problems where a seemingly messy complex expansion reduces to an integer.</p>
+
+<h3>3.4 Connection with De Moivre’s Theorem</h3>
+<p>De Moivre’s theorem can be regarded as a special case of the binomial theorem applied to the polar form <em>(cos θ + i sin θ)ⁿ</em>. Expanding using the binomial coefficients and then separating real and imaginary parts reproduces the identities <em>cos nθ = Σ<sub>k even</sub> (–1)<sup>k/2</sup> C(n,k) cos<sup>n‑k</sup>θ sin<sup>k</sup>θ</em> and <em>sin nθ = Σ<sub>k odd</sub> (–1)<sup>(k‑1)/2</sup> C(n,k) cos<sup>n‑k</sup>θ sin<sup>k</sup>θ</em>. Thus the binomial theorem provides a systematic route to multiple‑angle formulas, which are frequently tested in examinations.</p>
+
+<h3>3.5 Comparison of Real‑Coefficient and Complex‑Coefficient Expansions</h3>
+<table>
+<caption>Real versus Complex Binomial Expansions</caption>
+<thead>
+<tr><th>Feature</th><th>Real Coefficients</th><th>Complex Coefficients</th></tr>
+</thead>
+<tbody>
+<tr><td>Term Types</td><td>All terms are real</td><td>Terms may be real, imaginary, or mixed</td></tr>
+<tr><td>Cancellation</td><td>Rarely occurs</td><td>Often, due to i² = –1</td></tr>
+<tr><td>Use in Trigonometry</td><td>Limited</td><td>Direct link via De Moivre</td></tr>
+<tr><td>Symmetry</td><td>Symmetric binomial coefficients only</td><td>Symmetry plus conjugate pairing</td></tr>
+</tbody>
+</table>
+
+<h2>4. Worked Example and Exam‑Day Tip</h2>
+<div class="example-box">
+<div class="ex-title"><strong>Example 4.1</strong></div>
+<div class="ex-text"><p>Find the value of <em>(1 + i)⁸</em> and express the answer in the form <em>a + bi</em>.</p></div>
+<div class="ex-soln"><p>We first note that <em>1 + i = √2 (cos π/4 + i sin π/4)</em>. Using De Moivre’s theorem, <em>(1 + i)⁸ = (√2)⁸ [cos(8·π/4) + i sin(8·π/4)] = 2⁴ [cos 2π + i sin 2π] = 16·(1 + i·0) = 16.</em> Hence the imaginary part vanishes and the result is <em>16 + 0i</em>. Alternatively, expanding with the binomial theorem gives <em>(1 + i)⁸ = Σ<sub>k=0</sub><sup>8</sup> C(8,k) i<sup>k</sup></em>. Grouping even and odd powers of <em>i</em> and using <em>i² = –1</em> leads to the same simplification: all imaginary contributions cancel, leaving <em>16</em>. Therefore the final answer is <em>16 + 0i</em>.</p></div>
+</div>
+<div class="tip-box">
+<div class="tip-title"><strong>Tip for Complex‑Number Questions</strong></div>
+<div class="tip-text"><p>When a problem involves powers of a complex number of the form <em>a + bi</em>, first check whether the number lies on the unit circle. If <em>|a + bi| = 1</em>, rewrite it in polar form <em>cos θ + i sin θ</em> and apply De Moivre’s theorem; this usually reduces the computation to evaluating a simple trigonometric angle, saving time and avoiding lengthy binomial expansions.</p></div>
+</div>
+
+<h2>5. Summary and Further Connections</h2>
+<h3>5.1 Key Formulae to Memorise</h3>
 <ul>
-  <li><strong>Complex Numbers:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Argand:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Binomial:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
+<li><strong>Modulus</strong>: |a + bi| = √(a² + b²)</li>
+<li><strong>Argument</strong>: arg(a + bi) = tan⁻¹(b/a) (adjusted for quadrant)</li>
+<li><strong>Polar Form</strong>: a + bi = |z|(cos θ + i sin θ)</li>
+<li><strong>De Moivre</strong>: (cos θ + i sin θ)ⁿ = cos nθ + i sin nθ</li>
+<li><strong>Binomial Theorem</strong>: (a + b)ⁿ = Σ C(n,k) a<sup>n‑k</sup> b<sup>k</sup></li>
+<li><strong>n‑th Roots of Unity</strong>: ζ_k = cos(2πk/n) + i sin(2πk/n)</li>
 </ul>
-<h3>Important Formulas & Rules</h3>
-<p>Focus on understanding the core formulas and when to apply them. Practice identifying the correct formula based on question type. Create a formula sheet for quick revision before the exam.</p>
-<h3>Common Question Types</h3>
-<ul>
-  <li>Direct application of formulas and concepts</li>
-  <li>Multi-step problems requiring combination of concepts</li>
-  <li>Data interpretation and analysis-based questions</li>
-</ul>
-<div class="tip-box"><div class="tip-title">Exam Strategy</div><div class="tip-text">Practice topic-wise questions first, then attempt mixed sets. Focus on accuracy before speed. Review your mistakes and maintain an error log.</div></div>
-        <script>
+
+<h3>5.2 How These Topics Interlink</h3>
+<p>The Argand plane provides a visual language that translates algebraic operations into geometric motions. Modulus and argument turn multiplication into scaling and rotation, which in turn makes De Moivre’s theorem a natural consequence of the binomial expansion applied to polar form. Roots of unity are simply the points on the unit circle that return to the identity after a finite number of rotations; their algebraic properties stem from the same binomial principles that govern general powers. Consequently, mastery of complex numbers, their geometric interpretation, and the binomial theorem equips a student to tackle a wide range of problems, from solving polynomial equations to evaluating trigonometric sums.</p>
+
+<h3>5.3 Typical Examination Focus</h3>
+<p>Students are frequently asked to:</p>
+<ol>
+<li>Convert a complex number between rectangular and polar forms.</li>
+<li>Compute modulus and argument, and use them to multiply or divide complex numbers.</li>
+<li>Find all <em>n‑th</em> roots of unity and identify primitive roots.</li>
+<li>Apply De Moivre’s theorem to evaluate powers and extract real or imaginary parts.</li>
+<li>Expand expressions using the binomial theorem where the terms involve <em>i</em> or roots of unity, and simplify the result.</li>
+<li>Derive multiple‑angle formulas from the binomial expansion of <em>(cos θ + i sin θ)ⁿ</em>.</li>
+</ol>
+
+<h3>5.4 Suggested Further Reading</h3>
+<p>To deepen understanding, students should explore the following concepts after completing this lesson: the geometric interpretation of complex conjugation, the proof of Euler’s formula <em>e<sup>iθ</sup> = cos θ + i sin θ</em>, and the role of cyclotomic polynomials in number theory. These topics reinforce the unity of algebraic and geometric viewpoints that underlie the study of complex numbers.</p>        <script>
         (function(){try{
           var m=document.getElementById("lesson-meta");if(!m)return;
           var cur=m.getAttribute("data-version")||"";
@@ -185,7 +274,7 @@
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":111,"text":"What is the primary concept tested in Complex Numbers & Binomial Theorem?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Complex Numbers & Binomial Theorem."},{"id":112,"text":"Which of the following best describes the approach to solve Complex Numbers & Binomial Theorem problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for Complex Numbers & Binomial Theorem."},{"id":113,"text":"In Complex Numbers & Binomial Theorem, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Complex Numbers & Binomial Theorem."},{"id":114,"text":"How can you improve your speed in Complex Numbers & Binomial Theorem questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for Complex Numbers & Binomial Theorem."},{"id":115,"text":"What is the best strategy for attempting Complex Numbers & Binomial Theorem questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for Complex Numbers & Binomial Theorem."}];
+        var practiceQs = [{"id":101,"text":"Which of the following is a primitive 12th root of unity?","options":[{"l":"a","t":"cos(π/6) + i sin(π/6)","c":true},{"l":"b","t":"cos(π/3) + i sin(π/3)","c":false},{"l":"c","t":"cos(π/2) + i sin(π/2)","c":false},{"l":"d","t":"cos(2π/3) + i sin(2π/3)","c":false}],"sol":"The 12th roots of unity are ζ_k = cos(2πk/12) + i sin(2πk/12) for k = 0,…,11. A root is primitive iff gcd(k,12)=1. For k=1 we get cos(π/6)+i sin(π/6); gcd(1,12)=1 so it is primitive. The other options correspond to k=2,3,4, which have gcd >1 and are not primitive."},{"id":102,"text":"In the binomial expansion of (cos θ + i sin θ)^n, which statement about the terms is correct?","options":[{"l":"a","t":"All terms are real for any complex base.","c":false},{"l":"b","t":"Cancellation due to i² = –1 often occurs in complex expansions.","c":true},{"l":"c","t":"Symmetry of binomial coefficients is lost for complex coefficients.","c":false},{"l":"d","t":"Real‑coefficient expansions always have conjugate pairing.","c":false}],"sol":"The lesson states that for complex‑coefficient expansions, cancellation often occurs because i² = –1, and the symmetry of binomial coefficients is supplemented by conjugate pairing. Real‑coefficient expansions rarely show such cancellation and do not automatically produce conjugate pairs. Therefore the correct description is that cancellation due to i² = –1 often occurs in complex expansions."},{"id":103,"text":"Express (√3 + i)^10 in the form a + bi.","options":[{"l":"a","t":"512 - 512√3 i","c":true},{"l":"b","t":"512 + 512√3 i","c":false},{"l":"c","t":"-512 + 512√3 i","c":false},{"l":"d","t":"-512 - 512√3 i","c":false}],"sol":"Modulus of √3 + i is √((√3)² + 1²) = 2. Argument = tan⁻¹(1/√3) = π/6. By De Moivre, (√3 + i)^10 = 2^10 (cos 10·π/6 + i sin 10·π/6) = 1024 (cos 5π/3 + i sin 5π/3). cos 5π/3 = 1/2, sin 5π/3 = -√3/2. Thus the result = 1024(1/2 - i√3/2) = 512 - 512√3 i."}];
         var answered={},correctCount=0,lessonSlug="complex-binomial";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
