@@ -84,6 +84,14 @@ async function probe(route, url, key, model, extra) {
   } else {
     console.log('OPENROUTER_API_KEY not set — skipping OpenRouter probes');
   }
+  const thUrl = process.env.TOKENHARBOR_URL || '';
+  const thKey = process.env.TOKENHARBOR_API_KEY || '';
+  const thModel = process.env.TOKENHARBOR_MODEL || 'deepseek-v4.1-flash';
+  if (thKey && thUrl) {
+    results.push(['tokenharbor', thModel, await probe('tokenharbor', thUrl, thKey, thModel)]);
+  } else {
+    console.log('TOKENHARBOR_URL / TOKENHARBOR_API_KEY not set — skipping Token Harbor probe');
+  }
   console.log('\n=== LIVE (answered 200) ===');
   results.filter(r => r[2]).forEach(r => console.log('  ' + r[0] + '  ' + r[1]));
   console.log('live: ' + results.filter(r => r[2]).length + '/' + results.length);

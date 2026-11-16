@@ -37,4 +37,7 @@ jobs:
         env:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TOKENHARBOR_API_KEY: ${{ secrets.TOKENHARBOR_API_KEY }}
+          TOKENHARBOR_URL: ${{ vars.TOKENHARBOR_URL }}
+          TOKENHARBOR_MODEL: ${{ vars.TOKENHARBOR_MODEL || 'deepseek-v4.1-flash' }}
         run: node scripts/probe-models.js
