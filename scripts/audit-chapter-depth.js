@@ -135,10 +135,11 @@ function auditChapter(chapter) {
   }
 
   const subTopics = chapter.subTopics || [];
-  // Sub-topics are checked against the matched chapter text when there is one,
-  // otherwise against the whole page (so 'scattered' still reports what is
-  // there).
-  const evidence = best ? best.text : pageText;
+  // Sub-topics are checked against the whole mapped page(s), not just the best
+  // block. A broad chapter (Parliament, Centre-State) legitimately keeps its
+  // sub-topics in sibling sections, and a block-only check reported them
+  // missing when they were plainly on the page.
+  const evidence = pageText;
   const missingSubTopics = subTopics.filter(t => !hasTerm(evidence, t));
   const pagePresent = subTopics.filter(t => hasTerm(pageText, t)).length;
   const namePresent = hasTerm(pageText, chapter.name);
