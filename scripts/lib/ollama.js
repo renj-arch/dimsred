@@ -126,8 +126,14 @@ const TOKENHARBOR = process.env.TOKENHARBOR === '1';
 const TOKENHARBOR_KEY = process.env.TOKENHARBOR_API_KEY || '';
 const TOKENHARBOR_MODEL = process.env.TOKENHARBOR_MODEL || 'deepseek-v4.1-flash';
 const TOKENHARBOR_URL = process.env.TOKENHARBOR_URL || '';
+const TOKENHARBOR_MAX_TOKENS = parseInt(process.env.TOKENHARBOR_MAX_TOKENS || '14000', 10);
 function callTokenHarbor(messages, opts) {
-  return callOpenAICompatible('TokenHarbor', TOKENHARBOR_URL, TOKENHARBOR_KEY, TOKENHARBOR_MODEL, messages, opts, null, null);
+  // deepseek-v4.1-flash is a reasoning model: a small max_tokens is spent
+  // entirely on hidden reasoning and returns no answer, which fails the call
+  // (correctly) and pushes the lane onto the next backend. Give it a floor big
+  // enough to reason AND answer, so an enabled route actually serves.
+  const o = Object.assign({}, opts, { numPredict: Math.max((opts && opts.numPredict) || 0, TOKENHARBOR_MAX_TOKENS) });
+  return callOpenAICompatible('TokenHarbor', TOKENHARBOR_URL, TOKENHARBOR_KEY, TOKENHARBOR_MODEL, messages, o, null, null);
 }
 
 function log(msg) { console.log('[model] ' + msg); }

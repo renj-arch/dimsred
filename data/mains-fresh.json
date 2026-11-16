@@ -2,7 +2,7 @@
   "meta": {
     "about": "Frozen AI practice questions for the mains page button. Written by the site's own model (scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. Unreviewed practice material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.",
     "updated": "2026-11-16",
-    "count": 23,
+    "count": 24,
     "lastAttempt": {
       "at": "2026-11-07T09:06:43.539Z",
       "reason": "shipped ci-mw66iy1f"
@@ -1606,6 +1606,76 @@
         "words": 215,
         "targetWords": 250,
         "anchors": 0
+      }
+    },
+    {
+      "id": "ci-mwjfpeif-lvf3",
+      "at": "2026-11-16",
+      "paper": "optional2",
+      "topic": "Linear Programming: Duality Theory and Sensitivity Analysis",
+      "marks": 15,
+      "difficulty": "medium",
+      "years": [],
+      "question": "State and prove the Fundamental Theorem of Duality in Linear Programming. Using this theorem, explain how sensitivity analysis of the right-hand side constants in the primal problem can be performed through the optimal dual solution. Illustrate with a suitable example. (15 marks, 250 words)",
+      "answer": [
+        {
+          "h": "Fundamental Theorem of Duality — Statement and Context",
+          "p": "The Fundamental Theorem of Duality states that if either the primal or the dual linear programming problem has a finite optimal solution, then the other also has a finite optimal solution and the optimal values of their objective functions are equal. This theorem, established by von Neumann and Gale in 1947, forms the cornerstone of duality theory and enables economic interpretation of shadow prices in resource allocation problems."
+        },
+        {
+          "h": "Proof Outline via Simplex Method and Complementary Slackness",
+          "p": "Consider the primal in standard form: maximize cᵀx subject to Ax ≤ b, x ≥ 0. The dual is minimize bᵀy subject to Aᵀy ≥ c, y ≥ 0. When the primal simplex terminates with an optimal basis B, the optimal dual variables are y* = c_BᵀB⁻¹. Weak duality (cᵀx ≤ bᵀy for all feasible x, y) follows directly from x ≥ 0, y ≥ 0 and the constraint structure. Strong duality is proved by showing that at optimality, the reduced costs c_j - y*ᵀA_j ≤ 0 imply cᵀx* = y*ᵀAx* = y*ᵀb, with equality holding due to complementary slackness: x_j*(c_j - y*ᵀA_j) = 0 and y_i*(b_i - A_i x*) = 0."
+        },
+        {
+          "h": "Sensitivity Analysis Through Optimal Dual Variables",
+          "p": "The optimal dual variables y* represent shadow prices — the rate of change of the optimal primal objective value with respect to marginal changes in the right-hand side constants b_i. If b changes to b + Δb while the current basis remains optimal (i.e., B⁻¹(b + Δb) ≥ 0), the new optimal value is z* + y*ᵀΔb. This allows immediate assessment of resource value without re-solving. For example, in a production planning problem with constraints on labour (b₁=100 hrs) and machine time (b₂=80 hrs), if y* = (15, 10), an extra hour of labour increases profit by ₹15 provided the basis remains unchanged."
+        },
+        {
+          "h": "Illustrative Example — Resource Allocation",
+          "p": "Maximize z = 3x₁ + 5x₂ subject to x₁ + 2x₂ ≤ 10 (material), 3x₁ + 2x₂ ≤ 18 (labour), x₁, x₂ ≥ 0. Optimal primal: x* = (4, 3), z* = 27. Optimal dual: y* = (1, 1). If material increases to 12 (Δb₁=2), new z* = 27 + 1×2 = 29, feasible since B⁻¹(b+Δb) = (4, 3) + (2, -1) = (6, 2) ≥ 0. If labour increases to 22 (Δb₂=4), new z* = 27 + 1×4 = 31, but B⁻¹(b+Δb) = (4, 3) + (-2, 2) = (2, 5) ≥ 0 holds. Beyond Δb₂=6, basis changes and re-optimization is needed."
+        },
+        {
+          "h": "Limitations and Practical Considerations",
+          "p": "Sensitivity analysis via dual variables is valid only within the range where the current optimal basis remains feasible (100% rule for simultaneous changes). It assumes linearity and certainty — violated in stochastic or integer programmes. In practice, the dual simplex method efficiently re-optimizes when basis changes, and parametric programming extends analysis to continuous parameter variation. The 1973 Indian Planning Commission's use of shadow prices in the Fifth Five Year Plan exemplifies policy application."
+        },
+        {
+          "h": "Way Forward",
+          "p": "Modern solvers (CPLEX, Gurobi) provide dual values and sensitivity ranges automatically, but understanding the theoretical basis remains essential for modelling decisions — such as whether to acquire additional resources at given prices. Future work integrates duality with robust optimization to handle data uncertainty, a critical need in India's infrastructure and energy planning where resource availability fluctuates."
+        }
+      ],
+      "marksGuide": [
+        "Clear statement and rigorous proof of the Fundamental Theorem of Duality",
+        "Correct derivation of shadow prices from optimal dual variables",
+        "Valid illustrative example with numerical verification of basis feasibility",
+        "Discussion of limitations (100% rule, linearity assumption, basis change)",
+        "Connection to practical applications and modern computational practice"
+      ],
+      "pitfalls": [
+        "Stating the theorem without proof or giving only weak duality",
+        "Confusing primal/dual variable roles in sensitivity interpretation",
+        "Example with arithmetic errors or infeasible basis after perturbation",
+        "Ignoring the range of validity (100% rule) for simultaneous RHS changes",
+        "Treating shadow prices as globally valid without basis-change caveat"
+      ],
+      "laws": [],
+      "keywords": [
+        "Fundamental Theorem of Duality",
+        "shadow prices",
+        "complementary slackness",
+        "sensitivity analysis",
+        "100% rule",
+        "dual simplex method",
+        "parametric programming"
+      ],
+      "origin": "ci",
+      "ai": 1,
+      "model": "hosted",
+      "subject": "mathematics",
+      "quality": {
+        "score": 96,
+        "words": 515,
+        "targetWords": 250,
+        "anchors": 2
       }
     }
   ]

@@ -27,7 +27,7 @@ on:
       model:
         description: 'NVIDIA model id or alias'
         required: false
-        default: 'mistral-large-4'
+        default: 'nemotron-3.5-super-vl'
       route:
         description: 'Which route writes'
         type: choice
@@ -73,7 +73,10 @@ jobs:
 
       - name: Write lessons with the strongest available model
         env:
-          NVAPI: ${{ inputs.route == 'nvidia' && '1' || '' }}
+          # NVAPI stays on for the nvidia and tokenharbor routes so the steady
+          # nemotron model is always available as a fallback; only the
+          # openrouter route disables it (to isolate that route).
+          NVAPI: ${{ inputs.route != 'openrouter' && '1' || '' }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           NVIDIA_MODEL: ${{ inputs.model }}
           OPENROUTER: '1'
@@ -134,6 +137,7 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           step_summary() { { echo '### Deepen (review PR)'; echo ''; echo '```'; cat /tmp/guard.txt 2>/dev/null || echo 'no guard output'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"; }
           if [ ! -f scripts/.course-touched.json ]; then echo "nothing written this run"; step_summary; exit 0; fi
@@ -141,11 +145,15 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           BR="deepen/run-${{ github.run_number }}"
           git checkout -b "$BR"
+          # Push the current branch to a same-named remote branch, so the
+          # proven ci-push.sh path (jittered retries, auth fallback, and a
+          # by-key union of concurrent course-data.json writes) does the push
+          # instead of a raw "git push -u" that hung here twice.
+          git config push.default current
           git add scripts/course-data.json scripts/course-practice.json scripts/course-versions.json scripts/course-depth.json scripts/course-addons.json 2>/dev/null || true
           if [ -f /tmp/course-files.txt ]; then xargs -a /tmp/course-files.txt git add; fi
           rm -f scripts/.course-touched.json
-          git commit -m "deepen: model-drafted content for review (${{ inputs.model }})" || { echo "nothing to commit"; step_summary; exit 0; }
-          git push -u origin "$BR"
-          GUARD=$(cat /tmp/guard.txt 2>/dev/null || echo 'no guard output')
+          if git diff --cached --quiet; then echo "nothing staged"; step_summary; exit 0; fi
+          bash scripts/ci-push.sh "deepen: model-drafted content for review (${{ inputs.model }})" || { echo "::error::push failed"; step_summary; exit 1; }
           gh pr create --head "$BR" --base main --title "deepen: model-drafted content for review (${{ inputs.model }})" --body "Model-drafted deepening for review. Model: ${{ inputs.model }}. Keys: ${{ inputs.keys }}. A human must verify every fact (Articles, cases, dates, scheme figures) before merging. The citation-guard output is in the workflow run summary." || echo "PR create returned non-zero (it may already exist)"
           step_summary
