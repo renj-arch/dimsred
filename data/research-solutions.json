@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-16T04:22:56.708Z",
+  "updatedAt": "2026-11-16T05:26:18.985Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -17719,6 +17719,370 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-15T22:46:03.986Z"
+    },
+    {
+      "id": "4f76ca6a6609cab9",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-08",
+      "paperTitle": "IBPS PO Practice Set 8",
+      "paperPath": "ibps-po/papers/practice-set-08.html",
+      "paperFile": "practice-set-08.json",
+      "questionNumber": 4,
+      "section": "Quantitative Aptitude",
+      "question": "A and B together can complete a work in 12 days. B and C together can complete the same work in 15 days. C and A together can complete it in 20 days. In how many days can A alone complete the work?",
+      "options": [
+        {
+          "label": "A",
+          "text": "30 days",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "24 days",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20 days",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "18 days",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let work = 1 unit. Rates: a+b=1/12, b+c=1/15, c+a=1/20.",
+        "Add all three: 2(a+b+c)=1/12+1/15+1/20 = 5/60+4/60+3/60 = 12/60 = 1/5.",
+        "So a+b+c = 1/10.",
+        "Subtract b+c: a = (a+b+c) - (b+c) = 1/10 - 1/15 = 3/30 - 2/30 = 1/30.",
+        "A's rate = 1/30 per day, so A alone takes 30 days.",
+        "Option A matches."
+      ],
+      "verifierCheck": "Let total work = 1 unit. Combined rates: A+B = 1/12, B+C = 1/15, C+A = 1/20 per day. Adding: 2(A+B+C) = 1/12+1/15+1/20 = (5+4+3)/60 = 12/60 = 1/5. So A+B+C = 1/10. Then A = (A+B+C) - (B+C) = 1/10 - 1/15 = (3-2)/30 = 1/30 per day. Hence A alone takes 30 days.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Formula Shortcut",
+          "idea": "Direct formula for A from three pairwise times",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Use A = 2 / (1/12 + 1/20 - 1/15)",
+            "Compute 1/12+1/20 = 2/15",
+            "2/15 - 1/15 = 1/15",
+            "2 ÷ (1/15) = 30"
+          ]
+        },
+        {
+          "name": "LCM & Sum",
+          "idea": "Use LCM as total work, sum pairwise rates to get individual",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Take LCM of 12,15,20 = 60 as total work",
+            "Daily rates: A+B=5, B+C=4, C+A=3",
+            "Add all three: 2(A+B+C)=12 → A+B+C=6",
+            "Subtract B+C: A = 6-4 = 2 units/day",
+            "Days = 60/2 = 30"
+          ]
+        },
+        {
+          "name": "Pairwise Subtraction",
+          "idea": "Add reciprocal equations, isolate 1/A",
+          "kind": "mnemonic",
+          "seconds": 10,
+          "steps": [
+            "Write rates: 1/A+1/B=1/12, 1/B+1/C=1/15, 1/C+1/A=1/20",
+            "Add all: 2(1/A+1/B+1/C)=1/12+1/15+1/20=1/5",
+            "So 1/A+1/B+1/C=1/10",
+            "Subtract 1/B+1/C=1/15 → 1/A=1/10-1/15=1/30",
+            "A = 30 days"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-16T05:23:51.007Z"
+    },
+    {
+      "id": "2e114f02084aafbe",
+      "exam": "nda",
+      "paperSlug": "practice-set-05",
+      "paperTitle": "NDA Practice Set 5",
+      "paperPath": "nda/papers/practice-set-05.html",
+      "paperFile": "practice-set-05.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "The exact value of tan 15° is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "2 - √3",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "√3 - 1",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1/√3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "√2 - 1",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Use tangent subtraction formula: tan(45° - 30°) = (tan 45° - tan 30°)/(1 + tan 45° tan 30°)",
+        "Substitute tan 45° = 1 and tan 30° = 1/√3: (1 - 1/√3)/(1 + 1/√3)",
+        "Simplify by multiplying numerator and denominator by √3: (√3 - 1)/(√3 + 1)",
+        "Rationalize denominator by multiplying by (√3 - 1)/(√3 - 1): (√3 - 1)^2/(3 - 1)",
+        "Expand numerator: 3 - 2√3 + 1 = 4 - 2√3, denominator 2: (4 - 2√3)/2 = 2 - √3",
+        "Match with option A: 2 - √3"
+      ],
+      "verifierCheck": "Using the tangent difference identity, tan(15°) = tan(45° - 30°) = (tan45° - tan30°)/(1 + tan45° tan30°) = (1 - 1/√3)/(1 + 1/√3) = (√3 - 1)/(√3 + 1). Rationalizing the denominator gives (√3 - 1)^2/(3 - 1) = (3 - 2√3 + 1)/2 = (4 - 2√3)/2 = 2 - √3. This matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Known Value Recall",
+          "idea": "Memorize tan15° = 2 - √3 from standard angles",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall exact value: tan15° = 2 - √3",
+            "Confirm it matches option A",
+            "Answer A"
+          ]
+        },
+        {
+          "name": "Half-Angle Formula",
+          "idea": "Use tan(θ/2) = (1-cosθ)/sinθ with θ=30°",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall tan(θ/2) = (1 - cosθ)/sinθ",
+            "Set θ = 30°: cos30° = √3/2, sin30° = 1/2",
+            "Compute (1 - √3/2) / (1/2) = 2 - √3",
+            "Match option A"
+          ]
+        },
+        {
+          "name": "Difference Identity",
+          "idea": "tan(45°-30°) simplifies quickly",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Write 15° = 45° - 30°",
+            "Apply tan(A-B) = (tanA - tanB)/(1+tanA tanB)",
+            "tan45°=1, tan30°=1/√3",
+            "Simplify (1 - 1/√3)/(1 + 1/√3) = 2 - √3",
+            "Select option A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-16T05:25:06.333Z"
+    },
+    {
+      "id": "a6d91c818147315d",
+      "exam": "clat",
+      "paperSlug": "practice-set-04",
+      "paperTitle": "CLAT Practice Set 4",
+      "paperPath": "clat/papers/practice-set-04.html",
+      "paperFile": "practice-set-04.json",
+      "questionNumber": 5,
+      "section": "Quantitative Techniques",
+      "question": "The difference between Compound Interest (compounded annually) and Simple Interest on a certain principal at 10% per annum for 2 years is ₹50. What is the principal amount?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹4,000",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "₹5,000",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "₹6,000",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹5,500",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let principal be P.",
+        "Simple Interest for 2 years at 10% = P × 0.1 × 2 = 0.2P.",
+        "Compound Interest compounded annually for 2 years at 10% = P(1.1)^2 - P = 1.21P - P = 0.21P.",
+        "Difference = 0.21P - 0.2P = 0.01P = 50.",
+        "Solve: P = 50 / 0.01 = 5000.",
+        "Option B is ₹5,000."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Formula Shortcut",
+          "idea": "Use CI-SI = P*(r/100)^2 for 2 years",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Note r=10%, so (r/100)^2 = 0.01",
+            "Difference = P * 0.01 = 50 => P = 50/0.01 = 5000"
+          ]
+        },
+        {
+          "name": "Percentage Insight",
+          "idea": "Difference equals 1% of principal at 10% for 2 years",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "For 10% rate, CI-SI over 2 years = 1% of principal",
+            "1% of P = 50 => P = 50 * 100 = 5000"
+          ]
+        },
+        {
+          "name": "Quick Ratio",
+          "idea": "Scale from a base principal of 100",
+          "kind": "estimate",
+          "seconds": 6,
+          "steps": [
+            "For P=100, SI=20, CI=21, diff=1",
+            "Diff 50 means principal = 100 * 50 = 5000"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-16T05:25:35.494Z"
+    },
+    {
+      "id": "73b989669db51f16",
+      "exam": "nda",
+      "paperSlug": "practice-set-05",
+      "paperTitle": "NDA Practice Set 5",
+      "paperPath": "nda/papers/practice-set-05.html",
+      "paperFile": "practice-set-05.json",
+      "questionNumber": 5,
+      "section": "Mathematics",
+      "question": "If the sum of the interior angles of a convex polygon is equal to 720°, what is the number of its sides?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "6",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "8",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the formula for the sum of interior angles of a convex polygon: (n-2) × 180°",
+        "Set up the equation: (n-2) × 180° = 720°",
+        "Divide both sides by 180°: n-2 = 4",
+        "Add 2 to both sides: n = 6",
+        "The polygon has 6 sides"
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Known sequence",
+          "idea": "Memorize sums: 180,360,540,720... each +180 adds a side",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Triangle 180 (3 sides)",
+            "Quad 360 (4)",
+            "Pentagon 540 (5)",
+            "Hexagon 720 (6)"
+          ]
+        },
+        {
+          "name": "Formula divide-add",
+          "idea": "Use (n-2)×180=sum; divide sum by 180 then add 2",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "720 ÷ 180 = 4",
+            "4 + 2 = 6"
+          ]
+        },
+        {
+          "name": "180× table",
+          "idea": "180×4=720 means 4 triangles → 4+2 sides",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "180 × 4 = 720",
+            "4 triangles = n-2",
+            "n = 4+2 = 6"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-16T05:25:51.763Z"
     }
   ]
 }
