@@ -141,16 +141,5 @@ jobs:
           git commit -m "deepen: model-drafted content for review (${{ inputs.model }})" || { echo "nothing to commit"; step_summary; exit 0; }
           git push -u origin "$BR"
           GUARD=$(cat /tmp/guard.txt 2>/dev/null || echo 'no guard output')
-          gh pr create --head "$BR" --base main \
-            --title "deepen: model-drafted content for review (${{ inputs.model }})" \
-            --body "Model-drafted deepening of: ${{ inputs.keys }}
-
-Written with **${{ inputs.model }}** through the hosted route. This lane never publishes to main; it proposes.
-
-**Citation guard (deterministic check):**
-\`\`\`
-$GUARD
-\`\`\`
-
-A human must verify facts (Articles, cases, dates, scheme figures) before this is merged. The guard only catches mechanically checkable defects." || echo "PR create returned non-zero (it may already exist)"
+          gh pr create --head "$BR" --base main --title "deepen: model-drafted content for review (${{ inputs.model }})" --body "Model-drafted deepening for review. Model: ${{ inputs.model }}. Keys: ${{ inputs.keys }}. A human must verify every fact (Articles, cases, dates, scheme figures) before merging. The citation-guard output is in the workflow run summary." || echo "PR create returned non-zero (it may already exist)"
           step_summary
