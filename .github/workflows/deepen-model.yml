@@ -25,14 +25,18 @@ on:
         required: false
         default: 'mistral-large-4'
       route:
-        description: 'Which route writes: nvidia or openrouter'
+        description: 'Which route writes'
         type: choice
-        options: ['nvidia', 'openrouter']
+        options: ['nvidia', 'openrouter', 'tokenharbor']
         default: 'nvidia'
       openrouter_model:
         description: 'OpenRouter model id (used when route=openrouter, and as fallback)'
         required: false
         default: 'google/gemma-4-31b-it'
+      tokenharbor_model:
+        description: 'Token Harbor model id (used when route=tokenharbor)'
+        required: false
+        default: 'deepseek-v4.1-flash'
 
 concurrency:
   group: deepen-model
@@ -71,6 +75,10 @@ jobs:
           OPENROUTER: '1'
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENROUTER_MODEL: ${{ inputs.openrouter_model }}
+          TOKENHARBOR: ${{ inputs.route == 'tokenharbor' && '1' || '' }}
+          TOKENHARBOR_API_KEY: ${{ secrets.TOKENHARBOR_API_KEY }}
+          TOKENHARBOR_URL: ${{ vars.TOKENHARBOR_URL }}
+          TOKENHARBOR_MODEL: ${{ inputs.tokenharbor_model }}
           EXPAND_PER_RUN: ${{ inputs.per_run }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
