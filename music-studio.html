@@ -45,6 +45,13 @@ a{color:var(--purple);text-decoration:none}
 .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
 .panel h3{font-size:.9rem;font-weight:800;margin-bottom:14px;color:var(--text);display:flex;align-items:center;gap:8px}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.word-grid{display:flex;flex-wrap:wrap;gap:6px}
+.word-chip{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-size:.8em;cursor:pointer;transition:all .15s;text-align:center}
+.word-chip:hover{background:var(--purple);color:#000;border-color:var(--purple)}
+.word-chip .script{font-size:.95em;font-weight:700;display:block}
+.word-chip .roman{font-size:.72em;color:var(--muted);display:block}
+.word-chip .roman.tamil{color:#bbf7d0}
+.word-chip .roman.malayalam{color:#a7f3d0}
 .field{display:flex;flex-direction:column;gap:6px}
 .field label{font-size:.75em;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
 .field input, .field select, .field textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.9em}
@@ -201,6 +208,7 @@ textarea{min-height:90px;resize:vertical}
       <button class="tab" onclick="showTab('synth')">🎹 Synth</button>
       <button class="tab" onclick="showTab('beat')">🥁 Beat</button>
       <button class="tab" onclick="showTab('tts')">🇮🇳 TTS ML/Tamil</button>
+      <button class="tab" onclick="showTab('tamil-malayalam')">🈶 Lyric Helper</button>
     </div>
 
     <div class="editor">
@@ -380,6 +388,25 @@ textarea{min-height:90px;resize:vertical}
           <div id="ttsStatus" style="margin-left:12px;font-size:.85em;color:var(--muted)"></div>
         </div>
       </section>
+
+      <section id="tab-tamil-malayalam" class="tab-panel panel" style="display:none">
+        <h3>Tamil & Malayalam Lyric Helper</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Tap a word to insert it into your lyrics. Build bilingual verses for your songs.</p>
+        <div style="display:flex;gap:16px">
+          <div style="flex:1">
+            <h4 style="font-size:.85em;color:var(--purple);margin-bottom:8px">Tamil (தமிழ்)</h4>
+            <div class="word-grid" id="tamilWords"></div>
+          </div>
+          <div style="flex:1">
+            <h4 style="font-size:.85em;color:var(--emerald);margin-bottom:8px">Malayalam (മലയാളം)</h4>
+            <div class="word-grid" id="malayalamWords"></div>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Combined lyrics</label>
+          <textarea id="tmLyrics" style="width:100%;min-height:200px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace;font-size:1rem" onchange="saveField('tmLyrics',this.value)" placeholder="Type or tap words above to build your verse..."></textarea>
+        </div>
+      </section>
     </div>
 
     <div class="player-bar">
@@ -420,6 +447,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initPiano();
   initChords();
   initBeatGrid();
+  renderTMWords();
   if (projects.length === 0) newSong();
   else loadProject(projects[0].id);
   setupAudio();
@@ -435,12 +463,80 @@ function loadVoices() {
   });
 }
 
+const TAMIL_WORDS = [
+  { script: 'காதல்', roman: 'Kādhal', meaning: 'Love' },
+  { script: 'கண்ணீர்', roman: 'Kāṇṇīr', meaning: 'Tears' },
+  { script: 'கனவு', roman: 'Kanavu', meaning: 'Dream' },
+  { script: 'மழை', roman: 'Mazhai', meaning: 'Rain' },
+  { script: 'சந்திரன்', roman: 'Chandran', meaning: 'Moon' },
+  { script: 'நட்சத்திரம்', roman: 'Natchathiram', meaning: 'Star' },
+  { script: 'பூ', roman: 'Pū', meaning: 'Flower' },
+  { script: 'கடல்', roman: 'Kadal', meaning: 'Ocean' },
+  { script: 'உயிரே', roman: 'Uyirē', meaning: 'My life/soul' },
+  { script: 'உயிர்', roman: 'Uyir', meaning: 'Life' },
+  { script: 'வீடு', roman: 'Vīṭu', meaning: 'Home' },
+  { script: 'வீлих', roman: 'Vīliha', meaning: 'Night' },
+  { script: 'நாள்', roman: 'Nāḷ', meaning: 'Day' },
+  { script: 'காதல்', roman: 'Kādhal', meaning: 'Love' },
+  { script: 'மறவும்', roman: 'Maṟavum', meaning: 'Forget' },
+  { script: 'நினivit', roman: 'Niṉaivi', meaning: 'Memory' }
+];
+
+const MALAYALAM_WORDS = [
+  { script: 'പ്രേമം', roman: 'Preyam', meaning: 'Love' },
+  { script: 'കണ്ണீர്', roman: 'Kannīr', meaning: 'Tears' },
+  { script: 'സ്വപ്നം', roman: 'Svapnam', meaning: 'Dream' },
+  { script: 'മഴ', roman: 'Mazha', meaning: 'Rain' },
+  { script: 'ചന്ദ്രൻ', roman: 'Chandran', meaning: 'Moon' },
+  { script: 'നക്ഷത്രം', roman: 'Nakshatram', meaning: 'Star' },
+  { script: 'പൂവ്', roman: 'Pūv', meaning: 'Flower' },
+  { script: 'കടൽ', roman: 'Kadal', meaning: 'Ocean' },
+  { script: 'ജീവ്', roman: 'Jīv', meaning: 'Life' },
+  { script: 'ഹൃദയം', roman: 'Hṛdayam', meaning: 'Heart' },
+  { script: 'രാത്രി', roman: 'Rātri', meaning: 'Night' },
+  { script: 'ദിവസം', roman: 'Divasam', meaning: 'Day' },
+  { script: 'വീട്', roman: 'Vīṭu', meaning: 'Home' },
+  { script: 'നിന്നೆ നോക്കി', roman: 'Ninne nokki', meaning: 'Looking at you' },
+  { script: 'മനസ്സിൽ', roman: 'Manassil', meaning: 'In the mind' }
+];
+
+function renderTMWords() {
+  const tamilEl = document.getElementById('tamilWords');
+  const malayalamEl = document.getElementById('malayalamWords');
+  if (!tamilEl || !malayalamEl) return;
+
+  tamilEl.innerHTML = TAMIL_WORDS.map(w =>
+    `<div class="word-chip tamil" onclick="insertTMWord('${escapeJs(w.script)}','${escapeJs(w.roman)}')"><span class="script">${w.script}</span><span class="roman tamil">${w.roman}</span><span class="roman" style="font-size:.65em">${w.meaning}</span></div>`
+  ).join('');
+
+  malayalamEl.innerHTML = MALAYALAM_WORDS.map(w =>
+    `<div class="word-chip malayalam" onclick="insertTMWord('${escapeJs(w.script)}','${escapeJs(w.roman)}')"><span class="script">${w.script}</span><span class="roman malayalam">${w.roman}</span><span class="roman" style="font-size:.65em">${w.meaning}</span></div>`
+  ).join('');
+}
+
+function escapeJs(s) {
+  return String(s).replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '\\n');
+}
+
+function insertTMWord(script, roman) {
+  const ta = document.getElementById('tmLyrics');
+  if (!ta) return;
+  const insert = script + ' (' + roman + ') ';
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  ta.value = ta.value.slice(0, start) + insert + ta.value.slice(end);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
+  ta.focus();
+  saveField('tmLyrics', ta.value);
+}
+
+
 function newSong() {
   const id = 'song_' + Date.now();
   const p = {
     id, title: 'Untitled Song', artist: 'You', bpm: 90, key: 'C',
     genre: 'pop', desc: '', chords: '', structure: '', notes: '',
-    lyrics: '', created: Date.now(), updated: Date.now()
+    lyrics: '', tmLyrics: '', created: Date.now(), updated: Date.now()
   };
   projects.unshift(p);
   saveProjects();
@@ -467,6 +563,7 @@ function loadProject(id) {
   document.getElementById('f-structure').value = p.structure;
   document.getElementById('f-notes').value = p.notes;
   document.getElementById('voiceText').value = p.lyrics;
+  document.getElementById('tmLyrics').value = p.tmLyrics || '';
   renderLyrics(p.lyrics);
   renderProjects();
   updatePlayer();
