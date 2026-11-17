@@ -63,7 +63,7 @@ function guessTag(text) {
   for (const [tag, re] of TAG_RULES) {
     if (re.test(text)) return tag;
   }
-  return 'Geography';
+  return null;
 }
 
 function arg(name, fallback) {
@@ -193,7 +193,7 @@ async function fromModel(ctx, id, paper, tag) {
     const text = await hosted.chat(
       'You design exam revision diagrams and answer with JSON only.',
       attempt === 1 ? ask : ask + '\n\nYour last answer was rejected. Return valid JSON with every item inside 0..760 x 0..420.',
-      { numPredict: 2800, temperature: 0.4 }
+      { numPredict: 6000, temperature: 0.4 }
     );
     const raw = extractJson(text);
     if (!raw) continue;
@@ -223,7 +223,14 @@ async function main() {
     ? lessonContext(path.resolve(ROOT, lesson))
     : { path: null, title: String(topic), sections: [] };
 
-  const tag = arg('tag') || guessTag(ctx.title + ' ' + (ctx.path || '') + ' ' + ctx.sections.join(' '));
+  // Title and path identify the subject; the section list is noisy (a Polity
+// lesson has a "historical background" section, which used to file the whole
+// figure under History). Ask the narrow text first, then widen.
+  const narrow = ctx.title + ' ' + (ctx.path || '');
+  const tag = arg('tag') ||
+    guessTag(narrow) ||
+    guessTag(narrow + ' ' + ctx.sections.join(' ')) ||
+    'Geography';
   const paper = String(arg('paper') || PAPER_OF[tag] || 'GS1').toUpperCase();
   const id = store.kebab(arg('id') || ctx.title);
 
