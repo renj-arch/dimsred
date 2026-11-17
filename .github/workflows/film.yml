@@ -127,6 +127,15 @@ jobs:
       - name: Validate political argument map
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-debates.js "data/films/${FILM}-debates.json"
 
+      # Design (or re-design) the sets from this film's own narration before
+      # Blender starts. Hand-authored sets such as salt-march-sets.json are left
+      # untouched; boards authored by author.js are redesigned from the text.
+      - name: Design the 3D sets from this film's narration
+        run: node scripts/film/design-sets.js --film "$FILM"
+
+      - name: Validate the designed sets
+        run: node scripts/film/validate-sets.js "data/films/${FILM}-sets.json"
+
       - name: Render 3D plates with Blender
         run: |
           node scripts/film/render-plates.js \
