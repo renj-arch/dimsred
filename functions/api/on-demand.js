@@ -38,7 +38,7 @@ var DEFAULT_MODEL = 'batiai/qwen3.8-27b:iq3';
 var MAX_RUNS_PER_WINDOW = 3;
 var WINDOW_MIN = 20;
 // The kinds on-demand.yml knows how to generate.
-var KINDS = { 'writer': 1, 'tutor-questions': 1, 'mental-batch': 1, 'mains-fresh': 1 };
+var KINDS = { 'writer': 1, 'tutor-questions': 1, 'mental-batch': 1, 'mains-fresh': 1, 'lyrics': 1 };
 var ORIGIN = 'https://vlymbooq.qzz.io';
 
 function CORS() {

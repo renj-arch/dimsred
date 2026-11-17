@@ -429,6 +429,59 @@ async function runWriter(p) {
   return { text: text };
 }
 
+// ---- lyrics -----------------------------------------------------------------
+// The studio's Lyric Lab. Same brief shape as functions/api/lyrics.js; that
+// function answers directly when Cloudflare holds a model key, and falls back
+// to dispatching this kind through the owner runner when it does not.
+const LANG_NAMES = {
+  english: 'English', tamil: 'Tamil', malayalam: 'Malayalam', hindi: 'Hindi',
+  telugu: 'Telugu', kannada: 'Kannada', bengali: 'Bengali', marathi: 'Marathi',
+  urdu: 'Urdu', punjabi: 'Punjabi', mixed: "a natural mix of English and the speaker's mother tongue"
+};
+
+function lyricsPrompt(b) {
+  b = b || {};
+  const lang = LANG_NAMES[String(b.language || 'english').toLowerCase()] || 'English';
+  const lines = Math.max(4, Math.min(80, Number(b.lines) || 16));
+  const parts = [
+    'Write song lyrics. Return ONLY the lyrics, no commentary, no markdown fences.',
+    '',
+    'Subject / story: ' + String(b.theme || 'write about what the singer cannot say out loud').slice(0, 600),
+    'Language: ' + lang,
+    'Mood: ' + String(b.mood || 'bittersweet').slice(0, 60),
+    'Genre: ' + String(b.genre || 'pop').slice(0, 60),
+    'Point of view: ' + String(b.pov || 'first person').slice(0, 40),
+    'Structure: ' + String(b.structure || 'Verse 1, Chorus, Verse 2, Chorus, Bridge, Chorus').slice(0, 120),
+    'About ' + lines + ' lines in total.',
+    'Rhyme: ' + String(b.rhyme || 'natural, not forced').slice(0, 60)
+  ];
+  if (b.keywords) parts.push('Must use these images or words: ' + String(b.keywords).slice(0, 300));
+  if (b.avoid) parts.push('Avoid: ' + String(b.avoid).slice(0, 300));
+  parts.push(
+    '',
+    'Rules:',
+    '- Tag each section on its own line: [Verse 1], [Chorus], [Bridge], [Outro].',
+    '- The chorus must be singable: short lines, one idea, a repeated hook.',
+    '- Concrete images over abstractions. No filler like "oh baby" unless the genre needs it.',
+    '- Do not invent facts or statistics.',
+    '- If the language is not English, write in that script, and add one romanised line in brackets under each section heading.'
+  );
+  return parts.join('\n');
+}
+
+async function runLyrics(p) {
+  const b = (p && p.brief) ? p.brief : (p || {});
+  const res = await callLLM([
+    { role: 'system', content: 'You are a professional songwriter. You write lyrics a real singer can perform: concrete, rhythmic, honest. You never pad a line to fill a rhyme and you never explain the song.' },
+    { role: 'user', content: lyricsPrompt(b) }
+  ], { temperature: 0.8, numPredict: 3200 });
+  const text = String(res.text || '').trim();
+  if (text.length < 40) throw new Error('lyrics: the model returned nothing usable');
+  const leak = metaLeak(text);
+  if (leak) throw new Error('lyrics contained meta text (' + leak + ') - dropped instead of shipped');
+  return { lyrics: text, provider: res.servedBy || 'owner runner', brief: b };
+}
+
 function tutorPrompt(exam, subject, count, seeds, bias) {
   const lines = [
     'You are a ' + exam + ' exam question setter.',
@@ -829,6 +882,7 @@ function paperLabel(kind, payload, obj) {
   if (kind === 'mental-batch') return 'Mental fresh paper - ' + (obj && Array.isArray(obj.questions) ? obj.questions.length : 0) + ' q';
   if (kind === 'mains-fresh') return 'Mains - ' + (obj && obj.item ? (String(obj.item.paper) + ' - ' + String(obj.item.topic || '')) : 'question');
   if (kind === 'writer') return 'Ask answer - ' + String(payload.prompt || '').replace(/\s+/g, ' ').slice(0, 70);
+  if (kind === 'lyrics') return 'Lyrics - ' + String((payload.brief && payload.brief.theme) || payload.theme || '').replace(/\s+/g, ' ').slice(0, 60);
   return kind;
 }
 
@@ -893,6 +947,7 @@ async function main() {
   const payload = loadPayload();
   let out;
   if (KIND === 'writer') out = await runWriter(payload);
+  else if (KIND === 'lyrics') out = await runLyrics(payload);
   else if (KIND === 'tutor-questions') out = await runTutorQuestions(payload);
   else if (KIND === 'mental-batch') out = await runMentalBatch(payload);
   else if (KIND === 'mains-fresh') out = await runMainsFresh(payload);
