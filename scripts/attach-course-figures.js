@@ -166,12 +166,25 @@ function inject(html, block, slot, perLesson) {
   return html.slice(0, at) + block + '\n' + html.slice(at);
 }
 
-async function inventFor(file, html) {
+// A lesson could end up carrying the same figure twice: with --per-lesson 2 the
+// second pass found no alternative match, invented one, and the inventor
+// returned the same id it derived from the filename. Drop any repeat of an id
+// before deciding what to add, and give a genuine second figure its own id.
+function dedupeBlocks(html) {
+  const seen = new Set();
+  return html.replace(/<!-- course-figure:([a-z0-9-]+) -->[\s\S]*?<\/figure>\n?/g, (m, id) => {
+    if (seen.has(id)) return '';
+    seen.add(id);
+    return m;
+  });
+}
+
+async function inventFor(file, html, ordinal) {
   const title = textOf(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || path.basename(file, '.html');
   // The slug comes from the lesson file without its extension: lesson-current-
   // affairs.html -> current-affairs-figure, not current-affairs-html-figure.
   const slug = store.kebab(path.basename(file, '.html').replace(/^lesson-/, ''));
-  const id = slug + '-figure';
+  const id = slug + '-figure' + (ordinal > 1 ? '-' + ordinal : '');
   if (store.ids().indexOf(id) !== -1) return store.get(id);
   const { execFileSync } = require('child_process');
   const cliArgs = [
@@ -228,10 +241,18 @@ async function main() {
     try { html = fs.readFileSync(file, 'utf8'); } catch (e) { continue; }
     if (html.length < 4000) continue;              // hub or stub, not a lesson
 
+    // Remove any repeat of a figure id before deciding what to add.
+    const deduped = dedupeBlocks(html);
+    const hadDuplicate = deduped !== html;
+    if (hadDuplicate) html = deduped;
+
     // A lesson may hold more than one figure. Skip only when it already has
     // its quota, and never re-attach a figure it already carries.
     const existing = [...html.matchAll(/course-figure:([a-z0-9-]+)/g)].map((m) => m[1]);
-    if (existing.length >= perLesson && !force) continue;
+    if (existing.length >= perLesson && !force) {
+      if (hadDuplicate) { fs.writeFileSync(file, html, 'utf8'); changed.push(rel); }
+      continue;
+    }
 
     const lessonWords = new Set(words(rel + ' ' + textOf(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i)));
     let chosen = bestFigure(lessonWords, existing);
@@ -241,10 +262,20 @@ async function main() {
       // Count creations, not attachments: four exam lessons share one
       // invented figure, and the budget is about model calls.
       const before = store.ids().length;
-      fig = await inventFor(file, html);
+      fig = await inventFor(file, html, existing.length + 1);
       invented += Math.max(0, store.ids().length - before);
     }
-    if (!fig) { missing++; continue; }
+    // Reusing a figure the page already shows would be a duplicate.
+    if (fig && existing.indexOf(fig.id) !== -1) {
+      if (hadDuplicate) { fs.writeFileSync(file, html, 'utf8'); changed.push(rel); }
+      missing++;
+      continue;
+    }
+    if (!fig) {
+      if (hadDuplicate) { fs.writeFileSync(file, html, 'utf8'); changed.push(rel); }
+      missing++;
+      continue;
+    }
 
     if (!html.includes('<div class="lesson-body">') && !/<\/h1>/i.test(html)) { missing++; continue; }
 
