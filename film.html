@@ -5,6 +5,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>vlymbooq film</title>
+<!--
+  This is the render stage, not a reader-facing page. scripts/film/build-film.js
+  drives it frame by frame in headless Chromium to produce the mp4s; readers
+  arrive at the catalogue (films.html) and then the player (watch.html).
+  Kept at this exact path because .github/workflows/film-autopilot.yml lists
+  `film.html` in a sparse-checkout on the film-ci branch.
+-->
+<meta name="robots" content="noindex,nofollow" />
+<link rel="canonical" href="films.html" />
 <style>
   :root {
     --ink:#070707;
