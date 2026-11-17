@@ -460,7 +460,7 @@ function lyricsPrompt(b) {
   parts.push(
     '',
     'Rules:',
-    '- Tag each section on its own line: [Verse 1], [Chorus], [Bridge], [Outro].',
+    '- Tag each section on its own line using the names in the Structure list exactly (for example [Pallavi], [Charanam 1], [Chorus]).',
     '- The chorus must be singable: short lines, one idea, a repeated hook.',
     '- Concrete images over abstractions. No filler like "oh baby" unless the genre needs it.',
     '- Do not invent facts or statistics.',
