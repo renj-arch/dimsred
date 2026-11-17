@@ -105,6 +105,7 @@ function parse(argv) {
     else if (a === '--scene') o.scene = next();
     else if (a === '--script') o.script = next();
     else if (a === '--force') o.force = true;
+    else if (a === '--dry-run') o.dryRun = true;
     else if (a === '--blender') o.blender = next();
     else if (a === '--help' || a === '-h') {
       console.log('node scripts/film/render-plates.js --film salt-march [--samples 32] [--width 1920] [--height 1080] [--force]');
@@ -139,7 +140,7 @@ function loadSetMap(filmId) {
       : null;
     map.set(plate, { scene: entry.scene, script, params });
   }
-  return { map, palette: sets.palette || {} };
+  return { map, palette: sets.palette || {}, file: setsFile, script: sets.script || 'stock_sets.py' };
 }
 
 function main() {
@@ -191,6 +192,11 @@ function main() {
   }
   if (!wanted.length) throw new Error('No Blender plates requested');
 
+  if (opts.dryRun) {
+    console.log(JSON.stringify({ film: opts.film, plates: wanted.length, wanted }, null, 2));
+    return;
+  }
+
   const blenderCheck = spawnSync(opts.blender, ['--version'], { encoding: 'utf8' });
   if (blenderCheck.error) {
     throw new Error(`Blender not found at ${opts.blender}. Set BLENDER or install Blender on the runner.`);
@@ -207,6 +213,13 @@ function main() {
       continue;
     }
     const paramArgs = params ? ['--params', JSON.stringify(params)] : [];
+    // scene_compiler.py reads the whole spec file (its `scenes` map), not one
+    // legacy scene name. Without --spec it exits with "scene 'x' is not in
+    // None". The stock and bespoke scripts take only --scene.
+    const specFile = path.join(ROOT, 'data', 'films', `${opts.film}-sets.json`);
+    const specArgs = script === 'scene_compiler.py' && fs.existsSync(specFile)
+      ? ['--spec', specFile]
+      : [];
     console.log(`\n[blender] ${plate} ← scene ${scene}${params ? ` (${JSON.stringify(params)})` : ''}  ${opts.width}x${opts.height} @ ${opts.samples} samples`);
     const result = spawnSync(
       opts.blender,
@@ -224,6 +237,7 @@ function main() {
         '--width', String(opts.width),
         '--height', String(opts.height),
         '--samples', String(opts.samples),
+        ...specArgs,
         ...paramArgs
       ],
       { stdio: 'inherit', cwd: ROOT, timeout: 2 * 60 * 60 * 1000 }

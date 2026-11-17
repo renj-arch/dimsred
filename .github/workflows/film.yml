@@ -165,8 +165,18 @@ jobs:
       - name: Validate political argument map
         run: node scripts/film/validate-debates.js "data/films/${FILM}-debates.json"
 
-      - name: Director gate (Evidence Room grammar)
+      - name: Director gate (craft)
         run: node scripts/film/validate-director.js "data/films/${FILM}.json"
+
+      # The storyboard describes what each shot shows; this turns those
+      # descriptions into real procedural sets (space, hero, props, light,
+      # lens) from scene_compiler.py's vocabulary. Before this step existed the
+      # renderer had no sets file for any new topic and refused to start.
+      - name: Design the 3D sets from this film's narration
+        run: node scripts/film/design-sets.js --film "$FILM"
+
+      - name: Validate the designed sets
+        run: node scripts/film/validate-sets.js "data/films/${FILM}-sets.json"
 
       - name: Render 3D plates with Blender
         run: |
