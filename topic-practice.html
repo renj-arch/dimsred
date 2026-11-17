@@ -179,7 +179,7 @@ a.back-link:hover{text-decoration:underline}
         var correctIdx = -1;
         (q.options || []).forEach(function(o,j){ if(o.correct) correctIdx = j; });
         var opts = (q.options || []).map(function(o,j){
-          return '<div class="q-opt'+(j===correctIdx?' correct':'')+'" onclick="selectOption(this, '+j+', '+correctIdx+')">'+String.fromCharCode(65+j)+') '+o.text+'</div>';
+          return '<div class="q-opt'+(j===correctIdx?' correct':'')+'" data-selected="'+j+'" data-correct="'+correctIdx+'">'+String.fromCharCode(65+j)+') '+o.text+'</div>';
         }).join('');
         detail.innerHTML +=
           '<div class="question-detail" style="margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:8px">'+
@@ -189,6 +189,12 @@ a.back-link:hover{text-decoration:underline}
           '</div>';
       });
       detail.scrollIntoView({behavior:'smooth'});
+      // Wire up option clicks (functions are inside this IIFE, so inline onclick won't work)
+      detail.querySelectorAll('.q-opt').forEach(function(opt){
+        opt.addEventListener('click', function(){
+          selectOption(this, parseInt(this.dataset.selected), parseInt(this.dataset.correct));
+        });
+      });
     });
   }
   
