@@ -5546,6 +5546,141 @@
         }
       ],
       "sol": "The lesson states that a clue like \"C immediately after D\" adds edges D → C and also forbids any other event between D and C. This is stricter than simple precedence (which would only add D → C). Therefore, the correct representation includes both the precedence edge and the immediate‑precedence restriction."
+    },
+    {
+      "id": 106,
+      "text": "A puzzle contains the clues: (1) Either A sits at the left end or B sits at the right end, but not both. (2) If A sits at the left end, then C sits immediately to the right of D. Which solving technique does the lesson recommend for such layered conditionality?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Treat both conditionals as always active and apply them simultaneously",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Create two parallel scenarios assuming each disjunct true and solve each independently",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Ignore the exclusive‑or clue and only use the conditional clue",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Assume both disjuncts are true at the same time",
+          "c": false
+        }
+      ],
+      "sol": "The lesson describes an exclusive‑or (XOR) combined with a conditional clue. The correct method is scenario‑splitting: create one branch where A is at the left end (making the conditional active) and another where B is at the right end (making the conditional inactive). Solve each branch independently; if both yield complete arrangements, the answer must be invariant across them. Treating the conditional as always active or ignoring the XOR leads to false eliminations, while assuming both disjuncts true violates the XOR."
+    },
+    {
+      "id": 107,
+      "text": "In a multi‑attribute matrix puzzle, a relational clue states: \"The engineer likes cricket.\" How should this clue be processed during constraint propagation?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Assign both attributes directly to the engineer without checking other entities",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Intersect the candidate sets of the two linked attributes for that entity; if the intersection becomes a singleton, fix the value and cascade eliminations",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Eliminate all other values for those attributes across all entities immediately",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Treat the clue as a negative clue and remove the engineer‑cricket pair from all entities",
+          "c": false
+        }
+      ],
+      "sol": "The multi‑attribute matrix method uses cross‑attribute propagation. For a clue linking two attributes of the same entity, the solver intersects the candidate sets of those attributes for that entity. If the intersection reduces to a single value, that value is fixed for the entity, and the elimination cascades to other entities sharing the same attribute value. Direct assignment without intersection, blanket elimination, or treating it as a negative clue would ignore the constraint‑propagation mechanism described."
+    },
+    {
+      "id": 108,
+      "text": "A hybrid puzzle includes an arithmetic constraint: the sum of the floor numbers of three persons equals 12. Each person occupies a distinct floor from 1 to 5. What must the solver ensure when applying this constraint?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Treat the sum constraint as independent of the distinctness requirement",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Combine the arithmetic constraint with the permutation of distinct values to prune domains",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Ignore distinctness because the sum already limits possibilities",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Assume floors can repeat to satisfy the sum",
+          "c": false
+        }
+      ],
+      "sol": "Hybrid puzzles with quantitative constraints require integrating arithmetic restrictions with the permutation of distinct values. The solver must consider the sum together with the fact that floors are distinct and drawn from 1‑5, which prunes the domain of each person’s floor. Ignoring distinctness or treating the sum in isolation would miss deductions and could allow invalid repetitions, while assuming repeats contradicts the puzzle’s distinct‑value rule."
+    },
+    {
+      "id": 109,
+      "text": "When solving an optimization puzzle that asks for the number of valid arrangements, the lesson advises branching on the most ambiguous variable. Which heuristic guarantees the smallest search tree?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Choose the variable with the largest domain first",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Choose the variable with the smallest remaining domain (MRV)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Branch randomly to explore diverse possibilities",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Always place the first person mentioned in the clues",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states the MRV (minimum remaining values) heuristic: always place the person or attribute with the fewest possible positions next. This mirrors the \"most constrained first\" principle from AI and ensures the search tree remains shallow because the branching factor is limited by the most restricted variable. Choosing the largest domain, random branching, or a fixed order does not guarantee minimal search effort."
+    },
+    {
+      "id": 110,
+      "text": "According to the lesson, adding conditional clues, arithmetic constraints, or optimisation objectives makes the general puzzle problem NP‑complete. However, exam instances are bounded. What practical algorithm is recommended for solving such puzzles under time pressure?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Exhaustive enumeration of all permutations",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Depth‑first search with constraint propagation (maintaining arc consistency) and MRV heuristic",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Use only topological sorting (Kahn’s algorithm)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Apply Hopcroft‑Karp bipartite matching for every puzzle",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that while the general case is NP‑complete, exam puzzles have ≤12 entities and high clue density, making the constraint graph almost tree‑like. The recommended practical algorithm is a depth‑first search with constraint propagation (maintaining arc consistency) combined with the MRV variable‑ordering heuristic. This solves any exam‑level puzzle within seconds on paper. Exhaustive enumeration is infeasible, topological sorting only handles pure precedence, and Hopcroft‑Karp is specific to bipartite matching in double‑row puzzles."
     }
   ],
   "reasoning/calendar-clock": [
@@ -14202,546 +14337,6 @@
         }
       ],
       "sol": "(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."
-    },
-    {
-      "id": 81841,
-      "text": "CI on `8000 at 5% for 2 years?",
-      "options": [
-        {
-          "l": "a",
-          "t": "820",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "840",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "800",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "860",
-          "c": false
-        }
-      ],
-      "sol": "A=8000*(1.05)_=8820. CI=820."
-    },
-    {
-      "id": 81842,
-      "text": "Rectangle perimeter 40 cm, length 12 cm. Area?",
-      "options": [
-        {
-          "l": "a",
-          "t": "96 cm_",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "108 cm_",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "84 cm_",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "112 cm_",
-          "c": false
-        }
-      ],
-      "sol": "l+b=20, b=8. Area=12*8=96 cm_."
-    },
-    {
-      "id": 81843,
-      "text": "A to B at 40 km/h, return at 60 km/h. Average speed?",
-      "options": [
-        {
-          "l": "a",
-          "t": "48 km/h",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "50 km/h",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "45 km/h",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "52 km/h",
-          "c": false
-        }
-      ],
-      "sol": "Avg=2*40*60/(40+60)=4800/100=48 km/h."
-    },
-    {
-      "id": 81844,
-      "text": "25% of 40% of 200?",
-      "options": [
-        {
-          "l": "a",
-          "t": "20",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "25",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "30",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "15",
-          "c": false
-        }
-      ],
-      "sol": "40% of 200=80. 25% of 80=20."
-    },
-    {
-      "id": 81845,
-      "text": "If a:b=2:3 and b:c=4:5, find a:c.",
-      "options": [
-        {
-          "l": "a",
-          "t": "8:15",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "2:5",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "4:7",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "6:11",
-          "c": false
-        }
-      ],
-      "sol": "a:b=8:12, b:c=12:15. a:c=8:15."
-    },
-    {
-      "id": 81846,
-      "text": "LCM of 12, 18 and 24?",
-      "options": [
-        {
-          "l": "a",
-          "t": "36",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "48",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "72",
-          "c": true
-        },
-        {
-          "l": "d",
-          "t": "96",
-          "c": false
-        }
-      ],
-      "sol": "12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."
-    },
-    {
-      "id": 81847,
-      "text": "Train 150 m passes pole in 5 sec. Speed in km/h?",
-      "options": [
-        {
-          "l": "a",
-          "t": "90",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "108",
-          "c": true
-        },
-        {
-          "l": "c",
-          "t": "120",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "72",
-          "c": false
-        }
-      ],
-      "sol": "Speed=150/5=30 m/s. 30*18/5=108 km/h."
-    },
-    {
-      "id": 81848,
-      "text": "20% profit on CP of `500. SP?",
-      "options": [
-        {
-          "l": "a",
-          "t": "550",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "600",
-          "c": true
-        },
-        {
-          "l": "c",
-          "t": "620",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "580",
-          "c": false
-        }
-      ],
-      "sol": "SP=500*120/100=600."
-    },
-    {
-      "id": 81849,
-      "text": "SI on `10,000 at 8% for 3 years?",
-      "options": [
-        {
-          "l": "a",
-          "t": "2000",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "2400",
-          "c": true
-        },
-        {
-          "l": "c",
-          "t": "2800",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "3000",
-          "c": false
-        }
-      ],
-      "sol": "SI=10000*8*3/100=2400."
-    },
-    {
-      "id": 81850,
-      "text": "15 men complete work in 8 days. Days for 12 men?",
-      "options": [
-        {
-          "l": "a",
-          "t": "8",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "10",
-          "c": true
-        },
-        {
-          "l": "c",
-          "t": "12",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "6",
-          "c": false
-        }
-      ],
-      "sol": "15*8=12*D, D=120/12=10 days."
-    },
-    {
-      "id": 81851,
-      "text": "Average of first 10 natural numbers?",
-      "options": [
-        {
-          "l": "a",
-          "t": "5",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "5.5",
-          "c": true
-        },
-        {
-          "l": "c",
-          "t": "6",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "4.5",
-          "c": false
-        }
-      ],
-      "sol": "Sum=10*11/2=55. Average=55/10=5.5."
-    },
-    {
-      "id": 81852,
-      "text": "Bag: 3R,4B,5G balls. Probability of green?",
-      "options": [
-        {
-          "l": "a",
-          "t": "1/3",
-          "c": false
-        },
-        {
-          "l": "b",
-          "t": "5/12",
-          "c": true
-        },
-        {
-          "l": "c",
-          "t": "1/4",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "1/2",
-          "c": false
-        }
-      ],
-      "sol": "Total=12. Green=5. P=5/12."
-    },
-    {
-      "id": 81853,
-      "text": "If x+1/x=3, find x_+1/x_.",
-      "options": [
-        {
-          "l": "a",
-          "t": "7",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "9",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "11",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "5",
-          "c": false
-        }
-      ],
-      "sol": "x_+1/x_=(x+1/x)_-2=9-2=7."
-    },
-    {
-      "id": 81854,
-      "text": "Sum becomes 1331 in 3 years at 10% CI. Principal?",
-      "options": [
-        {
-          "l": "a",
-          "t": "1000",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "1100",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "1200",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "900",
-          "c": false
-        }
-      ],
-      "sol": "1331=P(1.1)_=P*1.331. P=1000."
-    },
-    {
-      "id": 81855,
-      "text": "Ratio ages A:B=3:5. After 6 years 5:7. A's current age?",
-      "options": [
-        {
-          "l": "a",
-          "t": "9",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "12",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "15",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "18",
-          "c": false
-        }
-      ],
-      "sol": "(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."
-    },
-    {
-      "id": 81856,
-      "text": "CI on `8000 at 5% for 2 years?",
-      "options": [
-        {
-          "l": "a",
-          "t": "820",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "840",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "800",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "860",
-          "c": false
-        }
-      ],
-      "sol": "A=8000*(1.05)_=8820. CI=820."
-    },
-    {
-      "id": 81857,
-      "text": "Rectangle perimeter 40 cm, length 12 cm. Area?",
-      "options": [
-        {
-          "l": "a",
-          "t": "96 cm_",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "108 cm_",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "84 cm_",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "112 cm_",
-          "c": false
-        }
-      ],
-      "sol": "l+b=20, b=8. Area=12*8=96 cm_."
-    },
-    {
-      "id": 81858,
-      "text": "A to B at 40 km/h, return at 60 km/h. Average speed?",
-      "options": [
-        {
-          "l": "a",
-          "t": "48 km/h",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "50 km/h",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "45 km/h",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "52 km/h",
-          "c": false
-        }
-      ],
-      "sol": "Avg=2*40*60/(40+60)=4800/100=48 km/h."
-    },
-    {
-      "id": 81859,
-      "text": "25% of 40% of 200?",
-      "options": [
-        {
-          "l": "a",
-          "t": "20",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "25",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "30",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "15",
-          "c": false
-        }
-      ],
-      "sol": "40% of 200=80. 25% of 80=20."
-    },
-    {
-      "id": 81860,
-      "text": "If a:b=2:3 and b:c=4:5, find a:c.",
-      "options": [
-        {
-          "l": "a",
-          "t": "8:15",
-          "c": true
-        },
-        {
-          "l": "b",
-          "t": "2:5",
-          "c": false
-        },
-        {
-          "l": "c",
-          "t": "4:7",
-          "c": false
-        },
-        {
-          "l": "d",
-          "t": "6:11",
-          "c": false
-        }
-      ],
-      "sol": "a:b=8:12, b:c=12:15. a:c=8:15."
     }
   ],
   "quant/mensuration": [
@@ -95883,6 +95478,114 @@
         }
       ],
       "sol": "The lesson states: \"The International Court of Justice (ICJ), the UN's principal judicial organ, settles disputes between states and gives advisory opinions... The International Criminal Court (ICC)... prosecutes individuals for genocide, war crimes, crimes against humanity, aggression.\" It also notes: \"Questions distinguish ICJ (state vs state) from ICC (prosecutor vs individual).\" Option B matches this distinction. Option A reverses the jurisdictions. Option C is incorrect because the ICC is not a UN principal organ (it was established by the Rome Statute). Option D swaps the institutional details (ICJ has 15 judges; ICC has 124 states parties)."
+    },
+    {
+      "id": 105,
+      "text": "Regarding strategic maritime chokepoints, the lesson text highlights a common confusion between the controlling depth of the Strait of Malacca and the draft limit of the Suez Canal. What are the correct figures as per the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Strait of Malacca: 20.1 m; Suez Canal: 25 m",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Strait of Malacca: 25 m; Suez Canal: 20.1 m",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Strait of Malacca: 12 nm; Suez Canal: 200 nm",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Strait of Malacca: 200 nm; Suez Canal: 12 nm",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text explicitly lists as a common error: \"Misidentifying the Strait of Malacca's controlling depth (25 m) versus the Suez Canal's draft limit (20.1 m post-expansion).\" Therefore, the Strait of Malacca has a controlling depth of 25 metres, and the Suez Canal has a draft limit of 20.1 metres after expansion. Options C and D confuse maritime zone breadths (territorial sea and EEZ under UNCLOS) with physical depth/draft limits of chokepoints."
+    },
+    {
+      "id": 106,
+      "text": "Which organization publishes the Human Development Index (HDI), and what is a common misattribution noted in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Published by the World Bank; commonly misattributed to UNDP.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Published by UNDP; commonly misattributed to the World Bank.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Published by the World Economic Forum; commonly misattributed to the IMF.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Published by the IMF; commonly misattributed to the World Economic Forum.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text lists as a common error: \"Attributing the Human Development Index to the World Bank instead of UNDP.\" This confirms that the HDI is published by the United Nations Development Programme (UNDP), not the World Bank. The other options refer to incorrect organizations; the Global Competitiveness Index is published by the World Economic Forum, and the Ease of Doing Business index (discontinued) was published by the World Bank."
+    },
+    {
+      "id": 107,
+      "text": "Concerning India's lunar exploration programme, which statement accurately reflects the outcomes of Chandrayaan-2 and Chandrayaan-3 as described in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Chandrayaan-2 achieved a soft landing, while Chandrayaan-3 crashed on the lunar surface.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Both Chandrayaan-2 and Chandrayaan-3 achieved successful soft landings.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Chandrayaan-2's lander crashed, while Chandrayaan-3 achieved a soft landing.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Neither mission attempted a soft landing; both were orbiter-only missions.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text explicitly states under common errors: \"Assuming the Chandrayaan-2 lander succeeded; it crashed, while Chandrayaan-3 achieved soft landing.\" This directly confirms that Chandrayaan-2's lander (Vikram) crashed during its descent in 2019, whereas Chandrayaan-3 successfully achieved a soft landing in 2023. Options A, B, and D contradict this factual record."
+    },
+    {
+      "id": 108,
+      "text": "In the UNESCO World Heritage inscription process, which body evaluates natural heritage nominations, and what is a common misconception noted in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The World Heritage Committee evaluates natural sites; IUCN only evaluates cultural sites.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "ICOMOS evaluates natural sites; the World Heritage Committee evaluates cultural sites.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "IUCN evaluates natural sites; a common error is believing the World Heritage Committee performs that evaluation.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The World Heritage Committee evaluates both cultural and natural sites without external advisory bodies.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text states: \"Nomination proceeds through a Tentative List..., evaluation by ICOMOS (cultural) or IUCN (natural), and a decision by the World Heritage Committee.\" It also lists as a common error: \"Believing the World Heritage Committee evaluates natural sites; IUCN performs that evaluation.\" Therefore, IUCN (International Union for Conservation of Nature) evaluates natural heritage nominations, while ICOMOS evaluates cultural ones. The World Heritage Committee makes the final decision based on these evaluations. Option C correctly captures this distinction and the noted misconception."
     }
   ],
   "maths/vector-statistics": [
@@ -98231,6 +97934,87 @@
         }
       ],
       "sol": "Negative imperatives are reported with a reporting verb such as \"warned\" or \"forbade\" followed by the object (the addressee) and a to‑infinitive with \"not\" placed before the infinitive (\"not to make\"). Option A uses \"warned\" and the correct infinitival structure \"not to make noise\". The other options either misuse the reporting verb, place \"not\" incorrectly, or retain the base form without \"to\"."
+    },
+    {
+      "id": 106,
+      "text": "In formal writing, which passive construction correctly passivises the prepositional verb *account for* without stranding the preposition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The discrepancy was accounted.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The discrepancy was accounted for.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The discrepancy was accounted for by them.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The discrepancy was accounted by them.",
+          "c": false
+        }
+      ],
+      "sol": "Prepositional verbs such as *account for* must retain their preposition when passivised; the preposition cannot be stranded in formal registers. The grammatical passive therefore is *The discrepancy was accounted for*. Option A strands the preposition (*accounted* alone), which is ungrammatical. Option C adds a *by*-phrase, which is permissible but not required; the question asks for the form that correctly avoids stranding, and the minimal correct form is option B. Option D both strands the preposition and misplaces *by them*. Hence B is the only fully correct answer."
+    },
+    {
+      "id": 107,
+      "text": "Which of the following sentences exemplifies free indirect discourse (FID) rather than direct or ordinary indirect speech?",
+      "options": [
+        {
+          "l": "a",
+          "t": "She thought that it was a disaster.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "She thought, \"What a disaster!\"",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "What a disaster it was!",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "She said that it was a disaster.",
+          "c": false
+        }
+      ],
+      "sol": "Free indirect discourse blends the character's voice with the narrator's perspective: it omits the reporting clause, retains the character's expressive vocabulary and exclamatory force, shifts pronouns to third person, and may keep proximal adverbials while adopting the narrator's tense. Option C, *What a disaster it was!*, shows the exclamatory structure, the proximal *it*, and the past tense *was* (narrator's tense) without any reporting verb. Option A is ordinary indirect speech (reporting clause + *that*-clause). Option B is direct speech (quotation marks, first‑person perspective). Option D is also ordinary indirect speech with a different reporting verb. Hence only C matches the FID criteria."
+    },
+    {
+      "id": 108,
+      "text": "Given the indirect report \"He recalled how he would have to leave the next day,\" reconstruct the original direct speech.",
+      "options": [
+        {
+          "l": "a",
+          "t": "\"I will have to leave tomorrow.\"",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "\"I would have to leave tomorrow.\"",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "\"I will have to leave the next day.\"",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "\"I would have to leave the next day.\"",
+          "c": false
+        }
+      ],
+      "sol": "Reverse transformation proceeds by (1) identifying the highest reporting verb (*recalled*, past), (2) restoring its direct form (*said* / *thought*) and adding quotation marks, (3) reversing pronouns (*he* → *I*), (4) converting modal past *would have to* back to its present counterpart *will have to* because the original speaker expressed a future‑in‑the‑past intention, and (5) shifting distal adverbials (*the next day*) to proximal forms (*tomorrow*). Applying these steps yields *\"I will have to leave tomorrow.\"* Option B retains the modal past, option C keeps the distal adverbial, and option D retains both errors. Thus option A is the correct reconstruction."
     }
   ],
   "vocabulary/vocabulary": [
@@ -166609,6 +166393,114 @@
         }
       ],
       "sol": "The lesson states: \"Down a group, as new principal shells are added, the shielding effect increases significantly, but the increase in nuclear charge is also substantial, leading to a relatively constant or slightly increasing Zeff for valence electrons.\" Option A is wrong; Zeff increases across a period. Option B is wrong; radius increases down a group because the addition of new shells (increased distance) dominates over the increased nuclear charge. Option D is wrong; van der Waals radius (non-bonded) is larger than covalent radius (bonded)."
+    },
+    {
+      "id": 106,
+      "text": "Chlorine has a more negative first electron affinity than fluorine. What is the main reason?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The added electron in chlorine enters a larger 3p orbital, experiencing less electron-electron repulsion.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Fluorine has higher electronegativity, making electron gain less favorable.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Chlorine has a half-filled p subshell that stabilizes the added electron.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Fluorine has a higher effective nuclear charge, attracting the electron more strongly.",
+          "c": false
+        }
+      ],
+      "sol": "Electron affinity becomes more negative when energy release is greater. In fluorine, the incoming electron occupies the compact 2p orbital where electron-electron repulsion is significant, reducing the exothermicity. In chlorine, the added electron enters the more diffuse 3p orbital, which is larger and experiences less repulsion, so more energy is released. This makes chlorine's first electron affinity (–349 kJ mol⁻¹) more negative than fluorine's (–328 kJ mol⁻¹), despite fluorine's higher electronegativity."
+    },
+    {
+      "id": 107,
+      "text": "The anomalous chemical behavior of the first element in a group (period 2), such as beryllium and aluminium, is primarily due to:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Absence of low-lying d orbitals in the valence shell.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Exceptionally high ionization energies.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Diagonal relationship with heavier elements.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Lanthanide contraction effects.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that the first element of each group (period 2) lacks d orbitals, which leads to anomalous covalency and oxidation states. Beryllium and aluminium, as the first members of groups 2 and 13, show covalent character in their chlorides, amphoteric oxides, and a maximum coordination number of four because they cannot expand their valence shell using d orbitals. This absence of accessible d orbitals is the fundamental reason for their distinct chemistry compared to heavier congeners."
+    },
+    {
+      "id": 108,
+      "text": "Lanthanide contraction causes the atomic/ionic radii of the 5d transition series to be similar to those of the 4d series. Which statement best describes this consequence?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The contraction reduces the size of 5d elements, making them nearly identical to their 4d congeners.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "It increases the basicity of lanthanide hydroxides across the series.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It stabilizes the +2 oxidation state for all lanthanides.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It eliminates the diagonal relationship between 4d and 5d elements.",
+          "c": false
+        }
+      ],
+      "sol": "Lanthanide contraction is the steady decrease in ionic radii of Ln³⁺ ions from La to Lu due to poor shielding by 4f electrons. This contraction pulls the 5d transition elements (third series) closer in size to the 4d elements (second series). Consequently, the second and third transition series exhibit very similar atomic/ionic radii, coordination preferences, and chemical properties, more so than either resembles the first (3d) series. The text directly links this size similarity to lanthanide contraction."
+    },
+    {
+      "id": 109,
+      "text": "The diagonal relationship between lithium and magnesium leads to similarities such as formation of nitrides and thermal decomposition of carbonates. The underlying cause is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Opposing trends in atomic size and electronegativity partially cancel, giving similar charge densities.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Both elements belong to the same period.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "They have identical ionization energies.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "They exhibit the same oxidation states in all compounds.",
+          "c": false
+        }
+      ],
+      "sol": "Moving down a group increases atomic size and metallic character, while moving across a period decreases size and increases electronegativity. For diagonal pairs like Li–Mg, these two opposing trends partially offset each other, resulting in comparable charge densities (ionic charge/ionic radius). Similar charge densities lead to analogous chemical behavior: both form nitrides on direct reaction with nitrogen, and their carbonates and hydroxides decompose on heating to give oxides, unlike the stable carbonates of Na and Ca. This charge-density similarity is the core reason for the diagonal relationship."
     }
   ],
   "mains-gs1/architecture-heritage": [
@@ -168480,6 +168372,141 @@
         }
       ],
       "sol": "The lesson explicitly states: \"In Mimamsa, arthapatti is indispensable for interpreting Vedic injunctions that are not directly observable.\" This matches Option B perfectly. Option A is incorrect because the lesson says Nyaya's upamana underwrites \"its theory of analogy in legal reasoning,\" not medical diagnosis. Option C is incorrect because the lesson says Advaita \"uses anupalabdhi to establish the non‑existence of duality,\" not to prove the positive existence of Brahman. Option D is incorrect because the lesson states the Buddhist denial of testimony forces \"a reliance on the Buddha's words as inferentially validated,\" not perceptually validated."
+    },
+    {
+      "id": 116,
+      "text": "Which statement accurately describes the Bhandarkar Oriental Research Institute's Mahabharata critical edition (1919‑1966)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It classified manuscripts into eastern and western recensions and recorded about 5,000 variant passages.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It used a stemmatic method, classified manuscripts into northern and southern recensions, and recorded over 12,000 variant passages.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It was completed in 1919 and relied on a single manuscript from Nepal.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It adopted the vulgate text based on the oldest manuscripts from Gujarat and Bengal.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the Bhandarkar Mahabharata critical edition applied a stemmatic method, classified manuscripts into northern and southern recensions, and recorded over 12,000 variant passages. Option B matches this description exactly. The other options misrepresent the recension classification, the number of variants, the completion date, or confuse it with the Baroda Ramayana edition."
+    },
+    {
+      "id": 117,
+      "text": "In the key methodological steps for producing a critical edition, which step involves hypothesizing genealogical relationships among manuscripts?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Manuscript survey and cataloguing across repositories.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Collation of readings using a base manuscript.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Construction of a stemma codicum to hypothesize genealogical relationships.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Publication of a critical apparatus recording all significant variants.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists the methodological steps in order. The third step is explicitly \"Construction of a stemma codicum to hypothesize genealogical relationships.\" This step follows collation and precedes the application of textual criticism principles and publication of the apparatus. Options A, B, and D correspond to other distinct steps."
+    },
+    {
+      "id": 118,
+      "text": "What distinctive feature characterizes the Bengali Krittibasi Ramayan (c. 1400) by Krittibas Ojha?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It was composed in the ovi metre for kirtan performance.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It presented a philosophical exposition aligned with the Warkari tradition.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It transformed Valmiki’s narrative into a devotional poem emphasizing Rama’s accessibility to common folk.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "It was rendered in three stages by the Kavitrayam poets.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that the Krittibasi Ramayan \"transformed Valmiki’s narrative into a devotional poem that emphasized Rama’s accessibility to common folk, influencing later Bhakti poets such as Chaitanya.\" Option C captures this. Option A describes the Marathi Mahabharata by Moropant, Option B describes Eknath’s Bhavarth Ramayan, and Option D refers to the Telugu Andhra Mahabharatamu by the Kavitrayam."
+    },
+    {
+      "id": 119,
+      "text": "Which statement correctly describes the Buddhist concept of Anatman?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Anatman asserts the complete non-existence of any continuity, amounting to nihilism.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Anatman denies a permanent self but affirms causal continuity through dependent origination.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Anatman posits an eternal soul (jiva) that transmigrates across births.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Anatman is identical to the Upanishadic Atman but expressed in negative terminology.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly warns against \"Equating Anatman with nihilism; Buddhist doctrine denies a permanent self but affirms causal continuity.\" Option B reflects this nuanced position. Option A is the nihilistic misinterpretation the lesson flags. Option C describes the Jain or Upanishadic view of an eternal jiva/atman. Option D incorrectly equates the two concepts."
+    },
+    {
+      "id": 120,
+      "text": "How did Amir Khusrau adapt the Persian Masnavi form in the Indian context?",
+      "options": [
+        {
+          "l": "a",
+          "t": "He used the Masnavi's quatrain structure (aaba) for philosophical verses on wine and fate.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "He employed the Masnavi's rhymed couplets to compose Sufi narratives infused with Indian seasonal imagery.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "He introduced the radif and qafiya conventions of the ghazal into the Masnavi.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "He translated the Masnavi into Sanskrit for courtly recitation.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson's table on Persian forms states: \"Masnavi Rhymed couplets (aa bb cc…) Amir Khusrau Sufi narrative with Indian seasonal imagery.\" Option B matches this description. Option A describes the Rubai form adapted by later Urdu poets. Option C refers to ghazal conventions (radif/qafiya), not Masnavi. Option D has no basis in the lesson."
     }
   ],
   "mains-gs1/medieval-india": [
@@ -176865,6 +176892,141 @@
         }
       ],
       "sol": "The lesson notes that the 2021 amendment to the Right to Service Acts in states such as Madhya Pradesh and Karnataka \"made social audit a statutory requirement for flagship schemes such as the Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA) and the Pradhan Mantri Awas Yojana‑Gramin (PMAY‑G).\" Therefore, both schemes are covered by the statutory social‑audit mandate."
+    },
+    {
+      "id": 115,
+      "text": "Which of the following accurately reflects an integrity concern regarding lateral entry into the civil services as described in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Lateral entrants are selected through the UPSC examination, ensuring full transparency.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The search‑cum‑selection committee headed by the Cabinet Secretary publishes a public merit list for every recruitment round.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "There is no mandatory cooling‑off declaration for lateral entrants entering government, unlike the requirement for regular officers moving to private employment.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The Comptroller and Auditor General has already conducted a dedicated audit of lateral‑entry outcomes.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the 2020 amendment to the All India Services (Conduct) Rules introduced a mandatory cooling‑off declaration for officers moving to private employment, but a comparable provision for lateral entrants entering government is absent. This gap creates a conflict‑of‑interest risk. The selection committee headed by the Cabinet Secretary lacks the transparency of the UPSC exam and does not publish a public merit list. The CAG has not yet conducted a dedicated audit of lateral‑entry outcomes. Therefore, option C correctly captures the identified integrity concern."
+    },
+    {
+      "id": 116,
+      "text": "According to the lesson, why is biometric authentication in the Direct Benefit Transfer (DBT) system not considered a complete solution to leakage?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Biometric authentication has eliminated all leakage in DBT schemes.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "CAG audits have documented exclusion errors in DBT despite biometric authentication.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "DBT does not use biometric authentication at all.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Exclusion errors are not a recognised concern in DBT implementation.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly warns against treating DBT biometric authentication as a panacea for leakage while ignoring exclusion errors documented by CAG audits. This indicates that biometric verification, though a design feature, has not prevented exclusion errors, which remain a documented problem. Options A, C, and D contradict the lesson’s statement. Hence, option B is the correct reflection of the lesson’s content."
+    },
+    {
+      "id": 117,
+      "text": "What does the lesson identify as a critical requirement for ensuring accountability in the final disposal of public grievances on CPGRAMS?",
+      "options": [
+        {
+          "l": "a",
+          "t": "High grievance‑disposal rates alone demonstrate effective redressal.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Generic closures of grievances are encouraged to improve performance metrics.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "A speaking order must be issued in every final grievance disposal.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The Right to Information Act does not apply to grievance redressal mechanisms.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists as a misconception the neglect of the need for a speaking order in every final grievance disposal, noting that without it the Right to Information cannot enforce accountability. This directly states that a speaking order is a mandatory requirement for accountability. Options A and B describe practices that inflate metrics but do not ensure accountability, and option D is factually incorrect. Therefore, option C is the correct answer."
+    },
+    {
+      "id": 118,
+      "text": "The lesson cautions against assuming that Mission Karmayogi’s competency scores alone guarantee ethical leadership. What does it recommend instead?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Competency scores should be the sole determinant of promotion and ethical standing.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The weighting and validation process of competency scores must be scrutinised.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Mission Karmayogi does not involve any competency scoring mechanism.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Ethical leadership is automatically ensured once an officer completes the programme.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states: “Believing Mission Karmayogi’s competency scores alone guarantee ethical leadership; the weighting and validation process must be scrutinised.” This indicates that the design of the scoring system — how competencies are weighted and validated — requires careful examination to ensure ethical outcomes. Options A, C, and D misrepresent the lesson’s warning. Thus, option B correctly captures the recommended scrutiny."
+    },
+    {
+      "id": 119,
+      "text": "As per the lesson, what public‑hearing notice period did the National Green Tribunal (NGT) order to be restored for environmental clearance processes?",
+      "options": [
+        {
+          "l": "a",
+          "t": "20 days",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "30 days",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "15 days",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "45 days",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that the 2020 EIA amendment reduced the public‑hearing notice period to 20 days for certain categories, but the NGT, in Social Action for Forest and Environment v. Union of India (2022), directed the MoEFCC to restore the 30‑day notice period and provide vernacular summaries of the EIA report. Therefore, the NGT‑mandated notice period is 30 days, making option B the correct choice."
     }
   ],
   "mains-gs1/post-independence": [
@@ -178005,6 +178167,141 @@
         }
       ],
       "sol": "Instantaneous power is the dot product P = F·v. Here F = (3, 4) N and v = (2, 0) m/s. The dot product = 3×2 + 4×0 = 6 W. The component of force perpendicular to velocity (the 4 N j‑component) does no work, so power depends only on the component along the velocity. This matches the definition P = dW/dt = F·v given in the lesson."
+    },
+    {
+      "id": 106,
+      "text": "A block of mass m is placed on the floor of an elevator accelerating upward with constant acceleration a0. The block is displaced upward by a distance Δr relative to the elevator. What is the work done by the pseudo force on the block in the elevator frame?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Positive",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Negative",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Zero",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Depends on the mass m",
+          "c": false
+        }
+      ],
+      "sol": "In the non-inertial frame of the elevator, a pseudo force F_p = -m a0 acts downward. The displacement Δr is upward. Work W_p = F_p · Δr = (-m a0) · (Δr upward) = -m a0 Δr because the force and displacement are opposite. The sign is negative regardless of the mass value. Hence the pseudo work is negative."
+    },
+    {
+      "id": 107,
+      "text": "A particle of mass 1 kg moves in one dimension under the potential energy U(x) = 2x^2 - x^4 (in joules, x in metres). What is the angular frequency of small oscillations about the stable equilibrium at x = 0?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1 rad/s",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2 rad/s",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "√2 rad/s",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "4 rad/s",
+          "c": false
+        }
+      ],
+      "sol": "The effective spring constant for small oscillations is k = d²U/dx² evaluated at the equilibrium. dU/dx = 4x - 4x³, d²U/dx² = 4 - 12x². At x = 0, k = 4 J/m². For mass m = 1 kg, angular frequency ω = √(k/m) = √4 = 2 rad/s. The positive second derivative confirms a stable minimum."
+    },
+    {
+      "id": 108,
+      "text": "An engine delivers a torque that varies with angular position as τ(θ) = τ₀ sin θ over one complete revolution. What is the net work done by the engine per revolution?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "τ₀",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "2τ₀",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "πτ₀",
+          "c": false
+        }
+      ],
+      "sol": "Work per revolution is W = ∮ τ dθ = ∫₀^{2π} τ₀ sin θ dθ = τ₀ [-cos θ]₀^{2π} = τ₀ (-cos 2π + cos 0) = τ₀ (-1 + 1) = 0. The positive work in the first half-cycle cancels the negative work in the second half-cycle, giving zero net work."
+    },
+    {
+      "id": 109,
+      "text": "Two identical particles, one initially at rest, undergo a perfectly elastic collision. In the laboratory frame, what is the angle between their final velocity vectors?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0°",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "45°",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "90°",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "180°",
+          "c": false
+        }
+      ],
+      "sol": "For equal masses with one initially at rest, the centre-of-mass velocities are equal and opposite. In an elastic collision the speeds in the CM frame are unchanged and the directions reverse. Transforming back to the lab frame, the two final velocities are perpendicular. This is a standard result: the angle between the final velocities is 90°."
+    },
+    {
+      "id": 110,
+      "text": "A driven harmonic oscillator at resonance is subjected to a driving force F(t) = F₀ cos ωt. The steady-state velocity amplitude is v₀. What is the average power delivered by the driving force over one cycle?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "½ F₀ v₀",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "F₀ v₀",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "¼ F₀ v₀",
+          "c": false
+        }
+      ],
+      "sol": "At resonance the velocity is in phase with the driving force: v(t) = v₀ cos ωt. Instantaneous power P(t) = F(t)v(t) = F₀ v₀ cos² ωt. The average of cos² ωt over a cycle is ½. Therefore average power = ½ F₀ v₀. The phase factor cos φ = 1 at resonance, confirming the result."
     }
   ],
   "mains-gs3/inflation-prices": [
@@ -178547,6 +178844,141 @@
         }
       ],
       "sol": "The report emphasised that greenflation is a relative‑price shift driven by structural climate policy, not demand‑driven overheating. Therefore, the RBI advised “looking through” the first‑round effects of carbon pricing on prices, while remaining vigilant about possible second‑round wage‑price spirals. Aggressive tightening would hurt green investment. Options A, C and D contradict this nuanced approach."
+    },
+    {
+      "id": 121,
+      "text": "According to the lesson, why has the Reserve Bank of India's counter‑cyclical capital buffer (CCyB) remained at zero percent since its introduction in 2015?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Because the credit‑to‑GDP gap has not crossed the activation threshold",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Because the RBI decided not to implement the buffer",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Because the Basel III leverage ratio requirement was not met",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Because the Monetary Policy Committee opposed its activation",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the RBI introduced a counter‑cyclical capital buffer (CCyB) framework in 2015, but the buffer has remained at zero percent because the credit‑to‑GDP gap has not crossed the activation threshold. Therefore, the correct answer is that the CCyB buffer stayed at zero due to the credit‑to‑GDP gap not reaching the trigger level. The other options refer to unrelated reasons such as RBI discretion, Basel III leverage ratio, or MPC opposition, which are not supported by the text."
+    },
+    {
+      "id": 122,
+      "text": "What is the approximate weight of food and beverages in India's headline CPI‑Combined basket as given in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "30 percent",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "45 percent",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "55 percent",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "60 percent",
+          "c": false
+        }
+      ],
+      "sol": "According to the lesson, India’s headline CPI‑Combined basket assigns roughly 45 percent weight to food and beverages, about 7 percent to fuel and light, and the remainder to services. Hence the weight of food and beverages is approximately 45 percent. The other options (30, 55, 60 percent) do not match the figure given in the text."
+    },
+    {
+      "id": 123,
+      "text": "What role do administered fuel prices play in exchange rate pass‑through (ERPT) according to the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "They amplify ERPT",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "They dampen ERPT",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "They have no effect on ERPT",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "They make ERPT symmetric across all CPI sub‑groups",
+          "c": false
+        }
+      ],
+      "sol": "The lesson highlights a common mistake: neglecting the role of administered fuel prices in dampening exchange rate pass‑through (ERPT). Administered prices, set by the government, limit the extent to which exchange rate movements translate into domestic fuel prices, thereby reducing ERPT for that component. The correct answer is that administered fuel prices dampen ERPT. The other options incorrectly suggest amplification, no effect, or symmetry."
+    },
+    {
+      "id": 124,
+      "text": "What is the key difference between price‑level targeting (PLT) and average inflation targeting (AIT) regarding the \"make‑up\" principle as described in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "PLT commits to a precise price‑level path, while AIT does not",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "AIT commits to a precise price‑level path, while PLT does not",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Both frameworks commit equally to a precise price‑level path",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Neither framework uses a make‑up principle",
+          "c": false
+        }
+      ],
+      "sol": "The text explains that average inflation targeting (AIT) allows inflation to run moderately above the target to make up for past shortfalls but does not commit to a precise price‑level path. In contrast, price‑level targeting (PLT) explicitly commits to returning the price level to a predetermined path, embodying a stronger make‑up principle. Therefore, the key difference is that PLT commits to a precise price‑level path while AIT does not. The other options misstate the commitment."
+    },
+    {
+      "id": 125,
+      "text": "By how much would failure to adjust for quality overstate inflation annually in the CPI \"communication\" sub‑group for Indian smartphones, based on the preliminary hedonic models mentioned in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0.1‑0.2 percentage points",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "0.4‑0.6 percentage points",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "1.0‑1.2 percentage points",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "2.0‑2.5 percentage points",
+          "c": false
+        }
+      ],
+      "sol": "The lesson reports that preliminary hedonic models for Indian smartphones (2021‑2023) indicate that failure to adjust for quality would overstate inflation by 0.4‑0.6 percentage points annually in the communication sub‑group. This quantifies the upward bias from omitting quality adjustment. The other ranges (0.1‑0.2, 1.0‑1.2, 2.0‑2.5) are not supported by the given estimate."
     }
   ],
   "biology/genetics-inheritance": [
@@ -187109,6 +187541,141 @@
         }
       ],
       "sol": "The lesson outlines that the Lakdawala methodology used calorie norms, while the Rangarajan Committee (2014) recommended higher expenditure thresholds, moving away from calorie‑based calculations. Therefore, the claim that the Rangarajan Committee’s poverty line is based on calorie norms is inaccurate. Options A, B and C are directly mentioned as features of the respective schemes, making option 4 the correct choice for the statement not supported by the lesson."
+    },
+    {
+      "id": 106,
+      "text": "What was the vertical devolution share recommended by the 15th Finance Commission for the period 2020‑25, and how did it differ from the 14th Commission's recommendation?",
+      "options": [
+        {
+          "l": "a",
+          "t": "41%, down from 42%",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "42%, up from 41%",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "40%, down from 42%",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "41%, same as the 14th Commission",
+          "c": false
+        }
+      ],
+      "sol": "The 15th Finance Commission (2020‑25) recommended that States receive 41% of the divisible pool of central taxes. This was a reduction from the 42% share recommended by the 14th Finance Commission. The Commission justified the lower share by citing the Union’s enhanced expenditure responsibilities after the GST rollout and the fiscal shock caused by the COVID‑19 pandemic. Therefore, option A correctly captures both the recommended percentage and the direction of change relative to the previous Commission."
+    },
+    {
+      "id": 107,
+      "text": "Which weight was introduced by the 15th Finance Commission in the horizontal devolution formula to reward States that have controlled population growth?",
+      "options": [
+        {
+          "l": "a",
+          "t": "12.5% for demographic performance",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "10% for 2011 Census population",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "15% for 1971 Census population",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "20% for forest cover",
+          "c": false
+        }
+      ],
+      "sol": "The horizontal devolution formula of the 15th Finance Commission includes weights for population (15% for 1971 Census, 10% for 2011 Census), area, forest cover, income distance, and demographic performance. Notably, the Commission introduced a 12.5% weight for demographic performance to incentivise States that have successfully controlled population growth. This new weight altered inter‑State transfers significantly. Options B and C refer to the existing population weights, and option D is not mentioned as a weight in the formula. Hence, option A is correct."
+    },
+    {
+      "id": 108,
+      "text": "When the GST compensation cess collections fell short in 2020‑21, how did the Union government meet the guaranteed 14% annual revenue growth to States?",
+      "options": [
+        {
+          "l": "a",
+          "t": "By increasing the compensation cess rate",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "By borrowing ₹1.1 lakh crore on behalf of States and passing it as back‑to‑back loans",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "By reducing the protected revenue growth rate to 10%",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "By allowing States to borrow directly from the market",
+          "c": false
+        }
+      ],
+      "sol": "The GST (Compensation to States) Act, 2017 guaranteed States a 14% annual growth in protected revenue for five years, financed through a compensation cess on sin and luxury goods. During 2020‑21, cess collections fell short. To honour the guarantee without breaching the FRBM limits, the Union borrowed ₹1.1 lakh crore on behalf of the States and passed it on as back‑to‑back loans. This mechanism preserved the States’ fiscal space. The other options describe actions not taken: the cess rate was not increased, the growth rate was not reduced, and States were not asked to borrow directly. Thus, option B is correct."
+    },
+    {
+      "id": 109,
+      "text": "What is the statutory limit for deviation from the fiscal deficit target under the FRBM Act's escape clause?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1 percentage point",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "0.5 percentage point",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "0.25 percentage point",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.75 percentage point",
+          "c": false
+        }
+      ],
+      "sol": "The Fiscal Responsibility and Budget Management (FRBM) Act, 2003 (amended 2018) includes an escape clause that permits a deviation from the fiscal deficit target. The lesson explicitly states that the statutory limit is 0.5 percentage point, correcting the common misconception that it allows a 1‑percentage‑point deviation. Therefore, the correct answer is 0.5 percentage point, which corresponds to option B."
+    },
+    {
+      "id": 110,
+      "text": "How does the National Asset Reconstruction Company Limited (NARCL) acquire stressed assets from banks?",
+      "options": [
+        {
+          "l": "a",
+          "t": "At face value, paying cash upfront",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "At a discount, issuing security receipts to the selling banks",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "By swapping equity shares of the debtor companies",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "By taking over the management of the debtor firms directly",
+          "c": false
+        }
+      ],
+      "sol": "NARCL, set up in 2021 with a ₹30,600 crore government guarantee, acquires stressed loans from banks at a discount. In return, it issues security receipts (SRs) to the selling banks. These SRs are gradually redeemed as recoveries materialise, improving banks’ balance sheets. NARCL does not pay face value in cash, nor does it swap equity or directly manage debtor firms; those functions are handled by the separate asset management company IDRCL. Hence, option B accurately describes NARCL’s acquisition method."
     }
   ],
   "gs/geography-physical-prelims": [
@@ -187246,6 +187813,141 @@
         }
       ],
       "sol": "The lesson text explicitly lists the eight biogeographic realms as: 'Nearctic, Palearctic, Neotropical, Afrotropical, Indomalayan, Australasian, Oceanian and Antarctic'. Option B incorrectly substitutes 'Arctic' for 'Antarctic'. Option C includes both 'Antarctic' and 'Arctic' but omits 'Oceanian'. Option D includes 'Holarctic' (which is a combination of Nearctic and Palearctic) and omits 'Antarctic'. Only Option A matches the exact list provided in the text."
+    },
+    {
+      "id": 106,
+      "text": "At divergent plate boundaries, the spreading rate influences the morphology of the mid‑ocean ridge. According to the lesson, which of the following statements correctly describes this relationship?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Faster spreading produces a pronounced axial rift valley, while slower spreading creates a broad, low‑relief ridge.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The East Pacific Rise, spreading at 12–15 cm yr⁻¹, exhibits a broad, low‑relief ridge, whereas the Mid‑Atlantic Ridge, spreading at 2–3 cm yr⁻¹, shows a pronounced axial rift valley.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Both the East Pacific Rise and the Mid‑Atlantic Ridge develop similar axial valleys regardless of spreading rate.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Spreading rate has no systematic effect on ridge morphology; ridge shape is controlled solely by mantle temperature.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that the East Pacific Rise spreads at 12–15 cm yr⁻¹ and produces a broad, low‑relief ridge, while the Mid‑Atlantic Ridge spreads at 2–3 cm yr⁻¹ and generates a pronounced axial rift valley. This directly matches option B. Option A reverses the relationship, option C contradicts the stated difference, and option D is false because spreading rate is a primary control on ridge morphology."
+    },
+    {
+      "id": 107,
+      "text": "The δ¹⁸O composition of precipitation recorded in ice cores is used as a temperature proxy, while foraminiferal δ¹⁸O in marine sediments records a combined signal. Which statement accurately reflects this distinction?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Ice‑core δ¹⁸O varies only with local temperature, whereas marine foraminiferal δ¹⁸O varies only with global ice volume.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A 1 ‰ shift in ice‑core δ¹⁸O corresponds to roughly a 1.5 °C temperature change in polar regions, while marine foraminiferal δ¹⁸O reflects both deep‑water temperature and global ice volume.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Both ice‑core and marine δ¹⁸O are direct, unambiguous thermometers for past surface temperature.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Marine foraminiferal δ¹⁸O is a pure temperature proxy because the ice‑volume effect is negligible in deep‑sea records.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that a 1 ‰ shift in ice‑core δ¹⁸O corresponds to about 1.5 °C in polar regions, establishing it as a temperature proxy. In contrast, marine foraminiferal δ¹⁸O records a combination of global ice volume and deep‑water temperature. Option B captures this distinction. Option A incorrectly assigns exclusive controls, option C overstates the directness of both proxies, and option D wrongly claims the ice‑volume effect is negligible in marine records."
+    },
+    {
+      "id": 108,
+      "text": "One of the key feedbacks in the carbon cycle under elevated CO₂ is the CO₂ fertilisation effect. What limits the magnitude of this feedback according to the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The feedback is limited by the availability of water vapour in the atmosphere.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Nutrient limitation, particularly nitrogen and phosphorus, constrains the land carbon sink despite higher CO₂.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The feedback is self‑limiting because increased photosynthesis reduces atmospheric CO₂ instantly.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Ocean acidification directly cancels the terrestrial CO₂ fertilisation effect.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that CO₂ fertilisation enhances photosynthesis but nutrient limitation (N, P) constrains the sink. This is explicitly described under \"Key Feedbacks\". Option B matches this description. Option A mentions water vapour, which is not cited as the limiting factor. Option C misrepresents the feedback as instantly self‑limiting. Option D confuses ocean acidification with the terrestrial fertilisation limitation."
+    },
+    {
+      "id": 109,
+      "text": "The Anthropocene Working Group has recommended a primary stratigraphic marker for the Anthropocene. Which of the following is NOT considered a globally synchronous stratigraphic signal of the Anthropocene according to the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Radionuclide fallout (⁹⁰Sr, ¹³⁷Cs) from nuclear testing peaking in 1963.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A sharp rise in atmospheric CO₂ and CH₄ concentrations.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The onset of the Industrial Revolution in the late 18th century.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The widespread presence of plastic polymers and fly ash in sedimentary records.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists radionuclide fallout (peak 1963), a sharp rise in CO₂ and CH₄, plastic polymers, and fly ash as globally synchronous stratigraphic signals marking the Anthropocene. It also notes that the Anthropocene Working Group recommends the mid‑20th century \"Great Acceleration\" as the primary marker, not the Industrial Revolution. Therefore, the Industrial Revolution (option C) is not considered a globally synchronous signal for the Anthropocene in this context."
+    },
+    {
+      "id": 110,
+      "text": "The lesson provides quantitative comparisons of erosion rates. Natural background erosion rates are 0.01–0.1 mm yr⁻¹, while agricultural lands experience rates of 1–10 mm yr⁻¹. What is the approximate factor by which agricultural erosion exceeds natural background erosion?",
+      "options": [
+        {
+          "l": "a",
+          "t": "10–100 times",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "100–1000 times",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1–10 times",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.1–1 times",
+          "c": false
+        }
+      ],
+      "sol": "Natural background erosion is 0.01–0.1 mm yr⁻¹; agricultural erosion is 1–10 mm yr⁻¹. Dividing the agricultural range by the natural range gives a factor of roughly (1/0.1)=10 to (10/0.01)=1000, but the lesson explicitly states that deforestation increases hillslope erosion by 10–100×. The most consistent answer with the lesson’s phrasing is 10–100 times (option A). Options B, C, and D do not match the given multiplier."
     }
   ],
   "maths/complex-binomial": [
@@ -187874,6 +188576,141 @@
         }
       ],
       "sol": "The Gallantry Awards section classifies awards into wartime and peacetime categories. It states that in peacetime, the Ashoka Chakra (AC) is the highest, succeeded by the Kirti Chakra and the Shaurya Chakra. The Param Vir Chakra and Maha Vir Chakra are wartime awards."
+    },
+    {
+      "id": 106,
+      "text": "Which statement accurately describes the amendment procedure under Article 368 of the Constitution?",
+      "options": [
+        {
+          "l": "a",
+          "t": "All constitutional amendments require ratification by at least half of the state legislatures.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Only amendments affecting the federal structure, representation of states in Parliament, or the amendment procedure itself require ratification by at least half of the state legislatures.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Amendments to Fundamental Rights can be made by a simple majority in Parliament.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The basic structure doctrine is explicitly enumerated in Article 368.",
+          "c": false
+        }
+      ],
+      "sol": "Article 368 provides two tiers of amendment procedures. The default route needs a special majority of two‑thirds of members present and voting in each House of Parliament. However, if an amendment alters the federal structure, the representation of states in Parliament, or the amendment procedure itself, it additionally requires ratification by the legislatures of at least half of the states. The basic structure doctrine is a judicial creation, not a textual provision of Article 368. Therefore, option B correctly captures the conditional ratification requirement."
+    },
+    {
+      "id": 107,
+      "text": "In which landmark Supreme Court judgment was the concept of \"due process\" read into Article 21, expanding the meaning of \"procedure established by law\" to require fairness, justice and reasonableness?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Golaknath v. State of Punjab (1967)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Kesavananda Bharati v. State of Kerala (1973)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Maneka Gandhi v. Union of India (1978)",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Minerva Mills Ltd. v. Union of India (1980)",
+          "c": false
+        }
+      ],
+      "sol": "The Maneka Gandhi case (1978) interpreted Article 21 to hold that the \"procedure established by law\" must be fair, just and reasonable, thereby importing due‑process standards into Indian jurisprudence. Golaknath dealt with amendability of Fundamental Rights, Kesavananda established the basic structure doctrine, and Minerva Mills addressed the balance between Fundamental Rights and Directive Principles. Hence, the correct answer is Maneka Gandhi v. Union of India (1978)."
+    },
+    {
+      "id": 108,
+      "text": "Which of the following correctly distinguishes NITI Aayog from the erstwhile Planning Commission?",
+      "options": [
+        {
+          "l": "a",
+          "t": "NITI Aayog is a constitutional body established under Article 280.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "NITI Aayog allocates financial resources to states, whereas the Planning Commission only advised.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The Planning Commission allocated funds while NITI Aayog only advises and was created by an executive resolution in 2015.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Both bodies were created by parliamentary legislation.",
+          "c": false
+        }
+      ],
+      "sol": "The Planning Commission, set up in 1950, had the power to allocate plan funds to states. NITI Aayog, formed on 1 January 2015 through a Cabinet resolution (executive order), functions as a policy think‑tank and does not disburse funds; it only provides advisory inputs. It is not a constitutional body nor created by an Act of Parliament. Thus, option C accurately captures the functional and constitutional distinction."
+    },
+    {
+      "id": 109,
+      "text": "Regarding Indian monsoon variability, which statement is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Every El Niño year inevitably leads to a deficient monsoon in India.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Indian Ocean Dipole (IOD) has no influence on the Indian monsoon.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "A positive Indian Ocean Dipole can offset the adverse impact of El Niño on the Indian monsoon.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The Madden‑Julian Oscillation (MJO) is the sole driver of monsoon onset.",
+          "c": false
+        }
+      ],
+      "sol": "El Niño tends to suppress the Indian monsoon, but its effect is not absolute; a concurrent positive phase of the Indian Ocean Dipole (IOD) can enhance convection over the Indian Ocean and neutralise or even reverse the El Niño‑induced deficit. The MJO influences intra‑seasonal variability but is not the sole driver of onset. Therefore, the statement that a positive IOD can offset El Niño’s adverse impact is the only correct one."
+    },
+    {
+      "id": 110,
+      "text": "Which description accurately reflects India’s nuclear doctrine and command‑control architecture?",
+      "options": [
+        {
+          "l": "a",
+          "t": "India’s No First Use (NFU) policy extends to chemical and biological attacks.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Nuclear Command Authority (NCA) is chaired by the Defence Minister.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The Strategic Forces Command (SFC) operationalises the directives of the NCA and manages land‑, sea‑ and air‑based delivery systems.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "India is a signatory to the Nuclear Non‑Proliferation Treaty (NPT).",
+          "c": false
+        }
+      ],
+      "sol": "India’s nuclear doctrine rests on Credible Minimum Deterrence, No First Use (NFU) against nuclear attacks only, and civilian control through the Nuclear Command Authority (NCA) chaired by the Prime Minister. The Strategic Forces Command (SFC), established in 2003, executes NCA directives and oversees the triad of Agni missiles, submarine‑launched ballistic missiles, and air‑delivered platforms. India is not a party to the NPT or CTBT. Hence, option C correctly describes the command‑control structure."
     }
   ],
   "ga/industrial-relations": [
