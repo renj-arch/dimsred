@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-17T01:49:01.213Z",
+  "updatedAt": "2026-11-17T15:48:34.339Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -19676,6 +19676,459 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-17T01:49:01.210Z"
+    },
+    {
+      "id": "854d97e70bf46f2c",
+      "exam": "cgl",
+      "paperSlug": "practice-set-17",
+      "paperTitle": "CGL Practice Set 17",
+      "paperPath": "cgl/papers/practice-set-17.html",
+      "paperFile": "practice-set-17.json",
+      "questionNumber": 1,
+      "section": "General Intelligence & Reasoning",
+      "question": "Rahul walks 10 km North, turns right and walks 5 km, turns right and walks 10 km, turns left and walks 10 km. How far is he from the starting point?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5 km",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10 km",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "12 km",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "15 km",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Set starting point as origin (0,0) with North as +y and East as +x.",
+        "Walk 10 km North to (0,10).",
+        "Turn right (East) and walk 5 km to (5,10).",
+        "Turn right (South) and walk 10 km to (5,0).",
+        "Turn left (East) and walk 10 km to (15,0).",
+        "Distance from origin to (15,0) is 15 km."
+      ],
+      "verifierCheck": "Starting at origin (0,0). Walk 10 km North to (0,10). Turn right (East) walk 5 km to (5,10). Turn right (South) walk 10 km to (5,0). Turn left (East) walk 10 km to (15,0). Distance from start = sqrt((15-0)^2 + (0-0)^2) = 15 km.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Net Vector Sum",
+          "idea": "Sum NS and EW components separately",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "North 10 and South 10 cancel → net NS = 0",
+            "East 5 + East 10 = 15 km East",
+            "Resultant displacement = 15 km"
+          ]
+        },
+        {
+          "name": "Right-Angle Cancellation",
+          "idea": "Opposite equal legs cancel out",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "First (N10) and third (S10) are opposite equal → cancel",
+            "Remaining: 5 km East then 10 km East = 15 km East",
+            "Straight-line distance = 15 km"
+          ]
+        },
+        {
+          "name": "Coordinate Tracking",
+          "idea": "Track x,y after each turn",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Start at (0,0)",
+            "North 10 → (0,10)",
+            "Right (East) 5 → (5,10)",
+            "Right (South) 10 → (5,0)",
+            "Left (East) 10 → (15,0)",
+            "Distance = 15 km"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-17T15:40:04.115Z"
+    },
+    {
+      "id": "290aba4e3b0f7670",
+      "exam": "jee",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "JEE Main Practice Set 15",
+      "paperPath": "jee/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "\\lim_{x \\to 0} \\frac{e^x - 1 - x - \\frac{x^2}{2}}{x^3}",
+      "options": [
+        {
+          "label": "A",
+          "text": "\\frac{1}{6}",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "\\frac{1}{3}",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "\\frac{1}{2}",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recognize the limit is of the form 0/0 as x→0.",
+        "Apply L'Hôpital's rule three times: differentiate numerator and denominator repeatedly.",
+        "First derivative: (e^x - 1 - x)/(3x^2) → 0/0.",
+        "Second derivative: (e^x - 1)/(6x) → 0/0.",
+        "Third derivative: e^x/6 → 1/6 as x→0.",
+        "Alternatively, use Taylor expansion e^x = 1 + x + x^2/2 + x^3/6 + ... to get the same result."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Memorized Limit",
+          "idea": "Recognize standard limit from e^x expansion",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall e^x = 1 + x + x^2/2 + x^3/6 + ... so limit = 1/6",
+            "Match with option A"
+          ]
+        },
+        {
+          "name": "Taylor Series",
+          "idea": "Use Maclaurin expansion of e^x",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write e^x = 1 + x + x^2/2 + x^3/6 + O(x^4)",
+            "Substitute: numerator = (1+x+x^2/2+x^3/6+...) - 1 - x - x^2/2 = x^3/6 + ...",
+            "Divide by x^3 and take limit = 1/6"
+          ]
+        },
+        {
+          "name": "L'Hôpital Thrice",
+          "idea": "Differentiate numerator and denominator three times",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Apply L'Hôpital: (e^x - 1 - x) / (3x^2)",
+            "Apply again: (e^x - 1) / (6x)",
+            "Apply third time: e^x / 6",
+            "Evaluate at x=0: 1/6"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-17T15:41:30.650Z"
+    },
+    {
+      "id": "bcf496202e14da9f",
+      "exam": "neet",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "NEET UG Practice Set 15",
+      "paperPath": "neet/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 3,
+      "section": "Chemistry",
+      "question": "The unit of the rate constant for a reaction is L² mol⁻² s⁻¹. The overall order of the reaction is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Zero",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "First",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Second",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Third",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall that for a reaction of overall order n, the rate constant k has units of (concentration)^(1-n) time^-1.",
+        "Write the given units: L^2 mol^{-2} s^{-1}.",
+        "Express the general units: (mol L^{-1})^(1-n) s^{-1} = mol^{1-n} L^{n-1} s^{-1}.",
+        "Equate exponents: for mol, 1-n = -2 => n=3; for L, n-1 = 2 => n=3.",
+        "Conclude overall order is 3.",
+        "Select option D."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Order-unit pattern match",
+          "idea": "Memorize common units: zero=mol L⁻¹ s⁻¹, first=s⁻¹, second=L mol⁻¹ s⁻¹, third=L² mol⁻² s⁻¹",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recognize L² mol⁻² s⁻¹ matches third order pattern",
+            "Select third order"
+          ]
+        },
+        {
+          "name": "Unit exponent shortcut",
+          "idea": "Convert unit to (L/mol)^power and add 1",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Write unit as L² mol⁻² s⁻¹ = (L/mol)² s⁻¹",
+            "Exponent 2 equals n−1 for nth order",
+            "Solve n−1=2 → n=3"
+          ]
+        },
+        {
+          "name": "Concentration power rule",
+          "idea": "Use rate constant unit formula conc^(1−n) time⁻¹",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Rate constant unit = (mol/L)^(1−n) s⁻¹",
+            "Given L² mol⁻² s⁻¹ = (L/mol)² s⁻¹ = (mol/L)^(−2) s⁻¹",
+            "Set 1−n = −2 → n=3"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-17T15:45:08.842Z"
+    },
+    {
+      "id": "53298ccfa7e4f5da",
+      "exam": "neet",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "NEET UG Practice Set 15",
+      "paperPath": "neet/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 4,
+      "section": "Chemistry",
+      "question": "The pH of a 1.0 × 10⁻⁸ M aqueous HCl solution at 298 K is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "8.00",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7.00",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "6.98",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "8.02",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recognize that at 1.0 × 10⁻⁸ M HCl, the H⁺ from water autoionization (Kw = 1.0 × 10⁻¹⁴) is significant.",
+        "Let x = [H⁺] from water; total [H⁺] = 1.0 × 10⁻⁸ + x, and [OH⁻] = x.",
+        "Set up Kw = (1.0 × 10⁻⁸ + x)x = 1.0 × 10⁻¹⁴.",
+        "Solve quadratic: x² + 1.0 × 10⁻⁸ x - 1.0 × 10⁻¹⁴ = 0 → x ≈ 9.51 × 10⁻⁸ M.",
+        "Total [H⁺] ≈ 1.051 × 10⁻⁷ M.",
+        "pH = -log(1.051 × 10⁻⁷) ≈ 6.98."
+      ],
+      "verifierCheck": "For 1.0×10⁻⁸ M HCl at 298 K (Kw=1.0×10⁻¹⁴), the total [H⁺] satisfies [H⁺] = 1.0×10⁻⁸ + Kw/[H⁺]. Solving the quadratic [H⁺]² - 1.0×10⁻⁸[H⁺] - 1.0×10⁻¹⁴ = 0 gives [H⁺] = (1.0×10⁻⁸ + √(1.0×10⁻¹⁶ + 4.0×10⁻¹⁴))/2 ≈ 1.051×10⁻⁷ M. pH = -log(1.051×10⁻⁷) ≈ 6.98.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Invariant lookup",
+          "idea": "Recall that for C ≤ 10⁻⁶ M, pH ≈ 6.98",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recognize C = 1×10⁻⁸ M is far below 10⁻⁶ M",
+            "Remember the standard result: pH ≈ 6.98"
+          ]
+        },
+        {
+          "name": "Kw correction",
+          "idea": "Add water auto‑ionization to acid concentration",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write charge balance: [H+] = (C + √(C²+4K_w))/2",
+            "Insert C = 1.0×10⁻⁸ M, K_w = 1.0×10⁻¹⁴",
+            "Compute √(C²+4K_w) ≈ 2.00×10⁻⁷",
+            "Find [H+] ≈ (1.0×10⁻⁸ + 2.00×10⁻⁷)/2 = 1.05×10⁻⁷ M",
+            "pH = –log₁₀[H+] ≈ 6.98"
+          ]
+        },
+        {
+          "name": "Log approx",
+          "idea": "Use small‑C expansion of log",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Pure water gives [H+] = 1.0×10⁻⁷ M → pH = 7.00",
+            "Add acid: total [H+] ≈ 1.0×10⁻⁷ M (1 + C/1.0×10⁻⁷)",
+            "C/1.0×10⁻⁷ = 0.1, so [H+] ≈ 1.1×10⁻⁷ M",
+            "pH ≈ 7 – log₁₀1.1 ≈ 7 – 0.041 = 6.96 ≈ 6.98"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-17T15:47:46.951Z"
+    },
+    {
+      "id": "829eb433dcd000d7",
+      "exam": "cgl",
+      "paperSlug": "practice-set-17",
+      "paperTitle": "CGL Practice Set 17",
+      "paperPath": "cgl/papers/practice-set-17.html",
+      "paperFile": "practice-set-17.json",
+      "questionNumber": 5,
+      "section": "General Intelligence & Reasoning",
+      "question": "Pointing to a photograph, a woman says, \"He is the only son of my mother's mother.\" How is the man related to the woman?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Father",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Brother",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Maternal Uncle",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Paternal Uncle",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify \"my mother's mother\" as the woman's maternal grandmother.",
+        "The man is described as the only son of that grandmother.",
+        "The grandmother's children include the woman's mother (female) and possibly other children.",
+        "The only son of the grandmother is the woman's mother's brother.",
+        "Therefore, the man is the woman's maternal uncle."
+      ],
+      "verifierCheck": "The woman's mother's mother is her maternal grandmother. The only son of the maternal grandmother is the woman's maternal uncle (the brother of the woman's mother). Therefore, the man in the photograph is the woman's maternal uncle.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Generation Skip",
+          "idea": "Count generations: up two, down one",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Woman → Mother → Grandmother (2 up)",
+            "Grandmother's only son = same generation as Mother",
+            "That son is Mother's brother = Maternal Uncle"
+          ]
+        },
+        {
+          "name": "Grandmother's Son",
+          "idea": "Trace up two generations then down to uncle",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Mother's mother = maternal grandmother",
+            "Grandmother's only son = mother's brother",
+            "Mother's brother = maternal uncle"
+          ]
+        },
+        {
+          "name": "Side & Gender Filter",
+          "idea": "Eliminate paternal and sibling options fast",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "\"Mother's mother\" locks to maternal side (drop D)",
+            "\"Only son of grandmother\" cannot be woman's father (A) or brother (B)",
+            "Must be grandmother's son = mother's brother = Maternal Uncle"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-17T15:48:22.348Z"
     }
   ]
 }

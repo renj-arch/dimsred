@@ -192,6 +192,31 @@ jobs:
 
       # Incremental saves mean even a timeout keeps every lesson written so
       # far -- publish whatever landed. Nothing staged -> ci-push exits 0.
+      - name: Attach hand-drawn figures to the filled lessons
+        if: always()
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI: '1'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          # The inked figure library was reachable only from figures/index.html:
+          # no lesson linked to a diagram. Now every lesson this run wrote gets
+          # one -- the best existing match, or a figure invented for it -- and
+          # the library is rebuilt so the new card exists before the push.
+          [ -f /tmp/course-files.txt ] || { echo "no filled pages this run"; exit 0; }
+          node scripts/attach-course-figures.js --files-from /tmp/course-files.txt \
+            --invent --max-invent 4 --limit 12 || echo "::warning::figure attach failed (non-fatal)"
+          node scripts/build-svg-figure-pages.js || true
+          FIGURE_GALLERY_ONLY=1 node scripts/build-figure-pages.js || true
+          node scripts/lib/figure-library.test.js || echo "::warning::figure library test failed"
+
       - name: Publish expanded lessons
         if: always()
         env:
@@ -203,6 +228,8 @@ jobs:
           git add scripts/course-data.json scripts/course-practice.json 2>/dev/null || true
           git add scripts/course-versions.json 2>/dev/null || true
           git add scripts/course-depth.json scripts/course-addons.json 2>/dev/null || true
+          git add data/figures/invented.json 2>/dev/null || true
+          git add figures 2>/dev/null || true
           if [ -f /tmp/course-files.txt ]; then xargs -a /tmp/course-files.txt git add; fi
           rm -f scripts/.course-touched.json
           bash scripts/ci-push.sh "course-expand: hosted model wrote new exam lessons (run #${{ github.run_number }})"

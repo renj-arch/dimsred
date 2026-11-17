@@ -178,6 +178,10 @@ jobs:
           # proves every coverage row resolves, every card is present and
           # figures.html stays a redirect.
           node scripts/lib/figure-library.test.js
+          # Figures invented from course content are stored data, not source.
+          # The store is the only thing stopping a model-written item from
+          # publishing outside the sheet, so its guards run before every deploy.
+          node scripts/lib/figure-store.test.js
           # 2026-11-15: all 14 crash-course pages rendered "Content Coming
           # Soon" because the data engine was never included. This guard keeps
           # the include and the STUDY_DATA key honest.

@@ -152,10 +152,11 @@ jobs:
         if: steps.choose.outputs.kind == 'ready'
         env:
           GH_TOKEN: ${{ github.token }}
+          FILM_ID: ${{ steps.choose.outputs.film }}
         run: |
           gh workflow run film.yml \
             --ref film-ci \
-            -f film='${{ steps.choose.outputs.film }}' \
+            -f film="$FILM_ID" \
             -f quality=draft \
             -f release=false \
             -f publish=false \
@@ -166,11 +167,19 @@ jobs:
         if: steps.choose.outputs.kind == 'research'
         env:
           GH_TOKEN: ${{ github.token }}
+          FILM_ID: ${{ steps.choose.outputs.film }}
+          FILM_TITLE: ${{ steps.choose.outputs.title }}
         run: |
-          echo "::notice title=Authoring ${{ steps.choose.outputs.film }}::${{ steps.choose.outputs.title }}"
+          # News-derived titles routinely contain a double quote — the run on
+          # 2026-11-17 chose "... actor David Walliams about "alleged
+          # serious..."". Interpolating that straight into `echo "..."` is a
+          # shell syntax error: the step died with exit 2 before `gh` ran, so
+          # authoring never started for exactly the topics the brain picked.
+          # Everything the title touches now goes through an env var.
+          printf '::notice title=Authoring %s::%s\n' "$FILM_ID" "$FILM_TITLE"
           gh workflow run author.yml \
             --ref film-ci \
-            -f film='${{ steps.choose.outputs.film }}' \
+            -f film="$FILM_ID" \
             -f render=true \
             -f stub=false
 

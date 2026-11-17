@@ -516,7 +516,9 @@ var FIGURES = [
 // Second-generation diagrams (history, society, IR, public finance,
 // agriculture, sci-tech, disaster management, ethics) live in their own module
 // so this file stays readable. They use the same item format and therefore the
-// same renderer, gallery and per-topic pages.
+// same renderer, gallery and per-topic pages. That module also folds in the
+// figures invented from course content (data/figures/invented.json) and their
+// coverage rows, so a stored figure behaves exactly like a hand-written one.
 require('./upsc-figure-specs.js').FIGURES.forEach(function (f) { FIGURES.push(f); });
 
 module.exports = { PAPER: PAPER, FIGURES: FIGURES, svg: svg, esc: esc };

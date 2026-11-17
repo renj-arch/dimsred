@@ -111,6 +111,31 @@
   .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .tags span{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);
     border:1px solid rgba(214,161,74,.25);padding:3px 8px;border-radius:999px;background:rgba(214,161,74,.06)}
+  /* Two views of the same library: full documentaries and the 9:16 cuts made from them. */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:46px 0 28px;padding-bottom:22px;
+    border-bottom:1px solid rgba(255,255,255,.07)}
+  .tab{border:1px solid rgba(242,230,208,.2);background:transparent;color:var(--muted);
+    padding:11px 18px;border-radius:999px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+    cursor:pointer;font-family:inherit;transition:color .15s,border-color .15s,background .15s}
+  .tab:hover{border-color:var(--gold);color:var(--bone)}
+  .tab[aria-selected="true"]{background:var(--gold);color:#17110a;border-color:var(--gold);font-weight:800}
+  .panel[hidden]{display:none}
+  .shorts{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+  .reel{position:relative;background:#000;border:1px solid rgba(255,255,255,.08);border-radius:14px;
+    overflow:hidden;aspect-ratio:9/16;cursor:pointer}
+  .reel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .reel:hover::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.06)}
+  .reel .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:60px;
+    background:rgba(0,0,0,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;
+    opacity:0;transition:opacity .2s}
+  .reel:hover .play{opacity:1}
+  .reel .play::before{content:"";display:block;width:0;height:0;border-left:19px solid #fff;
+    border-top:13px solid transparent;border-bottom:13px solid transparent;margin-left:4px}
+  .reel .meta{position:absolute;bottom:0;left:0;right:0;padding:12px;
+    background:linear-gradient(transparent,#000);font-size:.78rem}
+  .reel .title{font-weight:700;display:block;text-transform:capitalize}
+  .reel .film-id{font-size:.7rem;color:var(--muted);margin-top:2px}
+  .empty{border:1px dashed rgba(242,230,208,.2);border-radius:16px;padding:34px;color:var(--muted)}
   footer{border-top:1px solid rgba(255,255,255,.08);padding:28px 0 48px;color:var(--faint);font-size:.72rem}
   @media(max-width:820px){
     .wrap{padding:0 18px}
@@ -145,6 +170,14 @@
 </div>
 
 <main class="wrap">
+  <div class="tabs" role="tablist" aria-label="Film library">
+    <button class="tab" role="tab" id="tab-docs" aria-controls="panel-docs" aria-selected="true"
+      onclick="showPanel('docs')">🎬 Documentaries</button>
+    <button class="tab" role="tab" id="tab-shorts" aria-controls="panel-shorts" aria-selected="false"
+      onclick="showPanel('shorts')">📱 Shorts</button>
+  </div>
+
+  <div class="panel" id="panel-docs" role="tabpanel" aria-labelledby="tab-docs">
   <article class="card" data-film="bhopal-gas-tragedy">
     <div class="art bhopal">
       <div class="grain"></div>
@@ -253,6 +286,13 @@
       </div>
     </div>
   </article>
+  </div>
+
+  <div class="panel" id="panel-shorts" role="tabpanel" aria-labelledby="tab-shorts" hidden>
+    <p class="dek" style="max-width:760px;margin:0 0 22px">Vertical dispatches cut from the finished film renders &mdash; 62 seconds each, 9:16, captioned. No new footage, no paid tools: the cutter only repurposes renders that already exist.</p>
+    <div id="reelGrid" class="shorts"></div>
+    <div id="reelEmpty" class="empty" hidden>No shorts yet. Run the <code>reel-cut.yml</code> workflow to generate them from the current renders.</div>
+  </div>
 
   <section id="build-new">
     <h2 style="font-family:var(--serif);font-size:clamp(28px,4vw,42px);line-height:1.1;letter-spacing:-.03em;margin:56px 0 18px">Build a new film</h2>
@@ -290,7 +330,7 @@
     </form>
   </section>
 
-  <p class="note"><b>How these are made.</b> Blender renders the sets, Piper reads the narration, Chromium draws the camera moves, and ffmpeg encodes the film - all on free GitHub Actions, none on the owner's machine. The argument maps are separate, sourced pages. A film is allowed to be beautiful. It is not allowed to invent a fact. Production dossiers: <a href="salt-march-production.html" style="color:var(--gold)">Salt &rarr;</a> <a href="production.html" style="color:var(--gold)">Jallianwala &rarr;</a> <a href="bhopal-gas-tragedy-production.html" style="color:var(--gold)">Bhopal &rarr;</a> <a href="emergency-1975-production.html" style="color:var(--gold)">Emergency &rarr;</a> <a href="the-vatican-archives-production.html" style="color:var(--gold)">Vatican &rarr;</a></p>
+  <p class="note"><b>How these are made.</b> Blender renders the sets, Piper reads the narration, Chromium draws the camera moves, and ffmpeg encodes the film - all on free GitHub Actions, none on the owner's machine. The <b>Shorts</b> tab above is the same renders cropped to 9:16 &mdash; no separate shoot. The argument maps are separate, sourced pages. A film is allowed to be beautiful. It is not allowed to invent a fact. Production dossiers: <a href="salt-march-production.html" style="color:var(--gold)">Salt &rarr;</a> <a href="production.html" style="color:var(--gold)">Jallianwala &rarr;</a> <a href="bhopal-gas-tragedy-production.html" style="color:var(--gold)">Bhopal &rarr;</a> <a href="emergency-1975-production.html" style="color:var(--gold)">Emergency &rarr;</a> <a href="the-vatican-archives-production.html" style="color:var(--gold)">Vatican &rarr;</a></p>
 </main>
 
 <footer class="wrap">
@@ -419,6 +459,63 @@ if (form) {
 function slugify(s) {
   return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 }
+
+// ── Documentaries / Shorts ───────────────────────────────────────────────
+// The reels used to be their own page (reels.html); they are the same footage
+// cut vertically, so they live here as a second view of one library instead of
+// a second nav entry that looked like a duplicate. reels.html now redirects to
+// this tab so older links keep working.
+function showPanel(which) {
+  var docs = which !== 'shorts';
+  var panelDocs = document.getElementById('panel-docs');
+  var panelShorts = document.getElementById('panel-shorts');
+  var tabDocs = document.getElementById('tab-docs');
+  var tabShorts = document.getElementById('tab-shorts');
+  if (!panelDocs || !panelShorts) return;
+  panelDocs.hidden = !docs;
+  panelShorts.hidden = docs;
+  tabDocs.setAttribute('aria-selected', docs ? 'true' : 'false');
+  tabShorts.setAttribute('aria-selected', docs ? 'false' : 'true');
+  if (docs) {
+    if (location.hash === '#shorts') history.replaceState(null, '', location.pathname + location.search);
+  } else {
+    if (location.hash !== '#shorts') history.replaceState(null, '', '#shorts');
+    loadReels();
+  }
+}
+
+var reelsLoaded = false;
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function loadReels() {
+  if (reelsLoaded) return;
+  reelsLoaded = true;
+  var grid = document.getElementById('reelGrid');
+  var empty = document.getElementById('reelEmpty');
+  if (!grid) return;
+  fetch('data/reels.json')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data || !data.total) { if (empty) empty.hidden = false; return; }
+      if (empty) empty.hidden = true;
+      data.reels.forEach(function (r) {
+        var el = document.createElement('div');
+        el.className = 'reel';
+        el.title = r.id.replace(/-/g, ' ');
+        el.innerHTML =
+          '<video playsinline muted preload="metadata"><source src="' + r.file + '" type="video/mp4"></video>' +
+          '<div class="play"></div>' +
+          '<div class="meta"><span class="title">' + escapeHtml(r.id.replace(/-/g, ' ')) + '</span>' +
+          '<span class="film-id">' + Math.round(r.duration) + 's &middot; vertical cut</span></div>';
+        el.onclick = function () { location.href = r.file; };
+        grid.appendChild(el);
+      });
+    })
+    .catch(function () { if (empty) empty.hidden = false; });
+}
+
+if (location.hash === '#shorts') showPanel('shorts');
 
 loadTopics();
 </script>
