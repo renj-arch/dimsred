@@ -72,7 +72,9 @@ jobs:
           MAX_INVENT: ${{ github.event.inputs.max_invent || '3' }}
         run: |
           node scripts/attach-course-figures.js --all --invent \
-            --limit "$LIMIT" --max-invent "$MAX_INVENT"
+            --limit "$LIMIT" --max-invent "$MAX_INVENT" \
+            --changed-out /tmp/figure-lessons.txt
+          echo "lessons changed:"; cat /tmp/figure-lessons.txt 2>/dev/null || true
 
       - name: Rebuild the figure hub and the per-figure pages
         run: |
@@ -91,5 +93,5 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git add data/figures/invented.json 2>/dev/null || true
           git add figures 2>/dev/null || true
-          git add "*/course" 2>/dev/null || true
+          if [ -f /tmp/figure-lessons.txt ]; then xargs -r -a /tmp/figure-lessons.txt git add; fi
           bash scripts/ci-push.sh "course-figures: inked diagrams attached to lessons (run #${{ github.run_number }})"

@@ -153,7 +153,10 @@ function inject(html, block) {
 
 async function inventFor(file, html) {
   const title = textOf(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || path.basename(file, '.html');
-  const id = store.kebab(path.basename(file).replace(/^lesson-/, '')) + '-figure';
+  // The slug comes from the lesson file without its extension: lesson-current-
+  // affairs.html -> current-affairs-figure, not current-affairs-html-figure.
+  const slug = store.kebab(path.basename(file, '.html').replace(/^lesson-/, ''));
+  const id = slug + '-figure';
   if (store.ids().indexOf(id) !== -1) return store.get(id);
   const { execFileSync } = require('child_process');
   try {
@@ -184,6 +187,7 @@ async function main() {
   let invented = 0;
   let missing = 0;
   let attached = 0;
+  const changed = [];
 
   for (const file of files) {
     if (limit && attached >= limit) break;
@@ -226,6 +230,7 @@ async function main() {
     if (!dry) fs.writeFileSync(file, next, 'utf8');
     attached++;
     touched++;
+    changed.push(rel);
     console.log((dry ? '[dry] ' : '') + rel + ' <- ' + fig.id + (chosen ? ' (score ' + chosen.score + ')' : ' (invented)'));
   }
 
@@ -234,6 +239,17 @@ async function main() {
   console.log(`figures attached: ${attached}`);
   console.log(`figures invented: ${invented}`);
   console.log(`lessons left without a figure: ${missing}`);
+
+  // The workflows stage the result. A pathspec like "*/course" does not match
+  // upsc/course/... (verified: `git ls-files "*/course"` returns 0), which is
+  // why the first CI run attached eight figures and published none of them.
+  // Emit the exact list instead.
+  const changedOut = arg('changed-out');
+  if (changedOut && changed.length) {
+    fs.writeFileSync(changedOut, changed.join('\n') + '\n', 'utf8');
+    console.log('changed files written to ' + changedOut);
+  }
+
   if (check && missing) process.exitCode = 1;
 }
 
