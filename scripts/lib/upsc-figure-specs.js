@@ -858,6 +858,45 @@ try {
   if (e.code !== 'MODULE_NOT_FOUND') throw e;
 }
 
+// Figures invented from course content (data/figures/invented.json) join both
+// the gallery and the coverage map here, exactly like a forged or hand-written
+// one. Without a coverage row figure-library.test.js fails with "figure not
+// reachable from the coverage map", so the mapping is part of adding a figure,
+// not an afterthought.
+try {
+  const INVENTED = require('./figure-store.js').all();
+  const TAG_THEME = [
+    [/^(economy)$/i, /econom|money|finance|public/],
+    [/^(environment)$/i, /environment|disaster/],
+    [/^(science|science & technology)$/i, /science|technology/],
+    [/^(history|art & culture)$/i, /history|culture/],
+    [/^(society)$/i, /society|population/],
+    [/^(polity|governance)$/i, /polity|constitution|governance/],
+    [/^(international relations)$/i, /international/],
+    [/^(agriculture)$/i, /agriculture/],
+    [/^(disaster management)$/i, /disaster|environment/],
+    [/^(geography)$/i, /geomorph|climat|oceanog|soil|water|geograph/],
+    [/^(ethics|probity)$/i, /ethic|probity/]
+  ];
+  INVENTED.forEach(function (f) {
+    if (!FIGURES.some(function (x) { return x.id === f.id; })) FIGURES.push(f);
+    const rows = COVERAGE[f.paper] || (COVERAGE[f.paper] = []);
+    const tag = String(f.tag || '').trim();
+    const rule = TAG_THEME.filter(function (r) { return r[0].test(tag); })[0];
+    let row = rule ? rows.filter(function (r) { return rule[1].test(r.theme); })[0] : null;
+    if (!row) {
+      row = rows.filter(function (r) { return r.theme.toLowerCase() === tag.toLowerCase(); })[0];
+    }
+    if (!row) {
+      row = { theme: tag || 'Unsorted', figs: [] };
+      rows.push(row);
+    }
+    if (row.figs.indexOf(f.id) === -1) row.figs.push(f.id);
+  });
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e;
+}
+
 const THEME_COUNT = Object.keys(COVERAGE).reduce(function (n, p) {
   return n + COVERAGE[p].length;
 }, 0);
