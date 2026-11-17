@@ -280,27 +280,25 @@ textarea{min-height:90px;resize:vertical}
 
       <section id="tab-tts" class="tab-panel panel" style="display:none">
         <h3>AI Voice — Malayalam & Tamil</h3>
-        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Browser voices depend on what voices are installed on your device. Install Malayalam/Tamil language packs in Windows/macOS Settings for best results. Optionally run <code>scripts/tts_server.py</code> locally for Edge TTS MP3 generation.</p>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Uses your device's built-in voices (free, no install). Install Malayalam/Tamil language packs in your OS settings for those voices to appear below.</p>
         <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
           <div class="field" style="min-width:200px">
-            <label>Browser Voice</label>
+            <label>Voice</label>
             <select id="ttsBrowserVoice" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.9em">
               <option value="">Loading voices...</option>
             </select>
           </div>
-          <button class="btn btn-primary" onclick="ttsFetchBrowserVoices()">🔄 Refresh</button>
+          <button class="btn btn-primary" onclick="ttsFetchBrowserVoices()">🔄 Refresh Voices</button>
         </div>
         <div style="margin-top:12px">
           <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Text to speak</label>
           <textarea id="ttsText" style="width:100%;min-height:120px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="Type Malayalam or Tamil text here..."></textarea>
         </div>
         <div style="margin-top:16px">
-          <button class="btn btn-primary" onclick="ttsSpeakBrowser()">🔊 Speak (Browser)</button>
+          <button class="btn btn-primary" onclick="ttsSpeakBrowser()">🔊 Speak</button>
           <button class="btn btn-secondary" onclick="ttsLoadLyrics()">📋 Load from Lyrics</button>
-          <button class="btn btn-sm btn-secondary" onclick="ttsFetchServerVoices()">Server Voices</button>
           <div id="ttsStatus" style="margin-left:12px;font-size:.85em;color:var(--muted)"></div>
         </div>
-        <div id="ttsAudioContainer" style="margin-top:16px"></div>
       </section>
     </div>
 
@@ -650,24 +648,6 @@ async function ttsFetchBrowserVoices() {
       sel.appendChild(o);
     });
     showToast('No ml-IN/ta-IN voices found — install language packs');
-  }
-}
-
-async function ttsFetchServerVoices() {
-  try {
-    const res = await fetch('http://localhost:8765/voices');
-    const voices = await res.json();
-    const sel = document.getElementById('ttsBrowserVoice');
-    sel.innerHTML = '';
-    Object.entries(voices).forEach(([name, id]) => {
-      const o = document.createElement('option');
-      o.value = id;
-      o.textContent = name + ' (server)';
-      sel.appendChild(o);
-    });
-    showToast('Server voices loaded');
-  } catch (e) {
-    showToast('TTS server not running. Start scripts/tts_server.py');
   }
 }
 
