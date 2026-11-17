@@ -2,7 +2,7 @@
   "meta": {
     "about": "Frozen AI practice questions for the mains page button. Written by the site's own model (scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. Unreviewed practice material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.",
     "updated": "2026-11-17",
-    "count": 23,
+    "count": 24,
     "lastAttempt": {
       "at": "2026-11-07T09:06:43.539Z",
       "reason": "shipped ci-mw66iy1f"
@@ -1606,6 +1606,73 @@
         "words": 215,
         "targetWords": 250,
         "anchors": 0
+      }
+    },
+    {
+      "id": "ci-mwk0odp1-wrsz",
+      "at": "2026-11-17",
+      "paper": "optional2",
+      "topic": "Simplex Method and Duality in Linear Programming",
+      "marks": 15,
+      "difficulty": "medium",
+      "years": [],
+      "question": "Examine the theoretical foundation of the Simplex method for solving Linear Programming Problems (LPP). Discuss the concept of duality and its economic interpretation. How does the dual simplex method provide computational advantages in sensitivity analysis? (15 marks, 250 words)",
+      "answer": [
+        {
+          "h": "Theoretical Foundation of Simplex Method",
+          "p": "The Simplex method, developed by George Dantzig in 1947, operates on the fundamental theorem of linear programming: if an optimal solution exists, it occurs at an extreme point (vertex) of the feasible region. The algorithm moves systematically from one basic feasible solution to an adjacent one with improved objective value, using pivot operations on the tableau. Each iteration maintains feasibility while reducing the objective function (for minimization) until optimality conditions — non-negative reduced costs for all non-basic variables — are satisfied. The method exploits the convex polyhedral structure of the feasible set, guaranteeing finite termination for non-degenerate problems."
+        },
+        {
+          "h": "Duality Theory and Economic Interpretation",
+          "p": "Every primal LPP has an associated dual problem where constraints become variables and vice versa. The Weak Duality Theorem states that any feasible primal solution provides a bound on the dual objective, while Strong Duality asserts that if both have feasible solutions, their optimal values coincide. Complementary Slackness conditions link primal and dual optimal solutions: a primal variable is positive only if its corresponding dual constraint is tight. Economically, dual variables represent shadow prices — the marginal value of relaxing a resource constraint — enabling resource allocation decisions in production planning and transportation problems."
+        },
+        {
+          "h": "Dual Simplex Method and Sensitivity Analysis",
+          "p": "The dual simplex method starts with a basic solution that is dual feasible (optimal reduced costs) but primal infeasible (negative RHS). It restores primal feasibility while maintaining dual feasibility, making it ideal for post-optimality analysis. When a new constraint is added or RHS values change, the current basis may become primal infeasible but remains dual feasible; dual simplex restores optimality without re-solving from scratch. This is computationally superior to primal simplex for parametric programming and integer programming branch-and-bound nodes where only RHS modifications occur."
+        },
+        {
+          "h": "Computational Challenges and Degeneracy",
+          "p": "Degeneracy — when a basic variable takes value zero — can cause cycling, though Bland's rule (choosing the smallest index entering/leaving variable) guarantees finite termination. In practice, large-scale problems suffer from numerical instability due to round-off errors in pivot operations. Revised simplex with LU factorization of the basis matrix improves numerical stability and exploits sparsity. Interior-point methods (Karmarkar, 1984) offer polynomial-time complexity and outperform simplex on very large sparse problems, though simplex remains preferred for warm-starts and sensitivity analysis."
+        },
+        {
+          "h": "Way Forward",
+          "p": "Modern solvers combine primal/dual simplex with interior-point methods in hybrid algorithms, selecting the approach based on problem structure. For UPSC-level applications, mastering dual simplex for sensitivity analysis and understanding shadow prices for policy decisions — such as resource allocation in Five-Year Plans — remains essential. Aspirants should practice formulating duals from primal problems and interpreting complementary slackness in economic contexts."
+        }
+      ],
+      "marksGuide": [
+        "Clear statement of fundamental theorem of LP and simplex mechanics",
+        "Correct formulation of dual problem and statement of Weak/Strong Duality theorems",
+        "Economic interpretation of dual variables as shadow prices with concrete example",
+        "Explanation of dual simplex advantage in sensitivity analysis (RHS changes, new constraints)",
+        "Mention of degeneracy, cycling, Bland's rule, and modern solver hybrids"
+      ],
+      "pitfalls": [
+        "Confusing primal/dual variable correspondence or misstating complementary slackness",
+        "Omitting economic interpretation of dual variables",
+        "Treating dual simplex as merely 'simplex on dual' without explaining primal infeasibility/dual feasibility start",
+        "Ignoring computational aspects (degeneracy, numerical stability, interior-point comparison)",
+        "Providing only algorithmic steps without theoretical justification"
+      ],
+      "laws": [],
+      "keywords": [
+        "Simplex method",
+        "Duality theory",
+        "Shadow prices",
+        "Complementary slackness",
+        "Dual simplex",
+        "Sensitivity analysis",
+        "Degeneracy",
+        "Interior-point methods"
+      ],
+      "origin": "ci",
+      "ai": 1,
+      "model": "hosted",
+      "subject": "mathematics",
+      "quality": {
+        "score": 100,
+        "words": 415,
+        "targetWords": 250,
+        "anchors": 2
       }
     }
   ]
