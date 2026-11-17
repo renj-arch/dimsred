@@ -81,8 +81,88 @@ textarea{min-height:90px;resize:vertical}
 .toast.show{display:block}
 @media(max-width:768px){.app{flex-direction:column}.sidebar{width:100%;height:auto;max-height:40vh}.editor{padding:12px}}
 </style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' https://krvlufonfbcabgcjomvs.supabase.co https://api.github.com; frame-src https://accounts.google.com; upgrade-insecure-requests">
+<script>
+// Owner-only gate — music studio is private to the site owner (red835699@gmail.com).
+// Reuses the same Supabase + /api/on-demand?whoami=1 check as owner-runner.js.
+(function(){
+  'use strict';
+  var SB_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
+  var SB_ANON = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
+  var API = '/api/on-demand';
+  var LOGIN_URL = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+
+  function getToken(){ try{ return localStorage.getItem('sb_access_token') || ''; }catch(e){ return ''; } }
+  function tokenExpired(){
+    var tok = getToken();
+    if (!tok) return true;
+    try {
+      var parts = tok.split('.');
+      if (parts.length < 2) return false;
+      var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+      if (payload && payload.exp) return (payload.exp * 1000) - Date.now() < 60000;
+      return false;
+    } catch(e) { return false; }
+  }
+  function refreshToken(){
+    var rt = localStorage.getItem('sb_refresh_token');
+    if (!rt) return Promise.resolve('');
+    return fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST', headers: { 'apikey': SB_ANON, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: rt })
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (d && d.access_token) {
+        try { localStorage.setItem('sb_access_token', d.access_token); if (d.refresh_token) localStorage.setItem('sb_refresh_token', d.refresh_token); } catch(e) {}
+        return d.access_token;
+      }
+      return '';
+    }).catch(function(){ return ''; });
+  }
+  function freshToken(){
+    var t = getToken();
+    if (!t) return Promise.resolve('');
+    if (!tokenExpired()) return Promise.resolve(t);
+    return refreshToken();
+  }
+  function checkOwner(){
+    freshToken().then(function(t){
+      if (!t) { window.location.replace(LOGIN_URL); return; }
+      fetch(API + '?whoami=1', { headers: { 'Authorization': 'Bearer ' + t } })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(w){
+          if (w && typeof w.owner === 'boolean' && w.owner) {
+            // Owner — show the studio
+            document.getElementById('studioApp').style.display = 'flex';
+            document.getElementById('ownerGate').style.display = 'none';
+          } else {
+            // Not owner — show gate message
+            document.getElementById('ownerGate').innerHTML =
+              '<div class="owner-lock"><div class="lock">🔒</div>' +
+              '<div style="font-weight:800">Owner only</div>' +
+              '<div style="color:var(--muted);font-size:.9em;margin-top:8px">This page is private to the site owner.</div>' +
+              '<button class="btn btn-primary" onclick="window.location.replace(\'/login.html?redirect=' + encodeURIComponent(window.location.pathname) + '\')">Sign in as owner</button></div>';
+          }
+        }).catch(function(){ window.location.replace(LOGIN_URL); });
+    });
+  }
+  // Start check immediately
+  checkOwner();
+})();
+</script>
 </head>
 <body>
+
+<!-- Owner gate (shown until auth resolves) -->
+<div id="ownerGate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg)">
+  <div style="text-align:center;color:var(--muted)">
+    <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+    <div style="font-weight:800">Owner only</div>
+    <div style="color:var(--muted);font-size:.9em;margin-top:8px">Verifying access…</div>
+  </div>
+</div>
+
+<!-- Studio app (hidden until owner confirmed) -->
+<div id="studioApp" style="display:none">
 
 <div class="app">
   <aside class="sidebar">
@@ -827,6 +907,8 @@ document.getElementById('beatBpm').addEventListener('change', () => {
     document.querySelector('.btn-primary').textContent = '▶ Start';
   }
 });
+
+</div>
 
 </script>
 </body>
