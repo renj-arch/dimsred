@@ -209,6 +209,14 @@ textarea{min-height:90px;resize:vertical}
       <button class="tab" onclick="showTab('beat')">🥁 Beat</button>
       <button class="tab" onclick="showTab('tts')">🇮🇳 TTS ML/Tamil</button>
       <button class="tab" onclick="showTab('tamil-malayalam')">🈶 Lyric Helper</button>
+    <button class="tab" onclick="showTab('lyriclab')">🧠 Lyric Lab</button>
+      <button class="tab" onclick="showTab('arrange')">🎬 Arrangement</button>
+      <button class="tab" onclick="showTab('mixer')">🎛 Mixer</button>
+      <button class="tab" onclick="showTab('fx')">🎚 Effects</button>
+      <button class="tab" onclick="showTab('harmony')">🎼 Harmony</button>
+      <button class="tab" onclick="showTab('roll')">🎹 Piano Roll</button>
+      <button class="tab" onclick="showTab('recorder')">🎙 Recorder</button>
+      <button class="tab" onclick="showTab('master')">💾 Master</button>
     </div>
 
     <div class="editor">
@@ -389,6 +397,163 @@ textarea{min-height:90px;resize:vertical}
         </div>
       </section>
 
+      <section id="tab-lyriclab" class="tab-panel panel" style="display:none">
+        <h3>🧠 Lyric Lab — model-written lyrics</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:14px">Give it a brief; it writes a full lyric with sections. Owner-only, and the model keys stay on the server — nothing is stored in this browser except the result you keep.</p>
+        <div class="grid2">
+          <div class="field" style="grid-column:1/-1">
+            <label>What is the song about?</label>
+            <textarea id="lb-theme" placeholder="e.g. a father leaving a small town for work, and the letters he never sends"></textarea>
+          </div>
+          <div class="field"><label>Language</label>
+            <select id="lb-language" onchange="MX.lyricPrefs()">
+              <option value="english">English</option><option value="tamil">Tamil</option>
+              <option value="malayalam">Malayalam</option><option value="hindi">Hindi</option>
+              <option value="telugu">Telugu</option><option value="kannada">Kannada</option>
+              <option value="bengali">Bengali</option><option value="marathi">Marathi</option>
+              <option value="urdu">Urdu</option><option value="punjabi">Punjabi</option>
+              <option value="mixed">Mixed (English + mother tongue)</option>
+            </select>
+          </div>
+          <div class="field"><label>Mood</label><input id="lb-mood" placeholder="bittersweet, defiant, tender..." value="bittersweet"></div>
+          <div class="field"><label>Genre</label>
+            <select id="lb-genre"><option>pop</option><option>indie</option><option>hip hop</option><option>R&amp;B</option><option>electronic</option><option>folk</option><option>film / cinematic</option><option>classical / carnatic</option><option>ghazal</option></select>
+          </div>
+          <div class="field"><label>Point of view</label>
+            <select id="lb-pov"><option>first person</option><option>second person</option><option>third person</option><option>we / collective</option></select>
+          </div>
+          <div class="field"><label>Total lines</label><input type="number" id="lb-lines" value="20" min="4" max="80"></div>
+          <div class="field"><label>Rhyme</label>
+            <select id="lb-rhyme"><option>natural, not forced</option><option>tight AABB</option><option>ABAB</option><option>free verse, rhythm over rhyme</option><option>assonance only</option></select>
+          </div>
+          <div class="field"><label>Structure</label><input id="lb-structure" value="Verse 1, Chorus, Verse 2, Chorus, Bridge, Chorus"></div>
+          <div class="field" style="grid-column:1/-1"><label>Must use these images / words</label><input id="lb-keywords" placeholder="railway platform, a blue letter, monsoon"></div>
+          <div class="field" style="grid-column:1/-1"><label>Avoid</label><input id="lb-avoid" placeholder="clichés, English words inside Tamil lines, brand names"></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin:14px 0;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.generateLyrics()">✨ Generate lyrics</button>
+          <button class="btn btn-secondary" onclick="MX.lyricToSection()">↳ Add as a section</button>
+          <button class="btn btn-secondary" onclick="MX.lyricReplace()">⇄ Replace all lyrics</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.copyLyric()">⧉ Copy</button>
+          <span id="lb-status" style="font-size:.82em;color:var(--muted)"></span>
+        </div>
+        <textarea id="lb-out" style="width:100%;min-height:320px;padding:14px;border-radius:10px;border:1px solid var(--border);background:#000;color:var(--text);font-family:ui-monospace,monospace;font-size:.95rem;line-height:1.6" placeholder="Your generated lyrics appear here. Edit them freely — nothing is overwritten until you press a button above."></textarea>
+      </section>
+
+      <section id="tab-arrange" class="tab-panel panel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0">Arrangement</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Intro')">+ Intro</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Verse')">+ Verse</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Chorus')">+ Chorus</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Bridge')">+ Bridge</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Solo')">+ Solo</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Outro')">+ Outro</button>
+          </div>
+        </div>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:12px">The song order. Each row plays its chord progression for the number of bars you set. This is the whole song, not a sketch.</p>
+        <div id="mx-sections"></div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.play()">▶ Play arrangement</button>
+          <button class="btn btn-secondary" onclick="MX.stop()">⏹ Stop</button>
+          <span id="mx-arrange-info" style="font-size:.82em;color:var(--muted)"></span>
+        </div>
+      </section>
+
+      <section id="tab-mixer" class="tab-panel panel" style="display:none">
+        <h3>Mixer</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:14px">Four parts, each with its own instrument, level and pan. Solo one to check it, mute it to hear the hole it leaves.</p>
+        <div id="mx-mixer"></div>
+        <div style="margin-top:16px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Master</label>
+          <input type="range" id="mx-master" min="0" max="1" step="0.01" value="0.8" oninput="MX.setMaster(this.value)" style="width:220px">
+          <span id="mx-master-val" style="font-size:.8em;color:var(--muted)">0.80</span>
+          <button class="btn btn-sm btn-secondary" onclick="MX.play()">▶ Audition</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.stop()">⏹</button>
+        </div>
+      </section>
+
+      <section id="tab-fx" class="tab-panel panel" style="display:none">
+        <h3>Effects &amp; Master Bus</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:14px">A real bus, not decoration: reverb and delay are sends, EQ shapes the tone, the compressor keeps the loud parts from clipping.</p>
+        <div class="grid2">
+          <div class="field"><label>Reverb mix</label><input type="range" id="fx-reverb" min="0" max="1" step="0.01" value="0.18" oninput="MX.setFx('reverb',this.value)"></div>
+          <div class="field"><label>Reverb size</label><input type="range" id="fx-size" min="0.6" max="4" step="0.1" value="1.8" oninput="MX.setFx('size',this.value)"></div>
+          <div class="field"><label>Delay time (s)</label><input type="range" id="fx-delay" min="0.05" max="0.8" step="0.01" value="0.28" oninput="MX.setFx('delay',this.value)"></div>
+          <div class="field"><label>Delay feedback</label><input type="range" id="fx-dfb" min="0" max="0.7" step="0.01" value="0.28" oninput="MX.setFx('dfb',this.value)"></div>
+          <div class="field"><label>Delay mix</label><input type="range" id="fx-dmix" min="0" max="1" step="0.01" value="0.12" oninput="MX.setFx('dmix',this.value)"></div>
+          <div class="field"><label>Compressor</label><input type="range" id="fx-comp" min="0" max="1" step="0.01" value="0.4" oninput="MX.setFx('comp',this.value)"></div>
+          <div class="field"><label>Low shelf (dB)</label><input type="range" id="fx-low" min="-12" max="12" step="1" value="0" oninput="MX.setFx('low',this.value)"></div>
+          <div class="field"><label>Mid (dB)</label><input type="range" id="fx-mid" min="-12" max="12" step="1" value="0" oninput="MX.setFx('mid',this.value)"></div>
+          <div class="field"><label>High shelf (dB)</label><input type="range" id="fx-high" min="-12" max="12" step="1" value="0" oninput="MX.setFx('high',this.value)"></div>
+        </div>
+      </section>
+
+      <section id="tab-harmony" class="tab-panel panel" style="display:none">
+        <h3>Harmony — scales, chords, progressions</h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end;margin-bottom:14px">
+          <div class="field"><label>Root</label><select id="hx-root" onchange="MX.refreshHarmony()"></select></div>
+          <div class="field"><label>Scale / mode</label><select id="hx-mode" onchange="MX.refreshHarmony()"></select></div>
+          <div class="field"><label>Octave</label><select id="hx-oct" onchange="MX.refreshHarmony()"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+        </div>
+        <div id="hx-notes" style="font-size:.9em;color:var(--text-sec);margin-bottom:14px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="hx-degrees"></div>
+        <div class="grid2">
+          <div class="field" style="grid-column:1/-1"><label>Progression preset</label><select id="hx-preset" onchange="MX.applyPreset(this.value)"></select></div>
+          <div class="field"><label>Arpeggiator</label><select id="hx-arp" onchange="MX.setArp()"><option value="off">Off</option><option value="up">Up</option><option value="down">Down</option><option value="updown">Up-Down</option><option value="random">Random</option></select></div>
+          <div class="field"><label>Arp rate (per beat)</label><select id="hx-arprate" onchange="MX.setArp()"><option value="1">1</option><option value="2" selected>2</option><option value="4">4</option></select></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.playHarmony()">▶ Play progression</button>
+          <button class="btn btn-secondary" onclick="MX.stop()">⏹</button>
+          <button class="btn btn-secondary" onclick="MX.progressionToSection()">+ Add to arrangement</button>
+        </div>
+      </section>
+
+      <section id="tab-roll" class="tab-panel panel" style="display:none">
+        <h3>Piano Roll</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:10px">16 steps, one octave and a bit. Click a cell to place the lead line. It loops over the arrangement.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:12px">
+          <div class="field"><label>Instrument</label><select id="roll-inst" onchange="MX.setRollInst()"><option value="pluck">Pluck</option><option value="lead">Lead</option><option value="pad">Pad</option><option value="strings">Strings</option></select></div>
+          <div class="field"><label>Steps</label><select id="roll-steps" onchange="MX.renderRoll()"><option>8</option><option selected>16</option><option>32</option></select></div>
+          <button class="btn btn-sm btn-secondary" onclick="MX.clearRoll()">Clear</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.play()">▶ Play</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.stop()">⏹</button>
+        </div>
+        <div id="mx-roll" style="overflow-x:auto"></div>
+      </section>
+
+      <section id="tab-recorder" class="tab-panel panel" style="display:none">
+        <h3>Vocal Recorder</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:14px">Record a take with the microphone, play it against the arrangement, or download it. The browser will ask for microphone permission the first time.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-primary" onclick="MX.startRec()">⏺ Record</button>
+          <button class="btn btn-secondary" onclick="MX.stopRec()">⏹ Stop</button>
+          <button class="btn btn-secondary" onclick="MX.playRec()">▶ Play take</button>
+          <a class="btn btn-secondary" id="mx-rec-dl" href="#" download="take.webm" style="display:none">⤓ Download</a>
+          <span id="mx-rec-status" style="font-size:.82em;color:var(--muted)"></span>
+        </div>
+        <div id="mx-recs" style="margin-top:16px"></div>
+      </section>
+
+      <section id="tab-master" class="tab-panel panel" style="display:none">
+        <h3>Master &amp; Export</h3>
+        <div class="grid2">
+          <div class="field"><label>Tempo (BPM)</label><input type="number" id="mx-bpm" min="40" max="220" value="96" onchange="MX.setTempo(this.value)"></div>
+          <div class="field"><label>Metronome</label><select id="mx-click" onchange="MX.setClick()"><option value="off">Off</option><option value="on">On</option></select></div>
+          <div class="field"><label>Length (seconds)</label><input type="number" id="mx-len" min="4" max="600" value="32"></div>
+          <div class="field"><label>Render quality</label><select id="mx-rate"><option value="44100">44.1 kHz</option><option value="48000">48 kHz</option></select></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.exportWav()">⤓ Render WAV</button>
+          <button class="btn btn-secondary" onclick="MX.exportProject()">⤓ Export project (.studio.json)</button>
+          <label class="btn btn-secondary" style="cursor:pointer">⤒ Import project<input type="file" accept=".json,application/json" style="display:none" onchange="MX.importProject(this)"></label>
+          <button class="btn btn-secondary" onclick="MX.printSheet()">🖨 Lyric sheet</button>
+        </div>
+        <p id="mx-export-status" style="font-size:.82em;color:var(--muted);margin-top:12px"></p>
+      </section>
+
       <section id="tab-tamil-malayalam" class="tab-panel panel" style="display:none">
         <h3>Tamil & Malayalam Lyric Helper</h3>
         <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Tap a word to insert it into your lyrics. Build bilingual verses for your songs.</p>
@@ -421,6 +586,7 @@ textarea{min-height:90px;resize:vertical}
       </div>
     </div>
   </main>
+</div>
 </div>
 
 <div class="toast" id="toast">Saved</div>
@@ -1005,8 +1171,911 @@ document.getElementById('beatBpm').addEventListener('change', () => {
   }
 });
 
-</div>
-
 </script>
+
+<script>
+// =====================================================================
+// Composer engine — arrangement, mixer, bus, harmony, piano roll,
+// recorder, WAV render, and the model-written lyric lane.
+//
+// Everything here is real Web Audio: the arrangement you hear is the same
+// graph that gets rendered to WAV, so the export is not a rough sketch of
+// the mix. State lives on the project as `mx` and is saved through the
+// existing saveField(), so it travels with the song.
+// =====================================================================
+const MX = (function () {
+  const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const MODES = {
+    'Major (Ionian)': [0, 2, 4, 5, 7, 9, 11],
+    'Natural minor (Aeolian)': [0, 2, 3, 5, 7, 8, 10],
+    'Dorian': [0, 2, 3, 5, 7, 9, 10],
+    'Phrygian': [0, 1, 3, 5, 7, 8, 10],
+    'Lydian': [0, 2, 4, 6, 7, 9, 11],
+    'Mixolydian': [0, 2, 4, 5, 7, 9, 10],
+    'Locrian': [0, 1, 3, 5, 6, 8, 10],
+    'Harmonic minor': [0, 2, 3, 5, 7, 8, 11],
+    'Melodic minor': [0, 2, 3, 5, 7, 9, 11],
+    'Major pentatonic': [0, 2, 4, 7, 9],
+    'Minor pentatonic': [0, 3, 5, 7, 10],
+    'Blues': [0, 3, 5, 6, 7, 10]
+  };
+  const PRESETS = {
+    'Pop: I–V–vi–IV': ['I', 'V', 'vi', 'IV'],
+    'Pop: vi–IV–I–V': ['vi', 'IV', 'I', 'V'],
+    'Fifties: I–vi–IV–V': ['I', 'vi', 'IV', 'V'],
+    'Canon: I–V–vi–iii–IV–I–IV–V': ['I', 'V', 'vi', 'iii', 'IV', 'I', 'IV', 'V'],
+    'Jazz: ii–V–I': ['ii', 'V', 'I'],
+    'Minor: i–VI–III–VII': ['i', 'VI', 'III', 'VII'],
+    'Modal: I–bVII–IV': ['I', 'bVII', 'IV'],
+    'Descending: I–vii–vi–V': ['I', 'vii', 'vi', 'V'],
+    'Loop: I–IV': ['I', 'IV'],
+    'Drone: I–I–IV–I': ['I', 'I', 'IV', 'I']
+  };
+  const INSTRUMENTS = {
+    kick: 'Kick', snare: 'Snare', hat: 'Hi-hat',
+    bass: 'Bass', pad: 'Pad', pluck: 'Pluck', lead: 'Lead', strings: 'Strings'
+  };
+  const TRACKS = [
+    { id: 'drums', name: 'Drums', inst: 'kick' },
+    { id: 'bass', name: 'Bass', inst: 'bass' },
+    { id: 'chords', name: 'Chords', inst: 'pad' },
+    { id: 'lead', name: 'Lead', inst: 'pluck' }
+  ];
+
+  const state = {
+    ctx: null, master: null, bus: null, trackGain: {}, playing: false, stopAt: 0,
+    rec: null, chunks: [], takes: [],
+    snap: defaults()
+  };
+
+  function defaults() {
+    return {
+      bpm: 96,
+      root: 'C',
+      mode: 'Major (Ionian)',
+      octave: 3,
+      sections: [
+        { name: 'Intro', bars: 2, chords: ['I', 'V'] },
+        { name: 'Verse', bars: 4, chords: ['I', 'V', 'vi', 'IV'] },
+        { name: 'Chorus', bars: 4, chords: ['vi', 'IV', 'I', 'V'] },
+        { name: 'Bridge', bars: 2, chords: ['IV', 'V'] },
+        { name: 'Chorus', bars: 4, chords: ['vi', 'IV', 'I', 'V'] }
+      ],
+      tracks: {
+        drums: { on: true, vol: 0.8, pan: 0, inst: 'kick' },
+        bass: { on: true, vol: 0.7, pan: 0, inst: 'bass' },
+        chords: { on: true, vol: 0.65, pan: 0, inst: 'pad' },
+        lead: { on: true, vol: 0.6, pan: 0.1, inst: 'pluck' }
+      },
+      master: 0.8,
+      fx: { reverb: 0.18, size: 1.8, delay: 0.28, dfb: 0.28, dmix: 0.12, comp: 0.4, low: 0, mid: 0, high: 0 },
+      arp: 'off',
+      arpRate: 2,
+      roll: { steps: 16, inst: 'pluck', cells: {} },
+      click: 'off',
+      preset: 'Pop: I–V–vi–IV'
+    };
+  }
+
+  /* ---------------- theory ---------------- */
+  function midiOf(name, octave) {
+    const i = NOTES.indexOf(name);
+    return 12 * (octave + 1) + (i < 0 ? 0 : i);
+  }
+  function freq(midi) { return 440 * Math.pow(2, (midi - 69) / 12); }
+  function scaleMidis(root, mode, octave) {
+    const base = midiOf(root, octave);
+    return (MODES[mode] || MODES['Major (Ionian)']).map((s) => base + s);
+  }
+  // "I", "vi", "bVII", "IV" -> {degree, flat}
+  function parseRoman(sym) {
+    const m = /^(b|#)?(I{1,3}|IV|V|VI{0,2}|vii|ii|iii|iv|v|vi)$/.exec(String(sym || 'I').trim());
+    if (!m) return { degree: 0, shift: 0 };
+    const table = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6 };
+    const roman = m[2].toUpperCase() === 'I' ? m[2] : m[2];
+    const up = String(m[2]).toUpperCase();
+    let degree = 0;
+    if (up === 'II') degree = 1; else if (up === 'III') degree = 2;
+    else if (up === 'IV') degree = 3; else if (up === 'V') degree = 4;
+    else if (up === 'VI') degree = 5; else if (up === 'VII') degree = 6;
+    const shift = m[1] === 'b' ? -1 : m[1] === '#' ? 1 : 0;
+    return { degree, shift, table, roman };
+  }
+  function chordMidis(root, mode, octave, sym) {
+    const scale = scaleMidis(root, mode, octave);
+    const { degree, shift } = parseRoman(sym);
+    const pick = (i) => {
+      const idx = i % scale.length;
+      const oct = Math.floor(i / scale.length);
+      return scale[idx] + 12 * oct;
+    };
+    return [0, 2, 4].map((k) => pick(degree + k) + shift);
+  }
+
+  /* ---------------- audio graph ---------------- */
+  function makeGraph(ctx) {
+    const bus = ctx.createGain();
+    const masterGain = ctx.createGain();
+    masterGain.gain.value = state.snap.master;
+
+    // EQ -> compressor -> master -> destination
+    const low = ctx.createBiquadFilter(); low.type = 'lowshelf'; low.frequency.value = 220; low.gain.value = state.snap.fx.low;
+    const mid = ctx.createBiquadFilter(); mid.type = 'peaking'; mid.frequency.value = 1200; mid.Q.value = 0.9; mid.gain.value = state.snap.fx.mid;
+    const high = ctx.createBiquadFilter(); high.type = 'highshelf'; high.frequency.value = 5200; high.gain.value = state.snap.fx.high;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -18 - 12 * (1 - state.snap.fx.comp);
+    comp.ratio.value = 2 + 6 * state.snap.fx.comp;
+    comp.attack.value = 0.006;
+    comp.release.value = 0.22;
+
+    // reverb send
+    const conv = ctx.createConvolver();
+    conv.buffer = impulse(ctx, state.snap.fx.size, 2.2);
+    const revSend = ctx.createGain(); revSend.gain.value = state.snap.fx.reverb;
+    // delay send
+    const delay = ctx.createDelay(1.0); delay.delayTime.value = state.snap.fx.delay;
+    const fb = ctx.createGain(); fb.gain.value = state.snap.fx.dfb;
+    const dSend = ctx.createGain(); dSend.gain.value = state.snap.fx.dmix;
+    const dTone = ctx.createBiquadFilter(); dTone.type = 'lowpass'; dTone.frequency.value = 3200;
+
+    bus.connect(low); low.connect(mid); mid.connect(high); high.connect(comp); comp.connect(masterGain); masterGain.connect(ctx.destination);
+    // sends tap the EQ'd signal
+    high.connect(revSend); revSend.connect(conv); conv.connect(masterGain);
+    high.connect(dSend); dSend.connect(delay); delay.connect(dTone); dTone.connect(fb); fb.connect(delay); dTone.connect(masterGain);
+
+    const trackGain = {};
+    TRACKS.forEach((t) => {
+      const g = ctx.createGain();
+      const p = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      const cfg = state.snap.tracks[t.id];
+      g.gain.value = cfg.on ? cfg.vol : 0;
+      if (p) { p.pan.value = cfg.pan || 0; g.connect(p); p.connect(bus); }
+      else g.connect(bus);
+      trackGain[t.id] = g;
+    });
+
+    return { bus, masterGain, trackGain, low, mid, high, comp, revSend, delay, fb, dSend, conv, delayNode: delay };
+  }
+
+  function impulse(ctx, seconds, decay) {
+    const len = Math.max(1, Math.floor(ctx.sampleRate * seconds));
+    const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = buf.getChannelData(ch);
+      for (let i = 0; i < len; i++) {
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+      }
+    }
+    return buf;
+  }
+
+  function ensure() {
+    if (state.ctx) return state.ctx;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const g = makeGraph(ctx);
+    state.ctx = ctx;
+    state.bus = g.bus;
+    state.master = g.masterGain;
+    state.graph = g;
+    return ctx;
+  }
+
+  /* ---------------- voices ---------------- */
+  function envelope(ctx, node, t, dur, peak, attack, release) {
+    const g = ctx.createGain();
+    const a = Math.max(0.003, attack);
+    const r = Math.max(0.03, release);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t + a);
+    g.gain.setValueAtTime(Math.max(0.0002, peak), t + Math.max(a, dur - r));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    node.connect(g);
+    return g;
+  }
+
+  function tone(ctx, dest, inst, m, t, dur, vel) {
+    const f = freq(m);
+    const amp = (vel == null ? 1 : vel) * 0.22;
+    if (inst === 'bass') {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 420;
+      o.connect(lp);
+      const g = envelope(ctx, lp, t, dur, amp, 0.01, 0.08);
+      g.connect(dest);
+      o.start(t); o.stop(t + dur + 0.05);
+    } else if (inst === 'pad') {
+      [0, 7].forEach((det, i) => {
+        const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = f; o.detune.value = i ? det : -det;
+        const g = envelope(ctx, o, t, dur, amp * 0.5, 0.12, 0.25);
+        g.connect(dest);
+        o.start(t); o.stop(t + dur + 0.3);
+      });
+    } else if (inst === 'strings') {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
+      o.connect(lp);
+      const g = envelope(ctx, lp, t, dur, amp * 0.7, 0.18, 0.3);
+      g.connect(dest);
+      o.start(t); o.stop(t + dur + 0.35);
+    } else if (inst === 'lead') {
+      const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = f;
+      const g = envelope(ctx, o, t, dur, amp * 0.6, 0.01, 0.06);
+      g.connect(dest);
+      o.start(t); o.stop(t + dur + 0.05);
+    } else {
+      // pluck
+      const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = f;
+      const g = envelope(ctx, o, t, Math.min(dur, 0.5), amp * 0.8, 0.005, 0.12);
+      g.connect(dest);
+      o.start(t); o.stop(t + Math.min(dur, 0.5) + 0.1);
+    }
+  }
+
+  function drum(ctx, dest, kind, t, vel) {
+    const amp = (vel == null ? 1 : vel);
+    if (kind === 'kick') {
+      const o = ctx.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(150, t);
+      o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+      const g = envelope(ctx, o, t, 0.24, 0.5 * amp, 0.004, 0.12);
+      g.connect(dest); o.start(t); o.stop(t + 0.3);
+    } else if (kind === 'snare') {
+      const n = ctx.createBufferSource();
+      n.buffer = noiseBuffer(ctx, 0.2);
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 0.8;
+      n.connect(bp);
+      const g = envelope(ctx, bp, t, 0.18, 0.25 * amp, 0.002, 0.1);
+      g.connect(dest); n.start(t); n.stop(t + 0.22);
+    } else {
+      const n = ctx.createBufferSource();
+      n.buffer = noiseBuffer(ctx, 0.08);
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 7000;
+      n.connect(hp);
+      const g = envelope(ctx, hp, t, 0.06, 0.12 * amp, 0.001, 0.04);
+      g.connect(dest); n.start(t); n.stop(t + 0.09);
+    }
+  }
+
+  let _noise = null;
+  function noiseBuffer(ctx, seconds) {
+    if (_noise && _noise.sampleRate === ctx.sampleRate) return _noise;
+    const len = Math.max(1, Math.floor(ctx.sampleRate * seconds));
+    const b = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = b.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    _noise = b;
+    return b;
+  }
+
+  /* ---------------- arrangement ---------------- */
+  function songSeconds(snap) {
+    const beat = 60 / Math.max(30, snap.bpm || 96);
+    return (snap.sections || []).reduce((n, s) => n + Math.max(1, s.bars) * 4 * beat, 0);
+  }
+
+  function scheduleSong(ctx, graph, snap, t0) {
+    const beat = 60 / Math.max(30, snap.bpm || 96);
+    const barDur = beat * 4;
+    let t = t0;
+    const rollCells = snap.roll && snap.roll.cells ? snap.roll.cells : {};
+    const rollSteps = (snap.roll && snap.roll.steps) || 16;
+
+    (snap.sections || []).forEach((sec) => {
+      const bars = Math.max(1, sec.bars || 1);
+      for (let b = 0; b < bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        const ch = chordMidis(snap.root, snap.mode, snap.octave, sym);
+        const barT = t + b * barDur;
+
+        if (snap.tracks.chords.on) {
+          const dest = graph.trackGain.chords;
+          ch.forEach((m) => tone(ctx, dest, snap.tracks.chords.inst, m, barT, barDur * 0.94, 1));
+          if (snap.arp && snap.arp !== 'off') {
+            const rate = Math.max(1, snap.arpRate || 2);
+            const stepDur = barDur / rate;
+            const order = snap.arp === 'down' ? [2, 1, 0] : snap.arp === 'updown' ? [0, 1, 2, 1] : [0, 1, 2];
+            for (let s = 0; s < rate; s++) {
+              const pick = snap.arp === 'random' ? ch[Math.floor(Math.random() * ch.length)] : ch[order[s % order.length]];
+              tone(ctx, dest, 'pluck', pick + 12, barT + s * stepDur, stepDur * 0.9, 0.7);
+            }
+          }
+        }
+
+        if (snap.tracks.bass.on) {
+          tone(ctx, graph.trackGain.bass, snap.tracks.bass.inst, ch[0] - 12, barT, barDur * 0.9, 1);
+        }
+
+        if (snap.tracks.drums.on) {
+          const d = graph.trackGain.drums;
+          for (let beatI = 0; beatI < 4; beatI++) {
+            const bt = barT + beatI * beat;
+            if (beatI === 0 || beatI === 2) drum(ctx, d, 'kick', bt, 1);
+            if (beatI === 1 || beatI === 3) drum(ctx, d, 'snare', bt, 0.9);
+            drum(ctx, d, 'hat', bt + beat / 2, 0.6);
+            drum(ctx, d, 'hat', bt, 0.5);
+          }
+        }
+
+        if (snap.tracks.lead.on && Object.keys(rollCells).length) {
+          const stepDur = barDur / rollSteps;
+          for (let s = 0; s < rollSteps; s++) {
+            // cells are keyed "step:noteIndex" and repeat every bar
+            Object.keys(rollCells).forEach((cell) => {
+              if (!rollCells[cell]) return;
+              const parts = cell.split(':');
+              if (Number(parts[0]) !== s) return;
+              const noteIndex = Number(parts[1]);
+              const base = midiOf(snap.root, (snap.octave || 3) + 1) + noteIndex;
+              tone(ctx, graph.trackGain.lead, snap.roll.inst || 'pluck', base, barT + s * stepDur, stepDur * 0.95, 0.8);
+            });
+          }
+        }
+
+        if (snap.click === 'on') {
+          for (let beatI = 0; beatI < 4; beatI++) {
+            const o = ctx.createOscillator(); o.type = 'square';
+            o.frequency.value = beatI === 0 ? 1600 : 1100;
+            const g = envelope(ctx, o, barT + beatI * beat, 0.05, 0.09, 0.001, 0.03);
+            g.connect(graph.masterGain);
+            o.start(barT + beatI * beat); o.stop(barT + beatI * beat + 0.06);
+          }
+        }
+      }
+      t += bars * barDur;
+    });
+    return t;
+  }
+
+  function play() {
+    stop();
+    const ctx = ensure();
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime + 0.12;
+    const end = scheduleSong(ctx, state.graph, state.snap, t0);
+    state.playing = true;
+    state.stopAt = end;
+    const info = document.getElementById('mx-arrange-info');
+    if (info) info.textContent = 'playing ' + songSeconds(state.snap).toFixed(1) + 's · ' + state.snap.bpm + ' BPM · ' + state.snap.root + ' ' + state.snap.mode;
+  }
+
+  function stop() {
+    if (!state.ctx) return;
+    // Recreate the graph so a stop is immediate and clean.
+    try { state.ctx.close(); } catch (e) {}
+    state.ctx = null; state.playing = false;
+    const info = document.getElementById('mx-arrange-info');
+    if (info) info.textContent = 'stopped';
+  }
+
+  /* ---------------- persistence ---------------- */
+  function snapshot() { return JSON.parse(JSON.stringify(state.snap)); }
+  function save() { try { saveField('mx', snapshot()); } catch (e) {} }
+  function syncFromProject() {
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    state.snap = (p && p.mx) ? Object.assign(defaults(), p.mx) : defaults();
+    renderAll();
+  }
+
+  /* ---------------- UI render ---------------- */
+  function renderAll() {
+    renderSections();
+    renderMixer();
+    renderHarmonyControls();
+    renderRoll();
+    syncFxInputs();
+    const bpm = document.getElementById('mx-bpm');
+    if (bpm) bpm.value = state.snap.bpm;
+    const click = document.getElementById('mx-click');
+    if (click) click.value = state.snap.click === 'on' ? 'on' : 'off';
+  }
+
+  function renderSections() {
+    const host = document.getElementById('mx-sections');
+    if (!host) return;
+    host.innerHTML = '';
+    (state.snap.sections || []).forEach((sec, i) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:grid;grid-template-columns:130px 60px 1fr auto;gap:8px;align-items:center;margin-bottom:8px;padding:8px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.02)';
+      row.innerHTML =
+        '<input value="' + esc(sec.name) + '" onchange="MX.editSection(' + i + ',\'name\',this.value)" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text)">' +
+        '<input type="number" min="1" max="32" value="' + sec.bars + '" onchange="MX.editSection(' + i + ',\'bars\',this.value)" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text)">' +
+        '<input value="' + esc((sec.chords || []).join(' ')) + '" onchange="MX.editSection(' + i + ',\'chords\',this.value)" placeholder="I V vi IV" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text);font-family:ui-monospace,monospace">' +
+        '<span style="display:flex;gap:4px">' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.moveSection(' + i + ',-1)">↑</button>' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.moveSection(' + i + ',1)">↓</button>' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.delSection(' + i + ')">✕</button></span>';
+      host.appendChild(row);
+    });
+    const info = document.getElementById('mx-arrange-info');
+    if (info && !state.playing) info.textContent = songSeconds(state.snap).toFixed(1) + 's · ' + (state.snap.sections || []).length + ' sections';
+  }
+
+  function renderMixer() {
+    const host = document.getElementById('mx-mixer');
+    if (!host) return;
+    host.innerHTML = '';
+    TRACKS.forEach((t) => {
+      const cfg = state.snap.tracks[t.id];
+      const row = document.createElement('div');
+      row.style.cssText = 'display:grid;grid-template-columns:90px 130px 140px 1fr 60px;gap:10px;align-items:center;margin-bottom:10px';
+      row.innerHTML =
+        '<strong style="font-size:.9em">' + t.name + '</strong>' +
+        '<select onchange="MX.setTrack(\'' + t.id + '\',\'inst\',this.value)" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text)">' +
+        ['kick', 'snare', 'hat', 'bass', 'pad', 'pluck', 'lead', 'strings'].map((k) => '<option value="' + k + '"' + (cfg.inst === k ? ' selected' : '') + '>' + INSTRUMENTS[k] + '</option>').join('') +
+        '</select>' +
+        '<input type="range" min="0" max="1" step="0.01" value="' + cfg.vol + '" oninput="MX.setTrack(\'' + t.id + '\',\'vol\',this.value)">' +
+        '<input type="range" min="-1" max="1" step="0.05" value="' + (cfg.pan || 0) + '" oninput="MX.setTrack(\'' + t.id + '\',\'pan\',this.value)">' +
+        '<label style="font-size:.75em;color:var(--muted)"><input type="checkbox" ' + (cfg.on ? 'checked' : '') + ' onchange="MX.setTrack(\'' + t.id + '\',\'on\',this.checked)"> on</label>';
+      host.appendChild(row);
+    });
+  }
+
+  function renderHarmonyControls() {
+    const rootSel = document.getElementById('hx-root');
+    const modeSel = document.getElementById('hx-mode');
+    const presetSel = document.getElementById('hx-preset');
+    if (rootSel && !rootSel.options.length) {
+      rootSel.innerHTML = NOTES.map((n) => '<option>' + n + '</option>').join('');
+    }
+    if (modeSel && !modeSel.options.length) {
+      modeSel.innerHTML = Object.keys(MODES).map((m) => '<option>' + m + '</option>').join('');
+    }
+    if (presetSel && !presetSel.options.length) {
+      presetSel.innerHTML = Object.keys(PRESETS).map((p) => '<option>' + p + '</option>').join('');
+    }
+    if (rootSel) rootSel.value = state.snap.root;
+    if (modeSel) modeSel.value = state.snap.mode;
+    if (presetSel) presetSel.value = state.snap.preset || Object.keys(PRESETS)[0];
+    const oct = document.getElementById('hx-oct');
+    if (oct) oct.value = String(state.snap.octave || 3);
+    refreshHarmony();
+  }
+
+  function refreshHarmony() {
+    const root = document.getElementById('hx-root');
+    const mode = document.getElementById('hx-mode');
+    const oct = document.getElementById('hx-oct');
+    if (root) state.snap.root = root.value;
+    if (mode) state.snap.mode = mode.value;
+    if (oct) state.snap.octave = Number(oct.value);
+    const notes = scaleMidis(state.snap.root, state.snap.mode, state.snap.octave)
+      .map((m) => NOTES[m % 12] + (Math.floor(m / 12) - 1));
+    const host = document.getElementById('hx-notes');
+    if (host) host.innerHTML = '<strong>Scale:</strong> ' + notes.join(' · ');
+    const deg = document.getElementById('hx-degrees');
+    if (deg) {
+      const romans = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
+      deg.innerHTML = romans.slice(0, (MODES[state.snap.mode] || []).length >= 7 ? 7 : (MODES[state.snap.mode] || []).length)
+        .map((r) => '<button class="btn btn-sm btn-secondary" onclick="MX.playDegree(\'' + r + '\')">' + r + '</button>').join('');
+    }
+    save();
+  }
+
+  function renderRoll() {
+    const host = document.getElementById('mx-roll');
+    if (!host) return;
+    const steps = state.snap.roll.steps || 16;
+    const rows = 13;
+    let html = '<div style="display:grid;grid-template-columns:44px repeat(' + steps + ',1fr);gap:3px;min-width:' + (44 + steps * 26) + 'px">';
+    for (let r = rows - 1; r >= 0; r--) {
+      html += '<div style="font-size:.65em;color:var(--muted);display:flex;align-items:center">' + NOTES[(r + 0) % 12] + (Math.floor(r / 12) + 4) + '</div>';
+      for (let s = 0; s < steps; s++) {
+        const on = state.snap.roll.cells[s + ':' + r];
+        html += '<button onclick="MX.toggleCell(' + s + ',' + r + ')" style="height:22px;border-radius:4px;border:1px solid var(--border);background:' + (on ? 'var(--purple,#a78bfa)' : 'rgba(255,255,255,.03)') + '"></button>';
+      }
+    }
+    html += '</div>';
+    host.innerHTML = html;
+  }
+
+  function syncFxInputs() {
+    const f = state.snap.fx;
+    const map = { 'fx-reverb': f.reverb, 'fx-size': f.size, 'fx-delay': f.delay, 'fx-dfb': f.dfb, 'fx-dmix': f.dmix, 'fx-comp': f.comp, 'fx-low': f.low, 'fx-mid': f.mid, 'fx-high': f.high };
+    Object.keys(map).forEach((id) => { const el = document.getElementById(id); if (el) el.value = map[id]; });
+    const m = document.getElementById('mx-master');
+    if (m) m.value = state.snap.master;
+    const mv = document.getElementById('mx-master-val');
+    if (mv) mv.textContent = Number(state.snap.master).toFixed(2);
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ---------------- editors ---------------- */
+  function addSection(name) {
+    state.snap.sections.push({ name: name, bars: name === 'Chorus' ? 4 : 2, chords: ['I', 'V', 'vi', 'IV'] });
+    renderSections(); save();
+  }
+  function delSection(i) { state.snap.sections.splice(i, 1); renderSections(); save(); }
+  function moveSection(i, d) {
+    const a = state.snap.sections; const j = i + d;
+    if (j < 0 || j >= a.length) return;
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+    renderSections(); save();
+  }
+  function editSection(i, key, value) {
+    const sec = state.snap.sections[i]; if (!sec) return;
+    if (key === 'bars') sec.bars = Math.max(1, Math.min(32, Number(value) || 1));
+    else if (key === 'chords') sec.chords = String(value).split(/[\s,]+/).filter(Boolean);
+    else sec.name = value;
+    renderSections(); save();
+  }
+  function setTrack(id, key, value) {
+    const t = state.snap.tracks[id]; if (!t) return;
+    if (key === 'vol' || key === 'pan') t[key] = Number(value);
+    else t[key] = value;
+    if (state.graph && state.graph.trackGain[id]) {
+      if (key === 'vol') state.graph.trackGain[id].gain.value = t.on ? t.vol : 0;
+      if (key === 'on') state.graph.trackGain[id].gain.value = value ? t.vol : 0;
+    }
+    save();
+  }
+  function setMaster(v) {
+    state.snap.master = Number(v);
+    if (state.master) state.master.gain.value = state.snap.master;
+    const el = document.getElementById('mx-master-val');
+    if (el) el.textContent = Number(v).toFixed(2);
+    save();
+  }
+  function setFx(key, v) {
+    state.snap.fx[key] = Number(v);
+    const g = state.graph;
+    if (g) {
+      if (key === 'reverb') g.revSend.gain.value = Number(v);
+      if (key === 'delay') g.delayNode.delayTime.value = Number(v);
+      if (key === 'dfb') g.fb.gain.value = Number(v);
+      if (key === 'dmix') g.dSend.gain.value = Number(v);
+      if (key === 'low') g.low.gain.value = Number(v);
+      if (key === 'mid') g.mid.gain.value = Number(v);
+      if (key === 'high') g.high.gain.value = Number(v);
+      if (key === 'comp') {
+        g.comp.threshold.value = -18 - 12 * (1 - Number(v));
+        g.comp.ratio.value = 2 + 6 * Number(v);
+      }
+      if (key === 'size' && g.conv) g.conv.buffer = impulse(state.ctx, Number(v), 2.2);
+    }
+    save();
+  }
+  function setTempo(v) { state.snap.bpm = Math.max(30, Math.min(220, Number(v) || 96)); renderSections(); save(); }
+  function setClick() {
+    const el = document.getElementById('mx-click');
+    state.snap.click = el && el.value === 'on' ? 'on' : 'off';
+    save();
+  }
+  function setArp() {
+    const a = document.getElementById('hx-arp'); const r = document.getElementById('hx-arprate');
+    state.snap.arp = a ? a.value : 'off';
+    state.snap.arpRate = r ? Number(r.value) : 2;
+    save();
+  }
+  function applyPreset(name) {
+    state.snap.preset = name;
+    const chords = PRESETS[name] || PRESETS['Pop: I–V–vi–IV'];
+    const last = state.snap.sections[state.snap.sections.length - 1];
+    if (last) { last.chords = chords.slice(); renderSections(); }
+    save();
+  }
+  function playDegree(r) {
+    const ctx = ensure();
+    const ch = chordMidis(state.snap.root, state.snap.mode, state.snap.octave, r);
+    const t = ctx.currentTime + 0.05;
+    ch.forEach((m) => tone(ctx, state.graph.bus, 'pad', m, t, 1.4, 1));
+  }
+  function playHarmony() {
+    stop();
+    const ctx = ensure();
+    if (ctx.state === 'suspended') ctx.resume();
+    const chords = (state.snap.sections[state.snap.sections.length - 1] || {}).chords || PRESETS[state.snap.preset] || ['I', 'V', 'vi', 'IV'];
+    const beat = 60 / state.snap.bpm;
+    let t = ctx.currentTime + 0.1;
+    chords.forEach((c) => {
+      const ch = chordMidis(state.snap.root, state.snap.mode, state.snap.octave, c);
+      ch.forEach((m) => tone(ctx, state.graph.bus, 'pad', m, t, beat * 3.6, 1));
+      tone(ctx, state.graph.bus, 'bass', ch[0] - 12, t, beat * 3.5, 1);
+      t += beat * 4;
+    });
+  }
+  function progressionToSection() {
+    const chords = (state.snap.sections[state.snap.sections.length - 1] || {}).chords || ['I', 'V', 'vi', 'IV'];
+    state.snap.sections.push({ name: 'Chorus', bars: 4, chords: chords.slice() });
+    renderSections(); save();
+  }
+  function setRollInst() {
+    const el = document.getElementById('roll-inst');
+    if (el) state.snap.roll.inst = el.value;
+    save();
+  }
+  function toggleCell(s, r) {
+    const key = s + ':' + r;
+    if (state.snap.roll.cells[key]) delete state.snap.roll.cells[key];
+    else state.snap.roll.cells[key] = 1;
+    renderRoll(); save();
+  }
+  function clearRoll() { state.snap.roll.cells = {}; renderRoll(); save(); }
+
+  /* ---------------- recorder ---------------- */
+  async function startRec() {
+    const status = document.getElementById('mx-rec-status');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.chunks = [];
+      state.rec = new MediaRecorder(stream);
+      state.rec.ondataavailable = (e) => { if (e.data && e.data.size) state.chunks.push(e.data); };
+      state.rec.onstop = () => {
+        const blob = new Blob(state.chunks, { type: 'audio/webm' });
+        state.takes.push(blob);
+        const url = URL.createObjectURL(blob);
+        const dl = document.getElementById('mx-rec-dl');
+        if (dl) { dl.href = url; dl.style.display = 'inline-block'; }
+        const list = document.getElementById('mx-recs');
+        if (list) {
+          const row = document.createElement('div');
+          row.style.cssText = 'margin-top:8px;display:flex;gap:10px;align-items:center';
+          row.innerHTML = '<span style="font-size:.82em;color:var(--muted)">Take ' + state.takes.length + '</span>';
+          const a = document.createElement('audio'); a.controls = true; a.src = url; a.style.height = '32px';
+          row.appendChild(a);
+          list.appendChild(row);
+        }
+        stream.getTracks().forEach((t) => t.stop());
+        if (status) status.textContent = 'recorded take ' + state.takes.length;
+      };
+      state.rec.start();
+      if (status) status.textContent = 'recording…';
+    } catch (e) {
+      if (status) status.textContent = 'microphone unavailable: ' + e.message;
+    }
+  }
+  function stopRec() {
+    if (state.rec && state.rec.state !== 'inactive') state.rec.stop();
+  }
+  function playRec() {
+    if (!state.takes.length) return;
+    const url = URL.createObjectURL(state.takes[state.takes.length - 1]);
+    const a = new Audio(url); a.play();
+  }
+
+  /* ---------------- WAV export ---------------- */
+  async function exportWav() {
+    const status = document.getElementById('mx-export-status');
+    const seconds = Math.max(4, Number((document.getElementById('mx-len') || {}).value) || 32);
+    const rate = Number((document.getElementById('mx-rate') || {}).value) || 44100;
+    if (status) status.textContent = 'rendering…';
+    try {
+      const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      const ctx = new OfflineCtx(2, Math.ceil(seconds * rate), rate);
+      const graph = makeGraph(ctx);
+      // Rebuild sends for the offline graph (makeGraph already wires them).
+      scheduleSong(ctx, graph, state.snap, 0.05);
+      const buf = await ctx.startRendering();
+      const blob = encodeWav(buf);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      const title = (document.getElementById('f-title') || {}).value || 'song';
+      a.download = String(title).replace(/[^\w-]+/g, '_') + '.wav';
+      a.click();
+      if (status) status.textContent = 'rendered ' + seconds + 's · ' + (blob.size / 1048576).toFixed(1) + ' MB';
+    } catch (e) {
+      if (status) status.textContent = 'render failed: ' + e.message;
+    }
+  }
+
+  function encodeWav(buffer) {
+    const numCh = buffer.numberOfChannels;
+    const len = buffer.length;
+    const bytes = 44 + len * numCh * 2;
+    const ab = new ArrayBuffer(bytes);
+    const view = new DataView(ab);
+    const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+    writeStr(0, 'RIFF'); view.setUint32(4, bytes - 8, true); writeStr(8, 'WAVE');
+    writeStr(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+    view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+    view.setUint16(34, 16, true); writeStr(36, 'data'); view.setUint32(40, len * numCh * 2, true);
+    let off = 44;
+    const chans = [];
+    for (let c = 0; c < numCh; c++) chans.push(buffer.getChannelData(c));
+    for (let i = 0; i < len; i++) {
+      for (let c = 0; c < numCh; c++) {
+        let s = Math.max(-1, Math.min(1, chans[c][i]));
+        view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+        off += 2;
+      }
+    }
+    return new Blob([ab], { type: 'audio/wav' });
+  }
+
+  /* ---------------- project import / export / print ---------------- */
+  function exportProject() {
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    const blob = new Blob([JSON.stringify(p || {}, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = ((p && p.title) || 'project').replace(/[^\w-]+/g, '_') + '.studio.json';
+    a.click();
+  }
+  function importProject(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const obj = JSON.parse(String(r.result));
+        const id = 'song_' + Date.now();
+        obj.id = id;
+        projects.unshift(obj);
+        saveProjects();
+        renderProjects();
+        loadProject(id);
+        toast('Project imported');
+      } catch (e) { showToast('That file is not a studio project'); }
+    };
+    r.readAsText(file);
+  }
+  function printSheet() {
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId) || {};
+    const w = window.open('', '_blank');
+    if (!w) return;
+    w.document.write('<!doctype html><title>' + esc(p.title || 'Lyric sheet') + '</title>' +
+      '<style>body{font-family:Georgia,serif;max-width:760px;margin:40px auto;line-height:1.6;white-space:pre-wrap}' +
+      'h1{font-size:22px;margin:0 0 4px}p.meta{color:#666;margin:0 0 24px;font-size:13px}</style>' +
+      '<h1>' + esc(p.title || 'Untitled') + '</h1><p class="meta">' + esc(p.artist || '') + ' · ' + esc(p.bpm || '') + ' BPM · ' + esc(p.key || '') + '</p>' +
+      esc(p.lyrics || '') + '\n\n' + esc(p.tmLyrics || ''));
+    w.document.close();
+    w.print();
+  }
+
+  /* ---------------- Lyric Lab ---------------- */
+  const SB_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
+  const SB_KEY = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
+
+  function token() { try { return localStorage.getItem('sb_access_token') || ''; } catch (e) { return ''; } }
+  async function freshToken() {
+    const t = token();
+    const exp = Number(localStorage.getItem('sb_token_expires') || 0);
+    if (t && (!exp || Date.now() < exp - 60000)) return t;
+    const rt = localStorage.getItem('sb_refresh_token');
+    if (!rt) return t;
+    try {
+      const r = await fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST',
+        headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: rt })
+      });
+      if (!r.ok) return t;
+      const d = await r.json();
+      if (d.access_token) {
+        localStorage.setItem('sb_access_token', d.access_token);
+        if (d.refresh_token) localStorage.setItem('sb_refresh_token', d.refresh_token);
+        if (d.expires_in) localStorage.setItem('sb_token_expires', String(Date.now() + d.expires_in * 1000));
+        return d.access_token;
+      }
+    } catch (e) {}
+    return t;
+  }
+
+  function brief() {
+    const v = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+    return {
+      theme: v('lb-theme'),
+      language: v('lb-language'),
+      mood: v('lb-mood'),
+      genre: v('lb-genre'),
+      pov: v('lb-pov'),
+      lines: Number(v('lb-lines')) || 20,
+      rhyme: v('lb-rhyme'),
+      structure: v('lb-structure'),
+      keywords: v('lb-keywords'),
+      avoid: v('lb-avoid')
+    };
+  }
+
+  async function generateLyrics() {
+    const status = document.getElementById('lb-status');
+    const out = document.getElementById('lb-out');
+    const btn = document.querySelector('#tab-lyriclab .btn-primary');
+    if (!brief().theme.trim()) { if (status) status.textContent = 'write what the song is about first'; return; }
+    if (btn) btn.disabled = true;
+    if (status) status.textContent = 'asking the model…';
+    try {
+      const t = await freshToken();
+      const r = await fetch('/api/lyrics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+        body: JSON.stringify({ token: t, brief: brief() })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.lyrics) {
+        if (status) status.textContent = d.error || ('failed (HTTP ' + r.status + ')') + (d.detail ? ' — ' + d.detail : '');
+        return;
+      }
+      if (out) out.value = d.lyrics;
+      if (status) status.textContent = 'written by ' + d.provider;
+    } catch (e) {
+      if (status) status.textContent = 'could not reach the model: ' + e.message;
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function lyricToSection() {
+    const out = document.getElementById('lb-out');
+    if (!out || !out.value.trim()) return;
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    if (!p) return;
+    p.lyrics = (p.lyrics ? p.lyrics + '\n\n' : '') + out.value.trim();
+    saveField('lyrics', p.lyrics);
+    const vt = document.getElementById('voiceText');
+    if (vt) vt.value = p.lyrics;
+    if (typeof renderLyrics === 'function') renderLyrics(p.lyrics);
+    showToast('Added to lyrics');
+  }
+
+  function lyricReplace() {
+    const out = document.getElementById('lb-out');
+    if (!out || !out.value.trim()) return;
+    if (!confirm('Replace the whole lyric with this draft?')) return;
+    saveField('lyrics', out.value.trim());
+    const vt = document.getElementById('voiceText');
+    if (vt) vt.value = out.value.trim();
+    if (typeof renderLyrics === 'function') renderLyrics(out.value.trim());
+    showToast('Lyrics replaced');
+  }
+
+  function copyLyric() {
+    const out = document.getElementById('lb-out');
+    if (!out) return;
+    out.select();
+    try { document.execCommand('copy'); showToast('Copied'); } catch (e) { showToast('Copy failed'); }
+  }
+
+  function lyricPrefs() {
+    // Language changes the structure hint, nothing else.
+    const lang = (document.getElementById('lb-language') || {}).value || 'english';
+    const st = document.getElementById('lb-structure');
+    if (st && lang !== 'english' && /^Verse 1, Chorus/.test(st.value)) {
+      st.value = 'Pallavi, Charanam 1, Pallavi, Charanam 2, Bridge, Pallavi';
+    }
+  }
+
+  /* ---------------- init ---------------- */
+  function init() {
+    const wrap = function (name, fn) {
+      const orig = window[name];
+      if (typeof orig !== 'function') return;
+      window[name] = function () {
+        const r = orig.apply(this, arguments);
+        try { fn.apply(this, arguments); } catch (e) {}
+        return r;
+      };
+    };
+    // Re-render the composer panels whenever a different song is loaded.
+    wrap('loadProject', () => { state.snap = (function () {
+      const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+      return (p && p.mx) ? Object.assign(defaults(), p.mx) : defaults();
+    })(); renderAll(); });
+    wrap('newSong', () => { state.snap = defaults(); renderAll(); });
+    // The existing DOMContentLoaded handler already called loadProject before
+    // this script wrapped it, so read the current project once here.
+    const cur = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    state.snap = (cur && cur.mx) ? Object.assign(defaults(), cur.mx) : defaults();
+    renderAll();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  return {
+    defaults, play, stop, addSection, delSection, moveSection, editSection,
+    setTrack, setMaster, setFx, setTempo, setClick, setArp, applyPreset,
+    playDegree, playHarmony, progressionToSection, refreshHarmony,
+    setRollInst, toggleCell, clearRoll, renderRoll,
+    startRec, stopRec, playRec, exportWav, exportProject, importProject, printSheet,
+    generateLyrics, lyricToSection, lyricReplace, copyLyric, lyricPrefs,
+    syncFromProject, snapshot, songSeconds: () => songSeconds(state.snap)
+  };
+})();
+</script>
+
 </body>
 </html>
