@@ -260,13 +260,23 @@ jobs:
       - name: Validate storyboard
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-film.js "data/films/${TOPIC_ID}.json"
 
+      # The storyboard names a plate per shot and describes what is in it. This
+      # turns those descriptions into real procedural sets (space, hero, props,
+      # light, lens) using the 22 x 41 vocabulary in scene_compiler.py, so a new
+      # topic gets its own scenes instead of failing on a missing sets file.
+      - name: Design the 3D sets from this film's narration
+        run: node scripts/film/design-sets.js --film "${TOPIC_ID}"
+
+      - name: Validate the designed sets
+        run: node scripts/film/validate-sets.js "data/films/${TOPIC_ID}-sets.json"
+
       - name: Commit topic bank and storyboard
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           # -f: data/* is gitignored; film JSONs and the topic bank are only
           # ever tracked via force-add (same reason build-figures documents).
-          git add -f data/films/topic-bank.json data/films/${TOPIC_ID}.json
+          git add -f data/films/topic-bank.json data/films/${TOPIC_ID}.json data/films/${TOPIC_ID}-sets.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
