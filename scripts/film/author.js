@@ -1613,7 +1613,16 @@ if (require.main === module) {
   try {
     main();
   } catch (e) {
-    console.error(`[author] FAIL ${e.message}`);
+    const msg = String(e.message || '');
+    if (/MODEL_UNAVAILABLE/.test(msg)) {
+      // All free model backends are rate-limited or otherwise down. Do not
+      // fail the workflow — the next scheduled run will retry when a quota
+      // resets. Exit 0 so the autopilot chain is not broken by a hard error.
+      console.error('[author] SKIP ' + msg.slice(0, 200));
+      process.exitCode = 0;
+      return;
+    }
+    console.error('[author] FAIL ' + msg);
     process.exitCode = 1;
   }
 }

@@ -359,6 +359,39 @@ function flattenPrompt(messages) {
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
+
+  // When every free backend is rate-limited (HTTP 429), retry the whole
+  // chain after a backoff instead of failing immediately. Quotas can reset
+  // between retries (daily token limits roll at midnight, per-minute limits
+  // roll in seconds). Keep the total wall-clock bounded so a lane never
+  // hangs waiting for a quota that will not reset in this run.
+  const MAX_RETRIES = 3;
+  const BACKOFF_BASE_MS = 15000; // 15s, 30s, 45s
+  let lastError = null;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      const waitMs = BACKOFF_BASE_MS * attempt;
+      log('all backends failed on attempt ' + attempt + ' (' + String(lastError && lastError.message || '').slice(0, 120) + '); retrying in ' + (waitMs / 1000) + 's...');
+      await new Promise(function (resolve) { setTimeout(resolve, waitMs); });
+    }
+    try {
+      return await callLLMOnce(messages, opts);
+    } catch (e) {
+      lastError = e;
+      // Only retry on 429 (rate limit) or 5xx (server error). A 400/401/403
+      // means the backend is configured wrong and will not recover.
+      const msg = String(e.message || '');
+      const isRetryable = /429|5\d\d/.test(msg);
+      if (!isRetryable || attempt === MAX_RETRIES) throw e;
+    }
+  }
+  throw new Error('MODEL_UNAVAILABLE: all backends exhausted after ' + (MAX_RETRIES + 1) + ' attempts; last error: ' + String(lastError && lastError.message || '').slice(0, 120));
+}
+
+// Single attempt through the full backend chain. Extracted from the old
+// callLLM body so the retry wrapper above can call it repeatedly.
+async function callLLMOnce(messages, opts) {
   // The owner asked for the free DeepSeek route first. It runs through the
   // OpenCode CLI because Zen's raw API rejects free models with HTTP 429.
   // A missing CLI, exhausted free quota or any other failure falls through.
