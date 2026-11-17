@@ -228,12 +228,28 @@ async function main() {
   // The backlog lane runs with --sort words so the flagship GS lessons
   // (Indian History at ~920 KB of HTML, Indian Geography, General Science,
   // Indian Polity) get diagrams before the optional-paper stubs do.
+  //
+  // Coverage comes first, though: a lesson with no figure at all is served
+  // before a lesson that already has one, even if the second lesson is bigger.
+  // Without that, --per-lesson 2 spent every run hanging a second diagram on
+  // the four Indian History lessons while 500 lessons still had none.
   if (arg('sort') === 'words') {
-    const size = new Map();
+    const meta = new Map();
     for (const f of files) {
-      try { size.set(f, fs.statSync(f).size); } catch (e) { size.set(f, 0); }
+      try {
+        const size = fs.statSync(f).size;
+        const has = /course-figure:/.test(fs.readFileSync(f, 'utf8'));
+        meta.set(f, { size, has });
+      } catch (e) {
+        meta.set(f, { size: 0, has: false });
+      }
     }
-    files = files.slice().sort((a, b) => size.get(b) - size.get(a));
+    files = files.slice().sort((a, b) => {
+      const A = meta.get(a);
+      const B = meta.get(b);
+      if (A.has !== B.has) return A.has ? 1 : -1;   // uncovered first
+      return B.size - A.size;                        // then biggest first
+    });
   }
 
   let touched = 0;
