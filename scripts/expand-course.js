@@ -1305,7 +1305,7 @@ function isStructuralReject(msg) {
 function generateQuestions(gap, html, timeoutMs) {
   var prompt = questionsPrompt(gap, html);
   function attempt(extra, n) {
-    return callModel(prompt + (extra || ''), 2600, timeoutMs, 0.25).then(function (raw) {
+    return callModel(prompt + (extra || ''), 5000, timeoutMs, 0.25).then(function (raw) {
       var rawQs = parseQuestions(raw);
       var qs = filterFresh(rawQs, gap.mk);
       console.log('expand: ' + gap.key + ' questions raw ' + rawQs.length + ', kept ' + qs.length + (n > 1 ? ' (retry)' : ''));
@@ -1334,7 +1334,7 @@ function reviseHtml(html, gap, timeoutMs) {
     'FRAGMENT:',
     html
   ].join('\n');
-  return callModel(prompt, 8000, timeoutMs).then(function (raw) {
+  return callModel(prompt, 14000, timeoutMs).then(function (raw) {
     var out = String(raw || '').replace(/^\s*```(?:html)?\s*/i, '').replace(/```\s*$/, '').trim();
     out = htmlRepair.sanitize(out);
     var trimmed = htmlRepair.trimIncompleteTail(out);
@@ -1358,7 +1358,7 @@ function generateOne(gap, timeoutMs) {
   else if (gap.role === 'deepen-page') source = pageSource(gap);
 
   function attempt(extra, n) {
-    return callModel(prompt + (extra || ''), isDepth ? 8000 : 8000, timeoutMs).then(function (raw) {
+    return callModel(prompt + (extra || ''), isDepth ? 14000 : 14000, timeoutMs).then(function (raw) {
       var html = raw;
       var qi = raw.indexOf('===QUESTIONS===');
       if (qi !== -1) html = raw.slice(0, qi);
