@@ -183,7 +183,15 @@ async function inventFor(file, html, ordinal) {
   const title = textOf(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || path.basename(file, '.html');
   // The slug comes from the lesson file without its extension: lesson-current-
   // affairs.html -> current-affairs-figure, not current-affairs-html-figure.
-  const slug = store.kebab(path.basename(file, '.html').replace(/^lesson-/, ''));
+  // The slug comes from the lesson file without its extension: lesson-current-
+  // affairs.html -> current-affairs-figure. Generic filenames (48 optional
+  // papers are all lesson-paper1.html) would otherwise share one id and one
+  // diagram across unrelated subjects, so those carry their directory:
+  // opt-assamese/lesson-paper1 -> opt-assamese-paper1-figure.
+  const base = path.basename(file, '.html').replace(/^lesson-/, '');
+  const parent = path.basename(path.dirname(file));
+  const generic = /^(paper\d|overview|vyakarana)$/.test(base);
+  const slug = store.kebab((generic ? parent + '-' : '') + base);
   const id = slug + '-figure' + (ordinal > 1 ? '-' + ordinal : '');
   if (store.ids().indexOf(id) !== -1) return store.get(id);
   const { execFileSync } = require('child_process');
