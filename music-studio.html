@@ -396,6 +396,34 @@ textarea{min-height:90px;resize:vertical}
           <button class="btn btn-secondary" onclick="ttsLoadLyrics()">📋 Load from Lyrics</button>
           <div id="ttsStatus" style="margin-left:12px;font-size:.85em;color:var(--muted)"></div>
         </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:22px 0">
+        <h3>Studio voices — Tamil &amp; Malayalam</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:14px">Real Tamil and Malayalam neural voices (Edge TTS). These do not depend on your device's language packs. Rendered on the owner runner, about a minute per take.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+          <div class="field" style="min-width:280px"><label>Voice</label>
+            <select id="edgeVoice" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text)">
+              <option value="">Loading voices…</option>
+            </select>
+          </div>
+          <div class="field"><label>Rate</label>
+            <select id="edgeRate"><option value="-20%">Slower</option><option value="-10%">Slow</option><option value="+0%" selected>Normal</option><option value="+10%">Fast</option><option value="+20%">Faster</option></select>
+          </div>
+          <div class="field"><label>Pitch</label>
+            <select id="edgePitch"><option value="-50Hz">Lower</option><option value="-20Hz">Low</option><option value="+0Hz" selected>Normal</option><option value="+20Hz">High</option><option value="+50Hz">Higher</option></select>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Text</label>
+          <textarea id="edgeText" style="width:100%;min-height:110px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="தமிழ் அல்லது മലയാളം ഇവിടെ എഴുതുക…"></textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.edgeSpeak()">🎙 Render voice</button>
+          <button class="btn btn-secondary" onclick="MX.edgeLoadLyrics()">📋 Load lyric</button>
+          <a class="btn btn-secondary" id="edgeDl" style="display:none" download="take.mp3">⤓ Download MP3</a>
+          <span id="edgeStatus" style="font-size:.82em;color:var(--muted)"></span>
+        </div>
+        <audio id="edgeAudio" controls style="display:none;width:100%;margin-top:12px"></audio>
       </section>
 
       <section id="tab-lyriclab" class="tab-panel panel" style="display:none">
@@ -2046,7 +2074,7 @@ const MX = (function () {
     if (btn) btn.disabled = true;
     if (status) status.textContent = 'asking the model…';
     try {
-      const t = await freshToken();
+      const t = await MX.freshToken();
       const r = await fetch('/api/lyrics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
@@ -2173,7 +2201,7 @@ const MX = (function () {
     playDegree, playHarmony, progressionToSection, refreshHarmony,
     setRollInst, toggleCell, clearRoll, renderRoll,
     startRec, stopRec, playRec, exportWav, exportProject, importProject, printSheet,
-    generateLyrics, lyricToSection, lyricReplace, copyLyric, lyricPrefs,
+    generateLyrics, lyricToSection, lyricReplace, copyLyric, lyricPrefs, freshToken: freshToken,
     syncFromProject, snapshot, songSeconds: () => songSeconds(state.snap),
     // Internals for the extended tools (MIDI, stems, chart, undo). Kept under
     // one key so the public surface above stays stable.
@@ -2399,6 +2427,95 @@ const MX = (function () {
     showToast('Composed: ' + mood + ' ' + genre + ' · ' + s.bpm + ' BPM · ' + s.root + ' ' + s.mode);
     setStatus('Composed "' + title + '" — ' + s.sections.length + ' sections, ' +
       Object.keys(s.roll.cells).length + ' melody notes. Press Play, then edit anything.');
+  };
+
+  /* ---------------- voice (Edge TTS) ---------------- */
+  // The browser voices depend on the device's language packs; these do not.
+  // The audio is rendered on the owner runner and fetched from GitHub, so the
+  // picker is loaded once and the result is played from a blob URL.
+  const VOICE_FALLBACK = [
+    'ta-IN-PallaviNeural', 'ta-IN-ValluvarNeural', 'ta-LK-SaranyaNeural', 'ta-LK-KumarNeural',
+    'ml-IN-SobhanaNeural', 'ml-IN-MidhunNeural', 'hi-IN-SwaraNeural', 'hi-IN-MadhurNeural',
+    'en-IN-NeerjaNeural', 'en-IN-PrabhatNeural'
+  ];
+
+  async function loadEdgeVoices() {
+    const sel = document.getElementById('edgeVoice');
+    if (!sel) return;
+    let list = VOICE_FALLBACK.map(function (id) { return { id: id, label: id.replace(/-/g, ' ') }; });
+    try {
+      const r = await fetch('/api/tts');
+      if (r.ok) {
+        const d = await r.json();
+        if (d && d.voices && d.voices.length) list = d.voices;
+      }
+    } catch (e) { /* keep the fallback list */ }
+    sel.innerHTML = list.map(function (v) {
+      return '<option value="' + v.id + '">' + (v.label || v.id) + '</option>';
+    }).join('');
+  }
+
+  MX.edgeLoadLyrics = function () {
+    const ta = document.getElementById('edgeText');
+    const p = (typeof projects !== 'undefined' ? projects : []).find(function (x) { return x.id === currentId; });
+    if (ta && p) ta.value = p.lyrics || p.tmLyrics || '';
+  };
+
+  async function pollAudio(metaUrl, audioUrl, status) {
+    for (let i = 0; i < 60; i++) {
+      await new Promise(function (r) { setTimeout(r, 5000); });
+      if (status) status.textContent = 'rendering… ' + Math.round((i + 1) * 5) + 's';
+      try {
+        const m = await fetch(metaUrl, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (m.status === 404) continue;
+        if (m.ok) {
+          const text = await m.text();
+          let meta = null;
+          try { meta = JSON.parse(text); } catch (e) { meta = null; }
+          if (meta && meta.status === 'failed') return { error: meta.error || 'the render failed' };
+          if (!meta || meta.status !== 'done') continue;
+        }
+        const a = await fetch(audioUrl, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (!a.ok) continue;
+        return { blob: await a.blob() };
+      } catch (e) { /* keep polling */ }
+    }
+    return { error: 'the runner did not finish in time — try again' };
+  }
+
+  MX.edgeSpeak = async function () {
+    const status = document.getElementById('edgeStatus');
+    const text = (document.getElementById('edgeText') || {}).value || '';
+    const voice = (document.getElementById('edgeVoice') || {}).value;
+    if (!text.trim()) { if (status) status.textContent = 'type or load a lyric first'; return; }
+    if (status) status.textContent = 'sending to the voice runner…';
+    try {
+      const t = await freshToken();
+      const r = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+        body: JSON.stringify({
+          token: t, text: text, voice: voice,
+          rate: (document.getElementById('edgeRate') || {}).value,
+          pitch: (document.getElementById('edgePitch') || {}).value
+        })
+      });
+      const d = await r.json().catch(function () { return {}; });
+      if (!r.ok || !d.id) {
+        if (status) status.textContent = d.error || ('failed (HTTP ' + r.status + ')');
+        return;
+      }
+      const got = await pollAudio(d.meta, d.audio, status);
+      if (!got || got.error) { if (status) status.textContent = (got && got.error) || 'no audio'; return; }
+      const url = URL.createObjectURL(got.blob);
+      const audio = document.getElementById('edgeAudio');
+      if (audio) { audio.src = url; audio.style.display = 'block'; audio.play().catch(function () {}); }
+      const dl = document.getElementById('edgeDl');
+      if (dl) { dl.href = url; dl.style.display = 'inline-block'; }
+      if (status) status.textContent = 'ready · ' + Math.round(got.blob.size / 1024) + ' KB';
+    } catch (e) {
+      if (status) status.textContent = 'could not reach the voice runner: ' + e.message;
+    }
   };
 
   /* ---------------- MIDI ---------------- */
@@ -2747,8 +2864,8 @@ const MX = (function () {
       return r;
     };
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync);
-  else sync();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { sync(); loadEdgeVoices(); });
+  else { sync(); loadEdgeVoices(); }
 })();
 </script>
 

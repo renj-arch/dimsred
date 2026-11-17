@@ -38,7 +38,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const hosted = require('./lib/hosted');
 
 const HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
@@ -501,6 +501,59 @@ async function runLyrics(p) {
   return { lyrics: text, provider: res.servedBy || 'owner runner', brief: b };
 }
 
+// ---- voice (Edge TTS) -------------------------------------------------------
+// Genuine Tamil and Malayalam neural voices, free, no API key. The browser's
+// own speechSynthesis only has those languages when the machine has the
+// language pack installed, which is why the studio could not promise Tamil or
+// Malayalam before.
+const VOICES = {
+  'ta-IN-PallaviNeural': 'Tamil · Pallavi (female)',
+  'ta-IN-ValluvarNeural': 'Tamil · Valluvar (male)',
+  'ta-LK-SaranyaNeural': 'Tamil (Sri Lanka) · Saranya (female)',
+  'ta-LK-KumarNeural': 'Tamil (Sri Lanka) · Kumar (male)',
+  'ml-IN-SobhanaNeural': 'Malayalam · Sobhana (female)',
+  'ml-IN-MidhunNeural': 'Malayalam · Midhun (male)',
+  'hi-IN-SwaraNeural': 'Hindi · Swara (female)',
+  'hi-IN-MadhurNeural': 'Hindi · Madhur (male)',
+  'en-IN-NeerjaNeural': 'English (India) · Neerja (female)',
+  'en-IN-PrabhatNeural': 'English (India) · Prabhat (male)'
+};
+
+function runTts(p) {
+  const text = String((p && p.text) || '').trim();
+  if (!text) throw new Error('tts: empty text');
+  if (text.length > 1200) throw new Error('tts: text is too long (1200 characters max) — split it into verses');
+  const voice = String((p && p.voice) || 'ta-IN-PallaviNeural');
+  if (!VOICES[voice]) throw new Error('tts: unknown voice ' + voice);
+  const rate = /^[+-]\d{1,3}%$/.test(String(p.rate || '')) ? p.rate : '+0%';
+  const pitch = /^[+-]\d{1,3}Hz$/.test(String(p.pitch || '')) ? p.pitch : '+0Hz';
+
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  const out = path.join(OUT_DIR, ID + '.mp3');
+  const res = spawnSync('python3', [
+    '-m', 'edge_tts',
+    '--voice', voice,
+    '--rate', rate,
+    '--pitch', pitch,
+    '--text', text,
+    '--write-media', out
+  ], { encoding: 'utf8', timeout: 180000 });
+
+  if (res.error) throw new Error('tts: could not run edge-tts (' + res.error.message + ')');
+  if (res.status !== 0 || !fs.existsSync(out)) {
+    throw new Error('tts: edge-tts failed: ' + String(res.stderr || res.stdout || '').slice(0, 300));
+  }
+  return {
+    file: path.relative(path.join(__dirname, '..'), out).replace(/\\/g, '/'),
+    voice: voice,
+    voiceLabel: VOICES[voice],
+    rate: rate,
+    pitch: pitch,
+    bytes: fs.statSync(out).size,
+    preview: text.slice(0, 140)
+  };
+}
+
 function tutorPrompt(exam, subject, count, seeds, bias) {
   const lines = [
     'You are a ' + exam + ' exam question setter.',
@@ -902,6 +955,7 @@ function paperLabel(kind, payload, obj) {
   if (kind === 'mains-fresh') return 'Mains - ' + (obj && obj.item ? (String(obj.item.paper) + ' - ' + String(obj.item.topic || '')) : 'question');
   if (kind === 'writer') return 'Ask answer - ' + String(payload.prompt || '').replace(/\s+/g, ' ').slice(0, 70);
   if (kind === 'lyrics') return 'Lyrics - ' + String((payload.brief && payload.brief.theme) || payload.theme || '').replace(/\s+/g, ' ').slice(0, 60);
+  if (kind === 'tts') return 'Voice - ' + String(payload.voice || '') + ' - ' + String(payload.text || '').replace(/\s+/g, ' ').slice(0, 40);
   return kind;
 }
 
@@ -967,6 +1021,7 @@ async function main() {
   let out;
   if (KIND === 'writer') out = await runWriter(payload);
   else if (KIND === 'lyrics') out = await runLyrics(payload);
+  else if (KIND === 'tts') out = runTts(payload);
   else if (KIND === 'tutor-questions') out = await runTutorQuestions(payload);
   else if (KIND === 'mental-batch') out = await runMentalBatch(payload);
   else if (KIND === 'mains-fresh') out = await runMainsFresh(payload);
