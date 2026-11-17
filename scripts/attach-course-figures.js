@@ -159,15 +159,20 @@ async function inventFor(file, html) {
   const id = slug + '-figure';
   if (store.ids().indexOf(id) !== -1) return store.get(id);
   const { execFileSync } = require('child_process');
+  const cliArgs = [
+    path.join(__dirname, 'invent-figure.js'),
+    '--lesson', file,
+    '--id', id,
+    '--topic', title
+  ];
+  // Only override the paper/tag when the caller asked for one. Passing
+  // defaults here forced every invented figure to GS1/Geography, which put a
+  // "Constitutional Distribution of Legislative Powers" diagram in the GS1
+  // Geography shelf.
+  if (arg('paper')) cliArgs.push('--paper', arg('paper'));
+  if (arg('tag')) cliArgs.push('--tag', arg('tag'));
   try {
-    execFileSync(process.execPath, [
-      path.join(__dirname, 'invent-figure.js'),
-      '--lesson', file,
-      '--id', id,
-      '--topic', title,
-      '--paper', arg('paper', 'GS1'),
-      '--tag', arg('tag', 'Geography')
-    ], { cwd: ROOT, stdio: 'inherit' });
+    execFileSync(process.execPath, cliArgs, { cwd: ROOT, stdio: 'inherit' });
   } catch (e) {
     return null;
   }
