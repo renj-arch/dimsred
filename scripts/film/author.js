@@ -570,8 +570,13 @@ function validateDirector(answer, scenes) {
 }
 
 function directPlates(film, topic, scenes, preferred) {
-  if (!process.env.LM_MODEL) {
-    console.log('[author] no LM_MODEL set; the director pass will use deterministic casting');
+  // The director pass used to require a local GGUF. A hosted route (Nemotron
+  // 550, Groq, GitHub Models...) can cast the plates just as well, so the guard
+  // now asks whether any model at all is reachable.
+  var hostedAsk = null;
+  try { hostedAsk = require('./hosted-ask'); } catch (e) { hostedAsk = null; }
+  if (!process.env.LM_MODEL && !(hostedAsk && hostedAsk.enabled())) {
+    console.log('[author] no model route configured; the director pass will use deterministic casting');
     return null;
   }
   try {

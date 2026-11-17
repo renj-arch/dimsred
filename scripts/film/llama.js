@@ -19,6 +19,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const gbnf = require('./gbnf');
+const hosted = require('./hosted-ask');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 
@@ -80,9 +81,37 @@ function ask({
   outDir,
   label = 'ask',
 }) {
-  if (!model) throw new Error('LM_MODEL is not set');
   const dir = outDir || path.join(ROOT, 'out', 'llama');
   fs.mkdirSync(dir, { recursive: true });
+
+  // Hosted first. The authoring lane used to be llama.cpp-only, so a runtime
+  // that could not start its sampler produced nothing all night and had no
+  // second route. Any configured key (NVIDIA / OpenRouter / Groq / GitHub
+  // Models / Gemini) is tried before the local GGUF; the local path below is
+  // unchanged and still runs if every hosted route fails or returns no JSON.
+  const preferHosted = process.env.HOSTED_MODELS === '1' || process.env.HOSTED_MODELS === 'auto';
+  if ((preferHosted || !model) && hosted.enabled()) {
+    try {
+      const out = hosted.ask({
+        system,
+        prompt,
+        tokens: Math.max(Number(tokens) || 0, 1200),
+        temperature: 0.3
+      });
+      fs.writeFileSync(path.join(dir, `out-${label}-hosted.txt`), out.text);
+      const value = extractJson(out.text);
+      if (value) {
+        return { value, attempt: `hosted:${out.provider}`, wallMs: out.wallMs, stderr: '', hosted: out.provider, model: out.model };
+      }
+      console.error(`[llama] hosted ${out.provider} answered without a JSON object; falling back to the local model`);
+    } catch (err) {
+      console.error(`[llama] hosted route failed: ${err.message}`);
+    }
+  }
+
+  if (!model) {
+    throw new Error('LM_MODEL is not set and no hosted route answered (set a key or download the GGUF)');
+  }
 
   const cap = capabilities(bin);
   const common = ['-m', model, '-n', String(tokens), '-c', String(ctx), '-t', String(threads)];
