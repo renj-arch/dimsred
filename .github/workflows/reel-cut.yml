@@ -51,7 +51,9 @@ jobs:
         run: ffmpeg -version | head -1
 
       - name: Cut reels from film renders
-        run: node scripts/reel-cut.js
+        run: |
+          mkdir -p data
+          node scripts/reel-cut.js
 
       - name: Commit + push reels
         if: github.event_name == 'schedule' || github.event.inputs.commit == 'true'
