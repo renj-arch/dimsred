@@ -471,11 +471,30 @@ function lyricsPrompt(b) {
 
 async function runLyrics(p) {
   const b = (p && p.brief) ? p.brief : (p || {});
+  const system = 'You are a professional songwriter. You write lyrics a real singer can perform: concrete, rhythmic, honest. You never pad a line to fill a rhyme and you never explain the song.';
   const res = await callLLM([
-    { role: 'system', content: 'You are a professional songwriter. You write lyrics a real singer can perform: concrete, rhythmic, honest. You never pad a line to fill a rhyme and you never explain the song.' },
+    { role: 'system', content: system },
     { role: 'user', content: lyricsPrompt(b) }
   ], { temperature: 0.8, numPredict: 3200 });
-  const text = String(res.text || '').trim();
+  let text = String(res.text || '').trim();
+
+  // Tamil/Malayalam (and the other Indic scripts) must come back in script,
+  // not transliterated. One stricter retry, same rule as the CF function.
+  const SCRIPTS = {
+    tamil: /[\u0B80-\u0BFF]/, malayalam: /[\u0D00-\u0D7F]/, hindi: /[\u0900-\u097F]/,
+    telugu: /[\u0C00-\u0C7F]/, kannada: /[\u0C80-\u0CFF]/, bengali: /[\u0980-\u09FF]/,
+    marathi: /[\u0900-\u097F]/, punjabi: /[\u0A00-\u0A7F]/, urdu: /[\u0600-\u06FF]/
+  };
+  const re = SCRIPTS[String(b.language || '').toLowerCase()];
+  if (re && !re.test(text)) {
+    log('lyrics came back without ' + b.language + ' script - retrying stricter');
+    const retry = await callLLM([
+      { role: 'system', content: system },
+      { role: 'user', content: lyricsPrompt(b) + '\n\nIMPORTANT: the previous answer was rejected because it was not written in ' + (LANG_NAMES[b.language] || b.language) + ' script. Write every line in that script. Do not transliterate into Latin letters.' }
+    ], { temperature: 0.7, numPredict: 3200 });
+    if (retry.text && re.test(retry.text)) text = String(retry.text).trim();
+  }
+
   if (text.length < 40) throw new Error('lyrics: the model returned nothing usable');
   const leak = metaLeak(text);
   if (leak) throw new Error('lyrics contained meta text (' + leak + ') - dropped instead of shipped');

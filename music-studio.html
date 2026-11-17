@@ -454,6 +454,16 @@ textarea{min-height:90px;resize:vertical}
           </div>
         </div>
         <p style="color:var(--muted);font-size:.85em;margin-bottom:12px">The song order. Each row plays its chord progression for the number of bars you set. This is the whole song, not a sketch.</p>
+        <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:16px;padding:12px;border:1px dashed rgba(167,139,250,.35);border-radius:10px;background:rgba(167,139,250,.05)">
+          <div class="field" style="min-width:150px"><label>Mood</label>
+            <select id="mx-mood"><option value="tender">Tender</option><option value="bittersweet" selected>Bittersweet</option><option value="hopeful">Hopeful</option><option value="defiant">Defiant</option><option value="dark">Dark</option><option value="playful">Playful</option></select>
+          </div>
+          <div class="field" style="min-width:150px"><label>Genre</label>
+            <select id="mx-songgen"><option value="pop">Pop</option><option value="ballad">Ballad</option><option value="folk">Folk</option><option value="film">Film / cinematic</option><option value="lofi">Lo-fi</option></select>
+          </div>
+          <button class="btn btn-primary" onclick="MX.composeSong()">✨ Compose a song</button>
+          <span style="font-size:.78em;color:var(--muted)">Fills the arrangement, mix and melody. Your lyrics stay untouched.</span>
+        </div>
         <div id="mx-sections"></div>
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="MX.play()">▶ Play arrangement</button>
@@ -1518,7 +1528,14 @@ const MX = (function () {
         const ch = chordMidis(snap.root, snap.mode, snap.octave, sym);
         const barT = t + b * barDur;
 
-        if (snap.tracks.chords.on) {
+        // A section may drop parts (intro without drums, verse without lead).
+        // That is what makes an arrangement breathe instead of looping flat.
+        const active = function (id) {
+          if (!(snap.tracks[id] && snap.tracks[id].on)) return false;
+          return (sec.mute || []).indexOf(id) === -1;
+        };
+
+        if (active('chords')) {
           const dest = graph.trackGain.chords;
           ch.forEach((m) => tone(ctx, dest, snap.tracks.chords.inst, m, barT, barDur * 0.94, 1));
           if (snap.arp && snap.arp !== 'off') {
@@ -1532,11 +1549,11 @@ const MX = (function () {
           }
         }
 
-        if (snap.tracks.bass.on) {
+        if (active('bass')) {
           tone(ctx, graph.trackGain.bass, snap.tracks.bass.inst, ch[0] - 12, barT, barDur * 0.9, 1);
         }
 
-        if (snap.tracks.drums.on) {
+        if (active('drums')) {
           const d = graph.trackGain.drums;
           for (let beatI = 0; beatI < bpb; beatI++) {
             const bt = barT + beatI * beat;
@@ -1547,7 +1564,7 @@ const MX = (function () {
           }
         }
 
-        if (snap.tracks.lead.on && Object.keys(rollCells).length) {
+        if (active('lead') && Object.keys(rollCells).length) {
           const stepDur = barDur / rollSteps;
           for (let s = 0; s < rollSteps; s++) {
             // cells are keyed "step:noteIndex" and repeat every bar
@@ -2255,6 +2272,133 @@ const MX = (function () {
     const el = document.getElementById('mx-countin');
     state.snap.countIn = el && el.value === 'on';
     save();
+  };
+
+  /* ---------------- song composer ---------------- */
+  // A composer, not a randomiser. It picks a key and mode from the mood, a
+  // progression that fits the genre, an arrangement with real contrast
+  // (parts drop out in the verse and return in the chorus), and a melody built
+  // from chord tones on the strong steps with stepwise passing notes between
+  // them. Everything it writes is editable afterwards.
+  const MOODS = {
+    tender: { mode: 'Major (Ionian)', bpm: 74, meter: '4/4', prog: ['I', 'V', 'vi', 'IV'], bridge: ['IV', 'I', 'V', 'V'], alt: ['vi', 'IV', 'I', 'V'] },
+    bittersweet: { mode: 'Natural minor (Aeolian)', bpm: 84, meter: '4/4', prog: ['i', 'VI', 'III', 'VII'], bridge: ['iv', 'VI', 'i', 'V'], alt: ['VI', 'III', 'VII', 'i'] },
+    hopeful: { mode: 'Major (Ionian)', bpm: 96, meter: '4/4', prog: ['I', 'IV', 'V', 'vi'], bridge: ['IV', 'V', 'iii', 'vi'], alt: ['vi', 'IV', 'I', 'V'] },
+    defiant: { mode: 'Mixolydian', bpm: 104, meter: '4/4', prog: ['I', 'bVII', 'IV', 'I'], bridge: ['IV', 'bVII', 'I', 'I'], alt: ['I', 'IV', 'bVII', 'I'] },
+    dark: { mode: 'Phrygian', bpm: 72, meter: '4/4', prog: ['i', 'bII', 'bVII', 'i'], bridge: ['iv', 'bVI', 'bII', 'i'], alt: ['i', 'bVII', 'bVI', 'bII'] },
+    playful: { mode: 'Dorian', bpm: 108, meter: '4/4', prog: ['i', 'IV', 'i', 'V'], bridge: ['IV', 'i', 'V', 'i'], alt: ['i', 'V', 'IV', 'i'] }
+  };
+  const GENRE = {
+    pop: { bpm: 0, meter: '4/4', swing: 0, layers: { lead: true, arp: 'up' }, density: 1 },
+    ballad: { bpm: -10, meter: '4/4', swing: 0, layers: { lead: true, arp: 'off' }, density: 0 },
+    folk: { bpm: -4, meter: '3/4', swing: 0, layers: { lead: true, arp: 'off' }, density: 0 },
+    film: { bpm: -6, meter: '4/4', swing: 0, layers: { lead: true, arp: 'updown' }, density: 1 },
+    lofi: { bpm: -14, meter: '4/4', swing: 0.24, layers: { lead: true, arp: 'off' }, density: 1 }
+  };
+
+  function modeScale(mode) { return X.MODES[mode] || X.MODES['Major (Ionian)']; }
+
+  // Map a scale step (may run past the octave) to a semitone above the root.
+  function stepSemitone(mode, step) {
+    const sc = modeScale(mode);
+    const n = ((step % sc.length) + sc.length) % sc.length;
+    const oct = Math.floor(step / sc.length);
+    return sc[n] + 12 * oct;
+  }
+
+  function melodyFor(sections, mode, octave) {
+    const cells = {};
+    let barNo = 0;
+    sections.forEach(function (sec) {
+      for (let b = 0; b < sec.bars; b++) {
+        if ((sec.mute || []).indexOf('lead') !== -1) { barNo++; continue; }
+        const sym = sec.chords[b % sec.chords.length] || 'I';
+        const d = parseDegree(sym);
+        // Two rhythms alternate so the tune is not a loop: on even bars the
+        // phrase lands on the beat, on odd bars it pushes late.
+        const rhythm = (barNo % 2 === 0) ? [[0, 0], [3, 2], [6, 4], [10, 2]] : [[2, 0], [5, 1], [8, 4], [12, 2]];
+        rhythm.forEach(function (pair) {
+          const step = pair[0];
+          const off = pair[1];
+          let semi = stepSemitone(mode, d + off);
+          // Keep the lead inside the roll's 13 rows.
+          while (semi > 12) semi -= 12;
+          while (semi < 0) semi += 12;
+          cells[step + ':' + semi] = 1;
+        });
+        barNo++;
+      }
+    });
+    // Resolve the final bar to the tonic: that is what makes an ending sound
+    // finished rather than stopped.
+    if (sections.length) cells['0:0'] = 1;
+    return cells;
+  }
+
+  // "bVII" -> 6, "vi" -> 5, "I" -> 0. Only the degree matters for the melody.
+  function parseDegree(sym) {
+    const up = String(sym || 'I').replace(/^[b#]/, '').toUpperCase();
+    const map = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6 };
+    return map[up] != null ? map[up] : 0;
+  }
+
+  MX.composeSong = function () {
+    pushHistory();
+    const mood = (document.getElementById('mx-mood') || {}).value || 'bittersweet';
+    const genre = (document.getElementById('mx-songgen') || {}).value || 'pop';
+    const M = MOODS[mood] || MOODS.bittersweet;
+    const G = GENRE[genre] || GENRE.pop;
+    const s = snap();
+
+    s.root = s.root || 'C';
+    s.mode = M.mode;
+    s.meter = G.meter;
+    s.bpm = Math.max(52, Math.min(180, (M.bpm + (G.bpm || 0)) || 90));
+    s.swing = G.swing || 0;
+    s.countIn = true;
+    s.preset = Object.keys(X.PRESETS)[0];
+
+    // Contest: intro, verse, chorus, verse, chorus, bridge, final chorus.
+    // Verse drops the lead so the words have room; the chorus adds it back.
+    s.sections = [
+      { name: 'Intro', bars: 2, chords: M.prog.slice(0, 2), mute: ['lead', 'drums'] },
+      { name: 'Verse 1', bars: 4, chords: M.prog.slice(), mute: ['lead'] },
+      { name: 'Chorus', bars: 4, chords: M.alt.slice(), mute: [] },
+      { name: 'Verse 2', bars: 4, chords: M.prog.slice(), mute: ['lead'] },
+      { name: 'Chorus', bars: 4, chords: M.alt.slice(), mute: [] },
+      { name: 'Bridge', bars: 2, chords: M.bridge.slice(), mute: ['drums'] },
+      { name: 'Final chorus', bars: 4, chords: M.alt.slice(), mute: [] }
+    ];
+
+    s.arp = (G.layers && G.layers.arp) || 'off';
+    s.arpRate = 2;
+    s.roll.steps = 16;
+    s.roll.inst = 'pluck';
+    s.roll.cells = melodyFor(s.sections, s.mode, s.octave);
+
+    // A mix that suits the room: ballad and lo-fi sit back, pop pushes.
+    s.master = 0.8;
+    s.tracks = {
+      drums: { on: true, vol: G.density ? 0.78 : 0.62, pan: 0, inst: 'kick' },
+      bass: { on: true, vol: 0.72, pan: 0, inst: 'bass' },
+      chords: { on: true, vol: 0.66, pan: -0.12, inst: genre === 'film' ? 'strings' : 'pad' },
+      lead: { on: true, vol: 0.58, pan: 0.12, inst: genre === 'lofi' ? 'pluck' : 'lead' }
+    };
+    s.fx = Object.assign({}, s.fx, {
+      reverb: genre === 'film' ? 0.32 : genre === 'lofi' ? 0.26 : 0.18,
+      size: genre === 'film' ? 2.6 : 1.8,
+      delay: genre === 'lofi' ? 0.36 : 0.28,
+      dmix: genre === 'lofi' ? 0.2 : 0.1,
+      comp: 0.42
+    });
+
+    save();
+    X.renderAll();
+    sync();
+    const title = (document.getElementById('f-title') || {}).value || 'Untitled';
+    showToast('Composed: ' + mood + ' ' + genre + ' · ' + s.bpm + ' BPM · ' + s.root + ' ' + s.mode);
+    setStatus('Composed "' + title + '" — ' + s.sections.length + ' sections, ' +
+      Object.keys(s.roll.cells).length + ' melody notes. Press Play, then edit anything.');
   };
 
   /* ---------------- MIDI ---------------- */
