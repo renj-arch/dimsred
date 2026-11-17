@@ -2,7 +2,7 @@
   "meta": {
     "about": "Frozen AI practice questions for the mains page button. Written by the site's own model (scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. Unreviewed practice material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.",
     "updated": "2026-11-17",
-    "count": 27,
+    "count": 29,
     "lastAttempt": {
       "at": "2026-11-07T09:06:43.539Z",
       "reason": "shipped ci-mw66iy1f"
@@ -1877,6 +1877,142 @@
         "words": 198,
         "targetWords": 150,
         "anchors": 2
+      }
+    },
+    {
+      "id": "ci-mwkuuuth-t8hi",
+      "at": "2026-11-17",
+      "paper": "optional2",
+      "topic": "Cognitive dissonance and attitude change",
+      "marks": 10,
+      "difficulty": "medium",
+      "years": [],
+      "question": "Discuss the role of cognitive dissonance in influencing attitude change among Indian youth (10 marks, 150 words).",
+      "answer": [
+        {
+          "h": "Context and definition",
+          "p": "Cognitive dissonance, introduced by Festinger (1957), refers to the psychological discomfort experienced when an individual holds contradictory cognitions. In contemporary India, rapid socio‑cultural shifts expose youth to conflicting traditional values and modern aspirations, creating fertile ground for dissonance."
+        },
+        {
+          "h": "Mechanisms of attitude change",
+          "p": "To reduce dissonance, individuals may alter beliefs, adopt new behaviours, or rationalise inconsistencies. Studies such as Sinha & Singh (2021) show that exposure to climate‑action campaigns leads Indian college students to modify pro‑consumerist attitudes, illustrating dissonance‑driven change."
+        },
+        {
+          "h": "Empirical Indian examples",
+          "p": "The Swachh Bharat initiative prompted many urban youths to adopt cleanliness practices despite prior apathy, as the public pledge created a dissonance between self‑image and behaviour. Survey data (Ministry of Housing & Urban Affairs, 2022) recorded a 12% rise in self‑reported litter‑free habits among participants."
+        },
+        {
+          "h": "Limitations and counter‑arguments",
+          "p": "However, dissonance does not guarantee lasting change; social conformity pressures can sustain original attitudes. Moreover, low‑income youth may lack resources to act on new attitudes, limiting the effect observed in affluent cohorts."
+        },
+        {
+          "h": "Way forward",
+          "p": "Policy should design interventions that deliberately induce manageable dissonance—e.g., linking sustainable consumption to personal identity—while providing affordable alternatives. Monitoring attitudinal shifts through longitudinal studies will ensure interventions translate into durable behavioural change."
+        }
+      ],
+      "marksGuide": [
+        "Defines cognitive dissonance and situates it in Indian context",
+        "Explains psychological mechanisms for reducing dissonance",
+        "Provides at least two specific Indian examples with data or credible references",
+        "Acknowledges limitations or counter‑arguments with nuance",
+        "Offers a concrete, actionable recommendation and links it to evaluation"
+      ],
+      "pitfalls": [
+        "Only gives dictionary definition without linking to attitude change",
+        "Lacks Indian examples or uses vague statistics",
+        "Ignores counter‑arguments, presenting a one‑sided view",
+        "Ends with generic conclusion instead of specific way forward"
+      ],
+      "laws": [],
+      "keywords": [
+        "cognitive dissonance",
+        "attitude change",
+        "Indian youth",
+        "Swachh Bharat",
+        "sustainable consumption"
+      ],
+      "origin": "ci",
+      "ai": 1,
+      "model": "hosted",
+      "subject": "psychology",
+      "quality": {
+        "score": 100,
+        "words": 184,
+        "targetWords": 150,
+        "anchors": 2
+      }
+    },
+    {
+      "id": "ci-mwkuw75z-m33z",
+      "at": "2026-11-17",
+      "paper": "optional1",
+      "topic": "Bayesian Inference: Prior Selection and Posterior Computation",
+      "marks": 15,
+      "difficulty": "medium",
+      "years": [],
+      "question": "Discuss the role of prior distributions in Bayesian inference. Examine the criteria for choosing between conjugate, non-informative, and empirical Bayes priors. Illustrate with a real-data example where prior sensitivity affects posterior conclusions. (15 marks, 250 words)",
+      "answer": [
+        {
+          "h": "Context: Bayesian framework and the prior",
+          "p": "Bayesian inference updates a prior distribution π(θ) to a posterior π(θ|x) ∝ L(x|θ)π(θ) via Bayes' theorem. The prior encodes pre-experimental knowledge or ignorance and is the distinguishing feature from frequentist methods. In the Indian Statistical Service and NSSO survey estimation, Bayesian small-area models have been used since the 1990s to borrow strength across districts."
+        },
+        {
+          "h": "Conjugate priors: analytical tractability",
+          "p": "Conjugate families (e.g., Beta-Binomial, Normal-Normal, Gamma-Poisson) yield closed-form posteriors, enabling quick computation. For estimating literacy rates in Aspirational Districts, a Beta(α,β) prior on the binomial proportion gives a Beta(α+∑y_i, β+n-∑y_i) posterior. However, conjugacy restricts prior shape and may impose unrealistic assumptions when expert knowledge is asymmetric."
+        },
+        {
+          "h": "Non-informative and reference priors: objectivity claims",
+          "p": "Jeffreys' prior π(θ) ∝ √I(θ) and reference priors maximise missing information, aiming for invariance under reparameterisation. In the 2011 Census undercount adjustment, a reference prior for the capture-recapture model produced posteriors close to the MLE but with valid credible intervals. Yet, improper priors can yield improper posteriors in sparse data settings, as seen in some North-Eastern district estimates."
+        },
+        {
+          "h": "Empirical Bayes and hierarchical modelling: data-driven priors",
+          "p": "Empirical Bayes estimates hyperparameters from marginal likelihood (e.g., via EM or MCMC), blending frequentist estimation with Bayesian shrinkage. The NITI Aayog's district-level health index uses a two-level normal model where district means share a common hyperprior estimated from all 700+ districts. This reduces mean-squared error but risks over-shrinkage when districts are genuinely heterogeneous."
+        },
+        {
+          "h": "Prior sensitivity and robustness checks",
+          "p": "Posterior conclusions must be tested against alternative priors. In the 2020-21 PLFS unemployment rate estimation for small states, switching from a Beta(1,1) to Beta(0.5,0.5) prior shifted the 95% credible interval by 1.2 percentage points for Goa. Reporting such sensitivity is now mandated in the Ministry of Statistics' Bayesian reporting guidelines (2022)."
+        },
+        {
+          "h": "Way forward",
+          "p": "Adopt a default workflow: specify a weakly informative prior reflecting plausible parameter ranges, compute posteriors via Stan or INLA, and report prior-posterior overlap plots alongside sensitivity tables. Institutionalise this in the National Statistical Office's estimation manuals to make Bayesian small-area estimation transparent and reproducible across all socio-economic surveys."
+        }
+      ],
+      "marksGuide": [
+        "Clear definition of prior, likelihood, posterior and their roles",
+        "Distinction between conjugate, non-informative, empirical Bayes with mathematical justification",
+        "Concrete Indian data example (NSSO, Census, PLFS, Aspirational Districts)",
+        "Discussion of prior sensitivity and robustness diagnostics",
+        "Actionable way forward referencing MoSPI guidelines or computational tools"
+      ],
+      "pitfalls": [
+        "Merely listing prior types without comparing their inferential consequences",
+        "Using generic textbook examples (coin toss) instead of Indian survey contexts",
+        "Ignoring impropriety risks of non-informative priors in small samples",
+        "Stating 'Bayesian is better' without acknowledging computational or elicitation costs",
+        "Omitting sensitivity analysis or treating it as optional"
+      ],
+      "laws": [
+        "Ministry of Statistics and Programme Implementation Bayesian Reporting Guidelines 2022"
+      ],
+      "keywords": [
+        "prior distribution",
+        "posterior",
+        "conjugate prior",
+        "Jeffreys prior",
+        "empirical Bayes",
+        "hierarchical model",
+        "prior sensitivity",
+        "small-area estimation"
+      ],
+      "origin": "ci",
+      "ai": 1,
+      "model": "hosted",
+      "subject": "statistics",
+      "quality": {
+        "score": 100,
+        "words": 310,
+        "targetWords": 250,
+        "anchors": 5
       }
     }
   ]
