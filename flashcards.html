@@ -57,7 +57,7 @@ a.back-link:hover{text-decoration:underline}
   </div>
 
   <div class="flashcard-wrapper" id="cardWrapper" style="display:none">
-    <div class="flashcard" id="flashcard" onclick="flipCard()">
+    <div class="flashcard" id="flashcard">
       <div class="front">
         <div class="card-q" id="cardQ">Question</div>
         <div class="flip-hint">Tap to flip →</div>
@@ -69,11 +69,11 @@ a.back-link:hover{text-decoration:underline}
       </div>
     </div>
     <div class="controls">
-      <button class="btn btn-no" onclick="rateCard(false)">❌ Again</button>
-      <button class="btn btn-yes" onclick="rateCard(true)">✓ Got it</button>
+      <button class="btn btn-no" id="btnAgain">❌ Again</button>
+      <button class="btn btn-yes" id="btnGotIt">✓ Got it</button>
     </div>
     <div style="margin-top:14px;text-align:center">
-      <button class="btn btn-reset" onclick="resetDeck()">🔄 Restart Deck</button>
+      <button class="btn btn-reset" id="btnReset">🔄 Restart Deck</button>
     </div>
   </div>
 
@@ -170,6 +170,12 @@ a.back-link:hover{text-decoration:underline}
   function saveProgress(){
     try { localStorage.setItem('fc_progress', JSON.stringify({ learned: Array.from(state.learned) })); } catch(e){}
   }
+
+  // Wire up buttons (functions are inside this IIFE, so inline onclick won't reach them)
+  document.getElementById('flashcard').addEventListener('click', flipCard);
+  document.getElementById('btnAgain').addEventListener('click', function(){ rateCard(false); });
+  document.getElementById('btnGotIt').addEventListener('click', function(){ rateCard(true); });
+  document.getElementById('btnReset').addEventListener('click', resetDeck);
 
   renderCard();
 })();
