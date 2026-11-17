@@ -530,19 +530,34 @@ function runTts(p) {
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const out = path.join(OUT_DIR, ID + '.mp3');
-  const res = spawnSync('python3', [
-    '-m', 'edge_tts',
-    '--voice', voice,
-    '--rate', rate,
-    '--pitch', pitch,
-    '--text', text,
-    '--write-media', out
-  ], { encoding: 'utf8', timeout: 180000 });
+  const errors = [];
 
-  if (res.error) throw new Error('tts: could not run edge-tts (' + res.error.message + ')');
-  if (res.status !== 0 || !fs.existsSync(out)) {
-    throw new Error('tts: edge-tts failed: ' + String(res.stderr || res.stdout || '').slice(0, 300));
+  // The CLI is the simple route, but its argument surface has moved between
+  // versions and the runner's Python is newer than the wheel's tested
+  // platforms. The programmatic API is the fallback: same package, no argparse.
+  const cliArgs = ['-m', 'edge_tts', '--voice', voice, '--text', text, '--write-media', out];
+  if (rate !== '+0%') cliArgs.push('--rate', rate);
+  if (pitch !== '+0Hz') cliArgs.push('--pitch', pitch);
+
+  let res = spawnSync('python3', cliArgs, { encoding: 'utf8', timeout: 180000 });
+  if (!(res.status === 0 && fs.existsSync(out))) {
+    errors.push('cli: ' + tail(res.stderr || res.stdout || (res.error && res.error.message) || ''));
+
+    const script = [
+      'import asyncio, sys',
+      'import edge_tts',
+      'async def main():',
+      '    c = edge_tts.Communicate(sys.argv[1], sys.argv[2], rate=sys.argv[3], pitch=sys.argv[4])',
+      '    await c.save(sys.argv[5])',
+      'asyncio.run(main())'
+    ].join('\n');
+    res = spawnSync('python3', ['-c', script, text, voice, rate, pitch, out], { encoding: 'utf8', timeout: 180000 });
+    if (!(res.status === 0 && fs.existsSync(out))) {
+      errors.push('api: ' + tail(res.stderr || res.stdout || (res.error && res.error.message) || ''));
+      throw new Error('tts: edge-tts failed — ' + errors.join(' | '));
+    }
   }
+
   return {
     file: path.relative(path.join(__dirname, '..'), out).replace(/\\/g, '/'),
     voice: voice,
@@ -552,6 +567,12 @@ function runTts(p) {
     bytes: fs.statSync(out).size,
     preview: text.slice(0, 140)
   };
+}
+
+// The useful line of a Python traceback is the last one, not the first.
+function tail(s) {
+  const lines = String(s || '').trim().split('\n');
+  return lines.slice(-3).join(' / ').slice(0, 500);
 }
 
 function tutorPrompt(exam, subject, count, seeds, bias) {
