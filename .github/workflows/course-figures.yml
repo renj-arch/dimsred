@@ -73,6 +73,7 @@ jobs:
         run: |
           node scripts/attach-course-figures.js --all --invent \
             --limit "$LIMIT" --max-invent "$MAX_INVENT" \
+            --per-lesson 2 --sort words \
             --changed-out /tmp/figure-lessons.txt
           echo "lessons changed:"; cat /tmp/figure-lessons.txt 2>/dev/null || true
 
