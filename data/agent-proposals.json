@@ -1,16 +1,67 @@
 {
  "meta": {
-  "generatedAt": "2026-11-14T08:19:00.570Z",
+  "generatedAt": "2026-11-17T09:44:51.277Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 53,
+  "count": 58,
   "lastAttempt": {
-   "at": "2026-11-16T08:36:17.479Z",
-   "ok": false,
-   "error": "curl exit 7 curl: (7) Failed to connect to 127.0.0.1 port 11434 after 0 ms: Could not connect to server\n"
+   "at": "2026-11-17T09:44:51.277Z",
+   "ok": true,
+   "count": 5,
+   "dropped": 0
   }
  },
  "proposals": [
+  {
+   "id": "prp-mwkiahxp-1",
+   "at": "2026-11-17T09:44:51.277Z",
+   "title": "Add fallback generation for mental‑batch on‑demand failures",
+   "why": "The on‑demand mental‑batch lane has 1 recent failure (hard cap 55 min) and overall 2 ok/1 fail, indicating timeout issues.",
+   "idea": "Wrap the mental‑batch generation step in a retry loop with a reduced max‑tokens/temperature setting to finish within the 55 min cap; if still failing, fall back to selecting existing invented‑pool questions of matching difficulty and tag them as \"generated fallback\". Implement via a small Node script invoked in the on‑demand workflow.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mwkiahxp-2",
+   "at": "2026-11-17T09:44:51.277Z",
+   "title": "Increase invented pool coverage for hard/veryhard levels",
+   "why": "Invented pool holds 201 questions but only 33 hard and 27 veryhard items, limiting source material for high‑difficulty sets.",
+   "idea": "Run a scheduled GitHub Action that prompts the local qwen3.5 model to create additional hard and veryhard questions (target +20 each) using the existing template prompts, then append them to data/invented‑pool.json after passing the existing validation checks.",
+   "effort": "medium",
+   "risk": "medium",
+   "status": "new"
+  },
+  {
+   "id": "prp-mwkiahxp-3",
+   "at": "2026-11-17T09:44:51.277Z",
+   "title": "Expose Next button on homepage quiz flow for browser tests",
+   "why": "Browser test reports flow‑skipped on Homepage due to no visible Next button, causing 3 of 23 pages to miss quiz flow verification.",
+   "idea": "Add a CSS rule or small JS snippet that ensures the Next button is rendered and focusable on page load; update the homepage HTML to include an aria‑label for accessibility. Verify with a quick unit test in the CI workflow.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mwkiahxp-4",
+   "at": "2026-11-17T09:44:51.277Z",
+   "title": "Add sanity check for tutor‑questions JSON array output",
+   "why": "Recent failures show tutor‑questions lane produced no JSON array or insufficient items (2 of 5 valid).",
+   "idea": "Insert a pre‑validation step in the tutor‑questions lane that parses the model output; if the result is not a JSON array with at least 3 items, automatically request a regeneration with a stricter prompt. Implement as a shell script called before committing the output.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mwkiahxp-5",
+   "at": "2026-11-17T09:44:51.277Z",
+   "title": "Prioritize fixing critical faults via automated rule‑based fixes",
+   "why": "Fault board shows 63 critical items; the rule‑based agent already applied 90 fixes but many remain.",
+   "idea": "Create a GitHub Action that runs the rule‑based agent nightly, targeting only critical fault types (e.g., missing anchors, JSON format) and auto‑applies fixes, then logs results. This leverages the existing agent infrastructure without new code.",
+   "effort": "medium",
+   "risk": "medium",
+   "status": "new"
+  },
   {
    "id": "prp-mwg4wjmi-1",
    "at": "2026-11-14T08:19:00.570Z",

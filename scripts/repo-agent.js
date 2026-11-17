@@ -397,7 +397,18 @@ if (require.main === module) {
 
     const branch = 'agent/task-' + Date.now();
     sh('git checkout -B ' + branch);
-    const result = await runLoop(task);
+    let result;
+    try {
+      result = await runLoop(task);
+    } catch (e) {
+      // All model backends are rate-limited or otherwise unavailable. Do not
+      // fail the workflow — the next scheduled run will retry when a quota
+      // resets. Revert the branch checkout so nothing is left dangling.
+      log('model unavailable (' + String(e.message || '').slice(0, 200) + '); agent run skipped, will retry on next schedule');
+      try { sh('git checkout -q main 2>/dev/null || true'); } catch (_) {}
+      try { sh('git branch -D ' + branch + ' 2>/dev/null || true'); } catch (_) {}
+      return;
+    }
     const changed = sh('git status --porcelain').split('\n').filter(Boolean).map(function (l) { return l.slice(3).trim(); });
     if (!changed.length) {
       log('agent made no change');

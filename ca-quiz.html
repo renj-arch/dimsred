@@ -55,9 +55,9 @@ a.back-link:hover{text-decoration:underline}
     <div class="q-topic" id="quizTopic">Topic</div>
     <div class="q-text" id="quizQuestion">Loading question...</div>
     <div class="q-options" id="quizOptions"></div>
-    <button class="btn-submit" id="submitBtn" onclick="submitAnswer()">Submit Answer</button>
+    <button class="btn-submit" id="submitBtn">Submit Answer</button>
     <div class="q-explain" id="quizExplain"></div>
-    <button class="btn-next" id="nextBtn" onclick="nextQuestion()" style="display:none">Next Question →</button>
+    <button class="btn-next" id="nextBtn" style="display:none">Next Question →</button>
   </div>
 
   <div class="result-banner" id="resultBanner"></div>
@@ -176,6 +176,10 @@ a.back-link:hover{text-decoration:underline}
     }
     renderQuestion();
   }
+
+  // Wire up buttons (functions are inside this IIFE, so inline onclick won't reach them)
+  document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+  document.getElementById('nextBtn').addEventListener('click', nextQuestion);
 
   loadQuiz();
 })();
