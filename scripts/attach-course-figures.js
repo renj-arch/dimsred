@@ -109,10 +109,12 @@ function score(fig, lessonWords) {
   return n;
 }
 
-function bestFigure(lessonWords) {
+function bestFigure(lessonWords, exclude) {
+  const skip = new Set(exclude || []);
   let best = null;
   let bestScore = 0;
   for (const fig of FIGLIB.FIGURES) {
+    if (skip.has(fig.id)) continue;
     const s = score(fig, lessonWords);
     if (s > bestScore) { bestScore = s; best = fig; }
   }
@@ -142,13 +144,26 @@ function figureBlock(fig, fromFile) {
   ].join('\n');
 }
 
-function inject(html, block) {
-  const anchor = /<div class="lesson-body">/i;
-  if (anchor.test(html)) return html.replace(anchor, (m) => m + '\n' + block);
-  // Hand-built pages have no .lesson-body wrapper: place it after the first h1.
-  const h1 = /<\/h1>/i;
-  if (h1.test(html)) return html.replace(h1, (m) => m + '\n' + block);
-  return null;
+// slot 0 goes at the top of the lesson; later slots spread down the page so a
+// 100,000-word lesson is not served by one diagram at the top. The position is
+// derived from the <h2> count, which every lesson has, so a second run lands a
+// figure in a different part of the page rather than on top of the first.
+function inject(html, block, slot, perLesson) {
+  if (!slot) {
+    const anchor = /<div class="lesson-body">/i;
+    if (anchor.test(html)) return html.replace(anchor, (m) => m + '\n' + block);
+    const h1 = /<\/h1>/i;
+    if (h1.test(html)) return html.replace(h1, (m) => m + '\n' + block);
+    return null;
+  }
+  const heads = [...html.matchAll(/<h2\b/gi)].map((m) => m.index);
+  if (!heads.length) {
+    const anchor = /<div class="lesson-body">/i;
+    return anchor.test(html) ? html.replace(anchor, (m) => m + '\n' + block) : null;
+  }
+  const slots = Math.max(1, perLesson);
+  const at = heads[Math.min(heads.length - 1, Math.max(1, Math.round((slot * heads.length) / slots)))];
+  return html.slice(0, at) + block + '\n' + html.slice(at);
 }
 
 async function inventFor(file, html) {
@@ -180,13 +195,25 @@ async function inventFor(file, html) {
 }
 
 async function main() {
-  const files = lessons();
+  let files = lessons();
   const limit = Number(arg('limit', '0')) || 0;
   const maxInvent = Number(arg('max-invent', '4'));
+  const perLesson = Math.max(1, Number(arg('per-lesson', '1')) || 1);
   const invent = has('invent');
   const check = has('check');
   const dry = has('dry-run');
   const force = has('force');
+
+  // The backlog lane runs with --sort words so the flagship GS lessons
+  // (Indian History at ~920 KB of HTML, Indian Geography, General Science,
+  // Indian Polity) get diagrams before the optional-paper stubs do.
+  if (arg('sort') === 'words') {
+    const size = new Map();
+    for (const f of files) {
+      try { size.set(f, fs.statSync(f).size); } catch (e) { size.set(f, 0); }
+    }
+    files = files.slice().sort((a, b) => size.get(b) - size.get(a));
+  }
 
   let touched = 0;
   let invented = 0;
@@ -200,16 +227,22 @@ async function main() {
     let html;
     try { html = fs.readFileSync(file, 'utf8'); } catch (e) { continue; }
     if (html.length < 4000) continue;              // hub or stub, not a lesson
-    const already = html.match(MARKER);
-    if (already && !force) continue;
+
+    // A lesson may hold more than one figure. Skip only when it already has
+    // its quota, and never re-attach a figure it already carries.
+    const existing = [...html.matchAll(/course-figure:([a-z0-9-]+)/g)].map((m) => m[1]);
+    if (existing.length >= perLesson && !force) continue;
 
     const lessonWords = new Set(words(rel + ' ' + textOf(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i)));
-    let chosen = bestFigure(lessonWords);
+    let chosen = bestFigure(lessonWords, existing);
     let fig = chosen ? chosen.fig : null;
 
     if (!fig && invent && invented < maxInvent) {
+      // Count creations, not attachments: four exam lessons share one
+      // invented figure, and the budget is about model calls.
+      const before = store.ids().length;
       fig = await inventFor(file, html);
-      if (fig) invented++;
+      invented += Math.max(0, store.ids().length - before);
     }
     if (!fig) { missing++; continue; }
 
@@ -217,12 +250,12 @@ async function main() {
 
     const block = figureBlock(fig, file);
     let next = html;
-    if (already) {
-      // Replace an existing block: match the marker through the closing figure.
+    if (force && existing.length) {
+      // Replace the first block in place when explicitly asked to re-dress.
       const re = new RegExp('<!-- course-figure:[a-z0-9-]+ -->[\\s\\S]*?</figure>');
       next = html.replace(re, block);
     } else {
-      next = inject(html, block);
+      next = inject(html, block, existing.length, perLesson);
     }
     if (!next) { missing++; continue; }
     if (next === html) continue;

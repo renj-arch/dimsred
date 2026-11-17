@@ -44,7 +44,7 @@ const PAPER_OF = {
 
 const TAG_RULES = [
   ['History', /ancient|medieval|mughal|maurya|gupta|harappa|indus valley|vedic|colonial|freedom|revolt|gandhi|nehru|empire|dynast|sultanate|historical|history/i],
-  ['Art & Culture', /art\b|temple|architecture|dance|music|painting|sculpture|cave|stupa|craft|heritage|culture/i],
+  ['Art & Culture', /\bart\b|temple|architecture|dance|music|painting|sculpture|cave|stupa|\bcraft\b|heritage|\bculture\b/i],
   ['Polity', /constitution|polity|article|parliament|supreme court|high court|president|federal|panchayat|election|amendment|writ|judicial|governor|legislature/i],
   ['Governance', /governance|civil service|administrat|bureaucra|scheme|policy implementation|e-governance|rti|transparency/i],
   ['International Relations', /\bun\b|united nations|brics|g20|treaty|foreign policy|diplomat|quad|wto|saarc|asean|indian ocean|geopolit/i],
