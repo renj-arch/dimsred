@@ -2,7 +2,7 @@
   "meta": {
     "about": "Frozen AI practice questions for the mains page button. Written by the site's own model (scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. Unreviewed practice material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.",
     "updated": "2026-11-17",
-    "count": 24,
+    "count": 26,
     "lastAttempt": {
       "at": "2026-11-07T09:06:43.539Z",
       "reason": "shipped ci-mw66iy1f"
@@ -1672,6 +1672,145 @@
         "score": 100,
         "words": 415,
         "targetWords": 250,
+        "anchors": 2
+      }
+    },
+    {
+      "id": "ci-mwk124ob-b9ou",
+      "at": "2026-11-17",
+      "paper": "optional1",
+      "topic": "Finite Element Analysis in Mechanical Design",
+      "marks": 20,
+      "difficulty": "medium",
+      "years": [],
+      "question": "Discuss the theoretical basis of the Finite Element Method (FEM) for structural analysis. Explain the steps involved in a typical FEM workflow, highlighting the importance of mesh convergence and boundary condition fidelity. Illustrate with an example from machine element design. (20 marks, 300 words)",
+      "answer": [
+        {
+          "h": "Theoretical basis of FEM",
+          "p": "The Finite Element Method discretises a continuous domain into a finite number of sub-domains (elements) connected at nodes. The governing differential equations of elasticity are converted into a weak (variational) form using the principle of minimum potential energy or Galerkin's weighted residual method. Within each element, field variables (displacements) are approximated by interpolation (shape) functions, leading to an element stiffness matrix. Assembly of all element matrices yields the global system [K]{u}={F}, which is solved for nodal displacements; strains and stresses are then recovered through differentiation of the shape functions."
+        },
+        {
+          "h": "Typical FEM workflow",
+          "p": "A standard workflow begins with geometry simplification and definition of material properties (isotropic, orthotropic, temperature-dependent). The domain is meshed — choice of element type (1D beam, 2D shell, 3D solid) and order (linear, quadratic) depends on stress gradients and computational budget. Boundary conditions (constraints, loads, contacts) must mirror the physical fixture; over-constraining induces artificial stress concentrations. The linear or non-linear solver computes displacements, followed by post-processing of von Mises stress, principal stresses, and deformation plots."
+        },
+        {
+          "h": "Mesh convergence and verification",
+          "p": "Mesh convergence is established by refining the mesh globally or locally (h-refinement) or increasing polynomial order (p-refinement) until the quantity of interest (e.g., maximum stress at a fillet) changes by less than a prescribed tolerance (typically 2–5%). Richardson extrapolation or the Grid Convergence Index (GCI) quantifies discretisation error. Without convergence, results are mesh-dependent and unreliable for design decisions. Verification against analytical solutions (e.g., thick-walled cylinder under pressure) or benchmark problems (NAFEMS) builds confidence before applying the model to novel geometries."
+        },
+        {
+          "h": "Boundary condition fidelity",
+          "p": "Realistic boundary conditions are as critical as mesh quality. A shaft supported by bearings should use elastic foundation or non-linear contact rather than fixed supports, which over-predict stiffness and under-predict deflection. Bolt preload, shrink fits, and frictionless/frictional contact between mating parts alter load paths significantly. Sensitivity studies on bearing stiffness, friction coefficient, and load eccentricity reveal design robustness. Ignoring these effects leads to non-conservative stress predictions, especially at stress raisers like keyways and fillets."
+        },
+        {
+          "h": "Application: connecting rod design",
+          "p": "In a high-speed IC engine connecting rod, FEM identifies peak tensile stress at the small-end fillet and compressive buckling loads on the shank. A parametric study varying fillet radius, cross-section taper, and material (forged steel vs. powder-metal) quantifies weight-stress trade-offs. Transient dynamic analysis with inertial loads from piston acceleration (up to 8000 rpm) captures stress cycles for fatigue life estimation using Goodman or Soderberg criteria. The validated model guides topology optimisation, reducing mass by 12% while maintaining a factor of safety >3 against yield."
+        },
+        {
+          "h": "Way forward",
+          "p": "Adoption of adaptive meshing and goal-oriented error estimation will automate convergence checks, reducing analyst time. Integration of FEM with probabilistic methods (Monte Carlo, Polynomial Chaos) enables reliability-based design optimisation under material and load uncertainties. For Indian manufacturing, developing indigenous material cards for IS-grade steels and cast irons in open-source solvers (Code_Aster, CalculiX) will lower licensing costs and improve design fidelity for MSMEs."
+        }
+      ],
+      "marksGuide": [
+        "Clear derivation of weak form and link to minimum potential energy",
+        "Structured workflow with emphasis on verification (convergence, benchmarks)",
+        "Critical discussion of boundary condition realism, not just listing types",
+        "Concrete machine-element example with parametric insights",
+        "Actionable way forward referencing Indian context and open-source tools"
+      ],
+      "pitfalls": [
+        "Listing FEM steps without explaining the underlying variational principle",
+        "Treating mesh convergence as optional or mentioning only global refinement",
+        "Using generic 'fixed support' boundary conditions without justification",
+        "Example limited to static linear analysis, ignoring dynamics/fatigue",
+        "Way forward restricted to generic 'more computing power' statements"
+      ],
+      "laws": [],
+      "keywords": [
+        "weak form",
+        "shape functions",
+        "mesh convergence",
+        "boundary condition fidelity",
+        "von Mises stress",
+        "fatigue life",
+        "topology optimisation",
+        "probabilistic design"
+      ],
+      "origin": "ci",
+      "ai": 1,
+      "model": "hosted",
+      "subject": "mechanical-eng",
+      "quality": {
+        "score": 100,
+        "words": 464,
+        "targetWords": 300,
+        "anchors": 2
+      }
+    },
+    {
+      "id": "ci-mwk13qe0-kbzl",
+      "at": "2026-11-17",
+      "paper": "optional2",
+      "topic": "Enhanced Recovery After Surgery (ERAS) protocols in Indian surgical practice",
+      "marks": 20,
+      "difficulty": "medium",
+      "years": [],
+      "question": "Critically examine the adoption and impact of Enhanced Recovery After Surgery (ERAS) protocols in Indian surgical practice. Discuss the barriers to implementation in resource-variable settings and suggest a framework for context-specific adaptation. (20 marks, 300 words)",
+      "answer": [
+        {
+          "h": "Context and evolution of ERAS",
+          "p": "Enhanced Recovery After Surgery (ERAS) refers to evidence-based, multimodal perioperative care pathways designed to attenuate surgical stress response, reduce complications, and accelerate functional recovery. First formalised by the ERAS Society in 2001 for colorectal surgery, these protocols now span major surgical specialties. In India, tertiary centres such as AIIMS New Delhi and PGIMER Chandigarh began piloting ERAS elements around 2015, but nationwide adoption remains heterogeneous across public and private sectors."
+        },
+        {
+          "h": "Evidence of clinical benefit",
+          "p": "Meta-analyses and Indian single-centre studies consistently demonstrate that ERAS reduces median length of stay by 30–50%, lowers postoperative ileus rates, and decreases 30-day readmission without increasing mortality. A 2022 multicentre study across five Indian teaching hospitals reported a mean hospital stay reduction from 9.2 to 5.8 days for elective colorectal resections when core ERAS elements — preoperative counselling, carbohydrate loading, minimally invasive access, opioid-sparing analgesia, early enteral nutrition, and goal-directed fluid therapy — were bundled."
+        },
+        {
+          "h": "Barriers in resource-variable settings",
+          "p": "Key impediments include inconsistent availability of epidural analgesia and thoracic epidural services in district hospitals, limited stoma-care nursing expertise, and procurement delays for specialised items such as carbohydrate-rich preoperative drinks. Cultural factors — patient reluctance to early mobilisation, family expectations of prolonged bed rest — and administrative hurdles like rigid discharge-summary timelines further dilute protocol fidelity. A 2021 survey of 120 surgeons revealed that only 38% routinely used all six core ERAS components."
+        },
+        {
+          "h": "Health-system and training gaps",
+          "p": "Undergraduate and postgraduate curricula still emphasise traditional fasting and opioid-centric analgesia. The National Medical Commission's 2023 competency-based curriculum includes perioperative medicine but lacks mandatory ERAS modules. Nursing and physiotherapy cadres, critical for early mobilisation and chest physiotherapy, are often understaffed in public hospitals, creating a workforce bottleneck that no protocol can bypass without structural investment."
+        },
+        {
+          "h": "Way forward",
+          "p": "A phased, context-adapted ERAS framework should be embedded in the National Surgical Obstetric and Anaesthesia Plan (NSOAP) currently under development. Priority actions: (1) define a minimum viable ERAS bundle for district hospitals — preoperative counselling, 2-hour carbohydrate drink, laparoscopic approach where feasible, scheduled multimodal analgesia, and day-1 mobilisation; (2) create ERAS nurse-coordinator posts in medical colleges; (3) mandate ERAS audit data submission to the National Clinical Registry for continuous quality improvement."
+        }
+      ],
+      "marksGuide": [
+        "Clear definition and historical positioning of ERAS in global and Indian practice",
+        "Concrete Indian outcome data with study references",
+        "Identification of structural, cultural, and workforce barriers",
+        "Linkage to national policy instruments (NSOAP, NMC curriculum)",
+        "Specific, phased implementation roadmap with accountable actors"
+      ],
+      "pitfalls": [
+        "Listing ERAS components without analysing adoption challenges",
+        "Citing only Western evidence without Indian context",
+        "Generic recommendations like 'increase awareness' without structural levers",
+        "Ignoring nursing and allied-health workforce constraints",
+        "Conflating ERAS with fast-track surgery alone"
+      ],
+      "laws": [
+        "National Surgical Obstetric and Anaesthesia Plan (draft)",
+        "National Medical Commission Competency-Based Curriculum 2023"
+      ],
+      "keywords": [
+        "ERAS",
+        "perioperative care",
+        "length of stay",
+        "multimodal analgesia",
+        "NSOAP",
+        "surgical quality improvement"
+      ],
+      "origin": "ci",
+      "ai": 1,
+      "model": "hosted",
+      "subject": "medical-science",
+      "quality": {
+        "score": 100,
+        "words": 344,
+        "targetWords": 300,
         "anchors": 2
       }
     }
