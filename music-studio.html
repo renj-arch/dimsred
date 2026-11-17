@@ -217,6 +217,7 @@ textarea{min-height:90px;resize:vertical}
       <button class="tab" onclick="showTab('roll')">🎹 Piano Roll</button>
       <button class="tab" onclick="showTab('recorder')">🎙 Recorder</button>
       <button class="tab" onclick="showTab('master')">💾 Master</button>
+      <button class="tab" onclick="showTab('chart')">📄 Chart</button>
     </div>
 
     <div class="editor">
@@ -395,6 +396,34 @@ textarea{min-height:90px;resize:vertical}
           <button class="btn btn-secondary" onclick="ttsLoadLyrics()">📋 Load from Lyrics</button>
           <div id="ttsStatus" style="margin-left:12px;font-size:.85em;color:var(--muted)"></div>
         </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:22px 0">
+        <h3>Studio voices — Tamil &amp; Malayalam</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:14px">Real Tamil and Malayalam neural voices (Edge TTS). These do not depend on your device's language packs. Rendered on the owner runner, about a minute per take.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+          <div class="field" style="min-width:280px"><label>Voice</label>
+            <select id="edgeVoice" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text)">
+              <option value="">Loading voices…</option>
+            </select>
+          </div>
+          <div class="field"><label>Rate</label>
+            <select id="edgeRate"><option value="-20%">Slower</option><option value="-10%">Slow</option><option value="+0%" selected>Normal</option><option value="+10%">Fast</option><option value="+20%">Faster</option></select>
+          </div>
+          <div class="field"><label>Pitch</label>
+            <select id="edgePitch"><option value="-50Hz">Lower</option><option value="-20Hz">Low</option><option value="+0Hz" selected>Normal</option><option value="+20Hz">High</option><option value="+50Hz">Higher</option></select>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Text</label>
+          <textarea id="edgeText" style="width:100%;min-height:110px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="தமிழ் அல்லது മലയാളം ഇവിടെ എഴുതുക…"></textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.edgeSpeak()">🎙 Render voice</button>
+          <button class="btn btn-secondary" onclick="MX.edgeLoadLyrics()">📋 Load lyric</button>
+          <a class="btn btn-secondary" id="edgeDl" style="display:none" download="take.mp3">⤓ Download MP3</a>
+          <span id="edgeStatus" style="font-size:.82em;color:var(--muted)"></span>
+        </div>
+        <audio id="edgeAudio" controls style="display:none;width:100%;margin-top:12px"></audio>
       </section>
 
       <section id="tab-lyriclab" class="tab-panel panel" style="display:none">
@@ -453,6 +482,16 @@ textarea{min-height:90px;resize:vertical}
           </div>
         </div>
         <p style="color:var(--muted);font-size:.85em;margin-bottom:12px">The song order. Each row plays its chord progression for the number of bars you set. This is the whole song, not a sketch.</p>
+        <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:16px;padding:12px;border:1px dashed rgba(167,139,250,.35);border-radius:10px;background:rgba(167,139,250,.05)">
+          <div class="field" style="min-width:150px"><label>Mood</label>
+            <select id="mx-mood"><option value="tender">Tender</option><option value="bittersweet" selected>Bittersweet</option><option value="hopeful">Hopeful</option><option value="defiant">Defiant</option><option value="dark">Dark</option><option value="playful">Playful</option></select>
+          </div>
+          <div class="field" style="min-width:150px"><label>Genre</label>
+            <select id="mx-songgen"><option value="pop">Pop</option><option value="ballad">Ballad</option><option value="folk">Folk</option><option value="film">Film / cinematic</option><option value="lofi">Lo-fi</option></select>
+          </div>
+          <button class="btn btn-primary" onclick="MX.composeSong()">✨ Compose a song</button>
+          <span style="font-size:.78em;color:var(--muted)">Fills the arrangement, mix and melody. Your lyrics stay untouched.</span>
+        </div>
         <div id="mx-sections"></div>
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="MX.play()">▶ Play arrangement</button>
@@ -542,16 +581,39 @@ textarea{min-height:90px;resize:vertical}
         <div class="grid2">
           <div class="field"><label>Tempo (BPM)</label><input type="number" id="mx-bpm" min="40" max="220" value="96" onchange="MX.setTempo(this.value)"></div>
           <div class="field"><label>Metronome</label><select id="mx-click" onchange="MX.setClick()"><option value="off">Off</option><option value="on">On</option></select></div>
-          <div class="field"><label>Length (seconds)</label><input type="number" id="mx-len" min="4" max="600" value="32"></div>
+          <div class="field"><label>Time signature</label><select id="mx-meter" onchange="MX.setMeter(this.value)"><option value="4/4">4/4</option><option value="3/4">3/4</option><option value="2/4">2/4</option><option value="6/8">6/8</option><option value="5/4">5/4</option><option value="7/8">7/8</option></select></div>
+          <div class="field"><label>Swing</label><input type="range" id="mx-swing" min="0" max="0.6" step="0.02" value="0" oninput="MX.setSwing(this.value)"></div>
+          <div class="field"><label>Count-in</label><select id="mx-countin" onchange="MX.setCountIn()"><option value="off">Off</option><option value="on">One bar</option></select></div>
+          <div class="field"><label>Length (seconds)</label><input type="number" id="mx-len" min="4" max="900" value="32"></div>
           <div class="field"><label>Render quality</label><select id="mx-rate"><option value="44100">44.1 kHz</option><option value="48000">48 kHz</option></select></div>
         </div>
         <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="MX.exportWav()">⤓ Render WAV</button>
-          <button class="btn btn-secondary" onclick="MX.exportProject()">⤓ Export project (.studio.json)</button>
+          <button class="btn btn-secondary" onclick="MX.exportStems()">⤓ Export stems (4 WAV)</button>
+          <button class="btn btn-secondary" onclick="MX.exportMidi()">⤓ Export MIDI</button>
+          <label class="btn btn-secondary" style="cursor:pointer">⤒ Import MIDI to roll<input type="file" accept=".mid,.midi,audio/midi" style="display:none" onchange="MX.importMidi(this)"></label>
+          <button class="btn btn-secondary" onclick="MX.exportProject()">⤓ Export project</button>
           <label class="btn btn-secondary" style="cursor:pointer">⤒ Import project<input type="file" accept=".json,application/json" style="display:none" onchange="MX.importProject(this)"></label>
           <button class="btn btn-secondary" onclick="MX.printSheet()">🖨 Lyric sheet</button>
         </div>
         <p id="mx-export-status" style="font-size:.82em;color:var(--muted);margin-top:12px"></p>
+      </section>
+
+      <section id="tab-chart" class="tab-panel panel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0">Chart</h3>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-sm btn-secondary" onclick="MX.undo()">↶ Undo</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.redo()">↷ Redo</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.copyChart()">⧉ Copy chart</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.printChart()">🖨 Print</button>
+          </div>
+        </div>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:12px">The whole arrangement as a lead-sheet chart: sections, bars, roman numerals and Nashville numbers. This is the page you hand to a player.</p>
+        <div id="mx-chart" style="background:#fffdf7;color:#1f2937;border-radius:10px;padding:18px;overflow-x:auto;font-family:Georgia,serif"></div>
+        <h3 style="margin:22px 0 8px">Key helper</h3>
+        <div id="mx-keys" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        <p id="mx-key-note" style="font-size:.82em;color:var(--muted);margin-top:8px"></p>
       </section>
 
       <section id="tab-tamil-malayalam" class="tab-panel panel" style="display:none">
@@ -1448,17 +1510,44 @@ const MX = (function () {
   }
 
   /* ---------------- arrangement ---------------- */
+  // Meter is written "4/4", "3/4", "6/8". Beats per bar is X * (4/Y), so 6/8
+  // is three quarter-note beats long — which is what a composer expects when
+  // the click is on the dotted quarter.
+  function beatsPerBar(snap) {
+    const m = /^(\d+)\/(\d+)$/.exec(String((snap && snap.meter) || '4/4'));
+    if (!m) return 4;
+    const num = Number(m[1]) || 4;
+    const den = Number(m[2]) || 4;
+    return Math.max(1, num * (4 / den));
+  }
+
   function songSeconds(snap) {
     const beat = 60 / Math.max(30, snap.bpm || 96);
-    return (snap.sections || []).reduce((n, s) => n + Math.max(1, s.bars) * 4 * beat, 0);
+    const bpb = beatsPerBar(snap);
+    return (snap.sections || []).reduce((n, s) => n + Math.max(1, s.bars) * bpb * beat, 0);
   }
 
   function scheduleSong(ctx, graph, snap, t0) {
     const beat = 60 / Math.max(30, snap.bpm || 96);
-    const barDur = beat * 4;
+    const bpb = beatsPerBar(snap);
+    const barDur = beat * bpb;
+    // Swing pushes every off-beat eighth later by up to half a beat. 0 = straight.
+    const swing = Math.max(0, Math.min(0.6, Number(snap.swing) || 0)) * (beat / 2);
     let t = t0;
     const rollCells = snap.roll && snap.roll.cells ? snap.roll.cells : {};
     const rollSteps = (snap.roll && snap.roll.steps) || 16;
+
+    // Count-in: one bar of clicks before the song starts.
+    if (snap.countIn) {
+      for (let c = 0; c < bpb; c++) {
+        const o = ctx.createOscillator(); o.type = 'square';
+        o.frequency.value = c === 0 ? 1500 : 1000;
+        const g = envelope(ctx, o, t + c * beat, 0.06, 0.1, 0.001, 0.03);
+        g.connect(graph.masterGain);
+        o.start(t + c * beat); o.stop(t + c * beat + 0.07);
+      }
+      t += bpb * beat;
+    }
 
     (snap.sections || []).forEach((sec) => {
       const bars = Math.max(1, sec.bars || 1);
@@ -1467,7 +1556,14 @@ const MX = (function () {
         const ch = chordMidis(snap.root, snap.mode, snap.octave, sym);
         const barT = t + b * barDur;
 
-        if (snap.tracks.chords.on) {
+        // A section may drop parts (intro without drums, verse without lead).
+        // That is what makes an arrangement breathe instead of looping flat.
+        const active = function (id) {
+          if (!(snap.tracks[id] && snap.tracks[id].on)) return false;
+          return (sec.mute || []).indexOf(id) === -1;
+        };
+
+        if (active('chords')) {
           const dest = graph.trackGain.chords;
           ch.forEach((m) => tone(ctx, dest, snap.tracks.chords.inst, m, barT, barDur * 0.94, 1));
           if (snap.arp && snap.arp !== 'off') {
@@ -1481,22 +1577,22 @@ const MX = (function () {
           }
         }
 
-        if (snap.tracks.bass.on) {
+        if (active('bass')) {
           tone(ctx, graph.trackGain.bass, snap.tracks.bass.inst, ch[0] - 12, barT, barDur * 0.9, 1);
         }
 
-        if (snap.tracks.drums.on) {
+        if (active('drums')) {
           const d = graph.trackGain.drums;
-          for (let beatI = 0; beatI < 4; beatI++) {
+          for (let beatI = 0; beatI < bpb; beatI++) {
             const bt = barT + beatI * beat;
-            if (beatI === 0 || beatI === 2) drum(ctx, d, 'kick', bt, 1);
-            if (beatI === 1 || beatI === 3) drum(ctx, d, 'snare', bt, 0.9);
-            drum(ctx, d, 'hat', bt + beat / 2, 0.6);
+            if (beatI === 0 || (bpb === 4 && beatI === 2) || (bpb === 3 && beatI === 1)) drum(ctx, d, 'kick', bt, 1);
+            if (beatI === 1 || beatI === bpb - 1) drum(ctx, d, 'snare', bt, 0.9);
+            drum(ctx, d, 'hat', bt + swing, 0.6);
             drum(ctx, d, 'hat', bt, 0.5);
           }
         }
 
-        if (snap.tracks.lead.on && Object.keys(rollCells).length) {
+        if (active('lead') && Object.keys(rollCells).length) {
           const stepDur = barDur / rollSteps;
           for (let s = 0; s < rollSteps; s++) {
             // cells are keyed "step:noteIndex" and repeat every bar
@@ -1512,7 +1608,7 @@ const MX = (function () {
         }
 
         if (snap.click === 'on') {
-          for (let beatI = 0; beatI < 4; beatI++) {
+          for (let beatI = 0; beatI < bpb; beatI++) {
             const o = ctx.createOscillator(); o.type = 'square';
             o.frequency.value = beatI === 0 ? 1600 : 1100;
             const g = envelope(ctx, o, barT + beatI * beat, 0.05, 0.09, 0.001, 0.03);
@@ -1978,7 +2074,7 @@ const MX = (function () {
     if (btn) btn.disabled = true;
     if (status) status.textContent = 'asking the model…';
     try {
-      const t = await freshToken();
+      const t = await MX.freshToken();
       const r = await fetch('/api/lyrics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
@@ -2105,11 +2201,674 @@ const MX = (function () {
     playDegree, playHarmony, progressionToSection, refreshHarmony,
     setRollInst, toggleCell, clearRoll, renderRoll,
     startRec, stopRec, playRec, exportWav, exportProject, importProject, printSheet,
-    generateLyrics, lyricToSection, lyricReplace, copyLyric, lyricPrefs,
-    syncFromProject, snapshot, songSeconds: () => songSeconds(state.snap)
+    generateLyrics, lyricToSection, lyricReplace, copyLyric, lyricPrefs, freshToken: freshToken,
+    syncFromProject, snapshot, songSeconds: () => songSeconds(state.snap),
+    // Internals for the extended tools (MIDI, stems, chart, undo). Kept under
+    // one key so the public surface above stays stable.
+    _x: {
+      state: state,
+      defaults: defaults,
+      save: save,
+      renderAll: renderAll,
+      makeGraph: makeGraph,
+      scheduleSong: scheduleSong,
+      chordMidis: chordMidis,
+      beatsPerBar: beatsPerBar,
+      midiOf: midiOf,
+      NOTES: NOTES,
+      MODES: MODES,
+      PRESETS: PRESETS,
+      esc: esc
+    }
   };
 })();
 </script>
+
+<script>
+// =====================================================================
+// Composer extensions: meter, swing, count-in, MIDI in/out, stems,
+// lead-sheet chart, key helper, undo/redo.
+// Lives in its own script so the base engine stays readable; it talks to
+// the engine through MX._x (the documented internals).
+// =====================================================================
+(function () {
+  const X = MX._x;
+  const state = X.state;
+
+  function esc(s) { return X.esc(s); }
+  function save() { X.save(); }
+  function snap() { return state.snap; }
+
+  /* ---------------- undo / redo ---------------- */
+  const HIST = { stack: [], at: -1 };
+
+  function pushHistory() {
+    const s = JSON.stringify(state.snap);
+    if (HIST.stack[HIST.at] === s) return;
+    HIST.stack = HIST.stack.slice(0, HIST.at + 1);
+    HIST.stack.push(s);
+    if (HIST.stack.length > 60) HIST.stack.shift();
+    HIST.at = HIST.stack.length - 1;
+  }
+
+  function applyHistory(json) {
+    state.snap = JSON.parse(json);
+    X.renderAll();
+    sync();
+  }
+
+  MX.undo = function () {
+    if (HIST.at <= 0) { showToast('Nothing to undo'); return; }
+    HIST.at--;
+    applyHistory(HIST.stack[HIST.at]);
+    showToast('Undone');
+  };
+  MX.redo = function () {
+    if (HIST.at >= HIST.stack.length - 1) { showToast('Nothing to redo'); return; }
+    HIST.at++;
+    applyHistory(HIST.stack[HIST.at]);
+    showToast('Redone');
+  };
+
+  // Record the state before every mutation the composer makes.
+  ['addSection', 'delSection', 'moveSection', 'editSection', 'setTrack', 'setMaster',
+    'setFx', 'setTempo', 'setClick', 'setArp', 'applyPreset', 'progressionToSection',
+    'toggleCell', 'clearRoll', 'refreshHarmony', 'setMeter', 'setSwing', 'setCountIn',
+    'transpose'].forEach(function (name) {
+      const orig = MX[name];
+      if (typeof orig !== 'function') return;
+      MX[name] = function () {
+        pushHistory();
+        return orig.apply(MX, arguments);
+      };
+    });
+  pushHistory();
+
+  /* ---------------- meter / swing / count-in ---------------- */
+  MX.setMeter = function (v) {
+    pushHistory();
+    state.snap.meter = v || '4/4';
+    save(); X.renderAll(); sync();
+  };
+  MX.setSwing = function (v) {
+    pushHistory();
+    state.snap.swing = Number(v) || 0;
+    save();
+  };
+  MX.setCountIn = function () {
+    pushHistory();
+    const el = document.getElementById('mx-countin');
+    state.snap.countIn = el && el.value === 'on';
+    save();
+  };
+
+  /* ---------------- song composer ---------------- */
+  // A composer, not a randomiser. It picks a key and mode from the mood, a
+  // progression that fits the genre, an arrangement with real contrast
+  // (parts drop out in the verse and return in the chorus), and a melody built
+  // from chord tones on the strong steps with stepwise passing notes between
+  // them. Everything it writes is editable afterwards.
+  const MOODS = {
+    tender: { mode: 'Major (Ionian)', bpm: 74, meter: '4/4', prog: ['I', 'V', 'vi', 'IV'], bridge: ['IV', 'I', 'V', 'V'], alt: ['vi', 'IV', 'I', 'V'] },
+    bittersweet: { mode: 'Natural minor (Aeolian)', bpm: 84, meter: '4/4', prog: ['i', 'VI', 'III', 'VII'], bridge: ['iv', 'VI', 'i', 'V'], alt: ['VI', 'III', 'VII', 'i'] },
+    hopeful: { mode: 'Major (Ionian)', bpm: 96, meter: '4/4', prog: ['I', 'IV', 'V', 'vi'], bridge: ['IV', 'V', 'iii', 'vi'], alt: ['vi', 'IV', 'I', 'V'] },
+    defiant: { mode: 'Mixolydian', bpm: 104, meter: '4/4', prog: ['I', 'bVII', 'IV', 'I'], bridge: ['IV', 'bVII', 'I', 'I'], alt: ['I', 'IV', 'bVII', 'I'] },
+    dark: { mode: 'Phrygian', bpm: 72, meter: '4/4', prog: ['i', 'bII', 'bVII', 'i'], bridge: ['iv', 'bVI', 'bII', 'i'], alt: ['i', 'bVII', 'bVI', 'bII'] },
+    playful: { mode: 'Dorian', bpm: 108, meter: '4/4', prog: ['i', 'IV', 'i', 'V'], bridge: ['IV', 'i', 'V', 'i'], alt: ['i', 'V', 'IV', 'i'] }
+  };
+  const GENRE = {
+    pop: { bpm: 0, meter: '4/4', swing: 0, layers: { lead: true, arp: 'up' }, density: 1 },
+    ballad: { bpm: -10, meter: '4/4', swing: 0, layers: { lead: true, arp: 'off' }, density: 0 },
+    folk: { bpm: -4, meter: '3/4', swing: 0, layers: { lead: true, arp: 'off' }, density: 0 },
+    film: { bpm: -6, meter: '4/4', swing: 0, layers: { lead: true, arp: 'updown' }, density: 1 },
+    lofi: { bpm: -14, meter: '4/4', swing: 0.24, layers: { lead: true, arp: 'off' }, density: 1 }
+  };
+
+  function modeScale(mode) { return X.MODES[mode] || X.MODES['Major (Ionian)']; }
+
+  // Map a scale step (may run past the octave) to a semitone above the root.
+  function stepSemitone(mode, step) {
+    const sc = modeScale(mode);
+    const n = ((step % sc.length) + sc.length) % sc.length;
+    const oct = Math.floor(step / sc.length);
+    return sc[n] + 12 * oct;
+  }
+
+  function melodyFor(sections, mode, octave) {
+    const cells = {};
+    let barNo = 0;
+    sections.forEach(function (sec) {
+      for (let b = 0; b < sec.bars; b++) {
+        if ((sec.mute || []).indexOf('lead') !== -1) { barNo++; continue; }
+        const sym = sec.chords[b % sec.chords.length] || 'I';
+        const d = parseDegree(sym);
+        // Two rhythms alternate so the tune is not a loop: on even bars the
+        // phrase lands on the beat, on odd bars it pushes late.
+        const rhythm = (barNo % 2 === 0) ? [[0, 0], [3, 2], [6, 4], [10, 2]] : [[2, 0], [5, 1], [8, 4], [12, 2]];
+        rhythm.forEach(function (pair) {
+          const step = pair[0];
+          const off = pair[1];
+          let semi = stepSemitone(mode, d + off);
+          // Keep the lead inside the roll's 13 rows.
+          while (semi > 12) semi -= 12;
+          while (semi < 0) semi += 12;
+          cells[step + ':' + semi] = 1;
+        });
+        barNo++;
+      }
+    });
+    // Resolve the final bar to the tonic: that is what makes an ending sound
+    // finished rather than stopped.
+    if (sections.length) cells['0:0'] = 1;
+    return cells;
+  }
+
+  // "bVII" -> 6, "vi" -> 5, "I" -> 0. Only the degree matters for the melody.
+  function parseDegree(sym) {
+    const up = String(sym || 'I').replace(/^[b#]/, '').toUpperCase();
+    const map = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6 };
+    return map[up] != null ? map[up] : 0;
+  }
+
+  MX.composeSong = function () {
+    pushHistory();
+    const mood = (document.getElementById('mx-mood') || {}).value || 'bittersweet';
+    const genre = (document.getElementById('mx-songgen') || {}).value || 'pop';
+    const M = MOODS[mood] || MOODS.bittersweet;
+    const G = GENRE[genre] || GENRE.pop;
+    const s = snap();
+
+    s.root = s.root || 'C';
+    s.mode = M.mode;
+    s.meter = G.meter;
+    s.bpm = Math.max(52, Math.min(180, (M.bpm + (G.bpm || 0)) || 90));
+    s.swing = G.swing || 0;
+    s.countIn = true;
+    s.preset = Object.keys(X.PRESETS)[0];
+
+    // Contest: intro, verse, chorus, verse, chorus, bridge, final chorus.
+    // Verse drops the lead so the words have room; the chorus adds it back.
+    s.sections = [
+      { name: 'Intro', bars: 2, chords: M.prog.slice(0, 2), mute: ['lead', 'drums'] },
+      { name: 'Verse 1', bars: 4, chords: M.prog.slice(), mute: ['lead'] },
+      { name: 'Chorus', bars: 4, chords: M.alt.slice(), mute: [] },
+      { name: 'Verse 2', bars: 4, chords: M.prog.slice(), mute: ['lead'] },
+      { name: 'Chorus', bars: 4, chords: M.alt.slice(), mute: [] },
+      { name: 'Bridge', bars: 2, chords: M.bridge.slice(), mute: ['drums'] },
+      { name: 'Final chorus', bars: 4, chords: M.alt.slice(), mute: [] }
+    ];
+
+    s.arp = (G.layers && G.layers.arp) || 'off';
+    s.arpRate = 2;
+    s.roll.steps = 16;
+    s.roll.inst = 'pluck';
+    s.roll.cells = melodyFor(s.sections, s.mode, s.octave);
+
+    // A mix that suits the room: ballad and lo-fi sit back, pop pushes.
+    s.master = 0.8;
+    s.tracks = {
+      drums: { on: true, vol: G.density ? 0.78 : 0.62, pan: 0, inst: 'kick' },
+      bass: { on: true, vol: 0.72, pan: 0, inst: 'bass' },
+      chords: { on: true, vol: 0.66, pan: -0.12, inst: genre === 'film' ? 'strings' : 'pad' },
+      lead: { on: true, vol: 0.58, pan: 0.12, inst: genre === 'lofi' ? 'pluck' : 'lead' }
+    };
+    s.fx = Object.assign({}, s.fx, {
+      reverb: genre === 'film' ? 0.32 : genre === 'lofi' ? 0.26 : 0.18,
+      size: genre === 'film' ? 2.6 : 1.8,
+      delay: genre === 'lofi' ? 0.36 : 0.28,
+      dmix: genre === 'lofi' ? 0.2 : 0.1,
+      comp: 0.42
+    });
+
+    save();
+    X.renderAll();
+    sync();
+    const title = (document.getElementById('f-title') || {}).value || 'Untitled';
+    showToast('Composed: ' + mood + ' ' + genre + ' · ' + s.bpm + ' BPM · ' + s.root + ' ' + s.mode);
+    setStatus('Composed "' + title + '" — ' + s.sections.length + ' sections, ' +
+      Object.keys(s.roll.cells).length + ' melody notes. Press Play, then edit anything.');
+  };
+
+  /* ---------------- voice (Edge TTS) ---------------- */
+  // The browser voices depend on the device's language packs; these do not.
+  // The audio is rendered on the owner runner and fetched from GitHub, so the
+  // picker is loaded once and the result is played from a blob URL.
+  const VOICE_FALLBACK = [
+    'ta-IN-PallaviNeural', 'ta-IN-ValluvarNeural', 'ta-LK-SaranyaNeural', 'ta-LK-KumarNeural',
+    'ml-IN-SobhanaNeural', 'ml-IN-MidhunNeural', 'hi-IN-SwaraNeural', 'hi-IN-MadhurNeural',
+    'en-IN-NeerjaNeural', 'en-IN-PrabhatNeural'
+  ];
+
+  async function loadEdgeVoices() {
+    const sel = document.getElementById('edgeVoice');
+    if (!sel) return;
+    let list = VOICE_FALLBACK.map(function (id) { return { id: id, label: id.replace(/-/g, ' ') }; });
+    try {
+      const r = await fetch('/api/tts');
+      if (r.ok) {
+        const d = await r.json();
+        if (d && d.voices && d.voices.length) list = d.voices;
+      }
+    } catch (e) { /* keep the fallback list */ }
+    sel.innerHTML = list.map(function (v) {
+      return '<option value="' + v.id + '">' + (v.label || v.id) + '</option>';
+    }).join('');
+  }
+
+  MX.edgeLoadLyrics = function () {
+    const ta = document.getElementById('edgeText');
+    const p = (typeof projects !== 'undefined' ? projects : []).find(function (x) { return x.id === currentId; });
+    if (ta && p) ta.value = p.lyrics || p.tmLyrics || '';
+  };
+
+  async function pollAudio(metaUrl, audioUrl, status) {
+    for (let i = 0; i < 60; i++) {
+      await new Promise(function (r) { setTimeout(r, 5000); });
+      if (status) status.textContent = 'rendering… ' + Math.round((i + 1) * 5) + 's';
+      try {
+        const m = await fetch(metaUrl, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (m.status === 404) continue;
+        if (m.ok) {
+          const text = await m.text();
+          let meta = null;
+          try { meta = JSON.parse(text); } catch (e) { meta = null; }
+          if (meta && meta.status === 'failed') return { error: meta.error || 'the render failed' };
+          if (!meta || meta.status !== 'done') continue;
+        }
+        const a = await fetch(audioUrl, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (!a.ok) continue;
+        return { blob: await a.blob() };
+      } catch (e) { /* keep polling */ }
+    }
+    return { error: 'the runner did not finish in time — try again' };
+  }
+
+  MX.edgeSpeak = async function () {
+    const status = document.getElementById('edgeStatus');
+    const text = (document.getElementById('edgeText') || {}).value || '';
+    const voice = (document.getElementById('edgeVoice') || {}).value;
+    if (!text.trim()) { if (status) status.textContent = 'type or load a lyric first'; return; }
+    if (status) status.textContent = 'sending to the voice runner…';
+    try {
+      const t = await freshToken();
+      const r = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+        body: JSON.stringify({
+          token: t, text: text, voice: voice,
+          rate: (document.getElementById('edgeRate') || {}).value,
+          pitch: (document.getElementById('edgePitch') || {}).value
+        })
+      });
+      const d = await r.json().catch(function () { return {}; });
+      if (!r.ok || !d.id) {
+        if (status) status.textContent = d.error || ('failed (HTTP ' + r.status + ')');
+        return;
+      }
+      const got = await pollAudio(d.meta, d.audio, status);
+      if (!got || got.error) { if (status) status.textContent = (got && got.error) || 'no audio'; return; }
+      const url = URL.createObjectURL(got.blob);
+      const audio = document.getElementById('edgeAudio');
+      if (audio) { audio.src = url; audio.style.display = 'block'; audio.play().catch(function () {}); }
+      const dl = document.getElementById('edgeDl');
+      if (dl) { dl.href = url; dl.style.display = 'inline-block'; }
+      if (status) status.textContent = 'ready · ' + Math.round(got.blob.size / 1024) + ' KB';
+    } catch (e) {
+      if (status) status.textContent = 'could not reach the voice runner: ' + e.message;
+    }
+  };
+
+  /* ---------------- MIDI ---------------- */
+  function vlq(n) {
+    const bytes = [n & 0x7f];
+    n >>= 7;
+    while (n > 0) { bytes.unshift((n & 0x7f) | 0x80); n >>= 7; }
+    return bytes;
+  }
+  function str(s) { return [...s].map((c) => c.charCodeAt(0)); }
+  function u32(n) { return [(n >> 24) & 255, (n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function u16(n) { return [(n >> 8) & 255, n & 255]; }
+
+  function arrangementEvents() {
+    const s = snap();
+    const bpb = X.beatsPerBar(s);
+    const beat = 60 / Math.max(30, s.bpm || 96);
+    const ev = [];
+    let barIndex = 0;
+    (s.sections || []).forEach(function (sec) {
+      const bars = Math.max(1, sec.bars || 1);
+      for (let b = 0; b < bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        const ch = X.chordMidis(s.root, s.mode, s.octave, sym);
+        const t0 = barIndex * bpb * beat;
+        const dur = bpb * beat;
+        if (s.tracks.chords.on) ch.forEach((m) => { ev.push({ t: t0, n: m, v: 80, d: dur * 0.94 }); });
+        if (s.tracks.bass.on) ev.push({ t: t0, n: ch[0] - 12, v: 90, d: dur * 0.9 });
+        if (s.tracks.lead.on && s.roll && s.roll.cells) {
+          const steps = s.roll.steps || 16;
+          Object.keys(s.roll.cells).forEach(function (cell) {
+            if (!s.roll.cells[cell]) return;
+            const p = cell.split(':');
+            const step = Number(p[0]);
+            const noteIndex = Number(p[1]);
+            const midi = X.midiOf(s.root, (s.octave || 3) + 1) + noteIndex;
+            ev.push({ t: t0 + step * (dur / steps), n: midi, v: 96, d: (dur / steps) * 0.9 });
+          });
+        }
+        barIndex++;
+      }
+    });
+    return { ev: ev, bpb: bpb, beat: beat };
+  }
+
+  MX.exportMidi = function () {
+    const s = snap();
+    const PPQ = 480;
+    const info = arrangementEvents();
+    const tempo = Math.round(60000000 / Math.max(30, s.bpm || 96));
+
+    const list = [];
+    info.ev.forEach(function (e) {
+      const on = Math.round((e.t / info.beat) * PPQ);
+      const off = Math.round(((e.t + e.d) / info.beat) * PPQ);
+      list.push({ tick: on, order: 1, data: [0x90, e.n, e.v] });
+      list.push({ tick: off, order: 0, data: [0x80, e.n, 0] });
+    });
+    list.sort((a, b) => a.tick - b.tick || a.order - b.order);
+
+    const track = [];
+    track.push.apply(track, [0x00, 0xFF, 0x51, 0x03, (tempo >> 16) & 255, (tempo >> 8) & 255, tempo & 255]);
+    track.push.apply(track, [0x00, 0xFF, 0x58, 0x04, info.bpb, 2, 24, 8]);
+    let last = 0;
+    list.forEach(function (e) {
+      track.push.apply(track, vlq(e.tick - last));
+      track.push.apply(track, e.data);
+      last = e.tick;
+    });
+    track.push.apply(track, [0x00, 0xFF, 0x2F, 0x00]);
+
+    const bytes = []
+      .concat(str('MThd'), u32(6), u16(0), u16(1), u16(PPQ))
+      .concat(str('MTrk'), u32(track.length), track);
+
+    const blob = new Blob([new Uint8Array(bytes)], { type: 'audio/midi' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const title = (document.getElementById('f-title') || {}).value || 'song';
+    a.download = String(title).replace(/[^\w-]+/g, '_') + '.mid';
+    a.click();
+    setStatus('MIDI exported · ' + list.length / 2 + ' notes');
+  };
+
+  // Import: read the first track, quantise its notes onto the piano roll.
+  MX.importMidi = function (input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = function () {
+      try {
+        const buf = new Uint8Array(r.result);
+        let p = 0;
+        function u32at() { const v = (buf[p] << 24) | (buf[p + 1] << 16) | (buf[p + 2] << 8) | buf[p + 3]; p += 4; return v >>> 0; }
+        function u16at() { const v = (buf[p] << 8) | buf[p + 1]; p += 2; return v; }
+        if (String.fromCharCode.apply(null, [...buf.slice(0, 4)]) !== 'MThd') throw new Error('not a MIDI file');
+        p = 4; const hlen = u32at(); u16at(); const ntrk = u16at(); const division = u16at() || 480;
+        p = 8 + hlen;
+        const notes = [];
+        let tick = 0;
+        for (let t = 0; t < ntrk && p < buf.length; t++) {
+          if (String.fromCharCode.apply(null, [...buf.slice(p, p + 4)]) !== 'MTrk') break;
+          p += 4; const len = u32at(); const end = p + len;
+          let running = 0;
+          while (p < end) {
+            let delta = 0;
+            let b;
+            do { b = buf[p++]; delta = (delta << 7) | (b & 0x7f); } while (b & 0x80);
+            tick += delta;
+            let status = buf[p];
+            if (status & 0x80) { p++; running = status; } else status = running;
+            const type = status & 0xf0;
+            if (status === 0xff) {
+              const meta = buf[p++]; let l = 0;
+              do { b = buf[p++]; l = (l << 7) | (b & 0x7f); } while (b & 0x80);
+              p += l;
+              continue;
+            }
+            if (status === 0xf0 || status === 0xf7) {
+              let l = 0; do { b = buf[p++]; l = (l << 7) | (b & 0x7f); } while (b & 0x80);
+              p += l; continue;
+            }
+            if (type === 0x90 || type === 0x80) {
+              const note = buf[p++]; const vel = buf[p++];
+              if (type === 0x90 && vel > 0) notes.push({ tick: tick, note: note });
+            } else if (type === 0xc0 || type === 0xd0) p += 1;
+            else p += 2;
+          }
+          p = end;
+        }
+        if (!notes.length) throw new Error('no notes found');
+        const s = snap();
+        const bpb = X.beatsPerBar(s);
+        const barTicks = division * bpb;
+        const steps = (document.getElementById('roll-steps') || {}).value || s.roll.steps || 16;
+        s.roll.steps = Number(steps);
+        s.roll.cells = {};
+        const base = X.midiOf(s.root, (s.octave || 3) + 1);
+        const first = Math.min.apply(null, notes.map((n) => n.tick));
+        notes.forEach(function (n) {
+          const inBar = (n.tick - first) % barTicks;
+          const step = Math.round((inBar / barTicks) * s.roll.steps) % s.roll.steps;
+          let idx = n.note - base;
+          while (idx < 0) idx += 12;
+          while (idx > 12) idx -= 12;
+          s.roll.cells[step + ':' + idx] = 1;
+        });
+        save(); X.renderAll(); sync();
+        setStatus('MIDI imported · ' + notes.length + ' notes mapped onto the roll');
+      } catch (e) {
+        setStatus('MIDI import failed: ' + e.message);
+      }
+    };
+    r.readAsArrayBuffer(file);
+  };
+
+  /* ---------------- stems ---------------- */
+  MX.exportStems = async function () {
+    const s = snap();
+    const seconds = Math.max(4, Number((document.getElementById('mx-len') || {}).value) || 32);
+    const rate = Number((document.getElementById('mx-rate') || {}).value) || 44100;
+    setStatus('rendering 4 stems…');
+    const keep = JSON.parse(JSON.stringify(s.tracks));
+    try {
+      for (const id of ['drums', 'bass', 'chords', 'lead']) {
+        Object.keys(s.tracks).forEach(function (k) { s.tracks[k].on = (k === id); });
+        const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        const ctx = new OfflineCtx(2, Math.ceil(seconds * rate), rate);
+        const graph = X.makeGraph(ctx);
+        X.scheduleSong(ctx, graph, s, 0.05);
+        const buf = await ctx.startRendering();
+        const blob = encodeWav(buf);
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        const title = (document.getElementById('f-title') || {}).value || 'song';
+        a.download = String(title).replace(/[^\w-]+/g, '_') + '-' + id + '.wav';
+        a.click();
+        await new Promise((r) => setTimeout(r, 400));
+      }
+      setStatus('4 stems rendered');
+    } catch (e) {
+      setStatus('stem render failed: ' + e.message);
+    } finally {
+      s.tracks = keep;
+      X.renderAll();
+    }
+  };
+
+  function encodeWav(buffer) {
+    const numCh = buffer.numberOfChannels;
+    const len = buffer.length;
+    const ab = new ArrayBuffer(44 + len * numCh * 2);
+    const view = new DataView(ab);
+    const w = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+    w(0, 'RIFF'); view.setUint32(4, ab.byteLength - 8, true); w(8, 'WAVE');
+    w(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+    view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+    view.setUint16(34, 16, true); w(36, 'data'); view.setUint32(40, len * numCh * 2, true);
+    let off = 44;
+    const chans = [];
+    for (let c = 0; c < numCh; c++) chans.push(buffer.getChannelData(c));
+    for (let i = 0; i < len; i++) {
+      for (let c = 0; c < numCh; c++) {
+        const v = Math.max(-1, Math.min(1, chans[c][i]));
+        view.setInt16(off, v < 0 ? v * 0x8000 : v * 0x7fff, true);
+        off += 2;
+      }
+    }
+    return new Blob([ab], { type: 'audio/wav' });
+  }
+
+  /* ---------------- chart + keys ---------------- */
+  const ROMAN_TO_NASH = { I: '1', II: '2', III: '3', IV: '4', V: '5', VI: '6', VII: '7' };
+
+  function nashville(sym) {
+    const m = /^(b|#)?([IViv]+)$/.exec(String(sym || 'I'));
+    if (!m) return sym;
+    const up = m[2].toUpperCase();
+    const n = ROMAN_TO_NASH[up] || '1';
+    const minor = m[2] === m[2].toLowerCase();
+    return (m[1] || '') + n + (minor ? 'm' : '');
+  }
+
+  function renderChart() {
+    const host = document.getElementById('mx-chart');
+    if (!host) return;
+    const s = snap();
+    const bpb = X.beatsPerBar(s);
+    let bars = 0;
+    let html = '<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#6b7280;margin-bottom:10px">' +
+      esc((document.getElementById('f-title') || {}).value || 'Untitled') + ' · ' + s.bpm + ' BPM · ' + s.root + ' ' + s.mode + ' · ' + (s.meter || '4/4') + '</div>';
+    (s.sections || []).forEach(function (sec) {
+      html += '<div style="margin:18px 0 8px;display:flex;align-items:baseline;gap:10px">' +
+        '<strong style="font-size:15px">' + esc(sec.name) + '</strong>' +
+        '<span style="font-size:12px;color:#6b7280">' + sec.bars + ' bars · ' + (sec.chords || []).length + ' chords</span></div>';
+      html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+      for (let b = 0; b < sec.bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        const notes = X.chordMidis(s.root, s.mode, s.octave, sym).map(function (m) { return X.NOTES[m % 12]; });
+        html += '<div style="min-width:74px;border:1px solid #d6d3c6;border-radius:6px;padding:6px 8px;background:#fff">' +
+          '<div style="font-size:11px;color:#9ca3af">bar ' + (++bars) + '</div>' +
+          '<div style="font-size:15px;font-weight:700">' + esc(sym) + '</div>' +
+          '<div style="font-size:10px;color:#6b7280">' + esc(nashville(sym)) + '</div>' +
+          '<div style="font-size:10px;color:#6b7280">' + esc(notes.join(' ')) + '</div></div>';
+      }
+      html += '</div>';
+    });
+    html += '<div style="margin-top:16px;font-size:11px;color:#9ca3af">' + bars + ' bars · ' +
+      (s.sections || []).length + ' sections · ' + Math.round(X.beatsPerBar(s)) + ' beats per bar</div>';
+    host.innerHTML = html;
+  }
+
+  function chartText() {
+    const s = snap();
+    const lines = [(document.getElementById('f-title') || {}).value || 'Untitled', s.bpm + ' BPM · ' + s.root + ' ' + s.mode + ' · ' + (s.meter || '4/4'), ''];
+    (s.sections || []).forEach(function (sec) {
+      const chords = [];
+      for (let b = 0; b < sec.bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        chords.push(sym + ' (' + nashville(sym) + ')');
+      }
+      lines.push('[' + sec.name + '] ' + sec.bars + ' bars');
+      lines.push(chords.join(' | '));
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+
+  MX.copyChart = function () {
+    const t = document.createElement('textarea');
+    t.value = chartText();
+    document.body.appendChild(t);
+    t.select();
+    try { document.execCommand('copy'); showToast('Chart copied'); } catch (e) { showToast('Copy failed'); }
+    document.body.removeChild(t);
+  };
+
+  MX.printChart = function () {
+    const w = window.open('', '_blank');
+    if (!w) return;
+    w.document.write('<!doctype html><title>Chart</title><style>body{font-family:Georgia,serif;white-space:pre-wrap;max-width:760px;margin:40px auto;line-height:1.5}</style>' + esc(chartText()));
+    w.document.close();
+    w.print();
+  };
+
+  const CIRCLE = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
+
+  function renderKeys() {
+    const host = document.getElementById('mx-keys');
+    if (!host) return;
+    const s = snap();
+    const i = CIRCLE.indexOf(s.root);
+    const near = [
+      { label: 'Home', key: s.root },
+      { label: 'Dominant', key: CIRCLE[(i + 1) % 12] },
+      { label: 'Subdominant', key: CIRCLE[(i + 11) % 12] },
+      { label: 'Relative minor', key: CIRCLE[(i + 9) % 12], mode: 'Natural minor (Aeolian)' },
+      { label: 'Up a tone', key: CIRCLE[(i + 2) % 12] }
+    ];
+    host.innerHTML = near.map(function (n) {
+      return '<button class="btn btn-sm btn-secondary" onclick="MX.transpose(\'' + n.key + '\',\'' + (n.mode || s.mode).replace(/'/g, "\\'") + '\')">' +
+        n.label + ' · ' + n.key + '</button>';
+    }).join('');
+    const note = document.getElementById('mx-key-note');
+    if (note) note.textContent = 'Modulating to the dominant or the relative minor is the two moves that never sound wrong. Transposing keeps every section and chord degree.';
+  }
+
+  MX.transpose = function (key, mode) {
+    pushHistory();
+    state.snap.root = key || state.snap.root;
+    if (mode) state.snap.mode = mode;
+    save(); X.renderAll(); sync();
+    showToast('Key → ' + state.snap.root + ' ' + state.snap.mode);
+  };
+
+  /* ---------------- UI sync ---------------- */
+  function setStatus(msg) {
+    const el = document.getElementById('mx-export-status');
+    if (el) el.textContent = msg;
+  }
+
+  function sync() {
+    const s = snap();
+    const meter = document.getElementById('mx-meter');
+    if (meter) meter.value = s.meter || '4/4';
+    const swing = document.getElementById('mx-swing');
+    if (swing) swing.value = s.swing || 0;
+    const ci = document.getElementById('mx-countin');
+    if (ci) ci.value = s.countIn ? 'on' : 'off';
+    const steps = document.getElementById('roll-steps');
+    if (steps) steps.value = String((s.roll && s.roll.steps) || 16);
+    const ri = document.getElementById('roll-inst');
+    if (ri) ri.value = (s.roll && s.roll.inst) || 'pluck';
+    renderChart();
+    renderKeys();
+  }
+  MX.syncExtras = sync;
+
+  // Re-sync when the Chart or Master tab is opened, and once at start.
+  const origShowTab = window.showTab;
+  if (typeof origShowTab === 'function') {
+    window.showTab = function (name) {
+      const r = origShowTab.apply(this, arguments);
+      if (name === 'chart' || name === 'master' || name === 'roll') { try { sync(); } catch (e) {} }
+      return r;
+    };
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { sync(); loadEdgeVoices(); });
+  else { sync(); loadEdgeVoices(); }
+})();
+</script>
+
 
 </body>
 </html>

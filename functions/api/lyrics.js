@@ -117,7 +117,7 @@ function brief(b) {
   parts.push(
     '',
     'Rules:',
-    '- Tag each section on its own line: [Verse 1], [Chorus], [Bridge], [Outro].',
+    '- Tag each section on its own line using the names in the Structure list exactly (for example [Pallavi], [Charanam 1], [Chorus]).',
     '- The chorus must be singable: short lines, one idea, a repeated hook.',
     '- Concrete images over abstractions. No filler like "oh baby" unless the genre needs it.',
     '- Do not invent facts or statistics.',
@@ -160,6 +160,33 @@ async function callProvider(p, system, user, timeoutMs) {
     clearTimeout(timer);
     return { error: e && e.name === 'AbortError' ? 'timed out' : (e.message || 'network error') };
   }
+}
+
+// A Tamil or Malayalam lyric written in Latin letters is not what was asked
+// for. Check the Unicode block and retry once with a blunter instruction.
+var SCRIPTS = {
+  tamil: /[\u0B80-\u0BFF]/,
+  malayalam: /[\u0D00-\u0D7F]/,
+  hindi: /[\u0900-\u097F]/,
+  telugu: /[\u0C00-\u0C7F]/,
+  kannada: /[\u0C80-\u0CFF]/,
+  bengali: /[\u0980-\u09FF]/,
+  marathi: /[\u0900-\u097F]/,
+  punjabi: /[\u0A00-\u0A7F]/,
+  urdu: /[\u0600-\u06FF]/
+};
+
+function scriptOk(text, lang) {
+  var re = SCRIPTS[String(lang || '').toLowerCase()];
+  if (!re) return true;
+  return re.test(String(text || ''));
+}
+
+function stricter(user, lang) {
+  var name = LANGS[lang] || lang;
+  return user + '\n\nIMPORTANT: the previous answer was rejected because it was not written in ' + name +
+    ' script. Write every line in ' + name + ' script. Do not transliterate into Latin letters. ' +
+    'Romanisation is allowed only on the single bracketed line under each section heading.';
 }
 
 export async function onRequestGet(context) {
@@ -248,6 +275,10 @@ export async function onRequestPost(context) {
   for (var i = 0; i < list.length; i++) {
     var p = list[i];
     var res = await callProvider(p, system, user, 60000);
+    if (res.text && !scriptOk(res.text, body.brief && body.brief.language)) {
+      var retry = await callProvider(p, system, stricter(user, (body.brief || {}).language), 60000);
+      if (retry.text && scriptOk(retry.text, body.brief && body.brief.language)) res = retry;
+    }
     if (res.text) {
       return out(200, {
         ok: true,
