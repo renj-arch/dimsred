@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Studio — vlymbooq Music</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --bg:#09090b;--card:#111113;--border:rgba(255,255,255,.06);
+  --text:#fafafa;--muted:#a1a1aa;--purple:#a78bfa;--purple-dark:#8b5cf6;
+  --emerald:#34d399;--rose:#f472b6;--amber:#fbbf24;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--purple);text-decoration:none}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:260px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10}
+.sidebar .brand{padding:20px 16px;font-weight:900;font-size:1.1rem;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
+.nav{padding:0 12px;display:flex;flex-direction:column;gap:4px}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.85em;transition:all .2s;text-align:left}
+.nav-btn:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-btn.active{background:var(--purple);color:#000}
+.projects{flex:1;overflow:auto;padding:12px}
+.project-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;margin-bottom:6px;transition:all .2s}
+.project-item:hover{border-color:var(--border);background:rgba(255,255,255,.03)}
+.project-item.active{border-color:var(--purple);background:rgba(167,134,250,.1)}
+.project-info{flex:1;min-width:0}
+.project-title{font-weight:700;font-size:.85em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.project-meta{font-size:.72em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.new-project{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.new-project-btn{width:100%;padding:10px;border-radius:8px;border:1px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.8em;transition:all .2s}
+.new-project-btn:hover{border-color:var(--purple);color:var(--purple)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:56px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:5}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.song-title{font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
+.song-status{font-size:.75em;color:var(--muted);margin-top:2px}
+.tab-bar{display:flex;gap:2px;padding:4px 24px;background:rgba(0,0,0,.2);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{padding:10px 16px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.82em;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.editor{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:24px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.panel h3{font-size:.9rem;font-weight:800;margin-bottom:14px;color:var(--text);display:flex;align-items:center;gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.word-grid{display:flex;flex-wrap:wrap;gap:6px}
+.word-chip{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-size:.8em;cursor:pointer;transition:all .15s;text-align:center}
+.word-chip:hover{background:var(--purple);color:#000;border-color:var(--purple)}
+.word-chip .script{font-size:.95em;font-weight:700;display:block}
+.word-chip .roman{font-size:.72em;color:var(--muted);display:block}
+.word-chip .roman.tamil{color:#bbf7d0}
+.word-chip .roman.malayalam{color:#a7f3d0}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.75em;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.field input, .field select, .field textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.9em}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--purple)}
+textarea{min-height:90px;resize:vertical}
+.lyrics-area{width:100%;min-height:320px;font-family:'Segoe UI',monospace;font-size:1rem;line-height:1.7;padding:16px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);resize:vertical}
+.lyrics-line{margin:6px 0;padding:8px 12px;border-radius:6px;background:rgba(255,255,255,.03);cursor:pointer;transition:all .2s;border-left:3px solid transparent}
+.lyrics-line:hover{background:rgba(255,255,255,.08)}
+.lyrics-line.active{background:rgba(167,134,250,.15);border-left-color:var(--purple)}
+.lyrics-section{font-size:.7em;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:16px 8px 6px;display:flex;align-items:center;gap:8px}
+.ai-voice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:end}
+.voice-select,.voice-rate,.voice-pitch{width:100%}
+.voice-controls{display:flex;gap:10px;margin-top:16px}
+.btn{padding:10px 18px;border-radius:8px;border:none;font-weight:700;font-size:.85em;cursor:pointer;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#000}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-secondary{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:rgba(255,255,255,.12)}
+.btn-danger{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-sm{padding:6px 12px;font-size:.75em}
+.player-bar{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:100}
+.now-playing{flex:1;min-width:0}
+.now-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now-artist{font-size:.8em;color:var(--muted)}
+.playback-controls{display:flex;align-items:center;gap:12px}
+.btn-icon{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.btn-icon:hover{background:rgba(255,255,255,.15)}
+.btn-play{background:var(--emerald);color:#000;width:48px;height:48px}
+.audio-player{width:100%;margin-top:12px}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);text-align:center}
+.empty-state .emoji{font-size:3rem;margin-bottom:16px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);padding:12px 20px;border-radius:var(--radius-full);color:var(--text);font-size:.85em;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;z-index:200}
+.toast.show{display:block}
+@media(max-width:768px){.app{flex-direction:column}.sidebar{width:100%;height:auto;max-height:40vh}.editor{padding:12px}}
+</style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' https://krvlufonfbcabgcjomvs.supabase.co https://api.github.com; frame-src https://accounts.google.com; upgrade-insecure-requests">
+<script>
+// Owner-only gate — music studio is private to the site owner (red835699@gmail.com).
+// Reuses the same Supabase + /api/on-demand?whoami=1 check as owner-runner.js.
+(function(){
+  'use strict';
+  var SB_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
+  var SB_ANON = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
+  var API = '/api/on-demand';
+  var LOGIN_URL = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+
+  function getToken(){ try{ return localStorage.getItem('sb_access_token') || ''; }catch(e){ return ''; } }
+  function tokenExpired(){
+    var tok = getToken();
+    if (!tok) return true;
+    try {
+      var parts = tok.split('.');
+      if (parts.length < 2) return false;
+      var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+      if (payload && payload.exp) return (payload.exp * 1000) - Date.now() < 60000;
+      return false;
+    } catch(e) { return false; }
+  }
+  function refreshToken(){
+    var rt = localStorage.getItem('sb_refresh_token');
+    if (!rt) return Promise.resolve('');
+    return fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST', headers: { 'apikey': SB_ANON, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: rt })
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (d && d.access_token) {
+        try { localStorage.setItem('sb_access_token', d.access_token); if (d.refresh_token) localStorage.setItem('sb_refresh_token', d.refresh_token); } catch(e) {}
+        return d.access_token;
+      }
+      return '';
+    }).catch(function(){ return ''; });
+  }
+  function freshToken(){
+    var t = getToken();
+    if (!t) return Promise.resolve('');
+    if (!tokenExpired()) return Promise.resolve(t);
+    return refreshToken();
+  }
+  function checkOwner(){
+    freshToken().then(function(t){
+      if (!t) { window.location.replace(LOGIN_URL); return; }
+      fetch(API + '?whoami=1', { headers: { 'Authorization': 'Bearer ' + t } })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(w){
+          if (w && typeof w.owner === 'boolean' && w.owner) {
+            // Owner — show the studio
+            document.getElementById('studioApp').style.display = 'flex';
+            document.getElementById('ownerGate').style.display = 'none';
+          } else {
+            // Not owner — show gate message
+            document.getElementById('ownerGate').innerHTML =
+              '<div class="owner-lock"><div class="lock">🔒</div>' +
+              '<div style="font-weight:800">Owner only</div>' +
+              '<div style="color:var(--muted);font-size:.9em;margin-top:8px">This page is private to the site owner.</div>' +
+              '<button class="btn btn-primary" onclick="window.location.replace(\'/login.html?redirect=' + encodeURIComponent(window.location.pathname) + '\')">Sign in as owner</button></div>';
+          }
+        }).catch(function(){ window.location.replace(LOGIN_URL); });
+    });
+  }
+  // Start check immediately
+  checkOwner();
+})();
+</script>
+</head>
+<body>
+
+<!-- Owner gate (shown until auth resolves) -->
+<div id="ownerGate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg)">
+  <div style="text-align:center;color:var(--muted)">
+    <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+    <div style="font-weight:800">Owner only</div>
+    <div style="color:var(--muted);font-size:.9em;margin-top:8px">Verifying access…</div>
+  </div>
+</div>
+
+<!-- Studio app (hidden until owner confirmed) -->
+<div id="studioApp" style="display:none">
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">🎵 STUDIO</div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="switchTab('dashboard','')">📁 Projects</button>
+      <button class="nav-btn" onclick="newSong()">➕ New Song</button>
+    </nav>
+    <div class="projects" id="projectList"></div>
+    <div class="new-project">
+      <button class="new-project-btn" onclick="newSong()">Create new song</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="song-title" id="headerTitle">Untitled Song</div>
+          <div class="song-status" id="headerStatus">Draft • no sections</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-secondary" onclick="exportProject()">💾 Export</button>
+        <button class="btn btn-sm btn-secondary" onclick="importProject()">📥 Import</button>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" onclick="showTab('info')">🎵 Song Info</button>
+      <button class="tab" onclick="showTab('lyrics')">📝 Lyrics</button>
+      <button class="tab" onclick="showTab('voice')">🤖 AI Voice</button>
+      <button class="tab" onclick="showTab('audio')">🔊 Audio</button>
+      <button class="tab" onclick="showTab('chords')">🎸 Chords</button>
+      <button class="tab" onclick="showTab('notes')">📒 Notes</button>
+      <button class="tab" onclick="showTab('synth')">🎹 Synth</button>
+      <button class="tab" onclick="showTab('beat')">🥁 Beat</button>
+      <button class="tab" onclick="showTab('tts')">🇮🇳 TTS ML/Tamil</button>
+      <button class="tab" onclick="showTab('tamil-malayalam')">🈶 Lyric Helper</button>
+    </div>
+
+    <div class="editor">
+      <section id="tab-info" class="tab-panel active panel">
+        <div class="grid2">
+          <div class="field">
+            <label>Title</label>
+            <input type="text" id="f-title" placeholder="Song title" onchange="saveField('title',this.value)">
+          </div>
+          <div class="field">
+            <label>Artist</label>
+            <input type="text" id="f-artist" placeholder="Your name" onchange="saveField('artist',this.value)">
+          </div>
+          <div class="field">
+            <label>BPM</label>
+            <input type="number" id="f-bpm" value="90" min="40" max="220" onchange="saveField('bpm',parseInt(this.value))">
+          </div>
+          <div class="field">
+            <label>Key</label>
+            <select id="f-key" onchange="saveField('key',this.value)">
+              <option value="C">C</option><option value="C#">C#</option><option value="D">D</option>
+              <option value="D#">D#</option><option value="E">E</option><option value="F">F</option>
+              <option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option>
+              <option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Genre</label>
+            <select id="f-genre" onchange="saveField('genre',this.value)">
+              <option value="pop">Pop</option><option value="indie">Indie</option><option value="hiphop">Hip Hop</option>
+              <option value="rnb">R&B</option><option value="electronic">Electronic</option><option value="folk">Folk</option>
+              <option value="classical">Classical</option><option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>Description / Hook idea</label>
+            <textarea id="f-desc" onchange="saveField('desc',this.value)" placeholder="What is this song about?"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-lyrics" class="tab-panel panel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h3>Lyrics & Sections</h3>
+          <button class="btn btn-sm btn-secondary" onclick="addSection()">+ Add Section</button>
+        </div>
+        <div id="lyricsContainer"></div>
+        <div style="margin-top:12px">
+          <p class="lyrics-section">Tip: Type [Verse], [Chorus], [Bridge], [Intro], [Outro] on their own line to create sections.</p>
+        </div>
+      </section>
+
+      <section id="tab-voice" class="tab-panel panel" style="display:none">
+        <h3>AI Voice (Synthesis)</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Uses your browser's built-in voices (free, no API).</p>
+        <div class="ai-voice">
+          <div class="field">
+            <label>Voice</label>
+            <select id="voiceSelect" class="voice-select"></select>
+          </div>
+          <div class="field">
+            <label>Rate</label>
+            <input type="range" id="voiceRate" min="0.5" max="2" step="0.1" value="1">
+          </div>
+          <div class="field">
+            <label>Pitch</label>
+            <input type="range" id="voicePitch" min="0" max="2" step="0.1" value="1">
+          </div>
+          <div class="field">
+            <label>Volume</label>
+            <input type="range" id="voiceVolume" min="0" max="1" step="0.1" value="1">
+          </div>
+        </div>
+        <div class="voice-controls">
+          <button class="btn btn-primary" onclick="speakLyrics()">▶ Speak Lyrics</button>
+          <button class="btn btn-secondary" onclick="stopSpeech()">⏹ Stop</button>
+          <button class="btn btn-sm btn-secondary" onclick="loadLyricsToVoice()">📋 Load Lyrics</button>
+        </div>
+        <div style="margin-top:16px">
+          <h4 style="font-size:.8em;color:var(--muted);margin-bottom:8px">Voice text</h4>
+          <textarea id="voiceText" style="width:100%;min-height:120px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="Type custom text to speak..."></textarea>
+        </div>
+      </section>
+
+      <section id="tab-audio" class="tab-panel panel" style="display:none">
+        <h3>Audio File</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Upload MP3/WAV to listen while you write.</p>
+        <input type="file" id="audioFile" accept="audio/*" onchange="loadAudioFile(this)">
+        <div id="audioContainer" style="margin-top:16px"></div>
+      </section>
+
+      <section id="tab-chords" class="tab-panel panel" style="display:none">
+        <h3>Chord Progression</h3>
+        <div class="grid2">
+          <div class="field">
+            <label>Chords</label>
+            <input type="text" id="f-chords" placeholder="e.g. C - G - Am - F" onchange="saveField('chords',this.value)">
+          </div>
+          <div class="field">
+            <label>Structure</label>
+            <input type="text" id="f-structure" placeholder="e.g. Verse-Chorus-Bridge" onchange="saveField('structure',this.value)">
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Quick chords</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px" id="quickChords"></div>
+        </div>
+      </section>
+
+      <section id="tab-notes" class="tab-panel panel" style="display:none">
+        <h3>Studio Notes</h3>
+        <textarea id="f-notes" style="width:100%;min-height:300px;padding:16px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace;font-size:1rem" onchange="saveField('notes',this.value)" placeholder="Ideas, references, samples, to-do..."></textarea>
+      </section>
+
+      <section id="tab-synth" class="tab-panel panel" style="display:none">
+        <h3>Web Synth (Tone Generator)</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Play notes and chords with your browser's audio engine (free, no API).</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <div class="field">
+            <label>Waveform</label>
+            <select id="synthWave" onchange="synthSetWave(this.value)">
+              <option value="sine">Sine</option><option value="square">Square</option><option value="sawtooth">Sawtooth</option><option value="triangle">Triangle</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:grid;grid-template-columns:repeat(8,1fr);gap:6px" id="pianoKeys"></div>
+        <div style="margin-top:16px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Play chord</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px" id="chordButtons"></div>
+        </div>
+      </section>
+
+      <section id="tab-beat" class="tab-panel panel" style="display:none">
+        <h3>Beat Machine</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">16-step drum sequencer.</p>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:.7em;color:var(--muted);text-transform:uppercase">Kick</div>
+            <div class="beat-row" id="beat-kick"></div>
+            <div style="font-size:.7em;color:var(--muted);text-transform:uppercase;margin-top:12px">Snare</div>
+            <div class="beat-row" id="beat-snare"></div>
+            <div style="font-size:.7em;color:var(--muted);text-transform:uppercase;margin-top:12px">Hi-hat</div>
+            <div class="beat-row" id="beat-hihat"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:.7em;color:var(--muted)">BPM</span>
+              <input type="number" id="beatBpm" value="120" min="60" max="200" style="width:60px">
+            </div>
+            <div style="display:flex;gap:12px">
+              <button class="btn btn-primary" onclick="beatTogglePlay()">▶ Start</button>
+              <button class="btn btn-secondary" onclick="beatClear()">Clear</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-tts" class="tab-panel panel" style="display:none">
+        <h3>AI Voice — Malayalam & Tamil</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Uses your device's built-in voices (free, no install). Install Malayalam/Tamil language packs in your OS settings for those voices to appear below.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+          <div class="field" style="min-width:200px">
+            <label>Voice</label>
+            <select id="ttsBrowserVoice" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.9em">
+              <option value="">Loading voices...</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="ttsFetchBrowserVoices()">🔄 Refresh Voices</button>
+        </div>
+        <div style="margin-top:12px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Text to speak</label>
+          <textarea id="ttsText" style="width:100%;min-height:120px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="Type Malayalam or Tamil text here..."></textarea>
+        </div>
+        <div style="margin-top:16px">
+          <button class="btn btn-primary" onclick="ttsSpeakBrowser()">🔊 Speak</button>
+          <button class="btn btn-secondary" onclick="ttsLoadLyrics()">📋 Load from Lyrics</button>
+          <div id="ttsStatus" style="margin-left:12px;font-size:.85em;color:var(--muted)"></div>
+        </div>
+      </section>
+
+      <section id="tab-tamil-malayalam" class="tab-panel panel" style="display:none">
+        <h3>Tamil & Malayalam Lyric Helper</h3>
+        <p style="color:var(--muted);font-size:.85em;margin-bottom:16px">Tap a word to insert it into your lyrics. Build bilingual verses for your songs.</p>
+        <div style="display:flex;gap:16px">
+          <div style="flex:1">
+            <h4 style="font-size:.85em;color:var(--purple);margin-bottom:8px">Tamil (தமிழ்)</h4>
+            <div class="word-grid" id="tamilWords"></div>
+          </div>
+          <div style="flex:1">
+            <h4 style="font-size:.85em;color:var(--emerald);margin-bottom:8px">Malayalam (മലയാളം)</h4>
+            <div class="word-grid" id="malayalamWords"></div>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Combined lyrics</label>
+          <textarea id="tmLyrics" style="width:100%;min-height:200px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace;font-size:1rem" onchange="saveField('tmLyrics',this.value)" placeholder="Type or tap words above to build your verse..."></textarea>
+        </div>
+      </section>
+    </div>
+
+    <div class="player-bar">
+      <div class="now-playing">
+        <div class="now-title" id="playerTitle">No song playing</div>
+        <div class="now-artist" id="playerArtist">Studio</div>
+      </div>
+      <div class="playback-controls">
+        <button class="btn-icon" onclick="prevSong()" title="Previous">⏮</button>
+        <button class="btn-icon btn-play" id="playBtn" onclick="togglePlay()" title="Play/Pause">▶</button>
+        <button class="btn-icon" onclick="nextSong()" title="Next">⏭</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+let projects = JSON.parse(localStorage.getItem('studio_projects') || '[]');
+let currentId = null;
+let audioEl = null;
+let isPlaying = false;
+let synth = window.speechSynthesis;
+let utterance = null;
+
+let audioCtx = null;
+let synthOsc = null;
+let synthGain = null;
+let beatInterval = null;
+let beatPlaying = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+  initSynth();
+  renderProjects();
+  initPiano();
+  initChords();
+  initBeatGrid();
+  renderTMWords();
+  if (projects.length === 0) newSong();
+  else loadProject(projects[0].id);
+  setupAudio();
+});
+function loadVoices() {
+  const sel = document.getElementById('voiceSelect');
+  sel.innerHTML = '';
+  synth.getVoices().forEach((v, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = (v.name || 'Voice ' + i) + ' (' + v.lang + ')';
+    sel.appendChild(o);
+  });
+}
+
+const TAMIL_WORDS = [
+  { script: 'காதல்', roman: 'Kādhal', meaning: 'Love' },
+  { script: 'கண்ணீர்', roman: 'Kāṇṇīr', meaning: 'Tears' },
+  { script: 'கனவு', roman: 'Kanavu', meaning: 'Dream' },
+  { script: 'மழை', roman: 'Mazhai', meaning: 'Rain' },
+  { script: 'சந்திரன்', roman: 'Chandran', meaning: 'Moon' },
+  { script: 'நட்சத்திரம்', roman: 'Natchathiram', meaning: 'Star' },
+  { script: 'பூ', roman: 'Pū', meaning: 'Flower' },
+  { script: 'கடல்', roman: 'Kadal', meaning: 'Ocean' },
+  { script: 'உயிரே', roman: 'Uyirē', meaning: 'My life/soul' },
+  { script: 'உயிர்', roman: 'Uyir', meaning: 'Life' },
+  { script: 'வீடு', roman: 'Vīṭu', meaning: 'Home' },
+  { script: 'வீлих', roman: 'Vīliha', meaning: 'Night' },
+  { script: 'நாள்', roman: 'Nāḷ', meaning: 'Day' },
+  { script: 'காதல்', roman: 'Kādhal', meaning: 'Love' },
+  { script: 'மறவும்', roman: 'Maṟavum', meaning: 'Forget' },
+  { script: 'நினivit', roman: 'Niṉaivi', meaning: 'Memory' }
+];
+
+const MALAYALAM_WORDS = [
+  { script: 'പ്രേമം', roman: 'Preyam', meaning: 'Love' },
+  { script: 'കണ്ണீர്', roman: 'Kannīr', meaning: 'Tears' },
+  { script: 'സ്വപ്നം', roman: 'Svapnam', meaning: 'Dream' },
+  { script: 'മഴ', roman: 'Mazha', meaning: 'Rain' },
+  { script: 'ചന്ദ്രൻ', roman: 'Chandran', meaning: 'Moon' },
+  { script: 'നക്ഷത്രം', roman: 'Nakshatram', meaning: 'Star' },
+  { script: 'പൂവ്', roman: 'Pūv', meaning: 'Flower' },
+  { script: 'കടൽ', roman: 'Kadal', meaning: 'Ocean' },
+  { script: 'ജീവ്', roman: 'Jīv', meaning: 'Life' },
+  { script: 'ഹൃദയം', roman: 'Hṛdayam', meaning: 'Heart' },
+  { script: 'രാത്രി', roman: 'Rātri', meaning: 'Night' },
+  { script: 'ദിവസം', roman: 'Divasam', meaning: 'Day' },
+  { script: 'വീട്', roman: 'Vīṭu', meaning: 'Home' },
+  { script: 'നിന്നೆ നോക്കി', roman: 'Ninne nokki', meaning: 'Looking at you' },
+  { script: 'മനസ്സിൽ', roman: 'Manassil', meaning: 'In the mind' }
+];
+
+function renderTMWords() {
+  const tamilEl = document.getElementById('tamilWords');
+  const malayalamEl = document.getElementById('malayalamWords');
+  if (!tamilEl || !malayalamEl) return;
+
+  tamilEl.innerHTML = TAMIL_WORDS.map(w =>
+    `<div class="word-chip tamil" onclick="insertTMWord('${escapeJs(w.script)}','${escapeJs(w.roman)}')"><span class="script">${w.script}</span><span class="roman tamil">${w.roman}</span><span class="roman" style="font-size:.65em">${w.meaning}</span></div>`
+  ).join('');
+
+  malayalamEl.innerHTML = MALAYALAM_WORDS.map(w =>
+    `<div class="word-chip malayalam" onclick="insertTMWord('${escapeJs(w.script)}','${escapeJs(w.roman)}')"><span class="script">${w.script}</span><span class="roman malayalam">${w.roman}</span><span class="roman" style="font-size:.65em">${w.meaning}</span></div>`
+  ).join('');
+}
+
+function escapeJs(s) {
+  return String(s).replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '\\n');
+}
+
+function insertTMWord(script, roman) {
+  const ta = document.getElementById('tmLyrics');
+  if (!ta) return;
+  const insert = script + ' (' + roman + ') ';
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  ta.value = ta.value.slice(0, start) + insert + ta.value.slice(end);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
+  ta.focus();
+  saveField('tmLyrics', ta.value);
+}
+
+
+function newSong() {
+  const id = 'song_' + Date.now();
+  const p = {
+    id, title: 'Untitled Song', artist: 'You', bpm: 90, key: 'C',
+    genre: 'pop', desc: '', chords: '', structure: '', notes: '',
+    lyrics: '', tmLyrics: '', created: Date.now(), updated: Date.now()
+  };
+  projects.unshift(p);
+  saveProjects();
+  renderProjects();
+  loadProject(id);
+  showToast('New song created');
+}
+
+function loadProject(id) {
+  currentId = id;
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('headerTitle').textContent = p.title;
+  document.getElementById('headerStatus').textContent = p.bpm + ' BPM • ' + p.key + ' • ' + p.genre;
+  document.getElementById('playerTitle').textContent = p.title;
+  document.getElementById('playerArtist').textContent = p.artist;
+  document.getElementById('f-title').value = p.title;
+  document.getElementById('f-artist').value = p.artist;
+  document.getElementById('f-bpm').value = p.bpm;
+  document.getElementById('f-key').value = p.key;
+  document.getElementById('f-genre').value = p.genre;
+  document.getElementById('f-desc').value = p.desc;
+  document.getElementById('f-chords').value = p.chords;
+  document.getElementById('f-structure').value = p.structure;
+  document.getElementById('f-notes').value = p.notes;
+  document.getElementById('voiceText').value = p.lyrics;
+  document.getElementById('tmLyrics').value = p.tmLyrics || '';
+  renderLyrics(p.lyrics);
+  renderProjects();
+  updatePlayer();
+}
+
+function saveField(key, val) {
+  if (!currentId) return;
+  const p = projects.find(x => x.id === currentId);
+  if (!p) return;
+  p[key] = val;
+  p.updated = Date.now();
+  if (key === 'title') {
+    document.getElementById('headerTitle').textContent = val;
+    document.getElementById('playerTitle').textContent = val;
+  }
+  if (key === 'bpm' || key === 'key' || key === 'genre') {
+    document.getElementById('headerStatus').textContent = p.bpm + ' BPM • ' + p.key + ' • ' + p.genre;
+  }
+  saveProjects();
+  renderProjects();
+}
+
+function deleteProject(id) {
+  if (!confirm('Delete this song?')) return;
+  projects = projects.filter(x => x.id !== id);
+  if (currentId === id) currentId = projects.length ? projects[0].id : null;
+  saveProjects();
+  renderProjects();
+  if (currentId) loadProject(currentId);
+  else {
+    document.getElementById('headerTitle').textContent = 'No song';
+    document.getElementById('playerTitle').textContent = 'No song';
+  }
+  showToast('Song deleted');
+}
+
+function saveProjects() {
+  localStorage.setItem('studio_projects', JSON.stringify(projects));
+}
+
+function renderProjects() {
+  const el = document.getElementById('projectList');
+  el.innerHTML = '';
+  projects.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'project-item' + (currentId === p.id ? ' active' : '');
+    div.onclick = () => loadProject(p.id);
+    div.innerHTML = `
+      <div class="project-info">
+        <div class="project-title">${escapeHtml(p.title)}</div>
+        <div class="project-meta">${p.bpm} BPM • ${p.key} • ${new Date(p.updated).toLocaleDateString()}</div>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteProject('${p.id}')">🗑</button>
+    `;
+    el.appendChild(div);
+  });
+}
+
+function exportProject() {
+  if (!currentId) return;
+  const p = projects.find(x => x.id === currentId);
+  const blob = new Blob([JSON.stringify(p, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (p.title || 'song') + '.studio.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exported ' + p.title);
+}
+
+function importProject() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const p = JSON.parse(ev.target.result);
+        p.id = 'song_' + Date.now();
+        projects.unshift(p);
+        saveProjects();
+        renderProjects();
+        loadProject(p.id);
+        showToast('Imported ' + p.title);
+      } catch (err) {
+        alert('Invalid file');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function renderLyrics(text) {
+  const container = document.getElementById('lyricsContainer');
+  container.innerHTML = '';
+  if (!text) {
+    container.innerHTML = '<div style="color:var(--muted);font-size:.85em;padding:20px">No lyrics yet.</div>';
+    return;
+  }
+  const lines = text.split('\n');
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    const isSection = /^\[(verse|chorus|bridge|intro|outro|pre-chorus|hook)\]/i.test(trimmed);
+    if (isSection) {
+      const s = document.createElement('div');
+      s.className = 'lyrics-section';
+      s.textContent = trimmed;
+      container.appendChild(s);
+    } else {
+      const div = document.createElement('div');
+      div.className = 'lyrics-line';
+      div.textContent = line || ' ';
+      div.onclick = () => speakLine(i);
+      container.appendChild(div);
+    }
+  });
+}
+
+function addSection() {
+  const sections = ['[Verse]', '[Chorus]', '[Bridge]', '[Intro]', '[Outro]'];
+  const s = sections[Math.floor(Math.random() * sections.length)];
+  const ta = document.getElementById('voiceText');
+  ta.value = (ta.value ? ta.value + '\n\n' : '') + s + '\n\n';
+  saveField('lyrics', ta.value);
+  renderLyrics(ta.value);
+}
+
+function loadLyricsToVoice() {
+  const p = projects.find(x => x.id === currentId);
+  if (p && p.lyrics) document.getElementById('voiceText').value = p.lyrics;
+}
+
+function speakLyrics() {
+  const text = document.getElementById('voiceText').value.trim();
+  if (!text) { showToast('No text to speak'); return; }
+  stopSpeech();
+  utterance = new SpeechSynthesisUtterance(text);
+  const voices = synth.getVoices();
+  const sel = document.getElementById('voiceSelect');
+  if (voices[sel.value]) utterance.voice = voices[sel.value];
+  utterance.rate = parseFloat(document.getElementById('voiceRate').value);
+  utterance.pitch = parseFloat(document.getElementById('voicePitch').value);
+  utterance.volume = parseFloat(document.getElementById('voiceVolume').value);
+  utterance.onend = () => { isPlaying = false; updatePlayBtn(); };
+  synth.speak(utterance);
+  isPlaying = true;
+  updatePlayBtn();
+  showToast('AI Voice speaking');
+}
+
+function stopSpeech() {
+  synth.cancel();
+  isPlaying = false;
+  updatePlayBtn();
+}
+
+function speakLine(lineIndex) {
+  const lines = document.getElementById('voiceText').value.split('\n');
+  const line = lines[lineIndex];
+  if (!line || !line.trim()) return;
+  stopSpeech();
+  utterance = new SpeechSynthesisUtterance(line.trim());
+  const voices = synth.getVoices();
+  const sel = document.getElementById('voiceSelect');
+  if (voices[sel.value]) utterance.voice = voices[sel.value];
+  utterance.rate = parseFloat(document.getElementById('voiceRate').value);
+  utterance.pitch = parseFloat(document.getElementById('voicePitch').value);
+  synth.speak(utterance);
+}
+
+function setupAudio() {
+  audioEl = new Audio();
+  audioEl.addEventListener('ended', () => { isPlaying = false; updatePlayBtn(); });
+}
+
+function loadAudioFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  audioEl.src = url;
+  document.getElementById('audioContainer').innerHTML = `
+    <div style="padding:12px;background:#000;border-radius:8px;border:1px solid var(--border)">
+      <strong>${escapeHtml(file.name)}</strong><br>
+      <audio class="audio-player" controls src="${url}"></audio>
+    </div>`;
+  showToast('Audio loaded');
+}
+
+function togglePlay() {
+  if (audioEl && audioEl.src) {
+    if (audioEl.paused) audioEl.play();
+    else audioEl.pause();
+    isPlaying = !audioEl.paused;
+    updatePlayBtn();
+  } else {
+    if (isPlaying) stopSpeech();
+    else speakLyrics();
+  }
+}
+
+function updatePlayBtn() {
+  const btn = document.getElementById('playBtn');
+  if (!btn) return;
+  btn.textContent = isPlaying ? '⏸' : '▶';
+}
+
+function prevSong() { showToast('Previous track'); }
+function nextSong() { showToast('Next track'); }
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('tab-' + name).style.display = 'block';
+  if (name === 'tts') ttsFetchBrowserVoices();
+}
+
+function switchTab(name, id) {
+  showTab(name);
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+async function ttsFetchBrowserVoices() {
+  const sel = document.getElementById('ttsBrowserVoice');
+  sel.innerHTML = '<option value="">Loading voices...</option>';
+  const voices = synth.getVoices();
+  const mlTa = voices.filter(v => /ml-IN|ta-IN/.test(v.lang));
+  const all = voices;
+  if (mlTa.length) {
+    mlTa.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.name;
+      o.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(o);
+    });
+    showToast(`Found ${mlTa.length} Malayalam/Tamil voice(s)`);
+  } else {
+    all.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.name;
+      o.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(o);
+    });
+    showToast('No ml-IN/ta-IN voices found — install language packs');
+  }
+}
+
+async function ttsSpeakBrowser() {
+  const text = document.getElementById('ttsText').value.trim();
+  if (!text) { showToast('Enter text'); return; }
+  stopSpeech();
+  utterance = new SpeechSynthesisUtterance(text);
+  const sel = document.getElementById('ttsBrowserVoice');
+  const voiceName = sel.value;
+  const voices = synth.getVoices();
+  const v = voices.find(x => x.name === voiceName);
+  if (v) utterance.voice = v;
+  utterance.rate = parseFloat(document.getElementById('voiceRate').value || 1);
+  utterance.pitch = parseFloat(document.getElementById('voicePitch').value || 1);
+  utterance.volume = parseFloat(document.getElementById('voiceVolume').value || 1);
+  utterance.onend = () => { isPlaying = false; updatePlayBtn(); };
+  synth.speak(utterance);
+  isPlaying = true;
+  updatePlayBtn();
+  showToast('Speaking via browser voice');
+}
+
+function ttsLoadLyrics() {
+  const p = projects.find(x => x.id === currentId);
+  if (p && p.lyrics) document.getElementById('ttsText').value = p.lyrics;
+}
+function initSynth() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  synthGain = audioCtx.createGain();
+  synthGain.gain.value = 0.15;
+  synthGain.connect(audioCtx.destination);
+  synthOsc = audioCtx.createOscillator();
+  synthOsc.type = 'sine';
+  synthOsc.connect(synthGain);
+  synthOsc.start();
+}
+
+function synthSetWave(type) {
+  if (synthOsc) synthOsc.type = type;
+}
+
+const NOTE_FREQ = {
+  'C4':261.63,'C#4':277.18,'D4':293.66,'D#4':311.13,'E4':329.63,'F4':349.23,'F#4':369.99,'G4':392.00,'G#4':415.30,'A4':440.00,'A#4':466.16,'B4':493.88,
+  'C5':523.25,'C#5':554.37,'D5':587.33,'D#5':622.25,'E5':659.25,'F5':698.46,'F#5':739.99,'G5':783.99,'G#5':830.61,'A5':880.00,'A#5':932.33,'B5':987.77
+};
+const PIANO_KEYS = ['C4','C#4','D4','D#4','E4','F4','F#4','G4','G#4','A4','A#4','B4','C5'];
+
+function initPiano() {
+  const el = document.getElementById('pianoKeys');
+  el.innerHTML = '';
+  PIANO_KEYS.forEach(note => {
+    const b = document.createElement('button');
+    b.className = 'btn btn-sm btn-secondary';
+    b.textContent = note;
+    b.onclick = () => playNote(note);
+    el.appendChild(b);
+  });
+}
+
+function playNote(note) {
+  if (!audioCtx) return;
+  const freq = NOTE_FREQ[note];
+  if (!freq) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = synthOsc ? synthOsc.type : 'sine';
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.5);
+}
+
+function initChords() {
+  const el = document.getElementById('chordButtons');
+  el.innerHTML = '';
+  const chords = {
+    'C Major': ['C4','E4','G4'], 'G Major': ['G4','B4','D5'], 'Am': ['A4','C5','E5'],
+    'F Major': ['F4','A4','C5'], 'Dm': ['D4','F4','A4'], 'Em': ['E4','G4','B4'],
+    'Cmaj7': ['C4','E4','G4','B4'], 'G7': ['G4','B4','D5','F5']
+  };
+  Object.entries(chords).forEach(([name, notes]) => {
+    const b = document.createElement('button');
+    b.className = 'btn btn-sm btn-secondary';
+    b.textContent = name;
+    b.onclick = () => playChord(notes);
+    el.appendChild(b);
+  });
+}
+
+function playChord(notes) {
+  if (!audioCtx) return;
+  notes.forEach(n => playNote(n));
+}
+function initBeatGrid() {
+  ['kick','snare','hihat'].forEach(instr => {
+    const el = document.getElementById('beat-' + instr);
+    el.innerHTML = '';
+    for (let i = 0; i < 16; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'beat-cell';
+      cell.dataset.instr = instr;
+      cell.dataset.step = i;
+      cell.onclick = () => beatToggleCell(instr, i);
+      el.appendChild(cell);
+    }
+  });
+}
+
+const BEAT_SOUNDS = {
+  kick: 60,
+  snare: 150,
+  hihat: 8000
+};
+
+function beatToggleCell(instr, step) {
+  const cell = document.querySelector('.beat-cell[data-instr="'+instr+'"][data-step="'+step+'"]');
+  cell.classList.toggle('active');
+}
+
+function beatClear() {
+  document.querySelectorAll('.beat-cell').forEach(c => c.classList.remove('active'));
+}
+
+function beatTogglePlay() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    synthGain = audioCtx.createGain();
+    synthGain.gain.value = 0.3;
+    synthGain.connect(audioCtx.destination);
+  }
+  if (beatPlaying) {
+    clearInterval(beatInterval);
+    beatPlaying = false;
+    document.querySelector('.btn-primary').textContent = '▶ Start';
+    return;
+  }
+  let step = 0;
+  const bpm = parseInt(document.getElementById('beatBpm').value) || 120;
+  const intervalMs = (60 / bpm / 4) * 1000;
+  beatInterval = setInterval(() => {
+    document.querySelectorAll('.beat-cell').forEach(c => c.classList.remove('playing'));
+    ['kick','snare','hihat'].forEach(instr => {
+      const cell = document.querySelector('.beat-cell[data-instr="'+instr+'"][data-step="'+step+'"]');
+      if (cell && cell.classList.contains('active')) {
+        cell.classList.add('playing');
+        playBeatSound(instr);
+      }
+    });
+    step = (step + 1) % 16;
+  }, intervalMs);
+  beatPlaying = true;
+  document.querySelector('.btn-primary').textContent = '⏹ Stop';
+}
+
+function playBeatSound(instr) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(BEAT_SOUNDS[instr], audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.1);
+}
+
+document.getElementById('beatBpm').addEventListener('change', () => {
+  if (beatPlaying) {
+    clearInterval(beatInterval);
+    beatPlaying = false;
+    document.querySelector('.btn-primary').textContent = '▶ Start';
+  }
+});
+
+</div>
+
+</script>
+</body>
+</html>
