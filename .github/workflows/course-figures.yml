@@ -1,0 +1,95 @@
+name: Course Figures
+
+# Puts the inked figure library where candidates actually read: inside the
+# lesson. The 44 hand-drawn diagrams were reachable only from figures/index.html
+# and no lesson linked to one, so the library and the course were two unrelated
+# surfaces.
+#
+# Two lanes do the work and they share one script:
+#   - expand-course.yml attaches a figure to every lesson it just wrote (new
+#     content gets a diagram in the same run);
+#   - this workflow works through the backlog, ~20 lessons per tick, reusing an
+#     existing figure when the title matches and inventing one only when it does
+#     not. --max-invent caps the model spend per run.
+#
+# A figure invented here is stored in data/figures/invented.json, which
+# upsc-svg-figures.js folds into FIGURES: it gets a card on figures/index.html
+# and its own figures/svg-<id>.html page with no extra wiring.
+
+on:
+  schedule:
+    - cron: '23 */2 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Lessons to attach a figure to in this run'
+        required: false
+        default: '20'
+      max_invent:
+        description: 'Maximum new figures to invent this run'
+        required: false
+        default: '3'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: course-figures
+  cancel-in-progress: false
+
+jobs:
+  attach:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Attach a figure to the next lessons that lack one
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI: '1'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LIMIT: ${{ github.event.inputs.limit || '20' }}
+          MAX_INVENT: ${{ github.event.inputs.max_invent || '3' }}
+        run: |
+          node scripts/attach-course-figures.js --all --invent \
+            --limit "$LIMIT" --max-invent "$MAX_INVENT"
+
+      - name: Rebuild the figure hub and the per-figure pages
+        run: |
+          node scripts/build-svg-figure-pages.js
+          FIGURE_GALLERY_ONLY=1 node scripts/build-figure-pages.js
+
+      - name: Validate the library
+        run: node scripts/lib/figure-library.test.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/figures/invented.json 2>/dev/null || true
+          git add figures 2>/dev/null || true
+          git add "*/course" 2>/dev/null || true
+          bash scripts/ci-push.sh "course-figures: inked diagrams attached to lessons (run #${{ github.run_number }})"
