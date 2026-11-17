@@ -196,8 +196,48 @@ export async function onRequestPost(context) {
 
   var list = providers(context.env || {});
   if (!list.length) {
-    return out(503, {
-      error: 'no model key configured — add NVIDIA_API_KEY (or OPENROUTER_API_KEY / GROQ_API_KEY) in the Cloudflare dashboard'
+    // Fallback: the repo's owner runner already holds model credentials, so a
+    // missing Cloudflare key should not make the feature dead. Dispatch the
+    // on-demand lane with kind=lyrics and let the studio poll for the result.
+    var gh = context.env && context.env.GITHUB_DISPATCH_TOKEN;
+    if (!gh) {
+      return out(503, {
+        error: 'no model key configured — add NVIDIA_API_KEY (or OPENROUTER_API_KEY / GROQ_API_KEY) in the Cloudflare dashboard, or GITHUB_DISPATCH_TOKEN for the owner runner'
+      });
+    }
+    var id = crypto.randomUUID();
+    var api = 'https://api.github.com/repos/renj-arch/dimsred/actions/workflows/on-demand.yml/dispatches';
+    var dr;
+    try {
+      dr = await fetch(api, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + gh,
+          Accept: 'application/vnd.github+json',
+          'User-Agent': 'vlymbooq-lyrics',
+          'X-GitHub-Api-Version': '2022-11-28'
+        },
+        body: JSON.stringify({
+          ref: 'main',
+          inputs: {
+            request_id: id,
+            kind: 'lyrics',
+            payload: JSON.stringify({ brief: body.brief || {} }),
+            model: 'hosted'
+          }
+        })
+      });
+    } catch (e) {
+      return out(502, { error: 'could not reach the owner runner' });
+    }
+    if (dr.status !== 204) {
+      return out(502, { error: 'the owner runner refused the request (HTTP ' + dr.status + ')' });
+    }
+    return out(202, {
+      pending: true,
+      id: id,
+      poll: 'https://api.github.com/repos/renj-arch/dimsred/contents/data/on-demand/' + id + '.json?ref=main',
+      note: 'no Cloudflare model key — using the owner runner; this takes a couple of minutes'
     });
   }
 

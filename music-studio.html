@@ -1985,6 +1985,17 @@ const MX = (function () {
         body: JSON.stringify({ token: t, brief: brief() })
       });
       const d = await r.json().catch(() => ({}));
+      if (r.status === 202 && d.pending && d.id) {
+        if (status) status.textContent = (d.note || 'queued on the owner runner') + ' · waiting…';
+        const got = await pollLyrics(d.id, status);
+        if (got && got.lyrics) {
+          if (out) out.value = got.lyrics;
+          if (status) status.textContent = 'written by ' + (got.provider || 'the owner runner');
+        } else if (status) {
+          status.textContent = 'the runner did not answer in time — try again in a minute';
+        }
+        return;
+      }
       if (!r.ok || !d.lyrics) {
         if (status) status.textContent = d.error || ('failed (HTTP ' + r.status + ')') + (d.detail ? ' — ' + d.detail : '');
         return;
@@ -1996,6 +2007,29 @@ const MX = (function () {
     } finally {
       if (btn) btn.disabled = false;
     }
+  }
+
+  // The owner-runner fallback commits data/on-demand/<id>.json to main. Reading
+// it straight from the GitHub contents API means the answer appears in a
+// couple of minutes instead of waiting for the next Cloudflare deploy.
+  async function pollLyrics(id, status) {
+    const url = 'https://api.github.com/repos/renj-arch/dimsred/contents/data/on-demand/' + id + '.json?ref=main';
+    for (let i = 0; i < 48; i++) {
+      await new Promise((r) => setTimeout(r, 5000));
+      if (status) status.textContent = 'waiting for the runner… ' + Math.round((i + 1) * 5) + 's';
+      try {
+        const r = await fetch(url, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (r.status === 404) continue;
+        if (!r.ok) continue;
+        const text = await r.text();
+        let d = null;
+        try { d = JSON.parse(text); } catch (e) { continue; }
+        if (!d) continue;
+        if (d.status === 'failed') return null;
+        if (d.lyrics) return d;
+      } catch (e) { /* keep polling */ }
+    }
+    return null;
   }
 
   function lyricToSection() {
