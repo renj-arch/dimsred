@@ -8,13 +8,25 @@ name: Course Figures
 # Two lanes do the work and they share one script:
 #   - expand-course.yml attaches a figure to every lesson it just wrote (new
 #     content gets a diagram in the same run);
-#   - this workflow works through the backlog, ~20 lessons per tick, reusing an
+#   - this workflow works through the backlog, largest lesson first, reusing an
 #     existing figure when the title matches and inventing one only when it does
 #     not. --max-invent caps the model spend per run.
 #
 # A figure invented here is stored in data/figures/invented.json, which
 # upsc-svg-figures.js folds into FIGURES: it gets a card on figures/index.html
 # and its own figures/svg-<id>.html page with no extra wiring.
+#
+# Autonomy. The 2-hourly cron alone is not enough on this repo: GitHub
+# throttles scheduled workflows on busy public repos (site-agent's hourly cron
+# was observed delivering every 3-5 hours), and a run whose validation fails
+# would repeat the same failure forever without publishing anything. So:
+#   - after a successful publish the job dispatches its own successor while it
+#     is still attaching figures, which makes progress independent of the cron;
+#   - if the library test fails, the run discards everything it wrote and exits
+#     clean with a warning, so the gallery can never be wedged by a bad figure
+#     and the next run starts from a valid tree.
+# Nothing here needs a human unless the PAT dies, and ci-push falls back to
+# GITHUB_TOKEN when it does.
 
 on:
   schedule:
@@ -24,7 +36,7 @@ on:
       limit:
         description: 'Lessons to attach a figure to in this run'
         required: false
-        default: '20'
+        default: '24'
       max_invent:
         description: 'Maximum new figures to invent this run'
         required: false
@@ -32,6 +44,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: course-figures
@@ -57,6 +70,7 @@ jobs:
           node-version: '22'
 
       - name: Attach a figure to the next lessons that lack one
+        id: attach
         env:
           NVAPI: '1'
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
@@ -68,24 +82,45 @@ jobs:
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          LIMIT: ${{ github.event.inputs.limit || '20' }}
+          LIMIT: ${{ github.event.inputs.limit || '24' }}
           MAX_INVENT: ${{ github.event.inputs.max_invent || '3' }}
         run: |
-          node scripts/attach-course-figures.js --all --invent \
+          set +e
+          OUT=$(node scripts/attach-course-figures.js --all --invent \
             --limit "$LIMIT" --max-invent "$MAX_INVENT" \
             --per-lesson 2 --sort words \
-            --changed-out /tmp/figure-lessons.txt
+            --changed-out /tmp/figure-lessons.txt 2>&1)
+          ST=$?
+          echo "$OUT"
           echo "lessons changed:"; cat /tmp/figure-lessons.txt 2>/dev/null || true
+          ATTACHED=$(echo "$OUT" | sed -n 's/^figures attached: //p' | tail -1)
+          MISSING=$(echo "$OUT" | sed -n 's/^lessons left without a figure: //p' | tail -1)
+          echo "attached=${ATTACHED:-0}" >> "$GITHUB_OUTPUT"
+          echo "missing=${MISSING:-0}" >> "$GITHUB_OUTPUT"
+          exit $ST
 
       - name: Rebuild the figure hub and the per-figure pages
         run: |
           node scripts/build-svg-figure-pages.js
           FIGURE_GALLERY_ONLY=1 node scripts/build-figure-pages.js
 
+      # A model-written item that slips past the store is still caught here. If
+      # it fails, throw away this run's edits instead of publishing a broken
+      # gallery, and end green: a red run would retry the same input forever.
       - name: Validate the library
-        run: node scripts/lib/figure-library.test.js
+        id: validate
+        run: |
+          if node scripts/lib/figure-library.test.js; then
+            echo "ok=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning title=Figures rejected::Library validation failed. Discarding this run's changes so the gallery stays valid; the next run starts from a clean tree."
+            git checkout -- . 2>/dev/null || true
+            git clean -fd figures data/figures 2>/dev/null || true
+            echo "ok=0" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Publish
+        if: steps.validate.outputs.ok == '1'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -96,3 +131,16 @@ jobs:
           git add figures 2>/dev/null || true
           if [ -f /tmp/figure-lessons.txt ]; then xargs -r -a /tmp/figure-lessons.txt git add; fi
           bash scripts/ci-push.sh "course-figures: inked diagrams attached to lessons (run #${{ github.run_number }})"
+
+      # Chain the next run while there is work left. The cron is throttled
+      # often enough that relying on it alone turned a two-day backlog into a
+      # week. Only chain when this run actually attached something, so a run
+      # that can serve no lesson stops the chain instead of spinning.
+      - name: Chain the next run
+        if: steps.validate.outputs.ok == '1' && steps.attach.outputs.attached != '0' && steps.attach.outputs.attached != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "::notice title=Chaining::Attached ${{ steps.attach.outputs.attached }} figures, ${{ steps.attach.outputs.missing }} lessons still open."
+          gh workflow run course-figures.yml --ref main \
+            -f limit=24 -f max_invent=3
