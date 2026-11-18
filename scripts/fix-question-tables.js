@@ -63,7 +63,7 @@ function isSeparator(line) {
 // each data row is one label followed by the same number of values. So count the
 // longest run of values, and the column count is that run plus the label.
 function gridFromTokens(tokens) {
-  const plainNum = (c) => /^[0-9]+([.,][0-9]+)?\s*%?$/.test(String(c).trim());
+  const plainNum = (c) => /^[+-]?[0-9][0-9,]*(?:\.[0-9]+)?\s*%?$/.test(String(c).trim());
   const labelish = (c) => c !== '' && !plainNum(c);
 
   let best = 0;
@@ -127,7 +127,7 @@ function splitInline(text) {
 
 // Fallback: exact rectangular split, for tables that kept their separators.
 function findGrid(cells) {
-  const plainNum = (c) => /^[0-9]+([.,][0-9]+)?\s*%?$/.test(String(c).trim());
+  const plainNum = (c) => /^[+-]?[0-9][0-9,]*(?:\.[0-9]+)?\s*%?$/.test(String(c).trim());
   const labelish = (c) => c !== '' && !plainNum(c);
 
   for (let k = 2; k <= 8; k++) {
@@ -135,7 +135,7 @@ function findGrid(cells) {
     const rows = [];
     for (let i = 0; i < cells.length; i += k) rows.push(cells.slice(i, i + k));
     if (rows.length < 3) continue;
-    if (!rows[0].every(labelish)) continue;
+    if (!rows[0].some(labelish)) continue;
     const ok = rows.slice(1).every((r) => labelish(r[0]) && r.slice(1).every(plainNum));
     if (ok) return rows;
   }
