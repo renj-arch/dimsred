@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-18T00:50:50.370Z",
+  "updatedAt": "2026-11-18T15:26:17.732Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -21113,6 +21113,977 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-18T00:50:50.366Z"
+    },
+    {
+      "id": "41307099ab15617c",
+      "exam": "jee",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "JEE Main Practice Set 16",
+      "paperPath": "jee/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "If z = (1 + i)^6, then the value of |z| is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "8",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "16",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compute modulus of 1+i: |1+i| = sqrt(1^2+1^2) = sqrt(2)",
+        "Raise to the 6th power: |z| = |1+i|^6 = (sqrt(2))^6",
+        "Simplify: (sqrt(2))^6 = (2^(1/2))^6 = 2^3 = 8"
+      ],
+      "verifierCheck": "The modulus of a complex number raised to a power equals the modulus raised to that power. |1+i| = sqrt(1^2+1^2) = sqrt(2). Then |(1+i)^6| = (sqrt(2))^6 = 2^3 = 8. Alternatively, compute (1+i)^2 = 2i, (1+i)^4 = -4, (1+i)^6 = -8i, whose modulus is 8.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Modulus Power Rule",
+          "idea": "Use |z^n| = |z|^n",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "|1+i| = sqrt(1^2+1^2) = sqrt(2)",
+            "|z| = (sqrt(2))^6 = 2^3 = 8"
+          ]
+        },
+        {
+          "name": "Polar Form",
+          "idea": "Convert to polar, raise to power",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "1+i = sqrt(2) * e^(iπ/4)",
+            "z = (sqrt(2))^6 * e^(i6π/4) = 8 * e^(i3π/2)",
+            "|z| = 8"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:18:21.347Z"
+    },
+    {
+      "id": "f0be08c0fe7c20f8",
+      "exam": "neet",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "NEET UG Practice Set 16",
+      "paperPath": "neet/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 1,
+      "section": "Physics",
+      "question": "In a series RL circuit, the resistance is 3 Ω and the inductive reactance is 4 Ω. The power factor of the circuit is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.6",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "0.8",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1.0",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify power factor formula for series RL circuit: cos φ = R/Z",
+        "Compute impedance Z = sqrt(R^2 + X_L^2) = sqrt(3^2 + 4^2) = 5 Ω",
+        "Calculate power factor = R/Z = 3/5 = 0.6",
+        "Match with given options: 0.6 corresponds to option A"
+      ],
+      "verifierCheck": "In a series RL circuit, the power factor is cos(φ) = R / |Z|, where |Z| = √(R² + X_L²). Given R = 3 Ω and X_L = 4 Ω, |Z| = √(3² + 4²) = √(9 + 16) = √25 = 5 Ω. Thus power factor = 3/5 = 0.6.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "3-4-5 Triangle",
+          "idea": "Pythagorean triple gives Z instantly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify R=3, X_L=4",
+            "Recall 3-4-5 right triangle → Z=5",
+            "Power factor = R/Z = 3/5 = 0.6"
+          ]
+        },
+        {
+          "name": "Cosine Formula",
+          "idea": "Direct formula cos φ = R/√(R²+X²)",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Write cos φ = R/√(R²+X_L²)",
+            "Plug R=3, X_L=4 → √(9+16)=5",
+            "Compute 3/5 = 0.6"
+          ]
+        },
+        {
+          "name": "Impedance Ratio",
+          "idea": "Power factor = R/|Z|, compute magnitude",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "|Z| = √(3²+4²) = 5",
+            "PF = 3/5 = 0.6",
+            "Select option A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:19:19.599Z"
+    },
+    {
+      "id": "70843ca53f8c11f9",
+      "exam": "cgl",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "CGL Practice Set 18",
+      "paperPath": "cgl/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 2,
+      "section": "General Intelligence & Reasoning",
+      "question": "Select the number-pair in which the two numbers are related in the same way as the two numbers of the given pair. 14 : 225 :: ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "16 : 256",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "18 : 324",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "12 : 169",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "20 : 400",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Observe the given pair 14 : 225.",
+        "Test possible relationships: 14^2 = 196 (not 225), (14+1)^2 = 225.",
+        "Conclude relationship: second number = (first number + 1)^2.",
+        "Test each option: A: 16 -> (17)^2 = 289 ≠ 256; B: 18 -> (19)^2 = 361 ≠ 324; C: 12 -> (13)^2 = 169 = 169; D: 20 -> (21)^2 = 441 ≠ 400.",
+        "Select option C as it matches the pattern."
+      ],
+      "verifierCheck": "The given pair 14 : 225 follows the relationship (first number + 1)² = second number, since (14 + 1)² = 15² = 225. Checking the options: A) (16 + 1)² = 289 ≠ 256; B) (18 + 1)² = 361 ≠ 324; C) (12 + 1)² = 13² = 169, which matches; D) (20 + 1)² = 441 ≠ 400. Therefore, option C is the correct pair with the same relationship.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Plus One Square",
+          "idea": "Second number is square of (first+1)",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Note 225 = 15²",
+            "See 15 = 14 + 1",
+            "Rule: second = (first+1)²",
+            "Test options: only 12 gives 13² = 169"
+          ]
+        },
+        {
+          "name": "Square Root Match",
+          "idea": "Square root of second equals first plus one",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "√225 = 15",
+            "15 = 14 + 1",
+            "For each option compute √second",
+            "Only option C: √169 = 13 = 12 + 1"
+          ]
+        },
+        {
+          "name": "Quick Elimination",
+          "idea": "Eliminate direct squares, test (first+1)²",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "225 ≠ 14² (196) so not direct square",
+            "Check (14+1)² = 225 matches",
+            "Scan options: A (17²=289≠256), B (19²=361≠324), C (13²=169=169), D (21²=441≠400)",
+            "Only C fits"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:20:51.876Z"
+    },
+    {
+      "id": "a857a675be5993ac",
+      "exam": "jee",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "JEE Main Practice Set 16",
+      "paperPath": "jee/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "The area of the triangle formed by the lines x = 0, y = 0 and 3x + 4y = 12 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "12",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "6",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "24",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Find intercepts of line 3x+4y=12 with axes: x-intercept at (4,0), y-intercept at (0,3).",
+        "The triangle vertices are (0,0), (4,0), (0,3).",
+        "Base = 4, height = 3.",
+        "Area = 1/2 * base * height = 1/2 * 4 * 3 = 6."
+      ],
+      "verifierCheck": "The lines x=0 and y=0 are the axes. The line 3x+4y=12 intersects the x-axis at (4,0) and the y-axis at (0,3). The triangle formed is right-angled with legs 4 and 3, so area = 1/2 * 4 * 3 = 6.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Intercept Method",
+          "idea": "Find x and y intercepts of the line; triangle legs are those intercepts.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Set y=0 in 3x+4y=12 → 3x=12 → x=4 (x-intercept).",
+            "Set x=0 → 4y=12 → y=3 (y-intercept).",
+            "Area = 1/2 × base × height = 1/2 × 4 × 3 = 6."
+          ]
+        },
+        {
+          "name": "Area Formula Shortcut",
+          "idea": "Use formula area = c²/(2|ab|) for line ax+by=c with axes.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify a=3, b=4, c=12 from 3x+4y=12.",
+            "Compute c² = 144, 2|ab| = 2×12 = 24.",
+            "Area = 144/24 = 6."
+          ]
+        },
+        {
+          "name": "Determinant Quick Calc",
+          "idea": "Vertices are (0,0), (4,0), (0,3); use shoelace formula.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Find intercepts: (4,0) and (0,3).",
+            "Vertices: (0,0), (4,0), (0,3).",
+            "Area = 1/2 |0(0-3)+4(3-0)+0(0-0)| = 1/2 × 12 = 6."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:21:19.132Z"
+    },
+    {
+      "id": "99fc90a812474bc9",
+      "exam": "jee",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "JEE Main Practice Set 16",
+      "paperPath": "jee/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 3,
+      "section": "Chemistry",
+      "question": "The decreasing order of reactivity towards SN2 reaction for the following alkyl bromides is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "CH₃Br > CH₃CH₂Br > (CH₃)₂CHBr > (CH₃)₃CBr",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "(CH₃)₃CBr > (CH₃)₂CHBr > CH₃CH₂Br > CH₃Br",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "CH₃CH₂Br > CH₃Br > (CH₃)₂CHBr > (CH₃)₃CBr",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "(CH₃)₂CHBr > CH₃Br > CH₃CH₂Br > (CH₃)₃CBr",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify each alkyl bromide: CH₃Br (methyl), CH₃CH₂Br (primary), (CH₃)₂CHBr (secondary), (CH₃)₃CBr (tertiary).",
+        "Recall SN2 reactivity order: methyl > primary > secondary > tertiary due to steric hindrance.",
+        "Apply order: CH₃Br > CH₃CH₂Br > (CH₃)₂CHBr > (CH₃)₃CBr.",
+        "Match with options: Option A matches exactly."
+      ],
+      "verifierCheck": "SN2 reactivity is governed by steric hindrance: less hindered substrates react faster. Methyl halides (CH₃Br) have the least steric hindrance, followed by primary (CH₃CH₂Br), secondary ((CH₃)₂CHBr), and tertiary ((CH₃)₃CBr) which is essentially unreactive via SN2. Thus the decreasing order is CH₃Br > CH₃CH₂Br > (CH₃)₂CHBr > (CH₃)₃CBr, matching option A.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Me > 1° > 2° > 3° Mnemonic",
+          "idea": "Instant classification mnemonic for SN2 reactivity order",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Label each: Me, 1°, 2°, 3°",
+            "Recite: Me > 1° > 2° > 3°",
+            "Select option A"
+          ]
+        },
+        {
+          "name": "Steric Hindrance Ladder",
+          "idea": "SN2 speed drops as carbon substitution increases; rank by hindrance",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Identify carbon bonded to Br in each compound",
+            "Classify: CH₃Br=methyl, CH₃CH₂Br=primary, (CH₃)₂CHBr=secondary, (CH₃)₃CBr=tertiary",
+            "Order: methyl > primary > secondary > tertiary"
+          ]
+        },
+        {
+          "name": "Alkyl Group Count",
+          "idea": "Count alkyl groups on the electrophilic carbon; fewer = faster SN2",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Count alkyl substituents on C-Br carbon: CH₃Br=0, CH₃CH₂Br=1, (CH₃)₂CHBr=2, (CH₃)₃CBr=3",
+            "Reverse sort: 0 > 1 > 2 > 3",
+            "Match to option A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:21:54.587Z"
+    },
+    {
+      "id": "75a12299aad1170a",
+      "exam": "neet",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "NEET UG Practice Set 16",
+      "paperPath": "neet/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 3,
+      "section": "Physics",
+      "question": "A steel wire of length 2 m and cross‑sectional area 1 mm² is stretched by a load of 100 N. If Young’s modulus of steel is 2×10¹¹ N/m², the elastic potential energy stored in the wire is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.5 J",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0.05 J",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "5 J",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "50 J",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Convert cross-sectional area to m²: 1 mm² = 1×10⁻⁶ m².",
+        "Calculate extension ΔL using Young's modulus: ΔL = (F L)/(A Y) = (100×2)/(1×10⁻⁶×2×10¹¹) = 0.001 m.",
+        "Calculate elastic potential energy: U = ½ F ΔL = ½ × 100 × 0.001 = 0.05 J.",
+        "Match with options: 0.05 J corresponds to option B."
+      ],
+      "verifierCheck": "The elastic potential energy stored in a stretched wire is U = (1/2) F ΔL, where ΔL = (F L)/(A Y). Given L = 2 m, A = 1 mm² = 1×10⁻⁶ m², F = 100 N, Y = 2×10¹¹ N/m², we find ΔL = (100 × 2) / (1×10⁻⁶ × 2×10¹¹) = 200 / 2×10⁵ = 0.001 m. Then U = 0.5 × 100 × 0.001 = 0.05 J. This matches option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Order-of-Magnitude Check",
+          "idea": "Estimate powers of ten to spot answer",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "F=10² N, L=2 m, A=10⁻⁶ m², Y=2×10¹¹ N/m²",
+            "AY ≈ 2×10⁵, FL=2×10² → ΔL ≈ 10⁻³ m",
+            "U ≈ ½ × 10² × 10⁻³ = 5×10⁻² J = 0.05 J"
+          ]
+        },
+        {
+          "name": "Direct Energy Formula",
+          "idea": "Plug into U = F²L/(2AY)",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Convert area: 1 mm² = 1×10⁻⁶ m²",
+            "Compute denominator: 2 × A × Y = 2 × 10⁻⁶ × 2×10¹¹ = 4×10⁵",
+            "Compute numerator: F² × L = 100² × 2 = 2×10⁴",
+            "Divide: (2×10⁴) / (4×10⁵) = 0.05",
+            "Result: 0.05 J"
+          ]
+        },
+        {
+          "name": "Half Force × Extension",
+          "idea": "Find ΔL from Hooke's law then U = ½FΔL",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "ΔL = (F L) / (A Y) = (100 × 2) / (10⁻⁶ × 2×10¹¹) = 200 / 2×10⁵ = 10⁻³ m",
+            "U = ½ × F × ΔL = 0.5 × 100 × 0.001 = 0.05 J"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:22:38.513Z"
+    },
+    {
+      "id": "029359d73b53a3c4",
+      "exam": "jee",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "JEE Main Practice Set 16",
+      "paperPath": "jee/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 4,
+      "section": "Chemistry",
+      "question": "The standard electrode potentials are: Zn²⁺/Zn = –0.76 V, Cu²⁺/Cu = +0.34 V. For the cell Zn(s) | Zn²⁺(0.1 M) || Cu²⁺(0.01 M) | Cu(s) at 298 K, the EMF of the cell is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1.10 V",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1.07 V",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "1.03 V",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0.99 V",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Standard cell potential E° = E°(Cu²⁺/Cu) - E°(Zn²⁺/Zn) = 0.34 - (-0.76) = 1.10 V",
+        "Cell reaction: Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s), n = 2",
+        "Reaction quotient Q = [Zn²⁺]/[Cu²⁺] = 0.1 / 0.01 = 10",
+        "Nernst equation at 298 K: E = E° - (0.0591/n) log Q = 1.10 - (0.0591/2) log 10",
+        "E = 1.10 - 0.02955 × 1 = 1.07045 V ≈ 1.07 V",
+        "Matches option B"
+      ],
+      "verifierCheck": "The standard cell potential E° = E°(Cu²⁺/Cu) - E°(Zn²⁺/Zn) = 0.34 - (-0.76) = 1.10 V. The overall reaction is Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s), so the reaction quotient Q = [Zn²⁺]/[Cu²⁺] = 0.1/0.01 = 10. Applying the Nernst equation at 298 K with n = 2: E = E° - (0.0591/2) log10(Q) = 1.10 - 0.02955 × 1 = 1.07045 V ≈ 1.07 V.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick Estimate",
+          "idea": "Round 0.059 to 0.06 for speed",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "E° = 1.10 V",
+            "Concentration ratio = 10",
+            "Correction ≈ 0.06/2 = 0.03 V",
+            "1.10 - 0.03 = 1.07 V"
+          ]
+        },
+        {
+          "name": "Log10 Factor Rule",
+          "idea": "Memorize 0.059/n per decade of Q",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Standard EMF = 1.10 V",
+            "Q = 10 (one decade)",
+            "Voltage shift = 0.059/2 = 0.03 V per decade",
+            "Subtract: 1.10 - 0.03 = 1.07 V"
+          ]
+        },
+        {
+          "name": "Nernst Shortcut",
+          "idea": "Direct Nernst with mental log10(10)=1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "E° = 0.34 - (-0.76) = 1.10 V",
+            "Q = [Zn²⁺]/[Cu²⁺] = 0.1/0.01 = 10",
+            "ΔE = (0.059/2) × log10(10) = 0.0295 V",
+            "E = 1.10 - 0.03 ≈ 1.07 V"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:23:27.307Z"
+    },
+    {
+      "id": "d15af288ccf23c53",
+      "exam": "neet",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "NEET UG Practice Set 16",
+      "paperPath": "neet/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 4,
+      "section": "Physics",
+      "question": "The half‑life of a radioactive sample is 10 days. The fraction of the initial activity that remains after 30 days is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1/16",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1/8",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "1/2",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Half-life formula: fraction remaining = (1/2)^(t / T_half)",
+        "Number of half-lives elapsed = 30 days / 10 days = 3",
+        "Fraction = (1/2)^3 = 1/8",
+        "Option C corresponds to 1/8"
+      ],
+      "verifierCheck": "After 30 days, 3 half-lives have passed (30/10 = 3). The fraction remaining is (1/2)^3 = 1/8.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Power of two",
+          "idea": "Memorize successive halvings for integer half-lives",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "30 days = 3 half-lives",
+            "Each half-life halves activity: 1/2, 1/4, 1/8"
+          ]
+        },
+        {
+          "name": "Half-life count",
+          "idea": "Count half-lives and halve repeatedly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Divide total time by half-life: 30/10 = 3",
+            "Raise 1/2 to that power: (1/2)^3 = 1/8"
+          ]
+        },
+        {
+          "name": "Exponent rule",
+          "idea": "Directly apply decay formula with exponent",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Use A = A0*(1/2)^(t/T)",
+            "Plug t=30, T=10 => exponent 3 => 1/8"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:23:45.582Z"
+    },
+    {
+      "id": "10e6ed06d848461b",
+      "exam": "jee",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "JEE Main Practice Set 16",
+      "paperPath": "jee/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 5,
+      "section": "Chemistry",
+      "question": "The correct decreasing order of acidic strength for the oxoacids of chlorine is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "HClO > HClO₂ > HClO₃ > HClO₄",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "HClO₄ > HClO₃ > HClO₂ > HClO",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "HClO₃ > HClO₄ > HClO₂ > HClO",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "HClO₂ > HClO > HClO₃ > HClO₄",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the oxoacids of chlorine: HClO (hypochlorous), HClO₂ (chlorous), HClO₃ (chloric), HClO₄ (perchloric).",
+        "Recall that acid strength of oxoacids increases with the number of oxygen atoms (or oxidation state of central atom) due to increased electron withdrawal stabilizing the conjugate base.",
+        "Order the acids by number of oxygen atoms: HClO₄ (4 O) > HClO₃ (3 O) > HClO₂ (2 O) > HClO (1 O).",
+        "Confirm that perchloric acid is a very strong acid, chloric acid is strong, chlorous acid is moderately weak, and hypochlorous acid is the weakest.",
+        "Match this order to the given options: Option B states HClO₄ > HClO₃ > HClO₂ > HClO."
+      ],
+      "verifierCheck": "The acidic strength of chlorine oxoacids increases with the oxidation state of chlorine (or number of oxygen atoms) because additional electronegative oxygen atoms withdraw electron density, stabilizing the conjugate base. The oxidation states are +7 in HClO₄, +5 in HClO₃, +3 in HClO₂, and +1 in HClO. Corresponding pKa values are approximately -10 for HClO₄, -1 for HClO₃, 1.96 for HClO₂, and 7.53 for HClO. Thus the decreasing order of acid strength is HClO₄ > HClO₃ > HClO₂ > HClO, which matches option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Oxygen Count Shortcut",
+          "idea": "More O atoms = stronger acid via inductive effect",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Count O atoms per acid: HClO(1), HClO₂(2), HClO₃(3), HClO₄(4)",
+            "Rank highest to lowest O count: 4 > 3 > 2 > 1"
+          ]
+        },
+        {
+          "name": "Oxidation State Rule",
+          "idea": "Higher Cl oxidation state = stronger acid",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Assign Cl oxidation states: HClO=+1, HClO₂=+3, HClO₃=+5, HClO₄=+7",
+            "Order by decreasing oxidation state: +7 > +5 > +3 > +1"
+          ]
+        },
+        {
+          "name": "Conjugate Base Stability",
+          "idea": "More O delocalizes negative charge better",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Write conjugate bases: ClO⁻, ClO₂⁻, ClO₃⁻, ClO₄⁻",
+            "More O atoms = more resonance/inductive stabilization = stronger acid"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:24:53.843Z"
+    },
+    {
+      "id": "4b497b3ae48ff4f1",
+      "exam": "jee",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "JEE Main Practice Set 16",
+      "paperPath": "jee/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "Two fair dice are rolled simultaneously. The probability that the sum of the numbers appearing is a prime number is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5/12",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1/3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "7/18",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5/18",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total outcomes when two fair dice are rolled: 6 × 6 = 36.",
+        "Prime numbers possible as sums (2 to 12): 2, 3, 5, 7, 11.",
+        "Count outcomes for each prime sum: 2→1, 3→2, 5→4, 7→6, 11→2.",
+        "Total favorable outcomes = 1+2+4+6+2 = 15.",
+        "Probability = 15/36 = 5/12.",
+        "Matches option A."
+      ],
+      "verifierCheck": "Two fair dice have 36 equally likely outcomes. The prime sums possible are 2, 3, 5, 7, 11. Number of ways: sum 2: 1; sum 3: 2; sum 5: 4; sum 7: 6; sum 11: 2. Total favorable = 15. Probability = 15/36 = 5/12.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Symmetry Shortcut",
+          "idea": "Use symmetry of sum distribution around 7",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Prime sums: 2,3,5,7,11. Their counts symmetric: 1,2,4,6,2",
+            "Sum counts = 15. Probability = 15/36 = 5/12"
+          ]
+        },
+        {
+          "name": "Prime Sum Count",
+          "idea": "Direct count of prime sums using known dice distribution",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "List prime sums: 2, 3, 5, 7, 11",
+            "Recall ways for each sum: min(s-1, 13-s) → 1, 2, 4, 6, 2",
+            "Add ways: 1+2+4+6+2 = 15",
+            "Divide by 36 total outcomes: 15/36 = 5/12"
+          ]
+        },
+        {
+          "name": "Complement Count",
+          "idea": "Count non-prime sums and subtract from total",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "List non-prime sums 2-12: 4, 6, 8, 9, 10, 12",
+            "Recall ways: 3, 5, 5, 4, 3, 1 → total 21",
+            "Subtract from 36: 36 - 21 = 15 favorable",
+            "Probability = 15/36 = 5/12"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:25:45.439Z"
+    },
+    {
+      "id": "eb6f7d6307281b2c",
+      "exam": "jee",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "JEE Main Practice Set 16",
+      "paperPath": "jee/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 7,
+      "section": "Physics",
+      "question": "One mole of a monoatomic ideal gas (γ = 5/3) expands adiabatically from volume V to 2V. If the initial temperature is T0, the final temperature is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "T0 / 2^(2/3)",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "T0 / 2^(3/2)",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "T0 / 2^(1/3)",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "T0 / 2^(5/3)",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall adiabatic relation for ideal gas: TV^(γ-1) = constant.",
+        "Substitute γ = 5/3, so γ-1 = 2/3.",
+        "Write equation: T0 * V^(2/3) = T_final * (2V)^(2/3).",
+        "Simplify: T0 = T_final * 2^(2/3).",
+        "Solve: T_final = T0 / 2^(2/3).",
+        "Match with option A."
+      ],
+      "verifierCheck": "For an adiabatic expansion of an ideal gas, TV^(γ-1) = constant. With γ = 5/3, γ-1 = 2/3. Initial state: T0, V. Final state: T, 2V. So T0 * V^(2/3) = T * (2V)^(2/3) = T * 2^(2/3) * V^(2/3). Cancelling V^(2/3) gives T = T0 / 2^(2/3). This matches option A.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Exponent elimination",
+          "idea": "Only option with correct exponent γ-1=2/3",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Adiabatic expansion cools gas, T_f < T0.",
+            "For monoatomic γ=5/3, exponent is γ-1=2/3.",
+            "Only option A has exponent 2/3.",
+            "Confirm: T_f = T0 / 2^(2/3).",
+            "Answer A."
+          ]
+        },
+        {
+          "name": "Gamma minus one exponent",
+          "idea": "Mnemonic: T ∝ V^(1-γ) for adiabatic",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Remember T ∝ V^(1-γ) in adiabatic process.",
+            "γ=5/3 → 1-γ = -2/3, so T ∝ V^(-2/3).",
+            "Volume doubles → T multiplies by 2^(-2/3) = 1/2^(2/3).",
+            "Final T = T0 / 2^(2/3).",
+            "Choose A."
+          ]
+        },
+        {
+          "name": "Adiabatic TV relation",
+          "idea": "Direct use of TV^(γ-1)=constant",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall adiabatic relation: T V^(γ-1) = constant.",
+            "Plug γ=5/3 → γ-1 = 2/3.",
+            "Set T0 V^(2/3) = T_f (2V)^(2/3).",
+            "Solve: T_f = T0 (V/(2V))^(2/3) = T0 / 2^(2/3).",
+            "Match option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T15:26:17.727Z"
     }
   ]
 }
