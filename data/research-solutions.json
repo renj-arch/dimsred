@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-17T15:48:34.339Z",
+  "updatedAt": "2026-11-18T00:50:50.370Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -20129,6 +20129,990 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-17T15:48:22.348Z"
+    },
+    {
+      "id": "4bc84711f46629ce",
+      "exam": "rbi",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "RBI Grade B Practice Set 15",
+      "paperPath": "rbi/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 1,
+      "section": "Reasoning",
+      "question": "Statements: 1. All architects are engineers. 2. Some engineers are artists. 3. No artist is a doctor. 4. Some doctors are architects. Conclusion I: Some engineers are architects. Conclusion II: Some doctors are not artists. Which of the following is correct? A. Both I and II follow. B. Only I follows. C. Only II follows. D. Neither I nor II follows.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Both I and II follow",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Only I follows",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Only II follows",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Neither I nor II follows",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Translate statements into set relations: All architects are engineers (A ⊆ E); Some engineers are artists (E ∩ R ≠ ∅); No artist is a doctor (R ∩ D = ∅); Some doctors are architects (D ∩ A ≠ ∅).",
+        "From statement 4, there exists at least one architect. Since all architects are engineers (statement 1), that architect is also an engineer. Therefore, some engineers are architects. Conclusion I follows.",
+        "From statement 3, no artist is a doctor, which means all doctors are not artists. Statement 4 asserts there is at least one doctor. Hence, some doctors are not artists. Conclusion II follows.",
+        "Both conclusions logically follow from the given statements."
+      ],
+      "verifierCheck": "From statement 1, all architects are engineers. Statement 4 says some doctors are architects, so there exists at least one architect. That architect is also an engineer (by statement 1), so some engineers are architects; thus conclusion I follows. Statement 3 says no artist is a doctor, which is equivalent to no doctor is an artist. Since statement 4 guarantees at least one doctor exists, that doctor cannot be an artist, so some doctors are not artists; thus conclusion II follows. Both conclusions logically follow from the premises.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Rule Trigger",
+          "idea": "Apply standard syllogism rules: universal + particular gives particular; negative universal + particular gives negative particular",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "For I: All architects are engineers (All A are E) + Some doctors are architects (Some D are A) → architects exist → Some engineers are architects (Some E are A)",
+            "For II: No artist is doctor (No Art are D) + Some doctors are architects (Some D are A) → doctors exist → Some doctors are not artists (Some D are not Art)",
+            "Both valid → Answer A"
+          ]
+        },
+        {
+          "name": "Subset Existence",
+          "idea": "Use existential import from 'some' to activate universal and disjointness",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Statement 1: All architects are engineers → architects ⊆ engineers",
+            "Statement 4: Some doctors are architects → architects exist",
+            "Therefore some engineers are architects (I follows)",
+            "Statement 3: No artist is a doctor → artists and doctors disjoint",
+            "Statement 4: Some doctors exist → those doctors are not artists (II follows)",
+            "Both follow → Answer A"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:42:57.686Z"
+    },
+    {
+      "id": "6ba0092c9b51000d",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "SSC GD Constable Practice Set 11",
+      "paperPath": "ssc-gd/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 1,
+      "section": "General Intelligence & Reasoning",
+      "question": "Select the option that best completes the analogy: Cuboid : Volume :: Circle : ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Area",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Radius",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Diameter",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Circumference",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the relationship: Cuboid is a 3D shape, and volume measures the space it occupies.",
+        "Circle is a 2D shape, and the analogous measure of space it occupies is area.",
+        "Among the options, Area corresponds to the measure of a circle's space."
+      ],
+      "verifierCheck": "A cuboid is a three-dimensional solid, and its quantitative measure of occupied space is volume. A circle is a two-dimensional figure, and its corresponding measure of occupied space is area. The analogy follows the pattern: shape : its dimensional measure. Therefore, Circle : Area.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Eliminate Lengths",
+          "idea": "Volume is not a length; among options only Area is not a length",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Volume is cubic units, not linear",
+            "Radius, Diameter, Circumference are linear",
+            "Area is square units, matches dimension"
+          ]
+        },
+        {
+          "name": "Dimension Match",
+          "idea": "Match shape dimension to its measure dimension",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Cuboid is 3D, Volume is 3D measure",
+            "Circle is 2D, so need 2D measure",
+            "Area is 2D measure, others are lengths"
+          ]
+        },
+        {
+          "name": "Space Inside",
+          "idea": "Volume measures interior space of 3D; Area measures interior space of 2D",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Volume = space inside 3D object",
+            "Circle is 2D, its interior space = Area",
+            "Radius, Diameter, Circumference are boundary lengths"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:43:12.656Z"
+    },
+    {
+      "id": "2cea2d21b2ee3090",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-10",
+      "paperTitle": "IBPS PO Practice Set 10",
+      "paperPath": "ibps-po/papers/practice-set-10.html",
+      "paperFile": "practice-set-10.json",
+      "questionNumber": 2,
+      "section": "Reasoning Ability",
+      "question": "Rahul walks 10m North, turns right and walks 15m, turns left and walks 10m, turns right and walks 5m. Finally, he turns right and walks 20m. In which direction is he from the starting point?",
+      "options": [
+        {
+          "label": "A",
+          "text": "North",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "South",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "East",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "West",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Start at origin (0,0).",
+        "Walk 10m North to (0,10).",
+        "Turn right (East) and walk 15m to (15,10).",
+        "Turn left (North) and walk 10m to (15,20).",
+        "Turn right (East) and walk 5m to (20,20).",
+        "Turn right (South) and walk 20m to (20,0)."
+      ],
+      "verifierCheck": "Starting at origin (0,0) facing North: walk 10m North to (0,10); turn right (East) walk 15m to (15,10); turn left (North) walk 10m to (15,20); turn right (East) walk 5m to (20,20); turn right (South) walk 20m to (20,0). Final position is 20m East of start, so direction is East.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Net Displacement",
+          "idea": "Sum orthogonal components separately",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Assign axes: North=+y, East=+x",
+            "Sum North moves: 10+10=20; South moves: 20 => net y=0",
+            "Sum East moves: 15+5=20; West moves: 0 => net x=20",
+            "Resultant vector points East"
+          ]
+        },
+        {
+          "name": "Coordinate Plot",
+          "idea": "Plot each segment endpoint quickly",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Start (0,0)",
+            "North 10 -> (0,10)",
+            "Right(East) 15 -> (15,10)",
+            "Left(North) 10 -> (15,20)",
+            "Right(East) 5 -> (20,20)",
+            "Right(South) 20 -> (20,0) => East of origin"
+          ]
+        },
+        {
+          "name": "Turn Tracking",
+          "idea": "Track facing direction and accumulate distances",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Start facing North",
+            "Right turn -> face East (walk 15)",
+            "Left turn -> face North (walk 10)",
+            "Right turn -> face East (walk 5)",
+            "Right turn -> face South (walk 20)",
+            "Net: North 20, South 20 cancel; East 20 remains"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:45:59.426Z"
+    },
+    {
+      "id": "cbd20473afb35f21",
+      "exam": "jee",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "JEE Main Practice Set 15",
+      "paperPath": "jee/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 2,
+      "section": "Physics",
+      "question": "An electric dipole of moment 2 × 10⁻²⁹ C·m is placed in vacuum. The magnitude of the electric field at a point on the axial line at a distance 0.1 m from the centre of the dipole is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1.8 × 10⁻¹⁶ N/C",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7.2 × 10⁻¹⁶ N/C",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "3.6 × 10⁻¹⁶ N/C",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "9.0 × 10⁻¹⁶ N/C",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall formula for electric field on axial line of dipole: E = (1/(4πε₀)) * (2p / r³).",
+        "Substitute known values: 1/(4πε₀) = 9 × 10⁹ N·m²/C², p = 2 × 10⁻²⁹ C·m, r = 0.1 m.",
+        "Compute r³ = (0.1)³ = 10⁻³ m³.",
+        "Compute 2p = 4 × 10⁻²⁹ C·m.",
+        "Calculate E = 9 × 10⁹ × (4 × 10⁻²⁹ / 10⁻³) = 9 × 10⁹ × 4 × 10⁻²⁶ = 36 × 10⁻¹⁷ = 3.6 × 10⁻¹⁶ N/C.",
+        "Match with option C."
+      ],
+      "verifierCheck": "The electric field on the axial line of a dipole is E = (1/(4πε₀)) * (2p/r³). Using 1/(4πε₀) = 9×10⁹ N·m²/C², p = 2×10⁻²⁹ C·m, r = 0.1 m, r³ = 10⁻³ m³. Then E = 9×10⁹ * (2 * 2×10⁻²⁹) / 10⁻³ = 9×10⁹ * 4×10⁻²⁹ * 10³ = 36×10⁻¹⁷ = 3.6×10⁻¹⁶ N/C, which matches option C.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Base Dipole Mnemonic",
+          "idea": "Memorize E=1.8×10⁻¹⁶ for p=10⁻²⁹ at 0.1 m",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall base axial field: p=1×10⁻²⁹ C·m at 0.1 m gives 1.8×10⁻¹⁶ N/C",
+            "Given p=2×10⁻²⁹, field doubles to 3.6×10⁻¹⁶ N/C"
+          ]
+        },
+        {
+          "name": "Power-of-10 Arithmetic",
+          "idea": "Combine exponents mentally",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "k=9×10⁹, 2p=4×10⁻²⁹, r³=10⁻³",
+            "Multiply coefficients: 9×4=36",
+            "Add exponents: 9 + (-29) + 3 = -17",
+            "Result: 36×10⁻¹⁷ = 3.6×10⁻¹⁶"
+          ]
+        },
+        {
+          "name": "Axial Dipole Formula",
+          "idea": "Direct formula plug-in",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall E_axial = (1/4πε₀)·(2p/r³)",
+            "Substitute k=9×10⁹, p=2×10⁻²⁹, r=0.1",
+            "Compute 2p=4×10⁻²⁹, r³=10⁻³",
+            "E = 9×10⁹ × 4×10⁻²⁹ / 10⁻³ = 36×10⁻¹⁷ = 3.6×10⁻¹⁶"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:46:55.705Z"
+    },
+    {
+      "id": "7b00f017bc2edaf7",
+      "exam": "neet",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "NEET UG Practice Set 15",
+      "paperPath": "neet/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 2,
+      "section": "Physics",
+      "question": "Two projectiles are launched with the same initial speed at angles of 30° and 60° with the horizontal. What is the ratio of their horizontal ranges (R₃₀ : R₆₀)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1:2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1:1",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "√3:1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1:√3",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the range formula for projectile motion: R = (v₀² sin(2θ))/g.",
+        "For θ = 30°, sin(2θ) = sin(60°) = √3/2.",
+        "For θ = 60°, sin(2θ) = sin(120°) = sin(60°) = √3/2.",
+        "Since initial speed v₀ and g are identical, both ranges are equal.",
+        "Therefore, the ratio R₃₀ : R₆₀ = 1 : 1."
+      ],
+      "verifierCheck": "The horizontal range for a projectile launched with speed v at angle θ is R = v² sin(2θ)/g. For θ = 30°, sin(60°) = √3/2; for θ = 60°, sin(120°) = sin(60°) = √3/2. Both give the same range, so R₃₀ : R₆₀ = 1:1.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "30-60 Memory",
+          "idea": "Memorize that 30° and 60° yield identical range",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Remember: 30° and 60° give same horizontal range.",
+            "Answer is 1:1."
+          ]
+        },
+        {
+          "name": "Complementary Angles",
+          "idea": "30° and 60° sum to 90°, so ranges equal",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Note 30° + 60° = 90° (complementary).",
+            "Range formula R = v² sin(2θ)/g gives same value for complementary angles.",
+            "Ratio R₃₀ : R₆₀ = 1 : 1."
+          ]
+        },
+        {
+          "name": "Sine Double-Angle",
+          "idea": "Compute sin(2θ) for both angles",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall range ∝ sin(2θ).",
+            "sin(60°) = sin(120°) = √3/2.",
+            "Both ranges equal → ratio 1:1."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:47:20.809Z"
+    },
+    {
+      "id": "c263628f2e93808c",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "SSC GD Constable Practice Set 11",
+      "paperPath": "ssc-gd/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 2,
+      "section": "Elementary Mathematics",
+      "question": "If the numerator of a fraction is increased by 20% and the denominator is decreased by 10%, the fraction becomes 4/5. What was the original fraction?",
+      "options": [
+        {
+          "label": "A",
+          "text": "2/3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3/5",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "4/7",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5/8",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let the original fraction be x/y.",
+        "Increase numerator by 20%: new numerator = 1.2x.",
+        "Decrease denominator by 10%: new denominator = 0.9y.",
+        "Set up equation: (1.2x)/(0.9y) = 4/5.",
+        "Simplify: (4/3)*(x/y) = 4/5 => x/y = 3/5.",
+        "Original fraction is 3/5, which corresponds to option B."
+      ],
+      "verifierCheck": "Let the original fraction be x/y. Increasing the numerator by 20% gives 1.2x, and decreasing the denominator by 10% gives 0.9y. The new fraction is (1.2x)/(0.9y) = (4/3)(x/y). Setting this equal to 4/5 yields (4/3)(x/y) = 4/5, so x/y = (4/5)*(3/4) = 3/5. Checking: 3/5 with numerator increased by 20% becomes 3.6, denominator decreased by 10% becomes 4.5, and 3.6/4.5 = 4/5. Thus the original fraction is 3/5, which is option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ratio Shortcut",
+          "idea": "Use combined change factor to directly compute original fraction",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let original fraction be N/D.",
+            "New fraction = (1.2N)/(0.9D) = (4/3)*(N/D).",
+            "Set (4/3)*(N/D) = 4/5.",
+            "Solve N/D = (4/5)*(3/4) = 3/5.",
+            "Match option B."
+          ]
+        },
+        {
+          "name": "Scale Invariant",
+          "idea": "Recognize the net multiplier on the fraction is constant",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Increasing numerator by 20% multiplies fraction by 1.2.",
+            "Decreasing denominator by 10% multiplies fraction by 1/0.9 = 10/9.",
+            "Combined factor = 1.2 * (10/9) = 4/3.",
+            "Original fraction = (4/5) ÷ (4/3) = 3/5.",
+            "Answer is option B."
+          ]
+        },
+        {
+          "name": "Test Options",
+          "idea": "Plug each choice into the percentage changes to see which yields 4/5",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "For each option, multiply numerator by 1.2.",
+            "Multiply denominator by 0.9.",
+            "Simplify the resulting fraction.",
+            "Check which equals 4/5.",
+            "Option B (3/5) gives 3.6/4.5 = 4/5."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:48:00.355Z"
+    },
+    {
+      "id": "ef971ebd1aa60965",
+      "exam": "agniveer",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "Agniveer Practice Set 18",
+      "paperPath": "agniveer/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 3,
+      "section": "Reasoning",
+      "question": "In a certain code language, 'TABLE' is written as 'WDEOH'. How will 'CHAIR' be written in that code?",
+      "options": [
+        {
+          "label": "A",
+          "text": "FKDLU",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "FKDUL",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "FLKDU",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "FDKLU",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Map each letter in 'TABLE' and 'WDEOH' to its alphabetical position (A=1, B=2, ..., Z=26).",
+        "Observe that each letter in 'WDEOH' is exactly 3 positions ahead of the corresponding letter in 'TABLE' (T+3=W, A+3=D, B+3=E, L+3=O, E+3=H).",
+        "Conclude the code is a Caesar cipher with a shift of +3.",
+        "Apply the same shift to 'CHAIR': C+3=F, H+3=K, A+3=D, I+3=L, R+3=U.",
+        "Form the coded word 'FKDLU'.",
+        "Match with the given options; option A is 'FKDLU'."
+      ],
+      "verifierCheck": "The code shifts each letter forward by 3 positions in the alphabet: T(20)+3=W(23), A(1)+3=D(4), B(2)+3=E(5), L(12)+3=O(15), E(5)+3=H(8). Applying the same shift to CHAIR: C(3)+3=F(6), H(8)+3=K(11), A(1)+3=D(4), I(9)+3=L(12), R(18)+3=U(21) gives FKDLU, which corresponds to option A.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "First Letter Quick Check",
+          "idea": "use first letter shift to eliminate options",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "T→W shows +3 shift",
+            "C+3=F, only option starting with F is A",
+            "Confirm rest matches FKDLU"
+          ]
+        },
+        {
+          "name": "Caesar +3 Shift",
+          "idea": "each letter advanced by 3 positions",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Note T→W, A→D, B→E, L→O, E→H all +3",
+            "Apply +3 to C,H,A,I,R → F,K,D,L,U",
+            "Match FKDLU to option A"
+          ]
+        },
+        {
+          "name": "Alphabet Index Add 3",
+          "idea": "convert letters to numbers, add 3, convert back",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Write positions: C=3,H=8,A=1,I=9,R=18",
+            "Add 3: 6,11,4,12,21",
+            "Convert: 6=F,11=K,4=D,12=L,21=U",
+            "Select option A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:48:34.207Z"
+    },
+    {
+      "id": "f8b777d2045ea6ac",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-10",
+      "paperTitle": "IBPS PO Practice Set 10",
+      "paperPath": "ibps-po/papers/practice-set-10.html",
+      "paperFile": "practice-set-10.json",
+      "questionNumber": 3,
+      "section": "Quantitative Aptitude",
+      "question": "The average weight of 8 persons increases by 2.5 kg when a new person replaces one of them weighing 56 kg. What is the weight of the new person?",
+      "options": [
+        {
+          "label": "A",
+          "text": "76 kg",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "70 kg",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "72 kg",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "78 kg",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let original average weight of 8 persons be A kg.",
+        "Original total weight = 8A kg.",
+        "After replacing 56 kg person with new person of weight x kg, new total = 8A - 56 + x.",
+        "New average = (8A - 56 + x)/8 = A + 2.5 (since average increases by 2.5 kg).",
+        "Multiply by 8: 8A - 56 + x = 8A + 20.",
+        "Solve: x = 76 kg."
+      ],
+      "verifierCheck": "Let original average be A. Total weight = 8A. After replacing 56 kg person with new person of weight x, new total = 8A - 56 + x. New average = (8A - 56 + x)/8 = A + 2.5. Multiply by 8: 8A - 56 + x = 8A + 20 => x = 76 kg.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick Mental Math",
+          "idea": "Break multiplication for speed: 2.5×8 = 20, then add",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "2.5 × 8 = 20 (2.5×4=10, double)",
+            "56 + 20 = 76"
+          ]
+        },
+        {
+          "name": "Average Delta Formula",
+          "idea": "Use direct formula new = old + (Δavg × n)",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Recall formula: new weight = old weight + (average increase × number of persons)",
+            "Plug values: 56 + (2.5 × 8) = 56 + 20 = 76"
+          ]
+        },
+        {
+          "name": "Total Increase Shortcut",
+          "idea": "Multiply average increase by group size, add to replaced weight",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Multiply 2.5 kg by 8 persons = 20 kg total increase",
+            "Add 20 kg to replaced weight 56 kg = 76 kg"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:49:01.663Z"
+    },
+    {
+      "id": "bbbe858723cf8f1d",
+      "exam": "jee",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "JEE Main Practice Set 15",
+      "paperPath": "jee/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "If ω is a non-real cube root of unity, then the value of (1 - ω + ω²)(1 + ω - ω²) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "-4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "-1",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall properties: ω^3 = 1 and 1 + ω + ω² = 0 for non-real cube roots of unity.",
+        "Substitute ω² = -1 - ω into the expression.",
+        "First factor: 1 - ω + ω² = 1 - ω - 1 - ω = -2ω.",
+        "Second factor: 1 + ω - ω² = 1 + ω + 1 + ω = 2 + 2ω = 2(1+ω) = -2ω².",
+        "Multiply: (-2ω)(-2ω²) = 4ω^3 = 4.",
+        "Alternatively, expand directly and simplify using ω^3=1, ω^4=ω, and ω+ω²=-1 to get 4."
+      ],
+      "verifierCheck": "Let ω be a non-real cube root of unity, so ω³ = 1 and 1 + ω + ω² = 0. Then 1 - ω + ω² = (1 + ω²) - ω = -ω - ω = -2ω, and 1 + ω - ω² = (1 + ω) - ω² = -ω² - ω² = -2ω². Their product is (-2ω)(-2ω²) = 4ω³ = 4·1 = 4. Alternatively, expanding directly gives 3 - ω - ω² = 3 - (-1) = 4.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Factor as -2ω and -2ω²",
+          "idea": "Directly rewrite each factor using 1+ω+ω²=0",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Note 1+ω+ω²=0.",
+            "Then 1-ω+ω² = (1+ω+ω²) - 2ω = -2ω.",
+            "And 1+ω-ω² = (1+ω+ω²) - 2ω² = -2ω².",
+            "Product = (-2ω)(-2ω²) = 4ω³ = 4."
+          ]
+        },
+        {
+          "name": "Difference of Squares",
+          "idea": "Rewrite as (1-(ω-ω²))(1+(ω-ω²)) = 1-(ω-ω²)²",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Write as (1 - (ω-ω²))(1 + (ω-ω²)) = 1 - (ω-ω²)².",
+            "Expand (ω-ω²)² = ω² - 2ω³ + ω⁴ = ω² - 2 + ω.",
+            "Use ω²+ω = -1 → (ω-ω²)² = -3.",
+            "Product = 1 - (-3) = 4."
+          ]
+        },
+        {
+          "name": "Sum Zero Substitution",
+          "idea": "Replace ω² with -1-ω using 1+ω+ω²=0",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Use 1+ω+ω²=0 → ω² = -1-ω.",
+            "First factor: 1-ω+ω² = 1-ω-1-ω = -2ω.",
+            "Second factor: 1+ω-ω² = 1+ω+1+ω = 2+2ω = 2(1+ω).",
+            "Use 1+ω = -ω² → second factor = -2ω².",
+            "Multiply: (-2ω)(-2ω²)=4ω³=4."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:50:20.480Z"
+    },
+    {
+      "id": "4f66eb4a9ee2aefe",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "SSC GD Constable Practice Set 11",
+      "paperPath": "ssc-gd/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 3,
+      "section": "Elementary Mathematics",
+      "question": "The perimeter of a rectangle is 60 cm and its length is twice its breadth. What is the area of the rectangle?",
+      "options": [
+        {
+          "label": "A",
+          "text": "150 cm²",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "180 cm²",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "200 cm²",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "220 cm²",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let breadth = b cm, then length = 2b cm.",
+        "Perimeter = 2(length + breadth) = 2(2b + b) = 6b.",
+        "Given perimeter = 60 cm, so 6b = 60 => b = 10 cm.",
+        "Length = 2b = 20 cm.",
+        "Area = length × breadth = 20 × 10 = 200 cm².",
+        "Option C is 200 cm²."
+      ],
+      "verifierCheck": "Let breadth = b, length = 2b. Perimeter = 2(2b+b)=6b=60 => b=10 cm, length=20 cm. Area = 20*10=200 cm².",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Perimeter Parts",
+          "idea": "Split perimeter into 6 equal parts (2L+2B = 6B)",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Perimeter 60 ÷ 6 = 10 = breadth",
+            "Length = 2 × 10 = 20",
+            "Area = 20 × 10 = 200"
+          ]
+        },
+        {
+          "name": "Half-Perimeter",
+          "idea": "Half-perimeter = L+B = 3B, then multiply",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Half-perimeter = 60 ÷ 2 = 30",
+            "30 ÷ 3 = 10 = breadth",
+            "Area = 20 × 10 = 200"
+          ]
+        },
+        {
+          "name": "Area Ratio",
+          "idea": "Area = (P/6) × (P/3) = P²/18",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "P² = 60² = 3600",
+            "3600 ÷ 18 = 200"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:50:32.129Z"
+    },
+    {
+      "id": "22917e4c3d2bf4be",
+      "exam": "agniveer",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "Agniveer Practice Set 18",
+      "paperPath": "agniveer/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "A shopkeeper gives two successive discounts of 20% and 10% on a marked price of ₹500. What is the selling price?",
+      "options": [
+        {
+          "label": "A",
+          "text": "350",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "340",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "330",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "360",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate price after first discount of 20%: 500 * 0.8 = 400",
+        "Calculate price after second discount of 10% on the reduced price: 400 * 0.9 = 360",
+        "Selling price is 360"
+      ],
+      "verifierCheck": "The marked price is ₹500. After a 20% discount, the price becomes 500 × 0.80 = ₹400. Then a 10% discount on ₹400 gives 400 × 0.90 = ₹360. Thus the selling price is ₹360, which corresponds to option D.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Multiply",
+          "idea": "Combine discounts into single factor",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Compute combined factor: 0.8 * 0.9 = 0.72",
+            "Multiply 500 * 0.72 = 360"
+          ]
+        },
+        {
+          "name": "Percentage Shortcut",
+          "idea": "Use net discount 28% (20+10-2)",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Net discount = 20+10 - (20*10/100) = 28%",
+            "Selling price = 500 * (1 - 0.28) = 500 * 0.72 = 360"
+          ]
+        },
+        {
+          "name": "Stepwise Discount",
+          "idea": "Apply each discount sequentially",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "20% off 500 = 500 - 100 = 400",
+            "10% off 400 = 400 - 40 = 360"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-18T00:50:50.366Z"
     }
   ]
 }
