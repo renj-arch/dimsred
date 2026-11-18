@@ -182,6 +182,9 @@ jobs:
           # The store is the only thing stopping a model-written item from
           # publishing outside the sheet, so its guards run before every deploy.
           node scripts/lib/figure-store.test.js
+          # A duplicated, unclosed sidebar heading wraps the whole page and
+          # shrinks every word to .7em. Refuse to deploy one.
+          node scripts/repair-sidebar-heading.js --check
           # 2026-11-15: all 14 crash-course pages rendered "Content Coming
           # Soon" because the data engine was never included. This guard keeps
           # the include and the STUDY_DATA key honest.
