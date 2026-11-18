@@ -505,7 +505,7 @@ async function runLyrics(p) {
   const res = await callLLM([
     { role: 'system', content: system },
     { role: 'user', content: lyricsPrompt(b) }
-  ], { temperature: 0.8, numPredict: 6000 });
+  ], { temperature: 0.8, numPredict: 12000 });
   let text = String(res.text || '').trim();
   // Which route actually answered. The result file used to say "owner runner",
   // which told the reader nothing about whether the 550B model or the small
