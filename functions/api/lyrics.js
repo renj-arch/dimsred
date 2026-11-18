@@ -209,7 +209,7 @@ async function callProvider(p, system, user, timeoutMs) {
           { role: 'user', content: user }
         ],
         temperature: 0.8,
-        max_tokens: Math.min(6000, p.max),
+        max_tokens: Math.min(12000, p.max),
         stream: false
       }),
       signal: ctrl.signal
