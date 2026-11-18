@@ -99,6 +99,38 @@ function brief(b) {
   var lang = LANGS[String(b.language || 'english').toLowerCase()] || 'English';
   var lines = Math.max(4, Math.min(80, Number(b.lines) || 16));
   var structure = String(b.structure || 'Verse 1, Chorus, Verse 2, Chorus, Bridge, Chorus').slice(0, 120);
+
+  // Transcreation: the aspirant supplies an English lyric and wants it sung in
+  // Tamil or Malayalam, not translated word for word. That is a different job
+  // from writing from a brief, so it gets its own instruction set.
+  var source = String(b.source || '').trim();
+  if (source) {
+    return [
+      'You are a film lyricist. You are not translating: you are transcreating — writing a NEW lyric in ' + lang +
+        ' that carries the same feeling, images and story as the English source, and sings.',
+      '',
+      'Target language: ' + lang,
+      'Mood: ' + String(b.mood || 'keep the source mood').slice(0, 60),
+      'Genre: ' + String(b.genre || 'film').slice(0, 60),
+      'Rhyme: ' + String(b.rhyme || 'natural, singable').slice(0, 60),
+      '',
+      'THE ENGLISH SOURCE (do not reproduce it; write its Tamil/Malayalam counterpart):',
+      source.slice(0, 2000),
+      '',
+      'Rules:',
+      '- Keep the section layout and the number of lines per section. A refrain stays a refrain.',
+      '- Write in ' + lang + ' script. Every sung line must be in ' + lang + ' script; no Latin-letter transliteration inside the sung line.',
+      '- Under each section heading, add ONE bracketed romanised line for pronunciation, prefixed with "Roman:".',
+      '- Match the syllable weight of each line closely enough to be sung to the same tune. Prefer short, open vowels.',
+      '- Keep the concrete images (lamp, sandalwood, cradle, flower, eyes, sea). Replace an image only when it does not exist in the target culture — and then replace it with one that does.',
+      '- Rhyme where the source rhymes; at minimum repeat the same vowel sound at line ends.',
+      '- No word-for-word calques that sound like a translated document. It must read as a lyric written in ' + lang + '.',
+      '- Do not add lines that are not in the source, and do not drop a section.',
+      '',
+      'Return only the lyric, with section headings in square brackets.'
+    ].join('\n');
+  }
+
   var parts = [
     'Write song lyrics. Return ONLY the lyrics, no commentary, no markdown fences.',
     '',
@@ -126,6 +158,40 @@ function brief(b) {
   return parts.join('\n');
 }
 
+// A transcreation must keep the source's shape. The first live attempt added a
+// verse and a bridge that were not in the source, and leaked Latin letters into
+// a sung Tamil line ("மounம்"). Both are rejected here so the caller can retry
+// instead of shipping a lyric that does not fit the tune.
+function transcreationProblems(text, source) {
+  var problems = [];
+  var src = String(source || '');
+  if (!src) return problems;
+
+  var srcSections = (src.match(/\[[^\]]+\]/g) || []).map(function (s) { return s.replace(/[\[\]]/g, '').trim().toLowerCase(); });
+  var outSections = (String(text).match(/\[[^\]]+\]/g) || []).map(function (s) { return s.replace(/[\[\]]/g, '').trim().toLowerCase(); });
+  if (srcSections.length && outSections.length > srcSections.length + 1) {
+    problems.push('added sections that are not in the source');
+  }
+  if (srcSections.length && outSections.length) {
+    var same = srcSections.filter(function (s, i) { return outSections[i] === s; }).length;
+    if (same < Math.max(1, srcSections.length - 1)) problems.push('section order does not follow the source');
+  }
+
+  // Latin letters are allowed only on the romanisation line and in headings.
+  var lines = String(text).split('\n');
+  var leaked = lines.filter(function (line) {
+    var t = line.trim();
+    if (!t) return false;
+    if (/^\[.*\]$/.test(t)) return false;
+    if (/^roman\s*:/i.test(t.replace(/^[\[(]/, ''))) return false;
+    if (/^\(.*\)$/.test(t)) return false;
+    return /[A-Za-z]{4,}/.test(t) && !/^\[/.test(t);
+  });
+  if (leaked.length) problems.push('Latin text inside sung lines (' + leaked[0].slice(0, 40) + ')');
+
+  return problems;
+}
+
 async function callProvider(p, system, user, timeoutMs) {
   var ctrl = new AbortController();
   var timer = setTimeout(function () { ctrl.abort(); }, timeoutMs);
@@ -143,7 +209,7 @@ async function callProvider(p, system, user, timeoutMs) {
           { role: 'user', content: user }
         ],
         temperature: 0.8,
-        max_tokens: Math.min(4000, p.max),
+        max_tokens: Math.min(12000, p.max),
         stream: false
       }),
       signal: ctrl.signal
@@ -278,6 +344,15 @@ export async function onRequestPost(context) {
     if (res.text && !scriptOk(res.text, body.brief && body.brief.language)) {
       var retry = await callProvider(p, system, stricter(user, (body.brief || {}).language), 60000);
       if (retry.text && scriptOk(retry.text, body.brief && body.brief.language)) res = retry;
+    }
+    if (res.text && body.brief && body.brief.source) {
+      var probs = transcreationProblems(res.text, body.brief.source);
+      if (probs.length) {
+        var retry2 = await callProvider(p, system,
+          user + '\n\nYour last answer was rejected: ' + probs.join('; ') +
+          '. Keep exactly the source sections and the same number of sung lines, and write every sung line in the target script with no Latin letters.', 60000);
+        if (retry2.text) res = retry2;
+      }
     }
     if (res.text) {
       return out(200, {

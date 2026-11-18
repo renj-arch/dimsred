@@ -169,7 +169,9 @@ function curlChat(payload) {
     child.on('close', function (code) {
       if (settled) return;
       settled = true; clearInterval(mon);
-      if (code === 0) resolve(out); else reject(new Error('curl exit ' + code + ' ' + err.slice(0, 300)));
+      if (code === 0) resolve(out);
+      else if (code === 7) reject(new Error('local Ollama is not reachable at 127.0.0.1:11434 (this runner has no local model installed)'));
+      else reject(new Error('curl exit ' + code + ' ' + err.slice(0, 300)));
     });
     child.stdin.on('error', function () {});
     child.stdin.write(payload); child.stdin.end();

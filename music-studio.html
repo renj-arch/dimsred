@@ -434,6 +434,10 @@ textarea{min-height:90px;resize:vertical}
             <label>What is the song about?</label>
             <textarea id="lb-theme" placeholder="e.g. a father leaving a small town for work, and the letters he never sends"></textarea>
           </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>Or paste an English lyric to transcreate (optional — overrides the brief above)</label>
+            <textarea id="lb-source" style="min-height:140px;font-family:ui-monospace,monospace" placeholder="Paste your English verse/chorus here. It becomes a singable Tamil/Malayalam lyric — same sections, same images, not a word-for-word translation."></textarea>
+          </div>
           <div class="field"><label>Language</label>
             <select id="lb-language" onchange="MX.lyricPrefs()">
               <option value="english">English</option><option value="tamil">Tamil</option>
@@ -569,8 +573,11 @@ textarea{min-height:90px;resize:vertical}
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-primary" onclick="MX.startRec()">⏺ Record</button>
           <button class="btn btn-secondary" onclick="MX.stopRec()">⏹ Stop</button>
-          <button class="btn btn-secondary" onclick="MX.playRec()">▶ Play take</button>
+          <button class="btn btn-secondary" onclick="MX.playRec()">▶ Play selected</button>
           <a class="btn btn-secondary" id="mx-rec-dl" href="#" download="take.webm" style="display:none">⤓ Download</a>
+          <label style="display:flex;gap:6px;align-items:center;font-size:.82em;color:var(--muted)">
+            <input type="checkbox" id="mx-monitor"> hear the backing while recording (use headphones)
+          </label>
           <span id="mx-rec-status" style="font-size:.82em;color:var(--muted)"></span>
         </div>
         <div id="mx-recs" style="margin-top:16px"></div>
@@ -589,6 +596,16 @@ textarea{min-height:90px;resize:vertical}
         </div>
         <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="MX.exportWav()">⤓ Render WAV</button>
+          <button class="btn btn-primary" onclick="MX.mixFinal()">🎧 Mix voice + backing (final song)</button>
+          <div class="field" style="min-width:170px;margin:0">
+            <label>Vocal source</label>
+            <select id="mx-vocal">
+              <option value="auto" selected>Auto (my take, else studio voice)</option>
+              <option value="take">My recording (Recorder tab)</option>
+              <option value="voice">Studio voice (TTS tab)</option>
+              <option value="none">Instrumental only</option>
+            </select>
+          </div>
           <button class="btn btn-secondary" onclick="MX.exportStems()">⤓ Export stems (4 WAV)</button>
           <button class="btn btn-secondary" onclick="MX.exportMidi()">⤓ Export MIDI</button>
           <label class="btn btn-secondary" style="cursor:pointer">⤒ Import MIDI to roll<input type="file" accept=".mid,.midi,audio/midi" style="display:none" onchange="MX.importMidi(this)"></label>
@@ -1891,33 +1908,192 @@ const MX = (function () {
   function clearRoll() { state.snap.roll.cells = {}; renderRoll(); save(); }
 
   /* ---------------- recorder ---------------- */
+  /* ---------------- takes: record, keep, choose ----------------
+   A studio records several takes and then chooses. Takes are stored in
+   IndexedDB against the project, so closing the tab does not lose the best
+   verse, and the final mix uses the take you selected rather than whichever
+   one happened to be recorded last. */
+  const TAKE_DB = 'studio-takes-v1';
+
+  function idbOpen() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(TAKE_DB, 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains('takes')) db.createObjectStore('takes', { keyPath: 'key' });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  async function idbPut(record) {
+    try {
+      const db = await idbOpen();
+      await new Promise((res, rej) => {
+        const tx = db.transaction('takes', 'readwrite');
+        tx.objectStore('takes').put(record);
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      });
+      db.close();
+    } catch (e) { /* private mode or quota: takes stay in memory */ }
+  }
+  async function idbDelete(key) {
+    try {
+      const db = await idbOpen();
+      await new Promise((res, rej) => {
+        const tx = db.transaction('takes', 'readwrite');
+        tx.objectStore('takes').delete(key);
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      });
+      db.close();
+    } catch (e) {}
+  }
+  async function idbAll() {
+    try {
+      const db = await idbOpen();
+      const rows = await new Promise((res, rej) => {
+        const tx = db.transaction('takes', 'readonly');
+        const req = tx.objectStore('takes').getAll();
+        req.onsuccess = () => res(req.result || []);
+        req.onerror = () => rej(req.error);
+      });
+      db.close();
+      return rows;
+    } catch (e) { return []; }
+  }
+
+  function takeKey(id) { return String(currentId || 'unsaved') + ':' + id; }
+
+  function activeTake() {
+    return (state.takes || []).find((t) => t.id === state.activeTakeId) ||
+      (state.takes || [])[state.takes.length - 1] || null;
+  }
+
+  async function decodeDuration(blob) {
+    try {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = await ac.decodeAudioData(await blob.arrayBuffer());
+      ac.close();
+      return buf.duration;
+    } catch (e) { return 0; }
+  }
+
+  async function addTake(blob, name) {
+    const id = 'take-' + Date.now().toString(36);
+    const dur = await decodeDuration(blob);
+    const take = {
+      id: id,
+      key: takeKey(id),
+      project: String(currentId || 'unsaved'),
+      name: name || ('Take ' + ((state.takes || []).length + 1)),
+      at: new Date().toISOString(),
+      type: blob.type || 'audio/webm',
+      dur: Math.round(dur * 10) / 10,
+      blob: blob,
+      url: URL.createObjectURL(blob)
+    };
+    state.takes = state.takes || [];
+    state.takes.push(take);
+    state.activeTakeId = id;
+    MX.lastTakeBlob = blob;
+    await idbPut({ key: take.key, project: take.project, id: id, name: take.name, at: take.at, type: take.type, dur: take.dur, data: blob });
+    renderTakes();
+    return take;
+  }
+
+  async function loadTakes() {
+    state.takes = [];
+    state.activeTakeId = null;
+    const rows = await idbAll();
+    const mine = rows.filter((r) => String(r.project || 'unsaved') === String(currentId || 'unsaved'));
+    mine.sort((a, b) => String(a.at).localeCompare(String(b.at)));
+    mine.forEach((r) => {
+      if (!r.data) return;
+      state.takes.push({
+        id: r.id, key: r.key, project: r.project, name: r.name, at: r.at,
+        type: r.type, dur: r.dur || 0, blob: r.data, url: URL.createObjectURL(r.data)
+      });
+    });
+    if (state.takes.length) {
+      state.activeTakeId = state.takes[state.takes.length - 1].id;
+      MX.lastTakeBlob = state.takes[state.takes.length - 1].blob;
+    }
+    renderTakes();
+  }
+
+  function renderTakes() {
+    const host = document.getElementById('mx-recs');
+    if (!host) return;
+    const takes = state.takes || [];
+    if (!takes.length) {
+      host.innerHTML = '<p style="font-size:.84em;color:var(--muted)">No takes yet. Press Record, sing a line, stop. Record several and choose the best one for the final mix.</p>';
+      return;
+    }
+    host.innerHTML = takes.map((t) => {
+      const active = t.id === state.activeTakeId;
+      return '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;padding:8px 10px;border:1px solid ' +
+        (active ? 'rgba(167,139,250,.55)' : 'var(--border)') + ';border-radius:8px;background:' +
+        (active ? 'rgba(167,139,250,.08)' : 'rgba(255,255,255,.02)') + '">' +
+        '<label style="display:flex;gap:6px;align-items:center;font-size:.8em;color:var(--muted)"><input type="radio" name="mxtake"' +
+        (active ? ' checked' : '') + ' onchange="MX.selectTake(\'' + t.id + '\')"> use</label>' +
+        '<input value="' + esc(t.name) + '" onchange="MX.renameTake(\'' + t.id + '\',this.value)" style="width:130px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text);font-size:.82em">' +
+        '<span style="font-size:.75em;color:var(--muted)">' + (t.dur ? t.dur + 's' : '') + '</span>' +
+        '<audio controls src="' + t.url + '" style="height:32px"></audio>' +
+        '<a class="btn btn-sm btn-secondary" href="' + t.url + '" download="' + esc(String(currentId || 'song')) + '-' + esc(t.name).replace(/[^\w-]+/g, '_') + '.webm">&#10515;</a>' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.deleteTake(\'' + t.id + '\')">&#10005;</button>' +
+        '</div>';
+    }).join('');
+    const status = document.getElementById('mx-rec-status');
+    if (status) status.textContent = takes.length + ' take' + (takes.length === 1 ? '' : 's') + ' - using "' + (activeTake() ? activeTake().name : '-') + '"';
+  }
+
+  function selectTake(id) {
+    state.activeTakeId = id;
+    const t = (state.takes || []).find((x) => x.id === id);
+    if (t) MX.lastTakeBlob = t.blob;
+    renderTakes();
+  }
+  function renameTake(id, name) {
+    const t = (state.takes || []).find((x) => x.id === id);
+    if (!t) return;
+    t.name = String(name || t.name).slice(0, 40);
+    idbPut({ key: t.key, project: t.project, id: t.id, name: t.name, at: t.at, type: t.type, dur: t.dur, data: t.blob });
+    renderTakes();
+  }
+  async function deleteTake(id) {
+    const t = (state.takes || []).find((x) => x.id === id);
+    state.takes = (state.takes || []).filter((x) => x.id !== id);
+    if (t) await idbDelete(t.key);
+    if (state.activeTakeId === id) state.activeTakeId = (state.takes[state.takes.length - 1] || {}).id || null;
+    const act = activeTake();
+    MX.lastTakeBlob = act ? act.blob : null;
+    renderTakes();
+  }
+
   async function startRec() {
     const status = document.getElementById('mx-rec-status');
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+      });
       state.chunks = [];
       state.rec = new MediaRecorder(stream);
       state.rec.ondataavailable = (e) => { if (e.data && e.data.size) state.chunks.push(e.data); };
-      state.rec.onstop = () => {
+      state.rec.onstop = async () => {
         const blob = new Blob(state.chunks, { type: 'audio/webm' });
-        state.takes.push(blob);
-        const url = URL.createObjectURL(blob);
-        const dl = document.getElementById('mx-rec-dl');
-        if (dl) { dl.href = url; dl.style.display = 'inline-block'; }
-        const list = document.getElementById('mx-recs');
-        if (list) {
-          const row = document.createElement('div');
-          row.style.cssText = 'margin-top:8px;display:flex;gap:10px;align-items:center';
-          row.innerHTML = '<span style="font-size:.82em;color:var(--muted)">Take ' + state.takes.length + '</span>';
-          const a = document.createElement('audio'); a.controls = true; a.src = url; a.style.height = '32px';
-          row.appendChild(a);
-          list.appendChild(row);
-        }
+        await addTake(blob);
         stream.getTracks().forEach((t) => t.stop());
-        if (status) status.textContent = 'recorded take ' + state.takes.length;
+        const mon = document.getElementById('mx-monitor');
+        if (mon && mon.checked) { try { MX.stop(); } catch (e) {} }
       };
+      const mon = document.getElementById('mx-monitor');
+      if (mon && mon.checked) {
+        try { MX.play(); } catch (e) {}
+        if (status) status.textContent = 'recording over the backing - use headphones';
+      } else if (status) status.textContent = 'recording';
       state.rec.start();
-      if (status) status.textContent = 'recording…';
     } catch (e) {
       if (status) status.textContent = 'microphone unavailable: ' + e.message;
     }
@@ -2054,6 +2230,7 @@ const MX = (function () {
     const v = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
     return {
       theme: v('lb-theme'),
+      source: v('lb-source'),
       language: v('lb-language'),
       mood: v('lb-mood'),
       genre: v('lb-genre'),
@@ -2070,7 +2247,7 @@ const MX = (function () {
     const status = document.getElementById('lb-status');
     const out = document.getElementById('lb-out');
     const btn = document.querySelector('#tab-lyriclab .btn-primary');
-    if (!brief().theme.trim()) { if (status) status.textContent = 'write what the song is about first'; return; }
+    if (!brief().theme.trim() && !brief().source.trim()) { if (status) status.textContent = 'write a brief, or paste an English lyric to transcreate'; return; }
     if (btn) btn.disabled = true;
     if (status) status.textContent = 'asking the model…';
     try {
@@ -2183,7 +2360,7 @@ const MX = (function () {
     wrap('loadProject', () => { state.snap = (function () {
       const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
       return (p && p.mx) ? Object.assign(defaults(), p.mx) : defaults();
-    })(); renderAll(); });
+    })(); renderAll(); try { loadTakes(); } catch (e) {} });
     wrap('newSong', () => { state.snap = defaults(); renderAll(); });
     // The existing DOMContentLoaded handler already called loadProject before
     // this script wrapped it, so read the current project once here.
@@ -2200,7 +2377,7 @@ const MX = (function () {
     setTrack, setMaster, setFx, setTempo, setClick, setArp, applyPreset,
     playDegree, playHarmony, progressionToSection, refreshHarmony,
     setRollInst, toggleCell, clearRoll, renderRoll,
-    startRec, stopRec, playRec, exportWav, exportProject, importProject, printSheet,
+    startRec, stopRec, playRec, loadTakes, renderTakes, selectTake, renameTake, deleteTake, activeTake, exportWav, exportProject, importProject, printSheet,
     generateLyrics, lyricToSection, lyricReplace, copyLyric, lyricPrefs, freshToken: freshToken,
     syncFromProject, snapshot, songSeconds: () => songSeconds(state.snap),
     // Internals for the extended tools (MIDI, stems, chart, undo). Kept under
@@ -2507,6 +2684,8 @@ const MX = (function () {
       }
       const got = await pollAudio(d.meta, d.audio, status);
       if (!got || got.error) { if (status) status.textContent = (got && got.error) || 'no audio'; return; }
+      // Kept so the voice can be mixed onto the backing later.
+      MX.lastVoiceBlob = got.blob;
       const url = URL.createObjectURL(got.blob);
       const audio = document.getElementById('edgeAudio');
       if (audio) { audio.src = url; audio.style.display = 'block'; audio.play().catch(function () {}); }
@@ -2515,6 +2694,94 @@ const MX = (function () {
       if (status) status.textContent = 'ready · ' + Math.round(got.blob.size / 1024) + ' KB';
     } catch (e) {
       if (status) status.textContent = 'could not reach the voice runner: ' + e.message;
+    }
+  };
+
+  /* ---------------- final mix: voice over the backing ---------------- */
+  // The last step of the studio: the arrangement as an instrumental, the
+  // rendered voice as an a cappella, mixed into one file you can play or send.
+  MX.mixFinal = async function () {
+    const status = document.getElementById('mx-export-status');
+    const s = snap();
+    const rate = Number((document.getElementById('mx-rate') || {}).value) || 44100;
+    const need = Math.max(4, Math.ceil((MX.songSeconds ? MX.songSeconds() : 30) + 4));
+    const seconds = Math.max(need, Number((document.getElementById('mx-len') || {}).value) || need);
+    if (status) status.textContent = 'rendering the backing…';
+    try {
+      const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      const ctx = new OfflineCtx(2, Math.ceil(seconds * rate), rate);
+      const graph = X.makeGraph(ctx);
+      X.scheduleSong(ctx, graph, s, 0.05);
+      const backing = await ctx.startRendering();
+
+      let voice = null;
+      const src = (document.getElementById('mx-vocal') || {}).value || 'auto';
+      const wantTake = (src === 'take') || (src === 'auto' && MX.lastTakeBlob);
+      const wantVoice = (src === 'voice') || (src === 'auto' && !MX.lastTakeBlob);
+      const vocalBlob = (src === 'none') ? null : (wantTake ? MX.lastTakeBlob : (wantVoice ? MX.lastVoiceBlob : null));
+      if (vocalBlob) {
+        if (status) status.textContent = wantTake ? 'adding your recorded take…' : 'adding the studio voice…';
+        try {
+          const tmp = new (window.AudioContext || window.webkitAudioContext)();
+          voice = await tmp.decodeAudioData(await vocalBlob.arrayBuffer());
+          tmp.close();
+        } catch (e) {
+          voice = null;
+          if (status) status.textContent = 'could not decode that take (' + e.message + ') — check the take plays in the Recorder tab';
+        }
+      }
+      const usedTake = !!(voice && wantTake);
+
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const outBuf = ac.createBuffer(2, backing.length, rate);
+      for (let ch = 0; ch < 2; ch++) {
+        const dst = outBuf.getChannelData(ch);
+        const src = backing.getChannelData(Math.min(ch, backing.numberOfChannels - 1));
+        for (let i = 0; i < dst.length; i++) dst[i] = src[i];
+      }
+      if (voice) {
+        const vgain = 1.0;
+        const boff = Math.floor(0.05 * rate);
+        for (let i = 0; i < voice.length; i++) {
+          const at = i + boff;
+          if (at >= outBuf.length) break;
+          for (let ch = 0; ch < 2; ch++) {
+            const vs = voice.getChannelData(Math.min(ch, voice.numberOfChannels - 1))[i] * vgain;
+            const cur = outBuf.getChannelData(ch)[at] * 0.75;   // duck the backing under the voice
+            outBuf.getChannelData(ch)[at] = Math.max(-1, Math.min(1, cur + vs));
+          }
+        }
+      }
+      ac.close();
+
+      const blob = encodeWav(outBuf);
+      const url = URL.createObjectURL(blob);
+      let player = document.getElementById('mx-final');
+      if (!player) {
+        player = document.createElement('audio');
+        player.id = 'mx-final';
+        player.controls = true;
+        player.style.cssText = 'display:block;width:100%;margin-top:14px';
+        const host = document.getElementById('mx-export-status');
+        if (host && host.parentNode) host.parentNode.insertBefore(player, host.nextSibling);
+      }
+      player.src = url;
+      player.style.display = 'block';
+
+      const title = (document.getElementById('f-title') || {}).value || 'song';
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = String(title).replace(/[^\w-]+/g, '_') + (voice ? (usedTake ? '-myvoice.wav' : '-song.wav') : '-instrumental.wav');
+      a.click();
+
+      if (status) {
+        status.textContent = voice
+          ? (usedTake ? 'final song ready — your recorded voice over the backing' : 'final song ready — studio voice over the backing') +
+            ' (' + (blob.size / 1048576).toFixed(1) + ' MB). Press play above.'
+          : 'instrumental ready. Record a take in the Recorder tab, or render a Studio voice, then press this again.';
+      }
+    } catch (e) {
+      if (status) status.textContent = 'final mix failed: ' + e.message;
     }
   };
 
