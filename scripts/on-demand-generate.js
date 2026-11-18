@@ -554,7 +554,32 @@ function runTts(p) {
     res = spawnSync('python3', ['-c', script, text, voice, rate, pitch, out], { encoding: 'utf8', timeout: 180000 });
     if (!(res.status === 0 && fs.existsSync(out))) {
       errors.push('api: ' + tail(res.stderr || res.stdout || (res.error && res.error.message) || ''));
-      throw new Error('tts: edge-tts failed — ' + errors.join(' | '));
+
+      // Edge's endpoint answers 403 whenever Microsoft rotates the client
+      // token, which is outside our control. Google's speech endpoint is
+      // keyless and has real ta/ml voices, so it is the fallback that keeps
+      // the feature alive instead of dead until a package update lands.
+      const lang = voice.slice(0, 2).toLowerCase() === 'ta' ? 'ta' : voice.slice(0, 2).toLowerCase() === 'ml' ? 'ml' : voice.slice(0, 2).toLowerCase();
+      const gscript = [
+        'import sys',
+        'from gtts import gTTS',
+        'gTTS(text=sys.argv[1], lang=sys.argv[2], slow=False).save(sys.argv[3])'
+      ].join('\n');
+      res = spawnSync('python3', ['-c', gscript, text, lang, out], { encoding: 'utf8', timeout: 180000 });
+      if (!(res.status === 0 && fs.existsSync(out))) {
+        errors.push('gtts: ' + tail(res.stderr || res.stdout || ''));
+        throw new Error('tts: every engine failed — ' + errors.join(' | '));
+      }
+      return {
+        file: path.relative(path.join(__dirname, '..'), out).replace(/\\/g, '/'),
+        voice: voice,
+        voiceLabel: VOICES[voice],
+        rate: rate,
+        pitch: pitch,
+        engine: 'Google',
+        bytes: fs.statSync(out).size,
+        preview: text.slice(0, 140)
+      };
     }
   }
 
