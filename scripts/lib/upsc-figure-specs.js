@@ -415,9 +415,9 @@ const SPECS = [
     intro: 'The source of a body decides its tenure, its removal procedure and how seriously a report can bite.',
     draw: function (r) {
       const cols = [
-        { x: 40, title: 'Constitutional', tone: 'blue', items: ['Election Commission', 'Comptroller and Auditor General', 'UPSC', 'Finance Commission', 'Attorney General', 'NCSC, NCST, NCBC', 'Linguistic Minorities Officer'] },
-        { x: 275, title: 'Statutory', tone: 'green', items: ['NHRC', 'NGT', 'Central Information Commission', 'Lokpal', 'National Commission for Women', 'NCPCR'] },
-        { x: 510, title: 'Executive', tone: 'amber', items: ['NITI Aayog', 'NDMA', 'National Integration Council', 'Cabinet Committees', 'CBI (DSPE Act, DoPT control)'] }
+        { x: 40, title: 'Constitutional', tone: 'blue', items: ['Election Commission', 'Comptroller and Auditor General', 'UPSC', 'Finance Commission', 'Attorney General', 'NCSC, NCST and NCBC', 'Special Officer for Linguistic Minorities'] },
+        { x: 275, title: 'Statutory', tone: 'green', items: ['NHRC', 'NGT', 'Central Information Commission', 'Lokpal', 'National Commission for Women', 'NCPCR', 'CBI (DSPE Act, 1946)'] },
+        { x: 510, title: 'Executive', tone: 'amber', items: ['NITI Aayog', 'NDMA', 'National Integration Council', 'Cabinet Committees', 'Zonal Councils'] }
       ];
       cols.forEach(function (col) {
         r.box(col.x, 60, 210, 46, [col.title], { tone: col.tone, size: 13.5 });
@@ -428,9 +428,9 @@ const SPECS = [
         });
       });
 
-      r.note(50, 372, 'Constitutional bodies draw power from the Constitution itself; statutory from an Act; executive from a resolution.', { size: 12.5 });
-      r.note(50, 396, 'That is why the CAG and the ECI have removal procedures close to a judge\'s, while NITI Aayog does not.', { size: 12.5 });
-      r.note(50, 418, 'Do not call the CBI a constitutional body; it is statutory, and its superintendence sits with DoPT.', { size: 12, color: '#64748b' });
+      r.note(50, 356, 'Constitutional bodies draw power from the Constitution itself; statutory from an Act; executive from a resolution.', { size: 12.5 });
+      r.note(50, 378, 'The CAG and the ECI have removal procedures close to a judge\'s, because their tenure is entrenched.', { size: 12.5 });
+      r.note(50, 400, 'CBI is statutory, not constitutional, and its superintendence sits with the DoPT.', { size: 12, color: '#64748b' });
     }
   },
   {
