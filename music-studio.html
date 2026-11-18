@@ -434,6 +434,10 @@ textarea{min-height:90px;resize:vertical}
             <label>What is the song about?</label>
             <textarea id="lb-theme" placeholder="e.g. a father leaving a small town for work, and the letters he never sends"></textarea>
           </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>Or paste an English lyric to transcreate (optional — overrides the brief above)</label>
+            <textarea id="lb-source" style="min-height:140px;font-family:ui-monospace,monospace" placeholder="Paste your English verse/chorus here. It becomes a singable Tamil/Malayalam lyric — same sections, same images, not a word-for-word translation."></textarea>
+          </div>
           <div class="field"><label>Language</label>
             <select id="lb-language" onchange="MX.lyricPrefs()">
               <option value="english">English</option><option value="tamil">Tamil</option>
@@ -2054,6 +2058,7 @@ const MX = (function () {
     const v = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
     return {
       theme: v('lb-theme'),
+      source: v('lb-source'),
       language: v('lb-language'),
       mood: v('lb-mood'),
       genre: v('lb-genre'),
@@ -2070,7 +2075,7 @@ const MX = (function () {
     const status = document.getElementById('lb-status');
     const out = document.getElementById('lb-out');
     const btn = document.querySelector('#tab-lyriclab .btn-primary');
-    if (!brief().theme.trim()) { if (status) status.textContent = 'write what the song is about first'; return; }
+    if (!brief().theme.trim() && !brief().source.trim()) { if (status) status.textContent = 'write a brief, or paste an English lyric to transcreate'; return; }
     if (btn) btn.disabled = true;
     if (status) status.textContent = 'asking the model…';
     try {

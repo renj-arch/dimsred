@@ -442,6 +442,36 @@ const LANG_NAMES = {
 function lyricsPrompt(b) {
   b = b || {};
   const lang = LANG_NAMES[String(b.language || 'english').toLowerCase()] || 'English';
+
+  // Transcreation: an English lyric in, a singable Tamil/Malayalam lyric out.
+  const source = String(b.source || '').trim();
+  if (source) {
+    return [
+      'You are a film lyricist. You are not translating: you are transcreating — writing a NEW lyric in ' + lang +
+        ' that carries the same feeling, images and story as the English source, and sings.',
+      '',
+      'Target language: ' + lang,
+      'Mood: ' + String(b.mood || 'keep the source mood').slice(0, 60),
+      'Genre: ' + String(b.genre || 'film').slice(0, 60),
+      'Rhyme: ' + String(b.rhyme || 'natural, singable').slice(0, 60),
+      '',
+      'THE ENGLISH SOURCE (do not reproduce it; write its ' + lang + ' counterpart):',
+      source.slice(0, 2000),
+      '',
+      'Rules:',
+      '- Keep the section layout and the number of lines per section. A refrain stays a refrain.',
+      '- Write in ' + lang + ' script. Every sung line must be in that script; no Latin-letter transliteration inside a sung line.',
+      '- Under each section heading add ONE bracketed romanised line for pronunciation, prefixed with "Roman:".',
+      '- Match the syllable weight of each line closely enough to be sung to the same tune.',
+      '- Keep the concrete images where the target culture has them; replace only what does not exist, with something that does.',
+      '- Rhyme where the source rhymes; at minimum repeat the same vowel sound at line ends.',
+      '- No word-for-word calques. It must read as a lyric written in ' + lang + '.',
+      '- Do not add lines that are not in the source, and do not drop a section.',
+      '',
+      'Return only the lyric, with section headings in square brackets.'
+    ].join('\n');
+  }
+
   const lines = Math.max(4, Math.min(80, Number(b.lines) || 16));
   const parts = [
     'Write song lyrics. Return ONLY the lyrics, no commentary, no markdown fences.',
