@@ -226,6 +226,10 @@ jobs:
           # the generator must not rewrite). Kept in scripts/course-addons.json
           # and inserted inside .lesson-body on every deploy.
           node scripts/inject-course-addons.js .
+          # "Updated 17 Nov 2026 · 1,24,550 words · 19 sections" on every lesson.
+          # Nothing rendered this before, and the hand-built flagship lessons
+          # had no record at all, which is why the freshness was invisible.
+          node scripts/stamp-course-freshness.js .
           git add -A -- '*.html' 2>/dev/null || true
 
           TREE=$(git write-tree)
