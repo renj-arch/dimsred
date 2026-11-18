@@ -235,6 +235,20 @@ function main() {
     if (hit) shaped++;
   });
 
+  // --- the paper-shape bank -------------------------------------------------
+  // Written by scripts/invent-paper-shape.js in the forms a modern paper uses.
+  // Reported separately from the legacy recall bank, because the whole point is
+  // that the two are not the same thing.
+  const paperShapeBank = { total: 0, byShape: {} };
+  try {
+    const doc = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'upsc-format-questions.json'), 'utf8'));
+    (doc.questions || []).forEach((q) => {
+      paperShapeBank.total++;
+      const k = q.shape || 'unknown';
+      paperShapeBank.byShape[k] = (paperShapeBank.byShape[k] || 0) + 1;
+    });
+  } catch (e) { /* the lane has not run yet */ }
+
   // --- topic coverage -----------------------------------------------------
   const report = { generatedAt: new Date().toISOString(), lessons: lessons.length, questionsSampled: sample.length, subjects: {} };
   let totalTopics = 0;
@@ -289,7 +303,8 @@ function main() {
     topics: totalTopics, covered: covered, thin: thin, missing: missing,
     coveragePct: Math.round((covered / totalTopics) * 1000) / 10,
     questionShapes: shapeCounts,
-    shapedShare: sample.length ? Math.round((shaped / sample.length) * 1000) / 10 : 0
+    shapedShare: sample.length ? Math.round((shaped / sample.length) * 1000) / 10 : 0,
+    paperShapeBank: paperShapeBank
   };
 
   fs.mkdirSync(path.dirname(OUT_JSON), { recursive: true });
@@ -323,10 +338,19 @@ function main() {
     '<div class="card"><b>' + missing + '</b><span>missing</span></div>' +
     '<div class="card"><b>' + report.summary.shapedShare + '%</b><span>questions in a paper shape</span></div>' +
     '</div>' +
-    '<h2>Question shapes in the bank</h2><table><tr><th>Shape</th><th>Count</th></tr>' +
-    Object.keys(shapeCounts).map((k) => '<tr><td>' + esc(k) + '</td><td>' + shapeCounts[k] + '</td></tr>').join('') +
+    '<h2>Question shapes</h2>' +
+    '<table><tr><th>Shape</th><th>Legacy bank (sampled)</th><th>Paper-shape bank</th></tr>' +
+    SHAPES.map(function (pair) {
+      const name = pair[0];
+      const old = shapeCounts[name] || 0;
+      const now = paperShapeBank.byShape[name] || 0;
+      return '<tr><td>' + esc(name) + '</td><td>' + old + '</td><td>' +
+        (now ? now : '<span class="small">—</span>') + '</td></tr>';
+    }).join('') +
     '</table>' +
-    '<p class="small">A paper that asks for application, matching and multi-statement reasoning is answered from these forms. If one is near zero, that is the gap to fill first.</p>';
+    '<p class="small">The first column is the existing bank, sampled (' + sample.length + ' questions): it is recall, so the paper shapes are near zero. ' +
+    'The second column is the generated bank (<code>data/upsc-format-questions.json</code>), written shape by shape from the thinnest topics upward, ' +
+    'and only items that pass validation 4 options / one key / a real explanation are stored. Total so far: <b>' + paperShapeBank.total + '</b>.</p>';
 
   for (const subject of Object.keys(report.subjects)) {
     html += '<h2>' + esc(subject) + '</h2><table><tr><th>Topic</th><th>Status</th><th>Mentions</th><th>Taught in</th></tr>';
