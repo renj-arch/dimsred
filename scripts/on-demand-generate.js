@@ -505,8 +505,13 @@ async function runLyrics(p) {
   const res = await callLLM([
     { role: 'system', content: system },
     { role: 'user', content: lyricsPrompt(b) }
-  ], { temperature: 0.8, numPredict: 3200 });
+  ], { temperature: 0.8, numPredict: 6000 });
   let text = String(res.text || '').trim();
+  // Which route actually answered. The result file used to say "owner runner",
+  // which told the reader nothing about whether the 550B model or the small
+  // local fallback wrote the verse.
+  let served = '';
+  try { served = require('./lib/ollama').lastServed() || ''; } catch (e) { served = ''; }
 
   // Tamil/Malayalam (and the other Indic scripts) must come back in script,
   // not transliterated. One stricter retry, same rule as the CF function.
@@ -528,7 +533,7 @@ async function runLyrics(p) {
   if (text.length < 40) throw new Error('lyrics: the model returned nothing usable');
   const leak = metaLeak(text);
   if (leak) throw new Error('lyrics contained meta text (' + leak + ') - dropped instead of shipped');
-  return { lyrics: text, provider: res.servedBy || 'owner runner', brief: b };
+  return { lyrics: text, provider: served || 'owner runner', brief: b };
 }
 
 // ---- voice (Edge TTS) -------------------------------------------------------
