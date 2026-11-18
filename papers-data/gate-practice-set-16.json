@@ -1,0 +1,671 @@
+{
+  "folder": "gate",
+  "slug": "practice-set-16",
+  "title": "GATE Practice Set 16",
+  "pageTitle": "GATE Practice Set 16 — Solved Paper",
+  "pageDesc": "Free GATE practice paper set 16 with detailed solutions. Pattern: Paper.",
+  "meta": "15 Q · 42 min · 23 marks · Paper pattern",
+  "timerMinutes": 42,
+  "totalMarks": 23,
+  "createdDate": "2026-11-18",
+  "blueprint": {
+    "paper": "paper1",
+    "name": "Paper",
+    "total": 65,
+    "marks": 100,
+    "duration": 180,
+    "negative": 0.33,
+    "source": "GATE: 65 questions, 100 marks, 180 minutes; General Aptitude 10 questions (15 marks), core 55 questions (85 marks).",
+    "provisional": false,
+    "sections": [
+      {
+        "name": "Core Subject",
+        "count": 13,
+        "bank": [
+          "Core Subject",
+          "Engineering Mathematics",
+          "Structural",
+          "Geotechnical",
+          "Water",
+          "Data Structures & Algorithms",
+          "Computer Organization & OS",
+          "Theory of Computation",
+          "DS & Algorithms",
+          "CO & OS",
+          "Networks",
+          "Analog",
+          "Digital",
+          "Thermodynamics",
+          "Strength of Materials",
+          "Production"
+        ]
+      },
+      {
+        "name": "General Aptitude",
+        "count": 2,
+        "bank": [
+          "General Aptitude"
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "name": "Core Subject",
+      "color": "#6366f1"
+    },
+    {
+      "name": "General Aptitude",
+      "color": "#a855f7"
+    }
+  ],
+  "questions": [
+    {
+      "section": "Core Subject",
+      "text": "A simply supported beam of length 4 m carries a point load of 10 kN at mid‑span. The flexural rigidity EI is 2×10⁶ N·m². The maximum deflection (in mm) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "7 mm",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "5 mm",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "10 mm",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "15 mm",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: δ = PL³/(48EI). Plug P=10 kN=10⁴ N, L=4 m → L³=64, numerator=6.4×10⁵ N·m³. Denominator=48×2×10⁶=9.6×10⁷. δ=6.4×10⁵/9.6×10⁷=0.00667 m=6.7 mm ≈ 7 mm. Full: Using the standard formula for central point load on a simply supported beam, the maximum deflection is PL³/(48EI). Substituting the given values yields 6.7 mm, closest to 7 mm.",
+      "topic": "Strength of Materials - Beam Deflection",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:30:24.371Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2003,
+      "q": 1
+    },
+    {
+      "section": "Core Subject",
+      "text": "A ball bearing is rated for a life of 10,000 hours at a radial load of 5 kN. If the load is increased to 10 kN, the expected life (in hours) is approximately? (Assume load-life exponent k = 3 for ball bearings)",
+      "options": [
+        {
+          "label": "A",
+          "text": "2500",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "5000",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1250",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "8000",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Bearing life L ∝ 1/Pᵏ. Load doubles (P₂/P₁ = 2), so life reduces by factor 2³ = 8. 10,000 / 8 = 1,250 hours. Full Solution: The load-life relationship is L₁₀ = (C/P)ᵏ or L₁P₁ᵏ = L₂P₂ᵏ. Given L₁ = 10,000 hrs, P₁ = 5 kN, P₂ = 10 kN, k = 3. L₂ = L₁ × (P₁/P₂)ᵏ = 10,000 × (5/10)³ = 10,000 × (1/8) = 1,250 hours.",
+      "topic": "Machine Design - Bearing Life",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:33:29.850Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2011,
+      "q": 2
+    },
+    {
+      "section": "Core Subject",
+      "text": "A spring‑mass system has stiffness k = 1×10⁵ N/m and mass m = 10 kg. The natural frequency (in Hz) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "10 Hz",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "12 Hz",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "14 Hz",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "16 Hz",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: f = (1/2π)√(k/m). √(k/m)=√(10⁵/10)=√10⁴=100 rad/s. f=100/(2π)≈100/6.283≈15.9 Hz ≈ 16 Hz. Full: Natural angular frequency ω_n=√(k/m)=100 rad/s, convert to Hz by dividing by 2π, giving ≈15.9 Hz, nearest 16 Hz.",
+      "topic": "Vibrations - Natural Frequency",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:30:24.388Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2006,
+      "q": 3
+    },
+    {
+      "section": "Core Subject",
+      "text": "A steam pipe is insulated with a material of thermal conductivity 0.1 W/m·K. The outer surface convection heat transfer coefficient is 10 W/m²·K. The critical radius of insulation (in mm) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5 mm",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10 mm",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "20 mm",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "50 mm",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For a cylinder, critical radius r_c = k_ins / h. Here r_c = 0.1 / 10 = 0.01 m = 10 mm. Full method: Heat loss from insulated pipe increases with insulation thickness until r = k/h, then decreases. Substituting k = 0.1 W/m·K and h = 10 W/m²·K gives r_c = 0.01 m = 10 mm.",
+      "topic": "Heat Transfer - Critical Insulation Thickness",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:33:44.934Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2015,
+      "q": 4
+    },
+    {
+      "section": "General Aptitude",
+      "text": "A and B together can complete a work in 12 days. B and C together can complete it in 15 days. C and A together can complete it in 20 days. In how many days can A alone complete the work?",
+      "options": [
+        {
+          "label": "A",
+          "text": "30 days",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "40 days",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "50 days",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "60 days",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Take LCM of 12, 15, 20 = 60 as total work. Then daily work of (A+B)=5, (B+C)=4, (C+A)=3. Sum = 12 = 2(A+B+C) => A+B+C=6. So A's daily work = 6-4=2. Time for A = 60/2 = 30 days. Full solution: Let total work = 60 units. Efficiency of A+B = 60/12 = 5 units/day, B+C = 60/15 = 4, C+A = 60/20 = 3. Adding gives 2(A+B+C)=12 => A+B+C=6. Subtract B+C (4) from total (6) gives A=2 units/day. Hence A alone takes 60/2 = 30 days.",
+      "topic": "Time and Work",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:34:37.321Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2016,
+      "q": 5
+    },
+    {
+      "section": "Core Subject",
+      "text": "A Carnot refrigerator operates between −10 °C and 30 °C. Its coefficient of performance (COP) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5.5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "6.5",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "7.5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "8.5",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: COP = T_L/(T_H−T_L) with temperatures in Kelvin. T_L = 263 K (−10 °C), T_H = 303 K (30 °C), ΔT = 40 K → COP = 263/40 ≈ 6.58 ≈ 6.5. Full: Convert Celsius to Kelvin, apply the Carnot refrigerator COP formula, compute 263/40 = 6.575, nearest option 6.5.",
+      "topic": "Thermodynamics - Carnot Cycle",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:30:24.376Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2004,
+      "q": 6
+    },
+    {
+      "section": "Core Subject",
+      "text": "In a turning operation using a carbide tool, the tool life is 80 minutes at a cutting speed of 30 m/min. If the Taylor's tool life exponent (n) is 0.5, the cutting speed (in m/min) required to achieve a tool life of 20 minutes is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "42",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "60",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "75",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "90",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use the ratio form of Taylor's equation V₂ = V₁(T₁/T₂)ⁿ. Speed ratio = (80/20)⁰·⁵ = √4 = 2. New speed = 30 × 2 = 60 m/min. Full: Taylor's equation VTⁿ = C gives V₁T₁ⁿ = V₂T₂ⁿ. Substituting V₁=30, T₁=80, T₂=20, n=0.5: V₂ = 30 × (80/20)⁰·⁵ = 30 × √4 = 60 m/min.",
+      "topic": "Machining - Tool Life",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:32:08.945Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2007,
+      "q": 7
+    },
+    {
+      "section": "General Aptitude",
+      "text": "Find the missing term in the following series: 2, 6, 12, 20, 30, ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "40",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "44",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "42",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "46",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Calculate successive differences: 4, 6, 8, 10. Differences increase by 2 constantly. Next difference = 12. Missing term = 30 + 12 = 42. Full: The series follows the pattern n(n+1): 1×2=2, 2×3=6, 3×4=12, 4×5=20, 5×6=30, 6×7=42.",
+      "topic": "Number Series",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-17T13:30:04.007Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1997,
+      "q": 8
+    },
+    {
+      "section": "Core Subject",
+      "text": "A cubic casting of side 50 mm solidifies in 5 minutes. Using Chvorinov's rule (t = B(V/A)^2), the solidification time (in minutes) for a cubic casting of the same material with side 100 mm is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "10",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "40",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "80",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: For a cube, V/A = a/6, so solidification time t ∝ a². Doubling the side length (50 mm → 100 mm) increases time by factor 2² = 4. 5 min × 4 = 20 min. Full Solution: Chvorinov's rule states t = B(V/A)². For a cube of side 'a', Volume = a³, Surface Area = 6a², so V/A = a/6. Thus t = B(a/6)² ∝ a². For a₁ = 50 mm, t₁ = 5 min. For a₂ = 100 mm = 2a₁, t₂/t₁ = (a₂/a₁)² = 4. Therefore t₂ = 4 × 5 = 20 min.",
+      "topic": "Casting - Solidification Time",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:33:29.843Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2010,
+      "q": 9
+    },
+    {
+      "section": "Core Subject",
+      "text": "A simply supported beam of length 4 m carries a uniformly distributed load of 10 kN/m. The maximum bending moment (in kN·m) occurs at mid-span and equals:",
+      "options": [
+        {
+          "label": "A",
+          "text": "40",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "60",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "80",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For UDL on simply supported beam, M_max = wL^2/8 = 10×4^2/8 = 20 kNm. Full: Reactions = wL/2 = 20 kN each; moment at centre = 20×2 – 10×2×1 = 40 – 20 = 20 kNm.",
+      "topic": "Strength of Materials - Beam bending",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-17T13:33:55.903Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "bar",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2000,
+      "q": 10
+    },
+    {
+      "section": "Core Subject",
+      "text": "An ideal Brayton cycle operates with a pressure ratio of 8. Assuming specific heat ratio γ = 1.4, the thermal efficiency (in %) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "35",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "55",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "45",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "65",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Brayton efficiency η = 1 - (1/rₚ)^((γ-1)/γ). Here (γ-1)/γ = 0.4/1.4 = 2/7 ≈ 0.286. rₚ^0.286 = 8^(2/7) = (2³)^(2/7) = 2^(6/7) ≈ 1.81. η ≈ 1 - 1/1.81 ≈ 0.447 ≈ 45%. Full Solution: For an ideal Brayton cycle, thermal efficiency depends only on pressure ratio rₚ and γ. η = 1 - 1/(rₚ)^((γ-1)/γ). Substituting rₚ = 8, γ = 1.4: Exponent = 0.4/1.4 = 2/7. (8)^(2/7) = 2^(6/7) ≈ 1.811. η = 1 - 1/1.811 = 0.4478 = 44.78% ≈ 45%.",
+      "topic": "Thermodynamics - Gas Power Cycles",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:33:29.855Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2012,
+      "q": 11
+    },
+    {
+      "section": "Core Subject",
+      "text": "An ideal Diesel cycle operates with a compression ratio of 16 and a cut-off ratio of 2. Taking the specific heat ratio γ = 1.4, the air-standard thermal efficiency (in %) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "55",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "58",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "61",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "67",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Compute 1/r^(γ-1) ≈ 1/16^0.4 ≈ 1/3.03 ≈ 0.33. Cut-off term (ρ^γ-1)/[γ(ρ-1)] ≈ (2^1.4-1)/1.4 ≈ 1.64/1.4 ≈ 1.17. Product ≈ 0.386. Efficiency ≈ 1 - 0.386 = 61.4%. Full: η = 1 - (1/r^(γ-1)) * [(ρ^γ - 1)/(γ(ρ - 1))]. r=16, ρ=2, γ=1.4. r^(γ-1)=16^0.4≈3.031. ρ^γ=2^1.4≈2.639. Term = (1/3.031) * (1.639/1.4) = 0.33 * 1.171 = 0.386. η = 1 - 0.386 = 0.614 ≈ 61%.",
+      "topic": "Thermodynamics - IC Engines",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:32:08.952Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2008,
+      "q": 12
+    },
+    {
+      "section": "Core Subject",
+      "text": "A centrifugal pump running at 1000 rpm delivers 0.1 m³/s against a head of 50 m. If the pump speed is increased to 1500 rpm, the new discharge (in m³/s) and head (in m) are respectively:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.15, 112.5",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "0.15, 75",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.225, 112.5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0.225, 75",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Affinity laws: Q ∝ N, H ∝ N². Speed ratio = 1500/1000 = 1.5. Q₂ = 0.1 × 1.5 = 0.15 m³/s. H₂ = 50 × (1.5)² = 50 × 2.25 = 112.5 m. Full: For dynamically similar conditions, Q₁/N₁ = Q₂/N₂ → Q₂ = 0.1 × (1500/1000) = 0.15 m³/s. H₁/N₁² = H₂/N₂² → H₂ = 50 × (1500/1000)² = 50 × 2.25 = 112.5 m.",
+      "topic": "Fluid Mechanics - Pumps",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:32:08.958Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2009,
+      "q": 13
+    },
+    {
+      "section": "Core Subject",
+      "text": "A data table shows the number of defective items found in successive batches: Batch 1: 12, Batch 2: 15, Batch 3: 9, Batch 4: 14. Using the quick “average of extremes” shortcut for small data sets, estimate the mean number of defects per batch.",
+      "options": [
+        {
+          "label": "A",
+          "text": "10",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "12.5",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "13",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "14.5",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Average of extremes = (first + last)/2 = (12 + 14)/2 = 13. Then adjust by noting middle values are close to 13, so final mean ≈ 12.5. Full solution: Sum = 12+15+9+14 = 50. Mean = 50/4 = 12.5.",
+      "topic": "Statistics – Mean",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "Groq openai/gpt-oss-120b",
+      "generatedAt": "2026-11-17T13:25:43.202Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Batch",
+          "Defects"
+        ],
+        "rows": [
+          [
+            "1",
+            "12"
+          ],
+          [
+            "2",
+            "15"
+          ],
+          [
+            "3",
+            "9"
+          ],
+          [
+            "4",
+            "14"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 1995,
+      "q": 14
+    },
+    {
+      "section": "Core Subject",
+      "text": "A solid circular shaft of diameter 40 mm transmits a torque of 377 Nm. The maximum shear stress in the shaft (in MPa) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "20 MPa",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "25 MPa",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "30 MPa",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "35 MPa",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: τ_max = 16T/(πd³). With T = 377 Nm, d = 0.04 m → τ_max ≈ 30 MPa. Full: For a solid circular shaft, maximum shear stress τ_max = 16T/(πd³). Substituting the given torque and diameter yields τ_max = 30 MPa.",
+      "topic": "Strength of Materials - Torsion of circular shafts",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-16T13:18:32.148Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1986,
+      "q": 15
+    }
+  ]
+}
