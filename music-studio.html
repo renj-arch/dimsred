@@ -594,6 +594,15 @@ textarea{min-height:90px;resize:vertical}
         <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="MX.exportWav()">⤓ Render WAV</button>
           <button class="btn btn-primary" onclick="MX.mixFinal()">🎧 Mix voice + backing (final song)</button>
+          <div class="field" style="min-width:170px;margin:0">
+            <label>Vocal source</label>
+            <select id="mx-vocal">
+              <option value="auto" selected>Auto (my take, else studio voice)</option>
+              <option value="take">My recording (Recorder tab)</option>
+              <option value="voice">Studio voice (TTS tab)</option>
+              <option value="none">Instrumental only</option>
+            </select>
+          </div>
           <button class="btn btn-secondary" onclick="MX.exportStems()">⤓ Export stems (4 WAV)</button>
           <button class="btn btn-secondary" onclick="MX.exportMidi()">⤓ Export MIDI</button>
           <label class="btn btn-secondary" style="cursor:pointer">⤒ Import MIDI to roll<input type="file" accept=".mid,.midi,audio/midi" style="display:none" onchange="MX.importMidi(this)"></label>
@@ -1906,6 +1915,8 @@ const MX = (function () {
       state.rec.onstop = () => {
         const blob = new Blob(state.chunks, { type: 'audio/webm' });
         state.takes.push(blob);
+        // Kept so the final mix can use your own voice over the backing.
+        MX.lastTakeBlob = blob;
         const url = URL.createObjectURL(blob);
         const dl = document.getElementById('mx-rec-dl');
         if (dl) { dl.href = url; dl.style.display = 'inline-block'; }
@@ -2544,14 +2555,22 @@ const MX = (function () {
       const backing = await ctx.startRendering();
 
       let voice = null;
-      if (MX.lastVoiceBlob) {
-        if (status) status.textContent = 'adding the voice…';
+      const src = (document.getElementById('mx-vocal') || {}).value || 'auto';
+      const wantTake = (src === 'take') || (src === 'auto' && MX.lastTakeBlob);
+      const wantVoice = (src === 'voice') || (src === 'auto' && !MX.lastTakeBlob);
+      const vocalBlob = (src === 'none') ? null : (wantTake ? MX.lastTakeBlob : (wantVoice ? MX.lastVoiceBlob : null));
+      if (vocalBlob) {
+        if (status) status.textContent = wantTake ? 'adding your recorded take…' : 'adding the studio voice…';
         try {
           const tmp = new (window.AudioContext || window.webkitAudioContext)();
-          voice = await tmp.decodeAudioData(await MX.lastVoiceBlob.arrayBuffer());
+          voice = await tmp.decodeAudioData(await vocalBlob.arrayBuffer());
           tmp.close();
-        } catch (e) { voice = null; }
+        } catch (e) {
+          voice = null;
+          if (status) status.textContent = 'could not decode that take (' + e.message + ') — check the take plays in the Recorder tab';
+        }
       }
+      const usedTake = !!(voice && wantTake);
 
       const ac = new (window.AudioContext || window.webkitAudioContext)();
       const outBuf = ac.createBuffer(2, backing.length, rate);
@@ -2592,13 +2611,14 @@ const MX = (function () {
       const title = (document.getElementById('f-title') || {}).value || 'song';
       const a = document.createElement('a');
       a.href = url;
-      a.download = String(title).replace(/[^\w-]+/g, '_') + (voice ? '-song.wav' : '-instrumental.wav');
+      a.download = String(title).replace(/[^\w-]+/g, '_') + (voice ? (usedTake ? '-myvoice.wav' : '-song.wav') : '-instrumental.wav');
       a.click();
 
       if (status) {
         status.textContent = voice
-          ? 'final song ready — voice over the backing (' + (blob.size / 1048576).toFixed(1) + ' MB). Press play above.'
-          : 'instrumental ready. No voice take yet: render one in the TTS tab (Studio voices) and press this again for a song with vocals.';
+          ? (usedTake ? 'final song ready — your recorded voice over the backing' : 'final song ready — studio voice over the backing') +
+            ' (' + (blob.size / 1048576).toFixed(1) + ' MB). Press play above.'
+          : 'instrumental ready. Record a take in the Recorder tab, or render a Studio voice, then press this again.';
       }
     } catch (e) {
       if (status) status.textContent = 'final mix failed: ' + e.message;
