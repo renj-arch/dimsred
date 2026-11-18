@@ -32,6 +32,24 @@ function labelLines(text, x, y, opts) {
   var fill = opts.fill || INK;
   var anchor = opts.anchor || 'middle';
   var lh = opts.lh || size * 1.25;
+  // Keep the label inside the 760x420 sheet. A long phrase centred on a box
+  // near the edge used to run off the canvas and get cut, which is what a
+  // reader sees as "text cut off at the edges". Estimate the width and pull the
+  // anchor back in.
+  var widest = Math.max.apply(null, lines.map(function (l) { return String(l).length; }));
+  var est = widest * size * 0.58;
+  var W = 760;
+  x = Number(x) || 0;
+  if (anchor === 'middle') {
+    if (x + est / 2 > W - 4) x = W - 4 - est / 2;
+    if (x - est / 2 < 4) x = 4 + est / 2;
+  } else if (anchor === 'end') {
+    if (x > W - 4) x = W - 4;
+    if (x - est < 4) x = 4 + est;
+  } else {
+    if (x + est > W - 4) x = W - 4 - est;
+    if (x < 4) x = 4;
+  }
   var start = y - ((lines.length - 1) * lh) / 2;
   return '<text x="' + x + '" y="' + start + '" text-anchor="' + anchor + '" font-size="' + size +
     '" font-weight="' + weight + '" fill="' + fill + '" font-family="' + FONT + '">' +

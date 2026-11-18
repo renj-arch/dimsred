@@ -233,6 +233,8 @@ jobs:
           # Nothing rendered this before, and the hand-built flagship lessons
           # had no record at all, which is why the freshness was invisible.
           node scripts/stamp-course-freshness.js .
+          # Site name on every page and inside every figure SVG.
+          node scripts/inject-watermark.js .
           # A model-written data question arrives as a pipe table; render it as a
           # real table instead of leaving the reader a wall of pipes.
           node scripts/fix-question-tables.js .
