@@ -593,6 +593,7 @@ textarea{min-height:90px;resize:vertical}
         </div>
         <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="MX.exportWav()">⤓ Render WAV</button>
+          <button class="btn btn-primary" onclick="MX.mixFinal()">🎧 Mix voice + backing (final song)</button>
           <button class="btn btn-secondary" onclick="MX.exportStems()">⤓ Export stems (4 WAV)</button>
           <button class="btn btn-secondary" onclick="MX.exportMidi()">⤓ Export MIDI</button>
           <label class="btn btn-secondary" style="cursor:pointer">⤒ Import MIDI to roll<input type="file" accept=".mid,.midi,audio/midi" style="display:none" onchange="MX.importMidi(this)"></label>
@@ -2512,6 +2513,8 @@ const MX = (function () {
       }
       const got = await pollAudio(d.meta, d.audio, status);
       if (!got || got.error) { if (status) status.textContent = (got && got.error) || 'no audio'; return; }
+      // Kept so the voice can be mixed onto the backing later.
+      MX.lastVoiceBlob = got.blob;
       const url = URL.createObjectURL(got.blob);
       const audio = document.getElementById('edgeAudio');
       if (audio) { audio.src = url; audio.style.display = 'block'; audio.play().catch(function () {}); }
@@ -2520,6 +2523,85 @@ const MX = (function () {
       if (status) status.textContent = 'ready · ' + Math.round(got.blob.size / 1024) + ' KB';
     } catch (e) {
       if (status) status.textContent = 'could not reach the voice runner: ' + e.message;
+    }
+  };
+
+  /* ---------------- final mix: voice over the backing ---------------- */
+  // The last step of the studio: the arrangement as an instrumental, the
+  // rendered voice as an a cappella, mixed into one file you can play or send.
+  MX.mixFinal = async function () {
+    const status = document.getElementById('mx-export-status');
+    const s = snap();
+    const rate = Number((document.getElementById('mx-rate') || {}).value) || 44100;
+    const need = Math.max(4, Math.ceil((MX.songSeconds ? MX.songSeconds() : 30) + 4));
+    const seconds = Math.max(need, Number((document.getElementById('mx-len') || {}).value) || need);
+    if (status) status.textContent = 'rendering the backing…';
+    try {
+      const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      const ctx = new OfflineCtx(2, Math.ceil(seconds * rate), rate);
+      const graph = X.makeGraph(ctx);
+      X.scheduleSong(ctx, graph, s, 0.05);
+      const backing = await ctx.startRendering();
+
+      let voice = null;
+      if (MX.lastVoiceBlob) {
+        if (status) status.textContent = 'adding the voice…';
+        try {
+          const tmp = new (window.AudioContext || window.webkitAudioContext)();
+          voice = await tmp.decodeAudioData(await MX.lastVoiceBlob.arrayBuffer());
+          tmp.close();
+        } catch (e) { voice = null; }
+      }
+
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const outBuf = ac.createBuffer(2, backing.length, rate);
+      for (let ch = 0; ch < 2; ch++) {
+        const dst = outBuf.getChannelData(ch);
+        const src = backing.getChannelData(Math.min(ch, backing.numberOfChannels - 1));
+        for (let i = 0; i < dst.length; i++) dst[i] = src[i];
+      }
+      if (voice) {
+        const vgain = 1.0;
+        const boff = Math.floor(0.05 * rate);
+        for (let i = 0; i < voice.length; i++) {
+          const at = i + boff;
+          if (at >= outBuf.length) break;
+          for (let ch = 0; ch < 2; ch++) {
+            const vs = voice.getChannelData(Math.min(ch, voice.numberOfChannels - 1))[i] * vgain;
+            const cur = outBuf.getChannelData(ch)[at] * 0.75;   // duck the backing under the voice
+            outBuf.getChannelData(ch)[at] = Math.max(-1, Math.min(1, cur + vs));
+          }
+        }
+      }
+      ac.close();
+
+      const blob = encodeWav(outBuf);
+      const url = URL.createObjectURL(blob);
+      let player = document.getElementById('mx-final');
+      if (!player) {
+        player = document.createElement('audio');
+        player.id = 'mx-final';
+        player.controls = true;
+        player.style.cssText = 'display:block;width:100%;margin-top:14px';
+        const host = document.getElementById('mx-export-status');
+        if (host && host.parentNode) host.parentNode.insertBefore(player, host.nextSibling);
+      }
+      player.src = url;
+      player.style.display = 'block';
+
+      const title = (document.getElementById('f-title') || {}).value || 'song';
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = String(title).replace(/[^\w-]+/g, '_') + (voice ? '-song.wav' : '-instrumental.wav');
+      a.click();
+
+      if (status) {
+        status.textContent = voice
+          ? 'final song ready — voice over the backing (' + (blob.size / 1048576).toFixed(1) + ' MB). Press play above.'
+          : 'instrumental ready. No voice take yet: render one in the TTS tab (Studio voices) and press this again for a song with vocals.';
+      }
+    } catch (e) {
+      if (status) status.textContent = 'final mix failed: ' + e.message;
     }
   };
 
