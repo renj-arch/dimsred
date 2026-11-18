@@ -68,9 +68,9 @@ jobs:
       # Edge TTS gives real Tamil and Malayalam neural voices for free. The
       # browser's own speechSynthesis only has those languages when the device
       # has the language pack, which is why the studio could not promise them.
-      - name: Install Edge TTS (voice lane only)
+      - name: Install Edge TTS and the Google fallback (voice lane only)
         if: inputs.kind == 'tts'
-        run: python3 -m pip install --quiet edge-tts==6.1.12
+        run: python3 -m pip install --quiet edge-tts==6.1.12 gTTS==2.5.4
 
       # EXACT same swap as the proven Ollama lanes — safety net against
       # paging model weights out under memory pressure.
