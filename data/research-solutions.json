@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-18T15:26:17.732Z",
+  "updatedAt": "2026-11-19T00:07:26.585Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -22084,6 +22084,888 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-18T15:26:17.727Z"
+    },
+    {
+      "id": "1a36ee09c2725819",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 1,
+      "section": "CSAT",
+      "question": "If it takes five machines five minutes to make five widgets, how long would it take 100 machines to make 100 widgets?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5 minutes",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "10 minutes",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "50 minutes",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "100 minutes",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "5 machines make 5 widgets in 5 minutes, so each machine makes 1 widget in 5 minutes.",
+        "The rate per machine is 1 widget per 5 minutes.",
+        "With 100 machines working simultaneously, each machine still takes 5 minutes to produce 1 widget.",
+        "Therefore, 100 machines produce 100 widgets in 5 minutes."
+      ],
+      "verifierCheck": "Five machines take five minutes to produce five widgets, meaning each machine produces one widget in five minutes (since 5 machines × 5 minutes = 25 machine-minutes for 5 widgets → 5 machine-minutes per widget). With 100 machines working simultaneously, each still requires five minutes to produce one widget, so 100 machines produce 100 widgets in five minutes. Alternatively, using rate: rate = 5 widgets / (5 machines × 5 min) = 0.2 widgets per machine-minute; time = 100 widgets / (0.2 × 100 machines) = 5 minutes.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Parallel Scaling",
+          "idea": "Machines and widgets scale equally, time stays constant",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Both machines and widgets ×20 (5→100)",
+            "Work per machine unchanged",
+            "Time unchanged at 5 minutes"
+          ]
+        },
+        {
+          "name": "Invariant Rate",
+          "idea": "Each machine makes 1 widget in 5 minutes regardless of count",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "5 machines → 5 widgets in 5 min",
+            "So 1 machine → 1 widget in 5 min",
+            "100 machines → 100 widgets in 5 min"
+          ]
+        },
+        {
+          "name": "Unit Rate Check",
+          "idea": "Compute widgets per machine-minute to verify",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Rate = 5 widgets / (5×5) = 0.2 per machine-min",
+            "Time = 100 / (100 × 0.2) = 5 min"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:00:40.176Z"
+    },
+    {
+      "id": "77831e9b4eb277fe",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 2,
+      "section": "CSAT",
+      "question": "If a car travels from city A to city B at an average speed of 60 km/h and returns at an average speed of 40 km/h, what is the average speed for the entire trip?",
+      "options": [
+        {
+          "label": "A",
+          "text": "48 km/h",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "50 km/h",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "55 km/h",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "60 km/h",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let the one-way distance be d km.",
+        "Total distance = 2d km.",
+        "Time from A to B = d/60 hours.",
+        "Time from B to A = d/40 hours.",
+        "Total time = d/60 + d/40 = (2d+3d)/120 = 5d/120 = d/24 hours.",
+        "Average speed = total distance / total time = 2d / (d/24) = 48 km/h."
+      ],
+      "verifierCheck": "Let the one-way distance be d km. Time from A to B = d/60 hours; time from B to A = d/40 hours. Total distance = 2d km. Total time = d/60 + d/40 = (2d+3d)/120 = 5d/120 = d/24 hours. Average speed = total distance / total time = 2d / (d/24) = 48 km/h.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Harmonic Mean",
+          "idea": "Use 2ab/(a+b) for equal distances",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Multiply speeds: 60×40=2400",
+            "Double it: 4800",
+            "Sum speeds: 60+40=100",
+            "Divide: 4800/100=48"
+          ]
+        },
+        {
+          "name": "Ratio Shortcut",
+          "idea": "Average speed = 2/(1/60+1/40)",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Reciprocals: 1/60, 1/40",
+            "Sum: (2+3)/120=5/120=1/24",
+            "Double reciprocal: 2/(1/24)=48"
+          ]
+        },
+        {
+          "name": "Assume Distance",
+          "idea": "Pick LCM distance to avoid fractions",
+          "kind": "invariant",
+          "seconds": 7,
+          "steps": [
+            "Let distance = 120 km (LCM of 60,40)",
+            "Time there: 120/60=2 h",
+            "Time back: 120/40=3 h",
+            "Total dist: 240 km, total time: 5 h",
+            "Avg = 240/5=48"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:01:02.495Z"
+    },
+    {
+      "id": "d5eba49c84e5f416",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 3,
+      "section": "CSAT",
+      "question": "A company has 15 employees, and each employee can speak two languages. What is the minimum number of languages that the company must have to satisfy this condition?",
+      "options": [
+        {
+          "label": "A",
+          "text": "8 languages",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "10 languages",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "12 languages",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "15 languages",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compute number of distinct language pairs possible with L languages: C(L,2)",
+        "Find smallest L where C(L,2) ≥ 15 employees",
+        "C(6,2)=15 meets requirement, but 6 not offered",
+        "Next available option is 8 languages, which yields C(8,2)=28 pairs, satisfying condition"
+      ],
+      "verifierCheck": "Each employee must know two languages, giving a total of 15 × 2 = 30 language‑assignments. To minimize the distinct languages while allowing each language to be spoken by more than one employee, the best we can do is have each language spoken by exactly two employees. Thus the smallest number of distinct languages L satisfies 2 L ≥ 30, i.e., L ≥ 15. Therefore the minimum number of languages required is 15, corresponding to option D.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Simple Count",
+          "idea": "Direct counting of required distinct languages",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Total language slots = 30.",
+            "Each language contributes at most 2 slots → minimum languages = 30 ÷ 2 = 15, but overlap reduces to ⌈15/2⌉ = 8.",
+            "Answer is 8 languages."
+          ]
+        },
+        {
+          "name": "Half‑Plus‑One",
+          "idea": "Half the employees plus one gives minimum distinct languages",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "With 2 languages per person, each language can cover at most 2 employees.",
+            "To cover 15 employees, need ⌈15/2⌉ = 8 distinct languages.",
+            "No smaller number can satisfy the 30 slots requirement."
+          ]
+        },
+        {
+          "name": "Pigeonhole Minimum",
+          "idea": "Use pigeonhole principle to force overlap",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Each employee knows 2 languages → total language‑slots = 15 × 2 = 30.",
+            "If there were 7 or fewer distinct languages, max slots without reuse = 7 × 2 = 14 < 30, impossible.",
+            "Thus at least 8 languages are needed."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:03:16.143Z"
+    },
+    {
+      "id": "d23573f62c2b03c3",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 4,
+      "section": "CSAT",
+      "question": "If a bakery sells 250 loaves of bread per day and each loaf costs $2.50, what is the total daily revenue?",
+      "options": [
+        {
+          "label": "A",
+          "text": "$500",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "$625",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "$750",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "$1000",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Multiply number of loaves (250) by price per loaf ($2.50)",
+        "Calculate 250 * 2.50 = 625"
+      ],
+      "verifierCheck": "Multiplying the number of loaves sold per day (250) by the price per loaf ($2.50) gives 250 × 2.50 = 625, so the total daily revenue is $625.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quarter Trick",
+          "idea": "2.50 = 10/4, multiply by 10 divide by 4",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "250 × 10 = 2500",
+            "2500 ÷ 4 = 625"
+          ]
+        },
+        {
+          "name": "Double-Halve",
+          "idea": "Multiply by 5 then halve",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "250 × 5 = 1250",
+            "1250 ÷ 2 = 625"
+          ]
+        },
+        {
+          "name": "Split Add",
+          "idea": "250×2 + 250×0.5",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "250 × 2 = 500",
+            "250 × 0.5 = 125",
+            "500 + 125 = 625"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:03:23.729Z"
+    },
+    {
+      "id": "df3e9d79bfcd2a79",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 6,
+      "section": "CSAT",
+      "question": "A bat and a ball together cost Rs. 100. The bat costs Rs. 20 more than the ball. How much does the ball cost?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 40",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Rs. 50",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Rs. 60",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 70",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let the cost of the ball be x.",
+        "Then the cost of the bat is x + 20.",
+        "Total cost: x + (x + 20) = 2x + 20 = 100.",
+        "Solve: 2x = 80 => x = 40.",
+        "The ball costs Rs. 40, which is option A."
+      ],
+      "verifierCheck": "Let the cost of the ball be x rupees. Then the bat costs x + 20 rupees. Together they cost x + (x + 20) = 2x + 20 = 100. Solving gives 2x = 80, so x = 40. Thus the ball costs Rs. 40, which corresponds to option A.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Option Test",
+          "idea": "Plug the first option to verify instantly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Try A: ball = 40",
+            "Then bat = 60, sum = 100, diff = 20"
+          ]
+        },
+        {
+          "name": "Half Difference",
+          "idea": "Subtract difference from total then halve",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Total cost = 100",
+            "Difference = 20",
+            "Ball = (100 - 20) / 2 = 40"
+          ]
+        },
+        {
+          "name": "Algebraic Snap",
+          "idea": "Set up simple equation and solve",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let ball = x",
+            "Bat = x + 20",
+            "Sum: x + (x+20) = 100",
+            "2x = 80 => x = 40"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:04:23.069Z"
+    },
+    {
+      "id": "644f2793d86147aa",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 7,
+      "section": "CSAT",
+      "question": "A bakery sells 250 loaves of bread per day. They make a profit of Rs. 2 per loaf. If the cost price of 100 loaves is Rs. 500, what is the total daily profit?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 500",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Rs. 1000",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Rs. 1500",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 2000",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Profit per loaf = Rs. 2",
+        "Loaves sold per day = 250",
+        "Total daily profit = 250 × 2 = Rs. 500"
+      ],
+      "verifierCheck": "The bakery sells 250 loaves per day with a profit of Rs. 2 per loaf, so total daily profit = 250 × 2 = Rs. 500. The cost price of 100 loaves (Rs. 500) is extraneous information.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental Double",
+          "idea": "Double 250 instantly",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "250 doubled = 500",
+            "Match option A"
+          ]
+        },
+        {
+          "name": "Direct Multiply",
+          "idea": "Profit per loaf given directly; ignore cost distractor",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Read profit: Rs. 2/loaf",
+            "Multiply: 250 × 2 = 500"
+          ]
+        },
+        {
+          "name": "Unit × Quantity",
+          "idea": "Daily profit = units sold × unit profit",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Identify unit profit = Rs. 2",
+            "Identify quantity = 250 loaves",
+            "Compute 250 × 2 = 500"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:04:39.867Z"
+    },
+    {
+      "id": "9b0cbc2052b21ecf",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 8,
+      "section": "CSAT",
+      "question": "A bakery sells a total of 250 loaves of bread per day. They sell a combination of whole wheat and white bread. If the ratio of whole wheat to white bread is 2:3, how many loaves of white bread are sold per day?",
+      "options": [
+        {
+          "label": "A",
+          "text": "125",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "150",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "175",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "200",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total parts in ratio = 2 + 3 = 5",
+        "White bread corresponds to 3 parts",
+        "White bread loaves = (3/5) * 250 = 150"
+      ],
+      "verifierCheck": "The ratio of whole wheat to white bread is 2:3, so total parts = 2+3 = 5. Total loaves = 250, so each part = 250/5 = 50. White bread corresponds to 3 parts = 3 × 50 = 150 loaves. Verification: whole wheat = 2 × 50 = 100, total = 100+150 = 250, ratio 100:150 = 2:3.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Fraction Shortcut",
+          "idea": "Direct fraction of total",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "White fraction = 3/(2+3) = 3/5",
+            "White loaves = 250 × 3/5 = 150"
+          ]
+        },
+        {
+          "name": "Parts Method",
+          "idea": "Split total into ratio parts",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Total parts = 2+3 = 5",
+            "One part = 250/5 = 50",
+            "White = 3 parts = 3×50 = 150"
+          ]
+        },
+        {
+          "name": "Mental Split",
+          "idea": "Halve then adjust",
+          "kind": "estimate",
+          "seconds": 6,
+          "steps": [
+            "Half of 250 = 125 (2.5 parts)",
+            "Add half part (25) = 150 (3 parts)",
+            "Or: 250 - 100 (2 parts) = 150"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:04:55.514Z"
+    },
+    {
+      "id": "16278044af58eb21",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 9,
+      "section": "CSAT",
+      "question": "A box contains 5 red balls, 3 blue balls, and 2 green balls. If 2 balls are drawn at random, what is the probability that the first ball is red and the second ball is blue?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.15",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0.17",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.18",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "0.20",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Total balls = 5 red + 3 blue + 2 green = 10",
+        "Probability first ball is red = 5/10 = 1/2",
+        "After drawing a red ball, 9 balls remain with 3 blue",
+        "Probability second ball is blue given first red = 3/9 = 1/3",
+        "Multiply: (1/2) * (1/3) = 1/6 ≈ 0.1667",
+        "Rounded to two decimal places = 0.17"
+      ],
+      "verifierCheck": "The box contains 10 balls total (5 red, 3 blue, 2 green). The probability the first ball drawn is red is 5/10 = 1/2. Without replacement, 9 balls remain with 3 blue, so the conditional probability the second ball is blue is 3/9 = 1/3. The joint probability is (1/2)*(1/3) = 1/6 ≈ 0.1667, which rounds to 0.17, matching option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Decimal Estimate",
+          "idea": "Approximate fractions to decimals for quick multiplication",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "5/10 = 0.5 exactly",
+            "3/9 ≈ 0.333",
+            "0.5 × 0.333 = 0.1665",
+            "Closest option is 0.17 → B"
+          ]
+        },
+        {
+          "name": "Fraction Multiply",
+          "idea": "Multiply conditional probabilities directly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Total balls = 10",
+            "P(first red) = 5/10 = 1/2",
+            "After red drawn, 9 balls left, 3 blue → P(second blue) = 3/9 = 1/3",
+            "Multiply: (1/2)*(1/3) = 1/6 ≈ 0.1667",
+            "Match to option B (0.17)"
+          ]
+        },
+        {
+          "name": "Ordered Count",
+          "idea": "Count favorable ordered draws over total ordered draws",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Favorable ordered draws: 5 red × 3 blue = 15",
+            "Total ordered draws: 10 × 9 = 90",
+            "Probability = 15/90 = 1/6 ≈ 0.1667",
+            "Select option B (0.17)"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:05:57.286Z"
+    },
+    {
+      "id": "48d674eea77ee7ba",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 11,
+      "section": "CSAT",
+      "question": "A bat and a ball together cost $1.10. The bat costs $1.00 more than the ball. How much does the ball cost?",
+      "options": [
+        {
+          "label": "A",
+          "text": "$0.05",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "$0.10",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "$0.15",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "$0.20",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let the cost of the ball be x dollars.",
+        "Then the bat costs x + 1.00 dollars.",
+        "Together they cost x + (x + 1.00) = 2x + 1.00 = 1.10.",
+        "Subtract 1.00 from both sides: 2x = 0.10.",
+        "Divide by 2: x = 0.05.",
+        "The ball costs $0.05, which is option A."
+      ],
+      "verifierCheck": "Let the ball cost x dollars. Then the bat costs x + 1.00 dollars. Their total is x + (x + 1.00) = 1.10, so 2x + 1.00 = 1.10, giving 2x = 0.10 and x = 0.05. Thus the ball costs $0.05, which corresponds to option A.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick Mental Check",
+          "idea": "Test each option instantly",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "If ball = $0.10, bat = $1.10 → total $1.20 (too high)",
+            "If ball = $0.05, bat = $1.05 → total $1.10 (matches)"
+          ]
+        },
+        {
+          "name": "Difference Halving",
+          "idea": "Total minus difference, then halve",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Subtract the $1.00 extra from total: 1.10 - 1.00 = 0.10",
+            "Half of remainder is ball cost: 0.10 / 2 = 0.05"
+          ]
+        },
+        {
+          "name": "Algebraic Substitution",
+          "idea": "Set up equations and solve directly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let ball = x, bat = x+1.00",
+            "x + (x+1.00) = 1.10 → 2x = 0.10",
+            "x = 0.05"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:06:52.127Z"
+    },
+    {
+      "id": "6dcb83599fea9fd5",
+      "exam": "upsc",
+      "paperSlug": "full-2026-11-18-upsc-csat",
+      "paperTitle": "UPSC Civil Services Prelims — CSAT Paper II (qualifying) (Full Paper)",
+      "paperPath": "upsc/mock-tests/full-2026-11-18-upsc-csat.html",
+      "paperFile": "full-2026-11-18-upsc-csat.json",
+      "questionNumber": 12,
+      "section": "CSAT",
+      "question": "A snail is at the bottom of a 20-foot well. Each day, it climbs up 3 feet, but at night, it slips back 2 feet. How many days will it take for the snail to reach the top of the well?",
+      "options": [
+        {
+          "label": "A",
+          "text": "18 days",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "20 days",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "22 days",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "25 days",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Net gain per full day (day+night) is 1 foot, but on the final day the snail does not slip back.",
+        "After 17 full days, the snail is at 17 feet at the start of day 18.",
+        "On day 18, the snail climbs 3 feet to reach exactly 20 feet, the top of the well.",
+        "Therefore, it takes 18 days for the snail to reach the top."
+      ],
+      "verifierCheck": "The snail gains a net 1 foot per day after slipping, but on the final day it does not slip. After 17 days, the snail is at 17 feet (since each full day-night cycle adds 1 foot). On day 18, it climbs 3 feet from 17 feet to reach 20 feet, escaping the well. Thus it takes 18 days.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Net Gain + Final Day",
+          "idea": "Subtract last climb, divide by net gain, add final day",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Subtract last day's climb: 20 - 3 = 17 feet remaining",
+            "Divide by net daily gain (3-2=1): 17 / 1 = 17 days",
+            "Add the final day: 17 + 1 = 18 days"
+          ]
+        },
+        {
+          "name": "Inequality Setup",
+          "idea": "Model position before final climb",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let n = total days. Before day n, snail climbed (n-1) net feet",
+            "On day n it climbs 3 ft: (n-1) + 3 >= 20",
+            "Solve: n-1 >= 17 => n >= 18"
+          ]
+        },
+        {
+          "name": "Milestone Check",
+          "idea": "Find day when snail reaches 17 ft before final climb",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "After 17 days, snail at 17 ft (net 1 ft/day)",
+            "On day 18, climbs 3 ft to 20 ft, exits well",
+            "No slip back needed"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T00:07:26.581Z"
     }
   ]
 }
