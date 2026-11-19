@@ -68,10 +68,19 @@ const SHAPES = [
       const errs = [];
       if (!q.statement1 || String(q.statement1).trim().length < 10) errs.push('statement1 is too short');
       if (!q.statement2 || String(q.statement2).trim().length < 10) errs.push('statement2 is too short');
-      // The four options are fixed; a model that invents its own wording makes
-      // the item unusable, so check for the standard shape.
-      const text = (q.options || []).join(' ').toLowerCase();
-      if (!/either statement alone|one statement alone|both statements together|not be answered/.test(text)) {
+      // The four options are fixed by the paper. All four meanings have to be
+      // present or the item cannot be answered in the paper's format; the
+      // builder then reorders them into the paper's order so the keyed option
+      // always means the same thing.
+      const opts = (q.options || []).map((s) => String(s).toLowerCase());
+      if (opts.length !== 4) errs.push('data sufficiency needs exactly four options');
+      const has = {
+        one: opts.some((o) => /one (?:of these )?statements? alone|one statement alone/.test(o) && !/either/.test(o)),
+        either: opts.some((o) => /either statement alone/.test(o)),
+        both: opts.some((o) => /both (?:the )?statements together|both together/.test(o)),
+        none: opts.some((o) => /not be answered|even (?:using )?(?:any|both)|not sufficient/.test(o))
+      };
+      if (!has.one || !has.either || !has.both || !has.none) {
         errs.push('options are not the standard data-sufficiency set');
       }
       return errs;
