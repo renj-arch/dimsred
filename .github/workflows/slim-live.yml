@@ -138,6 +138,11 @@ jobs:
           # deploy. The gate still runs, so a real regression is still caught.
           node scripts/prune-unsupported-solutions.js
           node scripts/lib/question-solutions.test.js
+          # A reader reported a lesson as "text so small". It was small on every
+          # lesson: body text at .9em and tables at .85em on a 16px base. The
+          # sizes are raised now, and this stops a regenerated page putting them
+          # back.
+          node scripts/legible-lesson-text.js --check
           node scripts/lib/course-versions.test.js
           node scripts/lib/archive-index-guard.test.js
           node scripts/lib/html-repair.test.js
