@@ -53,6 +53,18 @@ const SETS = {
       'Data interpretation: growth rates across years',
       'Comprehension: the authors main argument'
     ],
+    // A passage has to be about something. Topic pools that describe the exam
+    // itself ("logical reasoning: statement sufficiency") made the model write
+    // passages about how CSAT works, which is not what the paper prints.
+    passageTopics: [
+      'A policy choice and its measurable consequences',
+      'An environmental change and the evidence around it',
+      'A technology adoption and who benefited from it',
+      'A census or survey finding and what it does and does not show',
+      'A public health intervention and its limits',
+      'A cultural practice and how it changed over time',
+      'An economic indicator and the argument over how to read it'
+    ],
     lesson: 'upsc/course/csat/lesson-logical-reasoning.html'
   },
   'general-studies': {
@@ -149,14 +161,105 @@ function extractJson(text) {
   return null;
 }
 
+// "1. ... 2. ... 1. ... 2. ..." A model that writes the statements into the
+// stem, plus a builder that appends the statements, prints them twice. The
+// reader sees a question that repeats itself, so collapse the repeated block.
+function collapseRepeats(text) {
+  let lines = String(text == null ? '' : text).split('\n');
+
+  // A statement list can be repeated with the question line between the two
+  // copies: "1. ... 2. ... Which of the statements is correct? 1. ... 2. ...".
+  // Keep the first copy, drop the later one.
+  const runs = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (!/^\s*\d+\.\s/.test(lines[i])) continue;
+    const start = i;
+    while (i + 1 < lines.length && /^\s*\d+\.\s/.test(lines[i + 1])) i++;
+    runs.push({ start, end: i, body: lines.slice(start, i + 1).join('\n') });
+  }
+  const drop = new Set();
+  for (let a = 0; a < runs.length; a++) {
+    if (drop.has(a)) continue;
+    for (let b = a + 1; b < runs.length; b++) {
+      if (runs[b].body === runs[a].body && runs[a].body.trim().length > 20) drop.add(b);
+    }
+  }
+  if (drop.size) {
+    const remove = new Set();
+    for (const idx of drop) for (let i = runs[idx].start; i <= runs[idx].end; i++) remove.add(i);
+    lines = lines.filter((_, i) => !remove.has(i));
+    text = lines.join('\n');
+  } else {
+    text = lines.join('\n');
+  }
+
+  lines = text.split('\n');
+  const maxLen = Math.min(6, Math.floor(lines.length / 2));
+  for (let len = maxLen; len >= 2; len--) {
+    for (let i = 0; i + 2 * len <= lines.length; i++) {
+      const first = lines.slice(i, i + len).join('\n');
+      const second = lines.slice(i + len, i + 2 * len).join('\n');
+      if (first && first === second && first.trim().length > 20) {
+        lines.splice(i + len, len);
+        return collapseRepeats(lines.join('\n'));
+      }
+    }
+  }
+  return lines.join('\n');
+}
+
+// The paper prints these four meanings once and reuses them for every item, so
+// the keyed letter always means the same thing. A model that shuffles them, or
+// writes its own wording, produces an item whose key means something else; the
+// builder maps whatever the model wrote back onto this order.
+const DS_OPTIONS = [
+  'the question can be answered using one of these statements alone, but cannot be answered using the other statement',
+  'the question can be answered using either statement alone',
+  'the question can be answered using both statements together, but cannot be answered using either statement alone',
+  'the question cannot be answered even using both statements together'
+];
+
+function dsBucket(text) {
+  const t = String(text || '').toLowerCase();
+  if (/either statement alone/.test(t)) return 1;
+  if (/both (?:the )?statements together|both together/.test(t)) return 2;
+  if (/one (?:of these )?statements? alone|one statement alone/.test(t)) return 0;
+  if (/not be answered|even (?:using )?(?:any|both)|not sufficient/.test(t)) return 3;
+  return -1;
+}
+
+// "A. text" is rendered by the page, so a model that prefixes the letter itself
+// produced options reading "A. (a) the question can be answered...".
+function stripOptionLabel(text) {
+  return String(text == null ? '' : text).replace(/^\s*\(?[a-dA-D][).]\s+/, '').trim();
+}
+
+function normaliseShape(q) {
+  const opts = (q.options || []).map(stripOptionLabel);
+  if (q.shape !== 'data-sufficiency') return { options: opts, answer: q.answer };
+  const byBucket = new Map();
+  opts.forEach((t, i) => {
+    const b = dsBucket(t);
+    if (b >= 0 && !byBucket.has(b)) byBucket.set(b, i);
+  });
+  if (byBucket.size !== 4) return { options: opts, answer: q.answer };
+  const keyBucket = dsBucket(opts[q.answer]);
+  if (keyBucket < 0) return { options: opts, answer: q.answer };
+  const ordered = [];
+  for (let b = 0; b < 4; b++) ordered.push(DS_OPTIONS[b]);
+  return { options: ordered, answer: keyBucket };
+}
+
 function toPageQuestion(q, id, topic) {
-  const correctAt = Number.isInteger(q.answer) ? q.answer : 0;
-  const options = q.options.map((t, i) => ({ l: 'ABCD'[i], t: String(t), c: i === correctAt }));
+  const normal = normaliseShape(q);
+  const correctAt = normal.answer;
+  const options = normal.options.map((t, i) => ({ l: 'ABCD'[i], t: String(t), c: i === correctAt }));
   let text = String(q.question);
   if (q.passage) text = q.passage + '\n\n' + text;
   if (q.statement1) text += '\nI. ' + q.statement1 + '\nII. ' + q.statement2;
   if (Array.isArray(q.statements)) text += '\n' + q.statements.map((s, i) => (i + 1) + '. ' + s).join('\n');
   if (Array.isArray(q.items)) text += '\n' + q.items.map((s, i) => (i + 1) + '. ' + s).join('\n');
+  text = collapseRepeats(text);
   if (Array.isArray(q.list1)) {
     text += '\nList I: ' + q.list1.join(', ');
     text += '\nList II: ' + q.list2.join(', ');
@@ -189,10 +292,26 @@ async function main() {
     if (clean || has('all')) {
       const before = set.questions.length;
       set.questions = set.questions.filter((q) => {
+        // Repair what already shipped: a stem that repeats its own statement
+        // list is not a filter failure, so collapse it rather than drop it.
+        if (q && typeof q.text === 'string') q.text = collapseRepeats(q.text);
         const meta = quality.isMetaQuestion(q.text);
         const leak = quality.hasLeakedReasoning(q.sol);
-        if (meta || leak) {
-          console.log('  drop [' + (meta ? 'meta' : 'fabricated') + '] ' + String(q.text).slice(0, 60).replace(/\n/g, ' '));
+        // A "comprehension" passage that is really about the exam: the shipped
+        // CSAT set gained one beginning "Logical reasoning in the UPSC Civil
+        // Services Aptitude Test evaluates a candidate's capacity...". The real
+        // paper prints a passage on a subject, so this is not a comprehension
+        // item at all.
+        const examText = quality.isExamPassage(String(q.text || '').split('\n\n')[0]);
+        const lessonText = quality.isLessonMeta(q.text);
+        // --retire-legacy: the three sets shipped with a hand-written sampler of
+        // 30 items, most of them single-step. "Average of 10, 20, 30, 40, 50"
+        // and "Find the next: 2, 6, 18, 54" are not what the paper asks, so the
+        // shaped items replace them rather than sit beside them.
+        const trivial = has('retire-legacy') && !q.shape ? quality.isTrivial(q.text) : '';
+        if (meta || leak || examText || lessonText || trivial) {
+          const why = meta ? 'meta' : leak ? 'fabricated' : examText ? 'exam-passage' : lessonText ? 'lesson-meta' : 'trivial';
+          console.log('  drop [' + why + '] ' + String(q.text).slice(0, 60).replace(/\n/g, ' '));
           return false;
         }
         return true;
@@ -213,8 +332,14 @@ async function main() {
 
     for (let n = 0; n < count; n++) {
       const shape = shapeById(cfg.shapes[n % cfg.shapes.length]);
-      const topic = cfg.topics[n % cfg.topics.length];
-      const excerpt = lessonExcerpt(cfg.lesson);
+      // Passages get a substantive subject, because a topic like "statement
+      // sufficiency" produced passages about how the exam works.
+      const pool = (shape.id === 'passage-inference' && cfg.passageTopics) ? cfg.passageTopics : cfg.topics;
+      const topic = pool[n % pool.length];
+      // No lesson excerpt: it made the model ask about the page ("The lesson
+      // states that...") rather than about the subject. The shape prompt and a
+      // subject are enough.
+      const excerpt = '';
       let q = null;
       let why = '';
 
@@ -236,6 +361,12 @@ async function main() {
         if (errs.length) { why = errs.join('; '); console.error('  ' + shape.id + ' rejected: ' + why); continue; }
         if (quality.isMetaQuestion(cand.question)) { why = 'that is a meta question about exam technique'; continue; }
         if (quality.hasLeakedReasoning(cand.explanation)) { why = 'the explanation contains your own deliberation'; continue; }
+        if (cand.passage) {
+          const examPassage = quality.isExamPassage(cand.passage);
+          if (examPassage) { why = examPassage; continue; }
+        }
+        const lessonMeta = quality.isLessonMeta(cand.question);
+        if (lessonMeta) { why = lessonMeta; continue; }
         if (seen.has(stemKey(cand.question))) { why = 'duplicate stem'; continue; }
 
         seen.add(stemKey(cand.question));
