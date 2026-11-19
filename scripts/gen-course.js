@@ -161,23 +161,17 @@ function generateAutoContent(lesson, moduleName, examKey) {
 }
 
 function generateAutoQuestions(moduleKey, lesson, examKey, startId) {
-  var qs = [];
-  var templates = [
-    {q:'What is the primary concept tested in ' + lesson.title + '?', opts:['Direct application','Conceptual understanding','Formula recall','All of the above'], ans:3},
-    {q:'Which of the following best describes the approach to solve ' + lesson.title + ' problems?', opts:['Memorize all formulas','Understand concepts first','Practice only difficult questions','Skip theory'], ans:1},
-    {q:'In ' + lesson.title + ', which step is most critical for accurate problem-solving?', opts:['Reading the question carefully','Using the correct formula','Performing calculations accurately','All of the above'], ans:3},
-    {q:'How can you improve your speed in ' + lesson.title + ' questions?', opts:['Regular practice with timer','Solving only easy questions','Memorizing answers','Skipping calculations'], ans:0},
-    {q:'What is the best strategy for attempting ' + lesson.title + ' questions in the exam?', opts:['Attempt all questions','Easy questions first, then difficult','Difficult questions first','Random order'], ans:1}
-  ];
-  for (var i = 0; i < templates.length; i++) {
-    var t = templates[i];
-    var opts = [];
-    for (var j = 0; j < t.opts.length; j++) {
-      opts.push({l: String.fromCharCode(97+j), t: t.opts[j], c: j === t.ans});
-    }
-    qs.push({id: startId + i, text: t.q, options: opts, sol: 'The correct approach is: ' + opts[t.ans].t + '. Focus on understanding core concepts and regular practice for ' + lesson.title + '.'});
-  }
-  return qs;
+  // Nothing is generated here on purpose.
+  //
+  // This used to emit five study-advice questions for every lesson without a
+  // hand-written set - "What is the best strategy for attempting <lesson>
+  // questions in the exam?", "How can you improve your speed...", options like
+  // "Attempt all questions" / "Easy questions first". They test nothing about
+  // the subject, their "correct answer" is an opinion, and they made the
+  // micro-tests look like a school quiz. A shorter test of real questions beats
+  // a longer one padded with these, so the caller gets an empty list and the
+  // page simply shows no practice block for that lesson.
+  return [];
 }
 
 function generateExam(examKey) {
@@ -405,7 +399,7 @@ function generateExam(examKey) {
       h += '        <script>\n';
       h += '        var practiceQs = ' + JSON.stringify(lessonQs) + ';\n';
       h += '        var answered={},correctCount=0,lessonSlug="' + lesson.slug + '";\n';
-      h += '        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\\"color:var(--text-muted);font-size:.85em\\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\\"q-opt\\" data-qid=\\""+q.id+"\\" data-idx=\\""+j+"\\" onclick=\\"selectOpt("+q.id+","+j+")\\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\\"q-card\\" id=\\"q-"+q.id+"\\"><div class=\\"q-text\\">"+(i+1)+". "+q.text+"</div><div class=\\"q-opts\\">"+o+"</div><div class=\\"q-soln\\" id=\\"soln-"+q.id+"\\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\\"q-result\\" id=\\"result-"+q.id+"\\"></div></div>"}}c.innerHTML=h;updateProgress()}\n';
+      h += '        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\\"color:var(--text-muted);font-size:.85em\\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\\"q-opt\\" data-qid=\\""+q.id+"\\" data-idx=\\""+j+"\\" onclick=\\"selectOpt("+q.id+","+j+")\\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\\"q-card\\" id=\\"q-"+q.id+"\\"><div class=\\"q-text\\">"+(i+1)+". "+q.text+"</div><div class=\\"q-opts\\">"+o+"</div><div class=\\"q-soln\\" id=\\"soln-"+q.id+"\\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\\"q-result\\" id=\\"result-"+q.id+"\\"></div></div>"}}c.innerHTML=h;updateProgress()}\n';
       h += '        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}\n';
       h += '        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}\n';
       h += '        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}\n';

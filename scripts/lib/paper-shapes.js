@@ -59,6 +59,38 @@ const SHAPES = [
     }
   },
   {
+    id: 'data-sufficiency',
+    name: 'Data sufficiency (two statements)',
+    fields: 'question: the ask, statement1: first statement, statement2: second statement',
+    asks: 'Ask a question that needs data, then give two statements. The four options are ALWAYS exactly these, in this order: (a) the question can be answered using one statement alone but not the other; (b) using either statement alone; (c) using both statements together but neither alone; (d) even both together are not sufficient. Do not put all four options on one line — the page prints them as a list.',
+    extra: ['statement1', 'statement2'],
+    validate(q) {
+      const errs = [];
+      if (!q.statement1 || String(q.statement1).trim().length < 10) errs.push('statement1 is too short');
+      if (!q.statement2 || String(q.statement2).trim().length < 10) errs.push('statement2 is too short');
+      // The four options are fixed; a model that invents its own wording makes
+      // the item unusable, so check for the standard shape.
+      const text = (q.options || []).join(' ').toLowerCase();
+      if (!/either statement alone|one statement alone|both statements together|not be answered/.test(text)) {
+        errs.push('options are not the standard data-sufficiency set');
+      }
+      return errs;
+    }
+  },
+  {
+    id: 'passage-inference',
+    name: 'Passage-based inference',
+    fields: 'passage: 90-160 word passage, question: which conclusions follow',
+    asks: 'Write a short factual passage on the topic, then ask which of two or three given conclusions are valid. The answer must follow only from the passage, not from outside knowledge.',
+    extra: ['passage'],
+    validate(q) {
+      const errs = [];
+      const p = String(q.passage || '');
+      if (p.trim().length < 200) errs.push('passage is too short to reason from');
+      return errs;
+    }
+  },
+  {
     id: 'assertion-reason',
     name: 'Assertion and reason',
     fields: 'assertion: one sentence, reason: one sentence',
