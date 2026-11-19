@@ -38,10 +38,8 @@ jobs:
         with:
           fetch-depth: 1
           sparse-checkout: |
-            scripts
-            upsc
-            apfc
-            data/handwritten-lessons.json
+            /*
+            !/data/questions/
           sparse-checkout-cone-mode: false
 
       - name: Set up Node
