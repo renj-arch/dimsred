@@ -143,6 +143,9 @@ jobs:
           # sizes are raised now, and this stops a regenerated page putting them
           # back.
           node scripts/legible-lesson-text.js --check
+          # The Drill page's engine: every topic must give four real options and
+          # the data-interpretation topics must draw pie, bar and line figures.
+          node scripts/lib/mental-engine.test.js
           node scripts/lib/course-versions.test.js
           node scripts/lib/archive-index-guard.test.js
           node scripts/lib/html-repair.test.js
