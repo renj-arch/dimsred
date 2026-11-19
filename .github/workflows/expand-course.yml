@@ -68,25 +68,8 @@ jobs:
         with:
           fetch-depth: 1
           sparse-checkout: |
-            scripts
-            /*.html
-            english
-            neet
-            jee
-            upsc
-            ibps-po
-            sbi-clerk
-            ssc-gd
-            ctet
-            gate
-            agniveer
-            rbi
-            cgl
-            nda
-            cds
-            clat
-            apfc
-            data/handwritten-lessons.json
+            /*
+            !/data/questions/
           sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
