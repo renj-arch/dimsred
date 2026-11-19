@@ -35,7 +35,8 @@ for (const dir of DIRS) {
   for (const f of fs.readdirSync(abs).filter((x) => x.endsWith('.json'))) {
     const file = path.join(abs, f);
     let doc;
-    try { doc = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { continue; }
+    let raw;
+    try { raw = fs.readFileSync(file, 'utf8'); doc = JSON.parse(raw); } catch (e) { continue; }
     if (!doc || !Array.isArray(doc.questions)) continue;
 
     const keep = [];
@@ -51,7 +52,13 @@ for (const dir of DIRS) {
     if (!dropped) continue;
     if (CHECK) { removed += dropped; continue; }
     doc.questions = keep;
-    fs.writeFileSync(file, JSON.stringify(doc, null, 1) + '\n', 'utf8');
+    // Keep the file's own layout. Writing with a fixed indent rewrote every
+    // line of a 6 MB bank - a 130,000-line diff for four deleted questions.
+    const indentMatch = /\n( +)"/.exec(raw);
+    const indent = indentMatch ? indentMatch[1].length : 1;
+    const eol = raw.indexOf('\r\n') !== -1 ? '\r\n' : '\n';
+    const out = JSON.stringify(doc, null, indent).replace(/\n/g, eol);
+    fs.writeFileSync(file, out + (raw.endsWith('\n') ? eol : ''), 'utf8');
     removed += dropped;
     console.log('  ' + dir + '/' + f + ': removed ' + dropped + ', kept ' + keep.length);
   }
