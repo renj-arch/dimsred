@@ -1787,7 +1787,21 @@ function generateDirectionQuestion(diff) {
     idx = rand(0, ty.length - 1);
   }
   var t = ty[idx];
-  return t();
+  var out = t();
+  // Two of these types could return only two or three choices (a distance whose
+  // near misses collided, for one). A direction question with three options is
+  // a guess, so top up from the pool that matches the answer type.
+  if (out && Array.isArray(out.o) && out.o.length < 4) {
+    var numericAnswer = /^\s*\d+/.test(String(out.a));
+    var pool = numericAnswer
+      ? ['1 m','5 m','10 m','15 m','20 m','25 m']
+      : ['North','South','East','West','left','right','behind','in front','Same point'];
+    for (var _p = 0; _p < pool.length && out.o.length < 4; _p++) {
+      if (out.o.indexOf(pool[_p]) < 0) out.o.push(pool[_p]);
+    }
+    shuffle(out.o);
+  }
+  return out;
 }
 
 function turnDir(current, turn) {
@@ -2701,6 +2715,68 @@ function generateDataInterpretationQuestion(diff, layer) {
     }).join('');
     return '<table style="border-collapse:collapse;margin:8px 0;width:100%"><thead><tr>' + h + '</tr></thead><tbody>' + r + '</tbody></table>';
   }
+
+  // PSU papers ask DI from a figure as often as from a table: a pie for a
+  // budget split, a bar for monthly sales, a line for a five-year trend. These
+  // three draw the figure as inline SVG and share the palette with the rest of
+  // the site, so nothing has to load and nothing can 404.
+  function barSvg(vals, labels, title) {
+    var max = Math.max.apply(null, vals) || 1;
+    var w = 300, h = 160, pad = 26;
+    var bw = (w - pad - 12) / vals.length;
+    var bars = vals.map(function (v, i) {
+      var bh = Math.round((h - pad - 16) * v / max);
+      var x = pad + i * bw + 4;
+      var y = h - pad - bh;
+      return '<rect x="' + x.toFixed(1) + '" y="' + y + '" width="' + (bw - 8).toFixed(1) + '" height="' + bh +
+        '" fill="#a78bfa" rx="2"></rect>' +
+        '<text x="' + (x + (bw - 8) / 2).toFixed(1) + '" y="' + (y - 4) + '" text-anchor="middle" font-size="8" fill="#a1a1aa">' + v + '</text>' +
+        '<text x="' + (x + (bw - 8) / 2).toFixed(1) + '" y="' + (h - pad + 12) + '" text-anchor="middle" font-size="8" fill="#52525b">' + labels[i] + '</text>';
+    }).join('');
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + title + '" style="width:100%;max-width:330px;display:block;margin:6px auto">' +
+      '<line x1="' + pad + '" y1="' + (h - pad) + '" x2="' + (w - 8) + '" y2="' + (h - pad) + '" stroke="rgba(255,255,255,.18)"></line>' +
+      bars + '</svg>';
+  }
+
+  function pieSvg(slices) {
+    var colours = ['#a78bfa', '#34d399', '#f59e0b', '#ef4444', '#60a5fa'];
+    var total = slices.reduce(function (a, s) { return a + s.value; }, 0) || 1;
+    var cx = 78, cy = 78, r = 58, ang = -Math.PI / 2;
+    var paths = slices.map(function (s, i) {
+      var sweep = s.value / total * Math.PI * 2;
+      var a2 = ang + sweep;
+      var x1 = cx + r * Math.cos(ang), y1 = cy + r * Math.sin(ang);
+      var x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
+      var large = sweep > Math.PI ? 1 : 0;
+      var d = 'M' + cx + ' ' + cy + ' L' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x2.toFixed(1) + ' ' + y2.toFixed(1) + ' Z';
+      ang = a2;
+      return '<path d="' + d + '" fill="' + colours[i % colours.length] + '" stroke="#09090b" stroke-width="1"></path>';
+    }).join('');
+    var legend = slices.map(function (s, i) {
+      return '<rect x="152" y="' + (22 + i * 18) + '" width="9" height="9" rx="2" fill="' + colours[i % colours.length] + '"></rect>' +
+        '<text x="166" y="' + (30 + i * 18) + '" font-size="9" fill="#a1a1aa">' + s.label + '  ' + Math.round(s.value / total * 1000) / 10 + '%</text>';
+    }).join('');
+    return '<svg viewBox="0 0 300 160" role="img" aria-label="pie chart" style="width:100%;max-width:320px;display:block;margin:6px auto">' + paths + legend + '</svg>';
+  }
+
+  function lineSvg(vals, labels, title) {
+    var max = Math.max.apply(null, vals) || 1;
+    var w = 300, h = 160, pad = 26;
+    var stepX = (w - pad - 12) / Math.max(1, vals.length - 1);
+    var pts = vals.map(function (v, i) {
+      return { x: pad + i * stepX, y: h - pad - (v / max) * (h - pad - 18), v: v };
+    });
+    var poly = pts.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ');
+    var dots = pts.map(function (p) {
+      return '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="2.5" fill="#34d399"></circle>' +
+        '<text x="' + p.x.toFixed(1) + '" y="' + (p.y - 6).toFixed(1) + '" text-anchor="middle" font-size="8" fill="#a1a1aa">' + p.v + '</text>' +
+        '<text x="' + p.x.toFixed(1) + '" y="' + (h - pad + 12) + '" text-anchor="middle" font-size="8" fill="#52525b">' + labels[pts.indexOf(p)] + '</text>';
+    }).join('');
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + title + '" style="width:100%;max-width:330px;display:block;margin:6px auto">' +
+      '<polyline points="' + poly + '" fill="none" stroke="#a78bfa" stroke-width="2"></polyline>' +
+      '<line x1="' + pad + '" y1="' + (h - pad) + '" x2="' + (w - 8) + '" y2="' + (h - pad) + '" stroke="rgba(255,255,255,.18)"></line>' +
+      dots + '</svg>';
+  }
   var types = [
     [1, function(){ var a=rand(30,80), b=rand(20,60), c=rand(10,40); return { tbl:tableHtml(['Item','Value'],[['A',a],['B',b],['C',c]]), q:'Total of all?', a:a+b+c, hint:'A+B+C'}; }],
     [1, function(){ var m=rand(40,80), f=rand(20,50); return { tbl:tableHtml(['Category','Count'],[['Men',m],['Women',f]]), q:'% women?', a:Math.round(f*100/(m+f)), hint:'women/total×100'}; }],
@@ -2725,7 +2801,22 @@ function generateDataInterpretationQuestion(diff, layer) {
     // New: Bar chart visual using CSS
     [3, function(){ var vals=[rand(30,90), rand(20,80), rand(40,95), rand(10,70)]; var max=Math.max.apply(null,vals); var bars=vals.map(function(v){var pct=Math.round(v/max*100);return '<div style="margin:2px 0;font-size:.72em;display:flex;align-items:center;gap:4px"><span style="width:30px;text-align:right">'+v+'</span><div style="height:16px;width:'+pct+'%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:0 4px 4px 0;min-width:4px"></div></div>';}).join(''); var labels=['Q1','Q2','Q3','Q4']; return { tbl:'<div style="margin:8px 0;padding:8px 0"><div style="font-size:.75em;color:var(--text-sec);margin-bottom:4px">Sales (₹L) by Quarter</div>'+bars+'</div>', q:'Total annual sales?', a:vals.reduce(function(a,b){return a+b;},0), hint:'Sum all quarters'}; }],
     // New: Two-table comparison
-    [5, function(){ var mNames=['TechCo','MedCorp','FinServ','EduInc']; var revs=[rand(500,1500), rand(400,1200), rand(300,1000), rand(200,800)]; var emps=[rand(100,500), rand(80,400), rand(60,300), rand(40,200)]; var c=rand(0,3); return { tbl:tableHtml(['Company','Rev (₹L)','Employees'],[mNames.map(function(n,i){return[n,revs[i],emps[i]];})[0],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[1],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[2],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[3]]), q:'Revenue per employee of '+mNames[c]+'? (₹L)', a:Math.round(revs[c]*100/emps[c])/100, hint:'Rev÷Employees'}; }]
+    // New: Two-table comparison
+    [5, function(){ var mNames=['TechCo','MedCorp','FinServ','EduInc']; var revs=[rand(500,1500), rand(400,1200), rand(300,1000), rand(200,800)]; var emps=[rand(100,500), rand(80,400), rand(60,300), rand(40,200)]; var c=rand(0,3); return { tbl:tableHtml(['Company','Rev (₹L)','Employees'],[mNames.map(function(n,i){return[n,revs[i],emps[i]];})[0],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[1],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[2],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[3]]), q:'Revenue per employee of '+mNames[c]+'? (₹L)', a:Math.round(revs[c]*100/emps[c])/100, hint:'Rev÷Employees'}; }],
+    // New: Pie chart with a central-angle question, as PSU papers ask it.
+    [1, function(){ var a=rand(25,40), b=rand(20,30), c=rand(15,25), d=100-a-b-c; return { tbl:pieSvg([{label:'Food',value:a},{label:'Rent',value:b},{label:'Travel',value:c},{label:'Savings',value:d}]), q:'Central angle of the Food sector?', a:Math.round(a*3.6*10)/10, hint:'Angle = % × 3.6°'}; }],
+    // New: Pie chart read as a count against a stated total.
+    [2, function(){ var total=rand(1200,4800), a=rand(20,35), b=rand(15,30), c=rand(10,25), d=100-a-b-c; return { tbl:pieSvg([{label:'A',value:a},{label:'B',value:b},{label:'C',value:c},{label:'D',value:d}]) + '<div style="font-size:.8em;color:var(--text-sec);text-align:center">Total = ₹'+total+' crore</div>', q:'Amount in sector B (₹ crore)?', a:Math.round(total*b/100), hint:b+'% of '+total, sol:'Sector B = '+b+'% of ₹'+total+'cr = ₹'+Math.round(total*b/100)+'cr.'}; }],
+    // New: Bar chart, compare and total.
+    [2, function(){ var v=[rand(40,90), rand(55,110), rand(30,80), rand(60,120), rand(45,95)]; return { tbl:barSvg(v,['Mon','Tue','Wed','Thu','Fri'],'Units sold'), q:'Which day had the highest sales?', a:['Mon','Tue','Wed','Thu','Fri'][v.indexOf(Math.max.apply(null,v))], alt:['Mon','Tue','Wed','Thu','Fri'], hint:'Compare the bar heights'}; }],
+    // New: Bar chart, average.
+    [3, function(){ var v=[rand(120,300), rand(150,320), rand(100,280), rand(180,350)]; return { tbl:barSvg(v,['Q1','Q2','Q3','Q4'],'Production (units)'), q:'Average production per quarter?', a:Math.round(v.reduce(function(x,y){return x+y;},0)/4), hint:'Sum ÷ 4'}; }],
+    // New: Line graph, growth over the period.
+    [3, function(){ var y=[2019,2020,2021,2022,2023]; var v=[rand(200,300), rand(240,340), rand(280,380), rand(320,430), rand(380,500)]; return { tbl:lineSvg(v,['19','20','21','22','23'],'Revenue (₹ crore)'), q:'% growth from 2019 to 2023?', a:Math.round((v[4]-v[0])*100/v[0]), hint:'(new − old) ÷ old × 100', sol:'('+v[4]+' − '+v[0]+') ÷ '+v[0]+' × 100 = '+Math.round((v[4]-v[0])*100/v[0])+'%.'}; }],
+    // New: Line graph, steepest rise.
+    [4, function(){ var v=[rand(180,240), rand(260,340), rand(250,330), rand(360,460), rand(430,560)]; return { tbl:lineSvg(v,['19','20','21','22','23'],'Exports (₹ crore)'), q:'Between which two years did exports rise the most?', a:'2021 to 2022', alt:['2019 to 2020','2020 to 2021','2021 to 2022','2022 to 2023'], hint:'Compare the steepness of each segment'}; }],
+    // New: Pie chart beside a total, asking for a ratio.
+    [4, function(){ var a=rand(30,45), b=rand(20,30), c=rand(15,25), d=100-a-b-c; var g=gcd(a,b); return { tbl:pieSvg([{label:'Salary',value:a},{label:'Household',value:b},{label:'Education',value:c},{label:'Other',value:d}]), q:'Ratio of the Salary sector to the Household sector?', a:(a/g)+':'+(b/g), alt:[(a/g)+':'+(b/g),(b/g)+':'+(a/g),(a/g*2)+':'+(b/g),'1:1'], hint:'Use the percentages, then simplify'}; }]
   ];
   var matched = types.filter(function(t){ return t[0] <= diff; });
   if (matched.length === 0) matched = types;
@@ -2734,12 +2825,23 @@ function generateDataInterpretationQuestion(diff, layer) {
   var q = (data.tbl || '') + '<div style="margin-top:8px;font-weight:600">' + data.q + '</div>';
   var opts = [data.a];
   var spread = typeof data.a==='number' ? Math.max(2, Math.abs(data.a*0.12)) : 3;
+  // A number gets near-miss distractors. A wording answer (a day, a pair of
+  // years, a ratio) cannot, and the old loop then left the question with ONE
+  // option that _mentCanon padded with 'None of these', 'Cannot determine' and
+  // 'Option D' - three blank choices beside the right one. Those generators
+  // supply the plausible alternatives instead.
+  if (Array.isArray(data.alt) && data.alt.length) {
+    for (var _a=0; _a<data.alt.length && opts.length<4; _a++) {
+      if (opts.indexOf(data.alt[_a]) < 0) opts.push(data.alt[_a]);
+    }
+  }
   for (var _g=0; _g<50 && opts.length<4; _g++) {
     var v = typeof data.a==='number' ? Math.round(data.a + rand(-spread, spread)) : data.a;
     if (opts.indexOf(v) < 0 && (typeof v!=='number'||v>=0)) opts.push(v);
   }
+  if (opts.length < 4) return generateDataInterpretationQuestion(diff, layer);
   shuffle(opts);
-  return { question: q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'DI: '+data.hint, intuition:'Read table carefully. Identify total/avg/%, compute stepwise. For pie: central angle = % × 3.6°. For growth: (new-old)/old×100.' };
+  return { question: q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'DI: '+data.hint, intuition:'Read the figure first: for a pie, % × 3.6° gives the central angle; for a bar, compare heights or sum them; for a line, (new − old) ÷ old × 100 gives growth.' };
 }
 
 // ====== CASELET DI ======
@@ -7452,7 +7554,7 @@ function generateQuantQuestion(diff, subMode) {
     geometry: generateGeometryQuestion,
     mensuration: generateMensurationQuestion,
     counting: generateCountingQuestion,
-    data: generateDataQuestion,
+    data: function(diff, layer){ return rand(0,99) < 55 ? generateDataInterpretationQuestion(diff, layer) : generateDataQuestion(diff, layer); },
     number_system: generateNumberSystemQuestion,
     simplification: generateSimplificationQuestion,
     quadratic: generateQuadraticQuestion,
@@ -7492,13 +7594,65 @@ function generateQuantQuestion(diff, subMode) {
       q._subTopic = topic;
       q.techniqueLabel = (q.techniqueLabel || '') + ' [' + topic.replace(/_/g,' ') + ']';
       attempts++;
+      // A question with fewer than four options is not usable: the UI pads the
+      // gap with 'None of these', 'Cannot determine' and 'Option D', which is
+      // three guesses beside one real choice. Several topic generators did this
+      // (number_system 3 options, percentage 1, races 1). Draw again, and if the
+      // topic cannot produce four, top it up with near misses.
+      if (attempts >= 4) q = _topUpOptions(q);
       if (attempts > 10) break;
-    } while (_isRecent(q.question));
+    } while (_isRecent(q.question) || !_hasFourOptions(q));
     _addRecent(q.question);
     return q;
   }
   // Fallback
   return generateNumberSenseQuestion(diff, 'exam');
+}
+
+function _hasFourOptions(q) {
+  if (!q) return false;
+  var opts = q.options || q.o || [];
+  var uniq = {};
+  for (var i = 0; i < opts.length; i++) if (opts[i] !== undefined && opts[i] !== null) uniq[String(opts[i])] = 1;
+  // Grading compares with String() on both sides, so '3' and 3 are the same
+  // answer; counting them as different put the same choice on screen twice.
+  var hasAnswer = q.answer !== undefined && uniq[String(q.answer)] === 1;
+  return Object.keys(uniq).length >= 4 && hasAnswer;
+}
+
+// Give a question four distinct choices. Numbers get near misses; anything else
+// keeps what it has, because inventing a plausible wording could make a second
+// option correct.
+function _topUpOptions(q) {
+  if (!q) return q;
+  var opts = (q.options || q.o || []).slice();
+  var seen = {};
+  opts = opts.filter(function (o) {
+    if (o === undefined || o === null) return false;
+    var k = String(o);
+    if (seen[k]) return false;
+    seen[k] = 1;
+    return true;
+  });
+  if (q.answer !== undefined && !seen[String(q.answer)]) opts.unshift(q.answer);
+  if (typeof q.answer === 'number' && isFinite(q.answer)) {
+    var spread = Math.max(2, Math.round(Math.abs(q.answer) * 0.1));
+    var guard = 0;
+    while (opts.length < 4 && guard++ < 60) {
+      var d = Math.round(q.answer + (rand(0, 1) ? 1 : -1) * rand(1, spread * 2));
+      if (d !== q.answer && opts.indexOf(d) < 0 && d >= 0) opts.push(d);
+    }
+    var k = 1;
+    while (opts.length < 4 && k < 30) {
+      if (opts.indexOf(q.answer + k) < 0) opts.push(q.answer + k);
+      if (opts.length < 4 && q.answer - k >= 0 && opts.indexOf(q.answer - k) < 0) opts.push(q.answer - k);
+      k++;
+    }
+  }
+  q.options = opts;
+  if (q.o) q.o = opts;
+  shuffle(opts);
+  return q;
 }
 
 function generateReasoningQuestion(diff, subMode) {
@@ -7644,8 +7798,9 @@ function generateReasoningQuestion(diff, subMode) {
         }
       } catch(e) { /* fallback */ }
       attempts++;
+      if (attempts >= 4 && result) result = _topUpOptions(result);
       if (attempts > 10) break;
-    } while (result && _isRecent(result.question));
+    } while (result && (_isRecent(result.question) || !_hasFourOptions(result)));
     if (result) {
       _addRecent(result.question);
       return result;

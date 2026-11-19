@@ -15,7 +15,7 @@ body{background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMa
 .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:8px;font-weight:800}
 .nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
-.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.9em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
 .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
 .wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
@@ -723,14 +723,14 @@ renderFaults();
     var gaps=(j.gaps||[]).slice(0,15);
     var rows=gaps.map(function(g){
       var pct=Math.min(100,g.pct||0);
-      return '<div style="margin:7px 0"><div style="display:flex;justify-content:space-between;font-size:.82em"><span>'+esc(g.key)+'</span><span>'+g.words.toLocaleString()+' / '+g.target.toLocaleString()+' words ('+g.pct+'%)</span></div><div style="background:rgba(255,255,255,.07);border-radius:5px;height:7px;margin-top:3px"><div style="background:#34d399;height:7px;border-radius:5px;width:'+pct+'%"></div></div></div>';
+      return '<div style="margin:7px 0"><div style="display:flex;justify-content:space-between;font-size:.9em"><span>'+esc(g.key)+'</span><span>'+g.words.toLocaleString()+' / '+g.target.toLocaleString()+' words ('+g.pct+'%)</span></div><div style="background:rgba(255,255,255,.07);border-radius:5px;height:7px;margin-top:3px"><div style="background:#34d399;height:7px;border-radius:5px;width:'+pct+'%"></div></div></div>';
     }).join('');
     box.innerHTML='<div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px;font-size:.9em">'+
       '<span><strong>'+(j.coveragePct||0)+'%</strong> overall coverage</span>'+
       '<span><strong>'+(j.atTarget||0)+'/'+(j.lessons||0)+'</strong> lessons at target</span>'+
       '<span>median <strong>'+(j.medianWords||0).toLocaleString()+'</strong> words</span>'+
       '<span>'+(j.totalWords||0).toLocaleString()+' / '+(j.totalTargetWords||0).toLocaleString()+' words</span></div>'+
-      '<div style="font-size:.78em;color:var(--text-muted,#71717a);margin-bottom:6px">Biggest gaps (top 15 of '+(j.gaps||[]).length+'):</div>'+rows;
+      '<div style="font-size:.9em;color:var(--text-muted,#71717a);margin-bottom:6px">Biggest gaps (top 15 of '+(j.gaps||[]).length+'):</div>'+rows;
   }).catch(function(e){box.textContent='coverage data unavailable ('+e.message+')';});
 })();
 

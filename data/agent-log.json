@@ -13,7 +13,31 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:07:08.386Z",
+   "at": "2026-11-19T15:51:45.353Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mwnq9d50-avzj (optional1/lit-marathi, 20 marks): Critically examine the contribution of Bhalchandra Nemade's 'Kosala' (1963) to the modernist turn in the Marathi novel. ",
+       "model": "hosted"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-19T15:53:26.574Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
    "byAgent": [
@@ -25,7 +49,7 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:09:43.160Z",
+   "at": "2026-11-19T15:55:27.924Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
    "byAgent": [
@@ -37,7 +61,7 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:11:40.395Z",
+   "at": "2026-11-19T15:57:24.585Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
    "byAgent": [
@@ -49,7 +73,7 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:19:07.899Z",
+   "at": "2026-11-19T15:58:35.419Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
    "byAgent": [
@@ -61,7 +85,7 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:20:38.090Z",
+   "at": "2026-11-19T16:00:41.130Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
    "byAgent": [
@@ -73,7 +97,7 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:22:06.996Z",
+   "at": "2026-11-19T16:01:23.905Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
    "byAgent": [
@@ -85,7 +109,7 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:24:22.998Z",
+   "at": "2026-11-19T16:03:33.977Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
    "byAgent": [
@@ -97,37 +121,124 @@
    "details": []
   },
   {
-   "at": "2026-11-19T06:26:33.080Z",
+   "at": "2026-11-19T20:56:15.230Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 0,
+   "totalFixes": 6,
    "byAgent": [
     {
-     "agent": "mainsfresh",
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 6
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
      "count": 0
     }
    ],
-   "details": []
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 226520 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "00-27b-archive.json",
+       "fix": "Generated 6 questions for \"Friends-International\" (7 → 13)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 52 overlapping subtopics into correct categories"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Converted 83 fill-in-blank questions to proper Q&A"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Updated 62 question files"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Generated 6 new exam questions via LLM"
+      }
+     ]
+    }
+   ]
   },
   {
-   "at": "2026-11-19T06:28:15.615Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
+   "at": "2026-11-19T21:29:19.198Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 127,
    "byAgent": [
     {
-     "agent": "mainsfresh",
-     "count": 0
+     "agent": "selfcheck",
+     "count": 127
     }
    ],
-   "details": []
-  },
-  {
-   "at": "2026-11-19T06:29:43.687Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
+   "details": [
     {
-     "agent": "mainsfresh",
-     "count": 0
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "agniveer/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-13.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-14.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-15.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-16.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-17.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-18.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-19.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      }
+     ]
     }
    ],
    "details": []
