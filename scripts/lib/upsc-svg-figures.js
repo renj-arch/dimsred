@@ -159,15 +159,17 @@ function svg(d) {
       labels.push(text(it));
     }
   });
+  // The "hand-drawn" wobble used to come from feTurbulence + feDisplacementMap
+  // applied to the whole drawing. On large figures that filter smears strokes
+  // into bright streaks and softens every line, which readers described as
+  // "laser lines" across the page. The shapes are drawn slightly irregular
+  // already, so the filter is gone: clean strokes, crisp edges, no artefacts.
   return '<svg viewBox="0 0 ' + (d.w || 760) + ' ' + (d.h || 420) + '" role="img" aria-label="' + esc(d.aria || d.title) + '">' +
     '<defs><marker id="arrowhead-' + uid + '" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">' +
     '<path d="M0,0 L10,4 L0,8 z" fill="' + INK + '"/></marker>' +
-    '<filter id="rough-' + uid + '" x="-5%" y="-5%" width="110%" height="110%">' +
-    '<feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="11" result="n"/>' +
-    '<feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>' +
-    '</filter></defs>' +
+    '</defs>' +
     '<rect x="0" y="0" width="100%" height="100%" fill="' + SHEET + '"/>' +
-    '<g filter="url(#rough-' + uid + ')">' + shapes.join('') + '</g>' +
+    '<g>' + shapes.join('') + '</g>' +
     '<g>' + labels.join('') + '</g>' +
     '</svg>';
 }
