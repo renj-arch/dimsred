@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-19T07:19:32.630Z",
+  "updatedAt": "2026-11-19T20:14:29.556Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -23673,6 +23673,915 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-19T07:19:32.625Z"
+    },
+    {
+      "id": "6bc7723b5f348f80",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "Evaluate: &int; e^x sin x dx",
+      "options": [
+        {
+          "label": "A",
+          "text": "(e^x/2)(sin x − cos x) + C",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "(e^x/2)(sin x + cos x) + C",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "e^x cos x + C",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "e^x sin x + C",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let I = ∫ e^x sin x dx. Use integration by parts: u = sin x, dv = e^x dx → du = cos x dx, v = e^x. Then I = e^x sin x - ∫ e^x cos x dx.",
+        "Evaluate J = ∫ e^x cos x dx by parts: u = cos x, dv = e^x dx → du = -sin x dx, v = e^x. Then J = e^x cos x + ∫ e^x sin x dx = e^x cos x + I.",
+        "Substitute J into I: I = e^x sin x - (e^x cos x + I) = e^x sin x - e^x cos x - I.",
+        "Solve for I: 2I = e^x (sin x - cos x) → I = (e^x/2)(sin x - cos x) + C."
+      ],
+      "verifierCheck": "Using integration by parts twice: let I = ∫ e^x sin x dx. First, set u = sin x, dv = e^x dx to get I = e^x sin x - ∫ e^x cos x dx. Then for J = ∫ e^x cos x dx, set u = cos x, dv = e^x dx to get J = e^x cos x + ∫ e^x sin x dx = e^x cos x + I. Substituting back: I = e^x sin x - (e^x cos x + I) = e^x sin x - e^x cos x - I, so 2I = e^x(sin x - cos x), giving I = (e^x/2)(sin x - cos x) + C. This matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Standard Formula",
+          "idea": "Memorize ∫ e^{ax} sin bx dx = e^{ax}(a sin bx - b cos bx)/(a²+b²)",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Recall formula: ∫ e^{ax} sin(bx) dx = e^{ax}(a sin bx - b cos bx)/(a²+b²) + C",
+            "Set a = 1, b = 1",
+            "Compute: e^x (1·sin x - 1·cos x)/(1+1) = (e^x/2)(sin x - cos x) + C"
+          ]
+        },
+        {
+          "name": "Complex Exponential",
+          "idea": "Use e^{ix} to convert to simple exponential integral",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Write sin x = Im(e^{ix})",
+            "Integrand becomes Im(e^x e^{ix}) = Im(e^{(1+i)x})",
+            "Integrate: ∫ e^{(1+i)x} dx = e^{(1+i)x}/(1+i) + C",
+            "Multiply numerator and denominator by (1-i): e^{(1+i)x}(1-i)/2",
+            "Take imaginary part: (e^x/2)(sin x - cos x) + C"
+          ]
+        },
+        {
+          "name": "Double Parts",
+          "idea": "Integrate by parts twice and solve for I",
+          "kind": "shortcut",
+          "seconds": 15,
+          "steps": [
+            "Let I = ∫ e^x sin x dx",
+            "First parts: u=sin x, dv=e^x dx → I = e^x sin x - ∫ e^x cos x dx",
+            "Second parts: ∫ e^x cos x dx = e^x cos x + ∫ e^x sin x dx = e^x cos x + I",
+            "Substitute: I = e^x sin x - e^x cos x - I → 2I = e^x(sin x - cos x) → I = (e^x/2)(sin x - cos x) + C"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:08:05.835Z"
+    },
+    {
+      "id": "836597f124db39c0",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "Find lim(x→0) (cos x − 1)/x",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "−1",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Does not exist",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recognize the limit is of the form 0/0 as x→0.",
+        "Apply L'Hôpital's rule: differentiate numerator and denominator.",
+        "Derivative of cos x - 1 is -sin x; derivative of x is 1.",
+        "Evaluate limit of -sin x as x→0, which is 0.",
+        "Conclude the limit is 0."
+      ],
+      "verifierCheck": "Using L'Hôpital's rule, since both numerator and denominator approach 0 as x→0, the limit equals lim_{x→0} (-sin x)/1 = 0. Alternatively, using the known limit (cos x - 1)/x = 0.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Known Limit Identity",
+          "idea": "use (1-cos x)/x^2 = 1/2",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall lim (1-cos x)/x^2 = 1/2",
+            "Rewrite (cos x -1)/x = -x * (1-cos x)/x^2",
+            "Limit = -0 * 1/2 = 0"
+          ]
+        },
+        {
+          "name": "L'Hopital's Rule",
+          "idea": "differentiate numerator and denominator",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Differentiate numerator: -sin x",
+            "Differentiate denominator: 1",
+            "Evaluate at x=0: -sin 0 = 0"
+          ]
+        },
+        {
+          "name": "Series Expansion",
+          "idea": "use Maclaurin series for cos x",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "cos x = 1 - x^2/2 + O(x^4)",
+            "Substitute: (1 - x^2/2 - 1)/x = -x/2 + O(x^3)",
+            "Limit as x→0 is 0"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:08:28.670Z"
+    },
+    {
+      "id": "812ccf0a2b530960",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "The focus of the parabola y² = 8x is at:",
+      "options": [
+        {
+          "label": "A",
+          "text": "(0, 2)",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "(2, 0)",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "(4, 0)",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "(0, 4)",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "The given equation is y² = 8x.",
+        "This is a parabola opening to the right with standard form y² = 4ax.",
+        "Comparing, 4a = 8, so a = 2.",
+        "The focus of y² = 4ax is at (a, 0).",
+        "Thus the focus is at (2, 0).",
+        "This matches option B."
+      ],
+      "verifierCheck": "The given parabola is of the form y² = 4ax, where 4a = 8, so a = 2. For a parabola opening to the right, the focus lies at (a, 0). Substituting a = 2 gives the focus at (2, 0), which corresponds to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Focus Formula Recall",
+          "idea": "Memorize focus of y²=4ax is (a,0)",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall: y²=4ax → focus (a,0)",
+            "Match 4a=8 → a=2",
+            "Answer: (2,0)"
+          ]
+        },
+        {
+          "name": "Standard Form Match",
+          "idea": "Recognize y²=4ax pattern instantly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify 4a = 8 from y² = 8x",
+            "Compute a = 2",
+            "Focus is (a, 0) = (2, 0)"
+          ]
+        },
+        {
+          "name": "Coefficient Halving",
+          "idea": "Divide x-coefficient by 4 for a",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Take coefficient of x: 8",
+            "Divide by 4: 8/4 = 2",
+            "Focus at (2, 0)"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:08:38.097Z"
+    },
+    {
+      "id": "cc7b539b7a966f79",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "The integrating factor of dy/dx + (1/x)y = x is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "x",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1/x",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "ln x",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "e^x",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the linear ODE form dy/dx + P(x) y = Q(x).",
+        "Read off P(x) = 1/x from the given equation.",
+        "Compute the integral of P(x): ∫(1/x) dx = ln x.",
+        "Form the integrating factor μ(x) = e^{∫P(x)dx} = e^{ln x}.",
+        "Simplify e^{ln x} to x (for x>0).",
+        "Conclude that the integrating factor is x."
+      ],
+      "verifierCheck": "The given ODE is dy/dx + (1/x)y = x, which is linear with P(x) = 1/x. The integrating factor is μ(x) = exp(∫ P(x) dx) = exp(∫ (1/x) dx) = exp(ln|x|) = |x|. For x>0, this simplifies to x, which matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Pattern recall",
+          "idea": "Remember standard form y' + (1/x)y has IF = x",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recognize the ODE matches the common pattern.",
+            "Recall its integrating factor is x."
+          ]
+        },
+        {
+          "name": "Log‑exp shortcut",
+          "idea": "Use known identity e^{ln x}=x",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "For dy/dx + P y = Q, IF = e^{∫Pdx}.",
+            "P = 1/x → ∫Pdx = ln x.",
+            "e^{ln x} reduces to x instantly."
+          ]
+        },
+        {
+          "name": "IF quick compute",
+          "idea": "Directly apply μ = e^{∫Pdx} for linear ODE",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify P(x) = coefficient of y: 1/x.",
+            "Integrate P: ∫1/x dx = ln x.",
+            "Exponentiate: μ = e^{ln x}.",
+            "Simplify: e^{ln x} = x."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:08:44.284Z"
+    },
+    {
+      "id": "f773dd74e15476e7",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 5,
+      "section": "Mathematics",
+      "question": "Distance between the parallel lines 2x + 3y = 6 and 4x + 6y = 11 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/√13",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "√13/26",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "2/√13",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5/√13",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Rewrite both lines in the form Ax + By + C = 0 with identical A and B: first line 2x + 3y - 6 = 0; second line divide by 2: 2x + 3y - 11/2 = 0.",
+        "Apply distance formula for parallel lines: |C1 - C2| / sqrt(A^2 + B^2) = | -6 - (-11/2) | / sqrt(2^2 + 3^2) = | -1/2 | / sqrt(13) = 1/(2√13).",
+        "Rationalize denominator: 1/(2√13) = √13/(2*13) = √13/26.",
+        "Match with given options: √13/26 corresponds to option B."
+      ],
+      "verifierCheck": "Rewrite the lines as 2x+3y-6=0 and 4x+6y-11=0, then divide the second by 2 to get 2x+3y-11/2=0. Using the distance formula |c2‑c1|/√(a^2+b^2) gives |(-11/2)-(-6)|/√(2^2+3^2)=|1/2|/√13=1/(2√13)=√13/26, which matches option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Coeff halve shortcut",
+          "idea": "Recognize second line is double first, halve it then use simple distance formula",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Divide 4x+6y=11 by 2 → 2x+3y=11/2",
+            "Compute Δc = |6‑11/2| = 1/2",
+            "Compute norm = √(2^2+3^2)=√13",
+            "Distance = Δc / norm = (1/2)/√13 = √13/26"
+          ]
+        },
+        {
+          "name": "Invariant c‑difference",
+          "idea": "For parallel lines ax+by=c, distance = |c2‑c1|/√(a^2+b^2) directly",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Write both lines as ax+by=c: first is 2x+3y=6, second divide by2 → 2x+3y=11/2",
+            "Δc = |6‑11/2| = 1/2",
+            "Denominator √(2^2+3^2)=√13",
+            "Distance = (1/2)/√13 = √13/26"
+          ]
+        },
+        {
+          "name": "Point‑line distance",
+          "idea": "Pick an easy point on one line, then use point‑to‑line formula on the other",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Set x=0 in 2x+3y=6 → point P(0,2)",
+            "Use formula |4·0+6·2‑11|/√(4^2+6^2)",
+            "Compute numerator |12‑11|=1, denominator √52=2√13",
+            "Distance = 1/(2√13)=√13/26"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:08:58.729Z"
+    },
+    {
+      "id": "4ada28c4eef3e866",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "A retail store advertises a 10% discount on the marked price of a television. After this discount is applied, the store offers an additional 5% off on the already reduced price. What is the overall percentage discount on the original marked price?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. 14%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B. 14.5%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C. 15%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. 13.5%",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let the original price be P.",
+        "Apply 10% discount: new price = P × (1 - 0.10) = 0.9P.",
+        "Apply additional 5% discount on the reduced price: final price = 0.9P × (1 - 0.05) = 0.9P × 0.95 = 0.855P.",
+        "Overall discount = 1 - 0.855 = 0.145 = 14.5%."
+      ],
+      "verifierCheck": "First discount reduces price to 90% of original (0.9P). A further 5% off that gives 0.95 × 0.9P = 0.855P. The overall reduction is 1 − 0.855 = 0.145, i.e., 14.5% of the original marked price.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Successive Discount Formula",
+          "idea": "Use a+b−ab/100 for two successive discounts",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Add the two discounts: 10 + 5 = 15",
+            "Subtract product divided by 100: (10×5)/100 = 0.5",
+            "Result: 15 − 0.5 = 14.5%"
+          ]
+        },
+        {
+          "name": "Complement Multiplication",
+          "idea": "Multiply remaining fractions to get final price",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Convert discounts to remaining fractions: 10% off → 0.90, 5% off → 0.95",
+            "Multiply: 0.90 × 0.95 = 0.855",
+            "Subtract from 1: 1 − 0.855 = 0.145 = 14.5%"
+          ]
+        },
+        {
+          "name": "Quick Mental Estimate",
+          "idea": "Compute second discount on reduced price mentally",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "First discount 10% leaves 90% of original",
+            "Second discount 5% of 90% = 4.5%",
+            "Total discount = 10% + 4.5% = 14.5%"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:09:20.456Z"
+    },
+    {
+      "id": "5e89e287727ced05",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 7,
+      "section": "Mathematics",
+      "question": "Evaluate: lim(x→∞) (3x^2 + 2)/(2x^2 − 1)",
+      "options": [
+        {
+          "label": "A",
+          "text": "3/2",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "2/3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "∞",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the highest power of x in numerator and denominator (both x^2).",
+        "Divide numerator and denominator by x^2 to get (3 + 2/x^2)/(2 - 1/x^2).",
+        "As x→∞, 2/x^2 → 0 and 1/x^2 → 0.",
+        "The expression simplifies to 3/2."
+      ],
+      "verifierCheck": "Divide numerator and denominator by x^2: (3 + 2/x^2) / (2 - 1/x^2). As x → ∞, the terms 2/x^2 and 1/x^2 go to 0, leaving 3/2. Hence the limit is 3/2, corresponding to option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Infinity shortcut",
+          "idea": "Limits of rational functions",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "For large x, lower-degree terms are negligible.",
+            "Limit equals ratio of leading coefficients: 3/2.",
+            "Choose the corresponding answer."
+          ]
+        },
+        {
+          "name": "Dominant term ratio",
+          "idea": "Compare highest-degree terms",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify the highest power of x in numerator and denominator (x^2).",
+            "Keep only the leading coefficients: 3 (numerator) and 2 (denominator).",
+            "Form the ratio of these coefficients: 3/2.",
+            "Match the ratio to the answer choices."
+          ]
+        },
+        {
+          "name": "Divide by x²",
+          "idea": "Normalize each term",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Divide numerator and denominator by x^2: (3 + 2/x^2)/(2 - 1/x^2).",
+            "As x → ∞, the 2/x^2 and 1/x^2 terms vanish.",
+            "Resulting limit is 3/2.",
+            "Select the matching option."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:09:26.787Z"
+    },
+    {
+      "id": "33f8bca4eb3eeb36",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 9,
+      "section": "Mathematics",
+      "question": "A tea vendor mixes 3 kg of Type A tea costing Rs 120 per kg with 2 kg of Type B tea costing Rs 150 per kg. He sells half of this mixture at a 10 % profit on its cost. He then adds 1 kg of Type C tea costing Rs 180 per kg to the remaining mixture and sells the rest at the same selling price per kg as used for the first half. What is the overall profit percentage on the whole transaction (rounded to two decimal places)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. 10.00%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B. 5.00%",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C. 3.71%",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "D. 7.50%",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate initial mixture: 3 kg A at Rs 120/kg + 2 kg B at Rs 150/kg = 5 kg costing Rs 660, cost per kg = Rs 132.",
+        "First half (2.5 kg) sold at 10% profit: cost = Rs 330, selling price = Rs 363, selling price per kg = Rs 145.2.",
+        "Remaining mixture (2.5 kg, cost Rs 330) plus 1 kg Type C at Rs 180/kg gives 3.5 kg costing Rs 510.",
+        "Second sale: 3.5 kg at Rs 145.2/kg = Rs 508.2 revenue.",
+        "Total revenue = Rs 363 + Rs 508.2 = Rs 871.2. Total cost = Rs 660 + Rs 180 = Rs 840.",
+        "Profit = Rs 31.2, profit percentage = (31.2/840)×100 = 3.714...% ≈ 3.71%."
+      ],
+      "verifierCheck": "The initial mixture of 3 kg Type A (Rs 120/kg) and 2 kg Type B (Rs 150/kg) costs Rs 660 for 5 kg (Rs 132/kg). Half (2.5 kg) is sold at 10% profit: cost Rs 330, selling price Rs 363, giving Rs 145.2/kg. The remaining 2.5 kg (cost Rs 330) plus 1 kg Type C (Rs 180) totals 3.5 kg costing Rs 510. Sold at Rs 145.2/kg yields Rs 508.2. Total cost = Rs 840, total revenue = Rs 871.2, profit = Rs 31.2, profit% = 31.2/840 × 100 = 3.7142857% ≈ 3.71%.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Average Cost vs SP",
+          "idea": "Compare selling price per kg to average cost per kg of all tea purchased",
+          "kind": "shortcut",
+          "seconds": 15,
+          "steps": [
+            "Total cost = 3×120 + 2×150 + 1×180 = 840; total kg = 6 → avg cost = 140",
+            "First half cost = (3×120+2×150)/2 = 330; half qty = 2.5 kg",
+            "SP per kg = 330×1.1 / 2.5 = 145.2",
+            "Profit% = (145.2−140)/140 × 100 = 3.71% → Option C"
+          ]
+        },
+        {
+          "name": "Total Revenue Minus Cost",
+          "idea": "Find constant selling price per kg from first half, multiply by total kg sold (6), subtract total cost",
+          "kind": "shortcut",
+          "seconds": 15,
+          "steps": [
+            "Total cost = 3×120 + 2×150 + 1×180 = 840",
+            "First half cost = (3×120+2×150)/2 = 330; half qty = 2.5 kg",
+            "SP per kg = 330×1.1 / 2.5 = 145.2",
+            "Total revenue = 145.2 × 6 = 871.2",
+            "Profit% = (871.2−840)/840 × 100 = 3.71% → Option C"
+          ]
+        },
+        {
+          "name": "Profit/Loss Split",
+          "idea": "Compute 10% profit on first half, then loss on second half sold at same SP, sum for net profit",
+          "kind": "shortcut",
+          "seconds": 20,
+          "steps": [
+            "First half cost = (3×120+2×150)/2 = 330; profit = 10% of 330 = 33",
+            "Second half cost = 330 (remaining) + 180 = 510; qty = 3.5 kg",
+            "SP per kg = 330×1.1/2.5 = 145.2; revenue = 3.5×145.2 = 508.2",
+            "Loss on second = 510−508.2 = 1.8; net profit = 33−1.8 = 31.2",
+            "Total cost = 840; profit% = 31.2/840×100 = 3.71% → Option C"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:12:34.559Z"
+    },
+    {
+      "id": "f68f341404ac19d5",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 11,
+      "section": "Mathematics",
+      "question": "Combined mean of 20 boys (mean 75) and 15 girls (mean 80) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "77.14",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "77.5",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "76.5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "78",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate total sum for boys: 20 * 75 = 1500",
+        "Calculate total sum for girls: 15 * 80 = 1200",
+        "Total sum = 1500 + 1200 = 2700",
+        "Total count = 20 + 15 = 35",
+        "Combined mean = 2700 / 35 = 77.142857... ≈ 77.14",
+        "Match with option A: 77.14"
+      ],
+      "verifierCheck": "The total sum for boys is 20 * 75 = 1500, for girls is 15 * 80 = 1200, combined sum = 2700. Total count = 35. Combined mean = 2700 / 35 = 77.142857... which rounds to 77.14, matching option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick Estimate",
+          "idea": "Mental approximation with fraction",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Total 35, boys 20 (4/7), girls 15 (3/7)",
+            "Mean = 75*(4/7) + 80*(3/7)",
+            "= (300+240)/7 = 540/7 ≈ 77.14",
+            "Select A"
+          ]
+        },
+        {
+          "name": "Weighted Deviation",
+          "idea": "Use base mean and weighted offset",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Take lower mean 75 as base",
+            "Girls exceed base by 5, weight 15/35 = 3/7",
+            "Add (3/7)*5 = 15/7 ≈ 2.14 to base",
+            "Result 77.14 → option A"
+          ]
+        },
+        {
+          "name": "Ratio Shortcut",
+          "idea": "Simplify counts to ratio 4:3",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Reduce 20:15 to 4:3",
+            "Compute (4*75 + 3*80)/7 = 540/7",
+            "540/7 = 77.14",
+            "Matches option A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:13:24.126Z"
+    },
+    {
+      "id": "e0308e9a90e66b35",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 12,
+      "section": "Mathematics",
+      "question": "If f(x) = { x+1, x<2; 5, x=2; 3x-1, x>2 }, at x=2:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Continuous",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Removable discontinuity",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Jump discontinuity",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Infinite discontinuity",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compute left-hand limit as x→2⁻: lim_{x→2⁻} (x+1) = 3.",
+        "Compute right-hand limit as x→2⁺: lim_{x→2⁺} (3x-1) = 5.",
+        "Since left-hand limit (3) ≠ right-hand limit (5), the two-sided limit does not exist.",
+        "The function value f(2)=5 is finite and equals the right-hand limit but not the left-hand limit.",
+        "Therefore, the discontinuity at x=2 is a jump discontinuity."
+      ],
+      "verifierCheck": "At x=2, f(2)=5. The left-hand limit as x→2⁻ is lim_{x→2⁻} (x+1)=3. The right-hand limit as x→2⁺ is lim_{x→2⁺} (3x-1)=5. Since the left-hand limit (3) and right-hand limit (5) are finite but unequal, the two-sided limit does not exist, and the discontinuity is a jump discontinuity.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Graph Sketch",
+          "idea": "Mental picture of pieces",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "For x<2: line y=x+1, at 2 gives 3",
+            "Point at (2,5) isolated",
+            "For x>2: line y=3x-1, at 2 gives 5",
+            "Gap from 3 to 5 → jump"
+          ]
+        },
+        {
+          "name": "Limit Comparison",
+          "idea": "Compare left/right limits and value",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Left limit: x→2⁻, use x+1 → 3",
+            "Right limit: x→2⁺, use 3x-1 → 5",
+            "f(2)=5",
+            "Left ≠ Right → jump discontinuity"
+          ]
+        },
+        {
+          "name": "Definition Check",
+          "idea": "Apply discontinuity classification",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Compute left limit = 3",
+            "Compute right limit = 5",
+            "Limits finite but unequal",
+            "Classify as jump discontinuity"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-19T20:14:29.552Z"
     }
   ]
 }
