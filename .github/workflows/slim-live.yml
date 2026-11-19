@@ -129,6 +129,14 @@ jobs:
           # User-facing defects on 2026-11-07: a key that its own solution
           # contradicted and leaked model reasoning. This gate fails the deploy
           # on either, so they cannot reach live again.
+          #
+          # Repair before gating. Generation lanes run every few hours and one
+          # bad item used to freeze the whole site: on 2026-11-19 four fresh
+          # items ("none of the options match") arrived between a prune and the
+          # deploy and failed the publish. Pruning here drops them from the tree
+          # that gets built, so a lane's mistake costs its own item, not the
+          # deploy. The gate still runs, so a real regression is still caught.
+          node scripts/prune-unsupported-solutions.js
           node scripts/lib/question-solutions.test.js
           node scripts/lib/course-versions.test.js
           node scripts/lib/archive-index-guard.test.js
