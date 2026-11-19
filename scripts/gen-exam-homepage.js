@@ -70,6 +70,23 @@ var configs = {
     ],
     about: 'APFC (Assistant Provident Fund Commissioner) is a Group A post under the Employees\' Provident Fund Organisation, recruited through the UPSC Recruitment Test. The RT is a single 2-hour objective paper of 160 questions worth 300 marks with -1/3 negative marking, covering nine syllabus areas including Industrial Relations, Labour Codes, Social Security, Accountancy, Auditing and Insurance. Candidates scoring above the cutoff go to an interview carrying 25% weightage.',
     canonical: 'apfc/'
+  },
+  'rrb-station-master': {
+    name: 'RRB Station Master',
+    full: 'RRB Station Master (CEN 08/2026)',
+    desc: 'Free RRB Station Master practice papers with answers. Mathematics, General Intelligence & Reasoning, and General Awareness for CBT 1 and CBT 2 of the NTPC Station Master post.',
+    badge: 'RRB NTPC · Station Master · 1,265 posts',
+    topics: ['Mathematics', 'General Intelligence & Reasoning', 'General Awareness', 'Current Affairs', 'Computer & Typing', 'Railway News'],
+    modules: ['Mathematics', 'General Intelligence & Reasoning', 'General Awareness'],
+    mockLabel: 'Station Master Mock Test',
+    why: [
+      { title: 'Both CBTs Covered', desc: 'CBT 1 (100 questions) and CBT 2 (120 questions) at the graduate level the post actually asks for.' },
+      { title: 'Graduate Maths, Not GD Maths', desc: 'Station Master is a Level 6 post. The arithmetic here is built for that level, not the constable paper.' },
+      { title: 'The Typing Test Explained', desc: '30 wpm English or 25 wpm Hindi on a computer after CBT 2 — the stage candidates most often lose the post on.' },
+      { title: 'Free & Mobile Friendly', desc: 'No registration required. Timed practice with answers and explanations on any device.' }
+    ],
+    about: 'The Railway Recruitment Board (RRB) recruits Station Masters through the NTPC graduate-level notification, CEN 08/2026, which advertised 1,265 Station Master posts. Selection runs through CBT 1 (100 questions, 120 minutes: 30 Mathematics, 30 General Intelligence and Reasoning, 40 General Awareness), CBT 2 (120 questions, 90 minutes: 35 Mathematics, 35 Reasoning, 50 General Awareness), and a computer typing test at 30 words per minute in English or 25 in Hindi. Station Master is a Level 6 post, so the mathematics is graduate level. Both CBTs carry negative marking of one-third.',
+    canonical: 'rrb-station-master/'
   }
 };
 
