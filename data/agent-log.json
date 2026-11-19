@@ -169,18 +169,54 @@
    "details": []
   },
   {
-   "at": "2026-11-19T09:30:02.153Z",
+   "at": "2026-11-19T09:30:17.541Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 0,
+   "totalFixes": 5,
    "byAgent": [
     {
-     "agent": "mainsfresh",
-     "count": 0
+     "agent": "proposals",
+     "count": 5
     }
    ],
-   "details": []
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Add fallback JSON validation for on‑demand lanes",
+       "detail": "Recent on‑demand failures show malformed JSON in lyrics lane (2 fails) and TTS lane (2 fails) per the digest.",
+       "text": "Wrap each on‑demand lane's output parsing in a try/catch that validates JSON with a lightweight schema; on failure, log the raw payload and return a user‑friendly error page instead of breaking the workflow. Update the GitHub Action step that invokes the lane to include this wrapper script."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Expose a simple \"Next\" button on homepage quiz flow",
+       "detail": "Browser test reports \"flow-skipped on Homepage — no visible Next button\" meaning the quiz flow isn’t exercised.",
+       "text": "Add a minimal Next button element to the homepage quiz container with an `onclick` that triggers the existing quiz progression function. Ensure the button is always rendered (e.g., via a CSS fallback) and update the test script to assert its presence."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Automate periodic sanity check of on‑demand lane success rates",
+       "detail": "Owner on‑demand lane shows 38 requests with 6 failures across lyrics, tts, etc.; tracking trends would help prioritize fixes.",
+       "text": "Create a new GitHub Action that runs nightly, parses the on‑demand lane logs, computes failure percentages per lane, and writes a summary JSON to `data/on-demand-stats.json`. Add a simple HTML page that reads this file and displays a table of success rates."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Increase coverage of the invented pool into mains bank",
+       "detail": "Invented pool holds 269 questions but mains bank only has 19 hand‑authored + 42 AI batch items; seeding more would grow the core content.",
+       "text": "Add a GitHub Action step that selects up to 30 random “easy” and “moderate” questions from `invented/mental.html` and appends them to `data/mains-bank.json` each week, marking them with a “seeded‑invented” tag for later review."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Add console error monitoring to CI",
+       "detail": "Browser test logged 1 console error but no details; catching such errors early prevents regressions.",
+       "text": "Enhance the existing Playwright test workflow to capture console messages, fail the job if any error‑level messages appear, and output them in the CI log. No code changes to the site itself are needed."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-19T09:30:02.153Z",
+ "lastRun": "2026-11-19T09:30:17.541Z",
  "model": "qwen3.5:9b"
 }
