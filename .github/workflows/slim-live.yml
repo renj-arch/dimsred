@@ -143,6 +143,11 @@ jobs:
           # sizes are raised now, and this stops a regenerated page putting them
           # back.
           node scripts/legible-lesson-text.js --check
+          # Reading quality, checked rather than remembered: no doubled heading
+          # numbers, no blurred/smeared figures, one type scale across a page.
+          node scripts/strip-doubled-heading-numbers.js --check
+          node scripts/remove-figure-blur.js --check
+          node scripts/normalise-type-scale.js --check
           # The Drill page's engine: every topic must give four real options and
           # the data-interpretation topics must draw pie, bar and line figures.
           node scripts/lib/mental-engine.test.js
