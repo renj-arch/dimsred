@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T06:20:24.325Z",
+  "updatedAt": "2026-11-20T19:46:58.105Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -24598,6 +24598,347 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-20T06:20:24.320Z"
+    },
+    {
+      "id": "67ef7feb22817d05",
+      "exam": "cgl",
+      "paperSlug": "practice-set-20",
+      "paperTitle": "CGL Practice Set 20",
+      "paperPath": "cgl/papers/practice-set-20.html",
+      "paperFile": "practice-set-20.json",
+      "questionNumber": 1,
+      "section": "General Intelligence & Reasoning",
+      "question": "Pointing to a photograph, a man said, 'She is the only daughter of my father's only son.' How is the woman in the photograph related to the man?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Sister",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Daughter",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Mother",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Wife",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify that 'my father's only son' refers to the man himself, as he is the only son of his father.",
+        "Interpret 'the only daughter of my father's only son' as the only daughter of the man.",
+        "Conclude that the woman in the photograph is the man's daughter."
+      ],
+      "verifierCheck": "The phrase 'my father's only son' refers to the speaker himself, as he is the only male child of his father. Consequently, 'the only daughter of my father's only son' means the only daughter of the speaker. Therefore, the woman in the photograph is the man's daughter.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Substitution",
+          "idea": "Replace relational phrase with self",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Speaker is male.",
+            "\"My father's only son\" = me.",
+            "\"Only daughter of me\" = my daughter."
+          ]
+        },
+        {
+          "name": "Gender Elimination",
+          "idea": "Use gender to lock identity",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Speaker male → \"my father's only son\" must be male.",
+            "Only male in that slot is the speaker.",
+            "\"Only daughter of speaker\" = female child → daughter."
+          ]
+        },
+        {
+          "name": "Family Tree Sketch",
+          "idea": "Quick visual hierarchy",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Draw man at bottom.",
+            "Place father above him.",
+            "Father's only son = man.",
+            "Only daughter of man = his daughter."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T19:44:09.788Z"
+    },
+    {
+      "id": "34ed11b924201354",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "IBPS PO Practice Set 13",
+      "paperPath": "ibps-po/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 1,
+      "section": "Quantitative Aptitude",
+      "question": "As per the table below, what is the percentage increase in the number of female employees from 2019 to 2021? Year | Total Employees | Male Employees | Female Employees 2019 | 500 | 300 | 200 2020 | 600 | 350 | 250 2021 | 720 | 400 | 320",
+      "options": [
+        {
+          "label": "A",
+          "text": "55%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "60%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "65%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "50%",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify female employees in 2019: 200",
+        "Identify female employees in 2021: 320",
+        "Compute increase: 320 - 200 = 120",
+        "Compute percentage increase: (120 / 200) * 100 = 60%",
+        "Match with option B"
+      ],
+      "verifierCheck": "The number of female employees in 2019 was 200 and in 2021 was 320. The increase is 320 - 200 = 120. Percentage increase = (120 / 200) * 100 = 60%. This matches option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Half-Plus-Tenth",
+          "idea": "Mental math: 50% + 10% of base",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "50% of 200 = 100",
+            "10% of 200 = 20",
+            "100 + 20 = 120 increase → 60%"
+          ]
+        },
+        {
+          "name": "Fraction Flip",
+          "idea": "Simplify fraction before multiplying",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Increase/Original = 120/200",
+            "Cancel zeros: 12/20 = 3/5",
+            "3/5 = 0.6 = 60%"
+          ]
+        },
+        {
+          "name": "Direct Formula",
+          "idea": "Plug values into % increase formula",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Female 2019 = 200, Female 2021 = 320",
+            "Increase = 320 - 200 = 120",
+            "% = (120/200) × 100 = 60%"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T19:44:59.378Z"
+    },
+    {
+      "id": "b6a330440b08b88a",
+      "exam": "jee",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "JEE Main Practice Set 18",
+      "paperPath": "jee/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 1,
+      "section": "Physics",
+      "question": "In a photoelectric effect experiment, the stopping potential V_s is plotted against the frequency f of incident light. The slope of the straight line obtained gives:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Work function (φ)",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Planck's constant (h)",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Ratio h/e",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Ratio e/h",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Write the photoelectric equation: eV_s = hf - φ.",
+        "Rearrange to express stopping potential as a function of frequency: V_s = (h/e)f - φ/e.",
+        "Identify that this is a linear equation of the form y = mx + c, where slope m = h/e.",
+        "Conclude that the slope of the V_s vs f graph gives the ratio h/e."
+      ],
+      "verifierCheck": "The photoelectric effect equation is eV_s = hf - φ, where e is the electron charge, V_s is the stopping potential, h is Planck's constant, f is the frequency, and φ is the work function. Rearranging gives V_s = (h/e)f - φ/e. A plot of V_s versus f is a straight line with slope h/e and intercept -φ/e. Hence the slope directly yields the ratio h/e.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Graph Memory Trick",
+          "idea": "Recall standard photoelectric graph: V_s vs f is straight line with slope h/e.",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Memorize: V_s vs f graph slope = h/e",
+            "Intercept gives -φ/e",
+            "Select option C"
+          ]
+        },
+        {
+          "name": "Equation Rearrangement",
+          "idea": "Rearrange Einstein's photoelectric equation to slope-intercept form.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write eV_s = hf - φ",
+            "Divide by e: V_s = (h/e)f - φ/e",
+            "Identify slope = h/e"
+          ]
+        },
+        {
+          "name": "Unit Analysis",
+          "idea": "Check units of slope to match h/e.",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Slope = V_s/f → Volts/Hz = (J/C)/s⁻¹ = J·s/C",
+            "h has units J·s, e has units C",
+            "h/e has units J·s/C → matches slope"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T19:45:23.662Z"
+    },
+    {
+      "id": "8faa710438512d06",
+      "exam": "upsc",
+      "paperSlug": "practice-set-14",
+      "paperTitle": "UPSC Civil Services Practice Set 14",
+      "paperPath": "upsc/papers/practice-set-14.html",
+      "paperFile": "practice-set-14.json",
+      "questionNumber": 1,
+      "section": "CSAT",
+      "question": "A train 180 metres long crosses a telegraph pole in 12 seconds. What is the speed of the train in km/h?",
+      "options": [
+        {
+          "label": "A",
+          "text": "45 km/h",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "54 km/h",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "60 km/h",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "72 km/h",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Distance = length of train = 180 m",
+        "Time = 12 s",
+        "Speed in m/s = 180/12 = 15 m/s",
+        "Convert to km/h: 15 × 3.6 = 54 km/h",
+        "Option B matches 54 km/h"
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Calculation",
+          "idea": "Compute m/s then multiply by 3.6",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Speed = 180 m / 12 s = 15 m/s",
+            "15 × 3.6 = 54 km/h"
+          ]
+        },
+        {
+          "name": "5/18 Inverse",
+          "idea": "Use 18/5 factor to convert m/s to km/h",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "180/12 = 15 m/s",
+            "15 × 18/5 = 54 km/h"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T19:45:51.015Z"
     }
   ]
 }
