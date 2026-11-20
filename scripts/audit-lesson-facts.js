@@ -1,0 +1,215 @@
+#!/usr/bin/env node
+/**
+ * audit-lesson-facts.js — read lesson prose and flag claims that are wrong.
+ *
+ * The reader found this in a mains lesson:
+ *
+ *   "launched on 1 August 1920, coinciding with the first anniversary of the
+ *    death of Bal Gangadhar Tilak"
+ *
+ * Tilak died on 1 August 1920, so that was the day of his death, not an
+ * anniversary. One wrong word turns a correct paragraph into a trap, and there
+ * is no way to find these by grep: the sentence is grammatical, the date is
+ * right, only the relation between them is wrong.
+ *
+ * This reads a lesson the way a careful editor would and records every claim it
+ * cannot stand behind, with the quote, the problem, and the correction. With
+ * --apply it fixes the ones it is sure about, but only when the quote appears
+ * verbatim, so a stale line can never be replaced by the wrong text.
+ *
+ *   node scripts/audit-lesson-facts.js --file upsc/course/mains-gs1/lesson-x.html
+ *   node scripts/audit-lesson-facts.js --all --limit 20
+ *   node scripts/audit-lesson-facts.js --all --limit 20 --apply
+ *   node scripts/audit-lesson-facts.js --report data/fact-audit.json
+ */
+
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+const ROUTES = {
+  NVAPI: 'NVIDIA_API_KEY',
+  GROQ: 'GROQ_API_KEY',
+  OPENROUTER: 'OPENROUTER_API_KEY',
+  GH_MODELS: 'GH_MODELS_TOKEN'
+};
+for (const flag of Object.keys(ROUTES)) {
+  if (process.env[ROUTES[flag]] && process.env[flag] !== '0') process.env[flag] = '1';
+}
+const hosted = require('./lib/hosted');
+
+const ROOT = path.resolve(__dirname, '..');
+
+function arg(name, fallback) {
+  const i = process.argv.indexOf('--' + name);
+  return i >= 0 && i + 1 < process.argv.length ? process.argv[i + 1] : fallback;
+}
+const has = (n) => process.argv.indexOf('--' + n) !== -1;
+
+const LIMIT = parseInt(arg('limit', '0'), 10) || 0;
+const APPLY = has('apply');
+const REPORT = arg('report', 'data/fact-audit.json');
+const PARAS_PER_CALL = parseInt(arg('chunk', '10'), 10) || 10;
+
+function walk(dir, out) {
+  let entries = [];
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return out; }
+  for (const e of entries) {
+    if (e.name === '.git' || e.name === 'node_modules' || e.name === 'data') continue;
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) walk(full, out);
+    else if (e.name.endsWith('.html')) out.push(full);
+  }
+  return out;
+}
+
+// Prose only: the body paragraphs, not the contents list, nav, practice block or
+// figure labels. Those carry no claims a reader can be misled by.
+function lessonParagraphs(html) {
+  const start = html.indexOf('<div class="lesson-body"');
+  if (start === -1) return [];
+  let body = html.slice(start);
+  const endMarkers = ['id="practice-qs"', '<!-- lesson-nav -->', 'class="lesson-nav"'];
+  for (const m of endMarkers) {
+    const i = body.indexOf(m);
+    if (i > 0) body = body.slice(0, i);
+  }
+  body = body.replace(/<div class="lesson-toc"[\s\S]*?<\/div>\s*<\/div>/g, '');
+  body = body.replace(/<svg[\s\S]*?<\/svg>/g, ' ');
+  body = body.replace(/<figcaption[\s\S]*?<\/figcaption>/g, ' ');
+
+  const paras = [];
+  const re = /<p[^>]*>([\s\S]*?)<\/p>/g;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    const text = m[1].replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim();
+    if (text.length < 120) continue;
+    if (/^(this lesson|last updated|source)/i.test(text)) continue;
+    paras.push(text);
+  }
+  return paras;
+}
+
+function extractJson(text) {
+  const first = String(text || '').indexOf('{');
+  if (first < 0) return null;
+  let depth = 0, inStr = false, esc = false;
+  for (let i = first; i < text.length; i++) {
+    const ch = text[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === '\\') esc = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') inStr = true;
+    else if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) { try { return JSON.parse(text.slice(first, i + 1)); } catch (e) { return null; } }
+    }
+  }
+  return null;
+}
+
+const SYSTEM = 'You are a careful history, polity, geography and science editor for an Indian civil-services ' +
+  'exam site. You are given numbered paragraphs from one lesson. Find statements that are factually WRONG: ' +
+  'wrong dates, wrong attributions, wrong relations between two true facts ("the anniversary of a death on the ' +
+  'day of the death"), wrong article numbers, wrong places, wrong orders of events, invented quotes or numbers. ' +
+  'Do not report style, wording, simplification, or things that are debatable. Only report something when you ' +
+  'are confident it is wrong, and only when you can state the correction precisely. ' +
+  'Answer with JSON only: {"problems":[{"n":<paragraph number>,"quote":"<the exact wrong phrase, <=120 chars>",' +
+  '"problem":"<what is wrong>","correction":"<the corrected phrase, same length or shorter>",' +
+  '"confidence":"high|medium"}]} If there are none, answer {"problems":[]}.';
+
+async function auditParagraphs(paras) {
+  const user = paras.map((p, i) => '(' + (i + 1) + ') ' + p).join('\n\n');
+  const text = await hosted.chat(SYSTEM, user, { numPredict: 2500, temperature: 0.1 });
+  const json = extractJson(text);
+  return json && Array.isArray(json.problems) ? json.problems : [];
+}
+
+function applyCorrection(file, quote, correction, problem) {
+  const html = fs.readFileSync(file, 'utf8');
+  if (!quote || !html.includes(quote)) return false;
+  // A correction made by the model is marked on the page in green, with the
+  // reason on hover, so a reader can see what changed and why. Silently
+  // rewriting a lesson would make the site's own text unauditable.
+  const safeTitle = String(problem || 'Corrected after a fact check').replace(/"/g, '&quot;');
+  const marked = '<span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" ' +
+    'title="' + safeTitle + '">' + correction + '</span>';
+  fs.writeFileSync(file, html.split(quote).join(marked), 'utf8');
+  return true;
+}
+
+async function main() {
+  if (!hosted.enabled()) {
+    console.error('no model route: set NVIDIA_API_KEY / GROQ_API_KEY / GH_MODELS_TOKEN');
+    process.exitCode = 1;
+    return;
+  }
+
+  let files;
+  if (has('file')) files = [path.resolve(arg('file'))];
+  else files = walk(ROOT, []).filter((f) => /\/course\//.test(f.replace(/\\/g, '/')));
+
+  files.sort();
+  if (LIMIT) files = files.slice(0, LIMIT);
+
+  const results = [];
+  let audited = 0, flagged = 0, applied = 0;
+
+  for (const file of files) {
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    let html;
+    try { html = fs.readFileSync(file, 'utf8'); } catch (e) { continue; }
+    const paras = lessonParagraphs(html);
+    if (!paras.length) continue;
+
+    audited++;
+    for (let i = 0; i < paras.length; i += PARAS_PER_CALL) {
+      const chunk = paras.slice(i, i + PARAS_PER_CALL);
+      let problems = [];
+      try {
+        problems = await auditParagraphs(chunk);
+      } catch (e) {
+        console.error('  ' + rel + ': model call failed - ' + e.message);
+        continue;
+      }
+      for (const p of problems) {
+        if (!p || !p.quote) continue;
+        flagged++;
+        const record = {
+          file: rel,
+          quote: String(p.quote).slice(0, 200),
+          problem: String(p.problem || '').slice(0, 300),
+          correction: String(p.correction || '').slice(0, 200),
+          confidence: p.confidence === 'high' ? 'high' : 'medium'
+        };
+        if (APPLY && record.confidence === 'high' && record.correction) {
+          record.applied = applyCorrection(file, record.quote, record.correction, record.problem);
+          if (record.applied) applied++;
+        }
+        results.push(record);
+        console.log('  [' + record.confidence + '] ' + rel + '\n      "' + record.quote +
+          '"\n      -> ' + record.problem + '\n      fix: ' + record.correction + (record.applied ? '  (applied)' : ''));
+      }
+    }
+  }
+
+  const out = path.resolve(ROOT, REPORT);
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  fs.writeFileSync(out, JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    lessonsAudited: audited,
+    flagged,
+    applied,
+    problems: results
+  }, null, 1) + '\n', 'utf8');
+
+  console.log('\naudited ' + audited + ' lesson(s): ' + flagged + ' claim(s) flagged, ' + applied + ' applied');
+  console.log('report: ' + REPORT);
+}
+
+main().catch((e) => { console.error('FAIL ' + e.message); process.exitCode = 1; });
