@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Vectors &amp; Three-Dimensional Geometry — JEE Mathematics Lesson | vlymbooq</title>
     <meta name="description" content="Free JEE Mathematics Vectors &amp; Three-Dimensional Geometry lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
@@ -21,7 +23,7 @@
         .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
         .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
         .container{max-width:1000px;margin:0 auto;padding:24px}
@@ -32,9 +34,9 @@
         .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
         .module-card:hover{border-color:rgba(255,255,255,.12)}
         .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
-        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
         .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
-        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
         .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
         .lesson-body{padding:20px 0}
         .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
@@ -46,30 +48,30 @@
         .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
         .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
         .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
-        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
-        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
-        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
         .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
-        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
-        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
         .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
         .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
         .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
         @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
         .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
         .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
         .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
         .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
         .q-card .q-soln.show{display:block}
         .q-card .q-soln strong{color:var(--emerald)}
         .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
         .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
         .sidebar-nav{position:sticky;top:72px}
-        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
         .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
-        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
         .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
         .btn-primary:hover{background:rgba(167,139,250,.25)}
         .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
@@ -80,8 +82,8 @@
         @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
         .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
         .diagram-box svg{max-width:100%;height:auto}
-        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
-        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
         @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
     </style>
@@ -92,7 +94,7 @@
         <div class="flex-row">
             <div class="side">
                 <div class="sidebar-nav">
-                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
                     <a href="lesson-algebra.html">Algebra</a>
                     <a href="lesson-calculus.html">Calculus</a>
                     <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
@@ -114,9 +116,10 @@
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Vectors &amp; Three-Dimensional Geometry</h1>
-                    <div id="lesson-meta" hidden data-version="6f6820f18b2f" data-updated="" data-updated-label="" data-headings="[&quot;Key Concepts Covered&quot;,&quot;Important Formulas &amp; Rules&quot;,&quot;Common Question Types&quot;]"></div>
-                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
-                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Vector algebra, dot and cross products, lines and planes in space, and shortest distance.</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 20 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="3cd968ec390d" data-updated="2026-11-20" data-updated-label="20 Nov 2026" data-headings="[&quot;Vector Algebra Fundamentals&quot;,&quot;1 Definition and Representation of Vectors&quot;,&quot;2 Vector Addition and Scalar Multiplication&quot;,&quot;3 Components and Direction Cosines&quot;,&quot;4 Magnitude and Unit Vectors&quot;,&quot;Dot Product and Its Geometric Significance&quot;,&quot;5 Algebraic Definition of the Dot Product&quot;,&quot;6 Geometric Interpretation and Angle Between Vectors&quot;,&quot;7 Projection of One Vector Onto Another&quot;,&quot;8 Applications in Work and Orthogonality&quot;,&quot;Cross Product and Vector Triple Product&quot;,&quot;9 Algebraic Definition of the Cross Product&quot;,&quot;10 Geometric Meaning and Right‑Hand Rule&quot;,&quot;11 Scalar Triple Product and Volume of Parallelepiped&quot;,&quot;12 Vector Triple Product Identity&quot;,&quot;Lines in Three‑Dimensional Space&quot;,&quot;13 Vector and Parametric Equations of a Line&quot;,&quot;14 Symmetric Form and Direction Ratios&quot;,&quot;15 Angle Between Two Lines&quot;,&quot;16 Shortest Distance Between Two Skew Lines&quot;,&quot;Planes in Three‑Dimensional Space&quot;,&quot;17 Vector and Cartesian Equations of a Plane&quot;,&quot;18 Normal Vector and Distance from a Point to a Plane&quot;,&quot;19 Angle Between Two Planes and Line‑Plane Intersection&quot;,&quot;20 Shortest Distance Between Parallel Planes and Between a Line and a Plane&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Vector algebra, dot and cross products, lines and planes in space, and shortest distance.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
                         <span style="font-size:.75em;color:var(--text-muted)">Vectors · Planes · Lines · Distance</span>
                     </div>
@@ -126,50 +129,100 @@
                     </div>
                 </div>
                 <div class="lesson-body">
-<!-- course-figure:vector-statistics-figure-2 -->
-<figure class="lesson-figure" data-figure="vector-statistics-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
-  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
-    <svg viewBox="0 0 760 420" role="img" aria-label="Vectors 3D Geometry Statistics Probability Concept Flow Diagram Overview"><defs><marker id="arrowhead-lesson-vector-statistics-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="105" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="105" dy="0">Vectors</tspan></text><rect x="210" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="285" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="285" dy="0">3D Geometry</tspan></text><rect x="390" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="465" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="465" dy="0">Statistics</tspan></text><rect x="570" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="645" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="645" dy="0">Probability</tspan></text><path d="M 180 180 L 210 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure-2)"/><path d="M 360 180 L 390 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure-2)"/><path d="M 540 180 L 570 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure-2)"/></g><g><text x="195" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="195" dy="0">used in</tspan></text><text x="375" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="375" dy="0">feeds</tspan></text><text x="555" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="555" dy="0">basis</tspan></text><text x="30" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 12: Vector addition in 3D</tspan></text><text x="30" y="60" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Def: Probability = favourable/total</tspan></text></g></svg>
-  </div>
-  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
-    <strong>Vectors 3D Geometry Statistics Probability Concept Flow Diagram Overview</strong> — Shows how vectors underpin 3D geometry, which feeds statistics and probability.
-    &middot; <a href="../../../figures/svg-vector-statistics-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
-  </figcaption>
-</figure>
-<!-- course-figure:vectors-3d-figure -->
-<figure class="lesson-figure" data-figure="vectors-3d-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
-  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
-    <svg viewBox="0 0 760 420" role="img" aria-label="Vectors in Three Dimensional Geometry for Geography Exams"><defs><marker id="arrowhead-lesson-vectors-3d-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="50" y="50" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="140" y="70" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">Position Vector</tspan></text><rect x="50" y="130" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="140" y="150" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">Direction Cosines</tspan></text><rect x="300" y="50" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="390" y="70" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="390" dy="0">Vector Addition</tspan></text><rect x="300" y="130" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="390" y="150" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="390" dy="0">Dot Product</tspan></text><rect x="300" y="210" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="390" y="230" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="390" dy="0">Cross Product</tspan></text><path d="M 230 70 L 300 70" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vectors-3d-figure)"/><path d="M 140 90 L 140 130" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vectors-3d-figure)"/><path d="M 390 90 L 390 130" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vectors-3d-figure)"/><path d="M 390 90 L 390 210" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vectors-3d-figure)"/></g><g><text x="260" y="60" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="260" dy="0">gives</tspan></text><text x="150" y="110" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="150" dy="0">defines</tspan></text><text x="400" y="110" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">yields</tspan></text><text x="400" y="150" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">yields</tspan></text><text x="50" y="300" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="50" dy="0">Art. 3.2: Direction cosines define orientation</tspan></text><text x="300" y="300" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="300" dy="0">Mechanism: Cross product gives area vector</tspan></text></g></svg>
-  </div>
-  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
-    <strong>Vectors in Three Dimensional Geometry for Geography Exams</strong> — Shows how position vectors lead to direction cosines, addition, dot and cross products used in geographic coordinate transformations.
-    &middot; <a href="../../../figures/svg-vectors-3d-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
-  </figcaption>
-</figure>
                     <h3>Learning Objectives</h3>
                     <ul>
                         <li>Understand the fundamental concepts of Vectors &amp; Three-Dimensional Geometry</li>
                         <li>Apply key formulas and techniques to solve problems</li>
                         <li>Practice with exam-level questions to build speed and accuracy</li>
                     </ul>
-<p>This lesson covers <strong>Vectors & Three-Dimensional Geometry</strong>, a key topic in Mathematics for JEE. Below is a structured overview of the core concepts you need to master.</p>
-<h3>Key Concepts Covered</h3>
-<ul>
-  <li><strong>Vectors:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Planes:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Lines:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Distance:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-</ul>
-<h3>Important Formulas & Rules</h3>
-<p>Focus on understanding the core formulas and when to apply them. Practice identifying the correct formula based on question type. Create a formula sheet for quick revision before the exam.</p>
-<h3>Common Question Types</h3>
-<ul>
-  <li>Direct application of formulas and concepts</li>
-  <li>Multi-step problems requiring combination of concepts</li>
-  <li>Data interpretation and analysis-based questions</li>
-</ul>
-<div class="tip-box"><div class="tip-title">Exam Strategy</div><div class="tip-text">Practice topic-wise questions first, then attempt mixed sets. Focus on accuracy before speed. Review your mistakes and maintain an error log.</div></div>
-        <script>
+<h2>Vector Algebra Fundamentals</h2>
+
+<h3>1 Definition and Representation of Vectors</h3>
+<p>A vector is a mathematical object that possesses both magnitude and direction, distinguishing it from a scalar which has magnitude only. In three‑dimensional space a vector can be represented by an ordered triple of real numbers (x, y, z) which are its components along the mutually perpendicular coordinate axes. The same vector may also be depicted as a directed line segment from the origin to the point (x, y, z) or as a free vector that can be translated without altering its properties. The notation a or a is commonly used, and the zero vector 0 has all components equal to zero and no definite direction.</p>
+<h3>2 Vector Addition and Scalar Multiplication</h3>
+<p>Vector addition follows the parallelogram law: the sum a+b is obtained by placing the tail of b at the head of a and drawing the resultant from the tail of a to the head of b. Component‑wise this means (a<sub>1</sub>,a<sub>2</sub>,a<sub>3</sub>)+(b<sub>1</sub>,b<sub>2</sub>,b<sub>3</sub>)=(a<sub>1</sub>+b<sub>1</sub>,a<sub>2</sub>+b<sub>2</sub>,a<sub>3</sub>+b<sub>3</sub>). Scalar multiplication by a real number k stretches or shrinks the vector and reverses its direction when k is negative, giving ka=(ka<sub>1</sub>,ka<sub>2</sub>,ka<sub>3</sub>). Both operations satisfy the axioms of a vector space, making the set of all three‑dimensional vectors a real vector space of dimension three.</p>
+<h3>3 Components and Direction Cosines</h3>
+<p>The components of a vector are its projections on the coordinate axes; if a=a<sub>1</sub>i+a<sub>2</sub>j+a<sub>3</sub>k then a<sub>1</sub>,a<sub>2</sub>,a<sub>3</sub> are the scalar components. The direction cosines l,m,n are the cosines of the angles that the vector makes with the positive x, y, and z axes respectively, and they satisfy l<sup>2</sup>+m<sup>2</sup>+n<sup>2</sup>=1. They are obtained by dividing each component by the magnitude of the vector: l=a<sub>1</sub>/|a|, m=a<sub>2</sub>/|a|, n=a<sub>3</sub>/|a|. Direction ratios are any three numbers proportional to the direction cosines and are often used when the magnitude is not required.</p>
+<h3>4 Magnitude and Unit Vectors</h3>
+<p>The magnitude (or length) of a is |a|=√(a<sub>1</sub><sup>2</sup>+a<sub>2</sub><sup>2</sup>+a<sub>3</sub><sup>2</sup>), derived from the Pythagorean theorem in three dimensions. A unit vector has magnitude one and points in the same direction as the original vector; it is obtained by dividing the vector by its magnitude, a=a/|a|. The standard basis vectors i,j,k are unit vectors along the coordinate axes. Any vector can be expressed as a linear combination of these basis vectors, which is the foundation for all subsequent algebraic manipulations in three‑dimensional geometry.</p>
+
+<h2>Dot Product and Its Geometric Significance</h2>
+<h3>5 Algebraic Definition of the Dot Product</h3>
+<p>The dot product (also called scalar product) of two vectors a=a<sub>1</sub>i+a<sub>2</sub>j+a<sub>3</sub>k and b=b<sub>1</sub>i+b<sub>2</sub>j+b<sub>3</sub>k is defined algebraically as acdotb=a<sub>1</sub>b<sub>1</sub>+a<sub>2</sub>b<sub>2</sub>+a<sub>3</sub>b<sub>3</sub>. This operation yields a scalar, not a vector, and it is commutative: acdotb=bcdota. The dot product distributes over addition, a·(b+c)=acdotb+acdotc, and it is compatible with scalar multiplication, (ka)cdotb=k(acdotb). These algebraic properties make the dot product a powerful tool for simplifying vector expressions.</p>
+<h3>6 Geometric Interpretation and Angle Between Vectors</h3>
+<p>Geometrically the dot product equals the product of the magnitudes of the two vectors and the cosine of the angle θ between them: acdotb=|a||b|cosθ. This relationship provides a direct method to compute the angle: cosθ=(acdotb)/(|a||b|). When the dot product is zero the vectors are orthogonal (perpendicular), because cosθ=0 implies θ=90^°. The sign of the dot product indicates whether the angle is acute (positive) or obtuse (negative), which is useful in determining the relative orientation of vectors in physics and engineering problems.</p>
+<h3>7 Projection of One Vector Onto Another</h3>
+<p>The scalar projection of a onto b is the length of the shadow of a on the line of b and is given by proj<sub>b</sub>a=(acdotb)/|b|. The vector projection, which retains direction, is big((acdotb)/|b|<sup>2</sup>big)b. These formulas follow directly from the geometric definition of the dot product and are essential for resolving forces, finding components of velocity, and solving optimisation problems where a quantity must be maximised or minimised along a given direction.</p>
+<h3>8 Applications in Work and Orthogonality</h3>
+<p>In physics the work done by a constant force F moving an object through a displacement d is W=Fcdotd; only the component of the force along the displacement contributes to the work. In geometry, two lines are perpendicular if their direction vectors have a zero dot product, and a vector is normal to a plane if it is orthogonal to every direction vector lying in the plane. The dot product therefore bridges algebraic computation and geometric reasoning, making it indispensable for both theoretical derivations and practical calculations.</p>
+
+<div class="example-box">
+<div class="ex-title">Example: Angle Between Two Vectors</div>
+<div class="ex-text">Find the angle between the vectors a=2i-3j+6k and b=-i+2j-2k.</div>
+<div class="ex-soln">First compute the dot product: acdotb=2(-1)+(-3)(2)+6(-2)=-2-6-12=-20. Next find the magnitudes: |a|=√(2<sup>2</sup>+(-3)<sup>2</sup>+6<sup>2</sup>)=√(4+9+36)=√(49)=7; |b|=√((-1)<sup>2</sup>+2<sup>2</sup>+(-2)<sup>2</sup>)=√(1+4+4)=√(9)=3. Then cosθ=(acdotb)/(|a||b|)=-20/(7·3)=-20/21. Hence θ=cos<sup>-1</sup>(-20/21), which is approximately 162.3^°. The obtuse angle confirms that the vectors point in largely opposite directions.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Insight</div>
+<div class="tip-text">When a question asks for the angle between two vectors, always compute the dot product and the magnitudes first; the cosine formula is the most direct route and avoids the pitfalls of using the cross product magnitude, which gives the sine of the angle and requires an extra step to resolve the quadrant.</div>
+</div>
+
+<h2>Cross Product and Vector Triple Product</h2>
+<h3>9 Algebraic Definition of the Cross Product</h3>
+<p>The cross product (vector product) of a=a<sub>1</sub>i+a<sub>2</sub>j+a<sub>3</sub>k and b=b<sub>1</sub>i+b<sub>2</sub>j+b<sub>3</sub>k is defined as the determinant atimesb=begin{vmatrix}i&j&ka<sub>1</sub>&a<sub>2</sub>&a<sub>3</sub>b<sub>1</sub>&b<sub>2</sub>&b<sub>3</sub>end{vmatrix}, which expands to (a<sub>2</sub>b<sub>3</sub>-a<sub>3</sub>b<sub>2</sub>)i+(a<sub>3</sub>b<sub>1</sub>-a<sub>1</sub>b<sub>3</sub>)j+(a<sub>1</sub>b<sub>2</sub>-a<sub>2</sub>b<sub>1</sub>)k. The result is a vector perpendicular to both a and b. The cross product is anti‑commutative: atimesb=-(btimesa), and it distributes over addition but is not associative.</p>
+<h3>10 Geometric Meaning and Right‑Hand Rule</h3>
+<p>The magnitude of the cross product equals the area of the parallelogram formed by a and b: |atimesb|=|a||b|sinθ, where θ is the angle between them. The direction follows the right‑hand rule: if the fingers of the right hand curl from a to b through the smaller angle, the extended thumb points in the direction of atimesb. This geometric interpretation makes the cross product essential for computing torques, angular momentum, and surface normals in three‑dimensional graphics.</p>
+<h3>11 Scalar Triple Product and Volume of Parallelepiped</h3>
+<p>The scalar triple product of three vectors a,b,c is defined as a·(btimesc). Its absolute value gives the volume of the parallelepiped whose adjacent edges are the three vectors. The scalar triple product is invariant under cyclic permutations: a·(btimesc)=b·(ctimesa)=c·(atimesb). If the scalar triple product is zero, the three vectors are coplanar, which provides a quick test for linear dependence in three dimensions.</p>
+<h3>12 Vector Triple Product Identity</h3>
+<p>The vector triple product a×(btimesc) can be expanded using the identity a×(btimesc)=(acdotc)b-(acdotb)c. This identity, often remembered as “BAC minus CAB”, converts a double cross product into a linear combination of the original vectors and is extremely useful in simplifying expressions that arise in rigid‑body dynamics and electromagnetic theory. The identity also shows that the vector triple product lies in the plane spanned by b and c.</p>
+
+<table>
+<caption>Comparison of Dot Product and Cross Product</caption>
+<thead>
+<tr><th>Property</th><th>Dot Product acdotb</th><th>Cross Product atimesb</th></tr>
+</thead>
+<tbody>
+<tr><td>Result type</td><td>Scalar</td><td>Vector</td></tr>
+<tr><td>Commutativity</td><td>Commutative</td><td>Anti‑commutative</td></tr>
+<tr><td>Geometric meaning</td><td> |a||b|cosθ  (projection)</td><td> |a||b|sinθ  (area, perpendicular direction)</td></tr>
+<tr><td>Zero condition</td><td>Vectors orthogonal</td><td>Vectors parallel (or one zero)</td></tr>
+</tbody>
+</table>
+
+<h2>Lines in Three‑Dimensional Space</h2>
+<h3>13 Vector and Parametric Equations of a Line</h3>
+<p>A line in space can be described by a point r<sub>0</sub> through which it passes and a direction vector d. The vector equation is r=r<sub>0</sub>+lambdad, where λ is a real parameter. In component form this yields the parametric equations x=x<sub>0</sub>+λ d<sub>1</sub>, y=y<sub>0</sub>+λ d<sub>2</sub>, z=z<sub>0</sub>+λ d<sub>3</sub>. The parameter λ uniquely identifies each point on the line, and varying λ from -∞ to +∞ traces the entire line. This representation is especially convenient for finding intersections with other geometric objects because it reduces the problem to solving for the parameter.</p>
+<h3>14 Symmetric Form and Direction Ratios</h3>
+<p>Eliminating the parameter λ from the parametric equations gives the symmetric (or Cartesian) form (x-x<sub>0</sub>)/d<sub>1</sub>=(y-y<sub>0</sub>)/d<sub>2</sub>=(z-z<sub>0</sub>)/d<sub>3</sub>, provided none of the direction components d_i is zero. The numbers d<sub>1</sub>,d<sub>2</sub>,d<sub>3</sub> are called direction ratios; any non‑zero scalar multiple of them represents the same line. Direction cosines are obtained by normalising the direction ratios. The symmetric form is useful for quickly checking whether a given point lies on the line and for computing the angle between two lines using their direction ratios.</p>
+<h3>15 Angle Between Two Lines</h3>
+<p>If two lines have direction vectors d<sub>1</sub> and d<sub>2</sub>, the acute angle θ between them satisfies cosθ=|d<sub>1</sub>cdotd<sub>2</sub>|/(|d<sub>1</sub>||d<sub>2</sub>|). The absolute value ensures the angle is taken as the smaller of the two supplementary angles formed by the lines. When the lines are given in symmetric form, the direction ratios can be read directly and substituted into the formula. This concept is frequently tested in problems that ask whether two lines are perpendicular (dot product zero) or parallel (direction ratios proportional).</p>
+<h3>16 Shortest Distance Between Two Skew Lines</h3>
+<p>Two lines that are neither parallel nor intersecting are called skew lines. The shortest distance between them is the length of the common perpendicular segment. If the lines are r=a<sub>1</sub>+lambdab<sub>1</sub> and r=a<sub>2</sub>+mub<sub>2</sub>, the distance d is given by d=|(a<sub>2</sub>-a<sub>1</sub>)·(b<sub>1</sub>timesb<sub>2</sub>)|/|b<sub>1</sub>timesb<sub>2</sub>|. The numerator is the absolute value of the scalar triple product of the vector joining a point on the first line to a point on the second line with the two direction vectors; the denominator is the magnitude of the cross product of the direction vectors, which equals the area of the parallelogram they span. This formula is derived by projecting the joining vector onto the unit vector perpendicular to both lines.</p>
+
+<table>
+<caption>Forms of a Line in Space</caption>
+<thead>
+<tr><th>Form</th><th>Equation</th><th>When to Use</th></tr>
+</thead>
+<tbody>
+<tr><td>Vector (parametric)</td><td>r=r<sub>0</sub>+lambdad</td><td>Finding intersections, distance to a point</td></tr>
+<tr><td>Symmetric (Cartesian)</td><td>(x-x<sub>0</sub>)/d<sub>1</sub>=(y-y<sub>0</sub>)/d<sub>2</sub>=(z-z<sub>0</sub>)/d<sub>3</sub></td><td>Checking collinearity, angle between lines</td></tr>
+<tr><td>Two‑plane intersection</td><td>System of two linear equations</td><td>When line is given as intersection of planes</td></tr>
+</tbody>
+</table>
+
+<h2>Planes in Three‑Dimensional Space</h2>
+<h3>17 Vector and Cartesian Equations of a Plane</h3>
+<p>A plane can be defined by a point r<sub>0</sub> on it and a normal vector n perpendicular to the plane. The vector equation is (r-r<sub>0</sub>)cdotn=0, which expands to the Cartesian form a(x-x<sub>0</sub>)+b(y-y<sub>0</sub>)+c(z-z<sub>0</sub>)=0 or ax+by+cz+d=0 where n=ai+bj+ck and d=-(ax<sub>0</sub>+by<sub>0</sub>+cz<sub>0</sub>). Alternatively, a plane can be described by three non‑collinear points or by a point and two direction vectors lying in the plane, leading to the parametric form r=r<sub>0</sub>+lambdau+muv. The Cartesian equation is most convenient for distance calculations and for determining the relative position of points and lines.</p>
+<h3>18 Normal Vector and Distance from a Point to a Plane</h3>
+<p>The coefficients a,b,c in the Cartesian equation ax+by+cz+d=0 are the components of a normal vector n. The perpendicular distance from a point P(x<sub>1</sub>,y<sub>1</sub>,z<sub>1</sub>) to the plane is D=|ax<sub>1</sub>+by<sub>1</sub>+cz<sub>1</sub>+d|/√(a<sup>2</sup>+b<sup>2</sup>+c<sup>2</sup>). This formula follows from projecting the vector from any point on the plane to P onto the unit normal vector. The sign of the numerator indicates on which side of the plane the point lies, a fact used in determining whether two points are on the same side of a plane.</p>
+<h3>19 Angle Between Two Planes and Line‑Plane Intersection</h3>
+<p>The angle between two planes is defined as the acute angle between their normal vectors. If the planes are a<sub>1</sub>x+b<sub>1</sub>y+c<sub>1</sub>z+d<sub>1</sub>=0 and a<sub>2</sub>x+b<sub>2</sub>y+c<sub>2</sub>z+d<sub>2</sub>=0, then cosθ=|a<sub>1</sub>a<sub>2</sub>+b<sub>1</sub>b<sub>2</sub>+c<sub>1</sub>c<sub>2</sub>|/(√(a<sub>1</sub><sup>2</sup>+b<sub>1</sub><sup>2</sup>+c<sub>1</sub><sup>2</sup>)√(a<sub>2</sub><sup>2</sup>+b<sub>2</sub><sup>2</sup>+c<sub>2</sub><sup>2</sup>)). A line intersects a plane unless its direction vector is orthogonal to the plane’s normal (i.e., the line is parallel to the plane). Substituting the parametric equations of the line into the plane equation yields a linear equation in the parameter; solving it gives the intersection point, while a contradiction indicates the line is parallel and either lies in the plane (infinitely many solutions) or is disjoint (no solution).</p>
+<h3>20 Shortest Distance Between Parallel Planes and Between a Line and a Plane</h3>
+<p>Two parallel planes have proportional normal vectors; their equations can be written as ax+by+cz+d<sub>1</sub>=0 and ax+by+cz+d<sub>2</sub>=0. The distance between them is |d<sub>2</sub>-d<sub>1</sub>|/√(a<sup>2</sup>+b<sup>2</sup>+c<sup>2</sup>), obtained by measuring the distance from any point on one plane to the other. For a line r=a+lambdab and a plane rcdotn=d, if the line is not parallel to the plane the intersection point gives zero distance. If the line is parallel (i.e., bcdotn=0), the distance equals the perpendicular distance from any point on the line to the plane, computed with the point‑to‑plane formula. These results complete the toolkit for solving all standard distance problems in three‑dimensional geometry.</p>
+
+<p>Mastery of these concepts enables a student to translate geometric situations into algebraic equations, manipulate them using vector identities, and interpret the results back into spatial understanding, which is the essence of three‑dimensional analytic geometry.</p>        <script>
         (function(){try{
           var m=document.getElementById("lesson-meta");if(!m)return;
           var cur=m.getAttribute("data-version")||"";
@@ -183,7 +236,7 @@
             var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
             if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
             else{html+="The explanations and practice were revised.";}
-            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.85em;cursor:pointer\">Got it</button>";
             box.innerHTML=html;box.hidden=false;
             var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
             document.getElementById("lesson-new-ok").onclick=save;
@@ -206,12 +259,12 @@
             </div>
         </div>
         <script>
-        var questions = [];
+        var practiceQs = [];
         var answered={},correctCount=0,lessonSlug="vectors-3d";
-        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
         function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
-        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
         function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
         function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
         renderPractice();
