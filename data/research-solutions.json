@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T04:54:42.255Z",
+  "updatedAt": "2026-11-20T06:20:24.325Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -23527,6 +23527,1077 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-19T20:14:29.552Z"
+    },
+    {
+      "id": "54d43f6067d76635",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 8,
+      "section": "Mathematics",
+      "question": "Rahul invests ₹20,000 in a scheme offering 8% p.a. compound interest, compounded annually. At the end of the first year, the bank revises the rate to 10% p.a. for the second year. Rahul withdraws 25% of the amount (including interest) at the end of the first year and reinvests the remaining at the revised rate for the second year. What is the total amount he receives at the end of the second year?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹23,220",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "₹22,896",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "₹23,760",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹21,600",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate amount after first year: 20000 * 1.08 = 21600",
+        "Calculate withdrawal: 25% of 21600 = 5400",
+        "Calculate remaining reinvested: 21600 - 5400 = 16200",
+        "Calculate amount after second year at 10%: 16200 * 1.10 = 17820",
+        "Total amount received = withdrawal + final amount = 5400 + 17820 = 23220"
+      ],
+      "verifierCheck": "After 1 year: 20000 × 1.08 = 21600. He withdraws 25% → 0.25 × 21600 = 5400, leaving 21600 − 5400 = 16200. This remainder grows at 10% for the second year: 16200 × 1.10 = 17820. Adding the earlier withdrawn 5400 gives 17820 + 5400 = 23220, which matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Combined Growth Factor",
+          "idea": "Merge all multipliers into a single factor",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Effective factor = 1.08 × (0.25 + 0.75 × 1.10) = 1.08 × (0.25 + 0.825) = 1.08 × 1.075.",
+            "Compute 1.08 × 1.075 = 1.161.",
+            "Final amount = 20000 × 1.161 = 23220."
+          ]
+        },
+        {
+          "name": "Stepwise Decimal",
+          "idea": "Compute year-by-year with simple decimals",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "First year amount: 20000 × 1.08 = 21600.",
+            "Withdrawal (25%): 21600 × 0.25 = 5400.",
+            "Reinvested principal: 21600 - 5400 = 16200.",
+            "Second year amount: 16200 × 1.10 = 17820.",
+            "Total received: 5400 + 17820 = 23220."
+          ]
+        },
+        {
+          "name": "Fraction Multiplier",
+          "idea": "Use fractions to avoid decimals and combine steps",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Convert rates to fractions: 8% = 27/25, 10% = 11/10, 25% withdrawal = 1/4 kept = 3/4.",
+            "Total factor = (27/25) * (1/4 + 3/4 * 11/10) = (27/25) * (1/4 + 33/40) = (27/25) * (43/40).",
+            "Multiply: 20000 * 27 * 43 / 1000 = 20 * 27 * 43 = 23220."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:12:35.824Z"
+    },
+    {
+      "id": "69e686ce71804a9e",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 10,
+      "section": "Mathematics",
+      "question": "If the mean is 20 and the mode is 26, the median (via empirical relation) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "22",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "24",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "18",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall empirical relation: Mode = 3 * Median - 2 * Mean",
+        "Substitute given values: 26 = 3 * Median - 2 * 20",
+        "Solve for Median: 3 * Median = 26 + 40 = 66 => Median = 22",
+        "Verify with alternative formula: Mean - Mode = 3(Mean - Median) gives same result"
+      ],
+      "verifierCheck": "Using the empirical relation Mode = 3 × Median - 2 × Mean, with Mean = 20 and Mode = 26, we have 26 = 3 × Median - 40, so 3 × Median = 66, giving Median = 22. Alternatively, Mean - Mode = 3(Mean - Median) yields 20 - 26 = 3(20 - Median) → -6 = 60 - 3 Median → 3 Median = 66 → Median = 22. Thus the median is 22, corresponding to option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mnemonic: 2M+Mo over 3",
+          "idea": "remember median = (2*mean + mode)/3",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall: Median = (2×Mean + Mode)/3",
+            "Calculate: (40+26)/3 = 22"
+          ]
+        },
+        {
+          "name": "Empirical Formula Shortcut",
+          "idea": "plug into Median = (2Mean+Mode)/3",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Compute 2×Mean = 40",
+            "Add Mode: 40+26 = 66",
+            "Divide by 3: 66/3 = 22"
+          ]
+        },
+        {
+          "name": "Skewness Rearrangement",
+          "idea": "use Mean - Mode = 3(Mean - Median)",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write 20 - 26 = 3(20 - Median)",
+            "Simplify: -6 = 60 - 3 Median",
+            "Solve: 3 Median = 66 → Median = 22"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:13:18.898Z"
+    },
+    {
+      "id": "07d3e12fa7695739",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 13,
+      "section": "Mathematics",
+      "question": "sin⁻¹(1/2) + cos⁻¹(1/2) equals:",
+      "options": [
+        {
+          "label": "A",
+          "text": "π/3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "π/2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "π",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall principal values: sin⁻¹(1/2) = π/6, cos⁻¹(1/2) = π/3",
+        "Add the two angles: π/6 + π/3 = π/2"
+      ],
+      "verifierCheck": "The principal value of sin⁻¹(1/2) is π/6 because sin(π/6)=1/2 and the range of arcsin is [-π/2, π/2]. The principal value of cos⁻¹(1/2) is π/3 because cos(π/3)=1/2 and the range of arccos is [0, π]. Their sum is π/6 + π/3 = π/6 + 2π/6 = 3π/6 = π/2.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Identity Recall",
+          "idea": "use known identity sin⁻¹x+cos⁻¹x=π/2",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Recall identity sin⁻¹(x)+cos⁻¹(x)=π/2",
+            "Apply with x=1/2"
+          ]
+        },
+        {
+          "name": "Complementary Angles",
+          "idea": "sin⁻¹(1/2) and cos⁻¹(1/2) are complementary",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "sin⁻¹(1/2)=30°",
+            "cos⁻¹(1/2)=60°",
+            "Sum=90°=π/2"
+          ]
+        },
+        {
+          "name": "Angle Values",
+          "idea": "compute each inverse trig value",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "sin⁻¹(1/2)=π/6 (30°)",
+            "cos⁻¹(1/2)=π/3 (60°)",
+            "Add: π/6+π/3=π/2"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:13:33.599Z"
+    },
+    {
+      "id": "bb237d2d959b9fe6",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 14,
+      "section": "Mathematics",
+      "question": "Evaluate: lim(x→0) (tan x − sin x)/x^3",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1/2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "−1/2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Write Taylor expansions: tan x = x + x^3/3 + O(x^5), sin x = x - x^3/6 + O(x^5)",
+        "Subtract: tan x - sin x = (x + x^3/3) - (x - x^3/6) + O(x^5) = x^3/2 + O(x^5)",
+        "Divide by x^3: (tan x - sin x)/x^3 = 1/2 + O(x^2)",
+        "Take limit as x→0: limit = 1/2"
+      ],
+      "verifierCheck": "Using Taylor series expansions: tan x = x + x^3/3 + O(x^5), sin x = x - x^3/6 + O(x^5), so tan x - sin x = x^3/2 + O(x^5). Dividing by x^3 gives 1/2 + O(x^2) → 1/2 as x→0. Alternatively, applying L'Hôpital's rule three times yields the same result.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Known cubic limits",
+          "idea": "Memorize (tan x−x)/x³=1/3 and (x−sin x)/x³=1/6",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall lim (tan x−x)/x³ = 1/3",
+            "Recall lim (x−sin x)/x³ = 1/6",
+            "Add: 1/3 + 1/6 = 1/2"
+          ]
+        },
+        {
+          "name": "Taylor series",
+          "idea": "Use first three terms of Maclaurin expansions",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "tan x ≈ x + x³/3, sin x ≈ x − x³/6",
+            "Subtract: tan x − sin x ≈ x³/2",
+            "Divide by x³ → 1/2"
+          ]
+        },
+        {
+          "name": "Trig factorization",
+          "idea": "Factor sin x and apply basic limits",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "tan x − sin x = sin x (1−cos x)/cos x",
+            "Limit = (sin x/x) · ((1−cos x)/x²) · (1/cos x)",
+            "Known limits: 1, 1/2, 1 → product = 1/2"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:14:32.230Z"
+    },
+    {
+      "id": "02d3be765a75765c",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 15,
+      "section": "Mathematics",
+      "question": "If cosθ = 12/13 and θ is acute, find cotθ.",
+      "options": [
+        {
+          "label": "A",
+          "text": "12/5",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "5/12",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "13/12",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "13/5",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Given cosθ = 12/13 and θ is acute.",
+        "Use Pythagorean identity: sin²θ = 1 - cos²θ = 1 - (144/169) = 25/169.",
+        "Since θ is acute, sinθ = 5/13.",
+        "cotθ = cosθ/sinθ = (12/13)/(5/13) = 12/5."
+      ],
+      "verifierCheck": "Given cosθ = 12/13 with θ acute, we construct a right triangle where adjacent = 12, hypotenuse = 13. By Pythagoras, opposite = √(13² - 12²) = √(169 - 144) = √25 = 5. Then cotθ = adjacent/opposite = 12/5.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "5-12-13 Triangle",
+          "idea": "Instantly recall the Pythagorean triple to get opposite side",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recognize 12/13 as adjacent/hypotenuse of 5-12-13 right triangle",
+            "Opposite side is 5 by Pythagorean triple",
+            "cotθ = adjacent/opposite = 12/5"
+          ]
+        },
+        {
+          "name": "Reciprocal of tan",
+          "idea": "Use secant to find tangent then invert",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "secθ = 13/12",
+            "tanθ = √(sec²θ-1) = √(169/144-1)=5/12",
+            "cotθ = 1/tanθ = 12/5"
+          ]
+        },
+        {
+          "name": "Identity & Simplify",
+          "idea": "Directly compute cot from cos using the Pythagorean identity",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "cotθ = cosθ/√(1-cos²θ)",
+            "Plug cosθ=12/13: √(1-144/169)=√(25/169)=5/13",
+            "Divide: (12/13)÷(5/13)=12/5"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:14:55.073Z"
+    },
+    {
+      "id": "5440e73600e7e952",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 16,
+      "section": "Mathematics",
+      "question": "A sum of money is invested at a simple interest rate of 5% per annum for the first 2 years. After these 2 years, the rate is increased to 7% per annum for the remaining 3 years. If the total interest earned at the end of 5 years is Rs 1550, what was the original principal amount?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. Rs 5,000",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B. Rs 5,167",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C. Rs 4,430",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. Rs 6,200",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let principal be P.",
+        "Interest for first 2 years at 5% = P × 5/100 × 2 = 0.10P.",
+        "Interest for next 3 years at 7% = P × 7/100 × 3 = 0.21P.",
+        "Total interest = 0.10P + 0.21P = 0.31P = 1550.",
+        "Solve: P = 1550 / 0.31 = 5000.",
+        "Option A is Rs 5,000."
+      ],
+      "verifierCheck": "Let the principal be P. Simple interest for first 2 years at 5% = P × 0.05 × 2 = 0.10P. For next 3 years at 7% = P × 0.07 × 3 = 0.21P. Total interest = 0.10P + 0.21P = 0.31P = 1550. Thus P = 1550 / 0.31 = 5000. This matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Effective Rate",
+          "idea": "Sum rate×years to get total factor",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Multiply 5% by 2 years = 10%",
+            "Multiply 7% by 3 years = 21%",
+            "Add to get 31% total interest factor",
+            "Divide ₹1550 by 0.31 = ₹5000"
+          ]
+        },
+        {
+          "name": "Ratio Shortcut",
+          "idea": "Use ratio of total interest to test principal",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Assume principal = ₹100 → interest = ₹31",
+            "Actual interest ₹1550 is 1550/31 = 50 times test interest",
+            "Principal = 50 × ₹100 = ₹5000"
+          ]
+        },
+        {
+          "name": "Per-100 Scaling",
+          "idea": "Find interest on ₹100 then scale",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Interest on ₹100 for 2 yrs at 5% = ₹10",
+            "Interest on ₹100 for 3 yrs at 7% = ₹21",
+            "Total interest on ₹100 = ₹31",
+            "Scale: (1550/31)×100 = ₹5000"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:15:24.298Z"
+    },
+    {
+      "id": "8ded4f4db07a381a",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 17,
+      "section": "Mathematics",
+      "question": "Machine A produces 120 units in 4 hrs, Machine B 150 units in 5 hrs and Machine C 180 units in 6 hrs. Each machine works continuously for 2 hrs and then undergoes a 30‑minute maintenance break, after which it resumes the same pattern. All three machines start together at 9:00 AM. When will the total cumulative production first reach or exceed 1000 units?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) 10:36 PM",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B) 8:06 PM",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) 9:45 PM",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) 11:15 PM",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compute each machine's rate: 30 units/hr",
+        "Determine work‑break cycle: 2 h work, 0.5 h break",
+        "Calculate production per 2 h work block: 60 units per machine, 180 total",
+        "Find number of full work blocks to approach 1000 units: 5 blocks give 900, 6 blocks give 1080",
+        "During the 6th work block need 100 more units; at combined rate 90 units/hr this takes 100/90 h ≈ 1 h 6 min 40 s",
+        "Add this to the start of the 6th block (21:30) → ≈22:36 PM, i.e., 10:36 PM"
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Synchronized Cycle Counting",
+          "idea": "All machines share 30 u/hr rate and 2.5 h cycle, so treat as one 90 u/hr machine with periodic breaks.",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Per-cycle output: 3 × 30 u/hr × 2 h = 180 units per 2.5 h cycle.",
+            "Full cycles for 1000: 5 cycles give 900 units in 12.5 h (9:00 AM → 9:30 PM).",
+            "Remaining 100 units at 90 u/hr = 1 h 6.67 min.",
+            "Add to 9:30 PM → 10:36:40 PM, first exceed at 10:36 PM."
+          ]
+        },
+        {
+          "name": "Work-Period Accumulation",
+          "idea": "Breaks are synchronized; count only 2-hour work blocks each yielding 180 units.",
+          "kind": "shortcut",
+          "seconds": 12,
+          "steps": [
+            "Each 2-hour work block: 3 machines × 30 u/hr × 2 h = 180 units.",
+            "1000 ÷ 180 = 5 full blocks (900 units) + 100 units remainder.",
+            "5 blocks span 5 × (2 h + 0.5 h) = 12.5 h → 9:30 PM.",
+            "Next block starts 9:30 PM; 100 units need 100/90 h = 1 h 6.67 min.",
+            "Reach 1000 at 10:36:40 PM → 10:36 PM."
+          ]
+        },
+        {
+          "name": "Rate-Uniformity Shortcut",
+          "idea": "Identical hourly rates (30) and schedules allow simple cycle arithmetic.",
+          "kind": "mnemonic",
+          "seconds": 15,
+          "steps": [
+            "Confirm rates: A=30, B=30, C=30 u/hr.",
+            "Cycle = 2 h work + 0.5 h break = 2.5 h; output = 90 × 2 = 180.",
+            "1000 = 5×180 + 100 → 5 cycles (12.5 h) to 9:30 PM, 900 units.",
+            "Extra time = 100/90 h = 1 1/9 h = 1 h 6 min 40 s.",
+            "9:30 PM + 1 h 6 min 40 s = 10:36:40 PM → 10:36 PM."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:18:23.661Z"
+    },
+    {
+      "id": "b555a642e408f39b",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 18,
+      "section": "Mathematics",
+      "question": "Evaluate: lim(x→0) (e^x − 1)/sin x",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "∞",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "−1",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recognize the limit is of the indeterminate form 0/0 as x→0.",
+        "Apply L'Hôpital's rule: differentiate numerator and denominator.",
+        "Derivative of e^x - 1 is e^x; derivative of sin x is cos x.",
+        "Evaluate the new limit: lim_{x→0} e^x/cos x = e^0/cos 0 = 1/1 = 1."
+      ],
+      "verifierCheck": "Using L'Hôpital's rule, since both numerator e^x−1 and denominator sin x approach 0 as x→0, the limit equals lim(x→0) (e^x)/(cos x) = e^0/cos0 = 1/1 = 1.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Taylor Quick",
+          "idea": "first-order approximations",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Approximate e^x ≈ 1+x and sin x ≈ x near 0",
+            "Substitute: (1+x-1)/x = x/x",
+            "Simplify to 1"
+          ]
+        },
+        {
+          "name": "Known Limits Split",
+          "idea": "split into (e^x-1)/x * x/sin x",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Multiply and divide by x: (e^x-1)/x * x/sin x",
+            "Recall lim (e^x-1)/x = 1 and lim x/sin x = 1",
+            "Product of limits = 1 * 1 = 1"
+          ]
+        },
+        {
+          "name": "L'Hôpital Shortcut",
+          "idea": "differentiate top and bottom",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Check 0/0 indeterminate form",
+            "Differentiate: numerator e^x, denominator cos x",
+            "Evaluate at x=0: e^0/cos0 = 1/1 = 1"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:18:48.694Z"
+    },
+    {
+      "id": "0bff47223e0ce94c",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 19,
+      "section": "Mathematics",
+      "question": "Coefficient of x³ in (1 + x)⁷?",
+      "options": [
+        {
+          "label": "A",
+          "text": "35",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "21",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "28",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "15",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the binomial expansion (1+x)^7",
+        "Recall the general term is C(7,k) x^k",
+        "Set k=3 to find coefficient of x^3",
+        "Compute C(7,3) = 7!/(3!4!) = (7*6*5)/(3*2*1) = 35"
+      ],
+      "verifierCheck": "The binomial expansion of (1+x)^7 is Σ_{k=0}^7 C(7,k) x^k. The coefficient of x^3 is C(7,3) = 7!/(3!4!) = (7×6×5)/(3×2×1) = 35.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Pascal's Triangle",
+          "idea": "Memorized row 7 coefficients",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall row 7: 1, 7, 21, 35, 35, 21, 7, 1",
+            "Fourth entry (x^3) is 35"
+          ]
+        },
+        {
+          "name": "Recursive Ratio",
+          "idea": "Build from known C(7,2)=21",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "C(7,2) = 21",
+            "C(7,3) = C(7,2) * (7-3+1)/3 = 21 * 5/3 = 35"
+          ]
+        },
+        {
+          "name": "Binomial Formula",
+          "idea": "Direct nCk calculation",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Compute 7 choose 3 = 7*6*5/(3*2*1)",
+            "Simplify: 210/6 = 35"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:19:10.538Z"
+    },
+    {
+      "id": "f6c66dc4356c95ad",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 20,
+      "section": "Mathematics",
+      "question": "Find &int; dx/(4 + x^2)",
+      "options": [
+        {
+          "label": "A",
+          "text": "(1/4) tan^(−1)(x/2) + C",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "(1/2) tan^(−1)(x/2) + C",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "tan^(−1)(x/2) + C",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "(1/4) tan^(−1)x + C",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recognize the integral as standard form ∫ dx/(a^2 + x^2) = (1/a) arctan(x/a) + C",
+        "Identify a^2 = 4, so a = 2",
+        "Apply formula: ∫ dx/(4 + x^2) = (1/2) arctan(x/2) + C",
+        "Match with option B: (1/2) tan^(−1)(x/2) + C"
+      ],
+      "verifierCheck": "The integral ∫ dx/(4 + x^2) is of the standard form ∫ dx/(a^2 + x^2) = (1/a) arctan(x/a) + C. Here a^2 = 4, so a = 2. Substituting yields (1/2) arctan(x/2) + C, which corresponds to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Arctan Pattern",
+          "idea": "Memorize pattern for 1/(a^2+x^2)",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Spot denominator 4 + x^2 = 2^2 + x^2",
+            "Write (1/2) arctan(x/2) + C"
+          ]
+        },
+        {
+          "name": "Standard Formula",
+          "idea": "Recognize integral of 1/(a^2+x^2) = (1/a) arctan(x/a)",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify a^2 = 4 => a = 2",
+            "Apply formula: (1/2) arctan(x/2) + C"
+          ]
+        },
+        {
+          "name": "Trig Substitution",
+          "idea": "Substitute x = 2 tan θ, dx = 2 sec^2 θ dθ",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let x = 2 tan θ, then dx = 2 sec^2 θ dθ",
+            "Integral becomes ∫ (2 sec^2 θ dθ) / (4 + 4 tan^2 θ) = ∫ (1/2) dθ",
+            "Integrate: (1/2) θ + C = (1/2) arctan(x/2) + C"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:19:33.424Z"
+    },
+    {
+      "id": "2c69ad7bf1d877d4",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 21,
+      "section": "Mathematics",
+      "question": "Principal value of cos⁻¹(-1/2) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "π/3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2π/3",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "-π/3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4π/3",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the principal value range of cos⁻¹ is [0, π].",
+        "Find angle θ in [0, π] such that cos θ = -1/2.",
+        "cos(π/3) = 1/2, so cos(π - π/3) = cos(2π/3) = -1/2.",
+        "2π/3 lies in [0, π].",
+        "Thus principal value is 2π/3."
+      ],
+      "verifierCheck": "The principal value of arccos is defined in the range [0, π]. cos(2π/3) = -1/2 and 2π/3 lies in [0, π], while π/3 gives 1/2, -π/3 is outside the range, and 4π/3 exceeds π. Therefore the correct principal value is 2π/3.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Range Recall",
+          "idea": "Principal range of arccos is [0,π]; known cosine values",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recall arccos principal range: [0, π]",
+            "Identify angle in [0,π] with cos = -1/2: 2π/3"
+          ]
+        },
+        {
+          "name": "Reference Angle Flip",
+          "idea": "Use identity cos(π−θ)=−cosθ to get negative cosine",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Know cos(π/3)=1/2",
+            "Apply cos(π−π/3)=−cos(π/3)=−1/2",
+            "Compute π−π/3 = 2π/3"
+          ]
+        },
+        {
+          "name": "Unit Circle Quadrant",
+          "idea": "Cos negative in QII; reference angle π/3 gives 2π/3",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Cosine negative ⇒ angle in QII (principal range excludes QIII)",
+            "Reference angle for |−1/2| is π/3",
+            "QII angle = π − π/3 = 2π/3"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:19:55.266Z"
+    },
+    {
+      "id": "108fc85856efd8ca",
+      "exam": "nda",
+      "paperSlug": "full-2026-11-19-nda-maths",
+      "paperTitle": "NDA — Mathematics (Full Paper)",
+      "paperPath": "nda/mock-tests/full-2026-11-19-nda-maths.html",
+      "paperFile": "full-2026-11-19-nda-maths.json",
+      "questionNumber": 22,
+      "section": "Mathematics",
+      "question": "A retailer marks up a commodity by 25% above its cost price. He then offers a discount of x% on this marked price. If the final selling price equals the original cost price plus half of the initial profit he would have made had there been no discount, what is the value of x?",
+      "options": [
+        {
+          "label": "A",
+          "text": "10",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "12",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "15",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let cost price = C.",
+        "Marked price = 1.25C (25% markup).",
+        "Selling price after x% discount = 1.25C * (1 - x/100).",
+        "Initial profit without discount = 0.25C; half of that = 0.125C.",
+        "Final selling price = C + 0.125C = 1.125C.",
+        "Equate: 1.25C*(1 - x/100) = 1.125C => x = 10."
+      ],
+      "verifierCheck": "Let cost price be C. Marked price = 1.25C. Initial profit = 0.25C. Half of initial profit = 0.125C. Final selling price = C + 0.125C = 1.125C. Discounted selling price = 1.25C * (1 - x/100). Equating: 1.25(1 - x/100) = 1.125 => 1 - x/100 = 0.9 => x/100 = 0.1 => x = 10. Thus option A is correct.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Percentage Difference",
+          "idea": "Compute discount directly from percentages",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Cost = 100% → Marked = 125%",
+            "Initial profit = 25% → Half profit = 12.5%",
+            "Final price = 100% + 12.5% = 112.5%",
+            "Discount amount = 125% - 112.5% = 12.5%",
+            "Discount % = (12.5/125)×100 = 10%"
+          ]
+        },
+        {
+          "name": "Fraction Method",
+          "idea": "Use fractions to avoid decimals",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Cost = C",
+            "Markup 25% = 1/4 → Marked = 5/4 C",
+            "Profit = 1/4 C → Half profit = 1/8 C",
+            "Final price = C + 1/8 C = 9/8 C",
+            "Discount: (5/4)(1 - x/100) = 9/8",
+            "Solve: 1 - x/100 = 9/10 → x = 10"
+          ]
+        },
+        {
+          "name": "Algebraic Equation",
+          "idea": "Set up equation with cost C",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Let cost = C",
+            "Marked price = 1.25C",
+            "Initial profit = 0.25C",
+            "Final price = C + 0.125C = 1.125C",
+            "Discounted price = 1.25C(1 - x/100)",
+            "Solve 1.25(1 - x/100) = 1.125 → x = 10"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-20T06:20:24.320Z"
     }
   ]
 }
