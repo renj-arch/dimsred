@@ -50,7 +50,21 @@ const has = (n) => process.argv.indexOf('--' + n) !== -1;
 const LIMIT = parseInt(arg('limit', '0'), 10) || 0;
 const APPLY = has('apply');
 const REPORT = arg('report', 'data/fact-audit.json');
-const PARAS_PER_CALL = parseInt(arg('chunk', '10'), 10) || 10;
+const PARAS_PER_CALL = parseInt(arg('chunk', '20'), 10) || 20;
+// Stop before the job timeout and still publish what was read. The old lane
+// wrote its report only after every lesson, so a 90-minute cancellation threw
+// away the entire run - which is why the corpus never advanced past one file.
+const DEADLINE_MIN = parseInt(process.env.AUDIT_DEADLINE_MIN || '75', 10) || 75;
+const STATE = arg('state', 'data/fact-audit-state.json');
+
+function loadJson(file, fallback) {
+  try { return JSON.parse(fs.readFileSync(path.resolve(ROOT, file), 'utf8')); } catch (e) { return fallback; }
+}
+function saveJson(file, obj) {
+  const p = path.resolve(ROOT, file);
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  fs.writeFileSync(p, JSON.stringify(obj, null, 1) + '\n', 'utf8');
+}
 
 function walk(dir, out) {
   let entries = [];
@@ -125,9 +139,61 @@ const SYSTEM = 'You are a careful history, polity, geography and science editor 
 
 async function auditParagraphs(paras) {
   const user = paras.map((p, i) => '(' + (i + 1) + ') ' + p).join('\n\n');
-  const text = await hosted.chat(SYSTEM, user, { numPredict: 2500, temperature: 0.1 });
+  // The default hosted model is a reasoning model: at 2,500 tokens the hidden
+  // deliberation consumed the whole budget and every call failed with
+  // finish_reason=length, which is why the lane stalled on one lesson. 8,000
+  // leaves room for the reasoning plus the small JSON answer.
+  const text = await hosted.chat(SYSTEM, user, { numPredict: 8000, temperature: 0.1 });
   const json = extractJson(text);
   return json && Array.isArray(json.problems) ? json.problems : [];
+}
+
+// A single model pass is not evidence. It called the Ken-Betwa link
+// "Madhya Pradesh only" and told the page it does not involve Uttar Pradesh -
+// the project spans both states. Corrections are therefore checked by a second,
+// independent call that sees only the quote, the claim and the proposed fix,
+// and is told to reject anything it cannot confirm. Unverified claims are
+// dropped (and never applied), even when the first pass called them
+// high-confidence.
+const VERIFY_SYSTEM = 'You are an independent fact-checker for an Indian civil-services exam site. ' +
+  'A first reviewer says each numbered quotation is factually wrong and proposes a correction. ' +
+  'Judge each one on your own knowledge - do not defer to the reviewer. ' +
+  'Answer "agree": true ONLY when the original quotation is clearly wrong AND the proposed correction ' +
+  'is accurate and would not itself introduce an error. If the original is right, if the correction is ' +
+  'incomplete or misleading, or if the matter is debatable, answer "agree": false. ' +
+  'Be strict: a missed error is cheaper than a false correction printed on the site. ' +
+  'Answer with JSON only: {"verdicts":[{"n":<number>,"agree":true|false,"reason":"<=160 chars"}]}';
+
+async function verifyProblems(problems) {
+  if (!problems.length) return [];
+  const list = problems.map(function (p, i) {
+    return '(' + (i + 1) + ') QUOTE: ' + String(p.quote || '') +
+      '\n    CLAIMED PROBLEM: ' + String(p.problem || '') +
+      '\n    PROPOSED CORRECTION: ' + String(p.correction || '');
+  }).join('\n\n');
+  let json = null;
+  try {
+    const text = await hosted.chat(VERIFY_SYSTEM, list, { numPredict: 6000, temperature: 0 });
+    json = extractJson(text);
+  } catch (e) {
+    console.error('  verifier failed - dropping ' + problems.length + ' unverified claim(s): ' + e.message);
+    return [];
+  }
+  const verdicts = json && Array.isArray(json.verdicts) ? json.verdicts : [];
+  const byNumber = {};
+  verdicts.forEach(function (v) {
+    if (v && v.n) byNumber[String(v.n)] = v;
+  });
+  return problems.filter(function (p, i) {
+    const v = byNumber[String(i + 1)];
+    if (!v || v.agree !== true) {
+      if (v) console.log('  [disputed] "' + String(p.quote || '').slice(0, 70) + '" - ' + String(v.reason || 'not confirmed'));
+      return false;
+    }
+    p.verified = true;
+    p.verifierReason = String(v.reason || '').slice(0, 200);
+    return true;
+  });
 }
 
 function applyCorrection(file, quote, correction, problem) {
@@ -154,18 +220,49 @@ async function main() {
   if (has('file')) files = [path.resolve(arg('file'))];
   else files = walk(ROOT, []).filter((f) => /\/course\//.test(f.replace(/\\/g, '/')));
 
-  files.sort();
+  // Least-recently-audited first. Without this the lane re-read the same first
+  // N files every day, so the rest of the corpus was never reached.
+  const state = loadJson(STATE, { lessons: {} });
+  if (!state.lessons || typeof state.lessons !== 'object') state.lessons = {};
+  const relOf = (f) => path.relative(ROOT, f).replace(/\\/g, '/');
+  files.sort((a, b) => {
+    const ra = relOf(a), rb = relOf(b);
+    const ta = Date.parse(state.lessons[ra] || '') || 0;
+    const tb = Date.parse(state.lessons[rb] || '') || 0;
+    return ta - tb || ra.localeCompare(rb);
+  });
   if (LIMIT) files = files.slice(0, LIMIT);
 
   const results = [];
-  let audited = 0, flagged = 0, applied = 0;
+  let audited = 0, flagged = 0, applied = 0, callsOk = 0, callsFail = 0;
+  const startedAt = Date.now();
+  let deadlineHit = false;
 
-  for (const file of files) {
-    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+  function saveReport() {
+    saveJson(REPORT, {
+      generatedAt: new Date().toISOString(),
+      lessonsAudited: audited,
+      flagged,
+      applied,
+      modelCalls: callsOk,
+      modelFailures: callsFail,
+      deadlineHit,
+      problems: results
+    });
+  }
+
+  // One lesson at a time was ~5-10 minutes (the hosted model reasons before it
+  // answers), so a 75-minute run could never cover 60 lessons. Three lessons in
+  // flight, with larger paragraph chunks, is the difference between a sweep
+  // that finishes over days and one that never leaves the letter 'a'.
+  const WORKERS = Math.max(1, Math.min(6, parseInt(process.env.AUDIT_WORKERS || '3', 10) || 3));
+
+  async function auditOne(file) {
+    const rel = relOf(file);
     let html;
-    try { html = fs.readFileSync(file, 'utf8'); } catch (e) { continue; }
+    try { html = fs.readFileSync(file, 'utf8'); } catch (e) { return; }
     const paras = lessonParagraphs(html);
-    if (!paras.length) continue;
+    if (!paras.length) return;
 
     audited++;
     for (let i = 0; i < paras.length; i += PARAS_PER_CALL) {
@@ -173,10 +270,14 @@ async function main() {
       let problems = [];
       try {
         problems = await auditParagraphs(chunk);
+        callsOk++;
       } catch (e) {
+        callsFail++;
         console.error('  ' + rel + ': model call failed - ' + e.message);
         continue;
       }
+      // Nothing is published or applied on one model's word alone.
+      problems = await verifyProblems(problems);
       for (const p of problems) {
         if (!p || !p.quote) continue;
         flagged++;
@@ -185,7 +286,9 @@ async function main() {
           quote: String(p.quote).slice(0, 200),
           problem: String(p.problem || '').slice(0, 300),
           correction: String(p.correction || '').slice(0, 200),
-          confidence: p.confidence === 'high' ? 'high' : 'medium'
+          confidence: p.confidence === 'high' ? 'high' : 'medium',
+          verified: true,
+          verifierReason: p.verifierReason || ''
         };
         if (APPLY && record.confidence === 'high' && record.correction) {
           record.applied = applyCorrection(file, record.quote, record.correction, record.problem);
@@ -196,20 +299,39 @@ async function main() {
           '"\n      -> ' + record.problem + '\n      fix: ' + record.correction + (record.applied ? '  (applied)' : ''));
       }
     }
+    // Mark this lesson done and publish immediately, so a cancellation keeps it.
+    state.lessons[rel] = new Date().toISOString();
+    saveJson(STATE, state);
+    saveReport();
   }
 
-  const out = path.resolve(ROOT, REPORT);
-  fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, JSON.stringify({
-    generatedAt: new Date().toISOString(),
-    lessonsAudited: audited,
-    flagged,
-    applied,
-    problems: results
-  }, null, 1) + '\n', 'utf8');
+  let next = 0;
+  async function worker() {
+    while (next < files.length) {
+      if ((Date.now() - startedAt) / 60000 > DEADLINE_MIN) {
+        if (!deadlineHit) {
+          deadlineHit = true;
+          console.log('\ndeadline ' + DEADLINE_MIN + 'min reached - publishing what was read; the next run continues from here');
+        }
+        return;
+      }
+      const file = files[next++];
+      await auditOne(file);
+    }
+  }
 
-  console.log('\naudited ' + audited + ' lesson(s): ' + flagged + ' claim(s) flagged, ' + applied + ' applied');
-  console.log('report: ' + REPORT);
+  await Promise.all(Array.from({ length: WORKERS }, worker));
+
+  saveReport();
+  console.log('\naudited ' + audited + ' lesson(s): ' + flagged + ' claim(s) flagged, ' + applied + ' applied, ' +
+    callsOk + ' call(s) ok, ' + callsFail + ' failed');
+  console.log('report: ' + REPORT + (deadlineHit ? ' (deadline stop)' : ''));
+  // Every route failing is not a clean audit; make the daily run visibly red
+  // instead of publishing a report that only means "the model was unreachable".
+  if (audited > 0 && callsOk === 0) {
+    console.error('FAIL every model call failed - check the hosted route before trusting this report');
+    process.exitCode = 1;
+  }
 }
 
 main().catch((e) => { console.error('FAIL ' + e.message); process.exitCode = 1; });

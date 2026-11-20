@@ -23,6 +23,48 @@ function correctLabel(q) {
   return o ? o.label : '';
 }
 
+// Stored table/chart data sits beside the question. Without it a stem that says
+// "as per the table below" is unanswerable, so print the data under the stem.
+function qTableData(td) {
+  if (!td || !Array.isArray(td.headers) || !Array.isArray(td.rows) || !td.headers.length) return '';
+  const head = td.headers.map(function (h) { return '<th style="text-align:left;padding:5px 10px;border-bottom:1px solid #cbd5e1">' + esc(h) + '</th>'; }).join('');
+  const body = td.rows.map(function (r) {
+    return '<tr>' + (r || []).map(function (c) { return '<td style="padding:5px 10px;border-bottom:1px solid #e2e8f0">' + esc(c) + '</td>'; }).join('') + '</tr>';
+  }).join('');
+  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px"><thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + body + '</tbody></table></div>';
+}
+
+function qChartData(cd) {
+  if (!cd || !Array.isArray(cd.labels) || !Array.isArray(cd.datasets) || !cd.datasets.length) return '';
+  const ds = cd.datasets.filter(function (d) { return d && Array.isArray(d.data); });
+  if (!ds.length) return '';
+  const rows = cd.labels.map(function (l, i) {
+    return '<tr><td style="padding:5px 10px;border-bottom:1px solid #e2e8f0">' + esc(l) + '</td>' +
+      ds.map(function (d) { return '<td style="padding:5px 10px;border-bottom:1px solid #e2e8f0;text-align:right">' + esc((d.data || [])[i]) + '</td>'; }).join('') + '</tr>';
+  }).join('');
+  const head = '<th style="text-align:left;padding:5px 10px;border-bottom:1px solid #cbd5e1">' + esc(cd.type || 'chart') + '</th>' +
+    ds.map(function (d) { return '<th style="text-align:right;padding:5px 10px;border-bottom:1px solid #cbd5e1">' + esc(d.label || '') + '</th>'; }).join('');
+  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px"><caption style="caption-side:top;text-align:left;font-size:.85em;color:#475569;padding-bottom:4px">' + esc(cd.title || ((cd.type || 'Chart') + ' data')) + '</caption><thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+
+function qFigure(q) {
+  const url = String(q.imageUrl || '').trim();
+  if (!/^https?:\/\//i.test(url) || /example\.com|via\.placeholder\.com|placehold\./i.test(url)) return '';
+  return '<figure style="margin:10px 0"><img src="' + esc(url) + '" alt="Figure for the question" loading="lazy" style="max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:6px"></figure>';
+}
+
+function cleanStem(q) {
+  var t = String(q.text == null ? '' : q.text);
+  if (!q.tableData) return t;
+  var i = t.indexOf('|');
+  if (i < 0) return t;
+  return t.slice(0, i).replace(/[\s:,\-]+$/, '').trim() || t;
+}
+
+function questionData(q) {
+  return qTableData(q.tableData) + qChartData(q.chartData) + qFigure(q);
+}
+
 function questionHtml(q, color) {
   const opts = (q.options || []).map(function (o) {
     return '<label class="opt"><input type="radio" name="q' + q.q + '" value="' + esc(o.label) + '"><span class="ol">' + esc(o.label) + '.</span> ' + esc(o.text) + '</label>';
@@ -39,7 +81,7 @@ function questionHtml(q, color) {
   return '<article class="q" id="q' + q.q + '" data-correct="' + esc(correctLabel(q)) + '">' +
     '<div class="qhead"><span class="qnum">Q' + q.q + '</span><span class="badge" style="background:' + color + '33;color:' + color + '">' + esc(q.section) + '</span>' +
     (q.source === 'model' || q.reviewed === false ? '<span class="ai">model-generated · ' + esc((q.generatedAt || '').slice(0, 10)) + '</span>' : '') +
-    '</div><div class="stem">' + esc(q.text) + '</div><div class="opts">' + opts + '</div>' +
+    '</div><div class="stem">' + esc(cleanStem(q)) + '</div>' + questionData(q) + '<div class="opts">' + opts + '</div>' +
     '<button class="reveal" type="button">Show answer &amp; explanation</button>' +
     '<div class="sol" hidden><strong>Answer: ' + esc(correctLabel(q)) + '</strong><p>' + esc(q.solution || '') + '</p>' + labHtml + '</div></article>';
 }

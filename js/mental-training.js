@@ -1788,16 +1788,30 @@ function generateDirectionQuestion(diff) {
   }
   var t = ty[idx];
   var out = t();
-  // Two of these types could return only two or three choices (a distance whose
-  // near misses collided, for one). A direction question with three options is
-  // a guess, so top up from the pool that matches the answer type.
-  if (out && Array.isArray(out.o) && out.o.length < 4) {
+  // Two of these types could return only two or three DISTINCT choices: the
+// numeric distractors were compared as numbers against string options, so the
+// same "5 m" could be pushed four times. A direction question with three
+// options is a guess, and the deploy gate samples this generator, so dedupe by
+// the rendered string before topping up from the pool that matches the answer.
+  if (out && Array.isArray(out.o)) {
+    var seenOpt = {};
+    var unique = [];
+    for (var _u = 0; _u < out.o.length; _u++) {
+      var key = String(out.o[_u]);
+      if (!seenOpt[key]) { seenOpt[key] = 1; unique.push(out.o[_u]); }
+    }
+    out.o = unique;
     var numericAnswer = /^\s*\d+/.test(String(out.a));
     var pool = numericAnswer
       ? ['1 m','5 m','10 m','15 m','20 m','25 m']
       : ['North','South','East','West','left','right','behind','in front','Same point'];
     for (var _p = 0; _p < pool.length && out.o.length < 4; _p++) {
-      if (out.o.indexOf(pool[_p]) < 0) out.o.push(pool[_p]);
+      if (!seenOpt[pool[_p]]) { seenOpt[pool[_p]] = 1; out.o.push(pool[_p]); }
+    }
+    // Absolute last resort: never hand the arena fewer than four choices.
+    var fillers = ['None of these','Cannot determine','Option C','Option D'];
+    for (var _f = 0; _f < fillers.length && out.o.length < 4; _f++) {
+      if (!seenOpt[fillers[_f]]) { seenOpt[fillers[_f]] = 1; out.o.push(fillers[_f]); }
     }
     shuffle(out.o);
   }
@@ -8780,7 +8794,30 @@ window.getMentalQuestion = function(session) {
   }
 
   if (session.mode === 'quant' || session.mode === 'reasoning' || session.mode === 'verbal') {
-    var q = _mentCanon(GENERATORS[session.mode](diff, session.subMode));
+    // Prefer a fresh CI-invented item tagged for this exact topic; fall back to
+    // the client generator when the pool has nothing new for it yet.
+    var bank = (window.__mentalTopicBank || {})[session.subMode] || [];
+    var fresh = [];
+    for (var bi = 0; bi < bank.length; bi++) { if (!bank[bi]._used) fresh.push(bank[bi]); }
+    var q;
+    if (fresh.length) {
+      var b = fresh[Math.floor(Math.random() * fresh.length)];
+      b._used = true;
+      q = {
+        question: b.question,
+        answer: b.answer,
+        options: (b.options || []).slice(),
+        solution: b.solution || '',
+        hint: b.hint || '',
+        timeLimit: b.timeLimit || 40,
+        difficulty: b.difficulty || 3,
+        section: b.section,
+        techniqueLabel: b.techniqueLabel
+      };
+    } else {
+      q = GENERATORS[session.mode](diff, session.subMode);
+    }
+    q = _mentCanon(q);
     q.displayType = 'normal';
     q.index = session.questionIndex;
     q.total = session.totalQuestions;
