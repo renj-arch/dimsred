@@ -55,6 +55,58 @@ function sameQuestion(a, b) {
   return norm(a) === norm(b);
 }
 
+// A question can point at a table, a chart or an image that is stored beside it
+// in the data file. The paper renderer printed only the stem, so 70 questions
+// asked "as per the table below" with no table on the page. Render the stored
+// data under the stem; an item with no data is untouched.
+function renderTableData(td) {
+  if (!td || !Array.isArray(td.headers) || !Array.isArray(td.rows) || !td.headers.length) return '';
+  const head = td.headers.map(function (h) { return '<th style="text-align:left;padding:5px 10px;border-bottom:1px solid #cbd5e1;font-weight:600">' + esc(h) + '</th>'; }).join('');
+  const body = td.rows.map(function (row) {
+    return '<tr>' + (row || []).map(function (c) {
+      return '<td style="padding:5px 10px;border-bottom:1px solid #e2e8f0">' + esc(c) + '</td>';
+    }).join('') + '</tr>';
+  }).join('');
+  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;min-width:280px">' +
+    '<thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + body + '</tbody></table></div>';
+}
+
+function renderChartData(cd) {
+  if (!cd || !Array.isArray(cd.labels) || !Array.isArray(cd.datasets) || !cd.datasets.length) return '';
+  const ds = cd.datasets.filter(function (d) { return d && Array.isArray(d.data); });
+  if (!ds.length) return '';
+  const rows = cd.labels.map(function (label, i) {
+    return '<tr><td style="padding:5px 10px;border-bottom:1px solid #e2e8f0">' + esc(label) + '</td>' +
+      ds.map(function (d) { return '<td style="padding:5px 10px;border-bottom:1px solid #e2e8f0;text-align:right">' + esc((d.data || [])[i]) + '</td>'; }).join('') + '</tr>';
+  }).join('');
+  const head = '<th style="text-align:left;padding:5px 10px;border-bottom:1px solid #cbd5e1">' + esc(cd.type || 'chart') + '</th>' +
+    ds.map(function (d) { return '<th style="text-align:right;padding:5px 10px;border-bottom:1px solid #cbd5e1">' + esc(d.label || '') + '</th>'; }).join('');
+  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;min-width:280px">' +
+    '<caption style="caption-side:top;text-align:left;font-size:.85em;color:#475569;padding:0 0 4px">' + esc(cd.title || ((cd.type || 'Chart') + ' data')) + '</caption>' +
+    '<thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+
+function renderFigure(q) {
+  const url = String(q.imageUrl || '').trim();
+  // Placeholder hosts in older bank rows are not images a reader can use.
+  if (!/^https?:\/\//i.test(url) || /example\.com|via\.placeholder\.com|placehold\./i.test(url)) return '';
+  return '<figure style="margin:10px 0"><img src="' + esc(url) + '" alt="Figure for the question" loading="lazy" style="max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:6px"></figure>';
+}
+
+function cleanStem(q) {
+  var t = String(q.text == null ? '' : q.text);
+  // Older bank rows append the table to the stem as raw markdown pipes. When
+  // tableData is present the table is drawn properly, so drop the duplicate.
+  if (!q.tableData) return t;
+  var i = t.indexOf('|');
+  if (i < 0) return t;
+  return t.slice(0, i).replace(/[\s:,\-]+$/, '').trim() || t;
+}
+
+function questionData(q) {
+  return renderTableData(q.tableData) + renderChartData(q.chartData) + renderFigure(q);
+}
+
 function buildQuestion(q, sections) {
   var section = null;
   for (var i = 0; i < sections.length; i++) {
@@ -100,7 +152,7 @@ function buildQuestion(q, sections) {
       '</ol></div>'
     : '';
 
-  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + modelBadge + '</div><div class="q-text">' + esc(q.text) + '</div><div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + labHtml + '</div></div>';
+  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + modelBadge + '</div><div class="q-text">' + esc(cleanStem(q)) + '</div>' + questionData(q) + '<div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + labHtml + '</div></div>';
 }
 
 function buildPaper(data) {

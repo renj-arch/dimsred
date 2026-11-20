@@ -8780,7 +8780,30 @@ window.getMentalQuestion = function(session) {
   }
 
   if (session.mode === 'quant' || session.mode === 'reasoning' || session.mode === 'verbal') {
-    var q = _mentCanon(GENERATORS[session.mode](diff, session.subMode));
+    // Prefer a fresh CI-invented item tagged for this exact topic; fall back to
+    // the client generator when the pool has nothing new for it yet.
+    var bank = (window.__mentalTopicBank || {})[session.subMode] || [];
+    var fresh = [];
+    for (var bi = 0; bi < bank.length; bi++) { if (!bank[bi]._used) fresh.push(bank[bi]); }
+    var q;
+    if (fresh.length) {
+      var b = fresh[Math.floor(Math.random() * fresh.length)];
+      b._used = true;
+      q = {
+        question: b.question,
+        answer: b.answer,
+        options: (b.options || []).slice(),
+        solution: b.solution || '',
+        hint: b.hint || '',
+        timeLimit: b.timeLimit || 40,
+        difficulty: b.difficulty || 3,
+        section: b.section,
+        techniqueLabel: b.techniqueLabel
+      };
+    } else {
+      q = GENERATORS[session.mode](diff, session.subMode);
+    }
+    q = _mentCanon(q);
     q.displayType = 'normal';
     q.index = session.questionIndex;
     q.total = session.totalQuestions;

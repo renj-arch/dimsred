@@ -81,7 +81,13 @@ function checkArray(arr, rel) {
     const stem = q.text || q.question || q.q || q.stem || '';
     if (!stem) return;
     const sol = q.sol || q.solution || q.explanation || '';
+    // A table/chart/image stored beside the question is shown by the renderers
+    // (papers, full papers, micro-tests). The guard only looked at the stem
+    // string, so it called 70 answerable items missing. Data in hand is not
+    // missing; a passage field counts for the same reason.
+    const carriesData = !!(q.tableData || q.chartData || q.imageUrl || q.passage || q.passageText);
     inspect(stem, sol).forEach((f) => {
+      if (carriesData) return;
       hits.push(rel + ' #' + (q.id || i + 1) + ' [' + f.kind + '] ' + f.detail +
         '\n      "' + String(stem).replace(/\s+/g, ' ').slice(0, 120) + '"');
     });
@@ -93,6 +99,8 @@ for (const file of walk(ROOT, [], ['.json'])) {
   try { doc = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { continue; }
   scanned++;
   const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+  // Never audit the guard's own output: it holds the previous hits.
+  if (/missing-data-report\.json$/.test(rel)) continue;
   if (Array.isArray(doc)) checkArray(doc, rel);
   else if (doc && Array.isArray(doc.questions)) checkArray(doc.questions, rel);
   else if (doc && Array.isArray(doc.items)) checkArray(doc.items, rel);

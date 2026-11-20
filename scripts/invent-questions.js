@@ -20,7 +20,7 @@
  * Env:
  *   OLLAMA_MODEL        default qwen3.5:9b
  *   OLLAMA_HOST         default http://127.0.0.1:11434
- *   INVENT_PER_SLOT     questions per section x difficulty (default 2)
+ *   INVENT_PER_SLOT     questions per section x difficulty (default 4)
  *   INVENT_NUM_CTX      model context window (default 8192; the 27B quality
  *                       lane runs 4096 — the briefs fit and CPU prompt-eval
  *                       halves)
@@ -30,7 +30,7 @@
  *   INVENT_FIRST_BYTE_MIN patience waiting for the first streamed byte (default 25)
  *   INVENT_STALL_MIN    mid-stream silence that counts as wedged (default 12)
  *   INVENT_CALL_CAP_MIN absolute per-call cap in minutes (default 95)
- *   INVENT_MAX_STORE    max questions kept (default 1200)
+ *   INVENT_MAX_STORE    max questions kept (default 5000)
  *   INVENT_OUT          override output path (for tests)
  *   INVENT_FAKE_LLM=1   no model needed — canned responses for local tests
  */
@@ -43,11 +43,11 @@ const hosted = require('./lib/hosted');
 
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
-const PER_SLOT = Math.max(1, parseInt(process.env.INVENT_PER_SLOT || '2', 10) || 2);
+const PER_SLOT = Math.max(1, parseInt(process.env.INVENT_PER_SLOT || '4', 10) || 4);
 const NUM_CTX = Math.max(1024, parseInt(process.env.INVENT_NUM_CTX || '8192', 10) || 8192);
 const NUM_PREDICT = Math.max(256, parseInt(process.env.INVENT_NUM_PREDICT || '1600', 10) || 1600);
 const DEADLINE_MIN = parseFloat(process.env.INVENT_DEADLINE_MIN || '95') || 95;
-const MAX_STORE = parseInt(process.env.INVENT_MAX_STORE || '1200', 10) || 1200;
+const MAX_STORE = parseInt(process.env.INVENT_MAX_STORE || '5000', 10) || 5000;
 const OUT_FILE = process.env.INVENT_OUT || path.join('data', 'invented', 'questions.json');
 const FAKE = process.env.INVENT_FAKE_LLM === '1';
 const RUN = process.env.GITHUB_RUN_NUMBER || String(Date.now());
@@ -81,6 +81,21 @@ const SECTION_BRIEF = {
   reasoning: 'REASONING (number/letter series, coding-decoding, syllogism, blood relations, direction sense, ranking/order, seating/puzzles, clock/calendar, analogy). The logical chain must be airtight — exactly one conclusion follows.',
   english: 'ENGLISH (vocabulary in context, synonym/antonym, error spotting, sentence improvement, cloze, idioms, one-word substitution, connectors, fillers). Exactly one option must be defensibly correct for a standard exam key.'
 };
+
+// The exact sub-topic keys mental.html drills. Tagging each invented question
+// with one lets a topic drill use fresh exam-style items instead of only the
+// client-side generator, so every topic gains new questions as the pool grows.
+const MENTAL_TOPIC_KEYS = {
+  quant: ['number_sense', 'percentage', 'arithmetic', 'motion', 'work', 'algebra', 'geometry', 'mensuration', 'counting', 'data', 'number_system', 'simplification', 'quadratic', 'partnership', 'compound_interest', 'discount', 'races', 'data_interpretation', 'profit_loss', 'pipes_cisterns', 'boats_streams', 'alligation', 'surds_indices', 'bankers_discount', 'stocks_shares', 'odd_man_out', 'height_distance', 'caselet_di', 'trigonometry', 'number_series', 'quantity_comparison', 'decimal_fraction', 'chain_rule', 'logarithm', 'instalments'],
+  reasoning: ['pattern_flash', 'coding_flash', 'logic_snap', 'direction_sense', 'blood_relations', 'ranking_grid', 'floor_puzzle', 'linear_seating', 'circular_seating', 'box_distribution', 'scheduling', 'input_output', 'mirror_image', 'dice_cube', 'calendar', 'clock', 'alphabet_arrange', 'critical_reasoning', 'decision_making', 'venn_diagram', 'letter_symbol_series', 'artificial_language', 'matching_definitions', 'cause_effect', 'essential_part', 'theme_detection', 'statement_argument', 'statement_assumption', 'statement_conclusion', 'embedded_images', 'figure_matrix', 'paper_folding', 'paper_cutting', 'rule_detection', 'grouping_images', 'image_analysis', 'water_images', 'dot_situation', 'making_judgments', 'logical_problems', 'logical_games', 'analyzing_arguments', 'logical_deduction', 'character_puzzles', 'verification_truth', 'analytical_reasoning', 'pattern_completion', 'shape_construction', 'verbal_analogy', 'number_coding'],
+  english: ['synonym', 'antonym', 'sentence_completion', 'word_ordering', 'sentence_ordering', 'paragraph_formation', 'spotting_errors', 'spellings', 'sentence_correction', 'sentence_improvement', 'closet_test', 'one_word_subs', 'idioms_phrases', 'change_voice', 'change_speech', 'comprehension', 'sentence_connectors', 'double_fillers', 'paragraph_completion', 'tenses', 'prepositions', 'articles', 'confusing_words', 'homophones']
+};
+
+function normalizeTopicKey(section, raw) {
+  const allowed = MENTAL_TOPIC_KEYS[section] || [];
+  const key = String(raw || '').trim();
+  return allowed.indexOf(key) === -1 ? '' : key;
+}
 
 function log() { console.log.apply(console, arguments); }
 function nowISO() { return new Date().toISOString(); }
@@ -584,6 +599,9 @@ function validate(raw, section, tier, recentTokenSets) {
     difficulty: tier,
     style: style.slice(0, 90),
     topic: topic.slice(0, 70),
+    // Used by mental.html to serve this item inside the matching topic drill.
+    // Empty when the model's tag is not one of the drilled keys.
+    mentalTopic: normalizeTopicKey(section, t.topicKey),
     importance: importance,
     importantFor: importantFor,
     seconds: TIER_SECONDS[tier],
@@ -615,6 +633,7 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
     'Do not use a template. The stem must be a self-contained situation, and every distractor must be the answer a real candidate would reach after a specific mistake.',
     '',
     'SECTION: ' + SECTION_BRIEF[section],
+    'TOPIC TAG: set "topicKey" to the ONE key from this list that best matches the question: ' + (MENTAL_TOPIC_KEYS[section] || []).join(', '),
     'DIFFICULTY (' + tier + '): ' + TIER_BRIEF[tier],
     '',
     'NOVELTY RULES:',
@@ -636,7 +655,7 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
     '- "importantFor": 1-3 exam names, ONLY from: IBPS PO, IBPS Clerk, SBI PO, SSC CGL, SSC CHSL, RRB NTPC, State PSC.',
     '',
     'Reply with ONLY this JSON (no markdown, no commentary):',
-    '{"topic":"3-5 words","style":"name of the mechanism you invented","stem":"the question text","options":["A","B","C","D"],"answer":"exact text of the correct option","solution":"step-by-step working","hint":"one-line nudge","importance":"high|medium|low","importantFor":["exam name"]}'
+    '{"topic":"3-5 words","topicKey":"one key from the list","style":"name of the mechanism you invented","stem":"the question text","options":["A","B","C","D"],"answer":"exact text of the correct option","solution":"step-by-step working","hint":"one-line nudge","importance":"high|medium|low","importantFor":["exam name"]}'
   ].filter(Boolean).join('\n');
 }
 

@@ -273,7 +273,7 @@
                 <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:.75em;color:var(--text-sec)">
                     <label>Questions:
                         <select id="invCount" style="background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:1em">
-                            <option>8</option><option selected>12</option><option>20</option><option>30</option><option>50</option><option>100</option>
+                            <option>8</option><option selected>12</option><option>20</option><option>30</option><option>50</option><option>100</option><option>150</option><option>200</option><option>300</option><option>500</option><option>1000</option>
                         </select>
                     </label>
                     <span>· Quant + Reasoning + English · fresh batches invented round the clock · nothing runs on your device</span>
@@ -815,15 +815,58 @@
     ];
 
     // ====== TRAINING FLOW ======
+    // Topic drills use the client-side generator, which is strong on mechanics
+    // but finite. The CI setter invents fresh exam-style items around the clock
+    // and tags each with one of these topic keys; when such an item exists it is
+    // used first, so every topic gains new questions daily. A slow or failed
+    // fetch must never block the drill: the generator starts immediately.
+    var __topicBankPromise = null;
+    function buildTopicBank(pool) {
+        var bank = {};
+        (pool || []).forEach(function(q) {
+            if (!q || !q.mentalTopic || !q.stem || !q.answer) return;
+            var entry = {
+                question: q.stem,
+                answer: q.answer,
+                options: (q.options || []).slice(),
+                solution: q.solution || '',
+                hint: q.hint || '',
+                timeLimit: q.seconds || 40,
+                difficulty: ({ easy: 2, moderate: 3, hard: 4, veryhard: 5 })[q.difficulty] || 3,
+                section: q.section,
+                techniqueLabel: '🧪 Fresh · ' + (q.section || '') + ' · ' + (q.difficulty || '')
+            };
+            (bank[q.mentalTopic] = bank[q.mentalTopic] || []).push(entry);
+        });
+        window.__mentalTopicBank = bank;
+    }
+    function withTopicBank(done) {
+        if (window.__mentalTopicBank) { done(); return; }
+        if (!__topicBankPromise) {
+            __topicBankPromise = fetch('data/invented/questions.json')
+                .then(function(r) { return r.json(); })
+                .then(function(j) { buildTopicBank((j && j.questions) || []); })
+                .catch(function() { window.__mentalTopicBank = {}; });
+        }
+        var started = false;
+        var fire = function() { if (!started) { started = true; done(); } };
+        __topicBankPromise.then(fire, fire);
+        setTimeout(fire, 1200);
+    }
+
     function startTraining(mode, subTopic) {
-        var hardMode = document.getElementById('hardModeToggle').checked;
-        session = window.startMentalSession(mode, { hardMode: hardMode, subMode: subTopic || null, layer: activeLayer });
-        document.getElementById('modeSelect').style.display = 'none';
-        document.getElementById('arena').classList.add('active');
-        answered = false;
-        hasHint = false;
-        inPuzzleCluePhase = false;
-        loadQuestion();
+        var begin = function() {
+            var hardMode = document.getElementById('hardModeToggle').checked;
+            session = window.startMentalSession(mode, { hardMode: hardMode, subMode: subTopic || null, layer: activeLayer });
+            document.getElementById('modeSelect').style.display = 'none';
+            document.getElementById('arena').classList.add('active');
+            answered = false;
+            hasHint = false;
+            inPuzzleCluePhase = false;
+            loadQuestion();
+        };
+        if (mode === 'quant' || mode === 'reasoning' || mode === 'verbal') withTopicBank(begin);
+        else begin();
     }
 
     // Exam Sim: on-demand mixed paper (Quant + Reasoning + English) generated

@@ -15,13 +15,16 @@ name: Lesson Fact Audit
 
 on:
   schedule:
-    - cron: '23 4 * * 1'
+    # Daily. One lesson per run was too slow: a full sweep of ~390 lessons takes
+    # a fortnight at 40 a week. At 60 a day the corpus is covered in about a
+    # week, and the lane keeps re-reading as lessons are rewritten.
+    - cron: '23 4 * * *'
   workflow_dispatch:
     inputs:
       limit:
         description: 'Lessons to audit this run'
         required: false
-        default: '40'
+        default: '60'
       apply:
         description: 'Apply high-confidence corrections (marked green on the page)'
         required: false
@@ -63,9 +66,11 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LIMIT: ${{ github.event.inputs.limit || '40' }}
+          LIMIT: ${{ github.event.inputs.limit || '60' }}
           APPLY: ${{ github.event.inputs.apply || 'false' }}
           FILE: ${{ github.event.inputs.file || '' }}
+          AUDIT_DEADLINE_MIN: '75'
+          AUDIT_WORKERS: '3'
         run: |
           ARGS="--report data/fact-audit.json"
           if [ -n "$FILE" ]; then ARGS="$ARGS --file $FILE"; else ARGS="$ARGS --all --limit $LIMIT"; fi
@@ -80,5 +85,6 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -f data/fact-audit.json
+          git add -f data/fact-audit-state.json
           git add upsc/course 2>/dev/null || true
           bash scripts/ci-push.sh "fact-audit: claims that do not hold up"
