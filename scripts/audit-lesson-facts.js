@@ -206,7 +206,40 @@ function applyCorrection(file, quote, correction, problem) {
   const marked = '<span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" ' +
     'title="' + safeTitle + '">' + correction + '</span>';
   fs.writeFileSync(file, html.split(quote).join(marked), 'utf8');
+  applyToSource(quote, marked);
   return true;
+}
+
+// The page is the output; scripts/course-data.json and course-addons.json are
+// the source the expanders regenerate pages from. Editing only the page means
+// the very next expand pass silently drops the correction (observed on the
+// Mauryan succession fix). Rewrite the same quote in the source stores so the
+// corrected sentence survives every rebuild.
+function applyToSource(quote, marked) {
+  for (const rel of ['scripts/course-data.json', 'scripts/course-addons.json']) {
+    const p = path.join(ROOT, rel);
+    let doc;
+    try { doc = JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { continue; }
+    let touched = 0;
+    if (rel.endsWith('course-addons.json')) {
+      for (const key of Object.keys(doc.keys || {})) {
+        const entry = doc.keys[key];
+        if (!entry || typeof entry.html !== 'string' || !entry.html.includes(quote)) continue;
+        entry.html = entry.html.split(quote).join(marked);
+        touched++;
+      }
+    } else {
+      for (const key of Object.keys(doc)) {
+        if (typeof doc[key] !== 'string' || !doc[key].includes(quote)) continue;
+        doc[key] = doc[key].split(quote).join(marked);
+        touched++;
+      }
+    }
+    if (touched) {
+      fs.writeFileSync(p, JSON.stringify(doc, null, 2) + '\n', 'utf8');
+      console.log('  corrected in ' + rel + ' (' + touched + ' entr' + (touched === 1 ? 'y' : 'ies') + ')');
+    }
+  }
 }
 
 async function main() {
