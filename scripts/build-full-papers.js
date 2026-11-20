@@ -27,7 +27,11 @@ function questionHtml(q, color) {
   const opts = (q.options || []).map(function (o) {
     return '<label class="opt"><input type="radio" name="q' + q.q + '" value="' + esc(o.label) + '"><span class="ol">' + esc(o.label) + '.</span> ' + esc(o.text) + '</label>';
   }).join('');
-  const lab = RESEARCH[SLUG + '#' + q.q];
+  const rawLab = RESEARCH[SLUG + '#' + q.q];
+  // Keyed by question number, so a regenerated paper left the old method on the
+  // wrong question. Use it only when it was written for this exact question.
+  const normQ = (t) => String(t == null ? '' : t).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 160);
+  const lab = rawLab && normQ(rawLab.question) === normQ(q.text) ? rawLab : null;
   const labHtml = lab ? '<div class="lab"><div class="labh">Research Team · ~' + (parseInt(lab.methods[0].seconds, 10) || 10) + 's · verified</div>' +
     '<div class="labn">' + esc(lab.methods[0].name) + '</div><ol class="labs">' +
     (lab.methods[0].steps || []).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>' +
