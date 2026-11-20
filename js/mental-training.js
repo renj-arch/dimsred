@@ -1788,16 +1788,30 @@ function generateDirectionQuestion(diff) {
   }
   var t = ty[idx];
   var out = t();
-  // Two of these types could return only two or three choices (a distance whose
-  // near misses collided, for one). A direction question with three options is
-  // a guess, so top up from the pool that matches the answer type.
-  if (out && Array.isArray(out.o) && out.o.length < 4) {
+  // Two of these types could return only two or three DISTINCT choices: the
+// numeric distractors were compared as numbers against string options, so the
+// same "5 m" could be pushed four times. A direction question with three
+// options is a guess, and the deploy gate samples this generator, so dedupe by
+// the rendered string before topping up from the pool that matches the answer.
+  if (out && Array.isArray(out.o)) {
+    var seenOpt = {};
+    var unique = [];
+    for (var _u = 0; _u < out.o.length; _u++) {
+      var key = String(out.o[_u]);
+      if (!seenOpt[key]) { seenOpt[key] = 1; unique.push(out.o[_u]); }
+    }
+    out.o = unique;
     var numericAnswer = /^\s*\d+/.test(String(out.a));
     var pool = numericAnswer
       ? ['1 m','5 m','10 m','15 m','20 m','25 m']
       : ['North','South','East','West','left','right','behind','in front','Same point'];
     for (var _p = 0; _p < pool.length && out.o.length < 4; _p++) {
-      if (out.o.indexOf(pool[_p]) < 0) out.o.push(pool[_p]);
+      if (!seenOpt[pool[_p]]) { seenOpt[pool[_p]] = 1; out.o.push(pool[_p]); }
+    }
+    // Absolute last resort: never hand the arena fewer than four choices.
+    var fillers = ['None of these','Cannot determine','Option C','Option D'];
+    for (var _f = 0; _f < fillers.length && out.o.length < 4; _f++) {
+      if (!seenOpt[fillers[_f]]) { seenOpt[fillers[_f]] = 1; out.o.push(fillers[_f]); }
     }
     shuffle(out.o);
   }
