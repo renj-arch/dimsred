@@ -26,9 +26,9 @@ on:
         required: false
         default: '60'
       apply:
-        description: 'Apply high-confidence corrections (marked green on the page)'
+        description: 'Apply verified high-confidence corrections (marked green on the page)'
         required: false
-        default: 'false'
+        default: 'true'
       file:
         description: 'One lesson path, or blank for all'
         required: false
@@ -67,7 +67,7 @@ jobs:
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIMIT: ${{ github.event.inputs.limit || '60' }}
-          APPLY: ${{ github.event.inputs.apply || 'false' }}
+          APPLY: ${{ github.event.inputs.apply || 'true' }}
           FILE: ${{ github.event.inputs.file || '' }}
           AUDIT_DEADLINE_MIN: '75'
           AUDIT_WORKERS: '3'
