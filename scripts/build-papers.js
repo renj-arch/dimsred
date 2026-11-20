@@ -50,6 +50,11 @@ function jsonLd(type, extra) {
   return '<script type="application/ld+json">' + JSON.stringify(obj) + '</script>';
 }
 
+function sameQuestion(a, b) {
+  const norm = (t) => String(t == null ? '' : t).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 160);
+  return norm(a) === norm(b);
+}
+
 function buildQuestion(q, sections) {
   var section = null;
   for (var i = 0; i < sections.length; i++) {
@@ -83,6 +88,12 @@ function buildQuestion(q, sections) {
     ? '<br><span style="color:#4b5563">' + esc(q.solution) + '</span>'
     : '';
   var lab = RESEARCH[SLUG + '#' + q.q];
+  // Research answers were keyed by paper slug + question NUMBER, so when a paper
+  // was regenerated the stored method stayed on the number and answered whatever
+  // question now sat there: 391 of 577 blocks on the site answered a different
+  // question (a Quit India question carrying a net-vector sum). A stored method
+  // is used only when it was written for this exact question.
+  if (lab && !sameQuestion(lab.question, q.text)) lab = null;
   var labHtml = lab && lab.methods && lab.methods[0]
     ? '<div class="research-lab" style="margin-top:8px;padding:8px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;font-size:.9em;color:#1e3a8a"><strong>Research Team · ~' + (parseInt(lab.methods[0].seconds, 10) || 10) + 's · ' + esc(lab.methods[0].name) + '</strong><ol style="margin:4px 0 0;padding-left:18px">' +
       (lab.methods[0].steps || []).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') +

@@ -143,8 +143,13 @@ jobs:
           # sizes are raised now, and this stops a regenerated page putting them
           # back.
           node scripts/legible-lesson-text.js --check
-          # Reading quality, checked rather than remembered: no doubled heading
-          # numbers, no blurred/smeared figures, one type scale across a page.
+          # Reading quality. Repair first, then verify: a generation lane can
+          # rewrite a page with the old inline sizes minutes before the deploy
+          # (135 pages did), and that should cost the page a second pass, not the
+          # whole publish.
+          node scripts/strip-doubled-heading-numbers.js
+          node scripts/remove-figure-blur.js
+          node scripts/normalise-type-scale.js
           node scripts/strip-doubled-heading-numbers.js --check
           node scripts/remove-figure-blur.js --check
           node scripts/normalise-type-scale.js --check
