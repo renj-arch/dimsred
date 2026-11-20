@@ -1,73 +1,7 @@
 {
-  "updatedAt": "2026-11-19T20:14:29.556Z",
+  "updatedAt": "2026-11-20T04:54:42.255Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
-    {
-      "id": "1e0cf6c6d2b216f2",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier1",
-      "paperTitle": "SSC CGL — Tier I (Full Paper)",
-      "paperFile": "full-2026-11-07-cgl-tier1.json",
-      "questionNumber": 1,
-      "section": "General Intelligence & Reasoning",
-      "question": "Five books arranged on a shelf. Math is above English. Science is below History but above Geography. English is above Science. Which is at the bottom?",
-      "options": [
-        {
-          "label": "A",
-          "text": "Geography",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "Science",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "English",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "History",
-          "correct": false
-        }
-      ],
-      "key": "A",
-      "answer": "A",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Identify the total number of books is five.",
-        "Place History at the top since Science is below it and English is above Science (implying a specific order).",
-        "Determine the relative order: Math > English > Science > Geography.",
-        "Note that History must be above Science, placing it either above Math or between Math/English, but regardless, Geography is explicitly stated as being below Science.",
-        "Conclude that Geography is the lowest book in the sequence.",
-        "Verify no other book is placed below Geography based on the constraints."
-      ],
-      "verifierCheck": "Let the positions be 1 (top) to 5 (bottom). We know Math > English, Science < History, Science > Geography, and English > Science. Combining these: History is above Science; Science is above Geography. So the order for these three is History > Science > Geography. Also, English is above Science. Math is above English. This creates a chain where Science must be below both History and English. Since there are 5 books and we need to place Math, English, History, Science, and Geography. The relative order constraints force Geography to be the lowest because it is strictly below Science, which is below History and English, and Science is also below English (which is below Math). No other book is stated to be below Geography or in a position that forces it lower than Geography given the strict inequalities provided.",
-      "methods": [
-        {
-          "name": "Direct Elimination",
-          "idea": "Remove non-bottoms first",
-          "kind": "shortcut",
-          "seconds": 3,
-          "steps": [
-            "List positions: Top to Bottom.",
-            "Identify Math > English > Science > Geography.",
-            "Note History is above Science.",
-            "Eliminate anything not below all others.",
-            "Geography is the only item with no one below it.",
-            "Final: Geography (Option A)"
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-07T05:15:33.371Z",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html"
-    },
     {
       "id": "d5cef3cc104c9739",
       "exam": "cgl",
@@ -151,100 +85,13 @@
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html"
     },
     {
-      "id": "ce15027bb3b31fd2",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier1",
-      "paperTitle": "SSC CGL — Tier I (Full Paper)",
-      "paperFile": "full-2026-11-07-cgl-tier1.json",
-      "questionNumber": 3,
-      "section": "General Intelligence & Reasoning",
-      "question": "Situation: 'Exams have been postponed due to a natural calamity.' Course I: The education board should announce revised dates immediately. Course II: The board should reduce the syllabus to reduce student burden.",
-      "options": [
-        {
-          "label": "A",
-          "text": "Only I follows",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "Only II follows",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "Both follow",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "Neither follows",
-          "correct": false
-        }
-      ],
-      "key": "A",
-      "answer": "A",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Identify the core situation: exams are postponed due to a natural calamity.",
-        "Analyze Course I: Announcing revised dates immediately is a direct administrative response to a postponement, ensuring clarity for students and stakeholders.",
-        "Analyze Course II: Reducing the syllabus addresses content coverage but does not directly resolve the immediate logistical issue of rescheduling the exam itself.",
-        "Evaluate logical consistency: Course I follows logically from the situation as it deals with the 'when' of the exam. Course II is a separate policy decision regarding 'what' to study, which may or may not be necessary depending on the new timeline and isn't an immediate consequence of the postponement alone.",
-        "Conclusion: Only Course I is a direct and logical follow-up action to the specific situation described."
-      ],
-      "verifierCheck": "In situations involving natural calamities where exams are postponed, the immediate administrative priority is to restore order and clarity for students and stakeholders by announcing revised dates (Course I), as this directly addresses the disruption caused by the postponement. Course II suggests reducing the syllabus, which is a pedagogical decision regarding curriculum scope rather than an immediate procedural response to the specific event of postponement; furthermore, reducing the syllabus does not inherently solve the logistical issue of when the exams will occur and may be seen as a separate policy choice unrelated to the emergency protocol. Therefore, only Course I logically follows as the necessary immediate action.",
-      "methods": [
-        {
-          "name": "Keyword Link",
-          "idea": "Map 'postponed' to 'announcement'",
-          "kind": "shortcut",
-          "seconds": 3,
-          "steps": [
-            "Identify situation: Exams postponed.",
-            "Link consequence: Board must announce new dates immediately.",
-            "Ignore irrelevant Course II about syllabus reduction.",
-            "Select option matching the logical link."
-          ]
-        },
-        {
-          "name": "Direct Deduction",
-          "idea": "Follow the immediate obligation",
-          "kind": "invariant",
-          "seconds": 4,
-          "steps": [
-            "Read Course I: Postponement requires revised dates.",
-            "Verify validity: Immediate announcement is standard procedure.",
-            "Read Course II: Syllabus reduction is not a direct result of postponement.",
-            "Conclude only Course I follows logically."
-          ]
-        },
-        {
-          "name": "Elimination Filter",
-          "idea": "Remove non-mandatory actions",
-          "kind": "shortcut",
-          "seconds": 5,
-          "steps": [
-            "Check if syllabus cut (II) is forced by delay.",
-            "Deduce II is optional, not mandatory.",
-            "Keep I as the necessary administrative step.",
-            "Reject options B, C, D; select A."
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-07T05:21:07.483Z",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html"
-    },
-    {
       "id": "1e9e5e5e770c8c3c",
       "exam": "cgl",
       "paperSlug": "full-2026-11-07-cgl-tier2",
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 31,
+      "questionNumber": 27,
       "section": "Reasoning and General Intelligence",
       "question": "One number does not fit into the given factorial series. Identify it. 3, 6, 24, 120, 720, 800",
       "options": [
@@ -324,7 +171,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 33,
+      "questionNumber": 29,
       "section": "Reasoning and General Intelligence",
       "question": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
       "options": [
@@ -392,7 +239,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 34,
+      "questionNumber": 30,
       "section": "Reasoning and General Intelligence",
       "question": "Which incident is mentioned as a reallifee out come link ed to groupthink? Read the passage and answer the following questions. A common pattern in group decision-making—widely known as gr oupthink—occur swhen at eam' shunger for complet eagr eement becomes stronger than its willingness to examine other viewpoints with a critical lens. As a result, choices often turn defectiv ebecause disagr eement is either quietly silenced from within or discouraged thr ough social consequences. Closely link ed to this is social conformity, the tendency to adjust one's opinions or actions to mat ch the majority—o ften unconsciously—t ogain acceptance or pr event friction. In closely bonded cir cles such as boardrooms, policy gr oups, or academic committ ees, individuals May hold back opposing ideas due to fear of exclusion or damage to reputation. With time, this shar ed uniformity cr eates mental stagnation, weakens cr eativity, and incr eases the chance of strat egic misjudgments. The Bay of Pigs episode and the Challenger sp ace shuttle tragedy are commonly highlight ed as classic cases wher egroupthink dist orted judgment. From a psychological angle, conformity is tied to our ev olutionar ypull towar dtrib al belonging, wher estanding ap art once carried sur vival thr eats. T oday, that same impulse shows up thr ough peer pr essur eworkplace norms, and online echo chamber sDigital platforms int ensif yconformity because algorithms construct per sonalized \"bubbles\" that confirm existing beliefs while scr eening out conflicting per spectiv es. The antidot eto this narrowed thinking is to build dissent into the syst em. When teams welcome principled disagr eement, it becomes a mental safety-check against tunnel vision. Encouraging an envir onment wher ecount erviews are valued—not punished—suppor ts str onger, mor ebalanced, and mor eresilient decisions. In a time shaped by viral fads, polarized deb ate, and per formativ eagr eement, the brav ery to question the cr owd is both uncommon and necessar yReal pr ogress gr ows not from aut omatic loyalty to majority norms, but from critical pr obing and the ner ve to challenge what feels comfor table.",
       "options": [
@@ -468,7 +315,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 36,
+      "questionNumber": 32,
       "section": "Reasoning and General Intelligence",
       "question": "Which of the following industries is classified as a heavy industr y?",
       "options": [
@@ -558,7 +405,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 38,
+      "questionNumber": 34,
       "section": "Reasoning and General Intelligence",
       "question": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
       "options": [
@@ -644,174 +491,13 @@
       "generatedAt": "2026-11-07T22:05:44.086Z"
     },
     {
-      "id": "f93462b9ff45345f",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 39,
-      "section": "Reasoning and General Intelligence",
-      "question": "Statement: Should genetically modified (GM) crops be allowed in India? Argument I: Yes, because they can increase agricultural yield. Argument II: No, because their long-term health effects are unknown.",
-      "options": [
-        {
-          "label": "A",
-          "text": "Only I is strong",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "Only II is strong",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "Both are strong",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "Neither is strong",
-          "correct": false
-        }
-      ],
-      "key": "C",
-      "answer": "C",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Identify Argument I's core claim: GM crops increase yield, a direct economic benefit relevant to India's food security.",
-        "Identify Argument II's core claim: Long-term health effects are unknown, representing a significant safety risk.",
-        "Evaluate strength of Argument I: It addresses a primary motivation for adopting GM technology (productivity).",
-        "Evaluate strength of Argument II: It addresses a critical concern regarding public health and environmental safety.",
-        "Conclude that both arguments present valid, opposing sides of the debate with strong logical support for their respective positions.",
-        "Determine that since both arguments are relevant and well-reasoned within the context of the issue, both are considered strong."
-      ],
-      "verifierCheck": "To determine the strength of the arguments, we evaluate whether each provides a valid, relevant, and substantial reason to support or oppose the statement. Argument I states that GM crops should be allowed because they increase agricultural yield; this is a strong argument as food security and productivity are primary concerns for India's agrarian economy, making the benefit tangible and immediate. Argument II states they should not be allowed because long-term health effects are unknown; this is also a strong argument because the precautionary principle dictates that potential irreversible harm to human health or the environment warrants caution when scientific consensus on safety is lacking. Since both arguments present significant, distinct, and logically sound perspectives (one economic/productivity-based, the other safety/health-based) without being weak or irrelevant, both are considered strong in the context of critical reasoning.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Identify Benefit/Risk",
-          "idea": "Directly map arguments to criteria",
-          "kind": "shortcut",
-          "seconds": 3,
-          "steps": [
-            "Argument I cites yield increase (economic benefit).",
-            "Argument II cites unknown health risks (safety concern).",
-            "Both present valid, distinct logical grounds for opposing views.",
-            "Final: Both are strong -> Option C"
-          ]
-        },
-        {
-          "name": "Check Pro/Con Balance",
-          "idea": "Verify if both sides offer valid logic",
-          "kind": "mnemonic",
-          "seconds": 4,
-          "steps": [
-            "Look for 'Yes' reasons: Yield is a proven factor.",
-            "Look for 'No' reasons: Unknown health effects are a valid caution.",
-            "Since both have substantive, non-trivial points, both are strong.",
-            "Final: Both are strong -> Option C"
-          ]
-        },
-        {
-          "name": "Assess Relevance",
-          "idea": "Confirm arguments address the core issue",
-          "kind": "estimate",
-          "seconds": 5,
-          "steps": [
-            "Is yield relevant to allowing GM crops? Yes.",
-            "Are health effects relevant to allowing GM crops? Yes.",
-            "Neither is irrelevant or weak; both hold weight.",
-            "Final: Both are strong -> Option C"
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-07T22:07:55.524Z"
-    },
-    {
-      "id": "288e48673f365d0c",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 40,
-      "section": "Reasoning and General Intelligence",
-      "question": "Find the next term: 2, 3, 5, 7, 11, 13, ?",
-      "options": [
-        {
-          "label": "A",
-          "text": "15",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "17",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "19",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "23",
-          "correct": false
-        }
-      ],
-      "key": "B",
-      "answer": "C",
-      "verified": false,
-      "answerAgreesWithKey": false,
-      "canonicalSteps": [
-        "Identify the sequence as a series of prime numbers starting from 2.",
-        "Verify each term (2, 3, 5, 7, 11, 13) is indeed a prime number.",
-        "Find the next integer after 13 and check if it is prime.",
-        "Determine that 14 is not prime, 15 is not prime, 16 is not prime, and 17 is prime.",
-        "Select 17 as the next term in the sequence."
-      ],
-      "verifierCheck": "The sequence 2, 3, 5, 7, 11, 13 consists of consecutive prime numbers in ascending order. The next prime number after 13 is 17, which corresponds to option B.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Skip Even Numbers",
-          "idea": "Identify prime sequence pattern",
-          "kind": "invariant",
-          "seconds": 2,
-          "steps": [
-            "Recognize the list as consecutive prime numbers starting from 2.",
-            "Note that all terms after 2 are odd; skip any even option like 15.",
-            "Select the next prime number following 13, which is 19.",
-            "Verify 19 is in the options and matches choice C."
-          ]
-        }
-      ],
-      "status": "review",
-      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-07T22:09:14.572Z"
-    },
-    {
       "id": "7c50d43bb8088f2a",
       "exam": "cgl",
       "paperSlug": "full-2026-11-07-cgl-tier2",
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 42,
+      "questionNumber": 38,
       "section": "Reasoning and General Intelligence",
       "question": "Select the most appr opriat eant onym of the given word: Polymathic",
       "options": [
@@ -1573,7 +1259,7 @@
       "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
       "paperPath": "jee/mock-tests/full-2026-11-08-jee-paper2b.html",
       "paperFile": "full-2026-11-08-jee-paper2b.json",
-      "questionNumber": 10,
+      "questionNumber": 1,
       "section": "Mathematics",
       "question": "The solution of 2x + 3 = 7 is:",
       "options": [
@@ -1646,7 +1332,7 @@
       "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
       "paperPath": "jee/mock-tests/full-2026-11-08-jee-paper2b.html",
       "paperFile": "full-2026-11-08-jee-paper2b.json",
-      "questionNumber": 11,
+      "questionNumber": 10,
       "section": "Mathematics",
       "question": "The equation of line with slope 2 passing through (1, 3) is:",
       "options": [
@@ -1727,7 +1413,7 @@
       "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
       "paperPath": "jee/mock-tests/full-2026-11-08-jee-paper2b.html",
       "paperFile": "full-2026-11-08-jee-paper2b.json",
-      "questionNumber": 12,
+      "questionNumber": 11,
       "section": "Mathematics",
       "question": "Find the derivative of f(x) = sin(x^2).",
       "options": [
@@ -7631,7 +7317,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 32,
+      "questionNumber": 28,
       "section": "Reasoning and General Intelligence",
       "question": "In an election, 75% of eligible voters participated. Of these, 4% were inv alid votes. If a winning candidat egot 13,500 votes which was 55% of valid votes, what was the total number of eligible voterstoo the near est int eger)?",
       "options": [
@@ -7703,432 +7389,13 @@
       "generatedAt": "2026-11-11T05:36:34.824Z"
     },
     {
-      "id": "c9737eff7e1640a3",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 37,
-      "section": "Reasoning and General Intelligence",
-      "question": "Which of the following is NOT a leap year?",
-      "options": [
-        {
-          "label": "A",
-          "text": "1600",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "2000",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "2100",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "2400",
-          "correct": false
-        }
-      ],
-      "key": "C",
-      "answer": "C",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Identify the rule for leap years: divisible by 4, except end-of-century years which must be divisible by 400.",
-        "Check 1600: Divisible by 400, so it is a leap year.",
-        "Check 2000: Divisible by 400, so it is a leap year.",
-        "Check 2100: Divisible by 4 but not by 400, so it is NOT a leap year.",
-        "Check 2400: Divisible by 400, so it is a leap year.",
-        "Select option C as the non-leap year."
-      ],
-      "verifierCheck": "To determine which year is not a leap year, we apply the Gregorian calendar rules: a year is a leap year if it is divisible by 4, except for end-of-century years, which must be divisible by 400. Option A (1600) and Option B (2000) are both divisible by 400, making them leap years. Option D (2400) is also divisible by 400, so it is a leap year. Option C (2100) is divisible by 4 but not by 400 (since 2100 / 400 = 5.25), which means it fails the exception rule for century years and is therefore NOT a leap year.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Hundred Check",
-          "idea": "Divide by 400 for centuries",
-          "kind": "shortcut",
-          "seconds": 3,
-          "steps": [
-            "Check if year is divisible by 100.",
-            "If yes, check divisibility by 400.",
-            "2100/400=5.25, so it fails. Others pass.",
-            "Final: C"
-          ]
-        },
-        {
-          "name": "Quick Modulo",
-          "idea": "Test century years only",
-          "kind": "invariant",
-          "seconds": 4,
-          "steps": [
-            "Identify century years (ending 00).",
-            "Years A, B, D are divisible by 400.",
-            "Year C is not. It fails leap rule.",
-            "Final: C"
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-11T05:43:55.006Z"
-    },
-    {
-      "id": "106958dfc56ca6d6",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 39,
-      "section": "Reasoning and General Intelligence",
-      "question": "How many squares in a 6×6 grid?",
-      "options": [
-        {
-          "label": "A",
-          "text": "55",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "91",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "78",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "65",
-          "correct": false
-        }
-      ],
-      "key": "B",
-      "answer": "B",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Identify grid dimensions as n=6.",
-        "Calculate number of 1x1 squares: 6*6 = 36.",
-        "Calculate number of 2x2 squares: 5*5 = 25.",
-        "Calculate number of 3x3 squares: 4*4 = 16.",
-        "Calculate number of 4x4 squares: 3*3 = 9.",
-        "Calculate number of 5x5 squares: 2*2 = 4."
-      ],
-      "verifierCheck": "To find the total number of squares in a 6×6 grid, we sum the counts of all possible square sizes (1×1 up to 6×6). For an n×n grid, the number of k×k squares is given by (n-k+1)². For a 6×6 grid: there are 36 one-by-one squares (6²), 25 two-by-two squares (5²), 16 three-by-three squares (4²), 9 four-by-four squares (3²), 4 five-by-five squares (2²), and 1 six-by-six square (1²). Summing these values: 36 + 25 + 16 + 9 + 4 + 1 = 91. This matches option B.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Sum of Squares",
-          "idea": "Use standard formula n(n+1)(2n+1)/6",
-          "kind": "shortcut",
-          "seconds": 3,
-          "steps": [
-            "Identify grid size n=6.",
-            "Apply formula 6*7*13/6.",
-            "Simplify to 6*7*13/6 = 91."
-          ]
-        },
-        {
-          "name": "Count by Size",
-          "idea": "Sum squares of side lengths from 1 to 6",
-          "kind": "shortcut",
-          "seconds": 4,
-          "steps": [
-            "Count 1x1 squares: 6*6=36.",
-            "Count 2x2 squares: 5*5=25.",
-            "Add 3x3,4x4,5x5,6x6 counts (16,9,4,1).",
-            "Sum all counts: 36+25+16+9+4+1=91."
-          ]
-        },
-        {
-          "name": "Pattern Check",
-          "idea": "Verify against known n=3 case then scale",
-          "kind": "estimate",
-          "seconds": 5,
-          "steps": [
-            "Recall n=3 grid has 14 squares.",
-            "Note growth pattern for higher n.",
-            "Calculate n=6 using sum of first 6 squares.",
-            "Result matches option B."
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-11T05:46:17.733Z"
-    },
-    {
-      "id": "5a6bcb84ec6ed893",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 44,
-      "section": "Reasoning and General Intelligence",
-      "question": "Find the missing term: Thermometer : Temperature :: Barometer : ?",
-      "options": [
-        {
-          "label": "A",
-          "text": "Wind",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "Pressure",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "Humidity",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "Speed",
-          "correct": false
-        }
-      ],
-      "key": "B",
-      "answer": "B",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Identify the relationship in the first pair: A thermometer is an instrument used to measure temperature.",
-        "Apply the same relationship to the second term: A barometer is an instrument used to measure atmospheric pressure.",
-        "Select the option that corresponds to the quantity measured by a barometer, which is Pressure.",
-        "Verify that other options (Wind, Humidity, Speed) are measured by different instruments like anemometers or hygrometers.",
-        "Confirm that 'Pressure' is the correct logical completion for the analogy."
-      ],
-      "verifierCheck": "The relationship in the analogy 'Thermometer : Temperature' is that of an instrument to the physical quantity it measures; a thermometer is specifically designed to measure temperature. Applying this same logical structure to 'Barometer', we must identify the specific physical quantity that a barometer measures. A barometer is an instrument used to measure atmospheric pressure, which is essential for weather forecasting. Therefore, by direct functional equivalence, the missing term corresponding to Barometer is Pressure.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Prefix Match",
-          "idea": "link instrument name to its standard prefix",
-          "kind": "mnemonic",
-          "seconds": 2,
-          "steps": [
-            "Recall that baro- is a Greek prefix meaning 'weight' or 'pressure'.",
-            "Identify that the atmosphere's weight per unit area is called pressure.",
-            "Select the option corresponding to atmospheric pressure."
-          ]
-        },
-        {
-          "name": "Analogy Logic",
-          "idea": "match instrument function directly to measured quantity",
-          "kind": "invariant",
-          "seconds": 3,
-          "steps": [
-            "Recognize a thermometer measures thermal energy state (temperature).",
-            "Apply same logic: a barometer measures atmospheric force exerted.",
-            "Conclude the missing term is the specific physical quantity measured."
-          ]
-        },
-        {
-          "name": "Elimination Filter",
-          "idea": "remove options unrelated to static atmospheric variables",
-          "kind": "estimate",
-          "seconds": 4,
-          "steps": [
-            "Discard Wind and Speed as they describe motion, not static state.",
-            "Discard Humidity as it requires a hygrometer, not a barometer.",
-            "Keep Pressure as the only remaining variable measured by a barometer."
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-11T06:01:55.004Z"
-    },
-    {
-      "id": "9f60c240aba596ad",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 40,
-      "section": "Reasoning and General Intelligence",
-      "question": "Find the number opposite to 2 given: View 1: Top=A, Front=2, Right=3; View 2: Top=5, Front=2, Right=6.",
-      "options": [
-        {
-          "label": "A",
-          "text": "1",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "3",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "4",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "6",
-          "correct": false
-        }
-      ],
-      "key": "C",
-      "answer": "A",
-      "verified": true,
-      "answerAgreesWithKey": false,
-      "canonicalSteps": [
-        "Identify common face '2' in both views.",
-        "List adjacent faces to '2': 3 (View 1), 6 (View 1), 5 (View 2).",
-        "Determine remaining numbers: 1 and 4.",
-        "Conclude opposite of 2 is either 1 or 4 based on standard dice logic where 1-4 are opposites.",
-        "Select option A as the valid answer from choices.",
-        "Verify no other option fits adjacent constraints."
-      ],
-      "verifierCheck": "To find the number opposite to 2, we analyze the two views provided. In View 1, the faces are Top=A, Front=2, Right=3. This implies that 2 is adjacent to A, 3, and consequently their opposites (Bottom and Left). In View 2, the faces are Top=5, Front=2, Right=6. Here, 2 is again Front, but now adjacent to 5 (Top) and 6 (Right). Since a cube face has exactly four adjacent faces and one opposite face, the set of numbers adjacent to 2 must be {A, 3, 5, 6}. The only number from the standard set of six faces (1 through 6) that is not listed as an adjacent neighbor in either view is 1. Therefore, 1 must be the face opposite to 2.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Shared Edge Rule",
-          "idea": "use shared faces to link opposites",
-          "kind": "invariant",
-          "seconds": 3,
-          "steps": [
-            "Identify View 1: Top=5 is opposite Bottom.",
-            "Identify View 2: Top=4 is opposite Bottom (since Front=2, Right=6 implies Top must be 4 for consistency).",
-            "Since both views share Front=2 and Right faces differ, deduce 3 is adjacent to 2.",
-            "The only number not adjacent to 2 in the cube is 1.",
-            "Verify View 1 adjacency: A(5), 2, 3 are mutually adjacent.",
-            "Conclusion: Opposite of 2 is 1."
-          ]
-        }
-      ],
-      "status": "review",
-      "note": "The lab answer differs from the answer key in the paper; kept for review.",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-11T14:09:47.020Z"
-    },
-    {
-      "id": "52cea63be753c5cb",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 45,
-      "section": "Reasoning and General Intelligence",
-      "question": "Rs. 4,000 is invested at 5% for year 1 and 6% for year 2, compounded annually. Find the total amount after 2 years.",
-      "options": [
-        {
-          "label": "A",
-          "text": "Rs. 4,452",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "Rs. 4,400",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "Rs. 4,500",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "Rs. 4,550",
-          "correct": false
-        }
-      ],
-      "key": "A",
-      "answer": "A",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Calculate amount after year 1: Rs. 4000 * (1 + 0.05) = Rs. 4200.",
-        "Calculate amount after year 2: Rs. 4200 * (1 + 0.06) = Rs. 4452."
-      ],
-      "verifierCheck": "To find the total amount after 2 years with annual compounding, we calculate the interest year by year. Starting with Rs. 4,000 at 5% for the first year: Amount = 4000 * (1 + 0.05) = 4000 * 1.05 = Rs. 4,200. This new amount becomes the principal for the second year at 6%: Amount = 4200 * (1 + 0.06) = 4200 * 1.06 = Rs. 4,452. Thus, the total amount after 2 years is Rs. 4,452, which corresponds to option A.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Sequential Compound",
-          "idea": "Apply rates step-by-step",
-          "kind": "shortcut",
-          "seconds": 5,
-          "steps": [
-            "Start with Rs. 4000 and add 5% interest: 4000 * 1.05 = 4200.",
-            "Take new balance 4200 and add 6% interest: 4200 * 1.06 = 4452.",
-            "Match result to option A which is Rs. 4452."
-          ]
-        },
-        {
-          "name": "Decimal Multiplier",
-          "idea": "Multiply by factors directly",
-          "kind": "shortcut",
-          "seconds": 5,
-          "steps": [
-            "Convert percentages to decimals: 5% becomes 1.05, 6% becomes 1.06.",
-            "Multiply principal 4000 by both factors: 4000 * 1.05 * 1.06.",
-            "Calculate product: 4200 * 1.06 equals exactly 4452."
-          ]
-        },
-        {
-          "name": "Two-Step Arithmetic",
-          "idea": "Add interest then re-calculate",
-          "kind": "shortcut",
-          "seconds": 5,
-          "steps": [
-            "Year 1: Calculate 5% of 4000 (which is 200) and add to principal.",
-            "Year 2: Calculate 6% of the new total (4200) which is 252 and add.",
-            "Sum original principal and total interest: 4000 + 200 + 252 = 4452."
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-11T14:19:44.127Z"
-    },
-    {
       "id": "f16191f516a213d9",
       "exam": "cgl",
       "paperSlug": "full-2026-11-07-cgl-tier2",
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 46,
+      "questionNumber": 42,
       "section": "Reasoning and General Intelligence",
       "question": "A crick eter&#39;s average scor eover a series of mat ches is 42. If she scor es 138 runs in the next mat ch, her av erage incr eases to 46. How many mat ches did she play befor ethis?",
       "options": [
@@ -8212,7 +7479,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 47,
+      "questionNumber": 43,
       "section": "Reasoning and General Intelligence",
       "question": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
       "options": [
@@ -8300,94 +7567,13 @@
       "generatedAt": "2026-11-11T14:24:12.781Z"
     },
     {
-      "id": "11e1fc47ed8a783e",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 49,
-      "section": "Reasoning and General Intelligence",
-      "question": "A sum amounts to Rs. 15,400 in 1 year and Rs. 16,170 in 2 years at CI. Find the rate.",
-      "options": [
-        {
-          "label": "A",
-          "text": "3%",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "4%",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "5%",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "6%",
-          "correct": false
-        }
-      ],
-      "key": "C",
-      "answer": "C",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Calculate interest for year 1: 15400 - P = I_1",
-        "Calculate interest for year 2: 16170 - 15400 = 770",
-        "Note that in CI, interest on year 2 includes interest on year 1's interest",
-        "Difference between Year 2 and Year 1 interest is Interest on Interest",
-        "Interest on Interest = 770 - (P*r) = P*r^2",
-        "Alternatively, use formula A = P(1+r/100)^n for n=2"
-      ],
-      "verifierCheck": "The interest earned in the second year is Rs. 16,170 - Rs. 15,400 = Rs. 770. Under compound interest, this amount is calculated on the accumulated principal of Rs. 15,400 for one year. Using the formula Rate = (Interest / Amount after Year 1) * 100, we get (770 / 15,400) * 100 = 5%. Thus, the rate is 5%.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Difference Ratio",
-          "idea": "Compare amount growth to rate",
-          "kind": "shortcut",
-          "seconds": 3,
-          "steps": [
-            "Find difference: 16170 - 15400 = 770.",
-            "Note this equals interest for Year 2 only.",
-            "Divide by previous year's amount: 770/15400.",
-            "Simplify fraction: 770/15400 = 1/20 = 5%."
-          ]
-        },
-        {
-          "name": "Simple Interest Approx",
-          "idea": "Estimate rate via average growth",
-          "kind": "estimate",
-          "seconds": 4,
-          "steps": [
-            "Calculate total interest over 2 years: 670.",
-            "Assume simple interest approximation for quick check.",
-            "Rate ≈ (Total Interest / Principal) / Time.",
-            "(670/15400)/2 ≈ 4.3% → Closest integer is 5%."
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-11T14:31:28.149Z"
-    },
-    {
       "id": "8c8e6e3970ba2da9",
       "exam": "cgl",
       "paperSlug": "full-2026-11-07-cgl-tier2",
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 35,
+      "questionNumber": 31,
       "section": "Reasoning and General Intelligence",
       "question": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
       "options": [
@@ -8456,7 +7642,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 48,
+      "questionNumber": 44,
       "section": "Reasoning and General Intelligence",
       "question": "How many letters will remain unchanged if the word EDUCATION is arranged alphabetically?",
       "options": [
@@ -8527,7 +7713,7 @@
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 50,
+      "questionNumber": 46,
       "section": "Reasoning and General Intelligence",
       "question": "Select the most appr opriat eant onym of the given word: Eulogy",
       "options": [
@@ -8612,105 +7798,13 @@
       "generatedAt": "2026-11-12T01:21:48.751Z"
     },
     {
-      "id": "975340ea30d68e4e",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-07-cgl-tier2",
-      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-      "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 53,
-      "section": "Reasoning and General Intelligence",
-      "question": "In an 800 m race, A beats B by 160 m. What is the ratio of their speeds?",
-      "options": [
-        {
-          "label": "A",
-          "text": "5:4",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "4:5",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "6:5",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "5:6",
-          "correct": false
-        }
-      ],
-      "key": "A",
-      "answer": "A",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "When A completes 800 m, B has completed (800 - 160) = 640 m.",
-        "Since time is constant for both runners in this interval, the ratio of their speeds equals the ratio of distances covered.",
-        "The speed ratio of A to B is therefore 800 : 640.",
-        "Simplifying the ratio 800/640 by dividing both terms by 160 gives 5:4."
-      ],
-      "verifierCheck": "In an 800 m race, when A finishes the full distance (800 m), B has covered only 640 m (since A beats B by 160 m). Since time is constant for both at that specific moment, the ratio of their speeds is equal to the ratio of the distances covered. Therefore, Speed(A) : Speed(B) = Distance(A) : Distance(B) = 800 : 640. Simplifying this ratio by dividing both terms by 160 gives 5 : 4. Thus, the correct option is A.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Common Factor Shortcut",
-          "idea": "Divide by GCD immediately",
-          "kind": "mnemonic",
-          "seconds": 3,
-          "steps": [
-            "Identify total distance for A (800) and B's distance (800-160=640).",
-            "Find the Greatest Common Divisor of 800 and 640, which is 160.",
-            "Divide 800 by 160 to get 5.",
-            "Divide 640 by 160 to get 4.",
-            "The resulting ratio is 5:4."
-          ]
-        },
-        {
-          "name": "Distance Ratio Trick",
-          "idea": "Speed ratio equals distance ratio at fixed time",
-          "kind": "shortcut",
-          "seconds": 4,
-          "steps": [
-            "Both finish in same time T.",
-            "A runs 800m while B runs (800-160)=640m.",
-            "Ratio of speeds = Ratio of distances: 800:640.",
-            "Simplify 800:640 by dividing both by 160 to get 5:4."
-          ]
-        },
-        {
-          "name": "Unit Speed Estimate",
-          "idea": "Assume unit time to compare distances run",
-          "kind": "estimate",
-          "seconds": 5,
-          "steps": [
-            "Imagine the race finishes in exactly 1 second.",
-            "In that 1 second, A covers 800 meters.",
-            "In that same 1 second, B covers 640 meters (since he is beaten by 160m).",
-            "The speed ratio is simply the distance covered: 800/640 = 5/4."
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-12T01:51:00.277Z"
-    },
-    {
       "id": "12fb3e8514f37ca1",
       "exam": "cgl",
       "paperSlug": "full-2026-11-07-cgl-tier2",
       "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
       "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
       "paperFile": "full-2026-11-07-cgl-tier2.json",
-      "questionNumber": 54,
+      "questionNumber": 50,
       "section": "Reasoning and General Intelligence",
       "question": "Complet ethe pattern: 120, 96, 76.8, 61.44,?",
       "options": [
@@ -8798,85 +7892,6 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-12T01:55:01.243Z"
-    },
-    {
-      "id": "27c454c36ca99ab9",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-12-cgl-tier1",
-      "paperTitle": "SSC CGL — Tier I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-12-cgl-tier1.html",
-      "paperFile": "full-2026-11-12-cgl-tier1.json",
-      "questionNumber": 1,
-      "section": "General Intelligence & Reasoning",
-      "question": "Find the missing term: BIRD : FLY :: FISH : ?",
-      "options": [
-        {
-          "label": "A",
-          "text": "WALK",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "SWIM",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "CRAWL",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "JUMP",
-          "correct": false
-        }
-      ],
-      "key": "B",
-      "answer": "B",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Identify the relationship between 'BIRD' and 'FLY' as an animal and its primary mode of movement.",
-        "Apply this same relationship to 'FISH' to find its corresponding primary mode of movement.",
-        "Determine that 'SWIM' is the action fish perform in water, matching the logic of the first pair.",
-        "Eliminate other options like 'WALK', 'CRAWL', and 'JUMP' as they are not the primary aquatic locomotion for fish."
-      ],
-      "verifierCheck": "The analogy BIRD : FLY establishes a relationship between an organism and its primary mode of locomotion; birds fly through the air. Applying this same logic to FISH, we must identify the primary mode of movement for fish in their natural aquatic environment. While fish can technically perform actions like jumping (D) or crawling (C) in specific contexts, swimming (B) is the fundamental and defining method by which fish navigate their habitat, just as flying defines a bird's movement. Walking (A) is not a primary mode of locomotion for fish. Therefore, the missing term that completes the analogy based on primary biological function is SWIM.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Word Association",
-          "idea": "Direct semantic link",
-          "kind": "mnemonic",
-          "seconds": 2,
-          "steps": [
-            "Identify animal BIRD.",
-            "Recall primary action FLY.",
-            "Match FISH to its primary action SWIM.",
-            "Select option B."
-          ]
-        },
-        {
-          "name": "Action Invariant",
-          "idea": "Locomotion mapping",
-          "kind": "invariant",
-          "seconds": 3,
-          "steps": [
-            "Extract relation: Animal -> Movement mode.",
-            "Apply to FISH, excluding walking/crawling/jumping.",
-            "Confirm SWIM is the only valid aquatic movement.",
-            "Choose option B."
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-12T14:56:26.228Z"
     },
     {
       "id": "511c96d2bdb97ca8",
@@ -8967,76 +7982,6 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-12T14:59:10.037Z"
-    },
-    {
-      "id": "625b14be3c7d6135",
-      "exam": "cgl",
-      "paperSlug": "full-2026-11-12-cgl-tier1",
-      "paperTitle": "SSC CGL — Tier I (Full Paper)",
-      "paperPath": "cgl/mock-tests/full-2026-11-12-cgl-tier1.html",
-      "paperFile": "full-2026-11-12-cgl-tier1.json",
-      "questionNumber": 4,
-      "section": "General Intelligence & Reasoning",
-      "question": "If 'ABROAD' is coded as 'BCSPBE', what is 'FOREIGN' coded as?",
-      "options": [
-        {
-          "label": "A",
-          "text": "GPSFJHO",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "GPSFJGO",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "GPSEJHO",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "GPSFKHO",
-          "correct": false
-        }
-      ],
-      "key": "A",
-      "answer": "A",
-      "verified": true,
-      "answerAgreesWithKey": true,
-      "canonicalSteps": [
-        "Compare first letters: A->B (+1), B->C (+1).",
-        "Compare second letters: B->C (+1), R->S (+1).",
-        "Compare third letters: R->S (+1), O->P (+1).",
-        "Verify pattern holds for remaining letters in ABROAD->BCSPBE (D->E, A->B, D->E).",
-        "Apply +1 shift to each letter of FOREIGN: F->G, O->P, R->S, E->F, I->J, G->H, N->O.",
-        "Resulting code is GPSFJHO."
-      ],
-      "verifierCheck": "Analyzing the transformation from 'ABROAD' to 'BCSPBE', each letter shifts forward by exactly one position in the alphabet (A→B, B→C, R→S, O→P, A→B, D→E). Applying this consistent +1 shift rule to 'FOREIGN': F becomes G, O becomes P, R becomes S, E becomes F, I becomes J, G becomes H, and N becomes O. This results in the code 'GPSFJHO', which corresponds to option A.",
-      "roles": {
-        "solver": "Logician",
-        "inventor": "Inventor",
-        "verifier": "Verifier"
-      },
-      "methods": [
-        {
-          "name": "Shift + Shift",
-          "idea": "Two-step pattern check",
-          "kind": "shortcut",
-          "seconds": 3,
-          "steps": [
-            "Check ABROAD→BCSPBE: A→B (+1), B→C (+1), R→S (+1).",
-            "Apply same +1 shift to FOREIGN: F→G, O→P, R→S, E→F, I→J, N→O.",
-            "Combine result GPSFJO with missing letter check against options.",
-            "Select Option A (GPSFJHO) as the intended answer despite 'N' mapping to 'O'.",
-            "Final Answer: A"
-          ]
-        }
-      ],
-      "status": "published",
-      "note": "",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-12T15:02:18.062Z"
     },
     {
       "id": "799baeb5e53c8b02",
@@ -12352,7 +11297,7 @@
       "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
       "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
       "paperFile": "full-2026-11-12-jee-paper1.json",
-      "questionNumber": 33,
+      "questionNumber": 41,
       "section": "Chemistry",
       "question": "The pH of 10⁻³ M HCl solution is:",
       "options": [
