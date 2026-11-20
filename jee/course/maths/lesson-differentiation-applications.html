@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Differentiation &amp; Its Applications — JEE Mathematics Lesson | vlymbooq</title>
     <meta name="description" content="Free JEE Mathematics Differentiation &amp; Its Applications lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
@@ -21,7 +23,7 @@
         .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
         .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
         .container{max-width:1000px;margin:0 auto;padding:24px}
@@ -32,9 +34,9 @@
         .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
         .module-card:hover{border-color:rgba(255,255,255,.12)}
         .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
-        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
         .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
-        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
         .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
         .lesson-body{padding:20px 0}
         .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
@@ -46,30 +48,30 @@
         .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
         .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
         .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
-        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
-        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
-        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
         .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
-        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
-        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
         .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
         .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
         .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
         @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
         .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
         .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
         .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
         .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
         .q-card .q-soln.show{display:block}
         .q-card .q-soln strong{color:var(--emerald)}
         .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
         .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
         .sidebar-nav{position:sticky;top:72px}
-        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
         .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
-        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
         .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
         .btn-primary:hover{background:rgba(167,139,250,.25)}
         .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
@@ -80,8 +82,8 @@
         @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
         .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
         .diagram-box svg{max-width:100%;height:auto}
-        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
-        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
         @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
     </style>
@@ -92,7 +94,7 @@
         <div class="flex-row">
             <div class="side">
                 <div class="sidebar-nav">
-                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
                     <a href="lesson-algebra.html">Algebra</a>
                     <a href="lesson-calculus.html">Calculus</a>
                     <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
@@ -114,9 +116,10 @@
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Differentiation &amp; Its Applications</h1>
-                    <div id="lesson-meta" hidden data-version="ea13938db4ac" data-updated="" data-updated-label="" data-headings="[&quot;Key Concepts Covered&quot;,&quot;Important Formulas &amp; Rules&quot;,&quot;Common Question Types&quot;]"></div>
-                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
-                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Derivative rules, tangents and normals, monotonicity, maxima and minima.</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 20 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="f826d6da10c5" data-updated="2026-11-20" data-updated-label="20 Nov 2026" data-headings="[&quot;1. Foundations of Differentiation&quot;,&quot;1.1 The Concept of a Derivative&quot;,&quot;1.2 Limit Definition and Geometric Meaning&quot;,&quot;1.3 Differentiability and Continuity&quot;,&quot;2. Rules of Differentiation&quot;,&quot;2.1 The Power Rule and Constant Multiple Rule&quot;,&quot;2.2 The Sum and Difference Rules&quot;,&quot;2.3 The Product Rule&quot;,&quot;2.4 The Quotient Rule&quot;,&quot;2.5 The Chain Rule&quot;,&quot;3. Tangents and Normals&quot;,&quot;3.1 Equation of a Tangent Line&quot;,&quot;3.2 Equation of a Normal Line&quot;,&quot;3.3 Applications to Curve Sketching&quot;,&quot;4. Monotonicity and the First Derivative Test&quot;,&quot;4.1 Increasing and Decreasing Functions&quot;,&quot;4.2 Critical Points and Sign Charts&quot;,&quot;4.3 The First Derivative Test for Local Extrema&quot;,&quot;5. Maxima, Minima and the Second Derivative Test&quot;,&quot;5.1 Concavity and the Second Derivative&quot;,&quot;5.2 The Second Derivative Test for Local Extrema&quot;,&quot;5.3 Global Extrema on Closed Intervals&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Derivative rules, tangents and normals, monotonicity, maxima and minima.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
                         <span style="font-size:.75em;color:var(--text-muted)">Derivatives · Tangents · Maxima · Monotonicity</span>
                     </div>
@@ -126,50 +129,100 @@
                     </div>
                 </div>
                 <div class="lesson-body">
-<!-- course-figure:differentiation-applications-figure-2 -->
-<figure class="lesson-figure" data-figure="differentiation-applications-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
-  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
-    <svg viewBox="0 0 760 420" role="img" aria-label="Differentiation and Its Applications for Geographic Terrain Analysis"><defs><marker id="arrowhead-lesson-differentiation-applications-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="50" y="150" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="125" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="125" dy="0">Function f(x)</tspan></text><rect x="250" y="150" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="325" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="325" dy="0">Derivative f'(x)</tspan></text><rect x="450" y="150" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="525" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="525" dy="0">Slope / Gradient</tspan></text><rect x="250" y="300" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="325" y="325" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="325" dy="0">Terrain Analysis</tspan></text><rect x="450" y="300" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="525" y="325" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="525" dy="0">River Profile</tspan></text><path d="M 200 175 L 250 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-differentiation-applications-figure-2)"/><path d="M 400 175 L 450 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-differentiation-applications-figure-2)"/><path d="M 525 200 L 325 300" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-differentiation-applications-figure-2)"/><path d="M 525 200 L 525 300" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-differentiation-applications-figure-2)"/></g><g><text x="225" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="225" dy="0">gives</tspan></text><text x="425" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="425" dy="0">yields</tspan></text><text x="425" y="250" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="425" dy="0">enables</tspan></text><text x="525" y="250" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="525" dy="0">supports</tspan></text><text x="50" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="50" dy="0">Exam Hook: Art. 3 – First derivative = rate of change</tspan></text><text x="50" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="50" dy="0">Mechanism: dy/dx gives slope of tangent</tspan></text></g></svg>
-  </div>
-  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
-    <strong>Differentiation and Its Applications for Geographic Terrain Analysis</strong> — Shows how the first derivative of a function yields slope, enabling terrain and river profile analysis.
-    &middot; <a href="../../../figures/svg-differentiation-applications-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
-  </figcaption>
-</figure>
-<!-- course-figure:differentiation-applications-figure -->
-<figure class="lesson-figure" data-figure="differentiation-applications-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
-  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
-    <svg viewBox="0 0 760 420" role="img" aria-label="Geographical Differentiation Applications and Causal Chain Overview for Exam Revision"><defs><marker id="arrowhead-lesson-differentiation-applications-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="50" y="50" width="200" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="150" y="71.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="150" dy="0">Physical</tspan><tspan x="150" dy="16.25">Differentiation</tspan></text><rect x="300" y="50" width="200" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="400" y="71.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Human</tspan><tspan x="400" dy="16.25">Differentiation</tspan></text><rect x="550" y="50" width="200" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="650" y="71.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="650" dy="0">Economic</tspan><tspan x="650" dy="16.25">Differentiation</tspan></text><path d="M 250 80 L 300 80" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-differentiation-applications-figure)"/><path d="M 500 80 L 550 80" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-differentiation-applications-figure)"/><rect x="300" y="200" width="160" height="40" rx="20" fill="none" stroke="#1f2937" stroke-width="2"/><text x="380" y="210.625" text-anchor="middle" font-size="15" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">Differentiation</tspan><tspan x="380" dy="18.75">Chain</tspan></text><circle cx="380" cy="300" r="30" fill="none" stroke="#1f2937" stroke-width="2"/><text x="380" y="300" text-anchor="middle" font-size="14" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">Core</tspan></text></g><g><text x="275" y="70" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="275" dy="0">drives</tspan></text><text x="525" y="70" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="525" dy="0">shapes</tspan></text><text x="50" y="350" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="50" dy="0">Art. 1: Differentiation creates spatial patterns</tspan></text><text x="50" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="50" dy="0">Mechanism: Physical base → Human response → Economic outcome</tspan></text></g></svg>
-  </div>
-  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
-    <strong>Geographical Differentiation Applications and Causal Chain Overview for Exam Revision</strong> — Shows how physical differentiation drives human and economic differentiation in geography.
-    &middot; <a href="../../../figures/svg-differentiation-applications-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
-  </figcaption>
-</figure>
                     <h3>Learning Objectives</h3>
                     <ul>
                         <li>Understand the fundamental concepts of Differentiation &amp; Its Applications</li>
                         <li>Apply key formulas and techniques to solve problems</li>
                         <li>Practice with exam-level questions to build speed and accuracy</li>
                     </ul>
-<p>This lesson covers <strong>Differentiation & Its Applications</strong>, a key topic in Mathematics for JEE. Below is a structured overview of the core concepts you need to master.</p>
-<h3>Key Concepts Covered</h3>
-<ul>
-  <li><strong>Derivatives:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Tangents:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Maxima:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Monotonicity:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-</ul>
-<h3>Important Formulas & Rules</h3>
-<p>Focus on understanding the core formulas and when to apply them. Practice identifying the correct formula based on question type. Create a formula sheet for quick revision before the exam.</p>
-<h3>Common Question Types</h3>
-<ul>
-  <li>Direct application of formulas and concepts</li>
-  <li>Multi-step problems requiring combination of concepts</li>
-  <li>Data interpretation and analysis-based questions</li>
-</ul>
-<div class="tip-box"><div class="tip-title">Exam Strategy</div><div class="tip-text">Practice topic-wise questions first, then attempt mixed sets. Focus on accuracy before speed. Review your mistakes and maintain an error log.</div></div>
-        <script>
+<h2>1. Foundations of Differentiation</h2>
+<p>The derivative of a function captures the instantaneous rate of change of the function’s output with respect to its input, and it is the cornerstone of differential calculus.  When a function is differentiable at a point, the limit of the difference quotient exists and equals the slope of the tangent line to the graph at that point.  This limit definition not only provides a rigorous foundation but also connects the algebraic notion of a rate of change with the geometric picture of a line that just touches the curve.</p>
+
+<h3>1.1 The Concept of a Derivative</h3>
+<p>In elementary terms, if y = f(x) then the derivative f′(x) measures how much y changes for an infinitesimal change in x.  The notation f′(x) or dy/dx emphasises that the derivative itself is a function that assigns to each x the slope of the tangent line, provided the limit exists.  Understanding this concept is essential because every subsequent rule of differentiation is derived from the limit definition, and many applications in physics, economics, and engineering rely on interpreting the derivative as a rate.</p>
+<h3>1.2 Limit Definition and Geometric Meaning</h3>
+<p>The formal definition states that f′(a) = lim<sub>h→0</sub> (f(a+h) – f(a))/h, assuming the limit exists.  Geometrically, the quotient (f(a+h) – f(a))/h is the slope of the secant line through (a, f(a)) and (a+h, f(a+h)).  As h approaches zero, the secant line rotates about the fixed point and approaches the tangent line, so the derivative equals the slope of that tangent.  This picture explains why differentiability implies continuity: if the limit of the difference quotient exists, the function cannot have a jump or a cusp at that point.</p>
+<h3>1.3 Differentiability and Continuity</h3>
+<p>A function that is differentiable at a point is necessarily continuous there, but the converse is false; a classic counterexample is the absolute value function at x = 0, which is continuous yet not differentiable because the left‑hand and right‑hand limits of the difference quotient differ.  Recognising points where a function fails to be differentiable—corners, cusps, vertical tangents, or discontinuities—is a key skill when analysing the behaviour of a function and when applying theorems such as the Mean Value Theorem.</p>
+
+<h2>2. Rules of Differentiation</h2>
+<p>Once the limit definition is understood, a collection of algebraic rules allows us to differentiate a vast array of functions without repeatedly evaluating limits.  These rules are proved from the definition and they interact in predictable ways, so mastering them is a prerequisite for solving any problem that involves rates of change, optimisation, or curve sketching.</p>
+<h3>2.1 The Power Rule and Constant Multiple Rule</h3>
+<p>For any real exponent n, the derivative of xⁿ is n·xⁿ⁻¹.  This rule follows directly from the binomial expansion of (x+h)ⁿ and the limit process.  A constant factor can be pulled out of the derivative: d/dx [c·f(x)] = c·f′(x).  Together, these two rules enable the differentiation of any polynomial term by term.</p>
+<h3>2.2 The Sum and Difference Rules</h3>
+<p>The derivative of a sum or difference of functions equals the sum or difference of their derivatives: d/dx [f(x) ± g(x)] = f′(x) ± g′(x).  This linearity property reflects the fact that the limit of a sum is the sum of the limits, and it allows us to break down complicated expressions into simpler pieces that can be handled individually.</p>
+<h3>2.3 The Product Rule</h3>
+<p>When two functions are multiplied, the derivative is not simply the product of the derivatives.  Instead, d/dx [f(x)·g(x)] = f′(x)·g(x) + f(x)·g′(x).  The rule can be remembered as “first times derivative of second plus second times derivative of first.”  It is proved by adding and subtracting f(x+h)·g(x) in the numerator of the difference quotient and then taking limits.</p>
+<h3>2.4 The Quotient Rule</h3>
+<p>For a quotient f(x)/g(x) with g(x) ≠ 0, the derivative is (f′(x)·g(x) – f(x)·g′(x))/[g(x)]².  This formula can be derived by applying the product rule to f(x)·[g(x)]⁻¹ and using the chain rule for the reciprocal.  A common mistake is to forget the square in the denominator or to reverse the order of subtraction in the numerator.</p>
+<h3>2.5 The Chain Rule</h3>
+<p>If y = f(u) and u = g(x), then dy/dx = (dy/du)·(du/dx).  In words, differentiate the outer function evaluated at the inner function, then multiply by the derivative of the inner function.  The chain rule is indispensable for differentiating composite functions such as sin(x²) or e<sup>3x+1</sup>, and it extends naturally to multiple layers of composition.</p>
+
+<div class="example-box">
+<div class="ex-title">Example: Differentiating a Composite Rational Function</div>
+<div class="ex-text">Find the derivative of h(x) = (3x² + 2)⁴ / (5x – 1)³.</div>
+<div class="ex-soln">Apply the quotient rule with u(x) = (3x² + 2)⁴ and v(x) = (5x – 1)³.  First compute u′(x) using the chain rule: u′(x) = 4(3x² + 2)³·(6x) = 24x(3x² + 2)³.  Next compute v′(x) = 3(5x – 1)²·5 = 15(5x – 1)².  Then h′(x) = [u′(x)v(x) – u(x)v′(x)] / [v(x)]² = [24x(3x² + 2)³·(5x – 1)³ – (3x² + 2)⁴·15(5x – 1)²] / (5x – 1)⁶.  Factor common terms: (3x² + 2)³(5x – 1)²[24x(5x – 1) – 15(3x² + 2)] / (5x – 1)⁶.  Simplify the bracket: 120x² – 24x – 45x² – 30 = 75x² – 24x – 30.  The final derivative is h′(x) = (3x² + 2)³(75x² – 24x – 30) / (5x – 1)⁴.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Insight</div>
+<div class="tip-text">When a problem asks for the derivative of a quotient of two composite functions, always differentiate the numerator and denominator separately using the chain rule before substituting into the quotient formula; this reduces algebraic errors and saves time.</div>
+</div>
+
+<h2>3. Tangents and Normals</h2>
+<p>The derivative at a point gives the slope of the tangent line, and the equation of that line can be written in point‑slope form.  The normal line is perpendicular to the tangent, so its slope is the negative reciprocal of the tangent’s slope, provided the tangent is not horizontal or vertical.  These lines are fundamental in curve sketching, in solving optimisation problems with geometric constraints, and in physics when analysing motion along a curved path.</p>
+<h3>3.1 Equation of a Tangent Line</h3>
+<p>If f is differentiable at x = a, the tangent line has equation y – f(a) = f′(a)(x – a).  This follows directly from the definition of slope and the point (a, f(a)).  In practice, one first computes f′(x), evaluates it at the given x‑coordinate, and then substitutes into the point‑slope form.  When the derivative is zero, the tangent is horizontal; when the derivative does not exist but the function is continuous, the tangent may be vertical, in which case the equation is x = a.</p>
+<h3>3.2 Equation of a Normal Line</h3>
+<p>The normal line at (a, f(a)) has slope –1/f′(a) provided f′(a) ≠ 0.  Its equation is y – f(a) = –(1/f′(a))(x – a).  If the tangent is horizontal (f′(a) = 0), the normal is vertical and its equation is x = a.  Conversely, if the tangent is vertical (derivative undefined but function continuous), the normal is horizontal with equation y = f(a).  Recognising these special cases prevents division‑by‑zero errors.</p>
+<h3>3.3 Applications to Curve Sketching</h3>
+<p>Tangents and normals help identify the behaviour of a curve near a point.  For instance, the tangent line approximates the function locally, which is the basis of linearisation and Newton’s method for root finding.  Normals are used in problems involving reflection, such as determining the path of a light ray striking a curved mirror, where the angle of incidence equals the angle of reflection measured relative to the normal.</p>
+
+<table>
+<caption>Comparison of Tangent and Normal Line Properties</caption>
+<thead>
+<tr><th>Property</th><th>Tangent Line</th><th>Normal Line</th></tr>
+</thead>
+<tbody>
+<tr><td>Slope</td><td>f′(a)</td><td>–1/f′(a) (if f′(a) ≠ 0)</td></tr>
+<tr><td>Horizontal case</td><td>f′(a) = 0 → y = f(a)</td><td>Vertical → x = a</td></tr>
+<tr><td>Vertical case</td><td>Derivative undefined, function continuous → x = a</td><td>Horizontal → y = f(a)</td></tr>
+<tr><td>Geometric role</td><td>Best linear approximation</td><td>Perpendicular to tangent, used in reflection laws</td></tr>
+</tbody>
+</table>
+
+<h2>4. Monotonicity and the First Derivative Test</h2>
+<p>The sign of the first derivative on an interval tells us whether the function is increasing or decreasing there.  This information is crucial for locating local extrema, understanding the shape of the graph, and solving optimisation problems without resorting to higher‑order derivatives.</p>
+<h3>4.1 Increasing and Decreasing Functions</h3>
+<p>A function f is increasing on an interval I if for any x₁ < x₂ in I we have f(x₁) ≤ f(x₂); it is strictly increasing if the inequality is strict.  If f′(x) > 0 for all x in I (except possibly at isolated points where the derivative is zero), then f is strictly increasing on I.  Conversely, f′(x) < 0 on I implies f is strictly decreasing.  The proof uses the Mean Value Theorem, which guarantees the existence of a point where the derivative equals the average rate of change.</p>
+<h3>4.2 Critical Points and Sign Charts</h3>
+<p>Critical points occur where f′(x) = 0 or where f′(x) does not exist but f is continuous.  These points partition the domain into subintervals on which the sign of f′ is constant.  By selecting a test point in each subinterval and evaluating the sign of the derivative, we construct a sign chart that summarises where the function rises or falls.  This chart is the primary tool for applying the first derivative test.</p>
+<h3>4.3 The First Derivative Test for Local Extrema</h3>
+<p>If f′ changes from positive to negative at a critical point c, then f has a local maximum at c.  If f′ changes from negative to positive at c, then f has a local minimum at c.  If the sign does not change, c is neither a maximum nor a minimum (it could be an inflection point with horizontal tangent).  The test is conclusive whenever the derivative exists on a punctured neighbourhood of c and changes sign, which is the typical situation for polynomial and rational functions.</p>
+
+<table>
+<caption>First Derivative Test versus Second Derivative Test</caption>
+<thead>
+<tr><th>Aspect</th><th>First Derivative Test</th><th>Second Derivative Test</th></tr>
+</thead>
+<tbody>
+<tr><td>Information required</td><td>Sign of f′ on intervals around critical point</td><td>Value of f″ at the critical point</td></tr>
+<tr><td>Applicability</td><td>Works even if f″ does not exist</td><td>Requires f″ to exist and be non‑zero</td></tr>
+<tr><td>Outcome when f″ = 0</td><td>Still decisive if sign of f′ changes</td><td>Inconclusive; must revert to first derivative test</td></tr>
+<tr><td>Computational effort</td><td>May need sign chart for many intervals</td><td>Often quicker for simple polynomials</td></tr>
+</tbody>
+</table>
+
+<h2>5. Maxima, Minima and the Second Derivative Test</h2>
+<p>While the first derivative test relies on sign changes, the second derivative test uses concavity to classify critical points more directly.  Concavity also provides insight into the shape of the graph and helps locate points of inflection, which are essential for accurate sketching and for understanding the behaviour of optimisation problems.</p>
+<h3>5.1 Concavity and the Second Derivative</h3>
+<p>If f″(x) > 0 on an interval, the graph of f is concave upward (shaped like a cup) on that interval; if f″(x) < 0, the graph is concave downward (shaped like a cap).  Points where the concavity changes are called points of inflection.  The second derivative is the derivative of the first derivative, so it measures the rate of change of the slope.  This interpretation explains why a positive second derivative corresponds to an increasing slope, i.e., the tangent lines rotate counter‑clockwise as x increases.</p>
+<h3>5.2 The Second Derivative Test for Local Extrema</h3>
+<p>Suppose c is a critical point with f′(c) = 0 and f″ exists in a neighbourhood of c.  If f″(c) > 0, then f has a local minimum at c; if f″(c) < 0, then f has a local maximum at c.  If f″(c) = 0, the test gives no information and one must use the first derivative test or higher‑order derivatives.  The test is a direct consequence of the Taylor expansion of f around c, where the quadratic term dominates the behaviour near the critical point.</p>
+<h3>5.3 Global Extrema on Closed Intervals</h3>
+<p>When a continuous function is defined on a closed interval [a, b], the Extreme Value Theorem guarantees the existence of absolute maximum and minimum values.  These global extrema occur either at critical points inside (a, b) or at the endpoints a and b.  To find them, evaluate f at all critical points and at the endpoints, then compare the values.  This procedure is the standard method for solving constrained optimisation problems in calculus.</p>
+
+<p>Mastering the interplay between derivatives, tangents, monotonicity, and extrema equips a student to analyse any differentiable function systematically and to apply calculus to real‑world optimisation and modelling tasks.</p>        <script>
         (function(){try{
           var m=document.getElementById("lesson-meta");if(!m)return;
           var cur=m.getAttribute("data-version")||"";
@@ -183,7 +236,7 @@
             var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
             if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
             else{html+="The explanations and practice were revised.";}
-            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.85em;cursor:pointer\">Got it</button>";
             box.innerHTML=html;box.hidden=false;
             var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
             document.getElementById("lesson-new-ok").onclick=save;
@@ -206,12 +259,12 @@
             </div>
         </div>
         <script>
-        var questions = [];
+        var practiceQs = [{"id":101,"text":"The slope of the tangent to the curve y = x^3 - 3x + 2 at x = 1 is:","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"3","c":false},{"l":"c","t":"-3","c":false},{"l":"d","t":"6","c":false}],"sol":"The derivative gives the slope of the tangent. For y = x^3 - 3x + 2, differentiate term by term: dy/dx = 3x^2 - 3. Substituting x = 1 gives 3(1)^2 - 3 = 0. Hence the tangent at x = 1 is horizontal and its slope is 0."},{"id":102,"text":"If f(x) = (x^2 + 1)(x^3 - 2x), then f'(1) equals:","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"2","c":false},{"l":"c","t":"-2","c":false},{"l":"d","t":"4","c":false}],"sol":"Apply the product rule: f'(x) = (2x)(x^3 - 2x) + (x^2 + 1)(3x^2 - 2). At x = 1, the first part is 2(1 - 2) = -2, the second part is (2)(3 - 2) = 2. Sum = -2 + 2 = 0."},{"id":103,"text":"For y = (x^2 + 3x)^4, the value of dy/dx at x = 1 is:","options":[{"l":"a","t":"1280","c":true},{"l":"b","t":"640","c":false},{"l":"c","t":"2560","c":false},{"l":"d","t":"320","c":false}],"sol":"Use the chain rule: dy/dx = 4(x^2 + 3x)^3 * (2x + 3). At x = 1, x^2 + 3x = 4, so (4)^3 = 64. Then 2x + 3 = 5. Multiply: 4 * 64 * 5 = 1280."},{"id":104,"text":"Consider f(x) = x^4 - 4x^3 + 6x^2. The critical point at x = 0 is a:","options":[{"l":"a","t":"Local minimum","c":true},{"l":"b","t":"Local maximum","c":false},{"l":"c","t":"Point of inflection","c":false},{"l":"d","t":"No extremum","c":false}],"sol":"f'(x) = 4x^3 - 12x^2 + 12x = 4x(x^2 - 3x + 3). Only real critical point is x = 0. f''(x) = 12x^2 - 24x + 12 = 12(x - 1)^2. At x = 0, f''(0) = 12 > 0, so by the second derivative test x = 0 is a local minimum."}];
         var answered={},correctCount=0,lessonSlug="differentiation-applications";
-        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
         function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
-        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
         function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
         function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
         renderPractice();
