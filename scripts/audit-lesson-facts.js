@@ -148,6 +148,54 @@ async function auditParagraphs(paras) {
   return json && Array.isArray(json.problems) ? json.problems : [];
 }
 
+// A single model pass is not evidence. It called the Ken-Betwa link
+// "Madhya Pradesh only" and told the page it does not involve Uttar Pradesh -
+// the project spans both states. Corrections are therefore checked by a second,
+// independent call that sees only the quote, the claim and the proposed fix,
+// and is told to reject anything it cannot confirm. Unverified claims are
+// dropped (and never applied), even when the first pass called them
+// high-confidence.
+const VERIFY_SYSTEM = 'You are an independent fact-checker for an Indian civil-services exam site. ' +
+  'A first reviewer says each numbered quotation is factually wrong and proposes a correction. ' +
+  'Judge each one on your own knowledge - do not defer to the reviewer. ' +
+  'Answer "agree": true ONLY when the original quotation is clearly wrong AND the proposed correction ' +
+  'is accurate and would not itself introduce an error. If the original is right, if the correction is ' +
+  'incomplete or misleading, or if the matter is debatable, answer "agree": false. ' +
+  'Be strict: a missed error is cheaper than a false correction printed on the site. ' +
+  'Answer with JSON only: {"verdicts":[{"n":<number>,"agree":true|false,"reason":"<=160 chars"}]}';
+
+async function verifyProblems(problems) {
+  if (!problems.length) return [];
+  const list = problems.map(function (p, i) {
+    return '(' + (i + 1) + ') QUOTE: ' + String(p.quote || '') +
+      '\n    CLAIMED PROBLEM: ' + String(p.problem || '') +
+      '\n    PROPOSED CORRECTION: ' + String(p.correction || '');
+  }).join('\n\n');
+  let json = null;
+  try {
+    const text = await hosted.chat(VERIFY_SYSTEM, list, { numPredict: 6000, temperature: 0 });
+    json = extractJson(text);
+  } catch (e) {
+    console.error('  verifier failed - dropping ' + problems.length + ' unverified claim(s): ' + e.message);
+    return [];
+  }
+  const verdicts = json && Array.isArray(json.verdicts) ? json.verdicts : [];
+  const byNumber = {};
+  verdicts.forEach(function (v) {
+    if (v && v.n) byNumber[String(v.n)] = v;
+  });
+  return problems.filter(function (p, i) {
+    const v = byNumber[String(i + 1)];
+    if (!v || v.agree !== true) {
+      if (v) console.log('  [disputed] "' + String(p.quote || '').slice(0, 70) + '" - ' + String(v.reason || 'not confirmed'));
+      return false;
+    }
+    p.verified = true;
+    p.verifierReason = String(v.reason || '').slice(0, 200);
+    return true;
+  });
+}
+
 function applyCorrection(file, quote, correction, problem) {
   const html = fs.readFileSync(file, 'utf8');
   if (!quote || !html.includes(quote)) return false;
@@ -228,6 +276,8 @@ async function main() {
         console.error('  ' + rel + ': model call failed - ' + e.message);
         continue;
       }
+      // Nothing is published or applied on one model's word alone.
+      problems = await verifyProblems(problems);
       for (const p of problems) {
         if (!p || !p.quote) continue;
         flagged++;
@@ -236,7 +286,9 @@ async function main() {
           quote: String(p.quote).slice(0, 200),
           problem: String(p.problem || '').slice(0, 300),
           correction: String(p.correction || '').slice(0, 200),
-          confidence: p.confidence === 'high' ? 'high' : 'medium'
+          confidence: p.confidence === 'high' ? 'high' : 'medium',
+          verified: true,
+          verifierReason: p.verifierReason || ''
         };
         if (APPLY && record.confidence === 'high' && record.correction) {
           record.applied = applyCorrection(file, record.quote, record.correction, record.problem);
