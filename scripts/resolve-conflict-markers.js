@@ -23,7 +23,7 @@ const { execSync } = require('child_process');
 const ROOT = process.cwd();
 const THEIRS = process.argv.includes('--theirs');
 
-const files = execSync('git grep -l -F "<<<<<<< " -- .', { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+const files = execSync('git grep -l -F "<<<<<<< " -- "*.html" "*.json" "*.css" "*.svg"', { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
   .trim().split(/\r?\n/).filter(Boolean);
 
 function resolve(text) {
