@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T19:46:58.105Z",
+  "updatedAt": "2026-11-21T06:02:09.035Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -24939,6 +24939,187 @@
       "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-20T19:45:51.015Z"
+    },
+    {
+      "id": "8883134d7875821e",
+      "exam": "cds",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "CDS Practice Set 9",
+      "paperPath": "cds/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "What is the unit digit of 7^{2023}?",
+      "options": [
+        {
+          "label": "A",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "9",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "1",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the repeating pattern of unit digits for powers of 7: 7, 9, 3, 1.",
+        "Determine the cycle length, which is 4.",
+        "Compute 2023 mod 4 = 3.",
+        "The 3rd position in the cycle corresponds to unit digit 3."
+      ],
+      "verifierCheck": "The unit digit of powers of 7 follows a cycle of length 4: 7^1=7, 7^2=9, 7^3=3, 7^4=1, then repeats. 2023 mod 4 = 3, so 7^2023 has the same unit digit as 7^3, which is 3.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Last-Digit Table",
+          "idea": "Memorize 7^n unit digits for n=1,2,3,4; use remainder",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Cycle: 7¹=7, 7²=9, 7³=3, 7⁴=1",
+            "2023 mod 4 = 3 → pick 3rd entry: 3"
+          ]
+        },
+        {
+          "name": "Cycle of 4",
+          "idea": "Powers of 7 repeat unit digits every 4: 7,9,3,1",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "2023 ÷ 4 = 505 remainder 3",
+            "3rd position in cycle 7→9→3→1 is 3"
+          ]
+        },
+        {
+          "name": "Mod 10 Exponent",
+          "idea": "Reduce exponent modulo 4 using Euler's theorem φ(10)=4",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "7^4 ≡ 1 (mod 10)",
+            "2023 = 4×505 + 3",
+            "7^2023 ≡ 7^3 ≡ 343 ≡ 3 (mod 10)"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-21T06:01:25.993Z"
+    },
+    {
+      "id": "52ff7d5884c36acf",
+      "exam": "nda",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "NDA Practice Set 11",
+      "paperPath": "nda/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "What is the unit digit of 7^{2023} + 3^{2024}?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "6",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Find the cycle of unit digits for powers of 7: 7, 9, 3, 1 (period 4).",
+        "Compute 2023 mod 4 = 3, so unit digit of 7^{2023} is 3.",
+        "Find the cycle of unit digits for powers of 3: 3, 9, 7, 1 (period 4).",
+        "Compute 2024 mod 4 = 0, so unit digit of 3^{2024} is 1.",
+        "Add the unit digits: 3 + 1 = 4.",
+        "The unit digit is 4, which corresponds to option D."
+      ],
+      "verifierCheck": "The units digit of powers repeats every 4. For 7^n the cycle is 7,9,3,1; 2023 mod 4 = 3, giving a units digit of 3. For 3^n the cycle is 3,9,7,1; 2024 mod 4 = 0, giving a units digit of 1. Adding them, 3 + 1 = 4, so the units digit of 7^{2023} + 3^{2024} is 4.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Modulo 10 Shortcut",
+          "idea": "Reduce exponents modulo 4 using Euler's theorem for mod 10",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "For a coprime to 10, a^4 ≡ 1 (mod 10)",
+            "7^2023 = 7^(4*505+3) ≡ 7^3 ≡ 343 ≡ 3 (mod 10)",
+            "3^2024 = 3^(4*506) ≡ 1 (mod 10)",
+            "Sum ≡ 3+1=4 (mod 10) → unit digit 4 → D"
+          ]
+        },
+        {
+          "name": "Cyclicity Pattern",
+          "idea": "Use known 4-length cycles of units digits for 7 and 3",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "7^n units digit cycle: 7,9,3,1 repeats every 4",
+            "2023 mod 4 = 3 → units digit of 7^2023 = 3",
+            "3^n units digit cycle: 3,9,7,1 repeats every 4",
+            "2024 mod 4 = 0 → units digit of 3^2024 = 1",
+            "Sum units digits: 3+1=4 → answer D"
+          ]
+        },
+        {
+          "name": "Sum of Cycles",
+          "idea": "Align both cycles and pick the correct positions",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "7^n cycle (n=1..4): 7,9,3,1",
+            "3^n cycle (n=1..4): 3,9,7,1",
+            "2023 mod 4 = 3 → 7^2023 ends with 3",
+            "2024 mod 4 = 0 → 3^2024 ends with 1",
+            "Add: 3+1=4 → unit digit 4 → D"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-21T06:01:49.078Z"
     }
   ]
 }
