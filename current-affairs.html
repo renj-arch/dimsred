@@ -254,6 +254,7 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="courseToggle" checked style="accent-color:var(--emerald);width:14px;height:14px"> 📖 Course Lessons</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="genToggle" checked style="accent-color:var(--cyan);width:14px;height:14px"> ⚡ Generators</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="pibToggle" checked style="accent-color:var(--amber);width:14px;height:14px"> 📰 PIB/CA Feed</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions invented from lesson paragraphs by the hosted setter, each verified against its own passage"><input type="checkbox" id="lessonInvToggle" style="accent-color:var(--cyan);width:14px;height:14px"> 🧠 From lesson text</label>
                 <button id="upscToggle" onclick="toggleUpscOnly()" title="Only UPSC-relevant topics — uses deterministic exam-scope ground check (examScope=exam). Topics without syllabus anchors are excluded." style="padding:3px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.75em;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit">🎯 UPSC only</button>
             </div>
 
@@ -288,6 +289,7 @@
                     <button onclick="nextQuestion()" title="Next" style="padding:3px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.75em;font-weight:600">Next →</button>
                 </div>
                 <div class="q-cat-tag" id="catTag"></div>
+            <div id="srcTag" style="display:none;margin:2px 0 0;font-size:.72em;color:#93c5fd;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:999px;padding:2px 9px"></div>
                 <div id="qImgWrap" style="display:none;text-align:center"></div>
                 <div class="q-text" id="qText">Loading...</div>
                 <div role="button" tabindex="0" role="button" tabindex="0" class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
@@ -340,6 +342,7 @@
                 var useCourse = document.getElementById('courseToggle')?.checked !== false;
                 var useGen = document.getElementById('genToggle')?.checked !== false;
                 var usePib = document.getElementById('pibToggle')?.checked !== false;
+                var useLessonInv = document.getElementById('lessonInvToggle')?.checked === true;
                 var src = (q.source || q._src || '').toLowerCase();
                 var wikiCat = (q._wikiCat || '').toLowerCase();
                 var subject = (q.subject || '').toLowerCase();
@@ -352,6 +355,9 @@
                 if (src === 'pib' || src === 'news' || src === 'current affairs' ||
                     subject === 'pib releases' || subject === 'current affairs') {
                     return usePib;
+                }
+                if (src === 'lessoninvented') {
+                    return useLessonInv;
                 }
                 if (src === 'course' || src === 'lesson' ||
                     wikiCat === 'course-lesson' || subject.indexOf('lesson') !== -1) {
@@ -6323,8 +6329,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qProgress').style.width = ((state.idx / Math.max(state.questions.length, 1)) * 100) + '%';
                 var catLabel = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : state.categoryName);
                 document.getElementById('catTag').textContent = catLabel;
-  _renderRelevanceTag(q);
-                var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
+  _renderRelevanceTag(q); _renderSourceTag(q);
+                var displayText = '';
+                if (q.passage) {
+                    displayText += '<div style="font-size:.92em;line-height:1.7;color:var(--text-sec);background:rgba(255,255,255,.03);border-left:3px solid #34d399;padding:10px 12px;border-radius:6px;margin-bottom:12px">' + q.passage.replace(/\n/g, '<br>') + '</div>';
+                }
+                displayText += '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
                 if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
                 if (q.fact || q.solution) displayText += '<div style="font-size:.9em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
                 displayText += _yieldChipHtml(q);
@@ -6354,10 +6364,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qNum').textContent = 'Q ' + ((state.baseIdx || 0) + state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
                 document.getElementById('catTag').textContent = state.categoryName;
-  _renderRelevanceTag(q);
+  _renderRelevanceTag(q); _renderSourceTag(q);
                 var pd = q.pubDate || q._pubDate;
                 var yearStr = pd ? ' (' + pd.slice(0,4) + ')' : '';
-                document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr + _yieldChipHtml(q);
+                document.getElementById('qText').innerHTML = (q.passage ? '<div style="font-size:.9em;line-height:1.65;color:var(--text-sec);background:rgba(255,255,255,.03);border-left:3px solid #34d399;padding:10px 12px;border-radius:6px;margin-bottom:12px">' + q.passage.replace(/\n/g, '<br>') + '</div>' : '') + q.q.replace(/\n/g, '<br>') + yearStr + _yieldChipHtml(q);
                 document.getElementById('qText').style.fontSize = '';
                 document.getElementById('qText').style.lineHeight = '';
                 document.getElementById('qHint').style.display = 'none';
@@ -6789,12 +6799,17 @@ function prevQuestion() {
                 hint: raw.hint || '',
                 subject: raw.subject || raw.category || '',
                 subTopic: raw.subTopic || raw.subSubject || raw.subsubject || '',
+                passage: raw.passage || '',
                 type: raw.type || '',
                 relevance: raw.relevance || '',
                 importance: raw.importance || '',
                 importantFor: Array.isArray(raw.importantFor) ? raw.importantFor : [],
                 pubDate: raw.pubDate || raw._pubDate || '',
-                _wikiCat: raw._wikiCat || ''
+                _wikiCat: raw._wikiCat || '',
+                _src: raw._src || raw.source || '',
+                sourceExam: raw.sourceExam || '',
+                _exam: raw._exam || '',
+                _lesson: raw._lesson || ''
             });
         }
         function nextQuestion() {
@@ -8226,7 +8241,22 @@ function prevQuestion() {
                         added++;
                     }
                 });
-                _continueGeneration();
+                // Freshly invented from lesson paragraphs, each verified against
+                // its passage. Loaded regardless of the toggle; the filter hides
+                // them until "From lesson text" is checked.
+                _loadLessonInventedQuestions(function(invQs) {
+                    invQs.forEach(function(q) {
+                        if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
+                            q._src = 'lessoninvented';
+                            q.source = 'lessoninvented';
+                            existingSet[q.q] = true;
+                            existingSet[q.a] = true;
+                            state.questions.push(q);
+                            added++;
+                        }
+                    });
+                    _continueGeneration();
+                });
             });
             function _continueGeneration() {
                 // No artificial cap — keep round-robin until every generator is
@@ -8310,6 +8340,46 @@ function prevQuestion() {
             xhr.onerror = function() { clearTimeout(timer); finish([]); };
             xhr.ontimeout = function() { clearTimeout(timer); finish([]); };
             xhr.open('GET', 'data/course-questions.json?t=' + Date.now(), true);
+            xhr.timeout = 15000;
+            xhr.send();
+        }
+
+        // Questions invented from lesson paragraphs (data/lesson-invented.json),
+        // each verified against its own passage. Separate toggle so a reader can
+        // opt into "read the lesson, answer a new question" mode.
+        var _lessonInvCache = null;
+        function _loadLessonInventedQuestions(cb) {
+            if (_lessonInvCache) { cb(_lessonInvCache); return; }
+            var finished = false;
+            function finish(list) {
+                if (finished) return;
+                finished = true;
+                _lessonInvCache = list || [];
+                cb(_lessonInvCache);
+            }
+            var timer = setTimeout(function() { finish([]); }, 15000);
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                clearTimeout(timer);
+                if (xhr.status !== 200) { finish([]); return; }
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    var list = (data && data.questions) || [];
+                    for (var i = 0; i < list.length; i++) {
+                        var q = list[i];
+                        if (!q || !q.q || !q.a) continue;
+                        q.source = 'lessoninvented';
+                        q._src = 'lessoninvented';
+                        q.subject = q.section ? (q.section + ' · from lesson') : 'From lesson text';
+                        q.type = 'mcq';
+                        if (!q.opts || !q.opts.length) q.opts = [];
+                    }
+                    finish(list);
+                } catch (e) { finish([]); }
+            };
+            xhr.onerror = function() { clearTimeout(timer); finish([]); };
+            xhr.ontimeout = function() { clearTimeout(timer); finish([]); };
+            xhr.open('GET', 'data/lesson-invented.json?t=' + Date.now(), true);
             xhr.timeout = 15000;
             xhr.send();
         }
@@ -8822,7 +8892,11 @@ var fact = q.fact || q.solution || q.explanation || '';
             document.getElementById('jumpRow').style.display = 'flex';
             document.getElementById('jumpInput').max = (state.baseIdx || 0) + state.questions.length;
 
-            var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
+            var displayText = '';
+                if (q.passage) {
+                    displayText += '<div style="font-size:.92em;line-height:1.7;color:var(--text-sec);background:rgba(255,255,255,.03);border-left:3px solid #34d399;padding:10px 12px;border-radius:6px;margin-bottom:12px">' + q.passage.replace(/\n/g, '<br>') + '</div>';
+                }
+                displayText += '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
             if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">✅ ' + q.a + '</div>';
             if (q.fact || q.solution) displayText += '<div style="font-size:.9em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
             document.getElementById('qText').innerHTML = displayText;
@@ -9302,7 +9376,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             else el.innerHTML = '<span style="color:var(--text-muted)">ready</span>';
         }
         // ===== UPSC-only archive filter =====
-        var UPSC_SUBJECTS = {"Ancient India":1,"Art & Culture":1,"Awards & Honours":1,"Books & Authors":1,"Buddhism & Jainism":1,"Business & Economy":1,"Commissions Committees & Bodies":1,"Constitution":1,"Current Affairs":1,"Defence":1,"Defence & Security":1,"Defence & Strategic Affairs":1,"Disaster Management":1,"Education in India":1,"Elections & Political Parties":1,"Energy & Power":1,"Environment & Ecology":1,"Ethics":1,"Ethics & Integrity":1,"General Science":1,"Geography":1,"Govt Schemes":1,"Hinduism & Mythology":1,"ICT Digital & Cyber":1,"India & International Relations":1,"Important Days":1,"Indian Art & Architecture":1,"Indian Economy":1,"Indian Economy & Development":1,"Indian Festivals & Fairs":1,"Indian Festivals & Traditions":1,"Indian Geography":1,"Indian History":1,"Indian Judiciary":1,"Indian Languages - National & Regional":1,"Indian Music Dance & Theatre":1,"Indian Physical Geography":1,"Indian Polity & Constitution":1,"Indian Religions":1,"Indian Scientists & Nobel Laureates":1,"Indian Theatre & Cinema":1,"Indian Tribes":1,"International Relations":1,"ISRO & Space":1,"Kannada Literature":1,"Malayalam Literature":1,"Medieval & Modern India":1,"Nuclear Energy & Technology":1,"PIB Releases":1,"Polity":1,"Polity & Governance":1,"Public Administration & Governance":1,"Punjabi & Other Regional Literature":1,"RBI Press Releases":1,"Sanskrit & Classical Languages":1,"Science & Technology":1,"Sikhism & Other Faiths":1,"Society":1,"Space & Astronomy":1,"State GK":1,"Tech & Science":1,"Telugu Literature":1,"World & Indian Physical Geography":1};
+        var UPSC_SUBJECTS = {"Ancient India":1,"Art & Culture":1,"Awards & Honours":1,"Books & Authors":1,"Buddhism & Jainism":1,"Business & Economy":1,"Commissions Committees & Bodies":1,"Constitution":1,"Current Affairs":1,"Defence":1,"Defence & Security":1,"Defence & Strategic Affairs":1,"Disaster Management":1,"Education in India":1,"Elections & Political Parties":1,"Energy & Power":1,"Environment & Ecology":1,"Ethics":1,"Ethics & Integrity":1,"General Science":1,"Geography":1,"Govt Schemes":1,"Hinduism & Mythology":1,"ICT Digital & Cyber":1,"India & International Relations":1,"Important Days":1,"Indian Art & Architecture":1,"Indian Economy":1,"Indian Economy & Development":1,"Indian Festivals & Fairs":1,"Indian Festivals & Traditions":1,"Indian Geography":1,"Indian History":1,"Indian Judiciary":1,"Indian Languages - National & Regional":1,"Indian Music Dance & Theatre":1,"Indian Physical Geography":1,"Indian Polity & Constitution":1,"Indian Religions":1,"Indian Scientists & Nobel Laureates":1,"Indian Theatre & Cinema":1,"Indian Tribes":1,"International Relations":1,"ISRO & Space":1,"Kannada Literature":1,"Malayalam Literature":1,"Medieval & Modern India":1,"Nuclear Energy & Technology":1,"PIB Releases":1,"Polity":1,"Polity & Governance":1,"Public Administration & Governance":1,"Punjabi & Other Regional Literature":1,"RBI Press Releases":1,"Sanskrit & Classical Languages":1,"Science & Technology":1,"Sikhism & Other Faiths":1,"Society":1,"Space & Astronomy":1,"State GK":1,"Tech & Science":1,"Telugu Literature":1,"World & Indian Physical Geography":1,"CSAT":1,"Quantitative Aptitude":1,"Numerical Ability":1,"Aptitude":1,"Reasoning":1,"Logical Reasoning":1,"Verbal Ability":1,"English":1,"Reading Comprehension":1,"Comprehension":1,"Data Interpretation":1};
         function _isUpscSubject(subject) {
             var s = (subject || '').trim();
             if (UPSC_SUBJECTS[s] === 1) return true;
@@ -9476,8 +9550,41 @@ var fact = q.fact || q.solution || q.explanation || '';
             var rel = _upscRelevance(q);
             relEl.textContent = rel === 'high' ? 'High relevance' : (rel === 'medium' ? 'Medium relevance' : 'Low relevance');
             relEl.className = 'q-relevance ' + rel;
-            relEl.title = 'Exam relevance: syllabus mapping + subject/topic keywords. Agent-tagged data overrides it.';
+            relEl.title = 'Exam relevance: syllabus mapping + subject/topic anchors. A stored label can only lower the verdict, never raise it.';
             relEl.style.display = 'inline-block';
+        }
+        var _EXAM_LABEL = {
+            upsc: 'UPSC', cgl: 'SSC CGL', chsl: 'SSC CHSL', ctet: 'CTET', gate: 'GATE',
+            jee: 'JEE', neet: 'NEET', nda: 'NDA', cds: 'CDS', clat: 'CLAT',
+            apfc: 'UPSC APFC', agniveer: 'Agniveer', rbi: 'RBI', 'ibps-po': 'IBPS PO',
+            'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', 'rrb-station-master': 'RRB Station Master',
+            english: 'English'
+        };
+        function _examLabel(code) {
+            var c = String(code || '').toLowerCase();
+            return _EXAM_LABEL[c] || (c ? c.toUpperCase() : '');
+        }
+        function _renderSourceTag(q) {
+            var el = document.getElementById('srcTag');
+            if (!el) return;
+            var label = '';
+            var src = (q && (q._src || q.source) || '').toLowerCase();
+            if (src === 'course') {
+                label = (_examLabel(q._exam) || 'Course') + ' · lesson';
+            } else if (src === 'lessoninvented') {
+                var exam = String(q._lesson || '').split('/')[0];
+                label = (_examLabel(exam) || 'Course') + ' · invented from lesson text';
+            } else if (q && q.sourceExam) {
+                label = _examLabel(q.sourceExam);
+            } else if (src === 'archive' || src === 'wiki') {
+                label = 'Archive';
+            } else if (src === 'pib' || src === 'news') {
+                label = 'PIB / news';
+            } else if (src === 'generator') {
+                label = 'Generated · static GK';
+            }
+            el.textContent = label;
+            el.style.display = label ? 'inline-block' : 'none';
         }
         function _isUpscTopic(aq) {
             // One gate for archive and generator items: subject whitelist plus
