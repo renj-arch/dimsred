@@ -1,0 +1,146 @@
+name: Lesson Writer (cloud API lane)
+
+# Hand-writes queued lessons with FREE hosted models, so the work continues with
+# no laptop and no local Ollama. Reuses the proven deep-rewrite engine
+# (scripts/deep-rewrite.js): it takes items from data/deep-rewrite-queue.json,
+# asks the model for new exam-level sections, splices them before the practice
+# block, and removes finished items from the queue.
+#
+# Model preference, in the order scripts/lib/ollama.js tries them:
+#   1. NVIDIA NIM      secrets.NVIDIA_API_KEY   (nemotron-3-ultra 550B)
+#   2. Groq            secrets.GROQ_API_KEY     (openai/gpt-oss-120b)
+#   3. OpenRouter      secrets.OPENROUTER_API_KEY (same Nemotron, :free id)
+#   4. GitHub Models   built-in GITHUB_TOKEN    (gpt-4o-mini)
+#   5. local Ollama    NOT available on a hosted runner; if 1-4 all fail the
+#                      run reports the failure instead of hanging.
+# Every route is free-tier. A missing key simply skips that route, and a failed
+# call falls through to the next one.
+#
+# Optional DeepSeek route: set the manual input `deepseek: true` to try the
+# free DeepSeek V4.1 Flash model through the OpenCode CLI first. It is off by
+# default because the CLI boots a full agent/server per call and is much slower
+# than the direct NVIDIA API. Any failure falls through to NVIDIA.
+#
+# Checkout is sparse on purpose: the repository is ~18 GB, and a full
+# actions/checkout hung for 13+ minutes. Only scripts, the course tree and two
+# data files are needed, so the clone is ~40 MB.
+#
+# Safety: the lane refuses to touch any lesson listed in
+# data/handwritten-lessons.json (scripts/lib/handwritten.js), and the guard
+# test runs first so a broken manifest fails the run before any writing.
+#
+# Triggers:
+#   repository_dispatch  type "lesson-writer"  (from the Telegram control plane)
+#   workflow_dispatch    manual, optional batch size and DeepSeek toggle
+
+on:
+  repository_dispatch:
+    types: [lesson-writer]
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: 'How many queued lessons to write in this run'
+        required: false
+        default: '2'
+      deepseek:
+        description: 'Try the free DeepSeek CLI route first (slow; default is NVIDIA)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: lesson-writer
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+            upsc/course
+            data/deep-rewrite-queue.json
+            data/handwritten-lessons.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install OpenCode CLI (only for the optional DeepSeek route)
+        if: inputs.deepseek == true
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Protected-lesson guard must pass before any writing
+        run: node scripts/lib/handwritten.test.js
+
+      - name: Report which model routes are configured (names only)
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        run: |
+          for v in NVIDIA_API_KEY GROQ_API_KEY OPENROUTER_API_KEY OPENCODE_API_KEY; do
+            if [ -n "${!v}" ]; then
+              echo "::notice::$v is set"
+            else
+              echo "::warning::$v is missing - that route will be skipped"
+            fi
+          done
+
+      - name: Hand-write queued lessons with a hosted model
+        env:
+          # OpenCode Zen (free DeepSeek via the CLI) is NOT active in CI:
+          #   - the raw HTTP API rejects free models with HTTP 429,
+          #   - 'opencode run' hangs headless for the full deadline and never answers
+          # The hosted fallbacks (NVIDIA / Groq / OpenRouter / GitHub Models) serve instead.
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          NVIDIA_MODEL: ${{ vars.NVIDIA_MODEL || 'nemotron-3-ultra' }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: ${{ vars.GROQ_MODEL || 'openai/gpt-oss-120b' }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'nvidia/nemotron-3-ultra-550b-a55b:free' }}
+          GH_MODELS: '1'
+          GH_MODELS_MODEL: ${{ vars.GH_MODELS_MODEL || 'gpt-4o-mini' }}
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEEP_BATCH: ${{ github.event.client_payload.batch || inputs.batch || '2' }}
+          DEEP_MAX_SECTIONS: '6'
+          DEEP_TARGET_WORDS: '2000-3000'
+          DEEP_NUM_PREDICT: '6000'
+          NODE_OPTIONS: '--max-old-space-size=2048'
+        run: node scripts/deep-rewrite.js
+
+      - name: Publish lessons and queue
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add -f data/deep-rewrite-queue.json 2>/dev/null || true
+          git add upsc/course 2>/dev/null || true
+          bash scripts/ci-push.sh "lesson-writer: hosted model hand-wrote queued lessons (run #${{ github.run_number }})"
+
+      - name: Report to Telegram
+        if: always()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          LEFT=$(node -e 'try{console.log(require("./data/deep-rewrite-queue.json").length)}catch(e){console.log("?")}')
+          node scripts/telegram/notify.js "lesson-writer ${{ job.status }} - run #${{ github.run_number }} - $LEFT lesson(s) left in queue"

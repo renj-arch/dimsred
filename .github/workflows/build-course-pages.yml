@@ -1,0 +1,112 @@
+name: Build Course Pages
+
+# Regenerates lesson pages from scripts/course-data.json for the named keys.
+# This is the deterministic half of the expander, split out so that prose
+# authored by hand (and reviewed) can be published without a model ever
+# touching it: expand-course.yml writes content, this only renders it.
+#
+# It runs the exact sequence the expander's publish step runs -- gen-course.js
+# filtered to the given keys, then normalize-course-pages.js and
+# dedupe-lesson-sections.js -- and the same loss guard that restores a page if
+# regeneration would drop more than 200 lines.
+
+on:
+  workflow_dispatch:
+    inputs:
+      keys:
+        description: 'Lesson keys to regenerate, comma-separated (e.g. mains-gs2/union-executive)'
+        required: true
+      exams:
+        description: 'Exam keys (default upsc)'
+        required: false
+        default: 'upsc'
+
+concurrency:
+  group: build-course-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Resolve the target page files
+        env:
+          KEYS: ${{ inputs.keys }}
+          EXAMS: ${{ inputs.exams }}
+        run: |
+          set -euo pipefail
+          node -e '
+            const cfg = require("./scripts/exam-configs.json");
+            const keys = process.env.KEYS.split(",").map(s => s.trim()).filter(Boolean);
+            const wantExams = process.env.EXAMS.split(",").map(s => s.trim()).filter(Boolean);
+            const out = [];
+            for (const k of keys) {
+              const i = k.indexOf("/");
+              const mod = k.slice(0, i), slug = k.slice(i + 1);
+              for (const ek of Object.keys(cfg)) {
+                if (wantExams.length && wantExams.indexOf(ek) === -1) continue;
+                const e = cfg[ek]; if (!e || !e.dir) continue;
+                const m = (e.modules || {})[mod];
+                if (m && (m.lessons || []).some(l => l.slug === slug)) {
+                  out.push(e.dir + "/course/" + mod + "/lesson-" + slug + ".html");
+                }
+              }
+            }
+            if (!out.length) { console.error("no page matches keys: " + process.env.KEYS); process.exit(1); }
+            console.log(out.join("\n"));
+          ' | tee /tmp/course-files.txt
+
+      - name: Regenerate exactly those pages
+        env:
+          KEYS: ${{ inputs.keys }}
+          EXAMS: ${{ inputs.exams }}
+        run: |
+          set -euo pipefail
+          COURSE_ONLY_KEYS="$KEYS" COURSE_EXAMS="$EXAMS" node scripts/gen-course.js
+          node scripts/normalize-course-pages.js $(cat /tmp/course-files.txt)
+          node scripts/dedupe-lesson-sections.js $(cat /tmp/course-files.txt)
+
+      - name: Loss guard
+        if: always()
+        run: |
+          RESTORED=0
+          while read -r f; do
+            [ -f "$f" ] || continue
+            DEL=$(git diff --numstat -- "$f" | awk '{print $2}' | head -1)
+            if [ -n "$DEL" ] && [ "$DEL" -gt 200 ]; then
+              echo "::warning::$f would drop $DEL line(s) -- restoring committed content"
+              git checkout -- "$f"
+              RESTORED=$((RESTORED + 1))
+            fi
+          done < /tmp/course-files.txt
+          echo "guard: $RESTORED page(s) restored"
+
+      - name: Publish regenerated pages
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add scripts/course-data.json scripts/course-versions.json 2>/dev/null || true
+          xargs -a /tmp/course-files.txt git add
+          bash scripts/ci-push.sh "course-build: regenerate pages for ${{ inputs.keys }}"

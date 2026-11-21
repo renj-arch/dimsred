@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Physics Basics — Agniveer Science Lesson | vlymbooq</title>
+    <meta name="description" content="Free Agniveer Science Physics Basics lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/agniveer/course/science/lesson-physics-basics.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95em}
+        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}
+        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/agniveer/">Agniveer</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Science</div>
+                    <a href="lesson-physics-basics.html" class="active">Physics Basics</a>
+                    <a href="lesson-chemistry-basics.html">Chemistry Basics</a>
+                    <a href="lesson-biology-basics.html">Biology Basics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; Agniveer Science</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Physics Basics</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 17 Nov 2026 &#183; 5,635 words</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.75em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 21 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="f4f45b9ae20f" data-updated="2026-11-21" data-updated-label="21 Nov 2026" data-headings="[&quot;What is Physics?&quot;,&quot;Key Topics in Physics&quot;,&quot;Solved Examples&quot;,&quot;Shortcut Techniques&quot;,&quot;Application-Based Learning&quot;,&quot;Problem-Solving Methodology&quot;,&quot;Projectile Motion and Relative Velocity&quot;,&quot;Conservative Forces and Potential Energy&quot;,&quot;Wave Interference and Diffraction&quot;,&quot;Kirchhoff&#39;s Laws in Complex Circuits&quot;,&quot;Magnetic Field of Current-Carrying Conductors&quot;,&quot;Rotational Dynamics and Moment of Inertia&quot;,&quot;Thermodynamics: Laws, Cycles, and Efficiency&quot;,&quot;Electromagnetic Induction and Alternating Current Circuits&quot;,&quot;Wave Optics: Polarization, Interference in Thin Films, and Optical Instruments&quot;,&quot;Modern Physics: Photoelectric Effect, Bohr Model, and Nuclear Basics&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Motion, force, energy, light, sound, electricity, magnetism.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Motion · Force · Energy · Light · Sound · Electricity</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Physics Basics</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+
+<h3>What is Physics?</h3><p>Physics is the fundamental science of matter, energy, and their interactions. In Agniveer and defence exams, physics questions cover basic concepts from mechanics, heat, light, sound, electricity, and magnetism. Questions are at the high school level — focus on concepts, laws, and everyday applications.</p><h3>Key Topics in Physics</h3><p><strong>1. Motion and Newton's Laws:</strong> First law (inertia — an object at rest stays at rest, in motion stays in motion unless acted upon), Second law (F = ma — force equals mass times acceleration), Third law (action-reaction — every action has an equal and opposite reaction).</p><p><strong>2. Work, Energy, and Power:</strong> Work = Force × Displacement (W = Fd cosθ). Kinetic Energy = ½mv², Potential Energy = mgh. Law of conservation of energy (energy cannot be created or destroyed, only transformed). Power = Work/Time.</p><p><strong>3. Light — Reflection and Refraction:</strong> Law of reflection (angle of incidence = angle of reflection). Types of mirrors: concave (converging), convex (diverging). Refraction — bending of light when passing from one medium to another. Snell's law: n₁sinθ₁ = n₂sinθ₂. Lenses: convex (converging), concave (diverging). Prism — dispersion of white light into 7 colours (VIBGYOR).</p><p><strong>4. Sound:</strong> Sound travels as longitudinal waves. Speed of sound: 343 m/s in air (at 20°C), faster in liquids and solids. Amplitude → loudness, Frequency → pitch. Echo, SONAR, ultrasound, infrasound.</p><p><strong>5. Electricity:</strong> Current (I) = V/R (Ohm's Law). Series circuits (current same, voltage divides) and parallel circuits (voltage same, current divides). Resistivity, heating effect (H = I²Rt), power (P = VI). AC vs DC, domestic circuits, fuse, earthing.</p><p><strong>6. Magnetism:</strong> Bar magnet poles (North-South), magnetic field lines (from N to S outside magnet). Electromagnets — current-carrying wire creates magnetic field (Right-hand thumb rule). Earth as a magnet.</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1 (Newton's Second Law)</div><div class="ex-text">A force of 20 N acts on a mass of 4 kg. What is the acceleration produced?<br><br>a) 2 m/s² b) 5 m/s² c) 10 m/s² d) 80 m/s²</div><div class="ex-soln"><strong>Solution:</strong> b) 5 m/s². F = ma → 20 = 4 × a → a = 20/4 = 5 m/s².</div></div><div class="example-box"><div class="ex-title">Example 2 (Ohm's Law)</div><div class="ex-text">A current of 2 A flows through a resistor of 10 Ω. What is the voltage across the resistor?<br><br>a) 5 V b) 12 V c) 20 V d) 0.2 V</div><div class="ex-soln"><strong>Solution:</strong> c) 20 V. V = IR = 2 × 10 = 20 V.</div></div><div class="example-box"><div class="ex-title">Example 3 (Refraction of Light)</div><div class="ex-text">When light passes from air to water, it bends:<br><br>a) Away from the normal b) Towards the normal c) Does not bend d) Depends on the colour of light</div><div class="ex-soln"><strong>Solution:</strong> b) Towards the normal. Since water is optically denser than air, light slows down and bends towards the normal when entering water.</div></div><h3>Shortcut Techniques</h3><ul><li>Remember formulas by their units — e.g., Newton = kg·m/s², Joule = N·m, Watt = J/s.</li><li>For optics, remember: Concave mirrors converge (used in torches, car headlights); Convex mirrors diverge (used in rearview mirrors).</li><li>For electricity: In series, resistance adds up (R_total = R₁ + R₂); in parallel, 1/R_total = 1/R₁ + 1/R₂.</li><li>Speed of sound is maximum in solids, minimum in gases. Speed of light is maximum in vacuum/air.</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">In Agniveer exams, physics questions are direct application of formulas. Practice numericals from NCERT Class 9-10 science textbooks. Focus on conceptual understanding — why a bus needs more stopping distance than a car, why a straw appears bent in water, etc.</div></div><h3>Application-Based Learning</h3><p>Connect concepts to real-world applications: Why sky is blue (Rayleigh scattering), how pressure cookers work, why apples turn brown (oxidation).</p><h3>Problem-Solving Methodology</h3><p>1) Identify given data. 2) Recall formulas. 3) Check unit consistency. 4) Solve step-by-step. 5) Verify through estimation.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Check if your answer is reasonable through order-of-magnitude estimation to catch gross errors.</div></div><h3>Projectile Motion and Relative Velocity</h3>
+<p>Projectile motion is the two‑dimensional motion of an object launched with an initial velocity <strong>u</strong> at an angle <strong>θ</strong> to the horizontal, subject only to the uniform gravitational acceleration <strong>g</strong> (≈ 9.8 m/s² downward). The motion separates into independent horizontal and vertical components: the horizontal velocity <strong>uₓ = u cos θ</strong> remains constant (neglecting air resistance), while the vertical velocity <strong>uᵧ = u sin θ</strong> changes as <strong>vᵧ = uᵧ − g t</strong>. The trajectory is a parabola described by <strong>y = x tan θ − (g x²)/(2 u² cos² θ)</strong>. Key results: time of flight <strong>T = 2 u sin θ / g</strong>, maximum height <strong>H = u² sin² θ / (2 g)</strong>, and horizontal range <strong>R = u² sin 2θ / g</strong>. The range is maximum at <strong>θ = 45°</strong> for a given speed.</p>
+<p>Relative velocity extends the concept to moving reference frames. If two bodies A and B move with velocities <strong>v_A</strong> and <strong>v_B</strong> in a common inertial frame, the velocity of A relative to B is <strong>v<sub>A/B</sub> = v_A − v_B</strong>. In projectile problems, the ground frame is usually inertial, but a moving platform (e.g., a train) introduces a constant horizontal offset. For a projectile launched from a train moving at speed <strong>v_T</strong>, the horizontal component relative to ground becomes <strong>uₓ + v_T</strong>. The range measured on the ground is then <strong>R_ground = (uₓ + v_T) T</strong>. When the launch and landing heights differ, the quadratic equation for time of flight must be solved: <strong>y = uᵧ t − ½ g t² + y₀</strong>. The sign of <strong>y₀</strong> (initial height) determines whether the projectile lands above or below the launch point.</p>
+<p>Air resistance, when considered, makes the horizontal velocity decay exponentially and reduces both range and maximum height. The drag force is often modelled as <strong>F_d = ½ ρ C_d A v²</strong> opposite to velocity, where <strong>ρ</strong> is air density, <strong>C_d</strong> drag coefficient, and <strong>A</strong> cross‑sectional area. In competitive examinations, air resistance is usually ignored unless explicitly stated, but candidates should recognise the qualitative effect: the trajectory becomes asymmetric, the descent is steeper, and the optimum launch angle for maximum range shifts below 45°.</p>
+<p>Applications include sports (javelin, basketball), ballistics, and space‑vehicle re‑entry where the curvature of Earth and varying <strong>g</strong> become relevant. In such cases the flat‑Earth, constant‑<strong>g</strong> model is an approximation; the true path follows an elliptical orbit segment. Understanding the limits of the simple model prevents over‑confidence in numerical answers that ignore these higher‑order effects.</p>
+
+<h3>Conservative Forces and Potential Energy</h3>
+<p>A force is conservative if the work done by it on a particle moving between two points depends only on the endpoints, not on the path taken. Equivalently, the work done around any closed loop is zero. Gravity, electrostatic force, and the ideal spring force are classic examples. For a conservative force <strong>F</strong>, a scalar potential energy function <strong>U(r)</strong> can be defined such that <strong>F = −∇U</strong> (in one dimension, <strong>F = −dU/dx</strong>). The work done by the force from point A to B equals the negative change in potential energy: <strong>W<sub>A→B</sub> = −ΔU = U(A) − U(B)</strong>.</p>
+<p>Gravitational potential energy near Earth’s surface is <strong>U = m g h</strong> (choosing zero at <strong>h = 0</strong>). For a spring obeying Hooke’s law <strong>F = −k x</strong>, the elastic potential energy is <strong>U = ½ k x²</strong>. In electrostatics, the potential energy of a charge <strong>q</strong> in the field of a point charge <strong>Q</strong> is <strong>U = k_e q Q / r</strong>, where <strong>k_e = 1/(4π ε₀)</strong>. The total mechanical energy <strong>E = K + U</strong> is conserved when only conservative forces act. Non‑conservative forces (friction, air drag) dissipate mechanical energy into internal energy, so <strong>ΔE = W<sub>nc</sub></strong> where <strong>W<sub>nc</sub></strong> is the work done by non‑conservative forces.</p>
+<p>The work‑energy theorem states <strong>W<sub>total</sub> = ΔK</strong>. Splitting total work into conservative and non‑conservative parts gives <strong>W_c + W<sub>nc</sub> = ΔK</strong>. Since <strong>W_c = −ΔU</strong>, we obtain <strong>ΔK + ΔU = W<sub>nc</sub></strong>, or <strong>ΔE = W<sub>nc</sub></strong>. This formulation is powerful for solving problems where friction or a motor does work: compute the change in kinetic and potential energy, equate to the known non‑conservative work, and solve for the unknown (speed, compression, height).</p>
+<p>Potential energy curves <strong>U(x)</strong> provide qualitative insight. Equilibrium points occur where <strong>dU/dx = 0</strong>. Stable equilibrium corresponds to a local minimum (second derivative positive), unstable to a local maximum, and neutral to a flat region. Small oscillations about a stable minimum are simple harmonic with angular frequency <strong>ω = √(k_eff/m)</strong>, where <strong>k_eff = d²U/dx²</strong> evaluated at the minimum. This connects energy methods to the dynamics of oscillations without solving differential equations directly.</p>
+<p>In examinations, a common twist is to ask for the speed of a block sliding down a rough incline of length <strong>L</strong> and angle <strong>θ</strong>. The work done by friction is <strong>W_f = −μ m g cos θ L</strong>. Using <strong>ΔK + ΔU = W_f</strong> with <strong>ΔU = −m g L sin θ</strong> yields <strong>½ m v² = m g L (sin θ − μ cos θ)</strong>. Recognising that the normal force does no work (it is perpendicular to displacement) avoids a frequent error of including it in the energy balance.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Energy with Friction</div>
+<div class="ex-text">A 2 kg block is released from rest at the top of a 5 m long rough incline angled at 30°. The coefficient of kinetic friction is 0.2. Find the speed of the block at the bottom. (Take g = 10 m/s².)</div>
+<div class="ex-soln">Initial kinetic energy K_i = 0. Initial potential energy U_i = m g h = 2 × 10 × (5 sin 30°) = 2 × 10 × 2.5 = 50 J. Work done by friction W_f = −μ m g cos θ L = −0.2 × 2 × 10 × cos 30° × 5 = −0.2 × 20 × 0.866 × 5 ≈ −17.32 J. Final potential energy U_f = 0 (bottom). Energy equation: K_f + U_f = K_i + U_i + W_f → ½ m v² = 0 + 50 − 17.32 = 32.68 J. Thus v² = 2 × 32.68 / 2 = 32.68 → v ≈ 5.72 m/s.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem mixes conservative and non‑conservative forces, write the energy equation in the form ΔK + ΔU = W_nc before substituting numbers. This single line prevents sign errors and makes it obvious which terms are zero (e.g., normal force work). Always define the zero of potential energy explicitly; a consistent choice eliminates hidden constant terms.</div>
+</div>
+
+<h3>Wave Interference and Diffraction</h3>
+<p>Interference arises when two or more coherent waves superpose. For two sources of equal amplitude <strong>A</strong> and constant phase difference <strong>φ</strong>, the resultant amplitude is <strong>A_r = 2A cos(φ/2)</strong> and intensity <strong>I ∝ A_r² = 4A² cos²(φ/2)</strong>. Constructive interference occurs when <strong>φ = 2π m</strong> (m integer), giving intensity maximum <strong>I_max = 4I₀</strong>. Destructive interference occurs when <strong>φ = (2m+1)π</strong>, giving zero intensity for equal amplitudes. In a double‑slit experiment with slit separation <strong>d</strong> and screen distance <strong>D</strong>, the path difference for a point at angle <strong>θ</strong> is <strong>Δ = d sin θ</strong>. Bright fringes satisfy <strong>d sin θ = m λ</strong>, dark fringes <strong>d sin θ = (m+½) λ</strong>. The fringe width on the screen is <strong>β = λ D / d</strong>.</p>
+<p>Diffraction is the bending of waves around obstacles. For a single slit of width <strong>a</strong>, minima occur at <strong>a sin θ = m λ</strong> (m ≠ 0). The central maximum has angular width <strong>2λ/a</strong> and contains most of the transmitted intensity. The intensity distribution is <strong>I(θ) = I₀ [sin(β)/β]²</strong> where <strong>β = (π a sin θ)/λ</strong>. When the slit width is comparable to the wavelength, the central maximum broadens; when <strong>a ≫ λ</strong>, the pattern approaches geometric optics.</p>
+<p>Combined double‑slit and single‑slit effects produce a modulated interference pattern: the double‑slit fringes are enveloped by the single‑slit diffraction envelope. Missing orders occur when a double‑slit maximum coincides with a single‑slit minimum, i.e., when <strong>d sin θ = m λ</strong> and <strong>a sin θ = n λ</strong> simultaneously, giving <strong>d/a = m/n</strong>. This concept is frequently tested by asking which orders are absent for given <strong>d</strong> and <strong>a</strong>.</p>
+<p>Thin‑film interference involves phase changes on reflection. Light reflecting from a medium of higher refractive index undergoes a π phase shift; from lower index, no shift. For a film of thickness <strong>t</strong> and refractive index <strong>n</strong> surrounded by air, constructive interference in reflected light occurs when <strong>2 n t = (m+½) λ</strong> (if one reflection has a phase shift) and destructive when <strong>2 n t = m λ</strong>. In transmitted light the conditions are reversed. This explains colours in soap bubbles and anti‑reflection coatings.</p>
+<p>Coherence length and temporal coherence determine the visibility of fringes. White light produces coloured fringes only near the central maximum because different wavelengths have different fringe spacings. In examinations, a typical question gives a double‑slit with <strong>d = 0.5 mm</strong>, <strong>λ = 600 nm</strong>, <strong>D = 2 m</strong> and asks for the distance between the 3rd bright fringe and the central maximum. Using <strong>y_m = m λ D / d</strong> yields <strong>y<sub>3</sub> = 3 × 600×10⁻⁹ × 2 / 0.5×10⁻³ = 7.2 mm</strong>.</p>
+
+<h3>Kirchhoff's Laws in Complex Circuits</h3>
+<p>Kirchhoff’s Current Law (KCL) states that the algebraic sum of currents entering a junction equals zero: <strong>∑ I_in = ∑ I_out</strong>. It follows from charge conservation. Kirchhoff’s Voltage Law (KVL) states that the algebraic sum of potential differences around any closed loop is zero: <strong>∑ V = 0</strong>. It follows from energy conservation in electrostatic fields. Together they allow analysis of any linear circuit with resistors, batteries, and capacitors (in steady state).</p>
+<p>To solve a network, assign a current direction to each branch (arbitrary; a negative result indicates opposite flow). Write KCL at each independent node (number of nodes minus one). Write KVL for each independent loop (number of branches minus number of independent nodes). This yields a system of linear equations. For planar circuits, mesh analysis uses loop currents as variables, reducing the number of equations. Nodal analysis uses node voltages relative to a reference node, often simpler when many voltage sources are present.</p>
+<p>Superposition theorem: in a linear circuit with multiple independent sources, the response (current or voltage) in any element equals the algebraic sum of responses caused by each source acting alone, with all other independent voltage sources replaced by short circuits and current sources by open circuits. This is useful for circuits with both AC and DC sources, or for finding Thevenin/Norton equivalents.</p>
+<p>Thevenin’s theorem: any two‑terminal linear network can be replaced by an equivalent voltage source <strong>V_th</strong> in series with a resistance <strong>R_th</strong>. <strong>V_th</strong> is the open‑circuit voltage across the terminals; <strong>R_th</strong> is the resistance seen from the terminals with all independent sources turned off (voltage sources shorted, current sources opened). Norton’s equivalent uses a current source <strong>I_N = V_th / R_th</strong> in parallel with <strong>R_th</strong>. Maximum power transfer to a load occurs when <strong>R_load = R_th</strong>.</p>
+<p>Capacitors in DC steady state act as open circuits; inductors act as short circuits. In transient analysis, the differential equations <strong>V = L di/dt</strong> and <strong>I = C dv/dt</strong> govern charging/discharging. The time constant for an RC circuit is <strong>τ = R C</strong>; for an RL circuit <strong>τ = L / R</strong>. The voltage across a charging capacitor follows <strong>v(t) = V₀ (1 − e<sup>−t/τ</sup>)</strong>; discharging follows <strong>v(t) = V₀ e<sup>−t/τ</sup></strong>. These exponentials are frequently asked in numerical form: “Find the time for the capacitor voltage to reach 90 % of its final value.” Answer: <strong>t = −τ ln(0.1) ≈ 2.303 τ</strong>.</p>
+<p>Bridge circuits (Wheatstone bridge) are balanced when <strong>R₁/R₂ = R₃/R₄</strong>, giving zero current through the galvanometer. This condition is used to measure unknown resistances precisely. Unbalanced bridges require full KCL/KVL solution. In examinations, a common trap is to assume the bridge is balanced without verifying the ratio, leading to an incorrect zero‑current assumption.</p>
+
+<h3>Magnetic Field of Current-Carrying Conductors</h3>
+<p>The magnetic field <strong>B</strong> due to a steady current is described by the Biot–Savart law: <strong>dB = (μ₀/4π) I (dl × r̂)/r²</strong>, where <strong>μ₀ = 4π × 10⁻⁷ T·m/A</strong>. For an infinitely long straight wire, integration yields <strong>B = μ₀ I / (2π r)</strong>, directed in concentric circles around the wire (right‑hand thumb rule). The field inside a long solenoid of <strong>n</strong> turns per unit length carrying current <strong>I</strong> is uniform: <strong>B = μ₀ n I</strong>, directed along the axis. At the ends, the field is half the interior value.</p>
+<p>A circular loop of radius <strong>R</strong> carrying current <strong>I</strong> produces on its axis at distance <strong>x</strong> from the centre a field <strong>B = (μ₀ I R²) / (2 (R² + x²)<sup>3/2</sup>)</strong>. At the centre (<strong>x = 0</strong>) this reduces to <strong>B = μ₀ I / (2 R)</strong>. A flat coil of <strong>N</strong> turns multiplies the field by <strong>N</strong>. Helmholtz coils (two identical coaxial coils separated by their radius) create a nearly uniform field in the region between them, used in laboratory magnetometry.</p>
+<p>Ampere’s circuital law, <strong>∮ B·dl = μ₀ I_enc</strong>, provides a quicker route for highly symmetric configurations. For a long straight wire, a circular Amperian loop of radius <strong>r</strong> gives <strong>B (2π r) = μ₀ I</strong>, reproducing the Biot–Savart result. For a solenoid, a rectangular loop that encloses <strong>N</strong> turns yields <strong>B l = μ₀ n I l</strong> → <strong>B = μ₀ n I</strong>. The law applies only to magnetostatic situations; time‑varying electric fields require the Maxwell‑Ampere term <strong>μ₀ ε₀ dΦ_E/dt</strong>.</p>
+<p>Force on a current element in a magnetic field is <strong>dF = I dl × B</strong>. For a straight wire of length <strong>L</strong> in a uniform field, <strong>F = I L × B</strong>. Two parallel currents attract if they flow in the same direction and repel if opposite; the force per unit length is <strong>F/L = μ₀ I₁ I₂ / (2π d)</strong>. This defines the ampere: the current that produces a force of 2 × 10⁻⁷ N per metre between two parallel wires 1 m apart in vacuum.</p>
+<p>Magnetic dipole moment of a current loop is <strong>μ = I A n̂</strong> (area vector). The torque on a dipole in a uniform field is <strong>τ = μ × B</strong>, and potential energy <strong>U = −μ·B</strong>. A moving coil galvanometer operates on this torque; its sensitivity depends on the magnetic field strength, number of turns, and area. In examinations, a typical problem asks for the magnetic field at the centre of a square loop of side <strong>a</strong> carrying current <strong>I</strong>. Using Biot–Savart for each side and symmetry gives <strong>B = (2√2 μ₀ I) / (π a)</strong> directed perpendicular to the plane.</p>
+
+<ul>
+<li>Assuming the projectile range formula R = u² sin 2θ / g applies when launch and landing heights differ.</li>
+<li>Treating friction as a conservative force and including it in potential‑energy calculations.</li>
+<li>Forgetting the π phase shift on reflection from a denser medium in thin‑film interference.</li>
+<li>Applying Kirchhoff’s Voltage Law without consistent sign conventions for emf and IR drops.</li>
+<li>Using the straight‑wire magnetic field formula B = μ₀I/(2πr) for a finite wire segment without integration.</li>
+<li>Confusing the conditions for constructive interference in reflected versus transmitted light in thin films.</li>
+<li>Neglecting the internal resistance of a battery when calculating terminal voltage under load.</li>
+</ul>
+<h3>Rotational Dynamics and Moment of Inertia</h3>
+<p>Rotational motion extends the concepts of linear kinematics to bodies that spin about a fixed axis. The angular displacement <strong>θ</strong>, angular velocity <strong>ω</strong> and angular acceleration <strong>α</strong> obey the same algebraic relations as their linear counterparts: <strong>ω = ω₀ + αt</strong>, <strong>θ = ω₀t + ½αt²</strong>, <strong>ω² = ω₀² + 2αθ</strong>. Torque <strong>τ</strong> replaces force, and the rotational analogue of Newton’s second law is <strong>τ = Iα</strong>, where <strong>I</strong> is the moment of inertia. For a discrete system <strong>I = Σ mᵢrᵢ²</strong>; for continuous bodies the integral <strong>I = ∫ r² dm</strong> is evaluated using the appropriate density distribution.</p>
+<h4>Standard Moments of Inertia</h4>
+<ul>
+<li>Thin rod about centre, perpendicular to length: <strong>I = ¹⁄₁₂ ML²</strong></li>
+<li>Thin rod about one end: <strong>I = ⅓ ML²</strong></li>
+<li>Solid cylinder or disc about its symmetry axis: <strong>I = ½ MR²</strong></li>
+<li>Hollow cylinder (thin‑walled) about axis: <strong>I = MR²</strong></li>
+<li>Solid sphere about diameter: <strong>I = ⅖ MR²</strong></li>
+<li>Thin spherical shell about diameter: <strong>I = ⅔ MR²</strong></li>
+</ul>
+<p>The parallel‑axis theorem <strong>I = I_cm + Md²</strong> shifts the axis a distance <strong>d</strong> from the centre of mass. The perpendicular‑axis theorem applies only to planar laminae: <strong>I_z = I_x + I_y</strong>.</p>
+<h4>Rolling Without Slipping</h4>
+<p>When a body rolls without slipping, the instantaneous point of contact is at rest relative to the surface. The condition <strong>v_cm = ωR</strong> links translational and rotational motion. The total kinetic energy splits into translational and rotational parts: <strong>K = ½ Mv_cm² + ½ I_cm ω²</strong>. For a given shape the fraction of energy in rotation is fixed; e.g. a solid sphere has <strong>K_rot / K_total = 2/7</strong>. This ratio determines the acceleration down an incline: <strong>a = g sinθ / (1 + I_cm / MR²)</strong>. A solid sphere (<strong>I_cm = ⅖ MR²</strong>) accelerates faster than a hollow cylinder (<strong>I_cm = MR²</strong>).</p>
+<h4>Angular Momentum and Its Conservation</h4>
+<p>Angular momentum <strong>L = Iω</strong> for a rigid body about a fixed axis. In the absence of external torque, <strong>L</strong> is conserved. This principle explains the spin‑up of a contracting star, the behaviour of a figure skater pulling in arms, and the precession of a gyroscope under a gravitational torque <strong>τ = r × Mg</strong>. The precession angular speed is <strong>Ω = τ / L = Mgr / (Iω)</strong> for a fast‑spinning top.</p>
+
+<h3>Thermodynamics: Laws, Cycles, and Efficiency</h3>
+<p>The zeroth law establishes temperature as a transitive equilibrium property, allowing thermometers. The first law is energy conservation for a thermodynamic system: <strong>ΔU = Q – W</strong>, where <strong>Q</strong> is heat added to the system and <strong>W</strong> is work done by the system. For a reversible process <strong>dU = δQ_rev – δW_rev</strong> with <strong>δW_rev = P dV</strong>. The second law introduces entropy <strong>S</strong>: for any reversible change <strong>dS = δQ_rev / T</strong>; for an irreversible change <strong>dS > δQ / T</strong>. The Clausius statement (heat cannot spontaneously flow from cold to hot) and the Kelvin‑Planck statement (no process can convert heat completely into work) are equivalent formulations.</p>
+<h4>Carnot Cycle and Maximum Efficiency</h4>
+<p>The Carnot engine operates between two reservoirs at temperatures <strong>T_H</strong> and <strong>T_C</strong> (absolute scale). Its four reversible steps are: isothermal expansion at <strong>T_H</strong>, adiabatic expansion to <strong>T_C</strong>, isothermal compression at <strong>T_C</strong>, adiabatic compression back to <strong>T_H</strong>. The efficiency is <strong>η_Carnot = 1 – T_C / T_H</strong>. No real engine operating between the same temperatures can exceed this value. The coefficient of performance for a Carnot refrigerator is <strong>COP_R = T_C / (T_H – T_C)</strong> and for a heat pump <strong>COP_HP = T_H / (T_H – T_C)</strong>.</p>
+<h4>Real Cycles: Otto, Diesel, and Rankine</h4>
+<p>The Otto cycle (spark‑ignition engines) consists of two adiabats and two isochores. Its ideal efficiency is <strong>η_Otto = 1 – 1 / r<sup>γ‑1</sup></strong>, where <strong>r = V_max / V_min</strong> is the compression ratio and <strong>γ = C_p / C_v</strong>. The Diesel cycle replaces the constant‑volume heat addition with a constant‑pressure process; efficiency depends on both compression ratio and cut‑off ratio <strong>ρ = V<sub>3</sub> / V<sub>2</sub></strong>: <strong>η_Diesel = 1 – (1 / r<sup>γ‑1</sup>) [(ρ^γ – 1) / (γ(ρ – 1))]</strong>. The Rankine cycle models steam power plants; its efficiency is limited by the temperature of steam generation and condenser pressure. Superheating and reheating raise the average temperature of heat addition, improving efficiency.</p>
+<h4>Entropy Changes in Common Processes</h4>
+<ul>
+<li>Isothermal reversible expansion of ideal gas: <strong>ΔS = nR ln(V_f / V_i)</strong></li>
+<li>Adiabatic reversible: <strong>ΔS = 0</strong></li>
+<li>Free expansion (Joule expansion) of ideal gas into vacuum: <strong>ΔS = nR ln(V_f / V_i) > 0</strong> (irreversible)</li>
+<li>Phase change at constant <strong>T</strong>: <strong>ΔS = L / T</strong> where <strong>L</strong> is latent heat.</li>
+</ul>
+<p>Entropy of the universe increases for every irreversible process, providing a direction for time’s arrow.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Rolling Sphere on an Incline</div>
+<div class="ex-text">A solid sphere of mass M and radius R rolls without slipping down a plane inclined at angle θ. Find its linear acceleration a and the minimum coefficient of static friction μ_s required to prevent slipping.</div>
+<div class="ex-soln">For a solid sphere I_cm = ⅖ MR². The forces along the incline: Mg sinθ – f = Ma. Torque about centre: fR = I_cm α = (⅖ MR²)(a/R) = ⅖ MaR. Hence f = ⅖ Ma. Substitute into force equation: Mg sinθ – ⅖ Ma = Ma → Mg sinθ = (1 + ⅖)Ma = ⁷⁄₅ Ma. Therefore a = (5/7) g sinθ. The friction force needed is f = ⅖ M a = ⅖ M (5/7) g sinθ = (2/7) Mg sinθ. The normal reaction is N = Mg cosθ. The no‑slip condition requires f ≤ μ_s N → (2/7) Mg sinθ ≤ μ_s Mg cosθ → μ_s ≥ (2/7) tanθ. Thus the minimum coefficient of static friction is μ_s(min) = (2/7) tanθ.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a rotational dynamics problem appears, first identify whether the axis is fixed or moving. Write the translational Newton’s second law for the centre of mass and the rotational analogue about the centre of mass. Use the rolling constraint v = ωR only if the problem explicitly states “without slipping”. For thermodynamics cycles, sketch the PV diagram; the area enclosed equals net work. Remember that efficiency formulas for Otto and Diesel cycles assume ideal gas with constant γ; real engines deviate because of heat losses and variable specific heats.</div>
+</div>
+
+<h3>Electromagnetic Induction and Alternating Current Circuits</h3>
+<p>Faraday’s law states that the induced emf in a closed loop equals the negative rate of change of magnetic flux through the loop: <strong>ε = – dΦ_B / dt</strong>, where <strong>Φ_B = ∫ B·dA</strong>. Lenz’s law gives the direction: the induced current creates a magnetic field opposing the change in flux. For a coil of N turns, <strong>ε = – N dΦ_B / dt</strong>. Motional emf arises when a conductor of length <strong>l</strong> moves with velocity <strong>v</strong> perpendicular to a uniform field <strong>B</strong>: <strong>ε = B l v</strong>. Self‑inductance <strong>L</strong> is defined by <strong>Φ = L I</strong>; the induced emf in the same coil is <strong>ε = – L dI/dt</strong>. Mutual inductance <strong>M</strong> links two coils: <strong>ε<sub>2</sub> = – M dI<sub>1</sub>/dt</strong>.</p>
+<h4>AC Circuit Elements</h4>
+<p>In a purely resistive load, voltage and current are in phase: <strong>V = I R</strong>. For an inductor, <strong>V_L = I X_L</strong> with inductive reactance <strong>X_L = ωL</strong>; current lags voltage by 90°. For a capacitor, <strong>V_C = I X_C</strong> with capacitive reactance <strong>X_C = 1/(ωC)</strong>; current leads voltage by 90°. Impedance of a series RLC circuit is <strong>Z = √[R² + (X_L – X_C)²]</strong> and the phase angle φ satisfies <strong>tan φ = (X_L – X_C)/R</strong>. At resonance <strong>X_L = X_C</strong>, so <strong>ω₀ = 1/√(LC)</strong> and <strong>Z_min = R</strong>. The quality factor <strong>Q = ω₀L / R = 1/(ω₀ C R)</strong> measures sharpness of resonance.</p>
+<h4>Power in AC Circuits</h4>
+<p>Instantaneous power <strong>p(t) = v(t) i(t)</strong>. Average real power <strong>P = V_rms I_rms cos φ</strong>, where <strong>cos φ</strong> is the power factor. Reactive power <strong>Q = V_rms I_rms sin φ</strong> (measured in VAR) does no net energy transfer. Apparent power <strong>S = V_rms I_rms</strong> (VA). Power factor correction adds a capacitor in parallel with an inductive load to bring φ toward zero, reducing line current for the same real power.</p>
+<h4>Transformers</h4>
+<p>An ideal transformer has primary and secondary windings with turns ratio <strong>N_p / N_s = V_p / V_s = I_s / I_p</strong>. The core confines flux so that <strong>Φ_p = Φ_s</strong>. Real transformers have core losses (hysteresis and eddy currents) and copper losses (I²R). Efficiency <strong>η = P_out / P_in</strong> typically exceeds 95 % for power transformers. The equivalent circuit referred to the primary includes series resistance <strong>R_eq</strong> and leakage reactance <strong>X_eq</strong>, plus a magnetising branch <strong>R_m || X_m</strong>.</p>
+
+<h3>Wave Optics: Polarization, Interference in Thin Films, and Optical Instruments</h3>
+<p>Light is a transverse electromagnetic wave; its electric‑field vector oscillates perpendicular to the direction of propagation. Unpolarised light contains equal mixtures of all transverse orientations. A linear polariser transmits only the component parallel to its transmission axis; Malus’s law gives the transmitted intensity <strong>I = I₀ cos²θ</strong>, where θ is the angle between the incident polarisation and the axis. Brewster’s angle <strong>θ_B</strong> satisfies <strong>tan θ_B = n₂ / n₁</strong>; at this incidence reflected light is perfectly s‑polarised.</p>
+<h4>Thin‑Film Interference</h4>
+<p>When light reflects from a thin film of thickness t and refractive index n_f surrounded by media of indices n₁ (incident) and n₂ (substrate), two reflected beams interfere. A phase change of π occurs on reflection from a medium of higher index. Constructive interference in reflected light requires <strong>2 n_f t cos θ_f = (m + ½) λ</strong> if one reflection undergoes a π shift, or <strong>2 n_f t cos θ_f = m λ</strong> if both or neither shift. For transmitted light the conditions are reversed. Newton’s rings (air film between a convex lens and a flat plate) produce concentric fringes with radii <strong>r_m = √(m λ R)</strong> for dark rings in reflected light (R = radius of curvature of lens).</p>
+<h4>Diffraction Grating and Resolving Power</h4>
+<p>A transmission grating with slit spacing d produces principal maxima at <strong>d sin θ = m λ</strong>. The angular dispersion is <strong>dθ/dλ = m / (d cos θ)</strong>. The Rayleigh criterion for resolving two wavelengths λ and λ+Δλ is <strong>Δλ = λ / (m N)</strong>, where N is the total number of illuminated slits. Hence the resolving power <strong>R = λ/Δλ = m N</strong>.</p>
+<h4>Optical Instruments</h4>
+<p>A simple microscope (magnifying glass) gives angular magnification <strong>M = D / f</strong> (near‑point D ≈ 25 cm) when the final image is at the near point, or <strong>M = D / f + 1</strong> when the image is at infinity. A compound microscope uses an objective of focal length f_o and an eyepiece of focal length f_e; tube length L ≈ 16 cm. Total magnification <strong>M = (L / f_o) (D / f_e)</strong>. An astronomical telescope (refracting) has objective f_o and eyepiece f_e; angular magnification <strong>M = – f_o / f_e</strong> (negative sign indicates inverted image). The resolving power of a telescope aperture D is <strong>θ_min = 1.22 λ / D</strong> (Rayleigh).</p>
+
+<h3>Modern Physics: Photoelectric Effect, Bohr Model, and Nuclear Basics</h3>
+<p>The photoelectric effect demonstrates the particle nature of light. Einstein’s equation <strong>K_max = hν – φ</strong> relates the maximum kinetic energy of emitted electrons to the photon frequency ν and the work function φ of the material. The stopping potential V_s satisfies <strong>e V_s = K_max</strong>. The effect is instantaneous, and the photocurrent is proportional to light intensity (photon flux), confirming the quantum hypothesis.</p>
+<h4>Bohr Model of the Hydrogen Atom</h4>
+<p>Bohr postulated quantised angular momentum <strong>L = n ħ</strong> (n = 1,2,3…). For a circular orbit, centripetal force <strong>m v² / r = k e² / r²</strong> (k = 1/4πϵ₀). Combining gives radius <strong>r_n = n² a₀</strong> with Bohr radius <strong>a₀ = 4πϵ₀ ħ² / (m e²) ≈ 0.529 Å</strong>. Energy levels <strong>E_n = – 13.6 eV / n²</strong>. Transitions emit photons of wavelength <strong>1/λ = R_H (1/n_f² – 1/n_i²)</strong>, where Rydberg constant <strong>R_H = 1.097 × 10⁷ m⁻¹</strong>. The model explains the Lyman, Balmer, and Paschen series but fails for multi‑electron atoms and fine structure.</p>
+<h4>Nuclear Radius, Binding Energy, and Radioactivity</h4>
+<p>The empirical nuclear radius formula <strong>R = R₀ A<sup>1/3</sup></strong> with <strong>R₀ ≈ 1.2 fm</strong> shows constant nuclear density. Binding energy per nucleon peaks near iron‑56 (~8.8 MeV), explaining why fusion releases energy for light nuclei and fission for heavy nuclei. The semi‑empirical mass formula (Weizsäcker) includes volume, surface, Coulomb, asymmetry, and pairing terms. Radioactive decay follows <strong>N(t) = N₀ e<sup>–λt</sup></strong> with half‑life <strong>T<sub>1/2</sub> = ln 2 / λ</strong>. Alpha decay is described by quantum tunnelling (Gamow factor); beta decay involves weak interaction and neutrino emission; gamma decay is electromagnetic transition between nuclear energy levels.</p>
+<h4>Particle Physics Overview</h4>
+<p>Matter particles are fermions: six quarks (up, down, charm, strange, top, bottom) and six leptons (electron, muon, tau, and their neutrinos). Force carriers are gauge bosons: photon (electromagnetic), W± and Z⁰ (weak), gluons (strong), and the Higgs boson (mass generation). Hadrons are colour‑singlet composites: baryons (three quarks) and mesons (quark‑antiquark). The Standard Model predicts all observed particles except gravity; neutrino masses require beyond‑Standard‑Model physics.</p>
+
+<ul>
+<li>Assuming the moment of inertia of a composite body is the sum of individual moments without applying the parallel‑axis theorem for shifted axes.</li>
+<li>Using the Carnot efficiency formula with Celsius temperatures instead of absolute Kelvin temperatures.</li>
+<li>Neglecting the π phase shift on reflection from a denser medium when analysing thin‑film interference, leading to reversed constructive/destructive conditions.</li>
+<li>Treating the inductive reactance X_L = ωL as a resistance and adding it algebraically to R in series circuits.</li>
+<li>Confusing the stopping potential in the photoelectric effect with the work function; the stopping potential measures K_max/e, not φ directly.</li>
+<li>Applying the Bohr radius formula to multi‑electron ions without adjusting for nuclear charge Z (r_n = n² a₀ / Z).</li>
+<li>Forgetting that the resolving power of a grating depends on the total number of illuminated slits N, not just the order m.</li>
+</ul>        <script>
+        (function(){try{
+          var m=document.getElementById("lesson-meta");if(!m)return;
+          var cur=m.getAttribute("data-version")||"";
+          var label=m.getAttribute("data-updated-label")||"";
+          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");
+          var k="vlymbooq-lesson-seen:"+location.pathname;
+          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}
+          var box=document.getElementById("lesson-new");
+          if(prev&&prev.v&&prev.v!==cur){
+            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});
+            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
+            if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
+            else{html+="The explanations and practice were revised.";}
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            box.innerHTML=html;box.hidden=false;
+            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
+            document.getElementById("lesson-new-ok").onclick=save;
+            return; // keep the old version stored until acknowledged
+          }
+          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));
+        }catch(e){}})();
+        </script>
+                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <span></span>
+                    <a href="lesson-chemistry-basics.html" class="btn btn-success">Chemistry Basics &#x2192;</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":50071,"text":"Newton's First Law of Motion is also known as the law of:","options":[{"l":"a","t":"Acceleration","c":false},{"l":"b","t":"Inertia","c":true},{"l":"c","t":"Action-Reaction","c":false},{"l":"d","t":"Gravitation","c":false}],"sol":"b) Inertia. Newton's first law states that an object at rest stays at rest, and an object in motion stays in motion unless acted upon by an external force."},{"id":50072,"text":"What is the SI unit of electric current?","options":[{"l":"a","t":"Volt","c":false},{"l":"b","t":"Ohm","c":false},{"l":"c","t":"Ampere","c":true},{"l":"d","t":"Watt","c":false}],"sol":"c) Ampere (A). Volt is the unit of potential difference, Ohm is resistance, Watt is power."},{"id":50073,"text":"What is the speed of sound in air at 20°C approximately?","options":[{"l":"a","t":"343 m/s","c":true},{"l":"b","t":"500 m/s","c":false},{"l":"c","t":"300 m/s","c":false},{"l":"d","t":"700 m/s","c":false}],"sol":"a) 343 m/s. The speed of sound in air at 20°C is approximately 343 m/s."},{"id":50074,"text":"Which type of mirror is used in rearview mirrors of vehicles?","options":[{"l":"a","t":"Concave mirror","c":false},{"l":"b","t":"Convex mirror","c":true},{"l":"c","t":"Plane mirror","c":false},{"l":"d","t":"Parabolic mirror","c":false}],"sol":"b) Convex mirror provides a wider field of view and forms smaller, erect images, making it ideal for rearview mirrors."},{"id":50075,"text":"In a series circuit, if three resistors of 2Ω, 3Ω, and 5Ω are connected, what is the total resistance?","options":[{"l":"a","t":"1.03Ω","c":false},{"l":"b","t":"10Ω","c":true},{"l":"c","t":"30Ω","c":false},{"l":"d","t":"0.97Ω","c":false}],"sol":"b) 10Ω. In series, R_total = R₁ + R₂ + R₃ = 2 + 3 + 5 = 10Ω."},{"id":81126,"text":"Who is Father of Indian Constitution?","options":[{"l":"a","t":"Mahatma Gandhi","c":false},{"l":"b","t":"Jawaharlal Nehru","c":false},{"l":"c","t":"B.R. Ambedkar","c":true},{"l":"d","t":"Sardar Patel","c":false}],"sol":"Dr. B.R. Ambedkar chaired the Drafting Committee."},{"id":81127,"text":"Capital of Australia?","options":[{"l":"a","t":"Sydney","c":false},{"l":"b","t":"Melbourne","c":false},{"l":"c","t":"Canberra","c":true},{"l":"d","t":"Perth","c":false}],"sol":"Canberra. Sydney and Melbourne are major cities but not capitals."},{"id":81128,"text":"Which planet is the \"Red Planet\"?","options":[{"l":"a","t":"Venus","c":false},{"l":"b","t":"Mars","c":true},{"l":"c","t":"Jupiter","c":false},{"l":"d","t":"Saturn","c":false}],"sol":"Mars appears red due to iron oxide on its surface."},{"id":81129,"text":"Sun is classified as?","options":[{"l":"a","t":"Red Giant","c":false},{"l":"b","t":"White Dwarf","c":false},{"l":"c","t":"Yellow Dwarf","c":true},{"l":"d","t":"Neutron Star","c":false}],"sol":"Sun is a G-type main-sequence star (Yellow Dwarf)."},{"id":81130,"text":"UNESCO headquarters in?","options":[{"l":"a","t":"New York","c":false},{"l":"b","t":"Geneva","c":false},{"l":"c","t":"Paris","c":true},{"l":"d","t":"London","c":false}],"sol":"Paris. UN is New York, WHO is Geneva."},{"id":81131,"text":"Longest coastline in India?","options":[{"l":"a","t":"Tamil Nadu","c":false},{"l":"b","t":"Andhra Pradesh","c":false},{"l":"c","t":"Gujarat","c":true},{"l":"d","t":"Maharashtra","c":false}],"sol":"Gujarat (1,600 km) has longest coastline."},{"id":81132,"text":"Who wrote \"The Discovery of India\"?","options":[{"l":"a","t":"Mahatma Gandhi","c":false},{"l":"b","t":"Jawaharlal Nehru","c":true},{"l":"c","t":"B.R. Ambedkar","c":false},{"l":"d","t":"Rabindranath Tagore","c":false}],"sol":"Nehru wrote it during imprisonment in 1942-45."},{"id":81133,"text":"Chemical symbol for Gold?","options":[{"l":"a","t":"Go","c":false},{"l":"b","t":"Gd","c":false},{"l":"c","t":"Au","c":true},{"l":"d","t":"Ag","c":false}],"sol":"Au from Latin \"Aurum\" meaning shining dawn."},{"id":81134,"text":"Great Barrier Reef near which country?","options":[{"l":"a","t":"Indonesia","c":false},{"l":"b","t":"Australia","c":true},{"l":"c","t":"Philippines","c":false},{"l":"d","t":"Fiji","c":false}],"sol":"Off coast of Queensland, Australia."},{"id":81135,"text":"Year of Indian independence?","options":[{"l":"a","t":"1945","c":false},{"l":"b","t":"1946","c":false},{"l":"c","t":"1947","c":true},{"l":"d","t":"1950","c":false}],"sol":"August 15, 1947. Republic on Jan 26, 1950."},{"id":81136,"text":"Largest ocean?","options":[{"l":"a","t":"Atlantic","c":false},{"l":"b","t":"Indian","c":false},{"l":"c","t":"Pacific","c":true},{"l":"d","t":"Arctic","c":false}],"sol":"Pacific Ocean (165 million km_)."},{"id":81137,"text":"SI unit of electric current?","options":[{"l":"a","t":"Volt","c":false},{"l":"b","t":"Ampere","c":true},{"l":"c","t":"Ohm","c":false},{"l":"d","t":"Watt","c":false}],"sol":"Ampere (A). Volt=potential, Ohm=resistance, Watt=power."},{"id":81138,"text":"Battle of Plassey year?","options":[{"l":"a","t":"1757","c":true},{"l":"b","t":"1764","c":false},{"l":"c","t":"1857","c":false},{"l":"d","t":"1761","c":false}],"sol":"1757 established British rule in Bengal."},{"id":81139,"text":"Vitamin produced by sunlight on skin?","options":[{"l":"a","t":"Vitamin A","c":false},{"l":"b","t":"Vitamin B","c":false},{"l":"c","t":"Vitamin C","c":false},{"l":"d","t":"Vitamin D","c":true}],"sol":"Vitamin D synthesized in skin upon UVB exposure."},{"id":81140,"text":"Indian Parliament has how many houses?","options":[{"l":"a","t":"One","c":false},{"l":"b","t":"Two","c":true},{"l":"c","t":"Three","c":false},{"l":"d","t":"Four","c":false}],"sol":"Bicameral: Lok Sabha and Rajya Sabha."},{"id":83661,"text":"Who is Father of Indian Constitution?","options":[{"l":"a","t":"Mahatma Gandhi","c":false},{"l":"b","t":"Jawaharlal Nehru","c":false},{"l":"c","t":"B.R. Ambedkar","c":true},{"l":"d","t":"Sardar Patel","c":false}],"sol":"Dr. B.R. Ambedkar chaired the Drafting Committee."},{"id":83662,"text":"Capital of Australia?","options":[{"l":"a","t":"Sydney","c":false},{"l":"b","t":"Melbourne","c":false},{"l":"c","t":"Canberra","c":true},{"l":"d","t":"Perth","c":false}],"sol":"Canberra. Sydney and Melbourne are major cities but not capitals."},{"id":83663,"text":"Which planet is the \"Red Planet\"?","options":[{"l":"a","t":"Venus","c":false},{"l":"b","t":"Mars","c":true},{"l":"c","t":"Jupiter","c":false},{"l":"d","t":"Saturn","c":false}],"sol":"Mars appears red due to iron oxide on its surface."},{"id":83664,"text":"Sun is classified as?","options":[{"l":"a","t":"Red Giant","c":false},{"l":"b","t":"White Dwarf","c":false},{"l":"c","t":"Yellow Dwarf","c":true},{"l":"d","t":"Neutron Star","c":false}],"sol":"Sun is a G-type main-sequence star (Yellow Dwarf)."},{"id":83665,"text":"UNESCO headquarters in?","options":[{"l":"a","t":"New York","c":false},{"l":"b","t":"Geneva","c":false},{"l":"c","t":"Paris","c":true},{"l":"d","t":"London","c":false}],"sol":"Paris. UN is New York, WHO is Geneva."},{"id":83666,"text":"Longest coastline in India?","options":[{"l":"a","t":"Tamil Nadu","c":false},{"l":"b","t":"Andhra Pradesh","c":false},{"l":"c","t":"Gujarat","c":true},{"l":"d","t":"Maharashtra","c":false}],"sol":"Gujarat (1,600 km) has longest coastline."},{"id":83667,"text":"Who wrote \"The Discovery of India\"?","options":[{"l":"a","t":"Mahatma Gandhi","c":false},{"l":"b","t":"Jawaharlal Nehru","c":true},{"l":"c","t":"B.R. Ambedkar","c":false},{"l":"d","t":"Rabindranath Tagore","c":false}],"sol":"Nehru wrote it during imprisonment in 1942-45."},{"id":83668,"text":"Chemical symbol for Gold?","options":[{"l":"a","t":"Go","c":false},{"l":"b","t":"Gd","c":false},{"l":"c","t":"Au","c":true},{"l":"d","t":"Ag","c":false}],"sol":"Au from Latin \"Aurum\" meaning shining dawn."},{"id":83669,"text":"Great Barrier Reef near which country?","options":[{"l":"a","t":"Indonesia","c":false},{"l":"b","t":"Australia","c":true},{"l":"c","t":"Philippines","c":false},{"l":"d","t":"Fiji","c":false}],"sol":"Off coast of Queensland, Australia."},{"id":83670,"text":"Year of Indian independence?","options":[{"l":"a","t":"1945","c":false},{"l":"b","t":"1946","c":false},{"l":"c","t":"1947","c":true},{"l":"d","t":"1950","c":false}],"sol":"August 15, 1947. Republic on Jan 26, 1950."}];
+        var answered={},correctCount=0,lessonSlug="physics-basics";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("agniveer-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("agniveer-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("agniveer-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

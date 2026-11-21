@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Limits, Continuity &amp; Differentiability — JEE Mathematics Lesson | vlymbooq</title>
+    <meta name="description" content="Free JEE Mathematics Limits, Continuity &amp; Differentiability lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-limits-continuity.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95em}
+        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}
+        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/jee/">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D Geometry</a>
+                    <a href="lesson-probability-statistics.html">Probability & Statistics</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-quadratic-sequences.html">Quadratic Equations, Sequences & Series</a>
+                    <a href="lesson-complex-binomial.html">Complex Numbers & Binomial Theorem</a>
+                    <a href="lesson-matrices-determinants.html">Matrices & Determinants</a>
+                    <a href="lesson-permutations-probability.html">Permutations, Combinations & Probability</a>
+                    <a href="lesson-limits-continuity.html" class="active">Limits, Continuity & Differentiability</a>
+                    <a href="lesson-differentiation-applications.html">Differentiation & Its Applications</a>
+                    <a href="lesson-integration.html">Indefinite & Definite Integration</a>
+                    <a href="lesson-differential-equations.html">Differential Equations</a>
+                    <a href="lesson-vectors-3d.html">Vectors & Three-Dimensional Geometry</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Limits, Continuity &amp; Differentiability</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 18 Nov 2026 &#183; 5,424 words &#183; 5 sections</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.75em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 21 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="f012458b10a4" data-updated="2026-11-21" data-updated-label="21 Nov 2026" data-headings="[&quot;1. Limits and Standard Results&quot;,&quot;1.1 Definition of a Limit&quot;,&quot;1.2 Algebra of Limits&quot;,&quot;1.3 Standard Limits and Their Derivations&quot;,&quot;1.4 Limits at Infinity and Infinite Limits&quot;,&quot;2. Continuity&quot;,&quot;2.1 Continuity at a Point&quot;,&quot;2.2 Continuity on an Interval&quot;,&quot;2.3 Classification of Discontinuities&quot;,&quot;2.4 Properties of Continuous Functions&quot;,&quot;3. Differentiability&quot;,&quot;3.1 Definition of the Derivative&quot;,&quot;3.2 Differentiability Implies Continuity&quot;,&quot;3.3 Rules of Differentiation&quot;,&quot;3.4 Higher Order Derivatives&quot;,&quot;4. Mean Value Theorems&quot;,&quot;4.1 Rolle’s Theorem&quot;,&quot;4.2 Lagrange’s Mean Value Theorem&quot;,&quot;4.3 Cauchy’s Mean Value Theorem&quot;,&quot;4.4 Applications of the Mean Value Theorems&quot;,&quot;5. Problem Solving Strategies and Advanced Applications&quot;,&quot;5.1 Evaluating Indeterminate Forms Using L’Hôpital’s Rule&quot;,&quot;5.2 Using Series Expansions for Limits&quot;,&quot;5.3 Continuity and Differentiability in Parametric and Implicit Functions&quot;,&quot;5.4 Common Pitfalls and How to Avoid Them&quot;,&quot;Uniform Continuity and Its Distinction from Pointwise Continuity&quot;,&quot;Darboux&#39;s Theorem and the Intermediate Value Property of Derivatives&quot;,&quot;Taylor&#39;s Theorem with Remainder Forms and Error Estimation&quot;,&quot;Higher‑Order Derivatives: Leibniz Rule and Faà di Bruno&#39;s Formula&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Limits, standard results, continuity, and differentiability including the mean value theorems.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Limits · Continuity · Differentiability · MVT</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Limits, Continuity &amp; Differentiability</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+<h2>1. Limits and Standard Results</h2>
+
+<h3>1.1 Definition of a Limit</h3>
+<p>The concept of a limit captures the behaviour of a function as its argument approaches a particular value, without necessarily requiring the function to be defined at that value. Formally, we say that the limit of f(x) as x tends to a is L, written lim<sub>x→a</sub> f(x) = L, if for every positive number ε there exists a positive number δ such that whenever 0 < |x − a| < δ the inequality |f(x) − L| < ε holds. This ε‑δ definition makes precise the intuitive idea that f(x) can be made arbitrarily close to L by taking x sufficiently close to a, and it is the foundation upon which all subsequent limit theorems are built.</p>
+<p>Because the definition only concerns values of x different from a, the existence of a limit does not depend on the value f(a) itself. Consequently a function may have a limit at a point where it is not defined, or where it is defined but takes a different value. This distinction is crucial when we later discuss continuity, where the limit must equal the function value.</p>
+<h3>1.2 Algebra of Limits</h3>
+<p>If the limits of two functions exist individually, then the limit of their sum, difference, product, and quotient (provided the denominator limit is non‑zero) can be obtained by performing the corresponding algebraic operation on the individual limits. In symbols, if lim<sub>x→a</sub> f(x) = L and lim<sub>x→a</sub> g(x) = M, then lim<sub>x→a</sub> [f(x) ± g(x)] = L ± M, lim<sub>x→a</sub> [f(x)·g(x)] = L·M, and lim<sub>x→a</sub> [f(x)/g(x)] = L/M for M ≠ 0. These rules follow directly from the ε‑δ definition and allow us to break down complicated expressions into simpler pieces whose limits are known or easier to evaluate.</p>
+<p>The algebra of limits also extends to constant multiples and powers: lim<sub>x→a</sub> [c·f(x)] = c·L for any constant c, and lim<sub>x→a</sub> [f(x)]<sup>n</sup> = L<sup>n</sup> for any positive integer n. When combined with the standard limits discussed next, these rules give a powerful toolkit for evaluating a vast majority of elementary limits encountered in the JEE syllabus.</p>
+<h3>1.3 Standard Limits and Their Derivations</h3>
+<p>Several limits appear so frequently that they are treated as standard results. The most important among them is lim<sub>x→0</sub> (sin x)/x = 1, which can be proved geometrically by comparing the areas of a sector, a triangle, and a larger triangle in the unit circle, or analytically using the squeeze theorem. From this fundamental limit we obtain lim<sub>x→0</sub> (tan x)/x = 1 and lim<sub>x→0</sub> (1 − cos x)/x<sup>2</sup> = 1/2 by algebraic manipulation and the identity 1 − cos x = 2 sin<sup>2</sup>(x/2). Another cornerstone is lim<sub>x→0</sub> (e<sup>x</sup> − 1)/x = 1, which follows from the definition of the exponential function as its own derivative or from the series expansion e<sup>x</sup> = 1 + x + x<sup>2</sup>/2! + … . Similarly, lim<sub>x→0</sub> (a<sup>x</sup> − 1)/x = ln a for a > 0, and lim<sub>x→0</sub> (ln(1+x))/x = 1. These standard limits are the building blocks for evaluating more complex indeterminate forms without resorting to L’Hôpital’s rule at every step.</p>
+<p>Knowing the derivations helps a student recognise when a given limit can be transformed into one of these standard forms. For instance, the limit lim<sub>x→0</sub> (sin 5x)/(3x) is immediately seen as (5/3)·lim<sub>x→0</sub> (sin 5x)/(5x) = 5/3, because the argument of sine and the denominator can be matched by a simple substitution. Such manipulations are expected to be performed swiftly in an examination setting.</p>
+<h3>1.4 Limits at Infinity and Infinite Limits</h3>
+<p>When the variable grows without bound, we speak of limits at infinity. The notation lim<sub>x→∞</sub> f(x) = L means that for every ε > 0 there exists a number M such that |f(x) − L| < ε whenever x > M. This definition mirrors the finite‑point definition and allows us to discuss horizontal asymptotes of graphs. For rational functions, the limit at infinity is determined by the leading terms of numerator and denominator: if the degree of the numerator is less than that of the denominator the limit is 0; if the degrees are equal the limit is the ratio of leading coefficients; if the numerator’s degree exceeds the denominator’s the limit is infinite (or does not exist in the finite sense).</p>
+<p>Infinite limits, written lim<sub>x→a</sub> f(x) = ∞, describe the situation where f(x) grows arbitrarily large in magnitude as x approaches a. They are not limits in the strict ε‑δ sense because ∞ is not a real number, but they are a convenient shorthand for describing vertical asymptotes. The algebraic rules for limits extend to infinite limits with the usual caveats: ∞ + ∞ = ∞, ∞·∞ = ∞, but expressions such as ∞ − ∞ or 0·∞ are indeterminate and require further analysis.</p>
+
+<table>
+<caption>Comparison of Limit Laws and Continuity Conditions</caption>
+<thead>
+<tr><th>Property</th><th>Limit Law</th><th>Continuity Requirement</th></tr>
+</thead>
+<tbody>
+<tr><td>Sum</td><td>lim (f+g) = lim f + lim g</td><td>f+g continuous if f and g continuous</td></tr>
+<tr><td>Product</td><td>lim (f·g) = (lim f)(lim g)</td><td>f·g continuous if f and g continuous</td></tr>
+<tr><td>Quotient</td><td>lim (f/g) = (lim f)/(lim g), lim g ≠ 0</td><td>f/g continuous if f,g continuous and g ≠ 0</td></tr>
+<tr><td>Composition</td><td>lim f(g(x)) = f(lim g(x)) if f continuous at lim g</td><td>f∘g continuous if g continuous at a and f continuous at g(a)</td></tr>
+</tbody>
+</table>
+
+<h2>2. Continuity</h2>
+<h3>2.1 Continuity at a Point</h3>
+<p>A function f is said to be continuous at a point a if three conditions are simultaneously satisfied: f(a) is defined, the limit lim<sub>x→a</sub> f(x) exists, and the limit equals the function value, i.e. lim<sub>x→a</sub> f(x) = f(a). This definition encapsulates the idea that the graph of the function has no break, jump, or hole at a. If any one of the three conditions fails, the function is discontinuous at that point. The ε‑δ formulation of continuity is a direct adaptation of the limit definition: for every ε > 0 there exists a δ > 0 such that |x − a| < δ implies |f(x) − f(a)| < ε. Notice that the condition 0 < |x − a| is dropped because we now require the inequality to hold also at x = a, which is automatically true when the limit equals the function value.</p>
+<p>Continuity at a point is a local property; it depends only on the behaviour of the function in an arbitrarily small neighbourhood of that point. This locality is why we can often test continuity by examining the left‑hand and right‑hand limits separately, especially for piecewise‑defined functions.</p>
+<h3>2.2 Continuity on an Interval</h3>
+<p>A function is continuous on an open interval (a, b) if it is continuous at every point of that interval. For a closed interval [a, b] we additionally require right‑continuity at a (lim<sub>x→a⁺</sub> f(x) = f(a)) and left‑continuity at b (lim<sub>x→b⁻</sub> f(x) = f(b)). The distinction between open and closed intervals matters when applying theorems such as the Intermediate Value Theorem, which guarantees that a continuous function on a closed interval attains every value between its endpoints. The theorem fails on open intervals because the function may approach a value without ever reaching it, as seen with f(x) = 1/x on (0, 1).</p>
+<p>Continuity on an interval also implies the function is bounded and attains its bounds (Extreme Value Theorem) provided the interval is closed and bounded. These global consequences are direct results of the local ε‑δ definition combined with the completeness of the real numbers.</p>
+<h3>2.3 Classification of Discontinuities</h3>
+<p>When a function fails to be continuous at a point, the discontinuity can be classified into three main types. A removable discontinuity occurs when the limit exists but either the function is not defined at the point or its value differs from the limit; the graph has a hole that can be “filled” by redefining the function value. A jump discontinuity arises when the left‑hand and right‑hand limits both exist but are unequal; the graph makes a finite jump. An infinite (or essential) discontinuity occurs when at least one of the one‑sided limits is infinite or does not exist in any finite sense; the graph typically has a vertical asymptote. Recognising the type of discontinuity is important for determining whether a function can be made continuous by a simple redefinition or whether the discontinuity is intrinsic to the function’s nature.</p>
+<h3>2.4 Properties of Continuous Functions</h3>
+<p>Continuous functions enjoy several algebraic properties that mirror the limit laws: the sum, difference, product, and quotient (where the denominator is non‑zero) of continuous functions are continuous. Moreover, the composition of continuous functions is continuous. These properties allow us to build complicated continuous functions from elementary ones such as polynomials, trigonometric functions, exponentials, and logarithms. A polynomial is continuous everywhere on ℝ, a rational function is continuous wherever its denominator is non‑zero, and the trigonometric functions sin x and cos x are continuous on ℝ. The exponential function e<sup>x</sup> and the natural logarithm ln x are continuous on their respective domains (ℝ and (0, ∞)). These facts are frequently used without proof in JEE problems, but a student should be able to justify them by appealing to the limit laws and the standard limits discussed earlier.</p>
+
+<div class="example-box">
+<div class="ex-title">Example 1: Evaluating a Limit Using Standard Results</div>
+<div class="ex-text">Find the limit as x approaches 0 of (sin 3x) / (2x).</div>
+<div class="ex-soln">Solution: We rewrite the expression as (3/2)·(sin 3x)/(3x). As x → 0, the argument 3x also tends to 0, so we can apply the standard limit lim<sub>u→0</sub> (sin u)/u = 1 with u = 3x. Hence lim<sub>x→0</sub> (sin 3x)/(3x) = 1. Multiplying by the constant factor 3/2 gives the final answer 3/2.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Day Insight</div>
+<div class="tip-text">When a limit yields an indeterminate form 0/0, first check whether a standard limit such as sin x / x → 1 can be applied after algebraic manipulation; this often saves time compared to applying L’Hôpital’s rule directly.</div>
+</div>
+
+<h2>3. Differentiability</h2>
+<h3>3.1 Definition of the Derivative</h3>
+<p>The derivative of a function f at a point a, denoted f′(a) or df/dx|<sub>x=a</sub>, is defined as the limit lim<sub>h→0</sub> [f(a+h) − f(a)]/h, provided this limit exists. Geometrically, the derivative represents the slope of the tangent line to the curve y = f(x) at the point (a, f(a)). The existence of this limit implies that the function is locally well approximated by a linear function, and the error of this approximation tends to zero faster than h. The definition also makes clear that differentiability is a stronger condition than continuity, because the limit of the difference quotient requires the numerator f(a+h) − f(a) to tend to zero as h → 0, which is precisely the condition for continuity at a.</p>
+<p>If the limit exists, we say f is differentiable at a. The derivative function f′(x) is then defined on the set of points where f is differentiable. In many JEE problems, the derivative is computed using first principles for simple functions such as x<sup>2</sup>, sin x, or e<sup>x</sup> to illustrate the process, after which standard differentiation rules are employed.</p>
+<h3>3.2 Differentiability Implies Continuity</h3>
+<p>If a function is differentiable at a point, it must be continuous there. The proof follows directly from the definition: f(a+h) − f(a) = [f(a+h) − f(a)]/h · h. Taking the limit as h → 0, the first factor tends to f′(a) (finite) and the second factor tends to 0, so the product tends to 0. Hence lim<sub>h→0</sub> f(a+h) = f(a), which is exactly continuity at a. The converse is false; a classic counterexample is f(x) = |x| at x = 0, which is continuous but not differentiable because the left‑hand and right‑hand difference quotients give −1 and +1 respectively. This distinction is frequently tested: students must be able to produce examples of continuous but non‑differentiable functions and explain why the derivative fails to exist.</p>
+<h3>3.3 Rules of Differentiation</h3>
+<p>Once the derivatives of elementary functions are known, the derivative of any combination can be obtained using a small set of rules. The sum rule states (f+g)′ = f′ + g′; the constant multiple rule gives (cf)′ = c f′; the product rule (Leibniz rule) is (fg)′ = f′g + fg′; the quotient rule is (f/g)′ = (f′g − fg′)/g<sup>2</sup> for g ≠ 0; and the chain rule for composition reads (f∘g)′(x) = f′(g(x))·g′(x). These rules are derived from the limit definition and the algebra of limits, and they are indispensable for differentiating algebraic, trigonometric, exponential, and logarithmic functions efficiently. In the JEE context, the chain rule is especially important because many problems involve nested functions such as sin(e<sup>x<sup>2</sup></sup>) or ln(tan x). Mastery of these rules, together with the standard derivatives d/dx (x<sup>n</sup>) = n x<sup>n−1</sup>, d/dx (sin x) = cos x, d/dx (cos x) = −sin x, d/dx (e<sup>x</sup>) = e<sup>x</sup>, d/dx (ln x) = 1/x, allows a student to differentiate virtually any function appearing in the syllabus.</p>
+<h3>3.4 Higher Order Derivatives</h3>
+<p>The second derivative f″(x) is the derivative of f′(x), and in general the nth derivative f<sup>(n)</sup>(x) is obtained by differentiating n times. Higher order derivatives provide information about the curvature and the rate of change of the slope. For instance, f″(x) > 0 indicates the graph is concave upward, while f″(x) < 0 indicates concave downward. In physics‑related problems, the second derivative of position with respect to time gives acceleration. The Leibniz rule for the nth derivative of a product, (fg)<sup>(n)</sup> = Σ<sub>k=0</sub><sup>n</sup> C(n,k) f<sup>(k)</sup> g<sup>(n−k)</sup>, is a direct generalisation of the product rule and is occasionally required for series expansions or for solving differential equations. Students should be comfortable computing up to the third derivative of standard functions and recognising patterns such as the cyclic derivatives of sin x and cos x.</p>
+
+<table>
+<caption>Comparison of Rolle’s Theorem and Lagrange’s Mean Value Theorem</caption>
+<thead>
+<tr><th>Aspect</th><th>Rolle’s Theorem</th><th>Lagrange’s Mean Value Theorem</th></tr>
+</thead>
+<tbody>
+<tr><td>Hypotheses</td><td>f continuous on [a,b], differentiable on (a,b), f(a)=f(b)</td><td>f continuous on [a,b], differentiable on (a,b)</td></tr>
+<tr><td>Conclusion</td><td>∃ c∈(a,b) such that f′(c)=0</td><td>∃ c∈(a,b) such that f′(c) = (f(b)−f(a))/(b−a)</td></tr>
+<tr><td>Geometric Meaning</td><td>Tangent parallel to x‑axis</td><td>Tangent parallel to chord joining (a,f(a)) and (b,f(b))</td></tr>
+<tr><td>Special Case</td><td>Lagrange with f(a)=f(b)</td><td>Generalisation of Rolle</td></tr>
+</tbody>
+</table>
+
+<h2>4. Mean Value Theorems</h2>
+<h3>4.1 Rolle’s Theorem</h3>
+<p>Rolle’s theorem is a fundamental existence result that guarantees a stationary point for a differentiable function that takes equal values at the endpoints of a closed interval. Precisely, if f is continuous on [a, b], differentiable on (a, b), and f(a) = f(b), then there exists at least one c in (a, b) such that f′(c) = 0. The proof uses the Extreme Value Theorem to assert that f attains a maximum and a minimum on [a, b]; if both occur at the endpoints, the function is constant and the derivative is zero everywhere. Otherwise, an interior extremum exists, and Fermat’s theorem on stationary points gives f′(c) = 0. Rolle’s theorem is often the first step in proving the more general mean value theorems and is also used to establish the uniqueness of roots of equations: if a differentiable function has two distinct zeros, its derivative must vanish somewhere between them.</p>
+<h3>4.2 Lagrange’s Mean Value Theorem</h3>
+<p>Lagrange’s mean value theorem (often called simply the Mean Value Theorem) extends Rolle’s theorem by removing the requirement f(a) = f(b). It states that if f is continuous on [a, b] and differentiable on (a, b), then there exists a point c in (a, b) such that f′(c) = (f(b) − f(a))/(b − a). The right‑hand side is the slope of the secant line joining the endpoints of the graph. The theorem is proved by applying Rolle’s theorem to the auxiliary function g(x) = f(x) − [(f(b) − f(a))/(b − a)](x − a) − f(a), which satisfies g(a) = g(b) = 0. The conclusion f′(c) = (f(b) − f(a))/(b − a) has far‑reaching consequences: it provides a link between the average rate of change over an interval and the instantaneous rate of change at some interior point, and it underpins many inequalities and approximation results, including the proof of the Fundamental Theorem of Calculus.</p>
+<h3>4.3 Cauchy’s Mean Value Theorem</h3>
+<p>Cauchy’s mean value theorem generalises Lagrange’s theorem to two functions. If f and g are continuous on [a, b] and differentiable on (a, b), and g′(x) ≠ 0 for all x in (a, b), then there exists c in (a, b) such that (f(b) − f(a))/(g(b) − g(a)) = f′(c)/g′(c). This result is obtained by applying Rolle’s theorem to the function h(x) = f(x) − f(a) − [(f(b) − f(a))/(g(b) − g(a))](g(x) − g(a)). Cauchy’s theorem is the basis for L’Hôpital’s rule, because taking the limit as b → a yields the familiar form lim<sub>x→a</sub> f(x)/g(x) = lim<sub>x→a</sub> f′(x)/g′(x) under appropriate conditions. In JEE problems, Cauchy’s theorem sometimes appears in disguise when a ratio of differences is given and the student is asked to relate it to a ratio of derivatives.</p>
+<h3>4.4 Applications of the Mean Value Theorems</h3>
+<p>The mean value theorems are not merely theoretical; they provide powerful tools for estimating function values, proving inequalities, and establishing properties such as monotonicity. For example, if f′(x) > 0 on an interval, then by the Mean Value Theorem f is strictly increasing on that interval. Conversely, if f is increasing, its derivative cannot be negative anywhere it exists. The theorems also give error bounds for linear approximations: the difference between f(x) and its tangent line at a is exactly f′(c)(x−a) for some c between a and x. In competitive examinations, a typical question might ask to prove that sin x < x for x > 0 by applying the Mean Value Theorem to f(x) = sin x on [0, x] and using the fact that cos c < 1 for c in (0, x). Another common application is to show that a polynomial of degree n has at most n real roots by repeatedly applying Rolle’s theorem to its derivatives.</p>
+
+<h2>5. Problem Solving Strategies and Advanced Applications</h2>
+<h3>5.1 Evaluating Indeterminate Forms Using L’Hôpital’s Rule</h3>
+<p>L’Hôpital’s rule is a direct corollary of Cauchy’s mean value theorem and provides a systematic method for resolving limits of the indeterminate forms 0/0 and ∞/∞. The rule states that if lim<sub>x→a</sub> f(x) = lim<sub>x→a</sub> g(x) = 0 or both limits are infinite, and the limit of the quotient of derivatives lim<sub>x→a</sub> f′(x)/g′(x) exists (or is infinite), then lim<sub>x→a</sub> f(x)/g(x) = lim<sub>x→a</sub> f′(x)/g′(x). The rule can be applied repeatedly as long as the indeterminate form persists. However, it is essential to verify the hypotheses each time: the functions must be differentiable near a (except possibly at a), and g′(x) must not vanish in a punctured neighbourhood of a. In practice, many JEE limits that yield 0/0 can be solved more elegantly by algebraic manipulation and standard limits, but L’Hôpital’s rule remains a reliable fallback, especially when the functions involve exponentials, logarithms, or inverse trigonometric functions whose standard limits are less familiar.</p>
+<h3>5.2 Using Series Expansions for Limits</h3>
+<p>Taylor and Maclaurin series provide another powerful technique for evaluating limits, particularly when the indeterminate form involves higher‑order small quantities. The Maclaurin series of a function f about 0 is f(x) = f(0) + f′(0)x + f″(0)x<sup>2</sup>/2! + … . By substituting the series expansions of the numerator and denominator, the lowest‑order non‑zero terms often determine the limit. For example, lim<sub>x→0</sub> (e<sup>x</sup> − 1 − x)/x<sup>2</sup> can be found by writing e<sup>x</sup> = 1 + x + x<sup>2</sup>/2 + x<sup>3</sup>/6 + …, which gives the numerator as x<sup>2</sup>/2 + higher order terms, so the limit is 1/2. This method is especially useful when repeated application of L’Hôpital’s rule becomes cumbersome. Students should memorise the Maclaurin series of e<sup>x</sup>, sin x, cos x, ln(1+x), and (1+x)<sup>α</sup> up to the x<sup>3</sup> term, as these cover the vast majority of series‑based limit problems in the examination.</p>
+<h3>5.3 Continuity and Differentiability in Parametric and Implicit Functions</h3>
+<p>Many JEE problems present curves in parametric form x = φ(t), y = ψ(t) or implicitly as F(x, y) = 0. The derivative dy/dx for a parametric curve is given by (dy/dt)/(dx/dt) provided dx/dt ≠ 0. Continuity and differentiability of the parametric functions φ and ψ translate directly into continuity and differentiability of the curve, except at points where dx/dt = 0, which may correspond to vertical tangents or cusps. For an implicit function defined by F(x, y) = 0, the implicit differentiation formula dy/dx = −F<sub>x</sub>/F<sub>y</sub> holds wherever F<sub>y</sub> ≠ 0, a consequence of the Implicit Function Theorem. Understanding these relationships allows a student to analyse the behaviour of curves that are not graphs of functions in the usual sense, such as the cycloid or the folium of Descartes, and to determine points of non‑differentiability like cusps or self‑intersections.</p>
+<h3>5.4 Common Pitfalls and How to Avoid Them</h3>
+<p>A frequent mistake is to assume that the existence of a limit guarantees continuity; the function value must also be checked. Another common error is applying L’Hôpital’s rule to forms that are not 0/0 or ∞/∞, such as 0·∞ or ∞−∞, without first converting them into a quotient. Students also sometimes forget that the chain rule requires the inner function to be differentiable at the relevant point and the outer function to be differentiable at the image of that point. In mean value theorem problems, it is crucial to verify the continuity and differentiability hypotheses on the exact interval given; overlooking a point where the derivative does not exist invalidates the conclusion.</p>
+<h3>Uniform Continuity and Its Distinction from Pointwise Continuity</h3>
+<p>Pointwise continuity at <em>x₀</em> means: for every ε > 0 there exists δ > 0 (depending on ε and <em>x₀</em>) such that |<em>f</em>(<em>x</em>) − <em>f</em>(<em>x₀</em>)| < ε whenever |<em>x</em> − <em>x₀</em>| < δ. Uniform continuity strengthens this by requiring a single δ for all points in the domain: for every ε > 0 there exists δ > 0 such that for all <em>x</em>, <em>y</em> in the domain, |<em>x</em> − <em>y</em>| < δ implies |<em>f</em>(<em>x</em>) − <em>f</em>(<em>y</em>)| < ε. The distinction is crucial on unbounded intervals or intervals that are not closed. For example, <em>f</em>(<em>x</em>) = 1/<em>x</em> is continuous on (0,1] but not uniformly continuous because as <em>x</em> → 0⁺ the required δ shrinks to zero. In contrast, the Heine–Cantor theorem guarantees that every continuous function on a closed, bounded interval [a,b] is uniformly continuous. This theorem is frequently used to justify term‑by‑term integration of series and to prove the existence of the Riemann integral for continuous functions.</p>
+<p>A practical criterion for uniform continuity on ℝ is the Lipschitz condition: if |<em>f</em>(<em>x</em>) − <em>f</em>(<em>y</em>)| ≤ <em>L</em>|<em>x</em> − <em>y</em>| for all <em>x</em>, <em>y</em>, then <em>f</em> is uniformly continuous. Differentiable functions with bounded derivative satisfy this by the Mean Value Theorem. However, uniform continuity does not imply differentiability; |<em>x</em>| is uniformly continuous on ℝ but not differentiable at 0. Conversely, a function can be differentiable everywhere with unbounded derivative (e.g., <em>f</em>(<em>x</em>) = <em>x</em>² on ℝ) and fail to be uniformly continuous. Understanding these nuances helps decide whether a limit of a sequence of functions can be interchanged with integration or differentiation.</p>
+<h4>Sequential Characterisation</h4>
+<p>A function <em>f</em> is uniformly continuous on a set <em>D</em> iff for any two sequences (<em>xₙ</em>) and (<em>yₙ</em>) in <em>D</em> with |<em>xₙ</em> − <em>yₙ</em>| → 0, we have |<em>f</em>(<em>xₙ</em>) − <em>f</em>(<em>yₙ</em>)| → 0. This sequential test is often easier to apply in proofs because it avoids explicit ε‑δ manipulation. For instance, to show that <em>f</em>(<em>x</em>) = sin(<em>x</em>²) is not uniformly continuous on ℝ, choose <em>xₙ</em> = √(2π<em>n</em>) and <em>yₙ</em> = √(2π<em>n</em> + π/2). Then |<em>xₙ</em> − <em>yₙ</em>| → 0 but |sin(<em>xₙ</em>²) − sin(<em>yₙ</em>²)| = 1 does not tend to 0.</p>
+
+<h3>Darboux's Theorem and the Intermediate Value Property of Derivatives</h3>
+<p>While the Intermediate Value Theorem applies to continuous functions, Darboux's theorem states that derivatives also possess the intermediate value property, even if they are not continuous. Formally, if <em>f</em> is differentiable on an interval <em>I</em> and <em>a</em>, <em>b</em> ∈ <em>I</em> with <em>a</em> < <em>b</em>, then for any <em>L</em> between <em>f</em>′(<em>a</em>) and <em>f</em>′(<em>b</em>) there exists <em>c</em> ∈ (<em>a</em>, <em>b</em>) such that <em>f</em>′(<em>c</em>) = <em>L</em>. The proof applies the Mean Value Theorem to <em>g</em>(<em>x</em>) = <em>f</em>(<em>x</em>) − <em>Lx</em>. A striking consequence: a derivative cannot have a simple jump discontinuity. If <em>f</em>′ exists everywhere on an interval, its discontinuities must be oscillatory (e.g., <em>f</em>(<em>x</em>) = <em>x</em>² sin(1/<em>x</em>) for <em>x</em> ≠ 0, <em>f</em>(0) = 0, whose derivative at 0 is 0 but oscillates near 0). Darboux's theorem also implies that if a derivative takes both positive and negative values on an interval, it must vanish somewhere — a fact used to prove the existence of critical points without assuming continuity of the derivative.</p>
+<p>An important corollary: if <em>f</em>′ exists on [a,b] and <em>f</em>′(<em>a</em>) < 0 < <em>f</em>′(<em>b</em>), then there is at least one <em>c</em> ∈ (<em>a</em>, <em>b</em>) with <em>f</em>′(<em>c</em>) = 0. This follows directly from the intermediate value property for derivatives; it does not require <em>f</em>′ to be continuous, only that it exists everywhere. The theorem also underpins the proof that a function with derivative identically zero on an interval is constant. In competitive problems, Darboux's theorem is often invoked to rule out certain discontinuities in a derivative or to guarantee a point where the derivative equals a prescribed value.</p>
+<div class="example-box">
+<div class="ex-title">Application of Darboux's Theorem</div>
+<div class="ex-text">Let f be differentiable on [0,2] with f'(0) = -1 and f'(2) = 3. Prove that there exists c ∈ (0,2) such that f'(c) = 0.</div>
+<div class="ex-soln">Since f is differentiable on [0,2], its derivative f' exists at every point. By Darboux's theorem, f' has the intermediate value property on [0,2]. The values f'(0) = -1 and f'(2) = 3 are of opposite signs, so 0 lies between them. Therefore some c ∈ (0,2) satisfies f'(c) = 0. No continuity of f' is required; existence of the derivative at all points suffices.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem gives derivative values at endpoints and asks for a zero of the derivative inside the interval, immediately check whether Darboux's theorem applies. It requires only differentiability on the whole interval, not continuity of the derivative. This is faster than constructing an auxiliary function for Rolle's theorem, which would need equal function values at the endpoints.</div>
+</div>
+
+<h3>Taylor's Theorem with Remainder Forms and Error Estimation</h3>
+<p>Taylor's theorem generalises the Mean Value Theorem by approximating a function with a polynomial plus a remainder. If <em>f</em> has derivatives up to order <em>n</em>+1 on an interval containing <em>a</em> and <em>x</em>, then for each <em>x</em> there exists <em>ξ</em> between <em>a</em> and <em>x</em> such that<br>
+<em>f</em>(<em>x</em>) = <em>f</em>(<em>a</em>) + <em>f</em>′(<em>a</em>)(<em>x</em>−<em>a</em>) + <em>f</em>″(<em>a</em>)(<em>x</em>−<em>a</em>)²/2! + … + <em>f</em>⁽ⁿ⁾(<em>a</em>)(<em>x</em>−<em>a</em>)ⁿ/<em>n</em>! + <em>Rₙ</em>(<em>x</em>),<br>
+where the remainder <em>Rₙ</em>(<em>x</em>) has several forms. The Lagrange form is <em>Rₙ</em>(<em>x</em>) = <em>f</em>⁽ⁿ⁺¹⁾(<em>ξ</em>)(<em>x</em>−<em>a</em>)ⁿ⁺¹/(<em>n</em>+1)!. The Cauchy form is <em>Rₙ</em>(<em>x</em>) = <em>f</em>⁽ⁿ⁺¹⁾(<em>ξ</em>)(<em>x</em>−<em>ξ</em>)ⁿ(<em>x</em>−<em>a</em>)/<em>n</em>!. The integral form, valid when <em>f</em>⁽ⁿ⁺¹⁾ is integrable, is <em>Rₙ</em>(<em>x</em>) = ∫<sub>a</sub><sup>x</sup> <em>f</em>⁽ⁿ⁺¹⁾(<em>t</em>)(<em>x</em>−<em>t</em>)ⁿ/<em>n</em>! <em>dt</em>. Each form suits different estimation tasks. The Lagrange form gives a simple bound if a uniform bound <em>M</em> for |<em>f</em>⁽ⁿ⁺¹⁾| is known: |<em>Rₙ</em>(<em>x</em>)| ≤ <em>M</em>|<em>x</em>−<em>a</em>|ⁿ⁺¹/(<em>n</em>+1)!. This underpins error estimates in numerical methods and convergence proofs for Maclaurin series of <em>e</em><sup>x</sup>, sin <em>x</em>, cos <em>x</em>.</p>
+<p>In examinations, a typical question asks to approximate √1.01 using a second‑order Taylor polynomial of √<em>x</em> about <em>a</em> = 1 and to bound the error. The Lagrange remainder with <em>n</em> = 2 involves the third derivative of √<em>x</em>, which is (3/8)<em>x</em>⁻⁵ᐟ². On [1, 1.01] the maximum occurs at <em>x</em> = 1, giving <em>M</em> = 3/8. The error bound is then (3/8)(0.01)³/6 ≈ 6.25×10⁻⁸. Another common task is to prove inequalities like sin <em>x</em> < <em>x</em> − <em>x</em>³/6 + <em>x</em>⁵/120 for sufficiently small <em>x</em> > 0 by examining the sign of the remainder. Mastery of the three remainder forms allows a student to choose the one yielding the tightest bound.</p>
+<h4>Maclaurin Series and Radius of Convergence</h4>
+<p>The Maclaurin series is the Taylor series about <em>a</em> = 0. For <em>e</em><sup>x</sup>, sin <em>x</em>, cos <em>x</em>, the series converge for all real <em>x</em> because the remainder tends to zero as <em>n</em> → ∞. For ln(1+<em>x</em>) and (1+<em>x</em>)<sup>α</sup>, the series converge only for |<em>x</em>| < 1 (and at <em>x</em> = 1 under certain conditions on α). The radius of convergence can be found via the ratio test on the coefficients. In competitive problems, recognising a function's series up to <em>x</em>³ or <em>x</em>⁴ often suffices to evaluate limits or approximate integrals. For example, ∫<sub>0</sub><sup>0.1</sup> sin(<em>t</em>²) <em>dt</em> can be approximated by integrating the series <em>t</em>² − <em>t</em>⁶/6 + … term by term, with the error controlled by the first omitted term.</p>
+
+<h3>Higher‑Order Derivatives: Leibniz Rule and Faà di Bruno's Formula</h3>
+<p>The <em>n</em>th derivative of a product <em>u</em> and <em>v</em> is given by the Leibniz rule:<br>
+(<em>uv</em>)⁽ⁿ⁾ = ∑<sub>k=0</sub><sup>n</sup> C(<em>n</em>, <em>k</em>) <em>u</em>⁽ᵏ⁾ <em>v</em>⁽ⁿ⁻ᵏ⁾,<br>
+where C(<em>n</em>, <em>k</em>) = <em>n</em>!/(<em>k</em>!(<em>n</em>−<em>k</em>!)). This is proved by induction using the product rule and Pascal's identity. It is extremely useful when one factor is a polynomial (so its higher derivatives vanish) or when both factors have simple derivative patterns (e.g., <em>e</em><sup>x</sup> sin <em>x</em>). For instance, the 5th derivative of <em>x</em>² <em>e</em><sup>x</sup> requires only terms with <em>k</em> = 0,1,2 because <em>u</em> = <em>x</em>² has zero derivatives for <em>k</em> ≥ 3, reducing the computation to a short sum.</p>
+<p>For the <em>n</em>th derivative of a composite function <em>f</em>(<em>g</em>(<em>x</em>)), Faà di Bruno's formula generalises the chain rule. It expresses the derivative as a sum over partitions of <em>n</em>:<br>
+<em>dⁿ</em>/<em>dxⁿ</em> <em>f</em>(<em>g</em>(<em>x</em>)) = ∑ <em>n</em>!/(<em>m</em>₁! <em>m</em>₂! … <em>m</em>ₙ!) <em>f</em>⁽ᵐ⁾(<em>g</em>(<em>x</em>)) ∏<sub>j=1</sub><sup>n</sup> (<em>g</em>⁽ʲ⁾(<em>x</em>)/<em>j</em>!)^<em>m</em>ⱼ,<br>
+where the sum runs over all <em>n</em>-tuples of non‑negative integers (<em>m</em>₁,…,\<em>m</em>ₙ) satisfying 1·<em>m</em>₁ + 2·<em>m</em>₂ + … + <em>n</em>·<em>m</em>ₙ = <em>n</em>, and <em>m</em> = <em>m</em>₁ + … + <em>m</em>ₙ. The full formula is rarely needed; the first few cases are standard: the second derivative is <em>f</em>″(<em>g</em>)(<em>g</em>′)² + <em>f</em>′(<em>g</em>)<em>g</em>″, the third adds terms involving <em>g</em>‴ and products of <em>g</em>′ and <em>g</em>″. In examinations, problems often ask for the <em>n</em>th derivative of a specific composite function like sin(<em>x</em>²) or ln(1+<em>x</em>²) at <em>x</em> = 0, which can be tackled by combining series expansions with the Leibniz rule rather than by direct application of Faà di Bruno. Nevertheless, knowing the formula's structure helps recognise patterns and prove identities involving higher derivatives.</p>
+<h4>Applications to Differential Equations</h4>
+<p>Higher‑order derivatives appear naturally in linear differential equations with constant coefficients. The characteristic polynomial method relies on the fact that the <em>n</em>th derivative of <em>e</em><sup>λx</sup> is λⁿ <em>e</em><sup>λx</sup>. For equations with variable coefficients, the Leibniz rule is used to compute derivatives of products that arise in reduction of order or in finding integrating factors. For example, to solve <em>y</em>″ − 2<em>x</em><em>y</em>′ + 2<em>y</em> = 0, one may look for a solution of the form <em>y</em> = <em>u</em>(<em>x</em>)<em>v</em>(<em>x</em>) and use the Leibniz rule to express the derivatives of the product. Mastery of these rules is both a computational skill and a gateway to broader problem-solving.</p>
+
+<ul>
+<li>Assuming uniform continuity on an unbounded interval just because the function is continuous.</li>
+<li>Applying the Intermediate Value Theorem to a derivative without verifying that the derivative exists at every point of the interval.</li>
+<li>Using the Lagrange remainder without checking that the (n+1)th derivative is bounded on the interval between a and x.</li>
+<li>Forgetting that the Leibniz rule sum stops when one factor's derivatives become zero, leading to unnecessary terms.</li>
+<li>Misapplying Faà di Bruno's formula by omitting the multinomial coefficient or using incorrect partition conditions.</li>
+<li>Confusing the Cauchy form of the remainder with the Lagrange form when estimating errors.</li>
+<li>Neglecting to verify the hypotheses of Darboux's theorem (differentiability on the whole interval) before concluding the existence of a zero of the derivative.</li>
+</ul>        <script>
+        (function(){try{
+          var m=document.getElementById("lesson-meta");if(!m)return;
+          var cur=m.getAttribute("data-version")||"";
+          var label=m.getAttribute("data-updated-label")||"";
+          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");
+          var k="vlymbooq-lesson-seen:"+location.pathname;
+          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}
+          var box=document.getElementById("lesson-new");
+          if(prev&&prev.v&&prev.v!==cur){
+            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});
+            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
+            if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
+            else{html+="The explanations and practice were revised.";}
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            box.innerHTML=html;box.hidden=false;
+            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
+            document.getElementById("lesson-new-ok").onclick=save;
+            return; // keep the old version stored until acknowledged
+          }
+          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));
+        }catch(e){}})();
+        </script>
+                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-permutations-probability.html" class="btn btn-primary">&#x2190; Permutations, Combinations &amp; Probability</a>
+                    <a href="lesson-differentiation-applications.html" class="btn btn-success">Differentiation &amp; Its Applications &#x2192;</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":101,"text":"Which of the following functions is uniformly continuous on its domain?","options":[{"l":"a","t":"f(x) = 1/x on (0,1]","c":false},{"l":"b","t":"f(x) = x^2 on R","c":false},{"l":"c","t":"f(x) = sin(x^2) on R","c":false},{"l":"d","t":"f(x) = sin x on R","c":true}],"sol":"Uniform continuity on a domain requires a single δ for all points. f(x)=1/x on (0,1] is continuous but not uniformly continuous because δ must shrink to 0 as x→0⁺. f(x)=x^2 on R has unbounded derivative, so not uniformly continuous. f(x)=sin(x^2) on R fails the sequential criterion (e.g., x_n=√(2πn), y_n=√(2πn+π/2)). f(x)=sin x on R has bounded derivative |cos x|≤1, hence is Lipschitz and therefore uniformly continuous on R. Thus only sin x is uniformly continuous."},{"id":102,"text":"For f(x) = sin(x^2) on R, which pair of sequences (x_n), (y_n) demonstrates that f is not uniformly continuous via the sequential criterion?","options":[{"l":"a","t":"x_n = n, y_n = n + 1/n","c":false},{"l":"b","t":"x_n = sqrt(2π n), y_n = sqrt(2π n + π/2)","c":true},{"l":"c","t":"x_n = 1/n, y_n = 1/(n+1)","c":false},{"l":"d","t":"x_n = n, y_n = n + 1","c":false}],"sol":"The sequential criterion for uniform continuity: f is uniformly continuous iff for any sequences with |x_n - y_n|→0, we have |f(x_n)-f(y_n)|→0. For f(x)=sin(x^2), choose x_n=√(2πn), y_n=√(2πn+π/2). Then x_n^2=2πn, y_n^2=2πn+π/2, so f(x_n)=0, f(y_n)=1, giving |f(x_n)-f(y_n)|=1. Meanwhile, |x_n - y_n| = (π/2)/(√(2πn)+√(2πn+π/2)) → 0. Hence this pair violates the criterion, proving f is not uniformly continuous. The other pairs either do not have difference tending to 0 or do not keep the function difference away from 0."},{"id":103,"text":"Using the Maclaurin polynomial of degree 3 for sin x, the error in approximating sin(0.1) is at most:","options":[{"l":"a","t":"4.2×10^-6","c":true},{"l":"b","t":"1.7×10^-4","c":false},{"l":"c","t":"8.3×10^-5","c":false},{"l":"d","t":"2.1×10^-7","c":false}],"sol":"The Maclaurin polynomial of degree 3 for sin x is P_3(x)=x - x^3/6. The Lagrange remainder is R_3(x) = f^{(4)}(ξ) x^4 / 4! for some ξ between 0 and x. Since the fourth derivative of sin x is sin x, its absolute value is ≤1. For x=0.1, |R_3| ≤ (0.1)^4 / 24 = 0.0001 / 24 ≈ 4.1667×10^{-6}. Thus the error is at most about 4.2×10^{-6}. The other options correspond to using lower-order remainders or incorrect factorial denominators."},{"id":104,"text":"The value of the 4th derivative of x^2 e^x at x = 0 is:","options":[{"l":"a","t":"12","c":true},{"l":"b","t":"24","c":false},{"l":"c","t":"6","c":false},{"l":"d","t":"0","c":false}],"sol":"Use Leibniz rule: (uv)^{(n)} = Σ_{k=0}^n C(n,k) u^{(k)} v^{(n-k)}. Let u=x^2, v=e^x. Derivatives: u(0)=0, u'(0)=0, u''(0)=2, u'''(0)=0, u^{(4)}(0)=0. v^{(k)}(0)=1 for all k. For n=4, only k=2 contributes because u^{(k)}(0)=0 for k≠2. Term: C(4,2) * u''(0) * v^{(2)}(0) = 6 * 2 * 1 = 12. Hence the 4th derivative at 0 is 12."}];
+        var answered={},correctCount=0,lessonSlug="limits-continuity";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

@@ -1,0 +1,109 @@
+name: Invent Questions
+
+# The site's own question-setter agent: qwen3.5:9b invents BRAND-NEW exam
+# questions — new mechanisms, new contexts, worked solutions — and publishes
+# them to data/invented/questions.json. mental.html serves them as
+# "Invented - fresh paper" practice.
+#
+# Nothing here is templated: each brief lists the styles/topics already used
+# so the agent keeps inventing fresh mechanisms instead of repeating, and a
+# 70% word-overlap filter (same rule as the rest of the site) drops any
+# accidental duplicate before it can be stored.
+#
+# Hosted free-tier models (NVIDIA NIM -> Groq -> OpenRouter -> GitHub Models); no local model pull.
+#
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b — the
+# bulk lane). The 27B is proven on this runner now (batiai/qwen3.8-27b:iq3,
+# trial 39136862076 on 2026-10-18: 3 accepted + published inside 110 min) and
+# runs its own once-a-day quality lane in invent-27b.yml — dispatch model=...
+# here only for experiments. Both lanes append to the same pool, and ci-push
+# unions the pool on merge so no run can drop another run's questions.
+
+on:
+  schedule:
+    # Six batches a day. At 4 per section x difficulty this is up to 48 new
+    # questions a run, so the pool keeps growing instead of sitting at a few
+    # hundred. The store cap is INVENT_MAX_STORE (5000) in the script.
+    - cron: '17 1,5,9,13,17,21 * * *'
+  workflow_dispatch:
+    inputs:
+      per_slot:
+        description: 'Questions per section x difficulty (default 4 -> 48/run)'
+        required: false
+        default: '4'
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'qwen3.5:9b'
+
+concurrency:
+  group: invent-questions
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  invent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/invented
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
+      - name: Invent questions (hosted model as exam setter)
+        # Hard stop at 120 min; the script's own 110-min deadline stops
+        # gracefully first. Run #2 logged 24/24 calls aborted at the old
+        # 4-min client timeout; run #5 then died at undici's hidden ~5-min
+        # headers timeout (fetch failed -> false "server down" -> restart
+        # loop that killed every cold load). Transport is now curl via spawn
+        # with watchdogs: 25 min of first-byte silence is patience, 12 min
+        # mid-stream silence is wedged, 95 min is the per-call cap.
+        timeout-minutes: 120
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '4' }}
+          INVENT_DEADLINE_MIN: '110'
+          # 2026-11-12: every slot in a dead run rejected as "truncated JSON
+          # (num_predict cap)" at the 1600 default — the 9B model's self-
+          # correction burns the budget before the JSON closes. 2600 leaves
+          # headroom; the quality gate still decides what ships.
+          INVENT_NUM_PREDICT: '2600'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
+
+      # Revalidate the pool before it is ever committed. The generator's own
+      # checks cannot prove that the key follows from the stem; this gate
+      # catches the class of confident-but-wrong items that previously shipped.
+      - name: Revalidate invented pool (gate)
+        run: node scripts/revalidate-invented.js --quarantine
+
+      # Incremental saves mean even a timeout keeps every question invented
+      # so far — publish whatever landed. Nothing staged -> ci-push exits 0.
+      - name: Publish invented questions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/invented/
+          bash scripts/ci-push.sh "invent: hosted model invented fresh exam questions (run #${{ github.run_number }})"

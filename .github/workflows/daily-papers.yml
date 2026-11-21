@@ -1,0 +1,183 @@
+name: Daily Paper Generation
+
+on:
+  schedule:
+    # Three model batches a day. Each batch writes 15 questions per exam and
+    # then builds the daily practice sets. The old 30-minute cadence could
+    # never finish once the model lane replaced the procedural filler: the
+    # next slot cancelled a run that was still warming the model.
+    - cron: '0 4 * * *'
+    - cron: '0 10 * * *'
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+    inputs:
+      exams:
+        description: 'Exams to generate (space-separated, default: all)'
+        required: false
+        default: ''
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'qwen3.5:9b'
+      count:
+        description: 'Questions per daily set'
+        required: false
+        default: '15'
+
+permissions:
+  models: read
+  contents: write
+
+# Never cancel a model batch half-way: a cancelled run loses the model's
+# questions and the paper it was about to publish. Batches queue instead.
+concurrency:
+  group: daily-papers
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions
+          sparse-checkout-cone-mode: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      # The paper questions are written by the model on this runner. No
+      # procedural filler remains in this lane.
+      - name: Determine exam for this slot
+        id: batch
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ github.event.inputs.exams }}" ]; then
+              echo "exams=${{ github.event.inputs.exams }}" >> $GITHUB_OUTPUT
+            else
+              echo "exams=all" >> $GITHUB_OUTPUT
+            fi
+          else
+            # Use the cron slot that FIRED, not the wall clock. GitHub can delay
+            # a scheduled run by hours; run #546 was the 16:00 slot but executed
+            # at 20:28, hit the old "skip" branch, and every producing step was
+            # skipped while the run still reported success.
+            case "${{ github.event.schedule }}" in
+              "0 4 * * *")  echo "exams=cgl rbi jee neet gate" ;;
+              "0 10 * * *") echo "exams=agniveer upsc ibps-po sbi-clerk ssc-gd" ;;
+              "0 16 * * *") echo "exams=ctet nda cds clat apfc" ;;
+              *) echo "exams=all" ;;
+            esac >> $GITHUB_OUTPUT
+          fi
+          EXAMS=$(grep '^exams=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2)
+          echo "slot=${{ github.event.schedule }} exams=$EXAMS"
+          if [ -z "$EXAMS" ] || [ "$EXAMS" = "skip" ]; then
+            echo "::error::no exam batch for this slot (schedule='${{ github.event.schedule }}')"
+            exit 1
+          fi
+
+      - name: Backfill missing question banks from existing papers
+        if: steps.batch.outputs.exams != 'skip'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/extract-question-bank.js --missing-only
+
+      - name: Import validated invented questions into exam banks
+        if: steps.batch.outputs.exams != 'skip'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/import-invented-to-banks.js
+
+      - name: Import authored course questions into exam banks
+        if: steps.batch.outputs.exams != 'skip'
+        run: |
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-course-questions.js
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/import-course-questions-to-banks.js --refresh-course
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/refresh-course-paper-text.js
+
+      # Model-only generation. The procedural filler is gone: if the model
+      # cannot produce a valid question the step fails visibly instead of
+      # publishing template questions. One failing exam must not discard the
+      # questions the model did write for the other exams.
+      - name: Write fresh questions with the model
+        if: steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TARGETS="${{ steps.batch.outputs.exams }}"
+          if [ "$TARGETS" = "all" ]; then
+            TARGETS="cgl rbi jee neet gate agniveer upsc ibps-po sbi-clerk ssc-gd ctet nda cds clat"
+          fi
+          failed=""
+          for e in $TARGETS; do
+            if ! NODE_OPTIONS=--max-old-space-size=4096 node scripts/model-fill-bank.js "$e" --count=${{ inputs.count || '15' }} --budget=30; then
+              failed="$failed $e"
+            fi
+          done
+          if [ -n "$failed" ]; then
+            echo "::error::the model produced no valid question for:$failed"
+            exit 1
+          fi
+
+      - name: Build practice paper
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: |
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/sanitize-question-text.js
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
+
+      - name: Generate calendar data
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-calendar-data.js ${{ steps.batch.outputs.exams }}
+
+      - name: Update sitemap
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-sitemap.js
+
+      - name: Build topic index for micro-tests
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-topic-index.js
+
+      - name: Audit whole-site coverage
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/audit-coverage.js
+
+      - name: Ping search engines
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: |
+          curl -s -o /dev/null "https://www.google.com/ping?sitemap=https://vlymbooq.qzz.io/sitemap.xml"
+          curl -s -o /dev/null "https://www.bing.com/ping?siteMap=https://vlymbooq.qzz.io/sitemap.xml"
+
+      - name: Commit and push
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          # question-bank/ is gitignored, so new exam banks and the *-meta.json
+          # used-id rotation files would vanish on a fresh CI clone. Force-add
+          # the JSON so extraction, course imports and paper rotation persist.
+          git add -f question-bank/*.json
+          if git diff --staged --quiet; then
+            echo "No changes to publish"
+            exit 0
+          fi
+          # ci-push.sh owns the commit/fetch/merge/push retry. The old custom
+          # loop merged a depth-1 FETCH_HEAD with no common ancestor, so the
+          # branch stayed diverged and every push was rejected after the paper
+          # had been built. Deepen enough to find the merge base first.
+          git fetch --depth=100 --no-tags origin main 2>/dev/null || true
+          bash scripts/ci-push.sh "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,53 @@
+name: Zen Probe
+
+# One real call through the OpenCode Zen route, on demand.
+#
+# Why this exists: the route is additive and every lane falls through it on
+# error, so a route that has never answered once is indistinguishable in the
+# lane logs from a route that was merely unlucky. Rebuilding the whole capture
+# loop to find out which it is costs 90 minutes and answers nothing; this costs
+# one minute and prints the CLI build, the model id it was asked for, the
+# answer, or the exact refusal.
+#
+# Never scheduled. It spends one free-tier call when someone dispatches it.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zen-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/lib/opencode-zen.js
+            scripts/lib/opencode-zen.test.js
+            scripts/lib/zen-probe.js
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install OpenCode CLI exactly as the lanes do
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Unit suites for the route module
+        run: node scripts/lib/opencode-zen.test.js
+
+      - name: Ask the model one question
+        env:
+          OPENCODE_ZEN: '1'
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_ZEN_MODEL: ${{ vars.OPENCODE_ZEN_MODEL || 'opencode/deepseek-v4.1-flash-free' }}
+          OPENCODE_ZEN_TIMEOUT_MS: '120000'
+        run: node scripts/lib/zen-probe.js

@@ -1,0 +1,77 @@
+name: Figure Forge
+
+# The hand-drawn figure library is a study surface, not a one-off page. A brief
+# in data/figure-briefs.json is rendered by scripts/figure-forge.js, the hub at
+# figures/index.html is rebuilt from the same FIGURES array, and the result is
+# published. This schedule keeps the page current even when nobody remembers to
+# run the builders by hand.
+#
+# Why a separate workflow: the existing Figures Build lane spends its budget on
+# Wikimedia harvesting and the slow Commons resolver. The forge is offline and
+# deterministic, so it should not queue behind a network job, and it must not
+# be cancelled half-way through a rebuild.
+#
+# The 03:17 UTC slot is deliberately clear of the 00:23/06:23/12:23/18:23 figure
+# builds and the top-of-hour fill lanes.
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish the rebuilt hub (false = build and validate only)'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: figure-forge
+  cancel-in-progress: false
+
+jobs:
+  forge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          filter: blob:none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Render the briefs
+        run: node scripts/figure-forge.js
+
+      - name: Rebuild the hub and the per-diagram pages
+        env:
+          FIGURE_GALLERY_ONLY: '1'
+        run: |
+          node scripts/build-figure-pages.js
+          node scripts/build-svg-figure-pages.js
+          node scripts/build-upsc-figures-page.js
+
+      - name: Validate the library
+        run: node scripts/lib/figure-library.test.js
+
+      - name: Publish
+        if: github.event_name == 'schedule' || inputs.publish != 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "figure-forge[bot]"
+          git config user.email "figure-forge@users.noreply.github.com"
+          git add data/figure-forge.json figures/index.html figures.html
+          git add figures/svg-*.html figures/page-*.html 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Figure library already current"
+            exit 0
+          fi
+          # ci-push.sh owns the commit, the depth-100 fetch, the rebase/merge
+          # retry and the PAT -> GITHUB_TOKEN fallback.
+          bash scripts/ci-push.sh "figures: forge exam sketches $(date -u +'%Y-%m-%d')"

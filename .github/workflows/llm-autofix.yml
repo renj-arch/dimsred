@@ -1,0 +1,113 @@
+name: LLM Auto-fix
+
+# The model fixes its own weak content: reads the fault board, asks a
+# local small model (the mechanical half of the model split — qwen3:4b /
+# lfm2.5:1.2b on Ollama, runner CPU) to generate questions for thin
+# categories, draw SVG figures for missing syllabus topics, and rewrite
+# broken captions. Results land in data/autofix-log.json and show on
+# improve.html as "what the model fixed".
+#
+# Fully free forever: Ollama runs the model locally on GitHub's runner.
+# No API keys, no rate limits, no paid services. The models are <=3.5GB,
+# so no swap is needed (the old 27B path needed 16GB of it); the writing
+# workflows (invent-questions, expand-course) keep the big model.
+
+on:
+  schedule:
+    - cron: '40 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: llm-autofix
+  # false: fixes publish in one ci-push at the very end. Scheduled + manual
+  # triggers must queue behind an in-flight run, never cancel it mid-stream
+  # (a cancelled run loses every fix it already generated).
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    # 27B on runner CPU. Measured (#24): model pull takes 23 min, then the
+    # fixer ran 155+ min and was still working when the old 180-min cap hit —
+    # publish was skipped every time (4/4 runs, zero payoff). 340 leaves the
+    # fixer ~300 min; the step cap below plus publish (if: always()) mean
+    # whatever finished is still committed inside the job ceiling.
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          sparse-checkout: |
+            scripts
+            data/faults.json
+            data/figure-gaps.json
+            data/autofix-log.json
+            figures
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # No swap on purpose: the mechanical split runs 1.2B-4B models
+      # (<=3.5GB), which fit in RAM with room to spare. The 16GB swapfile
+      # only existed for the 17GB Qwen3.8-27B load, which autofix no longer
+      # pulls — the 27B stays in the writing workflows (invent-questions,
+      # expand-course). This also removes the ~1.5-min dd and the OOM-death
+      # class where the swap-thrashing model took the Ollama server with it.
+      - name: Run auto-fixer (fast local model, zero API keys)
+        # 300 min was sized for the 27B on CPU. The fast model answers in
+        # seconds, so this normally finishes in minutes; the generous cap and
+        # the always() publish below still protect a stuck run.
+        timeout-minutes: 300
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/llm-autofix.js
+
+      - name: Publish fixes
+        # always(): a fixer step that was capped or died still gets whatever
+        # it wrote (figures/ and rewritten pages are written per-fix).
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          # Per-path adds (2026-10-19): git add is all-or-nothing per call —
+          # data/questions/ is NOT in this workflow's sparse checkout, so a
+          # caption-only run used to kill the WHOLE add (log + figures too)
+          # silently via 2>/dev/null. Same per-path pattern as site-agent.
+          for p in data/autofix-log.json figures data/questions; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          MODN=$(git diff --name-only | wc -l)
+          STAGEDN=$(git diff --cached --name-only | wc -l)
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "[publish] safety-net: $MODN modified tracked file(s) but nothing staged — retrying with -f"
+            git diff --name-only | while read -r f; do git add --sparse -f "$f" || echo "[publish] WARNING: could not stage $f"; done
+            MODN=$(git diff --name-only | wc -l)
+            STAGEDN=$(git diff --cached --name-only | wc -l)
+            echo "[publish] after safety-net: staged=$STAGEDN modified-left=$MODN"
+          fi
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "::error::fixer work exists but nothing could be staged (silent-loss class). Diagnostics:"
+            git diff --name-only | sed 's/^/  unpushed: /'
+            exit 1
+          fi
+          echo "[publish] staged: $STAGEDN file(s)"
+          bash scripts/ci-push.sh "auto-fix: ${{ env.MODEL }} fixed weak content (run #${{ github.run_number }})"

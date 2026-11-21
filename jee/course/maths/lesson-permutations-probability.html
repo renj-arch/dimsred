@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Permutations, Combinations &amp; Probability — JEE Mathematics Lesson | vlymbooq</title>
+    <meta name="description" content="Free JEE Mathematics Permutations, Combinations &amp; Probability lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-permutations-probability.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95em}
+        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}
+        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/jee/">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D Geometry</a>
+                    <a href="lesson-probability-statistics.html">Probability & Statistics</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-quadratic-sequences.html">Quadratic Equations, Sequences & Series</a>
+                    <a href="lesson-complex-binomial.html">Complex Numbers & Binomial Theorem</a>
+                    <a href="lesson-matrices-determinants.html">Matrices & Determinants</a>
+                    <a href="lesson-permutations-probability.html" class="active">Permutations, Combinations & Probability</a>
+                    <a href="lesson-limits-continuity.html">Limits, Continuity & Differentiability</a>
+                    <a href="lesson-differentiation-applications.html">Differentiation & Its Applications</a>
+                    <a href="lesson-integration.html">Indefinite & Definite Integration</a>
+                    <a href="lesson-differential-equations.html">Differential Equations</a>
+                    <a href="lesson-vectors-3d.html">Vectors & Three-Dimensional Geometry</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Permutations, Combinations &amp; Probability</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 17 Nov 2026 &#183; 4,957 words &#183; 5 sections &#183; illustrated</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.75em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 16 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="91fd5af4c31f" data-updated="2026-11-16" data-updated-label="16 Nov 2026" data-headings="[&quot;Fundamental Counting Principles&quot;,&quot;1.1 The Multiplication Principle&quot;,&quot;1.2 The Addition Principle&quot;,&quot;1.3 Applications to Arrangements&quot;,&quot;Permutations&quot;,&quot;2.1 Definition and Notation&quot;,&quot;2.2 Permutations of Distinct Objects&quot;,&quot;2.3 Permutations with Repetition&quot;,&quot;Combinations&quot;,&quot;3.1 Definition and Notation&quot;,&quot;3.2 Combinations of Distinct Objects&quot;,&quot;3.3 Combinations with Repetition&quot;,&quot;Probability Foundations&quot;,&quot;4.1 Sample Space and Events&quot;,&quot;4.2 Axioms of Probability&quot;,&quot;4.3 Classical and Empirical Probability&quot;,&quot;Conditional Probability, Bayes&#39; Theorem and Distributions&quot;,&quot;5.1 Conditional Probability and Independence&quot;,&quot;5.2 Bayes&#39; Theorem&quot;,&quot;5.3 Common Discrete Distributions&quot;,&quot;Inclusion–Exclusion Principle and Its Applications&quot;,&quot;Derangements and Subfactorial Numbers&quot;,&quot;Circular Permutations and Necklace Problems&quot;,&quot;Multinomial Coefficients and the Multinomial Theorem&quot;,&quot;Advanced Probability: Expectation, Variance, and Generating Functions&quot;,&quot;Common Traps&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Counting principles, combinations, and conditional probability with Bayes and distributions.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Permutations · Combinations · Probability</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+<!-- course-figure:permutations-probability-figure -->
+<figure class="lesson-figure" data-figure="permutations-probability-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Permutation Combination Probability Flow Revision Diagram for GS1 Geography"><defs><marker id="arrowhead-lesson-permutations-probability-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="80" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="80" dy="0">Counting Principles</tspan></text><rect x="150" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="200" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="200" dy="0">Permutations</tspan></text><rect x="270" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="320" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="320" dy="0">Combinations</tspan></text><rect x="390" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="440" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="440" dy="0">Probability Basics</tspan></text><rect x="510" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="560" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="560" dy="0">Conditional Prob.</tspan></text><rect x="630" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="680" y="166.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="680" dy="0">Bayes &amp;</tspan><tspan x="680" dy="16.25">Distributions</tspan></text><path d="M 130 175 L 150 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure)"/><path d="M 250 175 L 270 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure)"/><path d="M 370 175 L 390 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure)"/><path d="M 490 175 L 510 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure)"/><path d="M 610 175 L 630 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure)"/></g><g><text x="140" y="175" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">→</tspan></text><text x="260" y="175" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="260" dy="0">→</tspan></text><text x="380" y="175" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">→</tspan></text><text x="500" y="175" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="500" dy="0">→</tspan></text><text x="620" y="175" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="620" dy="0">→</tspan></text><text x="380" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">Exam Hook: Art. 3 – Counting Principle</tspan></text><text x="380" y="390" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">Key Formula: P(n,r)=n!/(n−r)!</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Permutation Combination Probability Flow Revision Diagram for GS1 Geography</strong> — Shows how counting principles lead to permutations, combinations, and probability concepts including Bayes' theorem.
+    &middot; <a href="../../../figures/svg-permutations-probability-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Permutations, Combinations &amp; Probability</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+<h2>Fundamental Counting Principles</h2>
+
+<h3>1.1 The Multiplication Principle</h3>
+<p>The multiplication principle states that if a task can be broken into a sequence of independent stages, and the first stage can be performed in m ways while the second stage can be performed in n ways for each outcome of the first stage, then the whole task can be performed in m × n ways. This principle follows directly from the idea that each choice in the first stage can be paired with every choice in the second stage, producing a Cartesian product of the two sets of possibilities. When more than two stages are involved, the total number of ways is the product of the numbers of ways for each individual stage, provided the choices at each stage do not depend on earlier choices except through the already fixed outcomes.</p>
+<p>In practice, the multiplication principle is the engine behind counting arrangements, selections, and many probability calculations. For example, to form a three‑digit code where the first digit cannot be zero, there are 9 choices for the first digit, 10 for the second, and 10 for the third, giving 9 × 10 × 10 = 900 possible codes. The principle also underlies the derivation of factorial notation, because arranging n distinct objects in a line can be seen as n successive choices: n ways for the first position, n−1 for the second, and so on, yielding n × (n−1) × … × 1 = n!.</p>
+
+<h3>1.2 The Addition Principle</h3>
+<p>The addition principle applies when a task can be completed by exactly one of several mutually exclusive methods. If method A can be carried out in a ways and method B in b ways, and the two methods cannot both be used for the same outcome, then the total number of ways to complete the task is a + b. This principle is essentially a statement about the cardinality of a disjoint union of finite sets: the size of the union equals the sum of the sizes of the individual sets. It is crucial when a problem naturally splits into cases that do not overlap, such as counting the number of ways to choose a committee that either includes a particular person or excludes that person.</p>
+<p>Care must be taken to ensure the cases are truly disjoint; otherwise the simple sum would double‑count outcomes that belong to more than one case. In such situations the principle of inclusion–exclusion extends the addition principle by subtracting the sizes of intersections. The addition principle also appears in probability when computing the probability of the union of mutually exclusive events, because the probability of the union equals the sum of the individual probabilities.</p>
+
+<h3>1.3 Applications to Arrangements</h3>
+<p>Arrangements of objects in a line, around a circle, or in a row with restrictions are classic applications of the multiplication and addition principles. For linear arrangements of n distinct objects, the multiplication principle gives n! directly. When some objects are identical, the number of distinct permutations reduces because swapping identical objects does not produce a new arrangement; the formula becomes n! divided by the product of the factorials of the multiplicities of each identical type. Circular arrangements introduce a further division by n, since rotating the whole circle does not change the relative order, leading to (n−1)! for n distinct objects around a circle.</p>
+<p>Restrictions such as “two particular persons must not sit together” are handled by first counting the total arrangements without restriction and then subtracting the arrangements where the restriction is violated. The latter is often counted by treating the restricted pair as a single combined object, applying the multiplication principle to the reduced set, and then multiplying by the internal permutations of the pair. This complementary counting technique is a direct consequence of the addition principle applied to the partition of the sample space into “restriction satisfied” and “restriction violated” cases.</p>
+
+<h2>Permutations</h2>
+<h3>2.1 Definition and Notation</h3>
+<p>A permutation is an ordered arrangement of a selection of objects taken from a larger set. The notation P(n, r) or ⁿPᵣ denotes the number of ways to choose r objects from n distinct objects and arrange them in a sequence. By the multiplication principle, the first position can be filled in n ways, the second in n−1 ways, continuing until the r‑th position, which can be filled in n−r+1 ways. Hence P(n, r) = n × (n−1) × … × (n−r+1) = n! / (n−r)!. This formula makes explicit the relationship between permutations and factorials, and it reduces to n! when r = n, i.e., when all objects are arranged.</p>
+<p>The notation ⁿPᵣ is read as “n permute r” and is standard in combinatorial textbooks. It emphasizes that order matters: the arrangement (a, b, c) is considered different from (b, a, c). This distinction is the defining feature that separates permutations from combinations, where order is irrelevant. Understanding this notation is essential for translating word problems into algebraic expressions that can be evaluated or simplified.</p>
+
+<h3>2.2 Permutations of Distinct Objects</h3>
+<p>When all n objects are distinct, the number of permutations of all n objects is n!. This follows immediately from the multiplication principle applied to n successive choices. For a partial permutation of length r, the formula P(n, r) = n!/(n−r)! gives the count. For instance, the number of ways to award gold, silver, and bronze medals to 10 athletes is P(10, 3) = 10 × 9 × 8 = 720. The reasoning is that the gold medal can go to any of the 10 athletes, the silver to any of the remaining 9, and the bronze to any of the remaining 8.</p>
+<p>Permutations of distinct objects also appear in problems involving seating arrangements, password formation, and scheduling. In each case, the key is to identify the number of positions to fill and the pool of available distinct items for each position, then apply the product rule. If additional constraints such as “person A must sit at the left end” are present, the constrained position is fixed first, reducing the effective pool for the remaining positions, and the multiplication principle is applied to the reduced problem.</p>
+
+<h3>2.3 Permutations with Repetition</h3>
+<p>When objects are not all distinct, the number of distinct permutations decreases because swapping identical objects does not create a new arrangement. If a multiset contains n objects with n₁ of type 1, n₂ of type 2, …, n_k of type k (where Σ n_i = n), the number of distinct permutations is n! / (n₁! n₂! … n_k!). This formula is derived by starting with n! permutations of n labelled objects and then dividing by the factorial of each multiplicity to eliminate the overcounting caused by permutations among identical objects.</p>
+<p>A classic example is the word “MISSISSIPPI”, which has 11 letters with multiplicities M=1, I=4, S=4, P=2. The number of distinct arrangements is 11! / (1! 4! 4! 2!) = 34 650. The same principle applies to arranging coloured balls, distributing identical gifts, or any scenario where some items are indistinguishable. It is important to verify that the objects within each type are truly identical; if any subtle distinction exists, the simple division by factorials would undercount the true number of arrangements.</p>
+
+<div class="example-box">
+<div class="ex-title">Example: Arranging Letters with Repetition</div>
+<div class="ex-text">Find the number of distinct arrangements of the letters in the word “BANANA”.</div>
+<div class="ex-soln">The word BANANA has 6 letters. The letter A appears 3 times, N appears 2 times, and B appears once. Using the formula for permutations with repetition, the number of distinct arrangements is 6! / (3! 2! 1!) = 720 / (6 × 2 × 1) = 720 / 12 = 60. Therefore, there are 60 distinct arrangements of the letters in BANANA.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Insight</div>
+<div class="tip-text">When a problem asks for arrangements with repeated items, first write down the total number of items and the frequency of each distinct item. Then apply the division by factorials of the frequencies. A common mistake is to forget the factorial for items that appear only once; including 1! does not change the value but reinforces the habit of accounting for every type.</div>
+</div>
+
+<h2>Combinations</h2>
+<h3>3.1 Definition and Notation</h3>
+<p>A combination is a selection of objects from a larger set where the order of selection does not matter. The notation C(n, r) or ⁿCᵣ (also written as binom{n}{r}) denotes the number of ways to choose r objects from n distinct objects without regard to order. Since each combination of r objects corresponds to r! permutations of those same objects, the relationship between permutations and combinations is C(n, r) = P(n, r) / r! = n! / [r! (n−r)!]. This formula is symmetric: C(n, r) = C(n, n−r), reflecting the fact that choosing r objects to include is equivalent to choosing n−r objects to exclude.</p>
+<p>The binomial coefficient binom{n}{r} appears in the binomial theorem, in Pascal’s triangle, and in many probability calculations. It is read as “n choose r”. The symmetry property is often used to simplify calculations, for example by replacing C(100, 97) with C(100, 3). Understanding the combinatorial interpretation of binom{n}{r} as the number of r‑element subsets of an n‑element set is fundamental for solving selection problems.</p>
+
+<h3>3.2 Combinations of Distinct Objects</h3>
+<p>When selecting r objects from n distinct objects, the number of possible selections is binom{n}{r}. For example, the number of ways to form a committee of 4 members from a group of 12 people is binom{12}{4} = 495. The reasoning is that we first count ordered selections (permutations) which would be P(12, 4) = 12 × 11 × 10 × 9 = 11 880, and then divide by 4! = 24 because each committee can be ordered in 4! ways, leaving 495 distinct committees.</p>
+<p>Combinations are used whenever the problem asks for “groups”, “teams”, “subsets”, or “selections” without any ordering. If the problem later imposes an order on the chosen objects (e.g., assigning distinct roles to the chosen members), the count must be multiplied by the number of ways to order the chosen objects, effectively converting the combination back into a permutation. Recognizing whether order matters is the first decision point in any counting problem.</p>
+
+<h3>3.3 Combinations with Repetition</h3>
+<p>Sometimes we are allowed to choose the same type of object more than once, as in selecting r scoops of ice cream from n flavours where multiple scoops of the same flavour are permitted. The number of such combinations with repetition is binom{n+r-1}{r}. This result is derived by a stars‑and‑bars argument: represent the r selections as r stars and the n−1 dividers between flavours as bars; the total number of arrangements of r stars and n−1 bars is binom{n+r-1}{r}. Each arrangement corresponds uniquely to a multiset of size r drawn from n types.</p>
+<p>For instance, the number of ways to buy 6 donuts from 4 varieties is binom{4+6-1}{6} = binom{9}{6} = 84. The stars‑and‑bars method also provides a visual intuition: the positions of the bars determine how many of each variety are chosen. This technique extends to solving integer equations of the form x₁ + x₂ + … + x_n = r with non‑negative integer solutions, where the number of solutions is exactly binom{n+r-1}{r}.</p>
+
+<table>
+<caption>Comparison of Permutations and Combinations</caption>
+<thead>
+<tr><th>Aspect</th><th>Permutations</th><th>Combinations</th></tr>
+</thead>
+<tbody>
+<tr><td>Order matters</td><td>Yes</td><td>No</td></tr>
+<tr><td>Formula (distinct objects)</td><td>P(n, r) = n!/(n−r)! </td><td>C(n, r) = n!/[r!(n−r)!]</td></tr>
+<tr><td>Typical wording</td><td>Arrange, order, sequence, schedule</td><td>Select, choose, group, committee</td></tr>
+<tr><td>Relation</td><td>P(n, r) = C(n, r) × r!</td><td>C(n, r) = P(n, r) / r!</td></tr>
+</tbody>
+</table>
+
+<!-- course-figure:permutations-probability-figure-2 -->
+<figure class="lesson-figure" data-figure="permutations-probability-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Fundamental Counting Principles Leading to Bayes Theorem and Distributions"><defs><marker id="arrowhead-lesson-permutations-probability-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="150" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="105" y="166.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="105" dy="0">Fundamental</tspan><tspan x="105" dy="16.25">Counting</tspan></text><rect x="210" y="150" width="130" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="275" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="275" dy="0">Permutations</tspan></text><rect x="370" y="150" width="130" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="435" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="435" dy="0">Combinations</tspan></text><rect x="530" y="150" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="605" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="605" dy="0">Probability Basics</tspan></text><rect x="30" y="260" width="180" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="276.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Bayes &amp;</tspan><tspan x="120" dy="16.25">Distributions</tspan></text><path d="M 180 175 L 210 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure-2)"/><path d="M 340 175 L 370 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure-2)"/><path d="M 500 175 L 530 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure-2)"/><path d="M 605 200 L 120 260" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-permutations-probability-figure-2)"/></g><g><text x="195" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="195" dy="0">→</tspan></text><text x="355" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="355" dy="0">→</tspan></text><text x="515" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="515" dy="0">→</tspan></text><text x="360" y="225" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="360" dy="0">apply</tspan></text><text x="30" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 14: Fundamental Counting Principle</tspan></text><text x="30" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Bayes' Theorem: P(A|B)=P(B|A)P(A)/P(B)</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Fundamental Counting Principles Leading to Bayes Theorem and Distributions</strong> — Diagram shows how counting rules build permutations, combinations, probability basics, and Bayes' theorem.
+    &middot; <a href="../../../figures/svg-permutations-probability-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+<h2>Probability Foundations</h2>
+<h3>4.1 Sample Space and Events</h3>
+<p>The sample space of a random experiment is the set of all possible outcomes. An event is any subset of the sample space, including the empty set (impossible event) and the sample space itself (certain event). For a finite sample space with equally likely outcomes, the probability of an event E is defined as the ratio of the number of outcomes in E to the total number of outcomes in the sample space. This classical definition connects directly to counting principles: the numerator and denominator are often computed using permutations or combinations.</p>
+<p>When outcomes are not equally likely, the probability measure must assign a non‑negative weight to each elementary outcome such that the sum of all weights equals 1. The probability of an event is then the sum of the weights of the outcomes it contains. This axiomatic approach, formalized by Kolmogorov, provides a rigorous foundation that accommodates continuous sample spaces, where outcomes are points in a continuum and probabilities are defined via density functions rather than simple counting.</p>
+
+<h3>4.2 Axioms of Probability</h3>
+<p>The three Kolmogorov axioms state: (1) For any event A, 0 ≤ P(A) ≤ 1. (2) P(S) = 1, where S is the sample space. (3) For any countable sequence of mutually exclusive events A₁, A₂, …, the probability of their union equals the sum of their probabilities: P(∪ A_i) = Σ P(A_i). These axioms imply several useful rules, such as the complement rule P(Aᶜ) = 1 − P(A), the addition rule for non‑exclusive events P(A ∪ B) = P(A) + P(B) − P(A ∩ B), and the monotonicity property that if A ⊆ B then P(A) ≤ P(B).</p>
+<p>The axioms also justify the definition of conditional probability and the multiplication rule for intersections. They are the logical bedrock upon which all further probability theory, including Bayes’ theorem and the theory of random variables, is built. In problem solving, the axioms are rarely invoked explicitly, but they guarantee that any probability computed by legitimate counting or integration will satisfy the basic consistency requirements.</p>
+
+<h3>4.3 Classical and Empirical Probability</h3>
+<p>Classical probability applies when the sample space is finite and all outcomes are equally likely, as in tossing a fair coin, rolling a fair die, or drawing a card from a well‑shuffled deck. In such cases, probability reduces to a counting problem: P(E) = |E| / |S|. Empirical probability, on the other hand, is based on observed frequencies from repeated trials. If an experiment is performed N times and event E occurs f times, the empirical probability is f/N. As N grows, the law of large numbers ensures that the empirical probability converges to the true (theoretical) probability, provided the trials are independent and identically distributed.</p>
+<p>Both viewpoints are essential. Classical probability gives exact answers for idealized models, while empirical probability provides estimates when the model is unknown or too complex. In many practical situations, such as quality control or medical trials, empirical probabilities are used to infer the underlying theoretical probabilities, often with confidence intervals derived from the binomial or normal approximations.</p>
+
+<h2>Conditional Probability, Bayes' Theorem and Distributions</h2>
+<h3>5.1 Conditional Probability and Independence</h3>
+<p>Conditional probability quantifies the likelihood of an event A given that another event B has occurred. It is defined as P(A|B) = P(A ∩ B) / P(B), provided P(B) > 0. This definition reflects the idea of restricting the sample space to the outcomes in B and then measuring the proportion of those outcomes that also belong to A. The multiplication rule P(A ∩ B) = P(A|B) P(B) = P(B|A) P(A) follows directly and is a powerful tool for computing joint probabilities when conditional probabilities are known.</p>
+<p>Two events A and B are independent if the occurrence of one does not affect the probability of the other, i.e., P(A|B) = P(A) and P(B|A) = P(B). Equivalently, independence means P(A ∩ B) = P(A) P(B). Independence simplifies calculations dramatically because the joint probability factorizes. However, independence is an assumption that must be justified by the physical context; many real‑world events exhibit dependence, and assuming independence incorrectly can lead to severe errors in risk assessment.</p>
+
+<h3>5.2 Bayes' Theorem</h3>
+<p>Bayes’ theorem provides a way to update the probability of a hypothesis H in light of new evidence E. It states P(H|E) = P(E|H) P(H) / P(E), where P(E) can be expanded using the law of total probability: P(E) = Σ P(E|H_i) P(H_i) over a partition {H_i} of the sample space. The theorem is a direct consequence of the definition of conditional probability and the multiplication rule. It is widely used in medical diagnosis, spam filtering, and machine learning, where prior probabilities are updated with observed data.</p>
+<p>A classic illustration is the disease testing problem: suppose a disease affects 1 % of the population, a test has 99 % sensitivity (true positive rate) and 99 % specificity (true negative rate). If a randomly selected person tests positive, Bayes’ theorem gives the posterior probability of actually having the disease as (0.99 × 0.01) / (0.99 × 0.01 + 0.01 × 0.99) = 0.5, i.e., only a 50 % chance despite the high accuracy of the test. This counter‑intuitive result highlights the importance of the prior probability (prevalence) in interpreting diagnostic tests.</p>
+
+<h3>5.3 Common Discrete Distributions</h3>
+<p>Discrete probability distributions assign probabilities to countable outcomes. The binomial distribution models the number of successes in n independent Bernoulli trials with constant success probability p. Its probability mass function is P(X = k) = binom{n}{k} p^k (1−p)<sup>n−k</sup> for k = 0, 1, …, n. The mean is np and the variance is np(1−p). The Poisson distribution models the number of events occurring in a fixed interval of time or space when events happen independently at a constant average rate λ. Its mass function is P(X = k) = e<sup>−λ</sup> λ^k / k! for k = 0, 1, 2, …, with mean and variance both equal to λ.</p>
+<p>The geometric distribution describes the number of trials needed to obtain the first success in independent Bernoulli trials, with P(X = k) = (1−p)<sup>k−1</sup> p for k = 1, 2, … . The negative binomial generalizes this to the number of trials needed for the r‑th success. The hypergeometric distribution models sampling without replacement from a finite population, giving the probability of k successes in n draws from a population of size N containing K successes. Each distribution arises from a specific random mechanism, and recognizing the underlying mechanism is the key to selecting the correct model for a given problem.</p>
+
+<table>
+<caption>Comparison of Binomial and Poisson Distributions</caption>
+<thead>
+<tr><th>Feature</th><th>Binomial</th><th>Poisson</th></tr>
+</thead>
+<tbody>
+<tr><td>Underlying experiment</td><td>Fixed number n of independent Bernoulli trials</td><td>Events occurring randomly in continuous interval</td></tr>
+<tr><td>Parameters</td><td>n (trials), p (success probability)</td><td>λ (average rate)</td></tr>
+<tr><td>Support</td><td>k = 0, 1, …, n</td><td>k = 0, 1, 2, …</td></tr>
+<tr><td>Mean</td><td>np</td><td>λ</td></tr>
+<tr><td>Variance</td><td>np(1−p)</td><td>λ</td></tr>
+<tr><td>Limit relationship</td><td>Poisson approximates Binomial when n large, p small, np = λ</td><td>—</td></tr>
+</tbody>
+</table>
+
+<p>Mastering the interplay between counting principles, probability axioms, and the standard discrete distributions equips a student to tackle a wide spectrum of problems in competitive examinations and in practical data analysis.</p>
+<h3>Inclusion–Exclusion Principle and Its Applications</h3>
+<p>The inclusion–exclusion principle systematically counts elements in the union of finite sets that may overlap. For two sets A and B, |A ∪ B| = |A| + |B| − |A ∩ B|. For three sets A, B, C, |A ∪ B ∪ C| = |A| + |B| + |C| − |A ∩ B| − |A ∩ C| − |B ∩ C| + |A ∩ B ∩ C|. In general, for n sets A₁, A₂, …, Aₙ,</p>
+<p>|A₁ ∪ A₂ ∪ … ∪ Aₙ| = Σ|Aᵢ| − Σ|Aᵢ ∩ Aⱼ| + Σ|Aᵢ ∩ Aⱼ ∩ Aₖ| − … + (−1)ⁿ⁺¹|A₁ ∩ A₂ ∩ … ∩ Aₙ|,</p>
+<p>where sums run over all distinct indices. The term for the intersection of k sets carries sign (−1)ᵏ⁺¹.</p>
+<p>A standard application counts integers up to a bound not divisible by given primes. For positive integers ≤ 100 not divisible by 2, 3, or 5, let A₂, A₃, A₅ be the sets of multiples. Then |A₂| = ⌊100/2⌋ = 50, |A₃| = 33, |A₅| = 20. Pairwise intersections: |A₂ ∩ A₃| = ⌊100/6⌋ = 16, |A₂ ∩ A₅| = ⌊100/10⌋ = 10, |A₃ ∩ A₅| = ⌊100/15⌋ = 6. Triple intersection: |A₂ ∩ A₃ ∩ A₅| = ⌊100/30⌋ = 3. By inclusion–exclusion, numbers divisible by at least one of 2,3,5 total 50+33+20−16−10−6+3 = 74. Hence 100−74 = 26 are not divisible by any.</p>
+<p>The principle extends to probability: for events E₁, …, Eₙ, P(E₁ ∪ … ∪ Eₙ) follows the same alternating‑sum formula with probabilities replacing cardinalities. This is useful when the union probability is hard to compute directly but individual and intersection probabilities are accessible.</p>
+<p>Another application counts onto functions. The number of surjections from an m‑element set to an n‑element set is Σ<sub>k=0</sub><sup>n</sup> (−1)ᵏ C(n, k) (n−k)ᵐ, obtained by letting Aᵢ be the functions missing the i‑th codomain element and applying inclusion–exclusion.</p>
+<p>When applying inclusion–exclusion, correctly identify all intersections and maintain the alternating sign pattern. A common error is stopping at pairwise intersections when triple (or higher) intersections are non‑empty, causing overcounting.</p>
+
+<h3>Derangements and Subfactorial Numbers</h3>
+<p>A derangement is a permutation with no element in its original position. The number of derangements of n distinct objects is denoted !n (subfactorial n) or Dₙ. Inclusion–exclusion gives</p>
+<p>!n = n! Σ<sub>k=0</sub><sup>n</sup> (−1)ᵏ / k! = n! (1 − 1/1! + 1/2! − 1/3! + … + (−1)ⁿ/n!).</p>
+<p>This sum is the truncated Maclaurin series for e⁻¹, so for large n, !n ≈ n!/e. Rounding n!/e to the nearest integer yields the exact value.</p>
+<p>A useful recurrence is !n = (n−1)(!(n−1) + !(n−2)) for n ≥ 2, with !0 = 1, !1 = 0. It follows by placing element 1 in any of n−1 positions, say k. If element k goes to position 1, the remaining n−2 elements must be deranged; otherwise, element k must avoid position 1, equivalent to deranging n−1 elements with a modified forbidden position.</p>
+<p>The first few derangement numbers are:</p>
+<table>
+<caption>Derangement Numbers</caption>
+<thead>
+<tr><th>n</th><th>!n</th></tr>
+</thead>
+<tbody>
+<tr><td>0</td><td>1</td></tr>
+<tr><td>1</td><td>0</td></tr>
+<tr><td>2</td><td>1</td></tr>
+<tr><td>3</td><td>2</td></tr>
+<tr><td>4</td><td>9</td></tr>
+<tr><td>5</td><td>44</td></tr>
+<tr><td>6</td><td>265</td></tr>
+</tbody>
+</table>
+<p>Derangements appear in the hat‑check problem: n guests receive hats randomly; the probability no guest gets his own hat is !n/n! ≈ 1/e ≈ 0.3679 for large n. The same probability arises in the matching problem (letters to envelopes).</p>
+<p>For moderately large n, the factorial sum is efficient because terms decrease rapidly. For n = 10, the 11‑term sum gives !10 = 1,334,961. The approximation 10!/e ≈ 3,628,800/2.71828 ≈ 1,334,960.9 rounds correctly.</p>
+<p>In competitive problems, derangements often combine with other constraints, such as exactly k fixed points. The number of permutations of n elements with exactly k fixed points is C(n, k) × !(n−k), obtained by choosing the k fixed elements and deranging the rest.</p>
+
+<div class="example-box">
+<div class="ex-title">Technique: Derangement via Inclusion–Exclusion</div>
+<div class="ex-text">Find the number of derangements of 5 distinct letters.</div>
+<div class="ex-soln">Solution: Using !n = n! Σ<sub>k=0</sub><sup>n</sup> (−1)ᵏ / k!. For n=5, 5! = 120. Sum = 1 − 1 + 1/2 − 1/6 + 1/24 − 1/120 = (120 − 120 + 60 − 20 + 5 − 1)/120 = 44/120 = 11/30. Multiply by 120 gives 44. Alternatively, recurrence: !1=0, !2=1, !3=2(!2+!1)=2, !4=3(!3+!2)=9, !5=4(!4+!3)=44. Answer: 44.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam-Day Strategy</div>
+<div class="tip-text">Memorize the first six derangement values (0,1,2,9,44,265) and the recurrence !n = (n−1)(!(n−1)+!(n−2)). For larger n, use !n ≈ n!/e and round to the nearest integer. In multiple‑choice questions, the inclusion–exclusion sum often telescopes; write the first three terms to spot the pattern quickly.</div>
+</div>
+
+<h3>Circular Permutations and Necklace Problems</h3>
+<p>Arranging n distinct objects around a circle treats rotations as identical. The number of distinct circular permutations is (n−1)!, found by fixing one object and permuting the remaining n−1 linearly.</p>
+<p>If objects are not all distinct, divide by the factorials of multiplicities. For example, circular arrangements of "ALGEBRA" (7 letters, A twice) total (7−1)! / 2! = 720 / 2 = 360.</p>
+<p>When reflections are also identical, the objects form a necklace. For n > 2 distinct beads, the number is (n−1)!/2. For n = 1 or 2, division by 2 does not apply because a reflection coincides with a rotation. With colored beads (repetitions allowed), the problem becomes counting orbits under the dihedral group Dₙ. Burnside's lemma (Cauchy‑Frobenius lemma) gives the number of distinct colorings as (1/|G|) Σ<sub>g∈G</sub> fix(g), where G is the symmetry group (cyclic for rotations, dihedral for rotations and reflections) and fix(g) is the number of colorings fixed by g.</p>
+<p>For a binary necklace (two colors) with n beads, rotationally distinct necklaces number (1/n) Σ<sub>d|n</sub> φ(d) 2<sup>n/d</sup>, where φ is Euler's totient function. If reflections are allowed, the formula for odd n is (1/(2n)) [ Σ<sub>d|n</sub> φ(d) 2<sup>n/d</sup> + n·2<sup>⌈n/2⌉</sup> ]; for even n an analogous expression with additional terms applies. These are standard results in Polya enumeration theory.</p>
+<p>In examination problems, the symmetry group is usually explicit: "round table" implies rotations only; "necklace" or "bracelet" implies rotations and reflections. Misidentifying the group is a frequent error.</p>
+<p>Fixed positions break circular symmetry: if certain objects must occupy specific seats (e.g., host at the head), the problem reduces to a linear permutation of the remaining objects.</p>
+
+<h3>Multinomial Coefficients and the Multinomial Theorem</h3>
+<p>The multinomial coefficient generalizes the binomial coefficient to partitioning a set into more than two subsets. The number of ways to divide n distinct objects into k labeled groups of sizes n₁, n₂, …, nₖ (Σ nᵢ = n) is</p>
+<p>n! / (n₁! n₂! … nₖ!).</p>
+<p>This coefficient appears as the coefficient of x₁<sup>n₁</sup> x₂<sup>n₂</sup> … xₖ<sup>nₖ</sup> in the expansion of (x₁ + x₂ + … + xₖ)ⁿ, the multinomial theorem:</p>
+<p>(x₁ + x₂ + … + xₖ)ⁿ = Σ<sub>n₁+…+nₖ=n</sub> (n! / (n₁! … nₖ!)) x₁<sup>n₁</sup> … xₖ<sup>nₖ</sup>.</p>
+<p>The sum runs over all k‑tuples of non‑negative integers summing to n. For k = 2 this reduces to the binomial theorem.</p>
+<p>A direct combinatorial interpretation: the number of distinct permutations of a multiset with n total items, where item i appears nᵢ times, is n!/(n₁!…nₖ!). For "MISSISSIPPI" (M=1, I=4, S=4, P=2), distinct permutations = 11!/(1!4!4!2!) = 34,650.</p>
+<p>Multinomial coefficients also give the probability mass function of the multinomial distribution: for n independent trials with outcomes 1,…,k having probabilities p₁,…,pₖ (Σ pᵢ = 1), the probability of exactly nᵢ occurrences of outcome i is (n!/(n₁!…nₖ!)) p₁<sup>n₁</sup> … pₖ<sup>nₖ</sup>, generalizing the binomial distribution.</p>
+<p>An important identity: Σ<sub>n₁+…+nₖ=n</sub> n!/(n₁!…nₖ!) = kⁿ, obtained by setting x₁ = … = xₖ = 1 in the multinomial theorem.</p>
+<p>When solving problems, a multinomial coefficient can be computed sequentially as a product of binomial coefficients: choose n₁ items for the first group (C(n, n₁)), then n₂ from the remainder (C(n−n₁, n₂)), etc. This stepwise approach simplifies arithmetic and reduces overflow risk in manual calculations.</p>
+
+<h3>Advanced Probability: Expectation, Variance, and Generating Functions</h3>
+<p>The expectation of a discrete random variable X is E[X] = Σ x·P(X=x). Expectation is linear: E[aX + bY] = aE[X] + bE[Y] for any constants a, b and random variables X, Y, regardless of independence. This simplifies expectations of sums, e.g., the number of successes in n Bernoulli trials: E[X] = Σ E[Iᵢ] = n·p, where Iᵢ indicates success on trial i.</p>
+<p>Variance measures spread: Var(X) = E[(X − E[X])²] = E[X²] − (E[X])². For independent variables, variances add: Var(X+Y) = Var(X) + Var(Y). Covariance Cov(X,Y) = E[XY] − E[X]E[Y] quantifies linear dependence; the correlation coefficient ρ = Cov(X,Y)/√(Var(X)Var(Y)) lies in [−1,1].</p>
+<p>Moment generating functions (MGFs) encapsulate all moments. The MGF of X is M_X(t) = E[e<sup>tX</sup>], defined for t near 0. The k‑th moment is E[Xᵏ] = M_X<sup>(k)</sup>(0). For independent X, Y, M<sub>X+Y</sub>(t) = M_X(t) M_Y(t), making MGFs ideal for sums of independent variables.</p>
+<p>Common MGFs: Binomial(n,p): M(t) = (1−p + p e^t)ⁿ. Poisson(λ): M(t) = exp(λ(e^t−1)). Exponential(λ): M(t) = λ/(λ−t) for t<λ. Normal(μ,σ²): M(t) = exp(μt + ½σ²t²). The MGF of a sum of independent Poissons is Poisson with parameter equal to the sum of the individual parameters, confirming the reproductive property.</p>
+<p>Probability generating functions (PGFs) are used for non‑negative integer‑valued variables: G_X(s) = E[s^X] = Σ P(X=k) s^k. The PGF of a sum of independent variables is the product of their PGFs. Factorial moments come from derivatives at s=1: E[X(X−1)…(X−k+1)] = G_X<sup>(k)</sup>(1). For Binomial(n,p), G(s) = (1−p + ps)ⁿ; for Poisson(λ), G(s) = e<sup>λ(s−1)</sup>.</p>
+<p>Generating functions also solve recurrence relations for probabilities. For example, the extinction probability in a branching process is the smallest non‑negative root of s = G(s), where G is the PGF of the offspring distribution.</p>
+<p>In examinations, questions often ask for the expectation or variance of a function of a random variable, or to identify a distribution from its MGF or PGF. Recognizing standard MGFs/PGFs and using their algebraic properties (product for sums, composition for mixtures) can dramatically reduce computation.</p>
+
+<h3>Common Traps</h3>
+<ul>
+<li>Forgetting to divide by 2 when counting necklaces with reflection symmetry for n > 2.</li>
+<li>Applying the binomial coefficient formula to multinomial problems without adjusting for multiple categories.</li>
+<li>Confusing the inclusion–exclusion sign pattern: the term for k sets has sign (−1)<sup>k+1</sup>.</li>
+<li>Using the derangement approximation n!/e without rounding to the nearest integer, leading to off‑by‑one errors.</li>
+<li>Assuming independence when computing expectation of a product; E[XY] = E[X]E[Y] holds only for independent variables.</li>
+<li>Misapplying the multinomial theorem by omitting the factorial denominator for repeated items.</li>
+<li>Neglecting the condition P(B) > 0 when writing conditional probability formulas in multi‑step Bayes problems.</li>
+</ul>
+<p>Mastering these advanced counting and probability techniques ensures a robust toolkit for tackling the most challenging combinatorial problems.</p>        <script>
+        (function(){try{
+          var m=document.getElementById("lesson-meta");if(!m)return;
+          var cur=m.getAttribute("data-version")||"";
+          var label=m.getAttribute("data-updated-label")||"";
+          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");
+          var k="vlymbooq-lesson-seen:"+location.pathname;
+          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}
+          var box=document.getElementById("lesson-new");
+          if(prev&&prev.v&&prev.v!==cur){
+            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});
+            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
+            if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
+            else{html+="The explanations and practice were revised.";}
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            box.innerHTML=html;box.hidden=false;
+            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
+            document.getElementById("lesson-new-ok").onclick=save;
+            return; // keep the old version stored until acknowledged
+          }
+          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));
+        }catch(e){}})();
+        </script>
+                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-matrices-determinants.html" class="btn btn-primary">&#x2190; Matrices &amp; Determinants</a>
+                    <a href="lesson-limits-continuity.html" class="btn btn-success">Limits, Continuity &amp; Differentiability &#x2192;</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":101,"text":"What is the number of distinct arrangements of the letters in the word MISSISSIPPI?","options":[{"l":"a","t":"34650","c":true},{"l":"b","t":"3465","c":false},{"l":"c","t":"69300","c":false},{"l":"d","t":"17325","c":false}],"sol":"The word has 11 letters: M=1, I=4, S=4, P=2. The multinomial coefficient is 11!/(1!·4!·4!·2!) = 39916800/(1·24·24·2) = 39916800/1152 = 34650."}];
+        var answered={},correctCount=0,lessonSlug="permutations-probability";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

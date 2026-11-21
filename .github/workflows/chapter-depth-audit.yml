@@ -1,0 +1,90 @@
+name: Chapter Depth Audit
+
+# The syllabus audit asks "is the topic mentioned?". This asks the harder
+# question: "is there a real chapter, at textbook depth, with its sub-topics?"
+#
+# For each chapter in data/chapter-map.json it finds the best-matching lesson
+# chapter, measures the whole h2 block (its text plus every h3 subsection), and
+# checks the required sub-topics. A 20-word chapter is reported as a stub; a
+# topic mentioned only in passing (no chapter of its own) is reported as
+# scattered; a topic absent from the page is missing.
+#
+# Heuristic: depth is section word count, sub-topics are keyword presence.
+# Every thin/stub/missing row needs human verification. Never fails the build
+# unless run with strict=true.
+
+on:
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: 'Fail the run if any chapter is missing or stub'
+        type: choice
+        options: ['false', 'true']
+        default: 'false'
+  schedule:
+    - cron: '27 3 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Partial checkout. The repo carries a ~9 GB data/questions corpus that no
+      # deploy path ships; a full checkout of it makes this job crawl. This audit
+      # only reads upsc/course/** and data/chapter-map.json, so fetch the commit
+      # and tree (filter: blob:none) and materialise only those paths.
+      - name: Check out main (sparse, blobs on demand)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            /scripts/
+            /data/chapter-map.json
+            /upsc/course/
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run chapter depth audit
+        id: audit
+        shell: bash
+        run: |
+          set -o pipefail
+          ARGS=""
+          if [ "${{ inputs.strict }}" = "true" ]; then ARGS="--strict"; fi
+          node scripts/audit-chapter-depth.js $ARGS | tee /tmp/chapter-depth.txt
+
+      - name: Publish summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Chapter depth audit'
+            echo ''
+            echo '```'
+            if [ -f /tmp/chapter-depth.txt ]; then
+              cat /tmp/chapter-depth.txt
+            else
+              echo 'audit did not produce output'
+            fi
+            echo '```'
+            echo ''
+            echo 'Heuristic: chapter word count (the whole h2 block incl. its h3 subsections) + sub-topic keywords. A stub means a chapter with almost no body; scattered means it is mentioned but has no chapter of its own. Verify by hand.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter-depth
+          path: |
+            data/chapter-depth.json
+            data/chapter-map.json
+          if-no-files-found: warn

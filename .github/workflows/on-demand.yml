@@ -1,0 +1,105 @@
+name: On-Demand (owner runner)
+
+# The owner-gated on-demand lane. The site's owner clicks "generate" in the
+# browser; functions/api/on-demand.js verifies his login and dispatches this
+# workflow with the request; the model runs HERE, on GitHub's runner, and the
+# result is committed to data/on-demand/<request-id>.json for the page to
+# fetch. Visitors never trigger this — only an authenticated owner can, and
+# the dispatcher rate-limits to keep the queue sane.
+#
+# Hosted free-tier models (NVIDIA NIM -> Groq -> OpenRouter -> GitHub Models); no local model pull.
+# Default model is the quality tier (batiai/qwen3.8-27b:iq3) — the owner lane
+# is low-frequency and quality-first, and the huge tag skips the model cache
+# by design. The dispatch input can pin another tag (qwen3.5:9b for a quick
+# answer).
+#
+# Kinds (scripts/on-demand-generate.js):
+#   writer           — one prose answer from a fully-built prompt (ask pages)
+#   tutor-questions  — N practice questions for a subject (exam tutor, fresh paper)
+#   mental-batch     — N invented MCQs for the mental "fresh paper" pool
+#   mains-fresh      — one UPSC Mains question + model-answer skeleton (mains page)
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_id:
+        description: 'Caller-generated id; the result is committed as data/on-demand/<id>.json'
+        required: true
+      kind:
+        description: 'writer | tutor-questions | mental-batch | mains-fresh'
+        required: true
+      payload:
+        description: 'JSON payload for the kind'
+        required: true
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'batiai/qwen3.8-27b:iq3'
+
+concurrency:
+  group: on-demand
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/on-demand
+            data/invented
+            data/mains-fresh.json
+            data/mains-questions.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Edge TTS gives real Tamil and Malayalam neural voices for free. The
+      # browser's own speechSynthesis only has those languages when the device
+      # has the language pack, which is why the studio could not promise them.
+      - name: Install Edge TTS and the Google fallback (voice lane only)
+        if: inputs.kind == 'tts'
+        run: python3 -m pip install --quiet edge-tts==6.1.12 gTTS==2.5.4
+
+      # EXACT same swap as the proven Ollama lanes — safety net against
+      # paging model weights out under memory pressure.
+      - name: Generate (${{ inputs.kind }})
+        timeout-minutes: 120
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OD_ID: ${{ inputs.request_id }}
+          OD_KIND: ${{ inputs.kind }}
+          OD_PAYLOAD: ${{ inputs.payload }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/on-demand-generate.js
+
+      # Even a failed generation writes {status:"failed", ...} so the browser
+      # stops polling with a real reason instead of timing out silently.
+      # Nothing staged -> ci-push exits 0.
+      - name: Publish result
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/on-demand/ data/invented/ data/mains-fresh.json
+          bash scripts/ci-push.sh "on-demand: ${{ inputs.kind }} request ${{ inputs.request_id }}"

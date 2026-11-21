@@ -1,0 +1,3141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Studio — vlymbooq Music</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --bg:#09090b;--card:#111113;--border:rgba(255,255,255,.06);
+  --text:#fafafa;--muted:#a1a1aa;--purple:#a78bfa;--purple-dark:#8b5cf6;
+  --emerald:#34d399;--rose:#f472b6;--amber:#fbbf24;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--purple);text-decoration:none}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:260px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10}
+.sidebar .brand{padding:20px 16px;font-weight:900;font-size:1.1rem;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
+.nav{padding:0 12px;display:flex;flex-direction:column;gap:4px}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.9em;transition:all .2s;text-align:left}
+.nav-btn:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-btn.active{background:var(--purple);color:#000}
+.projects{flex:1;overflow:auto;padding:12px}
+.project-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;margin-bottom:6px;transition:all .2s}
+.project-item:hover{border-color:var(--border);background:rgba(255,255,255,.03)}
+.project-item.active{border-color:var(--purple);background:rgba(167,134,250,.1)}
+.project-info{flex:1;min-width:0}
+.project-title{font-weight:700;font-size:.9em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.project-meta{font-size:.75em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.new-project{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.new-project-btn{width:100%;padding:10px;border-radius:8px;border:1px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.9em;transition:all .2s}
+.new-project-btn:hover{border-color:var(--purple);color:var(--purple)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:56px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:5}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.song-title{font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
+.song-status{font-size:.75em;color:var(--muted);margin-top:2px}
+.tab-bar{display:flex;gap:2px;padding:4px 24px;background:rgba(0,0,0,.2);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{padding:10px 16px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.9em;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.editor{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:24px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.panel h3{font-size:.9rem;font-weight:800;margin-bottom:14px;color:var(--text);display:flex;align-items:center;gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.word-grid{display:flex;flex-wrap:wrap;gap:6px}
+.word-chip{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-size:.9em;cursor:pointer;transition:all .15s;text-align:center}
+.word-chip:hover{background:var(--purple);color:#000;border-color:var(--purple)}
+.word-chip .script{font-size:.95em;font-weight:700;display:block}
+.word-chip .roman{font-size:.75em;color:var(--muted);display:block}
+.word-chip .roman.tamil{color:#bbf7d0}
+.word-chip .roman.malayalam{color:#a7f3d0}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.75em;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.field input, .field select, .field textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.9em}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--purple)}
+textarea{min-height:90px;resize:vertical}
+.lyrics-area{width:100%;min-height:320px;font-family:'Segoe UI',monospace;font-size:1rem;line-height:1.7;padding:16px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);resize:vertical}
+.lyrics-line{margin:6px 0;padding:8px 12px;border-radius:6px;background:rgba(255,255,255,.03);cursor:pointer;transition:all .2s;border-left:3px solid transparent}
+.lyrics-line:hover{background:rgba(255,255,255,.08)}
+.lyrics-line.active{background:rgba(167,134,250,.15);border-left-color:var(--purple)}
+.lyrics-section{font-size:.75em;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin:16px 8px 6px;display:flex;align-items:center;gap:8px}
+.ai-voice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;align-items:end}
+.voice-select,.voice-rate,.voice-pitch{width:100%}
+.voice-controls{display:flex;gap:10px;margin-top:16px}
+.btn{padding:10px 18px;border-radius:8px;border:none;font-weight:700;font-size:.9em;cursor:pointer;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#000}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-secondary{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:rgba(255,255,255,.12)}
+.btn-danger{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-sm{padding:6px 12px;font-size:.75em}
+.player-bar{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:100}
+.now-playing{flex:1;min-width:0}
+.now-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now-artist{font-size:.9em;color:var(--muted)}
+.playback-controls{display:flex;align-items:center;gap:12px}
+.btn-icon{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.btn-icon:hover{background:rgba(255,255,255,.15)}
+.btn-play{background:var(--emerald);color:#000;width:48px;height:48px}
+.audio-player{width:100%;margin-top:12px}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);text-align:center}
+.empty-state .emoji{font-size:3rem;margin-bottom:16px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);padding:12px 20px;border-radius:var(--radius-full);color:var(--text);font-size:.9em;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;z-index:200}
+.toast.show{display:block}
+@media(max-width:768px){.app{flex-direction:column}.sidebar{width:100%;height:auto;max-height:40vh}.editor{padding:12px}}
+</style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' https://krvlufonfbcabgcjomvs.supabase.co https://api.github.com; frame-src https://accounts.google.com; upgrade-insecure-requests">
+<script>
+// Owner-only gate — music studio is private to the site owner (red835699@gmail.com).
+// Reuses the same Supabase + /api/on-demand?whoami=1 check as owner-runner.js.
+(function(){
+  'use strict';
+  var SB_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
+  var SB_ANON = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
+  var API = '/api/on-demand';
+  var LOGIN_URL = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+
+  function getToken(){ try{ return localStorage.getItem('sb_access_token') || ''; }catch(e){ return ''; } }
+  function tokenExpired(){
+    var tok = getToken();
+    if (!tok) return true;
+    try {
+      var parts = tok.split('.');
+      if (parts.length < 2) return false;
+      var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+      if (payload && payload.exp) return (payload.exp * 1000) - Date.now() < 60000;
+      return false;
+    } catch(e) { return false; }
+  }
+  function refreshToken(){
+    var rt = localStorage.getItem('sb_refresh_token');
+    if (!rt) return Promise.resolve('');
+    return fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST', headers: { 'apikey': SB_ANON, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: rt })
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (d && d.access_token) {
+        try { localStorage.setItem('sb_access_token', d.access_token); if (d.refresh_token) localStorage.setItem('sb_refresh_token', d.refresh_token); } catch(e) {}
+        return d.access_token;
+      }
+      return '';
+    }).catch(function(){ return ''; });
+  }
+  function freshToken(){
+    var t = getToken();
+    if (!t) return Promise.resolve('');
+    if (!tokenExpired()) return Promise.resolve(t);
+    return refreshToken();
+  }
+  function checkOwner(){
+    freshToken().then(function(t){
+      if (!t) { window.location.replace(LOGIN_URL); return; }
+      fetch(API + '?whoami=1', { headers: { 'Authorization': 'Bearer ' + t } })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(w){
+          if (w && typeof w.owner === 'boolean' && w.owner) {
+            // Owner — show the studio
+            document.getElementById('studioApp').style.display = 'flex';
+            document.getElementById('ownerGate').style.display = 'none';
+          } else {
+            // Not owner — show gate message
+            document.getElementById('ownerGate').innerHTML =
+              '<div class="owner-lock"><div class="lock">🔒</div>' +
+              '<div style="font-weight:800">Owner only</div>' +
+              '<div style="color:var(--muted);font-size:.9em;margin-top:8px">This page is private to the site owner.</div>' +
+              '<button class="btn btn-primary" onclick="window.location.replace(\'/login.html?redirect=' + encodeURIComponent(window.location.pathname) + '\')">Sign in as owner</button></div>';
+          }
+        }).catch(function(){ window.location.replace(LOGIN_URL); });
+    });
+  }
+  // Start check immediately
+  checkOwner();
+})();
+</script>
+</head>
+<body>
+
+<!-- Owner gate (shown until auth resolves) -->
+<div id="ownerGate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg)">
+  <div style="text-align:center;color:var(--muted)">
+    <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+    <div style="font-weight:800">Owner only</div>
+    <div style="color:var(--muted);font-size:.9em;margin-top:8px">Verifying access…</div>
+  </div>
+</div>
+
+<!-- Studio app (hidden until owner confirmed) -->
+<div id="studioApp" style="display:none">
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">🎵 STUDIO</div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="switchTab('dashboard','')">📁 Projects</button>
+      <button class="nav-btn" onclick="newSong()">➕ New Song</button>
+    </nav>
+    <div class="projects" id="projectList"></div>
+    <div class="new-project">
+      <button class="new-project-btn" onclick="newSong()">Create new song</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="song-title" id="headerTitle">Untitled Song</div>
+          <div class="song-status" id="headerStatus">Draft • no sections</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-secondary" onclick="exportProject()">💾 Export</button>
+        <button class="btn btn-sm btn-secondary" onclick="importProject()">📥 Import</button>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" onclick="showTab('info')">🎵 Song Info</button>
+      <button class="tab" onclick="showTab('lyrics')">📝 Lyrics</button>
+      <button class="tab" onclick="showTab('voice')">🤖 AI Voice</button>
+      <button class="tab" onclick="showTab('audio')">🔊 Audio</button>
+      <button class="tab" onclick="showTab('chords')">🎸 Chords</button>
+      <button class="tab" onclick="showTab('notes')">📒 Notes</button>
+      <button class="tab" onclick="showTab('synth')">🎹 Synth</button>
+      <button class="tab" onclick="showTab('beat')">🥁 Beat</button>
+      <button class="tab" onclick="showTab('tts')">🇮🇳 TTS ML/Tamil</button>
+      <button class="tab" onclick="showTab('tamil-malayalam')">🈶 Lyric Helper</button>
+    <button class="tab" onclick="showTab('lyriclab')">🧠 Lyric Lab</button>
+      <button class="tab" onclick="showTab('arrange')">🎬 Arrangement</button>
+      <button class="tab" onclick="showTab('mixer')">🎛 Mixer</button>
+      <button class="tab" onclick="showTab('fx')">🎚 Effects</button>
+      <button class="tab" onclick="showTab('harmony')">🎼 Harmony</button>
+      <button class="tab" onclick="showTab('roll')">🎹 Piano Roll</button>
+      <button class="tab" onclick="showTab('recorder')">🎙 Recorder</button>
+      <button class="tab" onclick="showTab('master')">💾 Master</button>
+      <button class="tab" onclick="showTab('chart')">📄 Chart</button>
+    </div>
+
+    <div class="editor">
+      <section id="tab-info" class="tab-panel active panel">
+        <div class="grid2">
+          <div class="field">
+            <label>Title</label>
+            <input type="text" id="f-title" placeholder="Song title" onchange="saveField('title',this.value)">
+          </div>
+          <div class="field">
+            <label>Artist</label>
+            <input type="text" id="f-artist" placeholder="Your name" onchange="saveField('artist',this.value)">
+          </div>
+          <div class="field">
+            <label>BPM</label>
+            <input type="number" id="f-bpm" value="90" min="40" max="220" onchange="saveField('bpm',parseInt(this.value))">
+          </div>
+          <div class="field">
+            <label>Key</label>
+            <select id="f-key" onchange="saveField('key',this.value)">
+              <option value="C">C</option><option value="C#">C#</option><option value="D">D</option>
+              <option value="D#">D#</option><option value="E">E</option><option value="F">F</option>
+              <option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option>
+              <option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Genre</label>
+            <select id="f-genre" onchange="saveField('genre',this.value)">
+              <option value="pop">Pop</option><option value="indie">Indie</option><option value="hiphop">Hip Hop</option>
+              <option value="rnb">R&B</option><option value="electronic">Electronic</option><option value="folk">Folk</option>
+              <option value="classical">Classical</option><option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>Description / Hook idea</label>
+            <textarea id="f-desc" onchange="saveField('desc',this.value)" placeholder="What is this song about?"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-lyrics" class="tab-panel panel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h3>Lyrics & Sections</h3>
+          <button class="btn btn-sm btn-secondary" onclick="addSection()">+ Add Section</button>
+        </div>
+        <div id="lyricsContainer"></div>
+        <div style="margin-top:12px">
+          <p class="lyrics-section">Tip: Type [Verse], [Chorus], [Bridge], [Intro], [Outro] on their own line to create sections.</p>
+        </div>
+      </section>
+
+      <section id="tab-voice" class="tab-panel panel" style="display:none">
+        <h3>AI Voice (Synthesis)</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:16px">Uses your browser's built-in voices (free, no API).</p>
+        <div class="ai-voice">
+          <div class="field">
+            <label>Voice</label>
+            <select id="voiceSelect" class="voice-select"></select>
+          </div>
+          <div class="field">
+            <label>Rate</label>
+            <input type="range" id="voiceRate" min="0.5" max="2" step="0.1" value="1">
+          </div>
+          <div class="field">
+            <label>Pitch</label>
+            <input type="range" id="voicePitch" min="0" max="2" step="0.1" value="1">
+          </div>
+          <div class="field">
+            <label>Volume</label>
+            <input type="range" id="voiceVolume" min="0" max="1" step="0.1" value="1">
+          </div>
+        </div>
+        <div class="voice-controls">
+          <button class="btn btn-primary" onclick="speakLyrics()">▶ Speak Lyrics</button>
+          <button class="btn btn-secondary" onclick="stopSpeech()">⏹ Stop</button>
+          <button class="btn btn-sm btn-secondary" onclick="loadLyricsToVoice()">📋 Load Lyrics</button>
+        </div>
+        <div style="margin-top:16px">
+          <h4 style="font-size:.9em;color:var(--muted);margin-bottom:8px">Voice text</h4>
+          <textarea id="voiceText" style="width:100%;min-height:120px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="Type custom text to speak..."></textarea>
+        </div>
+      </section>
+
+      <section id="tab-audio" class="tab-panel panel" style="display:none">
+        <h3>Audio File</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:16px">Upload MP3/WAV to listen while you write.</p>
+        <input type="file" id="audioFile" accept="audio/*" onchange="loadAudioFile(this)">
+        <div id="audioContainer" style="margin-top:16px"></div>
+      </section>
+
+      <section id="tab-chords" class="tab-panel panel" style="display:none">
+        <h3>Chord Progression</h3>
+        <div class="grid2">
+          <div class="field">
+            <label>Chords</label>
+            <input type="text" id="f-chords" placeholder="e.g. C - G - Am - F" onchange="saveField('chords',this.value)">
+          </div>
+          <div class="field">
+            <label>Structure</label>
+            <input type="text" id="f-structure" placeholder="e.g. Verse-Chorus-Bridge" onchange="saveField('structure',this.value)">
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Quick chords</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px" id="quickChords"></div>
+        </div>
+      </section>
+
+      <section id="tab-notes" class="tab-panel panel" style="display:none">
+        <h3>Studio Notes</h3>
+        <textarea id="f-notes" style="width:100%;min-height:300px;padding:16px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace;font-size:1rem" onchange="saveField('notes',this.value)" placeholder="Ideas, references, samples, to-do..."></textarea>
+      </section>
+
+      <section id="tab-synth" class="tab-panel panel" style="display:none">
+        <h3>Web Synth (Tone Generator)</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:16px">Play notes and chords with your browser's audio engine (free, no API).</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <div class="field">
+            <label>Waveform</label>
+            <select id="synthWave" onchange="synthSetWave(this.value)">
+              <option value="sine">Sine</option><option value="square">Square</option><option value="sawtooth">Sawtooth</option><option value="triangle">Triangle</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:grid;grid-template-columns:repeat(8,1fr);gap:6px" id="pianoKeys"></div>
+        <div style="margin-top:16px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Play chord</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px" id="chordButtons"></div>
+        </div>
+      </section>
+
+      <section id="tab-beat" class="tab-panel panel" style="display:none">
+        <h3>Beat Machine</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:16px">16-step drum sequencer.</p>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:.75em;color:var(--muted);text-transform:uppercase">Kick</div>
+            <div class="beat-row" id="beat-kick"></div>
+            <div style="font-size:.75em;color:var(--muted);text-transform:uppercase;margin-top:12px">Snare</div>
+            <div class="beat-row" id="beat-snare"></div>
+            <div style="font-size:.75em;color:var(--muted);text-transform:uppercase;margin-top:12px">Hi-hat</div>
+            <div class="beat-row" id="beat-hihat"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:.75em;color:var(--muted)">BPM</span>
+              <input type="number" id="beatBpm" value="120" min="60" max="200" style="width:60px">
+            </div>
+            <div style="display:flex;gap:12px">
+              <button class="btn btn-primary" onclick="beatTogglePlay()">▶ Start</button>
+              <button class="btn btn-secondary" onclick="beatClear()">Clear</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-tts" class="tab-panel panel" style="display:none">
+        <h3>AI Voice — Malayalam & Tamil</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:16px">Uses your device's built-in voices (free, no install). Install Malayalam/Tamil language packs in your OS settings for those voices to appear below.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+          <div class="field" style="min-width:200px">
+            <label>Voice</label>
+            <select id="ttsBrowserVoice" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.9em">
+              <option value="">Loading voices...</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="ttsFetchBrowserVoices()">🔄 Refresh Voices</button>
+        </div>
+        <div style="margin-top:12px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Text to speak</label>
+          <textarea id="ttsText" style="width:100%;min-height:120px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="Type Malayalam or Tamil text here..."></textarea>
+        </div>
+        <div style="margin-top:16px">
+          <button class="btn btn-primary" onclick="ttsSpeakBrowser()">🔊 Speak</button>
+          <button class="btn btn-secondary" onclick="ttsLoadLyrics()">📋 Load from Lyrics</button>
+          <div id="ttsStatus" style="margin-left:12px;font-size:.9em;color:var(--muted)"></div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:22px 0">
+        <h3>Studio voices — Tamil &amp; Malayalam</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:14px">Real Tamil and Malayalam neural voices (Edge TTS). These do not depend on your device's language packs. Rendered on the owner runner, about a minute per take.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+          <div class="field" style="min-width:280px"><label>Voice</label>
+            <select id="edgeVoice" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text)">
+              <option value="">Loading voices…</option>
+            </select>
+          </div>
+          <div class="field"><label>Rate</label>
+            <select id="edgeRate"><option value="-20%">Slower</option><option value="-10%">Slow</option><option value="+0%" selected>Normal</option><option value="+10%">Fast</option><option value="+20%">Faster</option></select>
+          </div>
+          <div class="field"><label>Pitch</label>
+            <select id="edgePitch"><option value="-50Hz">Lower</option><option value="-20Hz">Low</option><option value="+0Hz" selected>Normal</option><option value="+20Hz">High</option><option value="+50Hz">Higher</option></select>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Text</label>
+          <textarea id="edgeText" style="width:100%;min-height:110px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace" placeholder="தமிழ் அல்லது മലയാളം ഇവിടെ എഴുതുക…"></textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.edgeSpeak()">🎙 Render voice</button>
+          <button class="btn btn-secondary" onclick="MX.edgeLoadLyrics()">📋 Load lyric</button>
+          <a class="btn btn-secondary" id="edgeDl" style="display:none" download="take.mp3">⤓ Download MP3</a>
+          <span id="edgeStatus" style="font-size:.9em;color:var(--muted)"></span>
+        </div>
+        <audio id="edgeAudio" controls style="display:none;width:100%;margin-top:12px"></audio>
+      </section>
+
+      <section id="tab-lyriclab" class="tab-panel panel" style="display:none">
+        <h3>🧠 Lyric Lab — model-written lyrics</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:14px">Give it a brief; it writes a full lyric with sections. Owner-only, and the model keys stay on the server — nothing is stored in this browser except the result you keep.</p>
+        <div class="grid2">
+          <div class="field" style="grid-column:1/-1">
+            <label>What is the song about?</label>
+            <textarea id="lb-theme" placeholder="e.g. a father leaving a small town for work, and the letters he never sends"></textarea>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>Or paste an English lyric to transcreate (optional — overrides the brief above)</label>
+            <textarea id="lb-source" style="min-height:140px;font-family:ui-monospace,monospace" placeholder="Paste your English verse/chorus here. It becomes a singable Tamil/Malayalam lyric — same sections, same images, not a word-for-word translation."></textarea>
+          </div>
+          <div class="field"><label>Language</label>
+            <select id="lb-language" onchange="MX.lyricPrefs()">
+              <option value="english">English</option><option value="tamil">Tamil</option>
+              <option value="malayalam">Malayalam</option><option value="hindi">Hindi</option>
+              <option value="telugu">Telugu</option><option value="kannada">Kannada</option>
+              <option value="bengali">Bengali</option><option value="marathi">Marathi</option>
+              <option value="urdu">Urdu</option><option value="punjabi">Punjabi</option>
+              <option value="mixed">Mixed (English + mother tongue)</option>
+            </select>
+          </div>
+          <div class="field"><label>Mood</label><input id="lb-mood" placeholder="bittersweet, defiant, tender..." value="bittersweet"></div>
+          <div class="field"><label>Genre</label>
+            <select id="lb-genre"><option>pop</option><option>indie</option><option>hip hop</option><option>R&amp;B</option><option>electronic</option><option>folk</option><option>film / cinematic</option><option>classical / carnatic</option><option>ghazal</option></select>
+          </div>
+          <div class="field"><label>Point of view</label>
+            <select id="lb-pov"><option>first person</option><option>second person</option><option>third person</option><option>we / collective</option></select>
+          </div>
+          <div class="field"><label>Total lines</label><input type="number" id="lb-lines" value="20" min="4" max="80"></div>
+          <div class="field"><label>Rhyme</label>
+            <select id="lb-rhyme"><option>natural, not forced</option><option>tight AABB</option><option>ABAB</option><option>free verse, rhythm over rhyme</option><option>assonance only</option></select>
+          </div>
+          <div class="field"><label>Structure</label><input id="lb-structure" value="Verse 1, Chorus, Verse 2, Chorus, Bridge, Chorus"></div>
+          <div class="field" style="grid-column:1/-1"><label>Must use these images / words</label><input id="lb-keywords" placeholder="railway platform, a blue letter, monsoon"></div>
+          <div class="field" style="grid-column:1/-1"><label>Avoid</label><input id="lb-avoid" placeholder="clichés, English words inside Tamil lines, brand names"></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin:14px 0;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.generateLyrics()">✨ Generate lyrics</button>
+          <button class="btn btn-secondary" onclick="MX.lyricToSection()">↳ Add as a section</button>
+          <button class="btn btn-secondary" onclick="MX.lyricReplace()">⇄ Replace all lyrics</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.copyLyric()">⧉ Copy</button>
+          <span id="lb-status" style="font-size:.9em;color:var(--muted)"></span>
+        </div>
+        <textarea id="lb-out" style="width:100%;min-height:320px;padding:14px;border-radius:10px;border:1px solid var(--border);background:#000;color:var(--text);font-family:ui-monospace,monospace;font-size:.95rem;line-height:1.6" placeholder="Your generated lyrics appear here. Edit them freely — nothing is overwritten until you press a button above."></textarea>
+      </section>
+
+      <section id="tab-arrange" class="tab-panel panel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0">Arrangement</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Intro')">+ Intro</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Verse')">+ Verse</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Chorus')">+ Chorus</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Bridge')">+ Bridge</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Solo')">+ Solo</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.addSection('Outro')">+ Outro</button>
+          </div>
+        </div>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:12px">The song order. Each row plays its chord progression for the number of bars you set. This is the whole song, not a sketch.</p>
+        <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:16px;padding:12px;border:1px dashed rgba(167,139,250,.35);border-radius:10px;background:rgba(167,139,250,.05)">
+          <div class="field" style="min-width:150px"><label>Mood</label>
+            <select id="mx-mood"><option value="tender">Tender</option><option value="bittersweet" selected>Bittersweet</option><option value="hopeful">Hopeful</option><option value="defiant">Defiant</option><option value="dark">Dark</option><option value="playful">Playful</option></select>
+          </div>
+          <div class="field" style="min-width:150px"><label>Genre</label>
+            <select id="mx-songgen"><option value="pop">Pop</option><option value="ballad">Ballad</option><option value="folk">Folk</option><option value="film">Film / cinematic</option><option value="lofi">Lo-fi</option></select>
+          </div>
+          <button class="btn btn-primary" onclick="MX.composeSong()">✨ Compose a song</button>
+          <span style="font-size:.9em;color:var(--muted)">Fills the arrangement, mix and melody. Your lyrics stay untouched.</span>
+        </div>
+        <div id="mx-sections"></div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.play()">▶ Play arrangement</button>
+          <button class="btn btn-secondary" onclick="MX.stop()">⏹ Stop</button>
+          <span id="mx-arrange-info" style="font-size:.9em;color:var(--muted)"></span>
+        </div>
+      </section>
+
+      <section id="tab-mixer" class="tab-panel panel" style="display:none">
+        <h3>Mixer</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:14px">Four parts, each with its own instrument, level and pan. Solo one to check it, mute it to hear the hole it leaves.</p>
+        <div id="mx-mixer"></div>
+        <div style="margin-top:16px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Master</label>
+          <input type="range" id="mx-master" min="0" max="1" step="0.01" value="0.8" oninput="MX.setMaster(this.value)" style="width:220px">
+          <span id="mx-master-val" style="font-size:.9em;color:var(--muted)">0.80</span>
+          <button class="btn btn-sm btn-secondary" onclick="MX.play()">▶ Audition</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.stop()">⏹</button>
+        </div>
+      </section>
+
+      <section id="tab-fx" class="tab-panel panel" style="display:none">
+        <h3>Effects &amp; Master Bus</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:14px">A real bus, not decoration: reverb and delay are sends, EQ shapes the tone, the compressor keeps the loud parts from clipping.</p>
+        <div class="grid2">
+          <div class="field"><label>Reverb mix</label><input type="range" id="fx-reverb" min="0" max="1" step="0.01" value="0.18" oninput="MX.setFx('reverb',this.value)"></div>
+          <div class="field"><label>Reverb size</label><input type="range" id="fx-size" min="0.6" max="4" step="0.1" value="1.8" oninput="MX.setFx('size',this.value)"></div>
+          <div class="field"><label>Delay time (s)</label><input type="range" id="fx-delay" min="0.05" max="0.8" step="0.01" value="0.28" oninput="MX.setFx('delay',this.value)"></div>
+          <div class="field"><label>Delay feedback</label><input type="range" id="fx-dfb" min="0" max="0.7" step="0.01" value="0.28" oninput="MX.setFx('dfb',this.value)"></div>
+          <div class="field"><label>Delay mix</label><input type="range" id="fx-dmix" min="0" max="1" step="0.01" value="0.12" oninput="MX.setFx('dmix',this.value)"></div>
+          <div class="field"><label>Compressor</label><input type="range" id="fx-comp" min="0" max="1" step="0.01" value="0.4" oninput="MX.setFx('comp',this.value)"></div>
+          <div class="field"><label>Low shelf (dB)</label><input type="range" id="fx-low" min="-12" max="12" step="1" value="0" oninput="MX.setFx('low',this.value)"></div>
+          <div class="field"><label>Mid (dB)</label><input type="range" id="fx-mid" min="-12" max="12" step="1" value="0" oninput="MX.setFx('mid',this.value)"></div>
+          <div class="field"><label>High shelf (dB)</label><input type="range" id="fx-high" min="-12" max="12" step="1" value="0" oninput="MX.setFx('high',this.value)"></div>
+        </div>
+      </section>
+
+      <section id="tab-harmony" class="tab-panel panel" style="display:none">
+        <h3>Harmony — scales, chords, progressions</h3>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end;margin-bottom:14px">
+          <div class="field"><label>Root</label><select id="hx-root" onchange="MX.refreshHarmony()"></select></div>
+          <div class="field"><label>Scale / mode</label><select id="hx-mode" onchange="MX.refreshHarmony()"></select></div>
+          <div class="field"><label>Octave</label><select id="hx-oct" onchange="MX.refreshHarmony()"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+        </div>
+        <div id="hx-notes" style="font-size:.9em;color:var(--text-sec);margin-bottom:14px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="hx-degrees"></div>
+        <div class="grid2">
+          <div class="field" style="grid-column:1/-1"><label>Progression preset</label><select id="hx-preset" onchange="MX.applyPreset(this.value)"></select></div>
+          <div class="field"><label>Arpeggiator</label><select id="hx-arp" onchange="MX.setArp()"><option value="off">Off</option><option value="up">Up</option><option value="down">Down</option><option value="updown">Up-Down</option><option value="random">Random</option></select></div>
+          <div class="field"><label>Arp rate (per beat)</label><select id="hx-arprate" onchange="MX.setArp()"><option value="1">1</option><option value="2" selected>2</option><option value="4">4</option></select></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.playHarmony()">▶ Play progression</button>
+          <button class="btn btn-secondary" onclick="MX.stop()">⏹</button>
+          <button class="btn btn-secondary" onclick="MX.progressionToSection()">+ Add to arrangement</button>
+        </div>
+      </section>
+
+      <section id="tab-roll" class="tab-panel panel" style="display:none">
+        <h3>Piano Roll</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:10px">16 steps, one octave and a bit. Click a cell to place the lead line. It loops over the arrangement.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:12px">
+          <div class="field"><label>Instrument</label><select id="roll-inst" onchange="MX.setRollInst()"><option value="pluck">Pluck</option><option value="lead">Lead</option><option value="pad">Pad</option><option value="strings">Strings</option></select></div>
+          <div class="field"><label>Steps</label><select id="roll-steps" onchange="MX.renderRoll()"><option>8</option><option selected>16</option><option>32</option></select></div>
+          <button class="btn btn-sm btn-secondary" onclick="MX.clearRoll()">Clear</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.play()">▶ Play</button>
+          <button class="btn btn-sm btn-secondary" onclick="MX.stop()">⏹</button>
+        </div>
+        <div id="mx-roll" style="overflow-x:auto"></div>
+      </section>
+
+      <section id="tab-recorder" class="tab-panel panel" style="display:none">
+        <h3>Vocal Recorder</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:14px">Record a take with the microphone, play it against the arrangement, or download it. The browser will ask for microphone permission the first time.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-primary" onclick="MX.startRec()">⏺ Record</button>
+          <button class="btn btn-secondary" onclick="MX.stopRec()">⏹ Stop</button>
+          <button class="btn btn-secondary" onclick="MX.playRec()">▶ Play selected</button>
+          <a class="btn btn-secondary" id="mx-rec-dl" href="#" download="take.webm" style="display:none">⤓ Download</a>
+          <label style="display:flex;gap:6px;align-items:center;font-size:.9em;color:var(--muted)">
+            <input type="checkbox" id="mx-monitor"> hear the backing while recording (use headphones)
+          </label>
+          <span id="mx-rec-status" style="font-size:.9em;color:var(--muted)"></span>
+        </div>
+        <div id="mx-recs" style="margin-top:16px"></div>
+      </section>
+
+      <section id="tab-master" class="tab-panel panel" style="display:none">
+        <h3>Master &amp; Export</h3>
+        <div class="grid2">
+          <div class="field"><label>Tempo (BPM)</label><input type="number" id="mx-bpm" min="40" max="220" value="96" onchange="MX.setTempo(this.value)"></div>
+          <div class="field"><label>Metronome</label><select id="mx-click" onchange="MX.setClick()"><option value="off">Off</option><option value="on">On</option></select></div>
+          <div class="field"><label>Time signature</label><select id="mx-meter" onchange="MX.setMeter(this.value)"><option value="4/4">4/4</option><option value="3/4">3/4</option><option value="2/4">2/4</option><option value="6/8">6/8</option><option value="5/4">5/4</option><option value="7/8">7/8</option></select></div>
+          <div class="field"><label>Swing</label><input type="range" id="mx-swing" min="0" max="0.6" step="0.02" value="0" oninput="MX.setSwing(this.value)"></div>
+          <div class="field"><label>Count-in</label><select id="mx-countin" onchange="MX.setCountIn()"><option value="off">Off</option><option value="on">One bar</option></select></div>
+          <div class="field"><label>Length (seconds)</label><input type="number" id="mx-len" min="4" max="900" value="32"></div>
+          <div class="field"><label>Render quality</label><select id="mx-rate"><option value="44100">44.1 kHz</option><option value="48000">48 kHz</option></select></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="MX.exportWav()">⤓ Render WAV</button>
+          <button class="btn btn-primary" onclick="MX.mixFinal()">🎧 Mix voice + backing (final song)</button>
+          <div class="field" style="min-width:170px;margin:0">
+            <label>Vocal source</label>
+            <select id="mx-vocal">
+              <option value="auto" selected>Auto (my take, else studio voice)</option>
+              <option value="take">My recording (Recorder tab)</option>
+              <option value="voice">Studio voice (TTS tab)</option>
+              <option value="none">Instrumental only</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary" onclick="MX.exportStems()">⤓ Export stems (4 WAV)</button>
+          <button class="btn btn-secondary" onclick="MX.exportMidi()">⤓ Export MIDI</button>
+          <label class="btn btn-secondary" style="cursor:pointer">⤒ Import MIDI to roll<input type="file" accept=".mid,.midi,audio/midi" style="display:none" onchange="MX.importMidi(this)"></label>
+          <button class="btn btn-secondary" onclick="MX.exportProject()">⤓ Export project</button>
+          <label class="btn btn-secondary" style="cursor:pointer">⤒ Import project<input type="file" accept=".json,application/json" style="display:none" onchange="MX.importProject(this)"></label>
+          <button class="btn btn-secondary" onclick="MX.printSheet()">🖨 Lyric sheet</button>
+        </div>
+        <p id="mx-export-status" style="font-size:.9em;color:var(--muted);margin-top:12px"></p>
+      </section>
+
+      <section id="tab-chart" class="tab-panel panel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0">Chart</h3>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-sm btn-secondary" onclick="MX.undo()">↶ Undo</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.redo()">↷ Redo</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.copyChart()">⧉ Copy chart</button>
+            <button class="btn btn-sm btn-secondary" onclick="MX.printChart()">🖨 Print</button>
+          </div>
+        </div>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:12px">The whole arrangement as a lead-sheet chart: sections, bars, roman numerals and Nashville numbers. This is the page you hand to a player.</p>
+        <div id="mx-chart" style="background:#fffdf7;color:#1f2937;border-radius:10px;padding:18px;overflow-x:auto;font-family:Georgia,serif"></div>
+        <h3 style="margin:22px 0 8px">Key helper</h3>
+        <div id="mx-keys" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        <p id="mx-key-note" style="font-size:.9em;color:var(--muted);margin-top:8px"></p>
+      </section>
+
+      <section id="tab-tamil-malayalam" class="tab-panel panel" style="display:none">
+        <h3>Tamil & Malayalam Lyric Helper</h3>
+        <p style="color:var(--muted);font-size:.9em;margin-bottom:16px">Tap a word to insert it into your lyrics. Build bilingual verses for your songs.</p>
+        <div style="display:flex;gap:16px">
+          <div style="flex:1">
+            <h4 style="font-size:.9em;color:var(--purple);margin-bottom:8px">Tamil (தமிழ்)</h4>
+            <div class="word-grid" id="tamilWords"></div>
+          </div>
+          <div style="flex:1">
+            <h4 style="font-size:.9em;color:var(--emerald);margin-bottom:8px">Malayalam (മലയാളം)</h4>
+            <div class="word-grid" id="malayalamWords"></div>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <label style="font-size:.75em;color:var(--muted);text-transform:uppercase">Combined lyrics</label>
+          <textarea id="tmLyrics" style="width:100%;min-height:200px;padding:12px;border-radius:8px;border:1px solid var(--border);background:#000;color:var(--text);font-family:monospace;font-size:1rem" onchange="saveField('tmLyrics',this.value)" placeholder="Type or tap words above to build your verse..."></textarea>
+        </div>
+      </section>
+    </div>
+
+    <div class="player-bar">
+      <div class="now-playing">
+        <div class="now-title" id="playerTitle">No song playing</div>
+        <div class="now-artist" id="playerArtist">Studio</div>
+      </div>
+      <div class="playback-controls">
+        <button class="btn-icon" onclick="prevSong()" title="Previous">⏮</button>
+        <button class="btn-icon btn-play" id="playBtn" onclick="togglePlay()" title="Play/Pause">▶</button>
+        <button class="btn-icon" onclick="nextSong()" title="Next">⏭</button>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+let projects = JSON.parse(localStorage.getItem('studio_projects') || '[]');
+let currentId = null;
+let audioEl = null;
+let isPlaying = false;
+let synth = window.speechSynthesis;
+let utterance = null;
+
+let audioCtx = null;
+let synthOsc = null;
+let synthGain = null;
+let beatInterval = null;
+let beatPlaying = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+  initSynth();
+  renderProjects();
+  initPiano();
+  initChords();
+  initBeatGrid();
+  renderTMWords();
+  if (projects.length === 0) newSong();
+  else loadProject(projects[0].id);
+  setupAudio();
+});
+function loadVoices() {
+  const sel = document.getElementById('voiceSelect');
+  sel.innerHTML = '';
+  synth.getVoices().forEach((v, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = (v.name || 'Voice ' + i) + ' (' + v.lang + ')';
+    sel.appendChild(o);
+  });
+}
+
+const TAMIL_WORDS = [
+  { script: 'காதல்', roman: 'Kādhal', meaning: 'Love' },
+  { script: 'கண்ணீர்', roman: 'Kāṇṇīr', meaning: 'Tears' },
+  { script: 'கனவு', roman: 'Kanavu', meaning: 'Dream' },
+  { script: 'மழை', roman: 'Mazhai', meaning: 'Rain' },
+  { script: 'சந்திரன்', roman: 'Chandran', meaning: 'Moon' },
+  { script: 'நட்சத்திரம்', roman: 'Natchathiram', meaning: 'Star' },
+  { script: 'பூ', roman: 'Pū', meaning: 'Flower' },
+  { script: 'கடல்', roman: 'Kadal', meaning: 'Ocean' },
+  { script: 'உயிரே', roman: 'Uyirē', meaning: 'My life/soul' },
+  { script: 'உயிர்', roman: 'Uyir', meaning: 'Life' },
+  { script: 'வீடு', roman: 'Vīṭu', meaning: 'Home' },
+  { script: 'வீлих', roman: 'Vīliha', meaning: 'Night' },
+  { script: 'நாள்', roman: 'Nāḷ', meaning: 'Day' },
+  { script: 'காதல்', roman: 'Kādhal', meaning: 'Love' },
+  { script: 'மறவும்', roman: 'Maṟavum', meaning: 'Forget' },
+  { script: 'நினivit', roman: 'Niṉaivi', meaning: 'Memory' }
+];
+
+const MALAYALAM_WORDS = [
+  { script: 'പ്രേമം', roman: 'Preyam', meaning: 'Love' },
+  { script: 'കണ്ണீர്', roman: 'Kannīr', meaning: 'Tears' },
+  { script: 'സ്വപ്നം', roman: 'Svapnam', meaning: 'Dream' },
+  { script: 'മഴ', roman: 'Mazha', meaning: 'Rain' },
+  { script: 'ചന്ദ്രൻ', roman: 'Chandran', meaning: 'Moon' },
+  { script: 'നക്ഷത്രം', roman: 'Nakshatram', meaning: 'Star' },
+  { script: 'പൂവ്', roman: 'Pūv', meaning: 'Flower' },
+  { script: 'കടൽ', roman: 'Kadal', meaning: 'Ocean' },
+  { script: 'ജീവ്', roman: 'Jīv', meaning: 'Life' },
+  { script: 'ഹൃദയം', roman: 'Hṛdayam', meaning: 'Heart' },
+  { script: 'രാത്രി', roman: 'Rātri', meaning: 'Night' },
+  { script: 'ദിവസം', roman: 'Divasam', meaning: 'Day' },
+  { script: 'വീട്', roman: 'Vīṭu', meaning: 'Home' },
+  { script: 'നിന്നೆ നോക്കി', roman: 'Ninne nokki', meaning: 'Looking at you' },
+  { script: 'മനസ്സിൽ', roman: 'Manassil', meaning: 'In the mind' }
+];
+
+function renderTMWords() {
+  const tamilEl = document.getElementById('tamilWords');
+  const malayalamEl = document.getElementById('malayalamWords');
+  if (!tamilEl || !malayalamEl) return;
+
+  tamilEl.innerHTML = TAMIL_WORDS.map(w =>
+    `<div class="word-chip tamil" onclick="insertTMWord('${escapeJs(w.script)}','${escapeJs(w.roman)}')"><span class="script">${w.script}</span><span class="roman tamil">${w.roman}</span><span class="roman" style="font-size:.65em">${w.meaning}</span></div>`
+  ).join('');
+
+  malayalamEl.innerHTML = MALAYALAM_WORDS.map(w =>
+    `<div class="word-chip malayalam" onclick="insertTMWord('${escapeJs(w.script)}','${escapeJs(w.roman)}')"><span class="script">${w.script}</span><span class="roman malayalam">${w.roman}</span><span class="roman" style="font-size:.65em">${w.meaning}</span></div>`
+  ).join('');
+}
+
+function escapeJs(s) {
+  return String(s).replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '\\n');
+}
+
+function insertTMWord(script, roman) {
+  const ta = document.getElementById('tmLyrics');
+  if (!ta) return;
+  const insert = script + ' (' + roman + ') ';
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  ta.value = ta.value.slice(0, start) + insert + ta.value.slice(end);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
+  ta.focus();
+  saveField('tmLyrics', ta.value);
+}
+
+
+function newSong() {
+  const id = 'song_' + Date.now();
+  const p = {
+    id, title: 'Untitled Song', artist: 'You', bpm: 90, key: 'C',
+    genre: 'pop', desc: '', chords: '', structure: '', notes: '',
+    lyrics: '', tmLyrics: '', created: Date.now(), updated: Date.now()
+  };
+  projects.unshift(p);
+  saveProjects();
+  renderProjects();
+  loadProject(id);
+  showToast('New song created');
+}
+
+function loadProject(id) {
+  currentId = id;
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('headerTitle').textContent = p.title;
+  document.getElementById('headerStatus').textContent = p.bpm + ' BPM • ' + p.key + ' • ' + p.genre;
+  document.getElementById('playerTitle').textContent = p.title;
+  document.getElementById('playerArtist').textContent = p.artist;
+  document.getElementById('f-title').value = p.title;
+  document.getElementById('f-artist').value = p.artist;
+  document.getElementById('f-bpm').value = p.bpm;
+  document.getElementById('f-key').value = p.key;
+  document.getElementById('f-genre').value = p.genre;
+  document.getElementById('f-desc').value = p.desc;
+  document.getElementById('f-chords').value = p.chords;
+  document.getElementById('f-structure').value = p.structure;
+  document.getElementById('f-notes').value = p.notes;
+  document.getElementById('voiceText').value = p.lyrics;
+  document.getElementById('tmLyrics').value = p.tmLyrics || '';
+  renderLyrics(p.lyrics);
+  renderProjects();
+  updatePlayer();
+}
+
+function saveField(key, val) {
+  if (!currentId) return;
+  const p = projects.find(x => x.id === currentId);
+  if (!p) return;
+  p[key] = val;
+  p.updated = Date.now();
+  if (key === 'title') {
+    document.getElementById('headerTitle').textContent = val;
+    document.getElementById('playerTitle').textContent = val;
+  }
+  if (key === 'bpm' || key === 'key' || key === 'genre') {
+    document.getElementById('headerStatus').textContent = p.bpm + ' BPM • ' + p.key + ' • ' + p.genre;
+  }
+  saveProjects();
+  renderProjects();
+}
+
+function deleteProject(id) {
+  if (!confirm('Delete this song?')) return;
+  projects = projects.filter(x => x.id !== id);
+  if (currentId === id) currentId = projects.length ? projects[0].id : null;
+  saveProjects();
+  renderProjects();
+  if (currentId) loadProject(currentId);
+  else {
+    document.getElementById('headerTitle').textContent = 'No song';
+    document.getElementById('playerTitle').textContent = 'No song';
+  }
+  showToast('Song deleted');
+}
+
+function saveProjects() {
+  localStorage.setItem('studio_projects', JSON.stringify(projects));
+}
+
+function renderProjects() {
+  const el = document.getElementById('projectList');
+  el.innerHTML = '';
+  projects.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'project-item' + (currentId === p.id ? ' active' : '');
+    div.onclick = () => loadProject(p.id);
+    div.innerHTML = `
+      <div class="project-info">
+        <div class="project-title">${escapeHtml(p.title)}</div>
+        <div class="project-meta">${p.bpm} BPM • ${p.key} • ${new Date(p.updated).toLocaleDateString()}</div>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteProject('${p.id}')">🗑</button>
+    `;
+    el.appendChild(div);
+  });
+}
+
+function exportProject() {
+  if (!currentId) return;
+  const p = projects.find(x => x.id === currentId);
+  const blob = new Blob([JSON.stringify(p, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (p.title || 'song') + '.studio.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exported ' + p.title);
+}
+
+function importProject() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const p = JSON.parse(ev.target.result);
+        p.id = 'song_' + Date.now();
+        projects.unshift(p);
+        saveProjects();
+        renderProjects();
+        loadProject(p.id);
+        showToast('Imported ' + p.title);
+      } catch (err) {
+        alert('Invalid file');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function renderLyrics(text) {
+  const container = document.getElementById('lyricsContainer');
+  container.innerHTML = '';
+  if (!text) {
+    container.innerHTML = '<div style="color:var(--muted);font-size:.9em;padding:20px">No lyrics yet.</div>';
+    return;
+  }
+  const lines = text.split('\n');
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    const isSection = /^\[(verse|chorus|bridge|intro|outro|pre-chorus|hook)\]/i.test(trimmed);
+    if (isSection) {
+      const s = document.createElement('div');
+      s.className = 'lyrics-section';
+      s.textContent = trimmed;
+      container.appendChild(s);
+    } else {
+      const div = document.createElement('div');
+      div.className = 'lyrics-line';
+      div.textContent = line || ' ';
+      div.onclick = () => speakLine(i);
+      container.appendChild(div);
+    }
+  });
+}
+
+function addSection() {
+  const sections = ['[Verse]', '[Chorus]', '[Bridge]', '[Intro]', '[Outro]'];
+  const s = sections[Math.floor(Math.random() * sections.length)];
+  const ta = document.getElementById('voiceText');
+  ta.value = (ta.value ? ta.value + '\n\n' : '') + s + '\n\n';
+  saveField('lyrics', ta.value);
+  renderLyrics(ta.value);
+}
+
+function loadLyricsToVoice() {
+  const p = projects.find(x => x.id === currentId);
+  if (p && p.lyrics) document.getElementById('voiceText').value = p.lyrics;
+}
+
+function speakLyrics() {
+  const text = document.getElementById('voiceText').value.trim();
+  if (!text) { showToast('No text to speak'); return; }
+  stopSpeech();
+  utterance = new SpeechSynthesisUtterance(text);
+  const voices = synth.getVoices();
+  const sel = document.getElementById('voiceSelect');
+  if (voices[sel.value]) utterance.voice = voices[sel.value];
+  utterance.rate = parseFloat(document.getElementById('voiceRate').value);
+  utterance.pitch = parseFloat(document.getElementById('voicePitch').value);
+  utterance.volume = parseFloat(document.getElementById('voiceVolume').value);
+  utterance.onend = () => { isPlaying = false; updatePlayBtn(); };
+  synth.speak(utterance);
+  isPlaying = true;
+  updatePlayBtn();
+  showToast('AI Voice speaking');
+}
+
+function stopSpeech() {
+  synth.cancel();
+  isPlaying = false;
+  updatePlayBtn();
+}
+
+function speakLine(lineIndex) {
+  const lines = document.getElementById('voiceText').value.split('\n');
+  const line = lines[lineIndex];
+  if (!line || !line.trim()) return;
+  stopSpeech();
+  utterance = new SpeechSynthesisUtterance(line.trim());
+  const voices = synth.getVoices();
+  const sel = document.getElementById('voiceSelect');
+  if (voices[sel.value]) utterance.voice = voices[sel.value];
+  utterance.rate = parseFloat(document.getElementById('voiceRate').value);
+  utterance.pitch = parseFloat(document.getElementById('voicePitch').value);
+  synth.speak(utterance);
+}
+
+function setupAudio() {
+  audioEl = new Audio();
+  audioEl.addEventListener('ended', () => { isPlaying = false; updatePlayBtn(); });
+}
+
+function loadAudioFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  audioEl.src = url;
+  document.getElementById('audioContainer').innerHTML = `
+    <div style="padding:12px;background:#000;border-radius:8px;border:1px solid var(--border)">
+      <strong>${escapeHtml(file.name)}</strong><br>
+      <audio class="audio-player" controls src="${url}"></audio>
+    </div>`;
+  showToast('Audio loaded');
+}
+
+function togglePlay() {
+  if (audioEl && audioEl.src) {
+    if (audioEl.paused) audioEl.play();
+    else audioEl.pause();
+    isPlaying = !audioEl.paused;
+    updatePlayBtn();
+  } else {
+    if (isPlaying) stopSpeech();
+    else speakLyrics();
+  }
+}
+
+function updatePlayBtn() {
+  const btn = document.getElementById('playBtn');
+  if (!btn) return;
+  btn.textContent = isPlaying ? '⏸' : '▶';
+}
+
+function prevSong() { showToast('Previous track'); }
+function nextSong() { showToast('Next track'); }
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('tab-' + name).style.display = 'block';
+  if (name === 'tts') ttsFetchBrowserVoices();
+}
+
+function switchTab(name, id) {
+  showTab(name);
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+async function ttsFetchBrowserVoices() {
+  const sel = document.getElementById('ttsBrowserVoice');
+  sel.innerHTML = '<option value="">Loading voices...</option>';
+  const voices = synth.getVoices();
+  const mlTa = voices.filter(v => /ml-IN|ta-IN/.test(v.lang));
+  const all = voices;
+  if (mlTa.length) {
+    mlTa.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.name;
+      o.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(o);
+    });
+    showToast(`Found ${mlTa.length} Malayalam/Tamil voice(s)`);
+  } else {
+    all.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.name;
+      o.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(o);
+    });
+    showToast('No ml-IN/ta-IN voices found — install language packs');
+  }
+}
+
+async function ttsSpeakBrowser() {
+  const text = document.getElementById('ttsText').value.trim();
+  if (!text) { showToast('Enter text'); return; }
+  stopSpeech();
+  utterance = new SpeechSynthesisUtterance(text);
+  const sel = document.getElementById('ttsBrowserVoice');
+  const voiceName = sel.value;
+  const voices = synth.getVoices();
+  const v = voices.find(x => x.name === voiceName);
+  if (v) utterance.voice = v;
+  utterance.rate = parseFloat(document.getElementById('voiceRate').value || 1);
+  utterance.pitch = parseFloat(document.getElementById('voicePitch').value || 1);
+  utterance.volume = parseFloat(document.getElementById('voiceVolume').value || 1);
+  utterance.onend = () => { isPlaying = false; updatePlayBtn(); };
+  synth.speak(utterance);
+  isPlaying = true;
+  updatePlayBtn();
+  showToast('Speaking via browser voice');
+}
+
+function ttsLoadLyrics() {
+  const p = projects.find(x => x.id === currentId);
+  if (p && p.lyrics) document.getElementById('ttsText').value = p.lyrics;
+}
+function initSynth() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  synthGain = audioCtx.createGain();
+  synthGain.gain.value = 0.15;
+  synthGain.connect(audioCtx.destination);
+  synthOsc = audioCtx.createOscillator();
+  synthOsc.type = 'sine';
+  synthOsc.connect(synthGain);
+  synthOsc.start();
+}
+
+function synthSetWave(type) {
+  if (synthOsc) synthOsc.type = type;
+}
+
+const NOTE_FREQ = {
+  'C4':261.63,'C#4':277.18,'D4':293.66,'D#4':311.13,'E4':329.63,'F4':349.23,'F#4':369.99,'G4':392.00,'G#4':415.30,'A4':440.00,'A#4':466.16,'B4':493.88,
+  'C5':523.25,'C#5':554.37,'D5':587.33,'D#5':622.25,'E5':659.25,'F5':698.46,'F#5':739.99,'G5':783.99,'G#5':830.61,'A5':880.00,'A#5':932.33,'B5':987.77
+};
+const PIANO_KEYS = ['C4','C#4','D4','D#4','E4','F4','F#4','G4','G#4','A4','A#4','B4','C5'];
+
+function initPiano() {
+  const el = document.getElementById('pianoKeys');
+  el.innerHTML = '';
+  PIANO_KEYS.forEach(note => {
+    const b = document.createElement('button');
+    b.className = 'btn btn-sm btn-secondary';
+    b.textContent = note;
+    b.onclick = () => playNote(note);
+    el.appendChild(b);
+  });
+}
+
+function playNote(note) {
+  if (!audioCtx) return;
+  const freq = NOTE_FREQ[note];
+  if (!freq) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = synthOsc ? synthOsc.type : 'sine';
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.5);
+}
+
+function initChords() {
+  const el = document.getElementById('chordButtons');
+  el.innerHTML = '';
+  const chords = {
+    'C Major': ['C4','E4','G4'], 'G Major': ['G4','B4','D5'], 'Am': ['A4','C5','E5'],
+    'F Major': ['F4','A4','C5'], 'Dm': ['D4','F4','A4'], 'Em': ['E4','G4','B4'],
+    'Cmaj7': ['C4','E4','G4','B4'], 'G7': ['G4','B4','D5','F5']
+  };
+  Object.entries(chords).forEach(([name, notes]) => {
+    const b = document.createElement('button');
+    b.className = 'btn btn-sm btn-secondary';
+    b.textContent = name;
+    b.onclick = () => playChord(notes);
+    el.appendChild(b);
+  });
+}
+
+function playChord(notes) {
+  if (!audioCtx) return;
+  notes.forEach(n => playNote(n));
+}
+function initBeatGrid() {
+  ['kick','snare','hihat'].forEach(instr => {
+    const el = document.getElementById('beat-' + instr);
+    el.innerHTML = '';
+    for (let i = 0; i < 16; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'beat-cell';
+      cell.dataset.instr = instr;
+      cell.dataset.step = i;
+      cell.onclick = () => beatToggleCell(instr, i);
+      el.appendChild(cell);
+    }
+  });
+}
+
+const BEAT_SOUNDS = {
+  kick: 60,
+  snare: 150,
+  hihat: 8000
+};
+
+function beatToggleCell(instr, step) {
+  const cell = document.querySelector('.beat-cell[data-instr="'+instr+'"][data-step="'+step+'"]');
+  cell.classList.toggle('active');
+}
+
+function beatClear() {
+  document.querySelectorAll('.beat-cell').forEach(c => c.classList.remove('active'));
+}
+
+function beatTogglePlay() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    synthGain = audioCtx.createGain();
+    synthGain.gain.value = 0.3;
+    synthGain.connect(audioCtx.destination);
+  }
+  if (beatPlaying) {
+    clearInterval(beatInterval);
+    beatPlaying = false;
+    document.querySelector('.btn-primary').textContent = '▶ Start';
+    return;
+  }
+  let step = 0;
+  const bpm = parseInt(document.getElementById('beatBpm').value) || 120;
+  const intervalMs = (60 / bpm / 4) * 1000;
+  beatInterval = setInterval(() => {
+    document.querySelectorAll('.beat-cell').forEach(c => c.classList.remove('playing'));
+    ['kick','snare','hihat'].forEach(instr => {
+      const cell = document.querySelector('.beat-cell[data-instr="'+instr+'"][data-step="'+step+'"]');
+      if (cell && cell.classList.contains('active')) {
+        cell.classList.add('playing');
+        playBeatSound(instr);
+      }
+    });
+    step = (step + 1) % 16;
+  }, intervalMs);
+  beatPlaying = true;
+  document.querySelector('.btn-primary').textContent = '⏹ Stop';
+}
+
+function playBeatSound(instr) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(BEAT_SOUNDS[instr], audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.1);
+}
+
+document.getElementById('beatBpm').addEventListener('change', () => {
+  if (beatPlaying) {
+    clearInterval(beatInterval);
+    beatPlaying = false;
+    document.querySelector('.btn-primary').textContent = '▶ Start';
+  }
+});
+
+</script>
+
+<script>
+// =====================================================================
+// Composer engine — arrangement, mixer, bus, harmony, piano roll,
+// recorder, WAV render, and the model-written lyric lane.
+//
+// Everything here is real Web Audio: the arrangement you hear is the same
+// graph that gets rendered to WAV, so the export is not a rough sketch of
+// the mix. State lives on the project as `mx` and is saved through the
+// existing saveField(), so it travels with the song.
+// =====================================================================
+const MX = (function () {
+  const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const MODES = {
+    'Major (Ionian)': [0, 2, 4, 5, 7, 9, 11],
+    'Natural minor (Aeolian)': [0, 2, 3, 5, 7, 8, 10],
+    'Dorian': [0, 2, 3, 5, 7, 9, 10],
+    'Phrygian': [0, 1, 3, 5, 7, 8, 10],
+    'Lydian': [0, 2, 4, 6, 7, 9, 11],
+    'Mixolydian': [0, 2, 4, 5, 7, 9, 10],
+    'Locrian': [0, 1, 3, 5, 6, 8, 10],
+    'Harmonic minor': [0, 2, 3, 5, 7, 8, 11],
+    'Melodic minor': [0, 2, 3, 5, 7, 9, 11],
+    'Major pentatonic': [0, 2, 4, 7, 9],
+    'Minor pentatonic': [0, 3, 5, 7, 10],
+    'Blues': [0, 3, 5, 6, 7, 10]
+  };
+  const PRESETS = {
+    'Pop: I–V–vi–IV': ['I', 'V', 'vi', 'IV'],
+    'Pop: vi–IV–I–V': ['vi', 'IV', 'I', 'V'],
+    'Fifties: I–vi–IV–V': ['I', 'vi', 'IV', 'V'],
+    'Canon: I–V–vi–iii–IV–I–IV–V': ['I', 'V', 'vi', 'iii', 'IV', 'I', 'IV', 'V'],
+    'Jazz: ii–V–I': ['ii', 'V', 'I'],
+    'Minor: i–VI–III–VII': ['i', 'VI', 'III', 'VII'],
+    'Modal: I–bVII–IV': ['I', 'bVII', 'IV'],
+    'Descending: I–vii–vi–V': ['I', 'vii', 'vi', 'V'],
+    'Loop: I–IV': ['I', 'IV'],
+    'Drone: I–I–IV–I': ['I', 'I', 'IV', 'I']
+  };
+  const INSTRUMENTS = {
+    kick: 'Kick', snare: 'Snare', hat: 'Hi-hat',
+    bass: 'Bass', pad: 'Pad', pluck: 'Pluck', lead: 'Lead', strings: 'Strings'
+  };
+  const TRACKS = [
+    { id: 'drums', name: 'Drums', inst: 'kick' },
+    { id: 'bass', name: 'Bass', inst: 'bass' },
+    { id: 'chords', name: 'Chords', inst: 'pad' },
+    { id: 'lead', name: 'Lead', inst: 'pluck' }
+  ];
+
+  const state = {
+    ctx: null, master: null, bus: null, trackGain: {}, playing: false, stopAt: 0,
+    rec: null, chunks: [], takes: [],
+    snap: defaults()
+  };
+
+  function defaults() {
+    return {
+      bpm: 96,
+      root: 'C',
+      mode: 'Major (Ionian)',
+      octave: 3,
+      sections: [
+        { name: 'Intro', bars: 2, chords: ['I', 'V'] },
+        { name: 'Verse', bars: 4, chords: ['I', 'V', 'vi', 'IV'] },
+        { name: 'Chorus', bars: 4, chords: ['vi', 'IV', 'I', 'V'] },
+        { name: 'Bridge', bars: 2, chords: ['IV', 'V'] },
+        { name: 'Chorus', bars: 4, chords: ['vi', 'IV', 'I', 'V'] }
+      ],
+      tracks: {
+        drums: { on: true, vol: 0.8, pan: 0, inst: 'kick' },
+        bass: { on: true, vol: 0.7, pan: 0, inst: 'bass' },
+        chords: { on: true, vol: 0.65, pan: 0, inst: 'pad' },
+        lead: { on: true, vol: 0.6, pan: 0.1, inst: 'pluck' }
+      },
+      master: 0.8,
+      fx: { reverb: 0.18, size: 1.8, delay: 0.28, dfb: 0.28, dmix: 0.12, comp: 0.4, low: 0, mid: 0, high: 0 },
+      arp: 'off',
+      arpRate: 2,
+      roll: { steps: 16, inst: 'pluck', cells: {} },
+      click: 'off',
+      preset: 'Pop: I–V–vi–IV'
+    };
+  }
+
+  /* ---------------- theory ---------------- */
+  function midiOf(name, octave) {
+    const i = NOTES.indexOf(name);
+    return 12 * (octave + 1) + (i < 0 ? 0 : i);
+  }
+  function freq(midi) { return 440 * Math.pow(2, (midi - 69) / 12); }
+  function scaleMidis(root, mode, octave) {
+    const base = midiOf(root, octave);
+    return (MODES[mode] || MODES['Major (Ionian)']).map((s) => base + s);
+  }
+  // "I", "vi", "bVII", "IV" -> {degree, flat}
+  function parseRoman(sym) {
+    const m = /^(b|#)?(I{1,3}|IV|V|VI{0,2}|vii|ii|iii|iv|v|vi)$/.exec(String(sym || 'I').trim());
+    if (!m) return { degree: 0, shift: 0 };
+    const table = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6 };
+    const roman = m[2].toUpperCase() === 'I' ? m[2] : m[2];
+    const up = String(m[2]).toUpperCase();
+    let degree = 0;
+    if (up === 'II') degree = 1; else if (up === 'III') degree = 2;
+    else if (up === 'IV') degree = 3; else if (up === 'V') degree = 4;
+    else if (up === 'VI') degree = 5; else if (up === 'VII') degree = 6;
+    const shift = m[1] === 'b' ? -1 : m[1] === '#' ? 1 : 0;
+    return { degree, shift, table, roman };
+  }
+  function chordMidis(root, mode, octave, sym) {
+    const scale = scaleMidis(root, mode, octave);
+    const { degree, shift } = parseRoman(sym);
+    const pick = (i) => {
+      const idx = i % scale.length;
+      const oct = Math.floor(i / scale.length);
+      return scale[idx] + 12 * oct;
+    };
+    return [0, 2, 4].map((k) => pick(degree + k) + shift);
+  }
+
+  /* ---------------- audio graph ---------------- */
+  function makeGraph(ctx) {
+    const bus = ctx.createGain();
+    const masterGain = ctx.createGain();
+    masterGain.gain.value = state.snap.master;
+
+    // EQ -> compressor -> master -> destination
+    const low = ctx.createBiquadFilter(); low.type = 'lowshelf'; low.frequency.value = 220; low.gain.value = state.snap.fx.low;
+    const mid = ctx.createBiquadFilter(); mid.type = 'peaking'; mid.frequency.value = 1200; mid.Q.value = 0.9; mid.gain.value = state.snap.fx.mid;
+    const high = ctx.createBiquadFilter(); high.type = 'highshelf'; high.frequency.value = 5200; high.gain.value = state.snap.fx.high;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -18 - 12 * (1 - state.snap.fx.comp);
+    comp.ratio.value = 2 + 6 * state.snap.fx.comp;
+    comp.attack.value = 0.006;
+    comp.release.value = 0.22;
+
+    // reverb send
+    const conv = ctx.createConvolver();
+    conv.buffer = impulse(ctx, state.snap.fx.size, 2.2);
+    const revSend = ctx.createGain(); revSend.gain.value = state.snap.fx.reverb;
+    // delay send
+    const delay = ctx.createDelay(1.0); delay.delayTime.value = state.snap.fx.delay;
+    const fb = ctx.createGain(); fb.gain.value = state.snap.fx.dfb;
+    const dSend = ctx.createGain(); dSend.gain.value = state.snap.fx.dmix;
+    const dTone = ctx.createBiquadFilter(); dTone.type = 'lowpass'; dTone.frequency.value = 3200;
+
+    bus.connect(low); low.connect(mid); mid.connect(high); high.connect(comp); comp.connect(masterGain); masterGain.connect(ctx.destination);
+    // sends tap the EQ'd signal
+    high.connect(revSend); revSend.connect(conv); conv.connect(masterGain);
+    high.connect(dSend); dSend.connect(delay); delay.connect(dTone); dTone.connect(fb); fb.connect(delay); dTone.connect(masterGain);
+
+    const trackGain = {};
+    TRACKS.forEach((t) => {
+      const g = ctx.createGain();
+      const p = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      const cfg = state.snap.tracks[t.id];
+      g.gain.value = cfg.on ? cfg.vol : 0;
+      if (p) { p.pan.value = cfg.pan || 0; g.connect(p); p.connect(bus); }
+      else g.connect(bus);
+      trackGain[t.id] = g;
+    });
+
+    return { bus, masterGain, trackGain, low, mid, high, comp, revSend, delay, fb, dSend, conv, delayNode: delay };
+  }
+
+  function impulse(ctx, seconds, decay) {
+    const len = Math.max(1, Math.floor(ctx.sampleRate * seconds));
+    const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = buf.getChannelData(ch);
+      for (let i = 0; i < len; i++) {
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+      }
+    }
+    return buf;
+  }
+
+  function ensure() {
+    if (state.ctx) return state.ctx;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const g = makeGraph(ctx);
+    state.ctx = ctx;
+    state.bus = g.bus;
+    state.master = g.masterGain;
+    state.graph = g;
+    return ctx;
+  }
+
+  /* ---------------- voices ---------------- */
+  function envelope(ctx, node, t, dur, peak, attack, release) {
+    const g = ctx.createGain();
+    const a = Math.max(0.003, attack);
+    const r = Math.max(0.03, release);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), t + a);
+    g.gain.setValueAtTime(Math.max(0.0002, peak), t + Math.max(a, dur - r));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    node.connect(g);
+    return g;
+  }
+
+  function tone(ctx, dest, inst, m, t, dur, vel) {
+    const f = freq(m);
+    const amp = (vel == null ? 1 : vel) * 0.22;
+    if (inst === 'bass') {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 420;
+      o.connect(lp);
+      const g = envelope(ctx, lp, t, dur, amp, 0.01, 0.08);
+      g.connect(dest);
+      o.start(t); o.stop(t + dur + 0.05);
+    } else if (inst === 'pad') {
+      [0, 7].forEach((det, i) => {
+        const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = f; o.detune.value = i ? det : -det;
+        const g = envelope(ctx, o, t, dur, amp * 0.5, 0.12, 0.25);
+        g.connect(dest);
+        o.start(t); o.stop(t + dur + 0.3);
+      });
+    } else if (inst === 'strings') {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
+      o.connect(lp);
+      const g = envelope(ctx, lp, t, dur, amp * 0.7, 0.18, 0.3);
+      g.connect(dest);
+      o.start(t); o.stop(t + dur + 0.35);
+    } else if (inst === 'lead') {
+      const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = f;
+      const g = envelope(ctx, o, t, dur, amp * 0.6, 0.01, 0.06);
+      g.connect(dest);
+      o.start(t); o.stop(t + dur + 0.05);
+    } else {
+      // pluck
+      const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = f;
+      const g = envelope(ctx, o, t, Math.min(dur, 0.5), amp * 0.8, 0.005, 0.12);
+      g.connect(dest);
+      o.start(t); o.stop(t + Math.min(dur, 0.5) + 0.1);
+    }
+  }
+
+  function drum(ctx, dest, kind, t, vel) {
+    const amp = (vel == null ? 1 : vel);
+    if (kind === 'kick') {
+      const o = ctx.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(150, t);
+      o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+      const g = envelope(ctx, o, t, 0.24, 0.5 * amp, 0.004, 0.12);
+      g.connect(dest); o.start(t); o.stop(t + 0.3);
+    } else if (kind === 'snare') {
+      const n = ctx.createBufferSource();
+      n.buffer = noiseBuffer(ctx, 0.2);
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 0.8;
+      n.connect(bp);
+      const g = envelope(ctx, bp, t, 0.18, 0.25 * amp, 0.002, 0.1);
+      g.connect(dest); n.start(t); n.stop(t + 0.22);
+    } else {
+      const n = ctx.createBufferSource();
+      n.buffer = noiseBuffer(ctx, 0.08);
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 7000;
+      n.connect(hp);
+      const g = envelope(ctx, hp, t, 0.06, 0.12 * amp, 0.001, 0.04);
+      g.connect(dest); n.start(t); n.stop(t + 0.09);
+    }
+  }
+
+  let _noise = null;
+  function noiseBuffer(ctx, seconds) {
+    if (_noise && _noise.sampleRate === ctx.sampleRate) return _noise;
+    const len = Math.max(1, Math.floor(ctx.sampleRate * seconds));
+    const b = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = b.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    _noise = b;
+    return b;
+  }
+
+  /* ---------------- arrangement ---------------- */
+  // Meter is written "4/4", "3/4", "6/8". Beats per bar is X * (4/Y), so 6/8
+  // is three quarter-note beats long — which is what a composer expects when
+  // the click is on the dotted quarter.
+  function beatsPerBar(snap) {
+    const m = /^(\d+)\/(\d+)$/.exec(String((snap && snap.meter) || '4/4'));
+    if (!m) return 4;
+    const num = Number(m[1]) || 4;
+    const den = Number(m[2]) || 4;
+    return Math.max(1, num * (4 / den));
+  }
+
+  function songSeconds(snap) {
+    const beat = 60 / Math.max(30, snap.bpm || 96);
+    const bpb = beatsPerBar(snap);
+    return (snap.sections || []).reduce((n, s) => n + Math.max(1, s.bars) * bpb * beat, 0);
+  }
+
+  function scheduleSong(ctx, graph, snap, t0) {
+    const beat = 60 / Math.max(30, snap.bpm || 96);
+    const bpb = beatsPerBar(snap);
+    const barDur = beat * bpb;
+    // Swing pushes every off-beat eighth later by up to half a beat. 0 = straight.
+    const swing = Math.max(0, Math.min(0.6, Number(snap.swing) || 0)) * (beat / 2);
+    let t = t0;
+    const rollCells = snap.roll && snap.roll.cells ? snap.roll.cells : {};
+    const rollSteps = (snap.roll && snap.roll.steps) || 16;
+
+    // Count-in: one bar of clicks before the song starts.
+    if (snap.countIn) {
+      for (let c = 0; c < bpb; c++) {
+        const o = ctx.createOscillator(); o.type = 'square';
+        o.frequency.value = c === 0 ? 1500 : 1000;
+        const g = envelope(ctx, o, t + c * beat, 0.06, 0.1, 0.001, 0.03);
+        g.connect(graph.masterGain);
+        o.start(t + c * beat); o.stop(t + c * beat + 0.07);
+      }
+      t += bpb * beat;
+    }
+
+    (snap.sections || []).forEach((sec) => {
+      const bars = Math.max(1, sec.bars || 1);
+      for (let b = 0; b < bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        const ch = chordMidis(snap.root, snap.mode, snap.octave, sym);
+        const barT = t + b * barDur;
+
+        // A section may drop parts (intro without drums, verse without lead).
+        // That is what makes an arrangement breathe instead of looping flat.
+        const active = function (id) {
+          if (!(snap.tracks[id] && snap.tracks[id].on)) return false;
+          return (sec.mute || []).indexOf(id) === -1;
+        };
+
+        if (active('chords')) {
+          const dest = graph.trackGain.chords;
+          ch.forEach((m) => tone(ctx, dest, snap.tracks.chords.inst, m, barT, barDur * 0.94, 1));
+          if (snap.arp && snap.arp !== 'off') {
+            const rate = Math.max(1, snap.arpRate || 2);
+            const stepDur = barDur / rate;
+            const order = snap.arp === 'down' ? [2, 1, 0] : snap.arp === 'updown' ? [0, 1, 2, 1] : [0, 1, 2];
+            for (let s = 0; s < rate; s++) {
+              const pick = snap.arp === 'random' ? ch[Math.floor(Math.random() * ch.length)] : ch[order[s % order.length]];
+              tone(ctx, dest, 'pluck', pick + 12, barT + s * stepDur, stepDur * 0.9, 0.7);
+            }
+          }
+        }
+
+        if (active('bass')) {
+          tone(ctx, graph.trackGain.bass, snap.tracks.bass.inst, ch[0] - 12, barT, barDur * 0.9, 1);
+        }
+
+        if (active('drums')) {
+          const d = graph.trackGain.drums;
+          for (let beatI = 0; beatI < bpb; beatI++) {
+            const bt = barT + beatI * beat;
+            if (beatI === 0 || (bpb === 4 && beatI === 2) || (bpb === 3 && beatI === 1)) drum(ctx, d, 'kick', bt, 1);
+            if (beatI === 1 || beatI === bpb - 1) drum(ctx, d, 'snare', bt, 0.9);
+            drum(ctx, d, 'hat', bt + swing, 0.6);
+            drum(ctx, d, 'hat', bt, 0.5);
+          }
+        }
+
+        if (active('lead') && Object.keys(rollCells).length) {
+          const stepDur = barDur / rollSteps;
+          for (let s = 0; s < rollSteps; s++) {
+            // cells are keyed "step:noteIndex" and repeat every bar
+            Object.keys(rollCells).forEach((cell) => {
+              if (!rollCells[cell]) return;
+              const parts = cell.split(':');
+              if (Number(parts[0]) !== s) return;
+              const noteIndex = Number(parts[1]);
+              const base = midiOf(snap.root, (snap.octave || 3) + 1) + noteIndex;
+              tone(ctx, graph.trackGain.lead, snap.roll.inst || 'pluck', base, barT + s * stepDur, stepDur * 0.95, 0.8);
+            });
+          }
+        }
+
+        if (snap.click === 'on') {
+          for (let beatI = 0; beatI < bpb; beatI++) {
+            const o = ctx.createOscillator(); o.type = 'square';
+            o.frequency.value = beatI === 0 ? 1600 : 1100;
+            const g = envelope(ctx, o, barT + beatI * beat, 0.05, 0.09, 0.001, 0.03);
+            g.connect(graph.masterGain);
+            o.start(barT + beatI * beat); o.stop(barT + beatI * beat + 0.06);
+          }
+        }
+      }
+      t += bars * barDur;
+    });
+    return t;
+  }
+
+  function play() {
+    stop();
+    const ctx = ensure();
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime + 0.12;
+    const end = scheduleSong(ctx, state.graph, state.snap, t0);
+    state.playing = true;
+    state.stopAt = end;
+    const info = document.getElementById('mx-arrange-info');
+    if (info) info.textContent = 'playing ' + songSeconds(state.snap).toFixed(1) + 's · ' + state.snap.bpm + ' BPM · ' + state.snap.root + ' ' + state.snap.mode;
+  }
+
+  function stop() {
+    if (!state.ctx) return;
+    // Recreate the graph so a stop is immediate and clean.
+    try { state.ctx.close(); } catch (e) {}
+    state.ctx = null; state.playing = false;
+    const info = document.getElementById('mx-arrange-info');
+    if (info) info.textContent = 'stopped';
+  }
+
+  /* ---------------- persistence ---------------- */
+  function snapshot() { return JSON.parse(JSON.stringify(state.snap)); }
+  function save() { try { saveField('mx', snapshot()); } catch (e) {} }
+  function syncFromProject() {
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    state.snap = (p && p.mx) ? Object.assign(defaults(), p.mx) : defaults();
+    renderAll();
+  }
+
+  /* ---------------- UI render ---------------- */
+  function renderAll() {
+    renderSections();
+    renderMixer();
+    renderHarmonyControls();
+    renderRoll();
+    syncFxInputs();
+    const bpm = document.getElementById('mx-bpm');
+    if (bpm) bpm.value = state.snap.bpm;
+    const click = document.getElementById('mx-click');
+    if (click) click.value = state.snap.click === 'on' ? 'on' : 'off';
+  }
+
+  function renderSections() {
+    const host = document.getElementById('mx-sections');
+    if (!host) return;
+    host.innerHTML = '';
+    (state.snap.sections || []).forEach((sec, i) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:grid;grid-template-columns:130px 60px 1fr auto;gap:8px;align-items:center;margin-bottom:8px;padding:8px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.02)';
+      row.innerHTML =
+        '<input value="' + esc(sec.name) + '" onchange="MX.editSection(' + i + ',\'name\',this.value)" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text)">' +
+        '<input type="number" min="1" max="32" value="' + sec.bars + '" onchange="MX.editSection(' + i + ',\'bars\',this.value)" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text)">' +
+        '<input value="' + esc((sec.chords || []).join(' ')) + '" onchange="MX.editSection(' + i + ',\'chords\',this.value)" placeholder="I V vi IV" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text);font-family:ui-monospace,monospace">' +
+        '<span style="display:flex;gap:4px">' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.moveSection(' + i + ',-1)">↑</button>' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.moveSection(' + i + ',1)">↓</button>' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.delSection(' + i + ')">✕</button></span>';
+      host.appendChild(row);
+    });
+    const info = document.getElementById('mx-arrange-info');
+    if (info && !state.playing) info.textContent = songSeconds(state.snap).toFixed(1) + 's · ' + (state.snap.sections || []).length + ' sections';
+  }
+
+  function renderMixer() {
+    const host = document.getElementById('mx-mixer');
+    if (!host) return;
+    host.innerHTML = '';
+    TRACKS.forEach((t) => {
+      const cfg = state.snap.tracks[t.id];
+      const row = document.createElement('div');
+      row.style.cssText = 'display:grid;grid-template-columns:90px 130px 140px 1fr 60px;gap:10px;align-items:center;margin-bottom:10px';
+      row.innerHTML =
+        '<strong style="font-size:.9em">' + t.name + '</strong>' +
+        '<select onchange="MX.setTrack(\'' + t.id + '\',\'inst\',this.value)" style="padding:8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text)">' +
+        ['kick', 'snare', 'hat', 'bass', 'pad', 'pluck', 'lead', 'strings'].map((k) => '<option value="' + k + '"' + (cfg.inst === k ? ' selected' : '') + '>' + INSTRUMENTS[k] + '</option>').join('') +
+        '</select>' +
+        '<input type="range" min="0" max="1" step="0.01" value="' + cfg.vol + '" oninput="MX.setTrack(\'' + t.id + '\',\'vol\',this.value)">' +
+        '<input type="range" min="-1" max="1" step="0.05" value="' + (cfg.pan || 0) + '" oninput="MX.setTrack(\'' + t.id + '\',\'pan\',this.value)">' +
+        '<label style="font-size:.75em;color:var(--muted)"><input type="checkbox" ' + (cfg.on ? 'checked' : '') + ' onchange="MX.setTrack(\'' + t.id + '\',\'on\',this.checked)"> on</label>';
+      host.appendChild(row);
+    });
+  }
+
+  function renderHarmonyControls() {
+    const rootSel = document.getElementById('hx-root');
+    const modeSel = document.getElementById('hx-mode');
+    const presetSel = document.getElementById('hx-preset');
+    if (rootSel && !rootSel.options.length) {
+      rootSel.innerHTML = NOTES.map((n) => '<option>' + n + '</option>').join('');
+    }
+    if (modeSel && !modeSel.options.length) {
+      modeSel.innerHTML = Object.keys(MODES).map((m) => '<option>' + m + '</option>').join('');
+    }
+    if (presetSel && !presetSel.options.length) {
+      presetSel.innerHTML = Object.keys(PRESETS).map((p) => '<option>' + p + '</option>').join('');
+    }
+    if (rootSel) rootSel.value = state.snap.root;
+    if (modeSel) modeSel.value = state.snap.mode;
+    if (presetSel) presetSel.value = state.snap.preset || Object.keys(PRESETS)[0];
+    const oct = document.getElementById('hx-oct');
+    if (oct) oct.value = String(state.snap.octave || 3);
+    refreshHarmony();
+  }
+
+  function refreshHarmony() {
+    const root = document.getElementById('hx-root');
+    const mode = document.getElementById('hx-mode');
+    const oct = document.getElementById('hx-oct');
+    if (root) state.snap.root = root.value;
+    if (mode) state.snap.mode = mode.value;
+    if (oct) state.snap.octave = Number(oct.value);
+    const notes = scaleMidis(state.snap.root, state.snap.mode, state.snap.octave)
+      .map((m) => NOTES[m % 12] + (Math.floor(m / 12) - 1));
+    const host = document.getElementById('hx-notes');
+    if (host) host.innerHTML = '<strong>Scale:</strong> ' + notes.join(' · ');
+    const deg = document.getElementById('hx-degrees');
+    if (deg) {
+      const romans = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
+      deg.innerHTML = romans.slice(0, (MODES[state.snap.mode] || []).length >= 7 ? 7 : (MODES[state.snap.mode] || []).length)
+        .map((r) => '<button class="btn btn-sm btn-secondary" onclick="MX.playDegree(\'' + r + '\')">' + r + '</button>').join('');
+    }
+    save();
+  }
+
+  function renderRoll() {
+    const host = document.getElementById('mx-roll');
+    if (!host) return;
+    const steps = state.snap.roll.steps || 16;
+    const rows = 13;
+    let html = '<div style="display:grid;grid-template-columns:44px repeat(' + steps + ',1fr);gap:3px;min-width:' + (44 + steps * 26) + 'px">';
+    for (let r = rows - 1; r >= 0; r--) {
+      html += '<div style="font-size:.65em;color:var(--muted);display:flex;align-items:center">' + NOTES[(r + 0) % 12] + (Math.floor(r / 12) + 4) + '</div>';
+      for (let s = 0; s < steps; s++) {
+        const on = state.snap.roll.cells[s + ':' + r];
+        html += '<button onclick="MX.toggleCell(' + s + ',' + r + ')" style="height:22px;border-radius:4px;border:1px solid var(--border);background:' + (on ? 'var(--purple,#a78bfa)' : 'rgba(255,255,255,.03)') + '"></button>';
+      }
+    }
+    html += '</div>';
+    host.innerHTML = html;
+  }
+
+  function syncFxInputs() {
+    const f = state.snap.fx;
+    const map = { 'fx-reverb': f.reverb, 'fx-size': f.size, 'fx-delay': f.delay, 'fx-dfb': f.dfb, 'fx-dmix': f.dmix, 'fx-comp': f.comp, 'fx-low': f.low, 'fx-mid': f.mid, 'fx-high': f.high };
+    Object.keys(map).forEach((id) => { const el = document.getElementById(id); if (el) el.value = map[id]; });
+    const m = document.getElementById('mx-master');
+    if (m) m.value = state.snap.master;
+    const mv = document.getElementById('mx-master-val');
+    if (mv) mv.textContent = Number(state.snap.master).toFixed(2);
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ---------------- editors ---------------- */
+  function addSection(name) {
+    state.snap.sections.push({ name: name, bars: name === 'Chorus' ? 4 : 2, chords: ['I', 'V', 'vi', 'IV'] });
+    renderSections(); save();
+  }
+  function delSection(i) { state.snap.sections.splice(i, 1); renderSections(); save(); }
+  function moveSection(i, d) {
+    const a = state.snap.sections; const j = i + d;
+    if (j < 0 || j >= a.length) return;
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+    renderSections(); save();
+  }
+  function editSection(i, key, value) {
+    const sec = state.snap.sections[i]; if (!sec) return;
+    if (key === 'bars') sec.bars = Math.max(1, Math.min(32, Number(value) || 1));
+    else if (key === 'chords') sec.chords = String(value).split(/[\s,]+/).filter(Boolean);
+    else sec.name = value;
+    renderSections(); save();
+  }
+  function setTrack(id, key, value) {
+    const t = state.snap.tracks[id]; if (!t) return;
+    if (key === 'vol' || key === 'pan') t[key] = Number(value);
+    else t[key] = value;
+    if (state.graph && state.graph.trackGain[id]) {
+      if (key === 'vol') state.graph.trackGain[id].gain.value = t.on ? t.vol : 0;
+      if (key === 'on') state.graph.trackGain[id].gain.value = value ? t.vol : 0;
+    }
+    save();
+  }
+  function setMaster(v) {
+    state.snap.master = Number(v);
+    if (state.master) state.master.gain.value = state.snap.master;
+    const el = document.getElementById('mx-master-val');
+    if (el) el.textContent = Number(v).toFixed(2);
+    save();
+  }
+  function setFx(key, v) {
+    state.snap.fx[key] = Number(v);
+    const g = state.graph;
+    if (g) {
+      if (key === 'reverb') g.revSend.gain.value = Number(v);
+      if (key === 'delay') g.delayNode.delayTime.value = Number(v);
+      if (key === 'dfb') g.fb.gain.value = Number(v);
+      if (key === 'dmix') g.dSend.gain.value = Number(v);
+      if (key === 'low') g.low.gain.value = Number(v);
+      if (key === 'mid') g.mid.gain.value = Number(v);
+      if (key === 'high') g.high.gain.value = Number(v);
+      if (key === 'comp') {
+        g.comp.threshold.value = -18 - 12 * (1 - Number(v));
+        g.comp.ratio.value = 2 + 6 * Number(v);
+      }
+      if (key === 'size' && g.conv) g.conv.buffer = impulse(state.ctx, Number(v), 2.2);
+    }
+    save();
+  }
+  function setTempo(v) { state.snap.bpm = Math.max(30, Math.min(220, Number(v) || 96)); renderSections(); save(); }
+  function setClick() {
+    const el = document.getElementById('mx-click');
+    state.snap.click = el && el.value === 'on' ? 'on' : 'off';
+    save();
+  }
+  function setArp() {
+    const a = document.getElementById('hx-arp'); const r = document.getElementById('hx-arprate');
+    state.snap.arp = a ? a.value : 'off';
+    state.snap.arpRate = r ? Number(r.value) : 2;
+    save();
+  }
+  function applyPreset(name) {
+    state.snap.preset = name;
+    const chords = PRESETS[name] || PRESETS['Pop: I–V–vi–IV'];
+    const last = state.snap.sections[state.snap.sections.length - 1];
+    if (last) { last.chords = chords.slice(); renderSections(); }
+    save();
+  }
+  function playDegree(r) {
+    const ctx = ensure();
+    const ch = chordMidis(state.snap.root, state.snap.mode, state.snap.octave, r);
+    const t = ctx.currentTime + 0.05;
+    ch.forEach((m) => tone(ctx, state.graph.bus, 'pad', m, t, 1.4, 1));
+  }
+  function playHarmony() {
+    stop();
+    const ctx = ensure();
+    if (ctx.state === 'suspended') ctx.resume();
+    const chords = (state.snap.sections[state.snap.sections.length - 1] || {}).chords || PRESETS[state.snap.preset] || ['I', 'V', 'vi', 'IV'];
+    const beat = 60 / state.snap.bpm;
+    let t = ctx.currentTime + 0.1;
+    chords.forEach((c) => {
+      const ch = chordMidis(state.snap.root, state.snap.mode, state.snap.octave, c);
+      ch.forEach((m) => tone(ctx, state.graph.bus, 'pad', m, t, beat * 3.6, 1));
+      tone(ctx, state.graph.bus, 'bass', ch[0] - 12, t, beat * 3.5, 1);
+      t += beat * 4;
+    });
+  }
+  function progressionToSection() {
+    const chords = (state.snap.sections[state.snap.sections.length - 1] || {}).chords || ['I', 'V', 'vi', 'IV'];
+    state.snap.sections.push({ name: 'Chorus', bars: 4, chords: chords.slice() });
+    renderSections(); save();
+  }
+  function setRollInst() {
+    const el = document.getElementById('roll-inst');
+    if (el) state.snap.roll.inst = el.value;
+    save();
+  }
+  function toggleCell(s, r) {
+    const key = s + ':' + r;
+    if (state.snap.roll.cells[key]) delete state.snap.roll.cells[key];
+    else state.snap.roll.cells[key] = 1;
+    renderRoll(); save();
+  }
+  function clearRoll() { state.snap.roll.cells = {}; renderRoll(); save(); }
+
+  /* ---------------- recorder ---------------- */
+  /* ---------------- takes: record, keep, choose ----------------
+   A studio records several takes and then chooses. Takes are stored in
+   IndexedDB against the project, so closing the tab does not lose the best
+   verse, and the final mix uses the take you selected rather than whichever
+   one happened to be recorded last. */
+  const TAKE_DB = 'studio-takes-v1';
+
+  function idbOpen() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(TAKE_DB, 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains('takes')) db.createObjectStore('takes', { keyPath: 'key' });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  async function idbPut(record) {
+    try {
+      const db = await idbOpen();
+      await new Promise((res, rej) => {
+        const tx = db.transaction('takes', 'readwrite');
+        tx.objectStore('takes').put(record);
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      });
+      db.close();
+    } catch (e) { /* private mode or quota: takes stay in memory */ }
+  }
+  async function idbDelete(key) {
+    try {
+      const db = await idbOpen();
+      await new Promise((res, rej) => {
+        const tx = db.transaction('takes', 'readwrite');
+        tx.objectStore('takes').delete(key);
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      });
+      db.close();
+    } catch (e) {}
+  }
+  async function idbAll() {
+    try {
+      const db = await idbOpen();
+      const rows = await new Promise((res, rej) => {
+        const tx = db.transaction('takes', 'readonly');
+        const req = tx.objectStore('takes').getAll();
+        req.onsuccess = () => res(req.result || []);
+        req.onerror = () => rej(req.error);
+      });
+      db.close();
+      return rows;
+    } catch (e) { return []; }
+  }
+
+  function takeKey(id) { return String(currentId || 'unsaved') + ':' + id; }
+
+  function activeTake() {
+    return (state.takes || []).find((t) => t.id === state.activeTakeId) ||
+      (state.takes || [])[state.takes.length - 1] || null;
+  }
+
+  async function decodeDuration(blob) {
+    try {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = await ac.decodeAudioData(await blob.arrayBuffer());
+      ac.close();
+      return buf.duration;
+    } catch (e) { return 0; }
+  }
+
+  async function addTake(blob, name) {
+    const id = 'take-' + Date.now().toString(36);
+    const dur = await decodeDuration(blob);
+    const take = {
+      id: id,
+      key: takeKey(id),
+      project: String(currentId || 'unsaved'),
+      name: name || ('Take ' + ((state.takes || []).length + 1)),
+      at: new Date().toISOString(),
+      type: blob.type || 'audio/webm',
+      dur: Math.round(dur * 10) / 10,
+      blob: blob,
+      url: URL.createObjectURL(blob)
+    };
+    state.takes = state.takes || [];
+    state.takes.push(take);
+    state.activeTakeId = id;
+    MX.lastTakeBlob = blob;
+    await idbPut({ key: take.key, project: take.project, id: id, name: take.name, at: take.at, type: take.type, dur: take.dur, data: blob });
+    renderTakes();
+    return take;
+  }
+
+  async function loadTakes() {
+    state.takes = [];
+    state.activeTakeId = null;
+    const rows = await idbAll();
+    const mine = rows.filter((r) => String(r.project || 'unsaved') === String(currentId || 'unsaved'));
+    mine.sort((a, b) => String(a.at).localeCompare(String(b.at)));
+    mine.forEach((r) => {
+      if (!r.data) return;
+      state.takes.push({
+        id: r.id, key: r.key, project: r.project, name: r.name, at: r.at,
+        type: r.type, dur: r.dur || 0, blob: r.data, url: URL.createObjectURL(r.data)
+      });
+    });
+    if (state.takes.length) {
+      state.activeTakeId = state.takes[state.takes.length - 1].id;
+      MX.lastTakeBlob = state.takes[state.takes.length - 1].blob;
+    }
+    renderTakes();
+  }
+
+  function renderTakes() {
+    const host = document.getElementById('mx-recs');
+    if (!host) return;
+    const takes = state.takes || [];
+    if (!takes.length) {
+      host.innerHTML = '<p style="font-size:.9em;color:var(--muted)">No takes yet. Press Record, sing a line, stop. Record several and choose the best one for the final mix.</p>';
+      return;
+    }
+    host.innerHTML = takes.map((t) => {
+      const active = t.id === state.activeTakeId;
+      return '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;padding:8px 10px;border:1px solid ' +
+        (active ? 'rgba(167,139,250,.55)' : 'var(--border)') + ';border-radius:8px;background:' +
+        (active ? 'rgba(167,139,250,.08)' : 'rgba(255,255,255,.02)') + '">' +
+        '<label style="display:flex;gap:6px;align-items:center;font-size:.9em;color:var(--muted)"><input type="radio" name="mxtake"' +
+        (active ? ' checked' : '') + ' onchange="MX.selectTake(\'' + t.id + '\')"> use</label>' +
+        '<input value="' + esc(t.name) + '" onchange="MX.renameTake(\'' + t.id + '\',this.value)" style="width:130px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:#000;color:var(--text);font-size:.9em">' +
+        '<span style="font-size:.75em;color:var(--muted)">' + (t.dur ? t.dur + 's' : '') + '</span>' +
+        '<audio controls src="' + t.url + '" style="height:32px"></audio>' +
+        '<a class="btn btn-sm btn-secondary" href="' + t.url + '" download="' + esc(String(currentId || 'song')) + '-' + esc(t.name).replace(/[^\w-]+/g, '_') + '.webm">&#10515;</a>' +
+        '<button class="btn btn-sm btn-secondary" onclick="MX.deleteTake(\'' + t.id + '\')">&#10005;</button>' +
+        '</div>';
+    }).join('');
+    const status = document.getElementById('mx-rec-status');
+    if (status) status.textContent = takes.length + ' take' + (takes.length === 1 ? '' : 's') + ' - using "' + (activeTake() ? activeTake().name : '-') + '"';
+  }
+
+  function selectTake(id) {
+    state.activeTakeId = id;
+    const t = (state.takes || []).find((x) => x.id === id);
+    if (t) MX.lastTakeBlob = t.blob;
+    renderTakes();
+  }
+  function renameTake(id, name) {
+    const t = (state.takes || []).find((x) => x.id === id);
+    if (!t) return;
+    t.name = String(name || t.name).slice(0, 40);
+    idbPut({ key: t.key, project: t.project, id: t.id, name: t.name, at: t.at, type: t.type, dur: t.dur, data: t.blob });
+    renderTakes();
+  }
+  async function deleteTake(id) {
+    const t = (state.takes || []).find((x) => x.id === id);
+    state.takes = (state.takes || []).filter((x) => x.id !== id);
+    if (t) await idbDelete(t.key);
+    if (state.activeTakeId === id) state.activeTakeId = (state.takes[state.takes.length - 1] || {}).id || null;
+    const act = activeTake();
+    MX.lastTakeBlob = act ? act.blob : null;
+    renderTakes();
+  }
+
+  async function startRec() {
+    const status = document.getElementById('mx-rec-status');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+      });
+      state.chunks = [];
+      state.rec = new MediaRecorder(stream);
+      state.rec.ondataavailable = (e) => { if (e.data && e.data.size) state.chunks.push(e.data); };
+      state.rec.onstop = async () => {
+        const blob = new Blob(state.chunks, { type: 'audio/webm' });
+        await addTake(blob);
+        stream.getTracks().forEach((t) => t.stop());
+        const mon = document.getElementById('mx-monitor');
+        if (mon && mon.checked) { try { MX.stop(); } catch (e) {} }
+      };
+      const mon = document.getElementById('mx-monitor');
+      if (mon && mon.checked) {
+        try { MX.play(); } catch (e) {}
+        if (status) status.textContent = 'recording over the backing - use headphones';
+      } else if (status) status.textContent = 'recording';
+      state.rec.start();
+    } catch (e) {
+      if (status) status.textContent = 'microphone unavailable: ' + e.message;
+    }
+  }
+  function stopRec() {
+    if (state.rec && state.rec.state !== 'inactive') state.rec.stop();
+  }
+  function playRec() {
+    if (!state.takes.length) return;
+    const url = URL.createObjectURL(state.takes[state.takes.length - 1]);
+    const a = new Audio(url); a.play();
+  }
+
+  /* ---------------- WAV export ---------------- */
+  async function exportWav() {
+    const status = document.getElementById('mx-export-status');
+    const seconds = Math.max(4, Number((document.getElementById('mx-len') || {}).value) || 32);
+    const rate = Number((document.getElementById('mx-rate') || {}).value) || 44100;
+    if (status) status.textContent = 'rendering…';
+    try {
+      const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      const ctx = new OfflineCtx(2, Math.ceil(seconds * rate), rate);
+      const graph = makeGraph(ctx);
+      // Rebuild sends for the offline graph (makeGraph already wires them).
+      scheduleSong(ctx, graph, state.snap, 0.05);
+      const buf = await ctx.startRendering();
+      const blob = encodeWav(buf);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      const title = (document.getElementById('f-title') || {}).value || 'song';
+      a.download = String(title).replace(/[^\w-]+/g, '_') + '.wav';
+      a.click();
+      if (status) status.textContent = 'rendered ' + seconds + 's · ' + (blob.size / 1048576).toFixed(1) + ' MB';
+    } catch (e) {
+      if (status) status.textContent = 'render failed: ' + e.message;
+    }
+  }
+
+  function encodeWav(buffer) {
+    const numCh = buffer.numberOfChannels;
+    const len = buffer.length;
+    const bytes = 44 + len * numCh * 2;
+    const ab = new ArrayBuffer(bytes);
+    const view = new DataView(ab);
+    const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+    writeStr(0, 'RIFF'); view.setUint32(4, bytes - 8, true); writeStr(8, 'WAVE');
+    writeStr(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+    view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+    view.setUint16(34, 16, true); writeStr(36, 'data'); view.setUint32(40, len * numCh * 2, true);
+    let off = 44;
+    const chans = [];
+    for (let c = 0; c < numCh; c++) chans.push(buffer.getChannelData(c));
+    for (let i = 0; i < len; i++) {
+      for (let c = 0; c < numCh; c++) {
+        let s = Math.max(-1, Math.min(1, chans[c][i]));
+        view.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+        off += 2;
+      }
+    }
+    return new Blob([ab], { type: 'audio/wav' });
+  }
+
+  /* ---------------- project import / export / print ---------------- */
+  function exportProject() {
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    const blob = new Blob([JSON.stringify(p || {}, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = ((p && p.title) || 'project').replace(/[^\w-]+/g, '_') + '.studio.json';
+    a.click();
+  }
+  function importProject(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const obj = JSON.parse(String(r.result));
+        const id = 'song_' + Date.now();
+        obj.id = id;
+        projects.unshift(obj);
+        saveProjects();
+        renderProjects();
+        loadProject(id);
+        toast('Project imported');
+      } catch (e) { showToast('That file is not a studio project'); }
+    };
+    r.readAsText(file);
+  }
+  function printSheet() {
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId) || {};
+    const w = window.open('', '_blank');
+    if (!w) return;
+    w.document.write('<!doctype html><title>' + esc(p.title || 'Lyric sheet') + '</title>' +
+      '<style>body{font-family:Georgia,serif;max-width:760px;margin:40px auto;line-height:1.6;white-space:pre-wrap}' +
+      'h1{font-size:22px;margin:0 0 4px}p.meta{color:#666;margin:0 0 24px;font-size:13px}</style>' +
+      '<h1>' + esc(p.title || 'Untitled') + '</h1><p class="meta">' + esc(p.artist || '') + ' · ' + esc(p.bpm || '') + ' BPM · ' + esc(p.key || '') + '</p>' +
+      esc(p.lyrics || '') + '\n\n' + esc(p.tmLyrics || ''));
+    w.document.close();
+    w.print();
+  }
+
+  /* ---------------- Lyric Lab ---------------- */
+  const SB_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
+  const SB_KEY = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
+
+  function token() { try { return localStorage.getItem('sb_access_token') || ''; } catch (e) { return ''; } }
+  async function freshToken() {
+    const t = token();
+    const exp = Number(localStorage.getItem('sb_token_expires') || 0);
+    if (t && (!exp || Date.now() < exp - 60000)) return t;
+    const rt = localStorage.getItem('sb_refresh_token');
+    if (!rt) return t;
+    try {
+      const r = await fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST',
+        headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: rt })
+      });
+      if (!r.ok) return t;
+      const d = await r.json();
+      if (d.access_token) {
+        localStorage.setItem('sb_access_token', d.access_token);
+        if (d.refresh_token) localStorage.setItem('sb_refresh_token', d.refresh_token);
+        if (d.expires_in) localStorage.setItem('sb_token_expires', String(Date.now() + d.expires_in * 1000));
+        return d.access_token;
+      }
+    } catch (e) {}
+    return t;
+  }
+
+  function brief() {
+    const v = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+    return {
+      theme: v('lb-theme'),
+      source: v('lb-source'),
+      language: v('lb-language'),
+      mood: v('lb-mood'),
+      genre: v('lb-genre'),
+      pov: v('lb-pov'),
+      lines: Number(v('lb-lines')) || 20,
+      rhyme: v('lb-rhyme'),
+      structure: v('lb-structure'),
+      keywords: v('lb-keywords'),
+      avoid: v('lb-avoid')
+    };
+  }
+
+  async function generateLyrics() {
+    const status = document.getElementById('lb-status');
+    const out = document.getElementById('lb-out');
+    const btn = document.querySelector('#tab-lyriclab .btn-primary');
+    if (!brief().theme.trim() && !brief().source.trim()) { if (status) status.textContent = 'write a brief, or paste an English lyric to transcreate'; return; }
+    if (btn) btn.disabled = true;
+    if (status) status.textContent = 'asking the model…';
+    try {
+      const t = await MX.freshToken();
+      const r = await fetch('/api/lyrics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+        body: JSON.stringify({ token: t, brief: brief() })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.status === 202 && d.pending && d.id) {
+        if (status) status.textContent = (d.note || 'queued on the owner runner') + ' · waiting…';
+        const got = await pollLyrics(d.id, status);
+        if (got && got.lyrics) {
+          if (out) out.value = got.lyrics;
+          if (status) status.textContent = 'written by ' + (got.provider || 'the owner runner');
+        } else if (status) {
+          status.textContent = 'the runner did not answer in time — try again in a minute';
+        }
+        return;
+      }
+      if (!r.ok || !d.lyrics) {
+        if (status) status.textContent = d.error || ('failed (HTTP ' + r.status + ')') + (d.detail ? ' — ' + d.detail : '');
+        return;
+      }
+      if (out) out.value = d.lyrics;
+      if (status) status.textContent = 'written by ' + d.provider;
+    } catch (e) {
+      if (status) status.textContent = 'could not reach the model: ' + e.message;
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  // The owner-runner fallback commits data/on-demand/<id>.json to main. Reading
+// it straight from the GitHub contents API means the answer appears in a
+// couple of minutes instead of waiting for the next Cloudflare deploy.
+  async function pollLyrics(id, status) {
+    const url = 'https://api.github.com/repos/renj-arch/dimsred/contents/data/on-demand/' + id + '.json?ref=main';
+    for (let i = 0; i < 48; i++) {
+      await new Promise((r) => setTimeout(r, 5000));
+      if (status) status.textContent = 'waiting for the runner… ' + Math.round((i + 1) * 5) + 's';
+      try {
+        const r = await fetch(url, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (r.status === 404) continue;
+        if (!r.ok) continue;
+        const text = await r.text();
+        let d = null;
+        try { d = JSON.parse(text); } catch (e) { continue; }
+        if (!d) continue;
+        if (d.status === 'failed') return null;
+        if (d.lyrics) return d;
+      } catch (e) { /* keep polling */ }
+    }
+    return null;
+  }
+
+  function lyricToSection() {
+    const out = document.getElementById('lb-out');
+    if (!out || !out.value.trim()) return;
+    const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    if (!p) return;
+    p.lyrics = (p.lyrics ? p.lyrics + '\n\n' : '') + out.value.trim();
+    saveField('lyrics', p.lyrics);
+    const vt = document.getElementById('voiceText');
+    if (vt) vt.value = p.lyrics;
+    if (typeof renderLyrics === 'function') renderLyrics(p.lyrics);
+    showToast('Added to lyrics');
+  }
+
+  function lyricReplace() {
+    const out = document.getElementById('lb-out');
+    if (!out || !out.value.trim()) return;
+    if (!confirm('Replace the whole lyric with this draft?')) return;
+    saveField('lyrics', out.value.trim());
+    const vt = document.getElementById('voiceText');
+    if (vt) vt.value = out.value.trim();
+    if (typeof renderLyrics === 'function') renderLyrics(out.value.trim());
+    showToast('Lyrics replaced');
+  }
+
+  function copyLyric() {
+    const out = document.getElementById('lb-out');
+    if (!out) return;
+    out.select();
+    try { document.execCommand('copy'); showToast('Copied'); } catch (e) { showToast('Copy failed'); }
+  }
+
+  function lyricPrefs() {
+    // Language changes the structure hint, nothing else.
+    const lang = (document.getElementById('lb-language') || {}).value || 'english';
+    const st = document.getElementById('lb-structure');
+    if (st && lang !== 'english' && /^Verse 1, Chorus/.test(st.value)) {
+      st.value = 'Pallavi, Charanam 1, Pallavi, Charanam 2, Bridge, Pallavi';
+    }
+  }
+
+  /* ---------------- init ---------------- */
+  function init() {
+    const wrap = function (name, fn) {
+      const orig = window[name];
+      if (typeof orig !== 'function') return;
+      window[name] = function () {
+        const r = orig.apply(this, arguments);
+        try { fn.apply(this, arguments); } catch (e) {}
+        return r;
+      };
+    };
+    // Re-render the composer panels whenever a different song is loaded.
+    wrap('loadProject', () => { state.snap = (function () {
+      const p = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+      return (p && p.mx) ? Object.assign(defaults(), p.mx) : defaults();
+    })(); renderAll(); try { loadTakes(); } catch (e) {} });
+    wrap('newSong', () => { state.snap = defaults(); renderAll(); });
+    // The existing DOMContentLoaded handler already called loadProject before
+    // this script wrapped it, so read the current project once here.
+    const cur = (typeof projects !== 'undefined' ? projects : []).find((x) => x.id === currentId);
+    state.snap = (cur && cur.mx) ? Object.assign(defaults(), cur.mx) : defaults();
+    renderAll();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  return {
+    defaults, play, stop, addSection, delSection, moveSection, editSection,
+    setTrack, setMaster, setFx, setTempo, setClick, setArp, applyPreset,
+    playDegree, playHarmony, progressionToSection, refreshHarmony,
+    setRollInst, toggleCell, clearRoll, renderRoll,
+    startRec, stopRec, playRec, loadTakes, renderTakes, selectTake, renameTake, deleteTake, activeTake, exportWav, exportProject, importProject, printSheet,
+    generateLyrics, lyricToSection, lyricReplace, copyLyric, lyricPrefs, freshToken: freshToken,
+    syncFromProject, snapshot, songSeconds: () => songSeconds(state.snap),
+    // Internals for the extended tools (MIDI, stems, chart, undo). Kept under
+    // one key so the public surface above stays stable.
+    _x: {
+      state: state,
+      defaults: defaults,
+      save: save,
+      renderAll: renderAll,
+      makeGraph: makeGraph,
+      scheduleSong: scheduleSong,
+      chordMidis: chordMidis,
+      beatsPerBar: beatsPerBar,
+      midiOf: midiOf,
+      NOTES: NOTES,
+      MODES: MODES,
+      PRESETS: PRESETS,
+      esc: esc
+    }
+  };
+})();
+</script>
+
+<script>
+// =====================================================================
+// Composer extensions: meter, swing, count-in, MIDI in/out, stems,
+// lead-sheet chart, key helper, undo/redo.
+// Lives in its own script so the base engine stays readable; it talks to
+// the engine through MX._x (the documented internals).
+// =====================================================================
+(function () {
+  const X = MX._x;
+  const state = X.state;
+
+  function esc(s) { return X.esc(s); }
+  function save() { X.save(); }
+  function snap() { return state.snap; }
+
+  /* ---------------- undo / redo ---------------- */
+  const HIST = { stack: [], at: -1 };
+
+  function pushHistory() {
+    const s = JSON.stringify(state.snap);
+    if (HIST.stack[HIST.at] === s) return;
+    HIST.stack = HIST.stack.slice(0, HIST.at + 1);
+    HIST.stack.push(s);
+    if (HIST.stack.length > 60) HIST.stack.shift();
+    HIST.at = HIST.stack.length - 1;
+  }
+
+  function applyHistory(json) {
+    state.snap = JSON.parse(json);
+    X.renderAll();
+    sync();
+  }
+
+  MX.undo = function () {
+    if (HIST.at <= 0) { showToast('Nothing to undo'); return; }
+    HIST.at--;
+    applyHistory(HIST.stack[HIST.at]);
+    showToast('Undone');
+  };
+  MX.redo = function () {
+    if (HIST.at >= HIST.stack.length - 1) { showToast('Nothing to redo'); return; }
+    HIST.at++;
+    applyHistory(HIST.stack[HIST.at]);
+    showToast('Redone');
+  };
+
+  // Record the state before every mutation the composer makes.
+  ['addSection', 'delSection', 'moveSection', 'editSection', 'setTrack', 'setMaster',
+    'setFx', 'setTempo', 'setClick', 'setArp', 'applyPreset', 'progressionToSection',
+    'toggleCell', 'clearRoll', 'refreshHarmony', 'setMeter', 'setSwing', 'setCountIn',
+    'transpose'].forEach(function (name) {
+      const orig = MX[name];
+      if (typeof orig !== 'function') return;
+      MX[name] = function () {
+        pushHistory();
+        return orig.apply(MX, arguments);
+      };
+    });
+  pushHistory();
+
+  /* ---------------- meter / swing / count-in ---------------- */
+  MX.setMeter = function (v) {
+    pushHistory();
+    state.snap.meter = v || '4/4';
+    save(); X.renderAll(); sync();
+  };
+  MX.setSwing = function (v) {
+    pushHistory();
+    state.snap.swing = Number(v) || 0;
+    save();
+  };
+  MX.setCountIn = function () {
+    pushHistory();
+    const el = document.getElementById('mx-countin');
+    state.snap.countIn = el && el.value === 'on';
+    save();
+  };
+
+  /* ---------------- song composer ---------------- */
+  // A composer, not a randomiser. It picks a key and mode from the mood, a
+  // progression that fits the genre, an arrangement with real contrast
+  // (parts drop out in the verse and return in the chorus), and a melody built
+  // from chord tones on the strong steps with stepwise passing notes between
+  // them. Everything it writes is editable afterwards.
+  const MOODS = {
+    tender: { mode: 'Major (Ionian)', bpm: 74, meter: '4/4', prog: ['I', 'V', 'vi', 'IV'], bridge: ['IV', 'I', 'V', 'V'], alt: ['vi', 'IV', 'I', 'V'] },
+    bittersweet: { mode: 'Natural minor (Aeolian)', bpm: 84, meter: '4/4', prog: ['i', 'VI', 'III', 'VII'], bridge: ['iv', 'VI', 'i', 'V'], alt: ['VI', 'III', 'VII', 'i'] },
+    hopeful: { mode: 'Major (Ionian)', bpm: 96, meter: '4/4', prog: ['I', 'IV', 'V', 'vi'], bridge: ['IV', 'V', 'iii', 'vi'], alt: ['vi', 'IV', 'I', 'V'] },
+    defiant: { mode: 'Mixolydian', bpm: 104, meter: '4/4', prog: ['I', 'bVII', 'IV', 'I'], bridge: ['IV', 'bVII', 'I', 'I'], alt: ['I', 'IV', 'bVII', 'I'] },
+    dark: { mode: 'Phrygian', bpm: 72, meter: '4/4', prog: ['i', 'bII', 'bVII', 'i'], bridge: ['iv', 'bVI', 'bII', 'i'], alt: ['i', 'bVII', 'bVI', 'bII'] },
+    playful: { mode: 'Dorian', bpm: 108, meter: '4/4', prog: ['i', 'IV', 'i', 'V'], bridge: ['IV', 'i', 'V', 'i'], alt: ['i', 'V', 'IV', 'i'] }
+  };
+  const GENRE = {
+    pop: { bpm: 0, meter: '4/4', swing: 0, layers: { lead: true, arp: 'up' }, density: 1 },
+    ballad: { bpm: -10, meter: '4/4', swing: 0, layers: { lead: true, arp: 'off' }, density: 0 },
+    folk: { bpm: -4, meter: '3/4', swing: 0, layers: { lead: true, arp: 'off' }, density: 0 },
+    film: { bpm: -6, meter: '4/4', swing: 0, layers: { lead: true, arp: 'updown' }, density: 1 },
+    lofi: { bpm: -14, meter: '4/4', swing: 0.24, layers: { lead: true, arp: 'off' }, density: 1 }
+  };
+
+  function modeScale(mode) { return X.MODES[mode] || X.MODES['Major (Ionian)']; }
+
+  // Map a scale step (may run past the octave) to a semitone above the root.
+  function stepSemitone(mode, step) {
+    const sc = modeScale(mode);
+    const n = ((step % sc.length) + sc.length) % sc.length;
+    const oct = Math.floor(step / sc.length);
+    return sc[n] + 12 * oct;
+  }
+
+  function melodyFor(sections, mode, octave) {
+    const cells = {};
+    let barNo = 0;
+    sections.forEach(function (sec) {
+      for (let b = 0; b < sec.bars; b++) {
+        if ((sec.mute || []).indexOf('lead') !== -1) { barNo++; continue; }
+        const sym = sec.chords[b % sec.chords.length] || 'I';
+        const d = parseDegree(sym);
+        // Two rhythms alternate so the tune is not a loop: on even bars the
+        // phrase lands on the beat, on odd bars it pushes late.
+        const rhythm = (barNo % 2 === 0) ? [[0, 0], [3, 2], [6, 4], [10, 2]] : [[2, 0], [5, 1], [8, 4], [12, 2]];
+        rhythm.forEach(function (pair) {
+          const step = pair[0];
+          const off = pair[1];
+          let semi = stepSemitone(mode, d + off);
+          // Keep the lead inside the roll's 13 rows.
+          while (semi > 12) semi -= 12;
+          while (semi < 0) semi += 12;
+          cells[step + ':' + semi] = 1;
+        });
+        barNo++;
+      }
+    });
+    // Resolve the final bar to the tonic: that is what makes an ending sound
+    // finished rather than stopped.
+    if (sections.length) cells['0:0'] = 1;
+    return cells;
+  }
+
+  // "bVII" -> 6, "vi" -> 5, "I" -> 0. Only the degree matters for the melody.
+  function parseDegree(sym) {
+    const up = String(sym || 'I').replace(/^[b#]/, '').toUpperCase();
+    const map = { I: 0, II: 1, III: 2, IV: 3, V: 4, VI: 5, VII: 6 };
+    return map[up] != null ? map[up] : 0;
+  }
+
+  MX.composeSong = function () {
+    pushHistory();
+    const mood = (document.getElementById('mx-mood') || {}).value || 'bittersweet';
+    const genre = (document.getElementById('mx-songgen') || {}).value || 'pop';
+    const M = MOODS[mood] || MOODS.bittersweet;
+    const G = GENRE[genre] || GENRE.pop;
+    const s = snap();
+
+    s.root = s.root || 'C';
+    s.mode = M.mode;
+    s.meter = G.meter;
+    s.bpm = Math.max(52, Math.min(180, (M.bpm + (G.bpm || 0)) || 90));
+    s.swing = G.swing || 0;
+    s.countIn = true;
+    s.preset = Object.keys(X.PRESETS)[0];
+
+    // Contest: intro, verse, chorus, verse, chorus, bridge, final chorus.
+    // Verse drops the lead so the words have room; the chorus adds it back.
+    s.sections = [
+      { name: 'Intro', bars: 2, chords: M.prog.slice(0, 2), mute: ['lead', 'drums'] },
+      { name: 'Verse 1', bars: 4, chords: M.prog.slice(), mute: ['lead'] },
+      { name: 'Chorus', bars: 4, chords: M.alt.slice(), mute: [] },
+      { name: 'Verse 2', bars: 4, chords: M.prog.slice(), mute: ['lead'] },
+      { name: 'Chorus', bars: 4, chords: M.alt.slice(), mute: [] },
+      { name: 'Bridge', bars: 2, chords: M.bridge.slice(), mute: ['drums'] },
+      { name: 'Final chorus', bars: 4, chords: M.alt.slice(), mute: [] }
+    ];
+
+    s.arp = (G.layers && G.layers.arp) || 'off';
+    s.arpRate = 2;
+    s.roll.steps = 16;
+    s.roll.inst = 'pluck';
+    s.roll.cells = melodyFor(s.sections, s.mode, s.octave);
+
+    // A mix that suits the room: ballad and lo-fi sit back, pop pushes.
+    s.master = 0.8;
+    s.tracks = {
+      drums: { on: true, vol: G.density ? 0.78 : 0.62, pan: 0, inst: 'kick' },
+      bass: { on: true, vol: 0.72, pan: 0, inst: 'bass' },
+      chords: { on: true, vol: 0.66, pan: -0.12, inst: genre === 'film' ? 'strings' : 'pad' },
+      lead: { on: true, vol: 0.58, pan: 0.12, inst: genre === 'lofi' ? 'pluck' : 'lead' }
+    };
+    s.fx = Object.assign({}, s.fx, {
+      reverb: genre === 'film' ? 0.32 : genre === 'lofi' ? 0.26 : 0.18,
+      size: genre === 'film' ? 2.6 : 1.8,
+      delay: genre === 'lofi' ? 0.36 : 0.28,
+      dmix: genre === 'lofi' ? 0.2 : 0.1,
+      comp: 0.42
+    });
+
+    save();
+    X.renderAll();
+    sync();
+    const title = (document.getElementById('f-title') || {}).value || 'Untitled';
+    showToast('Composed: ' + mood + ' ' + genre + ' · ' + s.bpm + ' BPM · ' + s.root + ' ' + s.mode);
+    setStatus('Composed "' + title + '" — ' + s.sections.length + ' sections, ' +
+      Object.keys(s.roll.cells).length + ' melody notes. Press Play, then edit anything.');
+  };
+
+  /* ---------------- voice (Edge TTS) ---------------- */
+  // The browser voices depend on the device's language packs; these do not.
+  // The audio is rendered on the owner runner and fetched from GitHub, so the
+  // picker is loaded once and the result is played from a blob URL.
+  const VOICE_FALLBACK = [
+    'ta-IN-PallaviNeural', 'ta-IN-ValluvarNeural', 'ta-LK-SaranyaNeural', 'ta-LK-KumarNeural',
+    'ml-IN-SobhanaNeural', 'ml-IN-MidhunNeural', 'hi-IN-SwaraNeural', 'hi-IN-MadhurNeural',
+    'en-IN-NeerjaNeural', 'en-IN-PrabhatNeural'
+  ];
+
+  async function loadEdgeVoices() {
+    const sel = document.getElementById('edgeVoice');
+    if (!sel) return;
+    let list = VOICE_FALLBACK.map(function (id) { return { id: id, label: id.replace(/-/g, ' ') }; });
+    try {
+      const r = await fetch('/api/tts');
+      if (r.ok) {
+        const d = await r.json();
+        if (d && d.voices && d.voices.length) list = d.voices;
+      }
+    } catch (e) { /* keep the fallback list */ }
+    sel.innerHTML = list.map(function (v) {
+      return '<option value="' + v.id + '">' + (v.label || v.id) + '</option>';
+    }).join('');
+  }
+
+  MX.edgeLoadLyrics = function () {
+    const ta = document.getElementById('edgeText');
+    const p = (typeof projects !== 'undefined' ? projects : []).find(function (x) { return x.id === currentId; });
+    if (ta && p) ta.value = p.lyrics || p.tmLyrics || '';
+  };
+
+  async function pollAudio(metaUrl, audioUrl, status) {
+    for (let i = 0; i < 60; i++) {
+      await new Promise(function (r) { setTimeout(r, 5000); });
+      if (status) status.textContent = 'rendering… ' + Math.round((i + 1) * 5) + 's';
+      try {
+        const m = await fetch(metaUrl, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (m.status === 404) continue;
+        if (m.ok) {
+          const text = await m.text();
+          let meta = null;
+          try { meta = JSON.parse(text); } catch (e) { meta = null; }
+          if (meta && meta.status === 'failed') return { error: meta.error || 'the render failed' };
+          if (!meta || meta.status !== 'done') continue;
+        }
+        const a = await fetch(audioUrl, { headers: { Accept: 'application/vnd.github.raw' } });
+        if (!a.ok) continue;
+        return { blob: await a.blob() };
+      } catch (e) { /* keep polling */ }
+    }
+    return { error: 'the runner did not finish in time — try again' };
+  }
+
+  MX.edgeSpeak = async function () {
+    const status = document.getElementById('edgeStatus');
+    const text = (document.getElementById('edgeText') || {}).value || '';
+    const voice = (document.getElementById('edgeVoice') || {}).value;
+    if (!text.trim()) { if (status) status.textContent = 'type or load a lyric first'; return; }
+    if (status) status.textContent = 'sending to the voice runner…';
+    try {
+      const t = await freshToken();
+      const r = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+        body: JSON.stringify({
+          token: t, text: text, voice: voice,
+          rate: (document.getElementById('edgeRate') || {}).value,
+          pitch: (document.getElementById('edgePitch') || {}).value
+        })
+      });
+      const d = await r.json().catch(function () { return {}; });
+      if (!r.ok || !d.id) {
+        if (status) status.textContent = d.error || ('failed (HTTP ' + r.status + ')');
+        return;
+      }
+      const got = await pollAudio(d.meta, d.audio, status);
+      if (!got || got.error) { if (status) status.textContent = (got && got.error) || 'no audio'; return; }
+      // Kept so the voice can be mixed onto the backing later.
+      MX.lastVoiceBlob = got.blob;
+      const url = URL.createObjectURL(got.blob);
+      const audio = document.getElementById('edgeAudio');
+      if (audio) { audio.src = url; audio.style.display = 'block'; audio.play().catch(function () {}); }
+      const dl = document.getElementById('edgeDl');
+      if (dl) { dl.href = url; dl.style.display = 'inline-block'; }
+      if (status) status.textContent = 'ready · ' + Math.round(got.blob.size / 1024) + ' KB';
+    } catch (e) {
+      if (status) status.textContent = 'could not reach the voice runner: ' + e.message;
+    }
+  };
+
+  /* ---------------- final mix: voice over the backing ---------------- */
+  // The last step of the studio: the arrangement as an instrumental, the
+  // rendered voice as an a cappella, mixed into one file you can play or send.
+  MX.mixFinal = async function () {
+    const status = document.getElementById('mx-export-status');
+    const s = snap();
+    const rate = Number((document.getElementById('mx-rate') || {}).value) || 44100;
+    const need = Math.max(4, Math.ceil((MX.songSeconds ? MX.songSeconds() : 30) + 4));
+    const seconds = Math.max(need, Number((document.getElementById('mx-len') || {}).value) || need);
+    if (status) status.textContent = 'rendering the backing…';
+    try {
+      const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      const ctx = new OfflineCtx(2, Math.ceil(seconds * rate), rate);
+      const graph = X.makeGraph(ctx);
+      X.scheduleSong(ctx, graph, s, 0.05);
+      const backing = await ctx.startRendering();
+
+      let voice = null;
+      const src = (document.getElementById('mx-vocal') || {}).value || 'auto';
+      const wantTake = (src === 'take') || (src === 'auto' && MX.lastTakeBlob);
+      const wantVoice = (src === 'voice') || (src === 'auto' && !MX.lastTakeBlob);
+      const vocalBlob = (src === 'none') ? null : (wantTake ? MX.lastTakeBlob : (wantVoice ? MX.lastVoiceBlob : null));
+      if (vocalBlob) {
+        if (status) status.textContent = wantTake ? 'adding your recorded take…' : 'adding the studio voice…';
+        try {
+          const tmp = new (window.AudioContext || window.webkitAudioContext)();
+          voice = await tmp.decodeAudioData(await vocalBlob.arrayBuffer());
+          tmp.close();
+        } catch (e) {
+          voice = null;
+          if (status) status.textContent = 'could not decode that take (' + e.message + ') — check the take plays in the Recorder tab';
+        }
+      }
+      const usedTake = !!(voice && wantTake);
+
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const outBuf = ac.createBuffer(2, backing.length, rate);
+      for (let ch = 0; ch < 2; ch++) {
+        const dst = outBuf.getChannelData(ch);
+        const src = backing.getChannelData(Math.min(ch, backing.numberOfChannels - 1));
+        for (let i = 0; i < dst.length; i++) dst[i] = src[i];
+      }
+      if (voice) {
+        const vgain = 1.0;
+        const boff = Math.floor(0.05 * rate);
+        for (let i = 0; i < voice.length; i++) {
+          const at = i + boff;
+          if (at >= outBuf.length) break;
+          for (let ch = 0; ch < 2; ch++) {
+            const vs = voice.getChannelData(Math.min(ch, voice.numberOfChannels - 1))[i] * vgain;
+            const cur = outBuf.getChannelData(ch)[at] * 0.75;   // duck the backing under the voice
+            outBuf.getChannelData(ch)[at] = Math.max(-1, Math.min(1, cur + vs));
+          }
+        }
+      }
+      ac.close();
+
+      const blob = encodeWav(outBuf);
+      const url = URL.createObjectURL(blob);
+      let player = document.getElementById('mx-final');
+      if (!player) {
+        player = document.createElement('audio');
+        player.id = 'mx-final';
+        player.controls = true;
+        player.style.cssText = 'display:block;width:100%;margin-top:14px';
+        const host = document.getElementById('mx-export-status');
+        if (host && host.parentNode) host.parentNode.insertBefore(player, host.nextSibling);
+      }
+      player.src = url;
+      player.style.display = 'block';
+
+      const title = (document.getElementById('f-title') || {}).value || 'song';
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = String(title).replace(/[^\w-]+/g, '_') + (voice ? (usedTake ? '-myvoice.wav' : '-song.wav') : '-instrumental.wav');
+      a.click();
+
+      if (status) {
+        status.textContent = voice
+          ? (usedTake ? 'final song ready — your recorded voice over the backing' : 'final song ready — studio voice over the backing') +
+            ' (' + (blob.size / 1048576).toFixed(1) + ' MB). Press play above.'
+          : 'instrumental ready. Record a take in the Recorder tab, or render a Studio voice, then press this again.';
+      }
+    } catch (e) {
+      if (status) status.textContent = 'final mix failed: ' + e.message;
+    }
+  };
+
+  /* ---------------- MIDI ---------------- */
+  function vlq(n) {
+    const bytes = [n & 0x7f];
+    n >>= 7;
+    while (n > 0) { bytes.unshift((n & 0x7f) | 0x80); n >>= 7; }
+    return bytes;
+  }
+  function str(s) { return [...s].map((c) => c.charCodeAt(0)); }
+  function u32(n) { return [(n >> 24) & 255, (n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function u16(n) { return [(n >> 8) & 255, n & 255]; }
+
+  function arrangementEvents() {
+    const s = snap();
+    const bpb = X.beatsPerBar(s);
+    const beat = 60 / Math.max(30, s.bpm || 96);
+    const ev = [];
+    let barIndex = 0;
+    (s.sections || []).forEach(function (sec) {
+      const bars = Math.max(1, sec.bars || 1);
+      for (let b = 0; b < bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        const ch = X.chordMidis(s.root, s.mode, s.octave, sym);
+        const t0 = barIndex * bpb * beat;
+        const dur = bpb * beat;
+        if (s.tracks.chords.on) ch.forEach((m) => { ev.push({ t: t0, n: m, v: 80, d: dur * 0.94 }); });
+        if (s.tracks.bass.on) ev.push({ t: t0, n: ch[0] - 12, v: 90, d: dur * 0.9 });
+        if (s.tracks.lead.on && s.roll && s.roll.cells) {
+          const steps = s.roll.steps || 16;
+          Object.keys(s.roll.cells).forEach(function (cell) {
+            if (!s.roll.cells[cell]) return;
+            const p = cell.split(':');
+            const step = Number(p[0]);
+            const noteIndex = Number(p[1]);
+            const midi = X.midiOf(s.root, (s.octave || 3) + 1) + noteIndex;
+            ev.push({ t: t0 + step * (dur / steps), n: midi, v: 96, d: (dur / steps) * 0.9 });
+          });
+        }
+        barIndex++;
+      }
+    });
+    return { ev: ev, bpb: bpb, beat: beat };
+  }
+
+  MX.exportMidi = function () {
+    const s = snap();
+    const PPQ = 480;
+    const info = arrangementEvents();
+    const tempo = Math.round(60000000 / Math.max(30, s.bpm || 96));
+
+    const list = [];
+    info.ev.forEach(function (e) {
+      const on = Math.round((e.t / info.beat) * PPQ);
+      const off = Math.round(((e.t + e.d) / info.beat) * PPQ);
+      list.push({ tick: on, order: 1, data: [0x90, e.n, e.v] });
+      list.push({ tick: off, order: 0, data: [0x80, e.n, 0] });
+    });
+    list.sort((a, b) => a.tick - b.tick || a.order - b.order);
+
+    const track = [];
+    track.push.apply(track, [0x00, 0xFF, 0x51, 0x03, (tempo >> 16) & 255, (tempo >> 8) & 255, tempo & 255]);
+    track.push.apply(track, [0x00, 0xFF, 0x58, 0x04, info.bpb, 2, 24, 8]);
+    let last = 0;
+    list.forEach(function (e) {
+      track.push.apply(track, vlq(e.tick - last));
+      track.push.apply(track, e.data);
+      last = e.tick;
+    });
+    track.push.apply(track, [0x00, 0xFF, 0x2F, 0x00]);
+
+    const bytes = []
+      .concat(str('MThd'), u32(6), u16(0), u16(1), u16(PPQ))
+      .concat(str('MTrk'), u32(track.length), track);
+
+    const blob = new Blob([new Uint8Array(bytes)], { type: 'audio/midi' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const title = (document.getElementById('f-title') || {}).value || 'song';
+    a.download = String(title).replace(/[^\w-]+/g, '_') + '.mid';
+    a.click();
+    setStatus('MIDI exported · ' + list.length / 2 + ' notes');
+  };
+
+  // Import: read the first track, quantise its notes onto the piano roll.
+  MX.importMidi = function (input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = function () {
+      try {
+        const buf = new Uint8Array(r.result);
+        let p = 0;
+        function u32at() { const v = (buf[p] << 24) | (buf[p + 1] << 16) | (buf[p + 2] << 8) | buf[p + 3]; p += 4; return v >>> 0; }
+        function u16at() { const v = (buf[p] << 8) | buf[p + 1]; p += 2; return v; }
+        if (String.fromCharCode.apply(null, [...buf.slice(0, 4)]) !== 'MThd') throw new Error('not a MIDI file');
+        p = 4; const hlen = u32at(); u16at(); const ntrk = u16at(); const division = u16at() || 480;
+        p = 8 + hlen;
+        const notes = [];
+        let tick = 0;
+        for (let t = 0; t < ntrk && p < buf.length; t++) {
+          if (String.fromCharCode.apply(null, [...buf.slice(p, p + 4)]) !== 'MTrk') break;
+          p += 4; const len = u32at(); const end = p + len;
+          let running = 0;
+          while (p < end) {
+            let delta = 0;
+            let b;
+            do { b = buf[p++]; delta = (delta << 7) | (b & 0x7f); } while (b & 0x80);
+            tick += delta;
+            let status = buf[p];
+            if (status & 0x80) { p++; running = status; } else status = running;
+            const type = status & 0xf0;
+            if (status === 0xff) {
+              const meta = buf[p++]; let l = 0;
+              do { b = buf[p++]; l = (l << 7) | (b & 0x7f); } while (b & 0x80);
+              p += l;
+              continue;
+            }
+            if (status === 0xf0 || status === 0xf7) {
+              let l = 0; do { b = buf[p++]; l = (l << 7) | (b & 0x7f); } while (b & 0x80);
+              p += l; continue;
+            }
+            if (type === 0x90 || type === 0x80) {
+              const note = buf[p++]; const vel = buf[p++];
+              if (type === 0x90 && vel > 0) notes.push({ tick: tick, note: note });
+            } else if (type === 0xc0 || type === 0xd0) p += 1;
+            else p += 2;
+          }
+          p = end;
+        }
+        if (!notes.length) throw new Error('no notes found');
+        const s = snap();
+        const bpb = X.beatsPerBar(s);
+        const barTicks = division * bpb;
+        const steps = (document.getElementById('roll-steps') || {}).value || s.roll.steps || 16;
+        s.roll.steps = Number(steps);
+        s.roll.cells = {};
+        const base = X.midiOf(s.root, (s.octave || 3) + 1);
+        const first = Math.min.apply(null, notes.map((n) => n.tick));
+        notes.forEach(function (n) {
+          const inBar = (n.tick - first) % barTicks;
+          const step = Math.round((inBar / barTicks) * s.roll.steps) % s.roll.steps;
+          let idx = n.note - base;
+          while (idx < 0) idx += 12;
+          while (idx > 12) idx -= 12;
+          s.roll.cells[step + ':' + idx] = 1;
+        });
+        save(); X.renderAll(); sync();
+        setStatus('MIDI imported · ' + notes.length + ' notes mapped onto the roll');
+      } catch (e) {
+        setStatus('MIDI import failed: ' + e.message);
+      }
+    };
+    r.readAsArrayBuffer(file);
+  };
+
+  /* ---------------- stems ---------------- */
+  MX.exportStems = async function () {
+    const s = snap();
+    const seconds = Math.max(4, Number((document.getElementById('mx-len') || {}).value) || 32);
+    const rate = Number((document.getElementById('mx-rate') || {}).value) || 44100;
+    setStatus('rendering 4 stems…');
+    const keep = JSON.parse(JSON.stringify(s.tracks));
+    try {
+      for (const id of ['drums', 'bass', 'chords', 'lead']) {
+        Object.keys(s.tracks).forEach(function (k) { s.tracks[k].on = (k === id); });
+        const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        const ctx = new OfflineCtx(2, Math.ceil(seconds * rate), rate);
+        const graph = X.makeGraph(ctx);
+        X.scheduleSong(ctx, graph, s, 0.05);
+        const buf = await ctx.startRendering();
+        const blob = encodeWav(buf);
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        const title = (document.getElementById('f-title') || {}).value || 'song';
+        a.download = String(title).replace(/[^\w-]+/g, '_') + '-' + id + '.wav';
+        a.click();
+        await new Promise((r) => setTimeout(r, 400));
+      }
+      setStatus('4 stems rendered');
+    } catch (e) {
+      setStatus('stem render failed: ' + e.message);
+    } finally {
+      s.tracks = keep;
+      X.renderAll();
+    }
+  };
+
+  function encodeWav(buffer) {
+    const numCh = buffer.numberOfChannels;
+    const len = buffer.length;
+    const ab = new ArrayBuffer(44 + len * numCh * 2);
+    const view = new DataView(ab);
+    const w = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+    w(0, 'RIFF'); view.setUint32(4, ab.byteLength - 8, true); w(8, 'WAVE');
+    w(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+    view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+    view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+    view.setUint16(34, 16, true); w(36, 'data'); view.setUint32(40, len * numCh * 2, true);
+    let off = 44;
+    const chans = [];
+    for (let c = 0; c < numCh; c++) chans.push(buffer.getChannelData(c));
+    for (let i = 0; i < len; i++) {
+      for (let c = 0; c < numCh; c++) {
+        const v = Math.max(-1, Math.min(1, chans[c][i]));
+        view.setInt16(off, v < 0 ? v * 0x8000 : v * 0x7fff, true);
+        off += 2;
+      }
+    }
+    return new Blob([ab], { type: 'audio/wav' });
+  }
+
+  /* ---------------- chart + keys ---------------- */
+  const ROMAN_TO_NASH = { I: '1', II: '2', III: '3', IV: '4', V: '5', VI: '6', VII: '7' };
+
+  function nashville(sym) {
+    const m = /^(b|#)?([IViv]+)$/.exec(String(sym || 'I'));
+    if (!m) return sym;
+    const up = m[2].toUpperCase();
+    const n = ROMAN_TO_NASH[up] || '1';
+    const minor = m[2] === m[2].toLowerCase();
+    return (m[1] || '') + n + (minor ? 'm' : '');
+  }
+
+  function renderChart() {
+    const host = document.getElementById('mx-chart');
+    if (!host) return;
+    const s = snap();
+    const bpb = X.beatsPerBar(s);
+    let bars = 0;
+    let html = '<div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#6b7280;margin-bottom:10px">' +
+      esc((document.getElementById('f-title') || {}).value || 'Untitled') + ' · ' + s.bpm + ' BPM · ' + s.root + ' ' + s.mode + ' · ' + (s.meter || '4/4') + '</div>';
+    (s.sections || []).forEach(function (sec) {
+      html += '<div style="margin:18px 0 8px;display:flex;align-items:baseline;gap:10px">' +
+        '<strong style="font-size:15px">' + esc(sec.name) + '</strong>' +
+        '<span style="font-size:12px;color:#6b7280">' + sec.bars + ' bars · ' + (sec.chords || []).length + ' chords</span></div>';
+      html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+      for (let b = 0; b < sec.bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        const notes = X.chordMidis(s.root, s.mode, s.octave, sym).map(function (m) { return X.NOTES[m % 12]; });
+        html += '<div style="min-width:74px;border:1px solid #d6d3c6;border-radius:6px;padding:6px 8px;background:#fff">' +
+          '<div style="font-size:11px;color:#9ca3af">bar ' + (++bars) + '</div>' +
+          '<div style="font-size:15px;font-weight:700">' + esc(sym) + '</div>' +
+          '<div style="font-size:10px;color:#6b7280">' + esc(nashville(sym)) + '</div>' +
+          '<div style="font-size:10px;color:#6b7280">' + esc(notes.join(' ')) + '</div></div>';
+      }
+      html += '</div>';
+    });
+    html += '<div style="margin-top:16px;font-size:11px;color:#9ca3af">' + bars + ' bars · ' +
+      (s.sections || []).length + ' sections · ' + Math.round(X.beatsPerBar(s)) + ' beats per bar</div>';
+    host.innerHTML = html;
+  }
+
+  function chartText() {
+    const s = snap();
+    const lines = [(document.getElementById('f-title') || {}).value || 'Untitled', s.bpm + ' BPM · ' + s.root + ' ' + s.mode + ' · ' + (s.meter || '4/4'), ''];
+    (s.sections || []).forEach(function (sec) {
+      const chords = [];
+      for (let b = 0; b < sec.bars; b++) {
+        const sym = (sec.chords && sec.chords.length ? sec.chords[b % sec.chords.length] : 'I');
+        chords.push(sym + ' (' + nashville(sym) + ')');
+      }
+      lines.push('[' + sec.name + '] ' + sec.bars + ' bars');
+      lines.push(chords.join(' | '));
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+
+  MX.copyChart = function () {
+    const t = document.createElement('textarea');
+    t.value = chartText();
+    document.body.appendChild(t);
+    t.select();
+    try { document.execCommand('copy'); showToast('Chart copied'); } catch (e) { showToast('Copy failed'); }
+    document.body.removeChild(t);
+  };
+
+  MX.printChart = function () {
+    const w = window.open('', '_blank');
+    if (!w) return;
+    w.document.write('<!doctype html><title>Chart</title><style>body{font-family:Georgia,serif;white-space:pre-wrap;max-width:760px;margin:40px auto;line-height:1.5}</style>' + esc(chartText()));
+    w.document.close();
+    w.print();
+  };
+
+  const CIRCLE = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
+
+  function renderKeys() {
+    const host = document.getElementById('mx-keys');
+    if (!host) return;
+    const s = snap();
+    const i = CIRCLE.indexOf(s.root);
+    const near = [
+      { label: 'Home', key: s.root },
+      { label: 'Dominant', key: CIRCLE[(i + 1) % 12] },
+      { label: 'Subdominant', key: CIRCLE[(i + 11) % 12] },
+      { label: 'Relative minor', key: CIRCLE[(i + 9) % 12], mode: 'Natural minor (Aeolian)' },
+      { label: 'Up a tone', key: CIRCLE[(i + 2) % 12] }
+    ];
+    host.innerHTML = near.map(function (n) {
+      return '<button class="btn btn-sm btn-secondary" onclick="MX.transpose(\'' + n.key + '\',\'' + (n.mode || s.mode).replace(/'/g, "\\'") + '\')">' +
+        n.label + ' · ' + n.key + '</button>';
+    }).join('');
+    const note = document.getElementById('mx-key-note');
+    if (note) note.textContent = 'Modulating to the dominant or the relative minor is the two moves that never sound wrong. Transposing keeps every section and chord degree.';
+  }
+
+  MX.transpose = function (key, mode) {
+    pushHistory();
+    state.snap.root = key || state.snap.root;
+    if (mode) state.snap.mode = mode;
+    save(); X.renderAll(); sync();
+    showToast('Key → ' + state.snap.root + ' ' + state.snap.mode);
+  };
+
+  /* ---------------- UI sync ---------------- */
+  function setStatus(msg) {
+    const el = document.getElementById('mx-export-status');
+    if (el) el.textContent = msg;
+  }
+
+  function sync() {
+    const s = snap();
+    const meter = document.getElementById('mx-meter');
+    if (meter) meter.value = s.meter || '4/4';
+    const swing = document.getElementById('mx-swing');
+    if (swing) swing.value = s.swing || 0;
+    const ci = document.getElementById('mx-countin');
+    if (ci) ci.value = s.countIn ? 'on' : 'off';
+    const steps = document.getElementById('roll-steps');
+    if (steps) steps.value = String((s.roll && s.roll.steps) || 16);
+    const ri = document.getElementById('roll-inst');
+    if (ri) ri.value = (s.roll && s.roll.inst) || 'pluck';
+    renderChart();
+    renderKeys();
+  }
+  MX.syncExtras = sync;
+
+  // Re-sync when the Chart or Master tab is opened, and once at start.
+  const origShowTab = window.showTab;
+  if (typeof origShowTab === 'function') {
+    window.showTab = function (name) {
+      const r = origShowTab.apply(this, arguments);
+      if (name === 'chart' || name === 'master' || name === 'roll') { try { sync(); } catch (e) {} }
+      return r;
+    };
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { sync(); loadEdgeVoices(); });
+  else { sync(); loadEdgeVoices(); }
+})();
+</script>
+
+
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

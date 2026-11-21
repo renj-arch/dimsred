@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Vectors &amp; Three-Dimensional Geometry — JEE Mathematics Lesson | vlymbooq</title>
+    <meta name="description" content="Free JEE Mathematics Vectors &amp; Three-Dimensional Geometry lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-vectors-3d.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95em}
+        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}
+        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/jee/">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D Geometry</a>
+                    <a href="lesson-probability-statistics.html">Probability & Statistics</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-quadratic-sequences.html">Quadratic Equations, Sequences & Series</a>
+                    <a href="lesson-complex-binomial.html">Complex Numbers & Binomial Theorem</a>
+                    <a href="lesson-matrices-determinants.html">Matrices & Determinants</a>
+                    <a href="lesson-permutations-probability.html">Permutations, Combinations & Probability</a>
+                    <a href="lesson-limits-continuity.html">Limits, Continuity & Differentiability</a>
+                    <a href="lesson-differentiation-applications.html">Differentiation & Its Applications</a>
+                    <a href="lesson-integration.html">Indefinite & Definite Integration</a>
+                    <a href="lesson-differential-equations.html">Differential Equations</a>
+                    <a href="lesson-vectors-3d.html" class="active">Vectors & Three-Dimensional Geometry</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Vectors &amp; Three-Dimensional Geometry</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 18 Nov 2026 &#183; 7,396 words &#183; 5 sections</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.75em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 21 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="cb36fc8e4248" data-updated="2026-11-21" data-updated-label="21 Nov 2026" data-headings="[&quot;Vector Algebra Fundamentals&quot;,&quot;1 Definition and Representation of Vectors&quot;,&quot;2 Vector Addition and Scalar Multiplication&quot;,&quot;3 Components and Direction Cosines&quot;,&quot;4 Magnitude and Unit Vectors&quot;,&quot;Dot Product and Its Geometric Significance&quot;,&quot;5 Algebraic Definition of the Dot Product&quot;,&quot;6 Geometric Interpretation and Angle Between Vectors&quot;,&quot;7 Projection of One Vector Onto Another&quot;,&quot;8 Applications in Work and Orthogonality&quot;,&quot;Cross Product and Vector Triple Product&quot;,&quot;9 Algebraic Definition of the Cross Product&quot;,&quot;10 Geometric Meaning and Right‑Hand Rule&quot;,&quot;11 Scalar Triple Product and Volume of Parallelepiped&quot;,&quot;12 Vector Triple Product Identity&quot;,&quot;Lines in Three‑Dimensional Space&quot;,&quot;13 Vector and Parametric Equations of a Line&quot;,&quot;14 Symmetric Form and Direction Ratios&quot;,&quot;15 Angle Between Two Lines&quot;,&quot;16 Shortest Distance Between Two Skew Lines&quot;,&quot;Planes in Three‑Dimensional Space&quot;,&quot;17 Vector and Cartesian Equations of a Plane&quot;,&quot;18 Normal Vector and Distance from a Point to a Plane&quot;,&quot;19 Angle Between Two Planes and Line‑Plane Intersection&quot;,&quot;20 Shortest Distance Between Parallel Planes and Between a Line and a Plane&quot;,&quot;Family of Planes Through the Intersection of Two Planes&quot;,&quot;Condition for Coplanarity of Two Lines and Their Intersection&quot;,&quot;Reflection of a Point and a Line in a Plane&quot;,&quot;Volume of a Tetrahedron and Scalar Triple Product Applications&quot;,&quot;Vector Equation of a Plane Through Three Non‑Collinear Points (Determinant Form)&quot;,&quot;Vector Differentiation and Its Geometric Applications&quot;,&quot;Reciprocal Vectors and Dual Bases&quot;,&quot;Plücker Coordinates of a Line in Space&quot;,&quot;Screw Theory and Rigid Body Displacements&quot;,&quot;Barycentric Coordinates and Vector Methods in Tetrahedra&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Vector algebra, dot and cross products, lines and planes in space, and shortest distance.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Vectors · Planes · Lines · Distance</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Vectors &amp; Three-Dimensional Geometry</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+<h2>Vector Algebra Fundamentals</h2>
+
+<h3>1 Definition and Representation of Vectors</h3>
+<p>A vector is a mathematical object that possesses both magnitude and direction, distinguishing it from a scalar which has magnitude only. In three‑dimensional space a vector can be represented by an ordered triple of real numbers (x, y, z) which are its components along the mutually perpendicular coordinate axes. The same vector may also be depicted as a directed line segment from the origin to the point (x, y, z) or as a free vector that can be translated without altering its properties. The notation a or a is commonly used, and the zero vector 0 has all components equal to zero and no definite direction.</p>
+<h3>2 Vector Addition and Scalar Multiplication</h3>
+<p>Vector addition follows the parallelogram law: the sum a+b is obtained by placing the tail of b at the head of a and drawing the resultant from the tail of a to the head of b. Component‑wise this means (a<sub>1</sub>,a<sub>2</sub>,a<sub>3</sub>)+(b<sub>1</sub>,b<sub>2</sub>,b<sub>3</sub>)=(a<sub>1</sub>+b<sub>1</sub>,a<sub>2</sub>+b<sub>2</sub>,a<sub>3</sub>+b<sub>3</sub>). Scalar multiplication by a real number k stretches or shrinks the vector and reverses its direction when k is negative, giving ka=(ka<sub>1</sub>,ka<sub>2</sub>,ka<sub>3</sub>). Both operations satisfy the axioms of a vector space, making the set of all three‑dimensional vectors a real vector space of dimension three.</p>
+<h3>3 Components and Direction Cosines</h3>
+<p>The components of a vector are its projections on the coordinate axes; if a=a<sub>1</sub>i+a<sub>2</sub>j+a<sub>3</sub>k then a<sub>1</sub>,a<sub>2</sub>,a<sub>3</sub> are the scalar components. The direction cosines l,m,n are the cosines of the angles that the vector makes with the positive x, y, and z axes respectively, and they satisfy l<sup>2</sup>+m<sup>2</sup>+n<sup>2</sup>=1. They are obtained by dividing each component by the magnitude of the vector: l=a<sub>1</sub>/|a|, m=a<sub>2</sub>/|a|, n=a<sub>3</sub>/|a|. Direction ratios are any three numbers proportional to the direction cosines and are often used when the magnitude is not required.</p>
+<h3>4 Magnitude and Unit Vectors</h3>
+<p>The magnitude (or length) of a is |a|=√(a<sub>1</sub><sup>2</sup>+a<sub>2</sub><sup>2</sup>+a<sub>3</sub><sup>2</sup>), derived from the Pythagorean theorem in three dimensions. A unit vector has magnitude one and points in the same direction as the original vector; it is obtained by dividing the vector by its magnitude, a=a/|a|. The standard basis vectors i,j,k are unit vectors along the coordinate axes. Any vector can be expressed as a linear combination of these basis vectors, which is the foundation for all subsequent algebraic manipulations in three‑dimensional geometry.</p>
+
+<h2>Dot Product and Its Geometric Significance</h2>
+<h3>5 Algebraic Definition of the Dot Product</h3>
+<p>The dot product (also called scalar product) of two vectors a=a<sub>1</sub>i+a<sub>2</sub>j+a<sub>3</sub>k and b=b<sub>1</sub>i+b<sub>2</sub>j+b<sub>3</sub>k is defined algebraically as acdotb=a<sub>1</sub>b<sub>1</sub>+a<sub>2</sub>b<sub>2</sub>+a<sub>3</sub>b<sub>3</sub>. This operation yields a scalar, not a vector, and it is commutative: acdotb=bcdota. The dot product distributes over addition, a·(b+c)=acdotb+acdotc, and it is compatible with scalar multiplication, (ka)cdotb=k(acdotb). These algebraic properties make the dot product a powerful tool for simplifying vector expressions.</p>
+<h3>6 Geometric Interpretation and Angle Between Vectors</h3>
+<p>Geometrically the dot product equals the product of the magnitudes of the two vectors and the cosine of the angle θ between them: acdotb=|a||b|cosθ. This relationship provides a direct method to compute the angle: cosθ=(acdotb)/(|a||b|). When the dot product is zero the vectors are orthogonal (perpendicular), because cosθ=0 implies θ=90^°. The sign of the dot product indicates whether the angle is acute (positive) or obtuse (negative), which is useful in determining the relative orientation of vectors in physics and engineering problems.</p>
+<h3>7 Projection of One Vector Onto Another</h3>
+<p>The scalar projection of a onto b is the length of the shadow of a on the line of b and is given by proj<sub>b</sub>a=(acdotb)/|b|. The vector projection, which retains direction, is big((acdotb)/|b|<sup>2</sup>big)b. These formulas follow directly from the geometric definition of the dot product and are essential for resolving forces, finding components of velocity, and solving optimisation problems where a quantity must be maximised or minimised along a given direction.</p>
+<h3>8 Applications in Work and Orthogonality</h3>
+<p>In physics the work done by a constant force F moving an object through a displacement d is W=Fcdotd; only the component of the force along the displacement contributes to the work. In geometry, two lines are perpendicular if their direction vectors have a zero dot product, and a vector is normal to a plane if it is orthogonal to every direction vector lying in the plane. The dot product therefore bridges algebraic computation and geometric reasoning, making it indispensable for both theoretical derivations and practical calculations.</p>
+
+<div class="example-box">
+<div class="ex-title">Example: Angle Between Two Vectors</div>
+<div class="ex-text">Find the angle between the vectors a=2i-3j+6k and b=-i+2j-2k.</div>
+<div class="ex-soln">First compute the dot product: acdotb=2(-1)+(-3)(2)+6(-2)=-2-6-12=-20. Next find the magnitudes: |a|=√(2<sup>2</sup>+(-3)<sup>2</sup>+6<sup>2</sup>)=√(4+9+36)=√(49)=7; |b|=√((-1)<sup>2</sup>+2<sup>2</sup>+(-2)<sup>2</sup>)=√(1+4+4)=√(9)=3. Then cosθ=(acdotb)/(|a||b|)=-20/(7·3)=-20/21. Hence θ=cos<sup>-1</sup>(-20/21), which is approximately 162.3^°. The obtuse angle confirms that the vectors point in largely opposite directions.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Insight</div>
+<div class="tip-text">When a question asks for the angle between two vectors, always compute the dot product and the magnitudes first; the cosine formula is the most direct route and avoids the pitfalls of using the cross product magnitude, which gives the sine of the angle and requires an extra step to resolve the quadrant.</div>
+</div>
+
+<h2>Cross Product and Vector Triple Product</h2>
+<h3>9 Algebraic Definition of the Cross Product</h3>
+<p>The cross product (vector product) of a=a<sub>1</sub>i+a<sub>2</sub>j+a<sub>3</sub>k and b=b<sub>1</sub>i+b<sub>2</sub>j+b<sub>3</sub>k is defined as the determinant atimesb=begin{vmatrix}i&j&ka<sub>1</sub>&a<sub>2</sub>&a<sub>3</sub>b<sub>1</sub>&b<sub>2</sub>&b<sub>3</sub>end{vmatrix}, which expands to (a<sub>2</sub>b<sub>3</sub>-a<sub>3</sub>b<sub>2</sub>)i+(a<sub>3</sub>b<sub>1</sub>-a<sub>1</sub>b<sub>3</sub>)j+(a<sub>1</sub>b<sub>2</sub>-a<sub>2</sub>b<sub>1</sub>)k. The result is a vector perpendicular to both a and b. The cross product is anti‑commutative: atimesb=-(btimesa), and it distributes over addition but is not associative.</p>
+<h3>10 Geometric Meaning and Right‑Hand Rule</h3>
+<p>The magnitude of the cross product equals the area of the parallelogram formed by a and b: |atimesb|=|a||b|sinθ, where θ is the angle between them. The direction follows the right‑hand rule: if the fingers of the right hand curl from a to b through the smaller angle, the extended thumb points in the direction of atimesb. This geometric interpretation makes the cross product essential for computing torques, angular momentum, and surface normals in three‑dimensional graphics.</p>
+<h3>11 Scalar Triple Product and Volume of Parallelepiped</h3>
+<p>The scalar triple product of three vectors a,b,c is defined as a·(btimesc). Its absolute value gives the volume of the parallelepiped whose adjacent edges are the three vectors. The scalar triple product is invariant under cyclic permutations: a·(btimesc)=b·(ctimesa)=c·(atimesb). If the scalar triple product is zero, the three vectors are coplanar, which provides a quick test for linear dependence in three dimensions.</p>
+<h3>12 Vector Triple Product Identity</h3>
+<p>The vector triple product a×(btimesc) can be expanded using the identity a×(btimesc)=(acdotc)b-(acdotb)c. This identity, often remembered as “BAC minus CAB”, converts a double cross product into a linear combination of the original vectors and is extremely useful in simplifying expressions that arise in rigid‑body dynamics and electromagnetic theory. The identity also shows that the vector triple product lies in the plane spanned by b and c.</p>
+
+<table>
+<caption>Comparison of Dot Product and Cross Product</caption>
+<thead>
+<tr><th>Property</th><th>Dot Product acdotb</th><th>Cross Product atimesb</th></tr>
+</thead>
+<tbody>
+<tr><td>Result type</td><td>Scalar</td><td>Vector</td></tr>
+<tr><td>Commutativity</td><td>Commutative</td><td>Anti‑commutative</td></tr>
+<tr><td>Geometric meaning</td><td> |a||b|cosθ  (projection)</td><td> |a||b|sinθ  (area, perpendicular direction)</td></tr>
+<tr><td>Zero condition</td><td>Vectors orthogonal</td><td>Vectors parallel (or one zero)</td></tr>
+</tbody>
+</table>
+
+<h2>Lines in Three‑Dimensional Space</h2>
+<h3>13 Vector and Parametric Equations of a Line</h3>
+<p>A line in space can be described by a point r<sub>0</sub> through which it passes and a direction vector d. The vector equation is r=r<sub>0</sub>+lambdad, where λ is a real parameter. In component form this yields the parametric equations x=x<sub>0</sub>+λ d<sub>1</sub>, y=y<sub>0</sub>+λ d<sub>2</sub>, z=z<sub>0</sub>+λ d<sub>3</sub>. The parameter λ uniquely identifies each point on the line, and varying λ from -∞ to +∞ traces the entire line. This representation is especially convenient for finding intersections with other geometric objects because it reduces the problem to solving for the parameter.</p>
+<h3>14 Symmetric Form and Direction Ratios</h3>
+<p>Eliminating the parameter λ from the parametric equations gives the symmetric (or Cartesian) form (x-x<sub>0</sub>)/d<sub>1</sub>=(y-y<sub>0</sub>)/d<sub>2</sub>=(z-z<sub>0</sub>)/d<sub>3</sub>, provided none of the direction components d_i is zero. The numbers d<sub>1</sub>,d<sub>2</sub>,d<sub>3</sub> are called direction ratios; any non‑zero scalar multiple of them represents the same line. Direction cosines are obtained by normalising the direction ratios. The symmetric form is useful for quickly checking whether a given point lies on the line and for computing the angle between two lines using their direction ratios.</p>
+<h3>15 Angle Between Two Lines</h3>
+<p>If two lines have direction vectors d<sub>1</sub> and d<sub>2</sub>, the acute angle θ between them satisfies cosθ=|d<sub>1</sub>cdotd<sub>2</sub>|/(|d<sub>1</sub>||d<sub>2</sub>|). The absolute value ensures the angle is taken as the smaller of the two supplementary angles formed by the lines. When the lines are given in symmetric form, the direction ratios can be read directly and substituted into the formula. This concept is frequently tested in problems that ask whether two lines are perpendicular (dot product zero) or parallel (direction ratios proportional).</p>
+<h3>16 Shortest Distance Between Two Skew Lines</h3>
+<p>Two lines that are neither parallel nor intersecting are called skew lines. The shortest distance between them is the length of the common perpendicular segment. If the lines are r=a<sub>1</sub>+lambdab<sub>1</sub> and r=a<sub>2</sub>+mub<sub>2</sub>, the distance d is given by d=|(a<sub>2</sub>-a<sub>1</sub>)·(b<sub>1</sub>timesb<sub>2</sub>)|/|b<sub>1</sub>timesb<sub>2</sub>|. The numerator is the absolute value of the scalar triple product of the vector joining a point on the first line to a point on the second line with the two direction vectors; the denominator is the magnitude of the cross product of the direction vectors, which equals the area of the parallelogram they span. This formula is derived by projecting the joining vector onto the unit vector perpendicular to both lines.</p>
+
+<table>
+<caption>Forms of a Line in Space</caption>
+<thead>
+<tr><th>Form</th><th>Equation</th><th>When to Use</th></tr>
+</thead>
+<tbody>
+<tr><td>Vector (parametric)</td><td>r=r<sub>0</sub>+lambdad</td><td>Finding intersections, distance to a point</td></tr>
+<tr><td>Symmetric (Cartesian)</td><td>(x-x<sub>0</sub>)/d<sub>1</sub>=(y-y<sub>0</sub>)/d<sub>2</sub>=(z-z<sub>0</sub>)/d<sub>3</sub></td><td>Checking collinearity, angle between lines</td></tr>
+<tr><td>Two‑plane intersection</td><td>System of two linear equations</td><td>When line is given as intersection of planes</td></tr>
+</tbody>
+</table>
+
+<h2>Planes in Three‑Dimensional Space</h2>
+<h3>17 Vector and Cartesian Equations of a Plane</h3>
+<p>A plane can be defined by a point r<sub>0</sub> on it and a normal vector n perpendicular to the plane. The vector equation is (r-r<sub>0</sub>)cdotn=0, which expands to the Cartesian form a(x-x<sub>0</sub>)+b(y-y<sub>0</sub>)+c(z-z<sub>0</sub>)=0 or ax+by+cz+d=0 where n=ai+bj+ck and d=-(ax<sub>0</sub>+by<sub>0</sub>+cz<sub>0</sub>). Alternatively, a plane can be described by three non‑collinear points or by a point and two direction vectors lying in the plane, leading to the parametric form r=r<sub>0</sub>+lambdau+muv. The Cartesian equation is most convenient for distance calculations and for determining the relative position of points and lines.</p>
+<h3>18 Normal Vector and Distance from a Point to a Plane</h3>
+<p>The coefficients a,b,c in the Cartesian equation ax+by+cz+d=0 are the components of a normal vector n. The perpendicular distance from a point P(x<sub>1</sub>,y<sub>1</sub>,z<sub>1</sub>) to the plane is D=|ax<sub>1</sub>+by<sub>1</sub>+cz<sub>1</sub>+d|/√(a<sup>2</sup>+b<sup>2</sup>+c<sup>2</sup>). This formula follows from projecting the vector from any point on the plane to P onto the unit normal vector. The sign of the numerator indicates on which side of the plane the point lies, a fact used in determining whether two points are on the same side of a plane.</p>
+<h3>19 Angle Between Two Planes and Line‑Plane Intersection</h3>
+<p>The angle between two planes is defined as the acute angle between their normal vectors. If the planes are a<sub>1</sub>x+b<sub>1</sub>y+c<sub>1</sub>z+d<sub>1</sub>=0 and a<sub>2</sub>x+b<sub>2</sub>y+c<sub>2</sub>z+d<sub>2</sub>=0, then cosθ=|a<sub>1</sub>a<sub>2</sub>+b<sub>1</sub>b<sub>2</sub>+c<sub>1</sub>c<sub>2</sub>|/(√(a<sub>1</sub><sup>2</sup>+b<sub>1</sub><sup>2</sup>+c<sub>1</sub><sup>2</sup>)√(a<sub>2</sub><sup>2</sup>+b<sub>2</sub><sup>2</sup>+c<sub>2</sub><sup>2</sup>)). A line intersects a plane unless its direction vector is orthogonal to the plane’s normal (i.e., the line is parallel to the plane). Substituting the parametric equations of the line into the plane equation yields a linear equation in the parameter; solving it gives the intersection point, while a contradiction indicates the line is parallel and either lies in the plane (infinitely many solutions) or is disjoint (no solution).</p>
+<h3>20 Shortest Distance Between Parallel Planes and Between a Line and a Plane</h3>
+<p>Two parallel planes have proportional normal vectors; their equations can be written as ax+by+cz+d<sub>1</sub>=0 and ax+by+cz+d<sub>2</sub>=0. The distance between them is |d<sub>2</sub>-d<sub>1</sub>|/√(a<sup>2</sup>+b<sup>2</sup>+c<sup>2</sup>), obtained by measuring the distance from any point on one plane to the other. For a line r=a+lambdab and a plane rcdotn=d, if the line is not parallel to the plane the intersection point gives zero distance. If the line is parallel (i.e., bcdotn=0), the distance equals the perpendicular distance from any point on the line to the plane, computed with the point‑to‑plane formula. These results complete the toolkit for solving all standard distance problems in three‑dimensional geometry.</p>
+
+<p>Mastery of these concepts enables a student to translate geometric situations into algebraic equations, manipulate them using vector identities, and interpret the results back into spatial understanding, which is the essence of three‑dimensional analytic geometry.</p>
+<h3>Family of Planes Through the Intersection of Two Planes</h3>
+<p>When two non‑parallel planes π₁: a₁x + b₁y + c₁z + d₁ = 0 and π₂: a₂x + b₂y + c₂z + d₂ = 0 intersect, their intersection is a straight line. Every plane that contains this line can be represented by a linear combination of the two plane equations. The family of planes through the line of intersection is given by π₁ + λ π₂ = 0, where λ is a real parameter. Expanding, (a₁ + λ a₂)x + (b₁ + λ b₂)y + (c₁ + λ c₂)z + (d₁ + λ d₂) = 0. For each value of λ we obtain a distinct plane sharing the same line of intersection; the only exception is λ = –1, which yields the plane (a₁ – a₂)x + (b₁ – b₂)y + (c₁ – c₂)z + (d₁ – d₂) = 0, still passing through the line because the normal vector becomes n₁ – n₂, which is orthogonal to the direction vector of the intersection line (n₁ × n₂).</p>
+<p>To find a particular plane of the family that satisfies an additional condition — for instance, passing through a given point P(x₀, y₀, z₀) — substitute the coordinates of P into the family equation and solve for λ. The resulting λ gives the required plane. If the condition is that the plane be perpendicular to a given vector v = (p, q, r), then the normal of the family plane n(λ) = (a₁ + λ a₂, b₁ + λ b₂, c₁ + λ c₂) must be parallel to v, i.e. n(λ) = k v for some scalar k. This yields two independent ratios that determine λ uniquely (provided v is not orthogonal to the intersection line). The family representation is also useful for finding the plane that bisects the angle between π₁ and π₂: the bisectors correspond to λ = ±√(a₁² + b₁² + c₁²) / √(a₂² + b₂² + c₂²) after normalising the equations.</p>
+<p>A common pitfall is to treat the family equation as valid for all λ including the value that makes the coefficient of x, y, z all zero simultaneously; that would happen only if π₁ and π₂ are proportional, i.e. the same plane, in which case the intersection is not a line but the entire plane. In the standard situation of two distinct intersecting planes, the family covers every plane through their line exactly once. The parameter λ can be eliminated to obtain the Cartesian equation of the line of intersection itself by solving the two plane equations simultaneously, but the family form is often more convenient for problems that ask for a plane through the intersection with an extra geometric constraint.</p>
+
+<h3>Condition for Coplanarity of Two Lines and Their Intersection</h3>
+<p>Two lines in space, given in vector form as r = a₁ + λ b₁ and r = a₂ + μ b₂, are coplanar if and only if the scalar triple product of the vector joining a point on the first line to a point on the second line with the two direction vectors vanishes: (a₂ – a₁) · (b₁ × b₂) = 0. This condition is both necessary and sufficient. If the lines are coplanar, they either intersect at a unique point or are parallel (including the case of coincident lines). Parallelism is detected by b₁ × b₂ = 0; in that case the coplanarity condition reduces to (a₂ – a₁) being parallel to b₁, which means the lines lie on the same line or on distinct parallel lines within a plane.</p>
+<p>When the lines are known to be coplanar and non‑parallel, their intersection point can be found by solving the vector equation a₁ + λ b₁ = a₂ + μ b₂ for the scalars λ and μ. This yields three scalar equations in two unknowns; because the lines intersect, the system is consistent and any two independent equations suffice. A compact vector formula for the intersection point uses the vector triple product: the position vector of the intersection is a₁ + λ b₁ where λ = [(a₂ – a₁) × b₂] · (b₁ × b₂) / |b₁ × b₂|². The denominator is the squared area of the parallelogram spanned by b₁ and b₂, and the numerator is the scalar triple product of (a₂ – a₁), b₂, and (b₁ × b₂). An equivalent symmetric expression can be written by swapping the roles of the two lines.</p>
+<p>If the lines are skew, the scalar triple product is non‑zero and its absolute value divided by |b₁ × b₂| gives the shortest distance between them, as covered in the earlier section. The coplanarity test is therefore a quick diagnostic: compute (a₂ – a₁) · (b₁ × b₂). If the result is zero, proceed to find the intersection; if non‑zero, the lines are skew and the distance formula applies. In coordinate geometry, the same test appears as the vanishing of a 3×3 determinant formed by the direction ratios of the two lines and the direction ratios of the line joining a point on each line.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Coplanarity and Intersection</div>
+<div class="ex-text">Determine whether the lines L₁: r = (1, 2, 3) + λ (2, –1, 1) and L₂: r = (4, 0, 1) + μ (1, 2, –1) are coplanar. If they are, find their point of intersection.</div>
+<div class="ex-soln">Compute a₂ – a₁ = (4–1, 0–2, 1–3) = (3, –2, –2). Compute b₁ × b₂ = (2, –1, 1) × (1, 2, –1) = determinant |i j k; 2 –1 1; 1 2 –1| = i( (–1)(–1) – (1)(2) ) – j( (2)(–1) – (1)(1) ) + k( (2)(2) – (–1)(1) ) = i(1 – 2) – j(–2 – 1) + k(4 + 1) = (–1, 3, 5). Now (a₂ – a₁) · (b₁ × b₂) = (3, –2, –2) · (–1, 3, 5) = –3 –6 –10 = –19 ≠ 0. Since the scalar triple product is not zero, the lines are skew, not coplanar. Therefore they do not intersect. The shortest distance between them is |–19| / |(–1, 3, 5)| = 19 / √(1+9+25) = 19 / √35.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Strategy</div>
+<div class="tip-text">When a problem asks for the intersection of two lines, first compute the scalar triple product (a₂ – a₁) · (b₁ × b₂). If it is non‑zero, the lines are skew and there is no intersection — state this clearly and, if required, give the shortest distance. Only when the triple product is zero should you solve for λ and μ. This two‑step check saves time and avoids algebraic errors on inconsistent systems.</div>
+</div>
+
+<h3>Reflection of a Point and a Line in a Plane</h3>
+<p>The reflection (mirror image) of a point P(x₁, y₁, z₁) across a plane π: ax + by + cz + d = 0 is obtained by dropping a perpendicular from P to π, finding the foot of the perpendicular F, and then extending the segment PF by the same length beyond the plane. The foot F has coordinates (x₁ – a·k, y₁ – b·k, z₁ – c·k) where k = (ax₁ + by₁ + cz₁ + d) / (a² + b² + c²). The reflected point P′ is then P′ = P – 2k (a, b, c) = (x₁ – 2ak, y₁ – 2bk, z₁ – 2ck). This formula works for any plane, including those not passing through the origin. The sign of k indicates which side of the plane P lies on; the reflection automatically places P′ on the opposite side at the same perpendicular distance.</p>
+<p>To reflect a line L: r = a + λ b in the plane π, there are two equivalent approaches. One method is to reflect two distinct points on L (for instance, the point corresponding to λ = 0 and λ = 1) using the point‑reflection formula, then write the line through the two reflected points. The direction vector of the reflected line is the reflection of the original direction vector b. Since reflection in a plane is a linear isometry that reverses the component of a vector normal to the plane while leaving the tangential component unchanged, the reflected direction vector b′ = b – 2 (b·n̂) n̂, where n̂ = (a, b, c) / √(a² + b² + c²) is the unit normal of π. In Cartesian terms, if b = (l, m, n) and the plane normal is (a, b, c), then b′ = (l, m, n) – 2 (al + bm + cn) / (a² + b² + c²) · (a, b, c). The reflected line passes through the reflected image of any point on the original line, so its vector equation is r = a′ + λ b′ where a′ is the reflected position vector of a.</p>
+<p>An important special case occurs when the line is parallel to the plane (b·n = 0). Then b′ = b, so the direction is unchanged, and the reflected line is simply the original line shifted by twice the perpendicular distance from the line to the plane. If the line lies in the plane, every point reflects to itself and the line is invariant. These properties are frequently tested in problems that ask for the image of a line in a plane or for the equation of a plane that is the perpendicular bisector of the segment joining a point and its reflection.</p>
+
+<h3>Volume of a Tetrahedron and Scalar Triple Product Applications</h3>
+<p>The volume of a tetrahedron with vertices A, B, C, D can be expressed elegantly using the scalar triple product. Let vectors AB = b – a, AC = c – a, AD = d – a, where a, b, c, d are the position vectors of the vertices. The volume V of the parallelepiped spanned by AB, AC, AD is |(AB × AC) · AD|. Since a tetrahedron occupies exactly one sixth of that parallelepiped, V_tetra = |(AB × AC) · AD| / 6. This formula is coordinate‑free and works in any dimension where the cross product is defined (in three dimensions it is the standard scalar triple product). In Cartesian coordinates, if A = (x₁, y₁, z₁), B = (x₂, y₂, z₂), C = (x₃, y₃, z₃), D = (x₄, y₄, z₄), then V = |det( x₂–x₁, y₂–y₁, z₂–z₁; x₃–x₁, y₃–y₁, z₃–z₁; x₄–x₁, y₄–y₁, z₄–z₁ )| / 6.</p>
+<p>The scalar triple product also provides a quick test for coplanarity of four points: the points are coplanar iff the volume of the tetrahedron they form is zero, i.e. (AB × AC) · AD = 0. This is equivalent to the determinant of the 3×3 matrix of coordinate differences being zero. In vector form, four points with position vectors a, b, c, d are coplanar iff (b – a) · ((c – a) × (d – a)) = 0. This condition is often used in problems that ask whether a given point lies in the plane determined by three other points.</p>
+<p>Beyond volume, the scalar triple product appears in the formula for the distance from a point to a plane (already covered) and in the expression for the shortest distance between two skew lines. It also gives the volume of a parallelepiped formed by three vectors, which is the absolute value of the scalar triple product. A useful identity is the cyclic permutation property: (u × v) · w = (v × w) · u = (w × u) · v. This allows one to choose the most convenient order of vectors when computing determinants. In examinations, the scalar triple product is frequently hidden inside a determinant evaluation; recognising it can reduce a 3×3 determinant to a simple scalar triple product computation.</p>
+
+<h3>Vector Equation of a Plane Through Three Non‑Collinear Points (Determinant Form)</h3>
+<p>Given three non‑collinear points A(x₁, y₁, z₁), B(x₂, y₂, z₂), C(x₃, y₃, z₃), the plane passing through them can be written in determinant form as | x – x₁, y – y₁, z – z₁; x₂ – x₁, y₂ – y₁, z₂ – z₁; x₃ – x₁, y₃ – y₁, z₃ – z₁ | = 0. This determinant expresses the condition that the vector from A to a variable point P(x, y, z) lies in the span of the two direction vectors AB and AC, i.e. the three vectors are coplanar. Expanding the determinant yields the Cartesian equation ax + by + cz + d = 0 where (a, b, c) = AB × AC is a normal vector to the plane. The constant term d = –(a x₁ + b y₁ + c z₁). This form is particularly useful when the coordinates of the three points are given numerically, because one can compute the determinant directly without first finding the normal vector explicitly.</p>
+<p>The determinant form also generalises to the parametric vector equation r = a + λ (b – a) + μ (c – a), where a, b, c are the position vectors of A, B, C. The parameters λ, μ ∈ ℝ generate all points in the plane. The equivalence between the parametric form and the determinant form follows from the fact that the three vectors (r – a), (b – a), (c – a) are linearly dependent, which is exactly the vanishing of their scalar triple product. In practice, the determinant form is often faster for deriving the Cartesian equation, while the parametric form is more convenient for finding intersections with lines or for describing the plane in vector calculations.</p>
+<p>A common examination question provides three points and asks for the equation of the plane in both vector and Cartesian forms. The recommended workflow: compute two direction vectors, take their cross product to obtain the normal, then write the Cartesian equation using the point‑normal form. As a check, substitute the coordinates of the three given points into the final equation; all three must satisfy it. If the points are collinear, the cross product will be the zero vector and the determinant will vanish identically, signalling that no unique plane exists. This collinearity test is another application of the scalar triple product: (b – a) × (c – a) = 0 iff the points are collinear.</p>
+
+<ul>
+<li>Confusing the family of planes parameter λ with the parameter in the line of intersection; λ = –1 does not give a plane parallel to the intersection line.</li>
+<li>Forgetting to check the scalar triple product before solving for intersection of two lines; attempting to solve an inconsistent system wastes time.</li>
+<li>Using the point‑reflection formula with the wrong sign for k; the reflected point is P – 2k n, not P + 2k n.</li>
+<li>Assuming the reflected direction vector of a line is simply the negative of the original; only the normal component changes sign.</li>
+<li>Misapplying the tetrahedron volume formula by omitting the factor 1/6 or by using the wrong order of vectors in the scalar triple product.</li>
+<li>Treating the determinant form of a plane as valid for collinear points; the determinant vanishes identically and yields no plane equation.</li>
+<li>Neglecting to normalise the plane normal when computing the reflected direction vector; the formula b′ = b – 2 (b·n̂) n̂ requires a unit normal.</li>
+</ul>
+<h3>Vector Differentiation and Its Geometric Applications</h3>
+<p>When a vector function <strong>r</strong>(t) = x(t) <em>i</em> + y(t) <em>j</em> + z(t) <em>k</em> describes a curve in space, its derivative <strong>r</strong>′(t) = dx/dt <em>i</em> + dy/dt <em>j</em> + dz/dt <em>k</em> gives the tangent vector at the point corresponding to parameter t. The magnitude |<strong>r</strong>′(t)| is the speed if t represents time, and the unit tangent vector is <strong>T</strong>(t) = <strong>r</strong>′(t)/|<strong>r</strong>′(t)|. The second derivative <strong>r</strong>″(t) decomposes into tangential and normal components: <strong>r</strong>″ = (d|<strong>r</strong>′|/dt) <strong>T</strong> + |<strong>r</strong>′|² κ <strong>N</strong>, where κ is the curvature and <strong>N</strong> the principal normal. The binormal <strong>B</strong> = <strong>T</strong> × <strong>N</strong> completes the Frenet‑Serret frame. The Frenet‑Serret formulas in vector form are d<strong>T</strong>/ds = κ <strong>N</strong>, d<strong>N</strong>/ds = –κ <strong>T</strong> + τ <strong>B</strong>, d<strong>B</strong>/ds = –τ <strong>N</strong>, where s is arc length and τ the torsion. These relations are derived purely from vector differentiation and the orthonormality of the frame. In examinations, a typical problem asks for the curvature of a helix <strong>r</strong>(t) = (a cos t, a sin t, bt). One computes <strong>r</strong>′ = (–a sin t, a cos t, b), |<strong>r</strong>′| = √(a²+b²), <strong>r</strong>″ = (–a cos t, –a sin t, 0), then uses κ = |<strong>r</strong>′ × <strong>r</strong>″| / |<strong>r</strong>′|³ = a/(a²+b²). The torsion τ = ((<strong>r</strong>′ × <strong>r</strong>″)·<strong>r</strong>″′) / |<strong>r</strong>′ × <strong>r</strong>″|² yields τ = b/(a²+b²). Vector differentiation also underpins the dynamics of a particle: velocity <strong>v</strong> = <strong>r</strong>′, acceleration <strong>a</strong> = <strong>v</strong>′, and the angular momentum <strong>L</strong> = <strong>r</strong> × m<strong>v</strong>. The rate of change of <strong>L</strong> equals the torque <strong>τ</strong> = <strong>r</strong> × <strong>F</strong>. These identities are frequently tested in problems that mix geometry with physics, such as finding the condition for a central force ( <strong>r</strong> × <strong>F</strong> = 0 ) or proving that the areal velocity is constant ( d/dt (½|<strong>r</strong> × <strong>v</strong>|) = 0 ). Mastery of vector differentiation therefore bridges pure 3‑D geometry and applied mechanics.</p>
+
+<h3>Reciprocal Vectors and Dual Bases</h3>
+<p>Given three non‑coplanar vectors <strong>a</strong>, <strong>b</strong>, <strong>c</strong> forming a basis of ℝ³, the reciprocal (or dual) basis vectors <strong>a</strong>*, <strong>b</strong>*, <strong>c</strong>* are defined by the relations <strong>a</strong>·<strong>a</strong>* = 1, <strong>a</strong>·<strong>b</strong>* = 0, <strong>a</strong>·<strong>c</strong>* = 0, and cyclic permutations. Explicitly, <strong>a</strong>* = (<strong>b</strong> × <strong>c</strong>) / (<strong>a</strong>·(<strong>b</strong> × <strong>c</strong>)), <strong>b</strong>* = (<strong>c</strong> × <strong>a</strong>) / (<strong>a</strong>·(<strong>b</strong> × <strong>c</strong>)), <strong>c</strong>* = (<strong>a</strong> × <strong>b</strong>) / (<strong>a</strong>·(<strong>b</strong> × <strong>c</strong>)). The denominator is the scalar triple product [<strong>a</strong> <strong>b</strong> <strong>c</strong>] = <strong>a</strong>·(<strong>b</strong> × <strong>c</strong>), which is the volume of the parallelepiped. The reciprocal basis satisfies <strong>a</strong>*·<strong>a</strong> = 1, <strong>a</strong>*·<strong>b</strong> = 0, etc., and any vector <strong>v</strong> can be expanded as <strong>v</strong> = (<strong>v</strong>·<strong>a</strong>*) <strong>a</strong> + (<strong>v</strong>·<strong>b</strong>*) <strong>b</strong> + (<strong>v</strong>·<strong>c</strong>*) <strong>c</strong>. This is the covariant‑contravariant decomposition: the coefficients <strong>v</strong>·<strong>a</strong>* are the contravariant components relative to the original basis, while the dot products <strong>v</strong>·<strong>a</strong> are the covariant components. The metric tensor g<sub>ij</sub> = <strong>e</strong><sub>i</sub>·<strong>ej and its inverse g<sup>ij</sup> = <strong>e</strong><sup>i</sup>·<strong>e<sup>j</sup> connect the two sets. In crystallography, the reciprocal lattice vectors are precisely the reciprocal basis of the direct lattice vectors; the condition for a plane (hkl) to diffract is that the scattering vector equals a reciprocal lattice vector. In problem solving, reciprocal vectors simplify the solution of linear systems: if <strong>v</strong> = x <strong>a</strong> + y <strong>b</strong> + z <strong>c</strong>, then x = <strong>v</strong>·<strong>a</strong>*, y = <strong>v</strong>·<strong>b</strong>*, z = <strong>v</strong>·<strong>c</strong>*. This avoids matrix inversion and is especially handy when the basis vectors are given in component form. A common examination question provides three vectors and asks for the components of a fourth vector in that basis; computing the reciprocal basis once and then taking dot products is faster than solving three equations. The reciprocal basis also gives a neat formula for the volume of a tetrahedron: V = |[<strong>a</strong> <strong>b</strong> <strong>c</strong>]|/6 = 1/(6|<strong>a</strong>*·(<strong>b</strong>* × <strong>c</strong>*)|). Recognising the reciprocal basis structure often turns a messy determinant into a simple scalar triple product.</strong></strong></p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Reciprocal Basis Components</div>
+<div class="ex-text">Let <strong>a</strong> = (1, 2, 0), <strong>b</strong> = (0, 1, 3), <strong>c</strong> = (2, 0, 1). Find the components of <strong>v</strong> = (4, 5, 6) in the basis {<strong>a</strong>, <strong>b</strong>, <strong>c</strong>} using the reciprocal basis.</div>
+<div class="ex-soln">Compute the scalar triple product [<strong>a</strong> <strong>b</strong> <strong>c</strong>] = <strong>a</strong>·(<strong>b</strong> × <strong>c</strong>). <strong>b</strong> × <strong>c</strong> = (1·1 – 3·0, 3·2 – 0·1, 0·0 – 1·2) = (1, 6, –2). Then <strong>a</strong>·(<strong>b</strong> × <strong>c</strong>) = 1·1 + 2·6 + 0·(–2) = 13. Reciprocal vectors: <strong>a</strong>* = (<strong>b</strong> × <strong>c</strong>)/13 = (1/13, 6/13, –2/13). <strong>b</strong>* = (<strong>c</strong> × <strong>a</strong>)/13. <strong>c</strong> × <strong>a</strong> = (0·0 – 1·2, 1·1 – 2·0, 2·2 – 0·1) = (–2, 1, 4). So <strong>b</strong>* = (–2/13, 1/13, 4/13). <strong>c</strong>* = (<strong>a</strong> × <strong>b</strong>)/13. <strong>a</strong> × <strong>b</strong> = (2·3 – 0·1, 0·0 – 1·3, 1·1 – 2·0) = (6, –3, 1). Thus <strong>c</strong>* = (6/13, –3/13, 1/13). Components: x = <strong>v</strong>·<strong>a</strong>* = 4·(1/13) + 5·(6/13) + 6·(–2/13) = (4+30–12)/13 = 22/13. y = <strong>v</strong>·<strong>b</strong>* = 4·(–2/13) + 5·(1/13) + 6·(4/13) = (–8+5+24)/13 = 21/13. z = <strong>v</strong>·<strong>c</strong>* = 4·(6/13) + 5·(–3/13) + 6·(1/13) = (24–15+6)/13 = 15/13. Check: (22/13)<strong>a</strong> + (21/13)<strong>b</strong> + (15/13)<strong>c</strong> = (22/13 + 30/13, 44/13 + 21/13, 63/13 + 15/13) = (52/13, 65/13, 78/13) = (4, 5, 6) = <strong>v</strong>.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for coordinates of a vector in a non‑orthogonal basis, compute the reciprocal basis once using the scalar triple product. The three dot products with the reciprocal vectors give the required coefficients directly, avoiding simultaneous equations. Keep the denominator [<strong>a</strong> <strong>b</strong> <strong>c</strong>] common to all three reciprocal vectors; this reduces arithmetic errors.</div>
+</div>
+
+<h3>Plücker Coordinates of a Line in Space</h3>
+<p>A line in ℝ³ can be represented by a pair of vectors (<strong>d</strong>, <strong>m</strong>) called Plücker coordinates, where <strong>d</strong> is the direction vector of the line and <strong>m</strong> = <strong>r</strong> × <strong>d</strong> is the moment of the line about the origin, with <strong>r</strong> the position vector of any point on the line. The coordinates satisfy the quadratic Plücker relation <strong>d</strong>·<strong>m</strong> = 0, which expresses the fact that the moment is perpendicular to the direction. Given two distinct points <strong>p</strong> and <strong>q</strong> on the line, one can take <strong>d</strong> = <strong>q</strong> – <strong>p</strong> and <strong>m</strong> = <strong>p</strong> × <strong>q</strong>. The pair (<strong>d</strong>, <strong>m</strong>) is homogeneous: multiplying both vectors by a non‑zero scalar yields the same line. The Plücker coordinates embed the line into the projective space ℙ⁵, and the condition <strong>d</strong>·<strong>m</strong> = 0 defines the Klein quadric. Two lines with coordinates (<strong>d</strong>₁, <strong>m</strong>₁) and (<strong>d</strong>₂, <strong>m</strong>₂) intersect iff <strong>d</strong>₁·<strong>m</strong>₂ + <strong>d</strong>₂·<strong>m</strong>₁ = 0. The shortest distance between two skew lines is given by |<strong>d</strong>₁·<strong>m</strong>₂ + <strong>d</strong>₂·<strong>m</strong>₁| / |<strong>d</strong>₁ × <strong>d</strong>₂|. This formula is a compact alternative to the vector triple product method and is especially useful when the lines are given in Plücker form. The line of intersection of two planes with normals <strong>n</strong>₁, <strong>n</strong>₂ and constants d₁, d₂ has Plücker coordinates <strong>d</strong> = <strong>n</strong>₁ × <strong>n</strong>₂, <strong>m</strong> = d₁ <strong>n</strong>₂ – d₂ <strong>n</strong>₁. Conversely, a line with Plücker coordinates (<strong>d</strong>, <strong>m</strong>) lies in a plane <strong>n</strong>·<strong>r</strong> = c iff <strong>n</strong>·<strong>d</strong> = 0 and <strong>n</strong>·<strong>m</strong> = c|<strong>d</strong>|². These incidence relations are linear in the Plücker coordinates, making them powerful for solving systems of lines and planes simultaneously. In advanced examinations, a problem may ask for the condition that three lines are concurrent or that a line meets a given sphere; translating everything into Plücker coordinates reduces the geometry to algebraic manipulations of 6‑vectors subject to a single quadratic constraint.</p>
+
+<h3>Screw Theory and Rigid Body Displacements</h3>
+<p>Chasles’ theorem states that any rigid body displacement in three dimensions is equivalent to a screw motion: a rotation about an axis combined with a translation along that same axis. The screw axis is a directed line in space, described by its Plücker coordinates (<strong>s</strong>, <strong>s</strong>₀) where <strong>s</strong> is a unit vector along the axis and <strong>s</strong>₀ = <strong>r</strong> × <strong>s</strong> is the moment of the axis about the origin (<strong>r</strong> any point on the axis). The screw parameters are the rotation angle θ and the pitch p = d/θ, where d is the translation distance along the axis. The displacement of a point with position vector <strong>x</strong> is given by <strong>x</strong>′ = <strong>R</strong><strong>x</strong> + <strong>t</strong>, where <strong>R</strong> is the rotation matrix (Rodrigues’ formula) and <strong>t</strong> = p θ <strong>s</strong> + (I – <strong>R</strong>)<strong>r</strong>. In vector form, the instantaneous screw axis of a rigid body with angular velocity <strong>ω</strong> and linear velocity <strong>v</strong> at the origin has direction <strong>s</strong> = <strong>ω</strong>/|<strong>ω</strong>| and moment <strong>s</strong>₀ = (<strong>ω</strong> × <strong>v</strong>)/|<strong>ω</strong>|². The pitch is p = (<strong>ω</strong>·<strong>v</strong>)/|<strong>ω</strong>|². These formulas are derived by equating the velocity field <strong>v</strong>(<strong>x</strong>) = <strong>v</strong> + <strong>ω</strong> × <strong>x</strong> to the velocity field of a screw motion. The screw coordinates (<strong>ω</strong>, <strong>v</strong>) form a 6‑vector called a twist; the dual 6‑vector (<strong>f</strong>, <strong>τ</strong>) of forces and torques is a wrench. The virtual work of a wrench on a twist is <strong>ω</strong>·<strong>τ</strong> + <strong>v</strong>·<strong>f</strong>, a scalar product in the 6‑dimensional space of screws. Reciprocal screws satisfy <strong>ω</strong>₁·<strong>τ</strong>₂ + <strong>v</strong>₁·<strong>f</strong>₂ = 0, which is the condition for a wrench to do no work on a twist. In examination problems, screw theory appears in the guise of finding the instantaneous centre of rotation of a planar motion (pitch zero) or determining the screw axis of a given homogeneous transformation matrix. The key computational step is extracting <strong>ω</strong> and <strong>v</strong> from the matrix, then forming the Plücker coordinates of the screw axis. A common trap is forgetting that the screw axis is defined only up to a scalar multiple; the direction vector must be normalised before computing the pitch.</p>
+
+<h3>Barycentric Coordinates and Vector Methods in Tetrahedra</h3>
+<p>Barycentric coordinates provide a vector‑based coordinate system for points relative to a simplex. In a tetrahedron with vertices <strong>A</strong>, <strong>B</strong>, <strong>C</strong>, <strong>D</strong> having position vectors <strong>a</strong>, <strong>b</strong>, <strong>c</strong>, <strong>d</strong>, any point <strong>P</strong> can be written uniquely as <strong>p</strong> = α <strong>a</strong> + β <strong>b</strong> + γ <strong>c</strong> + δ <strong>d</strong> with α+β+γ+δ = 1. The coefficients (α, β, γ, δ) are the barycentric coordinates of <strong>P</strong>. They are proportional to the signed volumes of the sub‑tetrahedra opposite the corresponding vertices: α = V<sub>PBCD</sub>/V<sub>ABCD</sub>, etc. The volume of the tetrahedron is V = |(<strong>b</strong>–<strong>a</strong>)·((<strong>c</strong>–<strong>a</strong>)×(<strong>d</strong>–<strong>a</strong>))|/6. Using barycentric coordinates, the condition for <strong>P</strong> to lie in the plane of face <strong>BCD</strong> is α = 0; to lie on the line <strong>BC</strong> is α = δ = 0. The centroid has coordinates (¼, ¼, ¼, ¼). The incenter coordinates are proportional to the areas of the opposite faces: α : β : γ : δ = Area(BCD) : Area(ACD) : Area(ABD) : Area(ABC). The circumcenter coordinates involve the squared edge lengths and can be obtained by solving a linear system derived from equal distances to the vertices. Vector methods simplify many tetrahedron problems: the vector from the centroid to a vertex is (¾)(<strong>a</strong>–<strong>g</strong>) where <strong>g</strong> = (<strong>a</strong>+<strong>b</strong>+<strong>c</strong>+<strong>d</strong>)/4. The Monge point (the point of concurrency of the six planes through the midpoints of opposite edges perpendicular to those edges) has barycentric coordinates (tan A : tan B : tan C : tan D) where A, B, C, D are the dihedral angles at the edges opposite the vertices. In examinations, a typical question asks for the ratio in which the line joining a vertex to the centroid of the opposite face divides the segment joining the midpoints of two opposite edges. Setting up the barycentric coordinates of the relevant points and using the section formula in vector form yields the answer without heavy coordinate algebra. Another frequent task is to prove that the lines joining the vertices to the centroids of the opposite faces are concurrent (they meet at the centroid). This follows immediately from the fact that the centroid’s coordinates are equal. Barycentric coordinates also give a clean proof of the Euler line of a tetrahedron: the centroid, circumcenter, and Monge point are collinear, with the centroid dividing the segment joining the circumcenter and Monge point in the ratio 1:2. The vector expression for the circumcenter <strong>o</strong> satisfies (<strong>o</strong>–<strong>a</strong>)² = (<strong>o</strong>–<strong>b</strong>)² = (<strong>o</strong>–<strong>c</strong>)² = (<strong>o</strong>–<strong>d</strong>)², which reduces to a linear system in <strong>o</strong> after expanding the squares. Solving this system using the reciprocal basis of the edge vectors is an efficient technique.</p>
+
+<ul>
+<li>Confusing the reciprocal basis vectors with the original basis when computing contravariant components; the dot product must be taken with the reciprocal vectors, not the original ones.</li>
+<li>Forgetting the Plücker relation <strong>d</strong>·<strong>m</strong> = 0 when verifying that a given 6‑vector represents a real line; a non‑zero dot product indicates an invalid line.</li>
+<li>Using the screw pitch formula p = (<strong>ω</strong>·<strong>v</strong>)/|<strong>ω</strong>|² without first confirming that <strong>ω</strong> ≠ 0; a pure translation has zero angular velocity and infinite pitch.</li>
+<li>Treating barycentric coordinates as ordinary Cartesian coordinates; they must sum to 1 and can be negative for points outside the tetrahedron.</li>
+<li>Neglecting to normalise the direction vector of a screw axis before computing the moment <strong>s</strong>₀ = <strong>r</strong> × <strong>s</strong>; the moment depends on the magnitude of <strong>s</strong>.</li>
+<li>Applying the shortest‑distance formula for skew lines in Plücker form without checking the denominator |<strong>d</strong>₁ × <strong>d</strong>₂|; if the lines are parallel the cross product vanishes and the formula is invalid.</li>
+<li>Assuming the Monge point of a tetrahedron always lies inside the tetrahedron; it can be outside for obtuse‑angled tetrahedra.</li>
+</ul>
+<p>These advanced vector techniques are essential for solving complex three‑dimensional geometry problems.</p>        <script>
+        (function(){try{
+          var m=document.getElementById("lesson-meta");if(!m)return;
+          var cur=m.getAttribute("data-version")||"";
+          var label=m.getAttribute("data-updated-label")||"";
+          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");
+          var k="vlymbooq-lesson-seen:"+location.pathname;
+          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}
+          var box=document.getElementById("lesson-new");
+          if(prev&&prev.v&&prev.v!==cur){
+            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});
+            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
+            if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
+            else{html+="The explanations and practice were revised.";}
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            box.innerHTML=html;box.hidden=false;
+            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
+            document.getElementById("lesson-new-ok").onclick=save;
+            return; // keep the old version stored until acknowledged
+          }
+          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));
+        }catch(e){}})();
+        </script>
+                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-differential-equations.html" class="btn btn-primary">&#x2190; Differential Equations</a>
+                    <a href="../index.html" class="btn btn-success">&#x2190; Course Home</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":101,"text":"The reflection of the point P(1,2,3) in the plane 2x − y + 2z = 3 is:","options":[{"l":"a","t":"(−1/3, 8/3, 5/3)","c":true},{"l":"b","t":"(1/3, 7/3, 7/3)","c":false},{"l":"c","t":"(5/3, 4/3, 1/3)","c":false},{"l":"d","t":"(−1/3, 5/3, 8/3)","c":false}],"sol":"Plane: 2x − y + 2z − 3 = 0. Normal n = (2,−1,2), |n|² = 9. Value at P: 2·1 − 2 + 2·3 − 3 = 3. The reflected point is P′ = P − 2·(value/|n|²)n = (1,2,3) − 2·(3/9)(2,−1,2) = (1,2,3) − (2/3)(2,−1,2) = (1−4/3, 2+2/3, 3−4/3) = (−1/3, 8/3, 5/3)."},{"id":102,"text":"The volume of the tetrahedron with vertices A(0,0,0), B(1,2,3), C(2,1,1), D(1,1,2) is:","options":[{"l":"a","t":"1/3","c":true},{"l":"b","t":"1/6","c":false},{"l":"c","t":"1/2","c":false},{"l":"d","t":"2/3","c":false}],"sol":"Vectors: AB = (1,2,3), AC = (2,1,1), AD = (1,1,2). Compute AC×AD = (2,1,1)×(1,1,2) = (1·2−1·1, 1·1−2·2, 2·1−1·1) = (1,−3,1). Scalar triple product = AB·(AC×AD) = (1,2,3)·(1,−3,1) = 1−6+3 = −2. Absolute value = 2. Volume = (1/6)·|−2| = 1/3."},{"id":103,"text":"For the helix r(t) = (3 cos t, 3 sin t, 4t), the curvature κ is given by κ = |r' × r''| / |r'|^3. Compute κ.","options":[{"l":"a","t":"0.12","c":true},{"l":"b","t":"0.15","c":false},{"l":"c","t":"0.10","c":false},{"l":"d","t":"0.08","c":false}],"sol":"r' = (-3 sin t, 3 cos t, 4); |r'| = √(9+16)=5. r'' = (-3 cos t, -3 sin t, 0). r' × r'' = determinant |i j k; -3 sin t 3 cos t 4; -3 cos t -3 sin t 0| = (12 sin t, -12 cos t, 9). Its magnitude = √(144+81)=√225=15. κ = 15 / 5^3 = 15/125 = 0.12."},{"id":104,"text":"Given basis vectors a = (1,0,0), b = (1,1,0), c = (1,1,1), the reciprocal vector a* = (b × c) / [a b c] equals:","options":[{"l":"a","t":"(1, -1, 0)","c":true},{"l":"b","t":"(1, 1, 0)","c":false},{"l":"c","t":"(0, 1, -1)","c":false},{"l":"d","t":"(-1, 1, 0)","c":false}],"sol":"b × c = (1,1,0) × (1,1,1) = (1·1-0·1, 0·1-1·1, 1·1-1·1) = (1, -1, 0). Scalar triple product [a b c] = a·(b×c) = (1,0,0)·(1,-1,0)=1. Hence a* = (1,-1,0)/1 = (1,-1,0)."},{"id":105,"text":"The vertices of a tetrahedron are A(0,0,0), B(1,0,0), C(0,1,0), D(0,0,1). The barycentric coordinates of its centroid G are:","options":[{"l":"a","t":"(1/4, 1/4, 1/4, 1/4)","c":true},{"l":"b","t":"(1/3, 1/3, 1/3, 0)","c":false},{"l":"c","t":"(1/2, 1/2, 0, 0)","c":false},{"l":"d","t":"(0, 0, 0, 1)","c":false}],"sol":"Centroid G = (A+B+C+D)/4 = (1/4, 1/4, 1/4, 1/4) in barycentric coordinates because the coefficients sum to 1 and are equal for all four vertices."}];
+        var answered={},correctCount=0,lessonSlug="vectors-3d";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

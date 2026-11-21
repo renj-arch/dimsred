@@ -1,0 +1,70 @@
+=== QUICK SUMMARY ===
+Goal: Build exam question bank from Wikipedia
+Current: 112K questions live on Cloudflare, 43 categories
+Problem: Some questions are garbled (table rows from "List of..." pages)
+Fix done: Added filters to prevent future garbage + cleanup script
+Action needed: Run rebuild.bat again to regenerate with filters active
+
+== STATUS ==
+- Wiki-fill run completed: 112K questions across 43 categories
+- All per-category files < 25 MiB (largest: 23.9 MiB)
+- Pushed to GitHub, Cloudflare Pages deploying
+
+== NEEDS ATTENTION ==
+
+1. RUN rebuild.bat AGAIN
+   - The garbage filters (isBadSentence, isListPage, paraphrase) I added to
+     scripts/wiki-fill-all.cjs only take effect on the NEXT run
+   - The current run produced 112K questions without those filters
+   - Running rebuild.bat again will:
+     a) Fetch same 889 Wikipedia articles
+     b) Skip already-existing questions (dedup by text)
+     c) Generate NEW clean questions with paraphrased explanations
+     d) Cleanup-questions.js will remove any remaining garbage
+   - Takes ~30 min (most articles already cached, dedup skips existing)
+
+2. Quality issues remaining
+   - Some questions still have bad blanks (e.g., answer "Many", "Colonial
+     Committee" — findBestTerm picks weak terms)
+   - Some explanations still verbatim Wikipedia (paraphrase only activates
+     on next run)
+   - List pages (Nobel laureates, etc.) still have garbage from this run
+     that cleanup-questions.js may have missed
+
+3. Future improvements (if desired)
+   - Add attribution footer to archive.html ("Data sourced from Wikipedia")
+   - Further improve findBestTerm to avoid weak terms
+   - Add more topics to CATEGORIES for even broader coverage
+
+== COVERAGE GAPS (~30% missing) ==
+Covered well (~70%): Indian History, Polity, Geography, Economy,
+Science, Environment, International Relations, Sports, Awards — the core
+GK subjects.
+
+Thin or missing (~30%):
+- State-specific GK (only 36 states/UTs covered, not their local
+  acts/schemes)
+- Current affairs (ongoing news — need to add manually or via RSS)
+- Very niche topics (specific court judgments, budget figures, particular
+  schemes)
+- Factual precision (auto-generated dates/numbers may be wrong)
+
+The 889 topics cover the main syllabus well. For gaps, add more article
+titles to the CATEGORIES array in scripts/wiki-fill-all.cjs and re-run.
+
+Note: This is a practice tool (like flashcards), NOT an exam paper leak.
+Real exams are written by professionals. Use to build familiarity, not
+as a sole source.
+
+== HOW TO RUN ==
+   Simply:  rebuild.bat
+   From the project root (C:\Users\Renjith\Desktop\icode (2)\study)
+
+== FILES MODIFIED TODAY ==
+   scripts/wiki-fill-all.cjs          - Garbage filters + paraphrase
+   scripts/build-archive-single.js     - Auto-split large files
+   scripts/cleanup-questions.js        - NEW: removes bad questions
+   rebuild.bat                         - Added cleanup step
+   .github/workflows/daily-wiki-fill.yml - Added cleanup step
+   archive.html                        - Updated with split file support
+   data/questions/*.json               - All regenerated (112K questions)

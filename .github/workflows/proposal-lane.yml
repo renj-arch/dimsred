@@ -1,0 +1,82 @@
+name: Proposal Lane
+
+# The improvement scout: once a day the site's own model (Ollama on this
+# runner — zero API keys) reads a factual digest of the site (content pools,
+# owner-lane results, fault board, browser test, recent agent runs) and
+# writes 3-5 concrete improvement proposals to data/agent-proposals.json.
+#
+# The owner reviews them on improve.html ("Proposal lane" section) and
+# approves one by filing it as a GitHub issue. NOTHING is implemented
+# automatically — this lane only suggests.
+#
+# Runs daily at 01:45 UTC (07:15 IST) so the owner wakes up to fresh ideas,
+# plus manual dispatch. If a pass fails, the run is red (loud) and the
+# failure is recorded in the same file + data/agent-log.json.
+
+on:
+  schedule:
+    - cron: '45 1 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: proposal-lane
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/invented
+            data/on-demand
+            data/mains-fresh.json
+            data/mains-questions.json
+            data/mains-updates.json
+            data/practice-sets/index.json
+            data/agent-log.json
+            data/agent-proposals.json
+            data/faults.json
+            data/browser-test.json
+            data/questions/_state/cursor.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Same swap as the other model lanes — safety net against the model
+      # being paged out under memory pressure.
+      - name: Propose (30-minute model deadline)
+        timeout-minutes: 35
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROPOSAL_DEADLINE_MIN: '30'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/proposal-lane.js
+
+      - name: Publish proposals
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/agent-proposals.json data/agent-log.json 2>/dev/null || true
+          bash scripts/ci-push.sh "proposals: daily improvement pass"

@@ -1,0 +1,82 @@
+name: Telegram Control
+
+# Remote control for the cloud agent. Polls Telegram every 5 minutes, turns a
+# small command vocabulary into GitHub dispatches, and replies in the same
+# chat. The owner's laptop is never involved.
+#
+# Required secret: TELEGRAM_TOKEN  (from @BotFather)
+# Optional secrets: TELEGRAM_CHAT_ID (pre-pin the owner chat), NVIDIA_API_KEY,
+#                   GROQ_API_KEY, OPENROUTER_API_KEY, OPENCODE_API_KEY
+#                   (the writer lane tries them in that order)
+# Existing secret used here: PAT (to dispatch workflows)
+#
+# Checkout is sparse because the repository is ~18 GB; a full clone hung for
+# 13+ minutes. Only scripts and two data files are needed here.
+#
+# The cursor + pinned owner chat live in data/telegram-state.json, force-added
+# because data/* is gitignored. The file is only rewritten when a message is
+# actually handled, so idle polls create no commits.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: telegram-control
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+            data/deep-rewrite-queue.json
+            data/handwritten-lessons.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Is the control plane configured?
+        id: cfg
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        run: |
+          if [ -n "$TELEGRAM_TOKEN" ]; then
+            echo "ready=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=0" >> "$GITHUB_OUTPUT"
+            echo "::notice::TELEGRAM_TOKEN is not set - control plane idle. Add the secret to enable it."
+          fi
+
+      - name: Poll Telegram and dispatch commands
+        if: steps.cfg.outputs.ready == '1'
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          DISPATCH_TOKEN: ${{ secrets.PAT }}
+          OWNER_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/telegram/poll.js
+
+      - name: Persist the Telegram cursor
+        if: always() && steps.cfg.outputs.ready == '1'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -f data/telegram-state.json 2>/dev/null || true
+          bash scripts/ci-push.sh "telegram: advance control cursor"

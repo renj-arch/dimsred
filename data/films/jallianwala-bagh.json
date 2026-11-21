@@ -1,0 +1,1837 @@
+{
+  "schema": "vlymbooq.film.v1",
+  "id": "jallianwala-bagh",
+  "topicId": "jallianwala bagh massacre",
+  "title": "JALLIANWALA BAGH",
+  "titleLines": [
+    "JALLIANWALA",
+    "BAGH"
+  ],
+  "titleSize": "10.2vw",
+  "subtitle": "The Garden the Empire Could Not Bury",
+  "posterPlate": "bagh-wall",
+  "posterTitleSize": "9.6vw",
+  "posterMeta": "1919 · THE GARDEN · THE ORDER · THE INQUIRY",
+  "logline": "On 13 April 1919, a walled garden in Amritsar became the place where the British Empire stopped being able to call itself lawful.",
+  "targetDuration": 186,
+  "aspect": "16:9",
+  "fps": 24,
+  "voice": "en_US-lessac-medium",
+  "style": {
+    "genre": "cinematic 3D documentary",
+    "look": "dusk ochre, deep charcoal, aged paper, brass, dust in hard light, restrained typography",
+    "rules": [
+      "Show the object before the explanation: a notice, a wall, a watch, a well.",
+      "No bodies, no blood, no reconstructed killing. The aftermath carries the violence.",
+      "One idea per shot. The camera pushes, reveals, or holds. It never drifts.",
+      "Use silence as a cut. Let the narration stop before the next image lands.",
+      "Every number on screen is an official figure or explicitly attributed."
+    ]
+  },
+  "toolchain": {
+    "blender": {
+      "version": "4.2 LTS",
+      "role": "procedural sets, wall, gate, well, watch, lamp, memorial, hero stills",
+      "automation": "scripts/film/blender/jallianwala_scenes.py"
+    },
+    "piper": {
+      "role": "local narration, no cloud API",
+      "voice": "en_US-lessac-medium"
+    },
+    "node": {
+      "role": "timeline, Chromium camera moves, ffmpeg encode, captions, metadata",
+      "automation": "scripts/film/build-film.js"
+    }
+  },
+  "sources": [
+    {
+      "id": "jallianwala",
+      "title": "Jallianwala Bagh massacre",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Jallianwala_Bagh_massacre",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "rowlatt",
+      "title": "Rowlatt Act",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Rowlatt_Act",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "noncooperation",
+      "title": "Non-cooperation movement (1919–1922)",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Non-cooperation_movement_(1919%E2%80%931922)",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "tagore",
+      "title": "Rabindranath Tagore",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Rabindranath_Tagore",
+      "accessed": "2026-10-22"
+    }
+  ],
+  "youtube": {
+    "title": "Jallianwala Bagh: The Garden the Empire Could Not Bury",
+    "description": "A short cinematic history of 13 April 1919: the order, the garden, the firing, the inquiry, and the argument that never ended. Sources below.",
+    "tags": [
+      "Jallianwala Bagh",
+      "Amritsar massacre",
+      "1919",
+      "Indian history",
+      "British Empire",
+      "Rowlatt Act",
+      "Hunter Commission",
+      "history documentary"
+    ]
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "title": "The date",
+      "start": 0,
+      "duration": 16,
+      "purpose": "Open on a date, then hit the title while the sound is still moving.",
+      "narration": [
+        {
+          "text": "Thirteen April, nineteen nineteen.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Amritsar. A walled garden. A banned meeting.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "And a general who decided to punish a city.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S01-A",
+          "plate": "type-card",
+          "camera": "locked, full-frame type",
+          "visual": "A full-frame typographic card: bone serif on black, a thin gold rule, and a short line of small caps.",
+          "sfx": [
+            "a low sub hit",
+            "room tone"
+          ],
+          "text": "",
+          "transition": "flash",
+          "render": "html",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "cardKicker": "AMRITSAR",
+          "cardLines": [
+            "13 APRIL",
+            "1919"
+          ],
+          "cardSub": "THE JALLIANWALA BAGH"
+        },
+        {
+          "id": "S01-B",
+          "plate": "title",
+          "camera": "locked title card, a slow 2.5% scale",
+          "visual": "A full-frame typographic card: bone serif on black, a thin gold rule, and a short line of small caps.",
+          "sfx": [
+            "a low sub hit",
+            "room tone"
+          ],
+          "text": "",
+          "transition": "cut",
+          "render": "title",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S01-C",
+          "plate": "bagh-wall",
+          "camera": "38mm, low, hard push toward the gate",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "A BANNED MEETING",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1,
+              1.34
+            ],
+            "x": [
+              50,
+              53
+            ],
+            "y": [
+              50,
+              47
+            ]
+          }
+        },
+        {
+          "id": "S01-D",
+          "plate": "notice-desk",
+          "camera": "50mm, low three-quarter, slow push-in",
+          "visual": "A typed notice on a dark desk under a brass lamp, the paper brightest in the frame; pen, inkpot and the edge of a clock hold the foreground.",
+          "sfx": [
+            "paper under a pen",
+            "lamp hum",
+            "a clock tick"
+          ],
+          "text": "BY ORDER",
+          "transition": "crossfade",
+          "render": "blender",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.24
+            ],
+            "x": [
+              49,
+              51
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "The order",
+      "start": 16,
+      "duration": 20,
+      "purpose": "Make the paper the weapon: detention without trial, then the notice.",
+      "narration": [
+        {
+          "text": "The Rowlatt Act let the Raj jail without trial.",
+          "source": "rowlatt"
+        },
+        {
+          "text": "Punjab was already on edge.",
+          "source": "rowlatt"
+        },
+        {
+          "text": "That afternoon, a notice went up.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "No public meetings.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S02-A",
+          "plate": "notice-desk",
+          "camera": "macro, the paper filling the frame",
+          "visual": "A typed notice on a dark desk under a brass lamp, the paper brightest in the frame; pen, inkpot and the edge of a clock hold the foreground.",
+          "sfx": [
+            "paper under a pen",
+            "lamp hum",
+            "a clock tick"
+          ],
+          "text": "ROWLATT ACT",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S02-B",
+          "plate": "notice-desk",
+          "camera": "tight lateral pan across the typed lines",
+          "visual": "A typed notice on a dark desk under a brass lamp, the paper brightest in the frame; pen, inkpot and the edge of a clock hold the foreground.",
+          "sfx": [
+            "paper under a pen",
+            "lamp hum",
+            "a clock tick"
+          ],
+          "text": "NO TRIAL",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.13,
+              1.24
+            ],
+            "x": [
+              59,
+              41
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S02-C",
+          "plate": "type-card",
+          "camera": "locked, full-frame type",
+          "visual": "A full-frame typographic card: bone serif on black, a thin gold rule, and a short line of small caps.",
+          "sfx": [
+            "a low sub hit",
+            "room tone"
+          ],
+          "text": "",
+          "transition": "flash",
+          "render": "html",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "cardKicker": "BY ORDER",
+          "cardLines": [
+            "NO PUBLIC",
+            "MEETINGS"
+          ],
+          "cardSub": "AMRITSAR · 13 APRIL 1919"
+        },
+        {
+          "id": "S02-D",
+          "plate": "bagh-wall",
+          "camera": "38mm, low, drift across the wall",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "PUNJAB · APRIL 1919",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.13,
+              1.24
+            ],
+            "x": [
+              41,
+              59
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S02-E",
+          "plate": "notice-desk",
+          "camera": "50mm, low, slow push into the date",
+          "visual": "A typed notice on a dark desk under a brass lamp, the paper brightest in the frame; pen, inkpot and the edge of a clock hold the foreground.",
+          "sfx": [
+            "paper under a pen",
+            "lamp hum",
+            "a clock tick"
+          ],
+          "text": "13 APRIL 1919",
+          "transition": "whip-right",
+          "render": "blender",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1,
+              1.34
+            ],
+            "x": [
+              50,
+              53
+            ],
+            "y": [
+              50,
+              47
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "The garden",
+      "start": 36,
+      "duration": 24,
+      "purpose": "Build the place, then close the exits.",
+      "narration": [
+        {
+          "text": "By half past five, thousands were inside.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Some came to pray. Some came to protest two arrests.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The Bagh was two hundred yards square.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Walled ten feet high, with five narrow entrances.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "One main exit.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S03-A",
+          "plate": "bagh-wall",
+          "camera": "38mm, low, wide, the wall holding the sky",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "",
+          "transition": "mask-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        },
+        {
+          "id": "S03-B",
+          "plate": "bagh-wall",
+          "camera": "38mm, low, the gate and its crowd",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "5:30 PM",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.13,
+              1.24
+            ],
+            "x": [
+              59,
+              41
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S03-C",
+          "plate": "bagh-wall",
+          "camera": "50mm, tight on the silhouettes",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S03-D",
+          "plate": "bagh-wall",
+          "camera": "38mm, lateral drift along the wall",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "",
+          "transition": "whip-right",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.13,
+              1.24
+            ],
+            "x": [
+              41,
+              59
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S03-E",
+          "plate": "bagh-wall",
+          "camera": "38mm, low, the wall and the light",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "",
+          "transition": "crossfade",
+          "render": "blender",
+          "weight": 2,
+          "framing": {
+            "zoom": [
+              1.1,
+              1.25
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              58,
+              40
+            ]
+          }
+        },
+        {
+          "id": "S03-F",
+          "plate": "bagh-wall",
+          "camera": "38mm, the gate from outside",
+          "visual": "A high ochre wall at dusk, patched and weathered, with a round-topped gate and dark human silhouettes at the threshold.",
+          "sfx": [
+            "wind across the wall",
+            "a low crowd murmur",
+            "a distant bird"
+          ],
+          "text": "FIVE ENTRANCES",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.24
+            ],
+            "x": [
+              49,
+              51
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S03-G",
+          "plate": "bagh-wall-empty",
+          "camera": "38mm, low, the main exit",
+          "visual": "The gate from outside, now empty, with a fallen shoe, torn cloth, dropped paper and spent cases on the paving.",
+          "sfx": [
+            "wind",
+            "a single dropped shoe",
+            "then nothing"
+          ],
+          "text": "ONE WAY OUT",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 2,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "The order to fire",
+      "start": 60,
+      "duration": 22,
+      "purpose": "Turn the clock into a countdown, then make the order explicit.",
+      "narration": [
+        {
+          "text": "At six thirty, General Dyer arrived with about fifty soldiers.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "He blocked the main exit.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "He gave no warning to disperse.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "He later said his purpose was not to disperse the meeting.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "It was to punish.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S04-A",
+          "plate": "watch",
+          "camera": "62mm, macro, the hands at 6:30",
+          "visual": "A brass pocket watch lying in dust, its scratched dial and hands held in a hard shaft of low light.",
+          "sfx": [
+            "a clock tick",
+            "a low sub hit",
+            "wind"
+          ],
+          "text": "6:30 PM",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S04-B",
+          "plate": "bagh-wall-empty",
+          "camera": "38mm, low, the blocked exit",
+          "visual": "The gate from outside, now empty, with a fallen shoe, torn cloth, dropped paper and spent cases on the paving.",
+          "sfx": [
+            "wind",
+            "a single dropped shoe",
+            "then nothing"
+          ],
+          "text": "",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1,
+              1.34
+            ],
+            "x": [
+              50,
+              53
+            ],
+            "y": [
+              50,
+              47
+            ]
+          }
+        },
+        {
+          "id": "S04-C",
+          "plate": "type-card",
+          "camera": "locked, full-frame type",
+          "visual": "A full-frame typographic card: bone serif on black, a thin gold rule, and a short line of small caps.",
+          "sfx": [
+            "a low sub hit",
+            "room tone"
+          ],
+          "text": "",
+          "transition": "flash",
+          "render": "html",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "cardKicker": "6:30 PM",
+          "cardLines": [
+            "NO",
+            "WARNING"
+          ],
+          "cardSub": "THE EXITS WERE BLOCKED"
+        },
+        {
+          "id": "S04-D",
+          "plate": "watch",
+          "camera": "62mm, the dial filling the frame",
+          "visual": "A brass pocket watch lying in dust, its scratched dial and hands held in a hard shaft of low light.",
+          "sfx": [
+            "a clock tick",
+            "a low sub hit",
+            "wind"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        },
+        {
+          "id": "S04-E",
+          "plate": "wall-scar",
+          "camera": "55mm, tight, slow tilt up the wall",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "",
+          "transition": "whip-right",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.1,
+              1.25
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              58,
+              40
+            ]
+          }
+        },
+        {
+          "id": "S04-F",
+          "plate": "type-card",
+          "camera": "locked, full-frame type",
+          "visual": "A full-frame typographic card: bone serif on black, a thin gold rule, and a short line of small caps.",
+          "sfx": [
+            "a low sub hit",
+            "room tone"
+          ],
+          "text": "",
+          "transition": "flash",
+          "render": "html",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "cardKicker": "HIS OWN WORDS",
+          "cardLines": [
+            "TO",
+            "PUNISH"
+          ],
+          "cardSub": "NOT TO DISPERSE"
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "Ten minutes",
+      "start": 82,
+      "duration": 20,
+      "purpose": "Use numbers and silence; do not reconstruct the killing.",
+      "narration": [
+        {
+          "text": "The firing lasted about ten minutes.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "One thousand six hundred and fifty rounds.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Into the densest part of the crowd.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Toward the narrow exits.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S05-A",
+          "plate": "wall-scar",
+          "camera": "macro on the bullet chips",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S05-B",
+          "plate": "wall-scar",
+          "camera": "55mm, the wall holding the frame",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "10",
+          "transition": "flash",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "impact": true,
+          "impactSub": "MINUTES"
+        },
+        {
+          "id": "S05-C",
+          "plate": "wall-scar",
+          "camera": "tight, the cases on the sill",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.24
+            ],
+            "x": [
+              49,
+              51
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S05-D",
+          "plate": "bagh-wall-empty",
+          "camera": "38mm, low, the empty gate",
+          "visual": "The gate from outside, now empty, with a fallen shoe, torn cloth, dropped paper and spent cases on the paving.",
+          "sfx": [
+            "wind",
+            "a single dropped shoe",
+            "then nothing"
+          ],
+          "text": "1,650",
+          "transition": "flash",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "impact": true,
+          "impactSub": "ROUNDS"
+        },
+        {
+          "id": "S05-E",
+          "plate": "bagh-wall-empty",
+          "camera": "38mm, the paving and the cloth",
+          "visual": "The gate from outside, now empty, with a fallen shoe, torn cloth, dropped paper and spent cases on the paving.",
+          "sfx": [
+            "wind",
+            "a single dropped shoe",
+            "then nothing"
+          ],
+          "text": "",
+          "transition": "mask-right",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.2,
+              1.07
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              42,
+              56
+            ]
+          }
+        },
+        {
+          "id": "S05-F",
+          "plate": "wall-scar",
+          "camera": "55mm, the wall in hard light",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "The count",
+      "start": 102,
+      "duration": 18,
+      "purpose": "Put the official figures on screen, then let the silence hold.",
+      "narration": [
+        {
+          "text": "The official count was three hundred and seventy-nine dead.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "More than one thousand two hundred wounded.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Other estimates were higher.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S06-A",
+          "plate": "wall-scar",
+          "camera": "55mm, the wall and the sill",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.24
+            ],
+            "x": [
+              49,
+              51
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S06-B",
+          "plate": "wall-scar",
+          "camera": "locked, the wall as a ledger",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "379",
+          "transition": "flash",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "impact": true,
+          "impactSub": "OFFICIAL DEAD"
+        },
+        {
+          "id": "S06-C",
+          "plate": "wall-scar",
+          "camera": "macro, plaster and shadow",
+          "visual": "The wall in hard side light, pocked with bullet chips; three spent cases sit on the stone sill. No bodies, no blood, no crowd.",
+          "sfx": [
+            "plaster dust",
+            "a distant volley",
+            "silence after"
+          ],
+          "text": "",
+          "transition": "whip-right",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S06-D",
+          "plate": "bagh-wall-empty",
+          "camera": "38mm, low, the empty gate",
+          "visual": "The gate from outside, now empty, with a fallen shoe, torn cloth, dropped paper and spent cases on the paving.",
+          "sfx": [
+            "wind",
+            "a single dropped shoe",
+            "then nothing"
+          ],
+          "text": "1,200+",
+          "transition": "flash",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "impact": true,
+          "impactSub": "WOUNDED"
+        },
+        {
+          "id": "S06-E",
+          "plate": "bagh-wall-empty",
+          "camera": "38mm, the gate and the dark",
+          "visual": "The gate from outside, now empty, with a fallen shoe, torn cloth, dropped paper and spent cases on the paving.",
+          "sfx": [
+            "wind",
+            "a single dropped shoe",
+            "then nothing"
+          ],
+          "text": "",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "The well",
+      "start": 120,
+      "duration": 20,
+      "purpose": "Make the aftermath a place, not a statistic.",
+      "narration": [
+        {
+          "text": "Some died at the gates. Some died in the well.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "A plaque at the site says one hundred and twenty bodies were recovered.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Curfew kept help away until morning.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The Empire called it a disturbance. India called it a massacre.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S07-A",
+          "plate": "well",
+          "camera": "44mm, high angle, slow descent",
+          "visual": "A circular stone well inside the walled garden, black water below a wet rim, petals and torn cloth catching the sky.",
+          "sfx": [
+            "wind in the well",
+            "a drop of water",
+            "a low drone"
+          ],
+          "text": "",
+          "transition": "mask-left",
+          "render": "blender",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.2,
+              1.07
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              42,
+              56
+            ]
+          }
+        },
+        {
+          "id": "S07-B",
+          "plate": "well",
+          "camera": "44mm, close on the rim and cloth",
+          "visual": "A circular stone well inside the walled garden, black water below a wet rim, petals and torn cloth catching the sky.",
+          "sfx": [
+            "wind in the well",
+            "a drop of water",
+            "a low drone"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S07-C",
+          "plate": "well",
+          "camera": "locked, the black water",
+          "visual": "A circular stone well inside the walled garden, black water below a wet rim, petals and torn cloth catching the sky.",
+          "sfx": [
+            "wind in the well",
+            "a drop of water",
+            "a low drone"
+          ],
+          "text": "120",
+          "transition": "flash",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "impact": true,
+          "impactSub": "RECOVERED FROM THE WELL"
+        },
+        {
+          "id": "S07-D",
+          "plate": "well",
+          "camera": "44mm, the petals and the stone",
+          "visual": "A circular stone well inside the walled garden, black water below a wet rim, petals and torn cloth catching the sky.",
+          "sfx": [
+            "wind in the well",
+            "a drop of water",
+            "a low drone"
+          ],
+          "text": "",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.24
+            ],
+            "x": [
+              49,
+              51
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S07-E",
+          "plate": "bagh-wall-empty",
+          "camera": "38mm, the empty garden",
+          "visual": "The gate from outside, now empty, with a fallen shoe, torn cloth, dropped paper and spent cases on the paving.",
+          "sfx": [
+            "wind",
+            "a single dropped shoe",
+            "then nothing"
+          ],
+          "text": "",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "The inquiry",
+      "start": 140,
+      "duration": 24,
+      "purpose": "Show what the state did with the truth.",
+      "narration": [
+        {
+          "text": "The Hunter Commission condemned Dyer.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "It did not prosecute him.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "He was relieved of his command and barred from India.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "He was never tried for murder.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "In 2019, Britain expressed deep regret.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Not an apology.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S08-A",
+          "plate": "report-desk",
+          "camera": "overhead, locked, lateral drift",
+          "visual": "A typed report on a dark desk under a brass lamp; ruled lines, an inkpot, a magnifier and a red stamp crowd the paper.",
+          "sfx": [
+            "a stamp pressed once",
+            "paper",
+            "a clock tick"
+          ],
+          "text": "",
+          "transition": "mask-right",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.13,
+              1.24
+            ],
+            "x": [
+              41,
+              59
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S08-B",
+          "plate": "report-desk",
+          "camera": "macro on the typed figures",
+          "visual": "A typed report on a dark desk under a brass lamp; ruled lines, an inkpot, a magnifier and a red stamp crowd the paper.",
+          "sfx": [
+            "a stamp pressed once",
+            "paper",
+            "a clock tick"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S08-C",
+          "plate": "lamp",
+          "camera": "55mm, low, slow push toward the flame",
+          "visual": "A candle in a brass dish on a dark table, a sealed letter beside it, the flame the only warm thing in the frame.",
+          "sfx": [
+            "candle hiss",
+            "a page turning",
+            "silence"
+          ],
+          "text": "",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.24
+            ],
+            "x": [
+              49,
+              51
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S08-D",
+          "plate": "report-desk",
+          "camera": "locked, the red stamp in frame",
+          "visual": "A typed report on a dark desk under a brass lamp; ruled lines, an inkpot, a magnifier and a red stamp crowd the paper.",
+          "sfx": [
+            "a stamp pressed once",
+            "paper",
+            "a clock tick"
+          ],
+          "text": "NO PROSECUTION",
+          "transition": "flash",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "impact": true,
+          "impactSub": "NEVER TRIED FOR MURDER"
+        },
+        {
+          "id": "S08-E",
+          "plate": "report-desk",
+          "camera": "overhead, the report and the pen",
+          "visual": "A typed report on a dark desk under a brass lamp; ruled lines, an inkpot, a magnifier and a red stamp crowd the paper.",
+          "sfx": [
+            "a stamp pressed once",
+            "paper",
+            "a clock tick"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        },
+        {
+          "id": "S08-F",
+          "plate": "lamp",
+          "camera": "55mm, the flame and the sealed letter",
+          "visual": "A candle in a brass dish on a dark table, a sealed letter beside it, the flame the only warm thing in the frame.",
+          "sfx": [
+            "candle hiss",
+            "a page turning",
+            "silence"
+          ],
+          "text": "2019",
+          "transition": "flash",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          },
+          "impact": true,
+          "impactSub": "DEEP REGRET. NO APOLOGY."
+        },
+        {
+          "id": "S08-G",
+          "plate": "lamp",
+          "camera": "35mm, the room larger and emptier",
+          "visual": "A candle in a brass dish on a dark table, a sealed letter beside it, the flame the only warm thing in the frame.",
+          "sfx": [
+            "candle hiss",
+            "a page turning",
+            "silence"
+          ],
+          "text": "",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "The argument",
+      "start": 164,
+      "duration": 22,
+      "purpose": "Carry the event into the argument it created, and end on the question.",
+      "narration": [
+        {
+          "text": "Rabindranath Tagore renounced his knighthood.",
+          "source": "tagore"
+        },
+        {
+          "text": "The Congress turned toward mass non-cooperation.",
+          "source": "noncooperation"
+        },
+        {
+          "text": "The Empire survived the inquiry.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "It did not survive the loss of trust.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "What does a country do with the memory?",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S09-A",
+          "plate": "lamp",
+          "camera": "35mm, low, the flame small in frame",
+          "visual": "A candle in a brass dish on a dark table, a sealed letter beside it, the flame the only warm thing in the frame.",
+          "sfx": [
+            "candle hiss",
+            "a page turning",
+            "silence"
+          ],
+          "text": "TAGORE",
+          "transition": "crossfade",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S09-B",
+          "plate": "memorial",
+          "camera": "42mm, low, slow push into the plaque",
+          "visual": "A bronze plaque in a dark stone hall, gold letters catching a shaft of light; marigolds and a small brazier hold the foreground.",
+          "sfx": [
+            "low drone",
+            "a single bell",
+            "silence"
+          ],
+          "text": "NON-COOPERATION · 1920",
+          "transition": "whip-left",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.24
+            ],
+            "x": [
+              49,
+              51
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S09-C",
+          "plate": "memorial",
+          "camera": "42mm, the gold letters in the light",
+          "visual": "A bronze plaque in a dark stone hall, gold letters catching a shaft of light; marigolds and a small brazier hold the foreground.",
+          "sfx": [
+            "low drone",
+            "a single bell",
+            "silence"
+          ],
+          "text": "",
+          "transition": "match",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.36,
+              1.52
+            ],
+            "x": [
+              53,
+              48
+            ],
+            "y": [
+              51,
+              48
+            ]
+          }
+        },
+        {
+          "id": "S09-D",
+          "plate": "type-card",
+          "camera": "locked, full-frame type",
+          "visual": "A full-frame typographic card: bone serif on black, a thin gold rule, and a short line of small caps.",
+          "sfx": [
+            "a low sub hit",
+            "room tone"
+          ],
+          "text": "",
+          "transition": "dip",
+          "render": "html",
+          "weight": 4,
+          "framing": {
+            "zoom": [
+              1.06,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          },
+          "cardKicker": "1919",
+          "cardLines": [
+            "WHAT DOES A",
+            "COUNTRY DO",
+            "WITH THE MEMORY?"
+          ]
+        },
+        {
+          "id": "S09-E",
+          "plate": "memorial",
+          "camera": "42mm, the flame and the plaque",
+          "visual": "A bronze plaque in a dark stone hall, gold letters catching a shaft of light; marigolds and a small brazier hold the foreground.",
+          "sfx": [
+            "low drone",
+            "a single bell",
+            "silence"
+          ],
+          "text": "",
+          "transition": "dip",
+          "render": "blender",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.28,
+              1.06
+            ],
+            "x": [
+              52,
+              49
+            ],
+            "y": [
+              49,
+              51
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "previewMp4": "media/films/jallianwala-bagh/preview.mp4",
+  "previewPoster": "media/films/jallianwala-bagh/poster.jpg"
+}

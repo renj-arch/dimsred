@@ -1,0 +1,81 @@
+name: Cut Film Reels
+
+# Cuts vertical 9:16 reels (30-60s) from existing film renders:
+#   media/films/<id>/preview.mp4  +  media/films/<id>/captions.vtt
+# -> media/reels/<id>.mp4 + data/reels.json
+#
+# ffmpeg is pre-installed on ubuntu-latest. No paid APIs, no new footage.
+
+on:
+  schedule:
+    # Twice a day, offset from the hour so it doesn't herd with other lanes.
+    - cron: '17 4,16 * * *'
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit + push reels (false = dry run for logs only)'
+        required: false
+        default: 'true'
+
+concurrency:
+  group: reel-cut
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  cut:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            media/films
+            media/reels
+            data/reels.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install ffmpeg
+        run: sudo apt-get update -y && sudo apt-get install -y ffmpeg
+
+      - name: Check ffmpeg
+        run: ffmpeg -version | head -1
+
+      - name: Cut reels from film renders
+        run: |
+          mkdir -p data
+          node scripts/reel-cut.js
+
+      - name: Commit + push reels
+        if: github.event_name == 'schedule' || github.event.inputs.commit == 'true'
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add media/reels/ data/reels.json
+          if git diff --cached --quiet; then
+            echo "No reel changes to commit"
+            exit 0
+          fi
+          git commit -m "reels: cut $(date +'%Y-%m-%d %H:%M UTC')"
+          for attempt in 1 2 3; do
+            git fetch --depth=1 --no-tags origin "$GITHUB_REF_NAME" 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then
+              echo "Pushed reels (attempt $attempt)"
+              exit 0
+            fi
+            echo "Merge/push attempt $attempt failed; retrying..."
+            sleep 5
+          done
+          echo "::warning::could not push reels after 3 attempts; preserved in run logs"
+          exit 0

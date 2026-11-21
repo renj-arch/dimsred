@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>System of Particles &amp; Rotational Motion — JEE Physics Lesson | vlymbooq</title>
+    <meta name="description" content="Free JEE Physics System of Particles &amp; Rotational Motion lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/physics/lesson-rotational-motion.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95em}
+        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}
+        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/jee/">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Physics</div>
+                    <a href="lesson-mechanics.html">Mechanics</a>
+                    <a href="lesson-thermodynamics.html">Thermodynamics</a>
+                    <a href="lesson-optics.html">Optics</a>
+                    <a href="lesson-electrostatics.html">Electrostatics & Current</a>
+                    <a href="lesson-magnetism.html">Magnetism & EMI</a>
+                    <a href="lesson-modern-physics.html">Modern Physics</a>
+                    <a href="lesson-units-and-motion.html">Units, Measurement & Motion in a Straight Line</a>
+                    <a href="lesson-motion-in-a-plane.html">Motion in a Plane & Projectile Motion</a>
+                    <a href="lesson-laws-of-motion.html">Laws of Motion, Friction & Circular Motion</a>
+                    <a href="lesson-work-energy-power.html">Work, Energy & Power</a>
+                    <a href="lesson-rotational-motion.html" class="active">System of Particles & Rotational Motion</a>
+                    <a href="lesson-gravitation.html">Gravitation & Satellites</a>
+                    <a href="lesson-properties-of-matter.html">Mechanical Properties of Solids & Fluids</a>
+                    <a href="lesson-thermal-physics.html">Thermal Properties, Kinetic Theory & Thermodynamics</a>
+                    <a href="lesson-oscillations-waves.html">Oscillations & Waves</a>
+                    <a href="lesson-current-electricity.html">Current Electricity & Circuits</a>
+                    <a href="lesson-magnetism-and-emi.html">Magnetism, Moving Charges & Electromagnetic Induction</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; JEE Physics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">System of Particles &amp; Rotational Motion</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 17 Nov 2026 &#183; 7,333 words &#183; 5 sections</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.75em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 21 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="794ef0b58bbd" data-updated="2026-11-21" data-updated-label="21 Nov 2026" data-headings="[&quot;Centre of Mass of a System of Particles&quot;,&quot;1.1 Definition and Physical Significance&quot;,&quot;1.2 Calculation for Discrete and Continuous Distributions&quot;,&quot;1.3 Motion of the Centre of Mass Under External Forces&quot;,&quot;Torque and Rotational Equilibrium&quot;,&quot;2.1 Definition of Torque&quot;,&quot;2.2 Conditions for Rotational Equilibrium&quot;,&quot;2.3 Work and Power in Rotational Motion&quot;,&quot;Moment of Inertia and Its Calculation&quot;,&quot;3.1 Concept of Moment of Inertia&quot;,&quot;3.2 Parallel‑Axis and Perpendicular‑Axis Theorems&quot;,&quot;3.3 Standard Results for Common Geometries&quot;,&quot;Angular Momentum and Its Conservation&quot;,&quot;4.1 Definition of Angular Momentum&quot;,&quot;4.2 Torque as the Rate of Change of Angular Momentum&quot;,&quot;4.3 Applications of Angular Momentum Conservation&quot;,&quot;Rolling Motion and Energy Considerations&quot;,&quot;5.1 Kinematics of Pure Rolling&quot;,&quot;5.2 Dynamics of Rolling on an Inclined Plane&quot;,&quot;5.3 Energy Distribution in Rolling Motion&quot;,&quot;Inertia Tensor and Principal Axes&quot;,&quot;Gyroscopic Precession and Nutation&quot;,&quot;Angular Impulse in Rotational Collisions&quot;,&quot;Rolling with Slipping: Friction Direction and Energy Loss&quot;,&quot;Variable Mass Systems and Rocket Rotation&quot;,&quot;Euler&#39;s Equations and Free Rotation of Asymmetric Rigid Bodies&quot;,&quot;Stability of Rotation: The Intermediate Axis Theorem&quot;,&quot;Rotational Dynamics in Non‑Inertial Frames: Coriolis and Centrifugal Torques&quot;,&quot;Coupled Translation‑Rotation: Rolling on Accelerating Platforms&quot;,&quot;Energy Methods in Rotational Dynamics: Virtual Work and Lagrange’s Equations&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Centre of mass, torque, moment of inertia, angular momentum and rolling motion.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Centre of Mass · Torque · Moment of Inertia · Rolling</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of System of Particles &amp; Rotational Motion</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+<h2>Centre of Mass of a System of Particles</h2>
+
+<h3>1.1 Definition and Physical Significance</h3>
+<p>The centre of mass of a system of particles is the unique point at which the total mass of the system can be considered to be concentrated for the purpose of analysing translational motion. When external forces act on the system, the acceleration of this point follows Newton’s second law exactly as if the whole mass were located there, which makes the centre of mass a powerful tool for simplifying complex many‑body problems. The position vector of the centre of mass is obtained by taking the mass‑weighted average of the individual position vectors, a procedure that automatically accounts for the distribution of mass throughout the system.</p>
+<h3>1.2 Calculation for Discrete and Continuous Distributions</h3>
+<p>For a discrete collection of particles with masses m₁, m₂, …, mₙ located at position vectors r₁, r₂, …, rₙ, the centre of mass vector R is given by R = (Σ mᵢ rᵢ) / (Σ mᵢ). In the case of a continuous body the summation is replaced by an integral, R = (∫ r dm) / (∫ dm), where dm represents an infinitesimal mass element. The choice of coordinate system does not affect the physical location of the centre of mass, but a judicious choice often reduces the algebraic effort required to evaluate the integrals.</p>
+<h3>1.3 Motion of the Centre of Mass Under External Forces</h3>
+<p>Because internal forces occur in equal and opposite pairs, they cancel in the net force on the system. Consequently the centre of mass moves as if all external forces were applied at that point, and its trajectory is independent of the internal dynamics such as vibrations or rotations. This principle underlies the analysis of rocket propulsion, where the centre of mass of the rocket‑exhaust system follows a simple parabolic path despite the complicated internal mass ejection.</p>
+
+<h2>Torque and Rotational Equilibrium</h2>
+<h3>2.1 Definition of Torque</h3>
+<p>Torque, also called the moment of force, quantifies the tendency of a force to produce rotational motion about a chosen axis. Mathematically the torque τ produced by a force F applied at a point with position vector r relative to the axis is τ = r × F, where the cross product yields a vector perpendicular to the plane formed by r and F. The magnitude of the torque is τ = r F sin θ, with θ the angle between r and F; only the component of the force perpendicular to the lever arm contributes to rotation.</p>
+<h3>2.2 Conditions for Rotational Equilibrium</h3>
+<p>A rigid body is in rotational equilibrium when the vector sum of all torques acting on it about any axis is zero. This condition, Σ τ = 0, must hold simultaneously with the translational equilibrium condition Σ F = 0 for complete static equilibrium. In practice one often chooses a convenient axis that eliminates unknown forces from the torque equation, thereby simplifying the solution of problems involving beams, ladders, or suspended objects.</p>
+<h3>2.3 Work and Power in Rotational Motion</h3>
+<p>When a torque acts through an angular displacement dθ, the infinitesimal work done is dW = τ dθ. Integrating over a finite angular interval gives the total work, which equals the change in rotational kinetic energy. The instantaneous power delivered by a torque is P = τ ω, where ω is the angular velocity. These relations are the rotational analogues of the linear work‑energy theorem and are essential for analysing engines, turbines, and any device that converts torque into useful work.</p>
+
+<div class="example-box">
+<div class="ex-title">Example: Torque on a Uniform Rod</div>
+<div class="ex-text">A uniform rod of length L = 2 m and mass M = 3 kg is hinged at one end and held horizontally. A force of 20 N is applied perpendicular to the rod at a distance of 1.5 m from the hinge. Calculate the angular acceleration of the rod immediately after the force is applied.</div>
+<div class="ex-soln">The moment of inertia of a rod about one end is I = (1/3) M L² = (1/3) × 3 kg × (2 m)² = 4 kg·m². The torque produced by the applied force is τ = r F = 1.5 m × 20 N = 30 N·m. Using τ = I α, the angular acceleration α = τ / I = 30 N·m / 4 kg·m² = 7.5 rad/s².</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Insight</div>
+<div class="tip-text">When a problem gives a force at an angle, always resolve the force into components perpendicular and parallel to the lever arm; only the perpendicular component contributes to torque. This step eliminates a common source of sign errors in numerical answers.</div>
+</div>
+
+<h2>Moment of Inertia and Its Calculation</h2>
+<h3>3.1 Concept of Moment of Inertia</h3>
+<p>The moment of inertia I of a body about a given axis is the rotational analogue of mass; it quantifies the resistance of the body to changes in its angular velocity. For a system of particles I = Σ mᵢ rᵢ², where rᵢ is the perpendicular distance of the i‑th particle from the axis. For a continuous body the sum becomes an integral I = ∫ r² dm. The value of I depends not only on the total mass but also on how that mass is distributed relative to the axis, which explains why a hoop and a solid disc of equal mass and radius have different moments of inertia.</p>
+<h3>3.2 Parallel‑Axis and Perpendicular‑Axis Theorems</h3>
+<p>The parallel‑axis theorem states that the moment of inertia about any axis parallel to an axis through the centre of mass is I = I_cm + M d², where d is the separation between the axes. This theorem is invaluable when the moment of inertia about a centre‑of‑mass axis is known but the problem requires the moment about a different, often fixed, axis. The perpendicular‑axis theorem applies only to planar laminae and relates the moment of inertia about an axis perpendicular to the plane (I_z) to the moments about two orthogonal axes in the plane (I_x and I_y) through the same point: I_z = I_x + I_y.</p>
+<h3>3.3 Standard Results for Common Geometries</h3>
+<p>Textbooks tabulate moments of inertia for a variety of symmetric bodies because these results are used repeatedly in problems. For a thin rod of length L about an axis through its centre perpendicular to the rod, I = (1/12) M L²; about an end, I = (1/3) M L². A solid cylinder of radius R and mass M about its symmetry axis has I = (1/2) M R², while a thin hoop of the same dimensions has I = M R². A solid sphere about any diameter has I = (2/5) M R², and a thin spherical shell has I = (2/3) M R². These formulas are derived by integrating r² dm over the volume or surface of the object.</p>
+
+<table>
+<caption>Comparison of Centre of Mass and Centre of Gravity</caption>
+<thead>
+<tr><th>Aspect</th><th>Centre of Mass</th><th>Centre of Gravity</th></tr>
+</thead>
+<tbody>
+<tr><td>Definition</td><td>Mass‑weighted average position of all particles</td><td>Point where the total weight can be considered to act</td></tr>
+<tr><td>Dependence on gravitational field</td><td>Independent of external field</td><td>Coincides with centre of mass only in a uniform field</td></tr>
+<tr><td>Relevance in orbital mechanics</td><td>Essential for describing translational motion of a system</td><td>Used when analysing torque due to gravity on extended bodies</td></tr>
+</tbody>
+</table>
+
+<h2>Angular Momentum and Its Conservation</h2>
+<h3>4.1 Definition of Angular Momentum</h3>
+<p>Angular momentum L of a particle about a point is defined as the cross product of its position vector r and its linear momentum p: L = r × p. For a system of particles the total angular momentum is the vector sum of the individual angular momenta. In the case of a rigid body rotating about a fixed axis with angular velocity ω, the angular momentum simplifies to L = I ω, where I is the moment of inertia about that axis. The direction of L follows the right‑hand rule and is parallel to the axis of rotation for symmetric bodies.</p>
+<h3>4.2 Torque as the Rate of Change of Angular Momentum</h3>
+<p>Newton’s second law for rotation states that the net external torque acting on a system equals the time derivative of its total angular momentum: τ_net = dL/dt. This relation is the rotational counterpart of F = dp/dt and holds for any system, whether rigid or deformable. When the net external torque is zero, the total angular momentum of the system remains constant, a principle known as the conservation of angular momentum.</p>
+<h3>4.3 Applications of Angular Momentum Conservation</h3>
+<p>Conservation of angular momentum explains a wide range of phenomena, from the spin‑up of a figure skater pulling in her arms to the stability of a rotating satellite. In a closed system where internal forces are central, the redistribution of mass changes the moment of inertia, and the angular velocity adjusts so that I ω remains constant. This principle also underlies the operation of gyroscopes, which maintain orientation because any external torque would have to change the large angular momentum of the rapidly spinning rotor.</p>
+
+<table>
+<caption>Moments of Inertia for Selected Symmetric Bodies</caption>
+<thead>
+<tr><th>Body</th><th>Axis</th><th>Moment of Inertia</th></tr>
+</thead>
+<tbody>
+<tr><td>Thin rod (length L)</td><td>Through centre, perpendicular to rod</td><td>(1/12) M L²</td></tr>
+<tr><td>Thin rod (length L)</td><td>Through one end, perpendicular to rod</td><td>(1/3) M L²</td></tr>
+<tr><td>Solid cylinder (radius R)</td><td>Symmetry axis</td><td>(1/2) M R²</td></tr>
+<tr><td>Thin hoop (radius R)</td><td>Symmetry axis</td><td>M R²</td></tr>
+<tr><td>Solid sphere (radius R)</td><td>Any diameter</td><td>(2/5) M R²</td></tr>
+<tr><td>Thin spherical shell (radius R)</td><td>Any diameter</td><td>(2/3) M R²</td></tr>
+</tbody>
+</table>
+
+<h2>Rolling Motion and Energy Considerations</h2>
+<h3>5.1 Kinematics of Pure Rolling</h3>
+<p>Pure rolling occurs when a rigid body such as a cylinder or sphere moves on a surface without slipping. The condition for pure rolling is that the instantaneous velocity of the point of contact relative to the surface is zero, which translates into the relation v_cm = ω R, where v_cm is the velocity of the centre of mass, ω is the angular velocity, and R is the radius of the rolling body. This constraint couples translational and rotational motion, so that a single parameter, either v_cm or ω, completely describes the kinematics.</p>
+<h3>5.2 Dynamics of Rolling on an Inclined Plane</h3>
+<p>When a body rolls down an inclined plane of angle θ, gravity provides a component M g sin θ along the plane, while static friction supplies the necessary torque for rotation. Because the point of contact is instantaneously at rest, static friction does no work, and mechanical energy is conserved if dissipative forces are absent. Applying Newton’s second law for translation and rotation simultaneously yields the acceleration a = g sin θ / (1 + I/(M R²)). The denominator shows that bodies with larger moments of inertia (e.g., a hoop) accelerate more slowly than those with smaller moments (e.g., a solid sphere).</p>
+<h3>5.3 Energy Distribution in Rolling Motion</h3>
+<p>The total kinetic energy of a rolling body is the sum of translational kinetic energy (½ M v_cm²) and rotational kinetic energy (½ I ω²). Using the rolling constraint v_cm = ω R, the rotational part can be expressed as ½ I (v_cm²/R²). The fraction of total kinetic energy that is rotational is therefore I/(M R² + I). For a solid sphere this fraction is 2/7, for a solid cylinder it is 1/3, and for a thin hoop it is 1/2. This distribution has practical consequences, for example in designing wheels that minimise rotational energy loss.</p>
+
+<p>Understanding the interplay between centre of mass motion, torque, moment of inertia, angular momentum, and rolling constraints provides a complete framework for analysing the dynamics of extended bodies in both theoretical problems and real‑world engineering applications.</p>
+<h3>Inertia Tensor and Principal Axes</h3>
+<p>The moment of inertia of a rigid body about an arbitrary axis is not a single scalar but a component of a second‑rank tensor, the inertia tensor <strong>I</strong>. In a Cartesian frame fixed to the body the tensor elements are defined as I<sub>xx</sub> = ∑ m<sub>i</sub>(y<sub>i</sub>² + z<sub>i</sub>²), I<sub>yy</sub> = ∑ m<sub>i</sub>(x<sub>i</sub>² + z<sub>i</sub>²), I<sub>zz</sub> = ∑ m<sub>i</sub>(x<sub>i</sub>² + y<sub>i</sub>²) and the products of inertia I<sub>xy</sub> = −∑ m<sub>i</sub>x<sub>i</sub>y<sub>i</sub>, etc. The tensor is symmetric, so it can be diagonalised by an orthogonal transformation. The eigenvectors of the tensor define the principal axes of the body, and the corresponding eigenvalues are the principal moments of inertia I₁, I₂, I₃. When the body rotates about a principal axis the angular momentum vector is parallel to the angular velocity vector, and the scalar relation L = Iω holds. For any other axis the angular momentum has components not aligned with ω, leading to gyroscopic effects.</p>
+<p>Finding the principal axes analytically is straightforward for bodies with symmetry. A uniform rectangular plate of sides a and b has principal axes along its symmetry lines, with moments I₁ = (1/12) M b², I₂ = (1/12) M a², I₃ = (1/12) M (a² + b²). For a general asymmetric body one solves the characteristic equation det(I − λ1) = 0. The three real roots give the principal moments, and the associated eigenvectors give the orientation of the principal axes relative to the original coordinate system. In practice, numerical diagonalisation is used for complex shapes such as aircraft fuselages or molecular clusters.</p>
+<p>The inertia tensor is essential when the rotation axis is not fixed in the body, as in tumbling satellites or rotating machinery with flexible mounts. Euler’s equations of motion in the principal‑axis frame are I₁ dω₁/dt + (I₃ − I₂) ω₂ ω₃ = τ₁, and cyclic permutations. These coupled nonlinear equations describe free precession, nutation, and the stability of rotation about each principal axis. Rotation about the axis with the largest or smallest principal moment is stable, while rotation about the intermediate axis is unstable — a classic demonstration with a tossed book or a tennis racket.</p>
+<p>In engineering, the principal moments are used to compute the kinetic energy of a rotating body as T = ½ (I₁ ω₁² + I₂ ω₂² + I₃ ω₃²). This expression simplifies the formulation of Lagrangian mechanics for rigid bodies and is the basis for multibody dynamics codes. The tensor also appears in the calculation of angular momentum of a system of particles when the centre of mass is moving, because the total angular momentum splits into orbital and spin parts, the latter being L<sub>spin</sub> = I·ω.</p>
+<p>Understanding the inertia tensor and principal axes allows one to predict the response of a body to arbitrary torques, to design balanced rotors, and to analyse the stability of spinning spacecraft. It is the natural extension of the scalar moment of inertia taught in introductory courses and is indispensable for any advanced treatment of rotational dynamics.</p>
+
+<h3>Gyroscopic Precession and Nutation</h3>
+<p>A rapidly spinning symmetric top subjected to a torque perpendicular to its spin axis does not simply tip over; instead its spin axis sweeps out a cone — this is precession. The precession angular velocity Ω is given by Ω = τ / (I₃ ω₃) for a torque τ applied about a horizontal axis, where I₃ is the moment of inertia about the symmetry axis and ω₃ is the spin rate. The derivation follows from τ = dL/dt with L ≈ I₃ ω₃ directed along the spin axis; the torque causes L to rotate, and the tip of L moves in a circle of radius L sinθ, giving Ω = τ / (L sinθ). For a uniform gravitational torque τ = M g ℓ sinθ (ℓ = distance from pivot to centre of mass), the precession rate becomes Ω = M g ℓ / (I₃ ω₃), independent of the tilt angle θ.</p>
+<p>When the spin is not infinitely fast, the motion includes a small oscillation of the tilt angle called nutation. Nutation arises because the angular momentum vector is not perfectly aligned with the symmetry axis; the body executes a fast wobble superimposed on the slow precession. The nutation frequency for a symmetric top is ω<sub>nut</sub> = (I₃ ω₃) / I₁, where I₁ is the transverse moment of inertia. In the limit of large spin, nutation is rapid and of small amplitude, often damped quickly by friction at the pivot. The combined motion can be visualised as the tip of the angular momentum vector tracing a cycloid on a sphere.</p>
+<p>Gyroscopic stability is exploited in navigation instruments. A free gyroscope maintains its orientation in inertial space because any external torque produces precession rather than a change in spin direction. In a rate‑integrating gyro, the precession angle is proportional to the integrated angular rate, providing a measure of rotation. The Earth itself acts as a giant gyroscope; the torque from the Sun and Moon on the equatorial bulge causes the precession of the equinoxes with a period of about 26 000 years.</p>
+<p>In engineering, gyroscopic effects appear in rotating shafts, turbine blades, and motorcycle wheels. A spinning wheel resists leaning, which is why a bicycle is stable at speed. The design of control moment gyroscopes for spacecraft attitude control relies on commanding a torque to produce a desired precession, thereby reorienting the vehicle without propellant. Understanding the interplay of spin, torque, and moment of inertia is essential for predicting and harnessing these phenomena.</p>
+<p>The mathematical description of a symmetric top uses Euler angles (φ, θ, ψ) and the Lagrangian L = T − V with T = ½ I₁ (θ̇² + φ̇² sin²θ) + ½ I₃ (ψ̇ + φ̇ cosθ)². The cyclic coordinates φ and ψ yield two conserved momenta: the vertical component of angular momentum and the spin angular momentum. The effective potential for θ determines the allowed nutation bounds. This analytical framework is a cornerstone of classical mechanics and appears in advanced physics curricula.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Precession of a Spinning Top</div>
+<div class="ex-text">A symmetric top of mass 0.5 kg has its centre of mass 0.1 m from the fixed tip. Its axial moment of inertia is 2 × 10⁻³ kg·m² and it spins at 300 rad/s. Find the precession angular velocity when the axis makes an angle of 30° with the vertical.</div>
+<div class="ex-soln">The gravitational torque magnitude is τ = M g ℓ sinθ = 0.5 × 9.8 × 0.1 × sin30° = 0.245 N·m. The spin angular momentum is L = I₃ ω₃ = 2 × 10⁻³ × 300 = 0.6 kg·m²/s. The precession rate is Ω = τ / (L sinθ) = 0.245 / (0.6 × 0.5) = 0.817 rad/s. The result is independent of the tilt angle because the sinθ cancels; the same Ω would be obtained for any θ ≠ 0.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem gives a spinning symmetric body and asks for precession, first identify the spin angular momentum L = I₃ω₃ and the external torque τ. Use Ω = τ / (L sinθ) only if the torque is perpendicular to L. If the torque has a component along L, that component changes the spin magnitude, not the precession. Write down the torque vector explicitly to avoid sign errors.</div>
+</div>
+
+<h3>Angular Impulse in Rotational Collisions</h3>
+<p>Just as linear impulse equals the change in linear momentum, angular impulse equals the change in angular momentum: ∫ τ dt = ΔL. In a collision between rotating bodies, the impulsive torques are internal to the system if no external torque acts about the chosen point. Consequently the total angular momentum about that point is conserved during the impact, even though mechanical energy may be lost. This principle solves problems such as a rotating rod struck by a particle, or two gears meshing suddenly.</p>
+<p>Consider a uniform rod of length L and mass M pivoted at one end, initially at rest. A particle of mass m moving with speed v strikes the rod at a distance d from the pivot and sticks. The angular impulse delivered by the particle is m v d. Equating this to the final angular momentum I ω, where I = (1/3) M L² + m d² (parallel‑axis theorem for the added mass), gives ω = m v d / I. The kinetic energy after impact is ½ I ω², which is less than the initial ½ m v² because the collision is perfectly inelastic. The fraction of energy retained depends on the ratio m d² / I.</p>
+<p>If the collision is elastic, both angular momentum and kinetic energy are conserved. For a particle bouncing off a free rod (no pivot), the centre of mass of the rod translates and the rod rotates. One writes conservation of linear momentum, angular momentum about the centre of mass, and kinetic energy. The three equations determine the final translational velocity of the rod’s centre, its angular velocity, and the particle’s rebound speed. The algebra is simplified by working in the centre‑of‑mass frame of the combined system.</p>
+<p>In collisions involving rotating rigid bodies with fixed axes, the impulsive reaction at the axis can provide an external torque. If the axis is frictionless, the reaction force passes through the axis and exerts no torque about it, so angular momentum about the axis is conserved. If the axis has friction, an impulsive friction torque acts and angular momentum is not conserved; the problem then requires the coefficient of restitution and the friction impulse.</p>
+<p>Angular impulse also appears in the analysis of a ball rolling onto a rough surface. The friction impulse changes both the linear momentum and the angular momentum until the rolling condition v = ω R is satisfied. The direction of the friction impulse is opposite to the slip velocity at the contact point. Solving the two impulse equations simultaneously yields the final velocities. This method avoids dealing with the time‑dependent friction force and is a standard technique in advanced mechanics.</p>
+
+<h3>Rolling with Slipping: Friction Direction and Energy Loss</h3>
+<p>Pure rolling assumes the instantaneous velocity of the contact point is zero. When a body is launched with a translational speed v₀ and an angular speed ω₀ that do not satisfy v₀ = ω₀ R, slipping occurs. Kinetic friction acts at the contact point, opposing the relative motion. The friction force f = μ<sub>k</sub> N reduces the slip velocity until the rolling condition is met, after which static friction (if any) takes over and does no work.</p>
+<p>The equations of motion during slipping are M dv/dt = −f and I dω/dt = f R (sign chosen so that friction reduces the slip). Integrating from t = 0 to the time t₁ when v = ω R gives v₁ = v₀ − (f/M) t₁ and ω₁ = ω₀ + (f R/I) t₁. The rolling condition yields t₁ = (v₀ − ω₀ R) / (f/M + f R²/I). The final common speed is v₁ = (M v₀ + I ω₀ / R) / (M + I/R²). This result shows that the final speed is a weighted average of the initial translational and rotational speeds, with weights M and I/R².</p>
+<p>Energy is dissipated by kinetic friction. The work done by friction is W = −f × (relative displacement of the contact point). The loss equals the difference between initial kinetic energy (½ M v₀² + ½ I ω₀²) and final kinetic energy (½ M v₁² + ½ I ω₁²). For a solid sphere (I = 2/5 M R²) launched with pure translation (ω₀ = 0), the final speed is v₁ = 5/7 v₀ and the energy loss is 2/7 of the initial translational energy. For a hoop (I = M R²) the final speed is v₁ = ½ v₀ and half the initial energy is lost.</p>
+<p>The direction of friction is often a source of confusion. If the body is spinning faster than it translates (ω₀ R > v₀), the contact point moves backward relative to the ground, so friction acts forward, increasing v and decreasing ω. Conversely, if translation dominates, friction acts backward. Drawing the slip velocity vector at the contact point resolves the sign unambiguously.</p>
+<p>In problems where a rolling body encounters a rough patch of finite length, one must check whether pure rolling is achieved before the patch ends. If slipping persists throughout the patch, the friction force is constant and the above formulas apply with t₁ replaced by the time spent on the patch. If pure rolling is achieved early, the subsequent motion on the rough patch is frictionless (static friction does no work) and the body continues with constant v and ω.</p>
+
+<h3>Variable Mass Systems and Rocket Rotation</h3>
+<p>Rockets lose mass as they expel propellant, and the expelled mass carries away linear and angular momentum. The rotational analogue of the rocket equation is derived by applying angular momentum conservation to the system of rocket plus ejected mass in an inertial frame. If the rocket has moment of inertia I(t) about its centre of mass and ejects mass dm at relative velocity u (directed along the rocket’s axis), the torque due to mass ejection is τ = u × (dm/dt) r<sub>e</sub>, where r<sub>e</sub> is the position of the nozzle relative to the centre of mass. For a symmetric rocket with nozzles on the axis, the ejected mass carries no angular momentum about the centre of mass, so the rocket’s spin angular momentum L = I ω is conserved if no external torque acts.</p>
+<p>When the rocket has a non‑axial nozzle or a gimballed engine, the thrust vector can produce a torque. The equation of motion becomes I dω/dt + ω dI/dt = τ<sub>thrust</sub>. The term ω dI/dt accounts for the change in moment of inertia as mass leaves. For a slender rocket losing mass uniformly, I ∝ M, so dI/dt = (I/M) dM/dt. Substituting gives I dω/dt = τ<sub>thrust</sub> − ω (I/M) dM/dt. If the thrust is aligned with the symmetry axis, τ<sub>thrust</sub> = 0 and the spin rate increases as ω ∝ 1/I ∝ 1/M, i.e. the rocket spins faster as it lightens — a manifestation of angular momentum conservation.</p>
+<p>In multistage rockets, the separation of stages involves impulsive internal forces. The total angular momentum of the combined system just before separation equals the sum of the angular momenta of the stages just after, provided no external torque acts during the brief separation event. This principle is used to design spin‑stabilised upper stages: the lower stage imparts a spin to the upper stage before release, and the upper stage retains that spin because its moment of inertia is much smaller.</p>
+<p>Variable mass rotation also appears in astrophysics. An accreting neutron star gains mass and angular momentum from a companion. The accreted material carries specific angular momentum ℓ = √(G M R) at the inner edge of the accretion disk. The star’s spin evolves according to I dω/dt = Ṁ ℓ − τ<sub>mag</sub>, where τ<sub>mag</sub> is the magnetic braking torque. This equation explains the observed spin‑up of X‑ray pulsars and the equilibrium spin period where accretion torque balances magnetic torque.</p>
+<p>For engineering analysis, the rotational rocket equation is often written in terms of the mass flow rate ṁ = −dM/dt and the effective exhaust velocity v<sub>e</sub>. The thrust torque is τ = ṁ v<sub>e</sub> r<sub>⊥</sub>, where r<sub>⊥</sub> is the perpendicular distance from the centre of mass to the thrust line. Integrating I dω = τ dt yields the change in spin during a burn. This formulation is standard in spacecraft attitude dynamics and is implemented in flight software for thrust‑vector control.</p>
+
+<ul>
+<li>Assuming the scalar moment of inertia applies for any rotation axis; the inertia tensor must be used when the axis is not a principal axis.</li>
+<li>Confusing precession angular velocity with spin angular velocity; precession is typically orders of magnitude slower.</li>
+<li>Neglecting the change in moment of inertia when applying angular momentum conservation to variable‑mass systems.</li>
+<li>Taking the direction of kinetic friction opposite to the centre‑of‑mass velocity instead of opposite to the slip velocity at the contact point.</li>
+<li>Using the pure‑rolling energy formula when slipping occurs; kinetic friction does work and mechanical energy is not conserved.</li>
+<li>Forgetting that static friction does no work in pure rolling, so it cannot appear in the work‑energy theorem.</li>
+<li>Treating the torque from a gimballed engine as a pure force without the lever arm; the torque is the cross product of the nozzle offset and the thrust vector.</li>
+</ul>
+
+<p>These advanced topics extend the basic framework of rotational dynamics and are essential for solving the most challenging problems in mechanics.</p>
+<h3>Euler's Equations and Free Rotation of Asymmetric Rigid Bodies</h3>
+<p>When a rigid body rotates freely with no external torque, its angular momentum <strong>L</strong> is constant in an inertial frame. In the body‑fixed principal‑axis frame the components of <strong>L</strong> are <em>L₁ = I₁ ω₁</em>, <em>L₂ = I₂ ω₂</em>, <em>L₃ = I₃ ω₃</em>, where <em>I₁, I₂, I₃</em> are the principal moments of inertia and <em>ω₁, ω₂, ω₃</em> the angular‑velocity components along those axes. The time derivative of <strong>L</strong> in the rotating frame introduces the Coriolis‑type term <strong>ω × L</strong>, leading to Euler’s equations:</p>
+<p><em>I₁ dω₁/dt = (I₂ − I₃) ω₂ ω₃</em><br>
+<em>I₂ dω₂/dt = (I₃ − I₁) ω₃ ω₁</em><br>
+<em>I₃ dω₃/dt = (I₁ − I₂) ω₁ ω₂</em></p>
+<p>These three coupled first‑order equations completely describe the free motion of an asymmetric top. Two integrals of motion exist: the kinetic energy <em>T = ½ (I₁ ω₁² + I₂ ω₂² + I₃ ω₃²)</em> and the squared angular‑momentum magnitude <em>L² = I₁² ω₁² + I₂² ω₂² + I₃² ω₃²</em>. The intersection of the energy ellipsoid and the momentum sphere in ω‑space yields the polhode curves traced by the angular‑velocity vector in the body frame. For a symmetric body (<em>I₁ = I₂ ≠ I₃</em>) the equations reduce to simple precession of ω about the symmetry axis at the rate <em>Ω = (I₃ − I₁) ω₃ / I₁</em>. In the fully asymmetric case the motion is generally quasi‑periodic; the angular‑velocity vector wanders on a closed curve that can be expressed in terms of Jacobi elliptic functions. The qualitative behaviour depends on the ordering of the principal moments. If <em>I₁ < I₂ < I₃</em>, rotation about the axes with the smallest and largest moments (<em>I₁</em> and <em>I₃</em>) is stable, while rotation about the intermediate axis <em>I₂</em> is unstable — a result known as the intermediate‑axis theorem (or tennis‑racket theorem). Small perturbations about the intermediate axis grow exponentially, causing the body to tumble. This instability is exploited in spacecraft attitude control: a deliberate spin about the major axis provides passive stability, while a spin about the minor axis is used for spin‑stabilised projectiles.</p>
+<h4>Geometric Interpretation</h4>
+<p>The angular‑momentum vector <strong>L</strong> is fixed in space. In the body frame it appears to move on the intersection of the two ellipsoids mentioned above. The herpolhode is the curve traced by the tip of ω on the invariable plane perpendicular to <strong>L</strong>. For an asymmetric body the herpolhode is not a circle but a more complicated closed curve whose curvature changes sign, reflecting the non‑uniform precession rate. The period of the motion can be obtained from the complete elliptic integral of the first kind, <em>T = 4 K(k) / √[(I₃ − I₁)(I₂ − I₁) ω₁₀²]</em>, where <em>k</em> is the modulus determined by the initial conditions. This analytic solution is rarely required in examinations, but the qualitative picture — stable spin about extreme axes, unstable tumble about the intermediate axis — is a favourite conceptual question.</p>
+
+<h3>Stability of Rotation: The Intermediate Axis Theorem</h3>
+<p>The intermediate‑axis theorem states that a rigid body with three distinct principal moments of inertia <em>I₁ < I₂ < I₃</em> exhibits stable free rotation only about the axes corresponding to the smallest (<em>I₁</em>) and largest (<em>I₃</em>) moments. Rotation about the intermediate axis <em>I₂</em> is dynamically unstable: an infinitesimal disturbance causes the angular‑velocity vector to depart exponentially from that axis, leading to a tumbling motion that periodically brings the body close to the other two principal axes. The theorem can be proved by linearising Euler’s equations about a steady rotation <em>ω = (0, Ω, 0)</em>. Setting <em>ω₁ = ε₁, ω₂ = Ω + ε₂, ω₃ = ε₃</em> with <em>εᵢ ≪ Ω</em> and retaining only first‑order terms gives <em>I₁ dε₁/dt = (I₂ − I₃) Ω ε₃</em> and <em>I₃ dε₃/dt = (I₁ − I₂) Ω ε₁</em>. Eliminating <em>ε₃</em> yields <em>d²ε₁/dt² = −[(I₂ − I₃)(I₁ − I₂) Ω² / (I₁ I₃)] ε₁</em>. Because <em>(I₂ − I₃) < 0</em> and <em>(I₁ − I₂) < 0</em>, the product is positive, so the coefficient of <em>ε₁</em> is positive, giving exponential solutions <em>ε₁ ∝ e<sup>λ t</sup></em> with <em>λ = Ω √[(I₃ − I₂)(I₂ − I₁) / (I₁ I₃)]</em>. The same growth rate appears for <em>ε₃</em>. Hence any small perturbation grows, confirming instability. By contrast, linearisation about the major axis (<em>ω = (0,0,Ω)</em>) yields a negative coefficient, producing sinusoidal oscillations — stable precession. The minor axis gives an identical stable result.</p>
+<h4>Experimental Demonstrations</h4>
+<p>A classic demonstration uses a rectangular block (a book or a tennis racket) tossed into the air with a spin about each principal axis in turn. When spun about the axis through the centre of the face with the largest dimension (largest <em>I</em>) or the smallest dimension (smallest <em>I</em>), the block rotates cleanly. When spun about the intermediate axis (the axis through the centre of the edge of intermediate length), the block flips unpredictably, often completing a half‑turn before the spin reverses. The effect is also observed in spacecraft: the Explorer 1 satellite, launched in 1958, was designed to spin about its long axis (minor moment) but a small asymmetry caused it to tumble, illustrating the practical importance of the theorem. In modern attitude‑control design, reaction wheels are aligned with the major principal axis to guarantee passive stability, while thrusters are used to damp any residual motion about the intermediate axis.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Growth Rate of Intermediate‑Axis Instability</div>
+<div class="ex-text">A thin rectangular plate of mass <em>M</em> has sides <em>a = 0.30 m</em>, <em>b = 0.40 m</em>, <em>c = 0.05 m</em> (thickness). The plate rotates freely about its centre of mass with an initial angular speed <em>Ω = 10 rad s⁻¹</em> about the intermediate principal axis. Compute the exponential growth rate <em>λ</em> of a small perturbation.</div>
+<div class="ex-soln">The principal moments for a rectangular plate about its centre are <em>I₁ = (M/12)(b² + c²)</em>, <em>I₂ = (M/12)(a² + c²)</em>, <em>I₃ = (M/12)(a² + b²)</em>. Substituting the dimensions: <em>I₁ = (M/12)(0.40² + 0.05²) = (M/12)(0.1625) = 0.01354 M</em>, <em>I₂ = (M/12)(0.30² + 0.05²) = (M/12)(0.0925) = 0.00771 M</em>, <em>I₃ = (M/12)(0.30² + 0.40²) = (M/12)(0.25) = 0.02083 M</em>. Ordering gives <em>I₂ < I₁ < I₃</em>, so the intermediate axis is the one with moment <em>I₁</em>. The growth rate formula is <em>λ = Ω √[(I₃ − I₁)(I₁ − I₂) / (I₂ I₃)]</em>. Compute differences: <em>I₃ − I₁ = 0.02083 M − 0.01354 M = 0.00729 M</em>; <em>I₁ − I₂ = 0.01354 M − 0.00771 M = 0.00583 M</em>. Product <em>(I₃ − I₁)(I₁ − I₂) = 0.00729 × 0.00583 M² = 4.25 × 10⁻⁵ M²</em>. Denominator <em>I₂ I₃ = 0.00771 M × 0.02083 M = 1.606 × 10⁻⁴ M²</em>. Ratio = 0.2647. Square root = 0.5145. Finally <em>λ = 10 rad s⁻¹ × 0.5145 = 5.15 s⁻¹</em>. The perturbation amplitude doubles in <em>ln 2 / λ ≈ 0.135 s</em>.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks about stability of free rotation, first identify the ordering of the three principal moments. If they are not given, compute them from geometry. Remember that only the extreme axes are stable; the intermediate axis always yields exponential divergence. A quick check: if the body is a prolate spheroid (cigar‑shaped), the symmetry axis is the major axis (largest <em>I</em>) and is stable; the two equal minor axes are also stable because they are degenerate extremes. For an oblate spheroid (disc‑shaped), the symmetry axis is the minor axis (smallest <em>I</em>) and is stable. The intermediate‑axis instability appears only when all three moments are distinct.</div>
+</div>
+
+<h3>Rotational Dynamics in Non‑Inertial Frames: Coriolis and Centrifugal Torques</h3>
+<p>Analysing rotation from a frame that itself accelerates or rotates introduces fictitious torques analogous to the Coriolis and centrifugal forces in translational dynamics. Consider a rigid body observed from a frame rotating with angular velocity <strong>Ω</strong> relative to an inertial frame. The time derivative of any vector <strong>A</strong> in the inertial frame relates to its derivative in the rotating frame by <em>(dA/dt)ᵢₙₑᵣₜᵢₐₗ = (dA/dt)ᵣₒₜ + Ω × A</em>. Applying this to the angular momentum <strong>L</strong> of the body gives the equation of motion in the rotating frame:</p>
+<p><em>τₑₓₜ = (dL/dt)ᵣₒₜ + Ω × L</em></p>
+<p>The term <em>Ω × L</em> is the fictitious torque due to the rotation of the reference frame. If the body is also translating with velocity <strong>v</strong> of its centre of mass in the rotating frame, an additional Coriolis torque appears when the angular momentum is expressed about a point that is not the centre of mass. For a body rotating about a fixed point O in the rotating frame, the total fictitious torque is <em>τ_fict = Ω × L + M r_CM × (Ω × (Ω × r_CM) + 2 Ω × v_CM)</em>, where <em>r_CM</em> is the position of the centre of mass relative to O, <em>M</em> the total mass, and <em>v_CM</em> the centre‑of‑mass velocity in the rotating frame. The first part, <em>M r_CM × (Ω × (Ω × r_CM))</em>, is the centrifugal torque; the second, <em>2 M r_CM × (Ω × v_CM)</em>, is the Coriolis torque. These torques are essential in problems such as a gyroscope mounted on a rotating platform (e.g., a ship’s stabiliser) or a satellite in a rotating orbital frame.</p>
+<h4>Application: Gyrocompass on a Rotating Earth</h4>
+<p>A gyrocompass exploits the Earth’s rotation to align its spin axis with the meridian. The rotor spins at high speed <em>ω_s</em> about its symmetry axis, giving a large angular momentum <strong>L = I ω_s</strong>. In the Earth‑fixed frame (angular velocity <strong>Ω_E</strong>), the equation of motion for the rotor’s spin axis includes the fictitious torque <em>Ω_E × L</em>. When the spin axis is not aligned with the Earth’s axis, this torque causes a precession that drives the axis toward the meridian. Damping (usually viscous) removes the oscillatory nutation, leaving the axis pointing north. The steady‑state condition is <em>Ω_E × L = 0</em>, i.e. <strong>L</strong> parallel to <strong>Ω_E</strong>. The period of the undamped Schuler oscillation is <em>T = 2π / √(Ω_E ω_s cos φ)</em>, where <em>φ</em> is latitude. This principle underlies inertial navigation systems and is a standard topic in advanced mechanics examinations.</p>
+
+<h3>Coupled Translation‑Rotation: Rolling on Accelerating Platforms</h3>
+<p>Pure rolling on a stationary incline is a textbook staple, but many competitive problems place the rolling body on a platform that itself accelerates horizontally or vertically. The no‑slip condition couples the translational acceleration of the centre of mass <em>a_CM</em> to the angular acceleration <em>α</em> through <em>a_CM = α R</em> only when the contact point has zero velocity relative to the surface. If the surface moves with acceleration <em>a_s</em>, the constraint becomes <em>a_CM − a_s = α R</em> (signs chosen according to the direction of positive rotation). The friction force <em>f</em> is now an unknown that must satisfy both the translational equation <em>M a_CM = ΣF_ext + f</em> and the rotational equation <em>I α = f R</em> (for a symmetric body about the contact point). Eliminating <em>f</em> yields <em>a_CM = (ΣF_ext + (I/R²) a_s) / (M + I/R²)</em>. This formula shows that the effective inertia of the rolling body is increased by the term <em>I/R²</em>, and the platform acceleration appears as an additional driving term.</p>
+<h4>Example: Cylinder on a Horizontally Accelerating Plank</h4>
+<p>A solid cylinder of mass <em>M</em> and radius <em>R</em> rests on a rough plank that accelerates horizontally with <em>a_p</em>. The cylinder rolls without slipping. The only horizontal external force on the cylinder is the static friction <em>f</em>. Translational: <em>M a_CM = f</em>. Rotational about centre: <em>I α = f R</em> with <em>I = ½ M R²</em>. No‑slip: <em>a_CM − a_p = α R</em>. Substituting <em>α = f R / I = 2 f / (M R)</em> into the constraint gives <em>a_CM − a_p = 2 f / M</em>. Using <em>f = M a_CM</em> yields <em>a_CM − a_p = 2 a_CM</em> → <em>a_CM = −a_p</em>. The cylinder’s centre of mass accelerates opposite to the plank with the same magnitude; the friction force is <em>f = −M a_p</em> (backward on the cylinder). The cylinder therefore rolls backward relative to the ground while the plank moves forward. This counter‑intuitive result is a favourite in multiple‑choice questions testing sign conventions.</p>
+
+<h3>Energy Methods in Rotational Dynamics: Virtual Work and Lagrange’s Equations</h3>
+<p>While Newton‑Euler vector methods are powerful, energy‑based approaches often simplify problems with constraints. The principle of virtual work states that for a system in equilibrium, the total virtual work of applied forces and torques for any virtual displacement consistent with the constraints is zero. For dynamical systems, D’Alembert’s principle extends this by including inertial forces: <em>Σ (F_i − m_i a_i) · δr_i + Σ (τ_j − I_j α_j) · δθ_j = 0</em>. Choosing generalised coordinates <em>q_k</em> that automatically satisfy the constraints (e.g., the angle of rotation for a rolling cylinder) leads to Lagrange’s equations <em>d/dt (∂T/∂q̇_k) − ∂T/∂q_k = Q_k</em>, where <em>T</em> is the total kinetic energy (translational plus rotational) and <em>Q_k</em> the generalised forces derived from non‑conservative forces such as friction (when it does work). For pure rolling, static friction does no work, so it does not appear in <em>Q_k</em>; the constraint is holonomic and can be eliminated by expressing the translational velocity in terms of the angular velocity.</p>
+<h4>Lagrangian for a Rolling Sphere on a Moving Wedge</h4>
+<p>Consider a uniform sphere of mass <em>m</em> and radius <em>R</em> rolling without slipping on a wedge of mass <em>M</em> that can slide on a frictionless horizontal table. Let <em>x</em> be the horizontal coordinate of the wedge and <em>θ</em> the rotation angle of the sphere relative to the wedge. The sphere’s centre‑of‑mass coordinates are <em>x_CM = x + s cos α</em>, <em>y_CM = s sin α</em>, where <em>s</em> is the distance along the wedge and <em>α</em> the wedge angle. The no‑slip condition gives <em>ṡ = R θ̇</em>. The kinetic energy is <em>T = ½ M ẋ² + ½ m (ẋ + ṡ cos α)² + ½ m (ṡ sin α)² + ½ I θ̇²</em> with <em>I = ⅖ m R²</em>. Substituting <em>ṡ = R θ̇</em> and simplifying yields <em>T = ½ (M + m) ẋ² + m R cos α ẋ θ̇ + ½ m R² (1 + ⅖) θ̇²</em>. The Lagrangian <em>L = T − V</em> with <em>V = m g s sin α = m g R θ sin α</em>. Lagrange’s equations for <em>x</em> and <em>θ</em> give two coupled linear equations whose solution provides the acceleration of the wedge and the angular acceleration of the sphere. This method avoids dealing with the unknown normal and friction forces at the contact, illustrating the economy of the energy approach.</p>
+
+<ul>
+<li>Assuming the scalar moment of inertia applies for any rotation axis; the inertia tensor must be used when the axis is not a principal axis.</li>
+<li>Confusing precession angular velocity with spin angular velocity; precession is typically orders of magnitude slower.</li>
+<li>Neglecting the change in moment of inertia when applying angular momentum conservation to variable‑mass systems.</li>
+<li>Taking the direction of kinetic friction opposite to the centre‑of‑mass velocity instead of opposite to the slip velocity at the contact point.</li>
+<li>Using the pure‑rolling energy formula when slipping occurs; kinetic friction does work and mechanical energy is not conserved.</li>
+<li>Forgetting that static friction does no work in pure rolling, so it cannot appear in the work‑energy theorem.</li>
+<li>Treating the torque from a gimballed engine as a pure force without the lever arm; the torque is the cross product of the nozzle offset and the thrust vector.</li>
+</ul>
+<p>These advanced topics extend the basic framework of rotational dynamics and are essential for solving the most challenging problems in mechanics.</p>        <script>
+        (function(){try{
+          var m=document.getElementById("lesson-meta");if(!m)return;
+          var cur=m.getAttribute("data-version")||"";
+          var label=m.getAttribute("data-updated-label")||"";
+          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");
+          var k="vlymbooq-lesson-seen:"+location.pathname;
+          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}
+          var box=document.getElementById("lesson-new");
+          if(prev&&prev.v&&prev.v!==cur){
+            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});
+            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
+            if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
+            else{html+="The explanations and practice were revised.";}
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            box.innerHTML=html;box.hidden=false;
+            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
+            document.getElementById("lesson-new-ok").onclick=save;
+            return; // keep the old version stored until acknowledged
+          }
+          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));
+        }catch(e){}})();
+        </script>
+                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-work-energy-power.html" class="btn btn-primary">&#x2190; Work, Energy &amp; Power</a>
+                    <a href="lesson-gravitation.html" class="btn btn-success">Gravitation &amp; Satellites &#x2192;</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":101,"text":"The position vector of the centre of mass of a continuous body is obtained by which of the following procedures?","options":[{"l":"a","t":"Taking the arithmetic mean of the position vectors of all mass elements.","c":false},{"l":"b","t":"Taking the mass‑weighted average of the position vectors, i.e. R = (∫ r dm) / (∫ dm).","c":true},{"l":"c","t":"Finding the geometric centre of the body's shape.","c":false},{"l":"d","t":"Integrating the position vector over the volume without mass weighting.","c":false}],"sol":"The lesson states that for a continuous body the centre of mass vector is R = (∫ r dm) / (∫ dm), which is the mass‑weighted average of position vectors. The arithmetic mean (option A) ignores mass distribution, the geometric centre (option C) only coincides with the centre of mass for uniform symmetric bodies, and integrating without mass weighting (option D) does not yield the correct physical point."},{"id":102,"text":"A rocket in free space ejects exhaust gases. The centre of mass of the rocket‑exhaust system follows a simple parabolic path. This illustrates which principle?","options":[{"l":"a","t":"Internal forces can change the motion of the centre of mass.","c":false},{"l":"b","t":"The centre of mass moves as if all external forces act at that point, independent of internal dynamics.","c":true},{"l":"c","t":"The centre of mass of a system always remains at rest if no external force acts.","c":false},{"l":"d","t":"The trajectory of the centre of mass depends on the details of mass ejection.","c":false}],"sol":"According to the lesson, internal forces occur in equal and opposite pairs and cancel in the net force on the system. Consequently the centre of mass moves as if all external forces were applied at that point, and its trajectory is independent of internal dynamics such as mass ejection. Option B captures this principle exactly."},{"id":103,"text":"For a rigid body to be in complete static equilibrium, which set of conditions must hold?","options":[{"l":"a","t":"Only the vector sum of forces is zero.","c":false},{"l":"b","t":"Only the vector sum of torques about a chosen axis is zero.","c":false},{"l":"c","t":"Both the vector sum of forces and the vector sum of torques about any axis are zero.","c":true},{"l":"d","t":"The vector sum of forces is zero and the vector sum of torques about a specific axis is zero.","c":false}],"sol":"The lesson specifies that a rigid body is in rotational equilibrium when the vector sum of all torques about any axis is zero, and this must hold simultaneously with the translational equilibrium condition ΣF = 0 for complete static equilibrium. Option C correctly states both requirements and the condition that torque equilibrium must be valid for any axis."},{"id":104,"text":"According to the parallel‑axis theorem, the moment of inertia I about an axis parallel to an axis through the centre of mass and separated by a distance d is given by:","options":[{"l":"a","t":"I = I_cm + M d","c":false},{"l":"b","t":"I = I_cm + M d²","c":true},{"l":"c","t":"I = I_cm + M² d","c":false},{"l":"d","t":"I = I_cm + M d³","c":false}],"sol":"The parallel‑axis theorem states that the moment of inertia about a parallel axis displaced by distance d from the centre‑of‑mass axis is I = I_cm + M d². The other options incorrectly use linear, squared mass, or cubic distance dependencies, which do not match the theorem."},{"id":105,"text":"In pure rolling without slipping, the fraction of the total kinetic energy that is rotational for a solid sphere is:","options":[{"l":"a","t":"1/2","c":false},{"l":"b","t":"1/3","c":false},{"l":"c","t":"2/7","c":true},{"l":"d","t":"2/5","c":false}],"sol":"The lesson gives the rotational kinetic energy fraction as I/(M R² + I). For a solid sphere I = (2/5) M R², so the fraction becomes (2/5) / (1 + 2/5) = (2/5) / (7/5) = 2/7. The other fractions correspond to a thin hoop (1/2), a solid cylinder (1/3), and the moment‑of‑inertia coefficient (2/5) itself, not the energy fraction."},{"id":106,"text":"For a rigid body rotating freely in space, rotation about which principal axis is unstable according to the intermediate axis theorem?","options":[{"l":"a","t":"Axis with the largest principal moment of inertia","c":false},{"l":"b","t":"Axis with the smallest principal moment of inertia","c":false},{"l":"c","t":"Axis with the intermediate principal moment of inertia","c":true},{"l":"d","t":"Any axis passing through the centre of mass","c":false}],"sol":"The lesson text explicitly states: \"Rotation about the axis with the largest or smallest principal moment is stable, while rotation about the intermediate axis is unstable — a classic demonstration with a tossed book or a tennis racket.\" This is a direct consequence of Euler's equations for free rotation where the intermediate axis corresponds to a saddle point in the energy-momentum landscape, leading to exponential divergence of small perturbations. The other two axes are centres of stability."},{"id":107,"text":"A symmetric top spins with angular velocity ω₃ about its symmetry axis (moment of inertia I₃). A torque τ is applied perpendicular to the spin axis. What is the precession angular velocity Ω?","options":[{"l":"a","t":"τ I₃ ω₃","c":false},{"l":"b","t":"τ / (I₃ ω₃)","c":true},{"l":"c","t":"I₃ ω₃ / τ","c":false},{"l":"d","t":"√(τ / I₃ ω₃)","c":false}],"sol":"The lesson provides the formula for precession angular velocity: Ω = τ / (I₃ ω₃). This is derived from τ = dL/dt where the angular momentum L ≈ I₃ ω₃ is directed along the spin axis. The applied torque τ is perpendicular to L, causing the tip of the L vector to rotate in a horizontal plane with angular speed Ω = τ / L = τ / (I₃ ω₃). Precession is typically orders of magnitude slower than the spin ω₃."},{"id":108,"text":"During the separation of stages in a multistage rocket, impulsive internal forces act. If no external torque acts during the brief separation event, what happens to the total angular momentum of the system?","options":[{"l":"a","t":"It increases due to the impulse","c":false},{"l":"b","t":"It decreases due to mass loss","c":false},{"l":"c","t":"It remains constant","c":true},{"l":"d","t":"It becomes zero for the upper stage","c":false}],"sol":"The text states: \"The total angular momentum of the combined system just before separation equals the sum of the angular momenta of the stages just after, provided no external torque acts during the brief separation event.\" This is the principle of conservation of angular momentum applied to a system experiencing only internal impulsive forces during separation. The angular momentum is redistributed among the stages but the vector sum remains unchanged."},{"id":109,"text":"A cylinder is rolling with slipping on a rough horizontal surface. The velocity of the centre of mass is v_cm to the right, and the angular velocity ω is clockwise such that the contact point slips to the right relative to the surface. What is the direction of the kinetic friction force on the cylinder?","options":[{"l":"a","t":"To the right, opposite to v_cm","c":false},{"l":"b","t":"To the left, opposite to v_cm","c":false},{"l":"c","t":"To the right, opposite to the slip velocity","c":false},{"l":"d","t":"To the left, opposite to the slip velocity","c":true}],"sol":"The lesson highlights a common error: \"Taking the direction of kinetic friction opposite to the centre‑of‑mass velocity instead of opposite to the slip velocity at the contact point.\" Here, the cylinder spins clockwise and moves right. The velocity of the contact point relative to the ground is v_cm - Rω (taking right as positive). Since it slips to the right, the slip velocity is to the right. Kinetic friction always opposes the relative motion (slip) at the contact point, so it acts to the left."},{"id":110,"text":"A slender rocket loses mass uniformly while firing its engine aligned with the symmetry axis. If no external torque acts, how does the spin angular velocity ω change with mass M?","options":[{"l":"a","t":"ω ∝ M","c":false},{"l":"b","t":"ω ∝ 1/M","c":true},{"l":"c","t":"ω ∝ M²","c":false},{"l":"d","t":"ω remains constant","c":false}],"sol":"The text states: \"If the thrust is aligned with the symmetry axis, τ_thrust = 0 and the spin rate increases as ω ∝ 1/I ∝ 1/M.\" For a slender rocket losing mass uniformly, the moment of inertia I is proportional to mass M (I ∝ M). With zero external torque, angular momentum L = Iω is conserved. As M decreases, I decreases proportionally, so ω must increase inversely with M to keep L constant."},{"id":111,"text":"In the body‑fixed principal‑axis frame, the time derivative of the angular momentum vector L for a freely rotating rigid body includes a Coriolis‑type term. Which of the following represents this term?","options":[{"l":"a","t":"ω × L","c":true},{"l":"b","t":"L × ω","c":false},{"l":"c","t":"ω · L","c":false},{"l":"d","t":"L · ω","c":false}],"sol":"The angular momentum in an inertial frame is constant for free rotation. In the rotating body frame the time derivative is related by dL/dt_inertial = dL/dt_body + ω × L. Since dL/dt_inertial = 0, the body‑frame derivative equals −ω × L, so the Coriolis‑type term that appears is ω × L. This term leads directly to Euler’s equations I₁ dω₁/dt = (I₂−I₃)ω₂ω₃, etc."},{"id":112,"text":"The curve traced by the angular‑velocity vector ω in the body‑fixed frame during free rotation of an asymmetric rigid body is known as:","options":[{"l":"a","t":"Herpolhode","c":false},{"l":"b","t":"Polhode","c":true},{"l":"c","t":"Invariable plane","c":false},{"l":"d","t":"Momentum sphere","c":false}],"sol":"In the body frame the angular‑velocity vector ω moves on the intersection of the energy ellipsoid T = ½(I₁ω₁²+I₂ω₂²+I₃ω₃²) and the momentum sphere L² = I₁²ω₁²+I₂²ω₂²+I₃²ω₃². This intersection curve is called the polhode. The herpolhode is the trace of ω on the invariable plane perpendicular to the fixed space‑frame angular momentum L."},{"id":113,"text":"For a uniform sphere rolling without slipping on a wedge that can slide horizontally, the kinetic energy expressed in terms of the wedge coordinate x and sphere rotation angle θ contains a coupling term proportional to:","options":[{"l":"a","t":"ẋ²","c":false},{"l":"b","t":"θ̇²","c":false},{"l":"c","t":"ẋ θ̇","c":true},{"l":"d","t":"ẋ sinα","c":false}],"sol":"The sphere’s centre‑of‑mass velocity has components ẋ + ṡ cosα horizontally and ṡ sinα vertically, with ṡ = Rθ̇ from the no‑slip condition. Substituting into T = ½Mẋ² + ½m[(ẋ+Rθ̇ cosα)² + (Rθ̇ sinα)²] + ½Iθ̇² and using I = ⅖mR² gives a cross term mR cosα ẋ θ̇. This coupling term appears in the Lagrangian and leads to coupled equations of motion for x and θ."}];
+        var answered={},correctCount=0,lessonSlug="rotational-motion";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

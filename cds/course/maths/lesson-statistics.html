@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Statistics &amp; Probability — CDS Elementary Mathematics Lesson | vlymbooq</title>
+    <meta name="description" content="Free CDS Elementary Mathematics Statistics &amp; Probability lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/cds/course/maths/lesson-statistics.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95em}
+        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}
+        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/cds/">CDS</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Elementary Mathematics</div>
+                    <a href="lesson-number-system.html">Number System</a>
+                    <a href="lesson-percentage.html">Percentage & Profit-Loss</a>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-geometry-mensuration.html">Geometry & Mensuration</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-statistics.html" class="active">Statistics & Probability</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; CDS Elementary Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Statistics &amp; Probability</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 18 Nov 2026 &#183; 4,149 words &#183; illustrated</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.75em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 21 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="34c3347d5dc3" data-updated="2026-11-21" data-updated-label="21 Nov 2026" data-headings="[&quot;Mean&quot;,&quot;Median&quot;,&quot;Mode&quot;,&quot;Variance&quot;,&quot;Probability Basics&quot;,&quot;Common Traps&quot;,&quot;Memory Tricks&quot;,&quot;Weighted Mean and Combined Series&quot;,&quot;Grouped Data: Mean, Median, Mode from Frequency Tables&quot;,&quot;Measures of Dispersion: Standard Deviation and Coefficient of Variation&quot;,&quot;Conditional Probability and Bayes&#39; Theorem&quot;,&quot;Probability Distributions: Binomial and Poisson Basics&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Mean, median, mode, variance, probability basics.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Mean · Median · Mode · Probability</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+<!-- course-figure:probability-statistics-figure -->
+<figure class="lesson-figure" data-figure="probability-statistics-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Probability Statistics Concept Flow for Governance Exam Revision"><defs><marker id="arrowhead-lesson-probability-statistics-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="50" y="50" width="200" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="150" y="71.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="150" dy="0">Foundation</tspan><tspan x="150" dy="16.25">Probability</tspan></text><rect x="300" y="50" width="200" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="400" y="71.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Conditional</tspan><tspan x="400" dy="16.25">Probability</tspan></text><rect x="550" y="50" width="180" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="640" y="80" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="640" dy="0">Random Variables</tspan></text><rect x="50" y="200" width="200" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="150" y="230" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="150" dy="0">Descriptive Stats</tspan></text><rect x="300" y="200" width="200" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="400" y="230" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Key Distributions</tspan></text><rect x="550" y="200" width="180" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="640" y="230" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="640" dy="0">Variance &amp; SD</tspan></text><path d="M 250 80 L 300 80" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-probability-statistics-figure)"/><path d="M 500 80 L 550 80" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-probability-statistics-figure)"/><path d="M 250 230 L 300 230" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-probability-statistics-figure)"/><path d="M 500 230 L 550 230" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-probability-statistics-figure)"/></g><g><text x="275" y="70" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="275" dy="0">Foundation→Conditional</tspan></text><text x="525" y="70" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="525" dy="0">Conditional→RV</tspan></text><text x="275" y="220" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="275" dy="0">Desc→Dist</tspan></text><text x="525" y="220" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="525" dy="0">Dist→Var</tspan></text><text x="90.13" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="90.13" dy="0">Art. 14: Probability Basics</tspan></text><text x="550" y="350" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="550" dy="0">Exam Hook: Bayes' Theorem</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Probability Statistics Concept Flow for Governance Exam Revision</strong> — Shows how basic probability leads to conditional reasoning, random variables, descriptive measures, and key distributions.
+    &middot; <a href="../../../figures/svg-probability-statistics-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Statistics &amp; Probability</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+<p>Welcome to the Statistics and Probability module, where we transform raw numbers into meaningful insights and predict future outcomes based on chance. In this lesson, you will master the four pillars of data analysis: Mean, Median, Mode, and Variance, alongside the fundamental rules of probability. By the end of this session, you will be able to calculate central tendencies, understand data spread, and solve complex probability problems with confidence.</p>
+
+
+<h3>Mean</h3>
+<p>The mean is often called the average, but it is specifically defined as the sum of all values divided by the total count of those values. This formula works because it distributes the total value equally among every data point, creating a balance point for the dataset. Examiners typically ask you to calculate the mean from a list of numbers or find an unknown variable when the mean is given.</p>
+<p>To calculate the mean, add up every single number in your set and then divide that total by how many numbers there are. If one value changes, the mean shifts immediately because it depends on the sum of all parts. This makes the mean sensitive to extreme values, or outliers, which can pull the average higher or lower than the typical data point.</p>
+
+<h3>Median</h3>
+<p>The median is the middle number in a dataset that has been arranged from smallest to largest, representing the exact center of the distribution. Unlike the mean, the median does not change if you add an extremely large or small number to the list, making it robust against outliers. The examiner usually provides a list of numbers and asks for the median, often testing your ability to handle sets with an odd count versus an even count.</p>
+<p>If your dataset has an odd number of items, the median is simply the single number sitting exactly in the middle of the sorted list. If your dataset has an even number of items, there are two numbers in the middle, so you must find their average to get the median. Always remember to sort the data first; without sorting, identifying the middle position is impossible.</p>
+
+<h3>Mode</h3>
+<p>The mode is the value that appears most frequently within a specific dataset, indicating the most common occurrence in your group of numbers. A dataset can have one mode, multiple modes if several values share the highest frequency, or no mode at all if every number appears exactly once. Examiners love to trick students by presenting datasets with two modes, known as bimodal distributions, or asking you to identify that a mode does not exist.</p>
+<p>To find the mode, count how many times each unique number appears in your list and select the one with the highest count. If two numbers appear the same amount of times and that count is higher than any other, the dataset has two modes. It is crucial to distinguish between a set with no repeating numbers, which has no mode, and a set where all numbers repeat equally.</p>
+
+<h3>Variance</h3>
+<p>Variance measures how spread out the data points are from the mean, providing a numerical value for the dispersion of your dataset. It is calculated by finding the difference between each data point and the mean, squaring those differences to avoid negative values canceling out positives, averaging them, and taking the square root for standard deviation. The examiner often asks for the variance or standard deviation to determine if a dataset is tightly clustered or widely scattered.</p>
+<p>The process begins by calculating the mean, then subtracting the mean from each individual data point to find the deviation. Square each of these deviations to ensure they are positive, sum them up, and divide by the number of items for population variance or by one less than the count for sample variance. Taking the square root of this result gives you the standard deviation, which is in the same units as your original data.</p>
+
+<h3>Probability Basics</h3>
+<p>Probability is a measure of how likely an event is to occur, expressed as a number between zero and one where zero means impossible and one means certain. The fundamental rule states that probability equals the number of favorable outcomes divided by the total number of possible outcomes in the sample space. Examiners frequently test your understanding of independent events versus dependent events and ask you to calculate probabilities for multiple steps.</p>
+<p>For a single event, count all the ways the specific outcome can happen and divide that by the total number of distinct possibilities available. If two events are independent, meaning the first does not affect the second, you multiply their individual probabilities together to find the combined probability. If events are mutually exclusive, meaning they cannot happen at the same time, you add their probabilities together.</p>
+
+<div class="example-box">
+  <div class="ex-title">Calculating Mean and Median from a List</div>
+  <div class="ex-text">Find the mean and median of the following set of test scores: 5, 10, 15, 20, 25.</div>
+  <div class="ex-soln">To find the mean, sum the values: 5 + 10 + 15 + 20 + 25 equals 75. Divide this sum by the count of 5 numbers to get a mean of 15. To find the median, look at the list; it is already sorted from smallest to largest. Since there are 5 numbers (an odd count), the middle number is the third one, which is 15. In this specific case, the mean and median are identical because the data is perfectly symmetric.</div>
+</div>
+
+<div class="example-box">
+  <div class="ex-title">Dealing with Outliers in Mean vs Median</div>
+  <div class="ex-text">Compare the mean and median of two sets. Set A: 10, 20, 30. Set B: 10, 20, 100.</div>
+  <div class="ex-soln">For Set A, the sum is 60 divided by 3, giving a mean of 20. The middle number in the sorted list is also 20. For Set B, the sum is 130 divided by 3, giving a mean of approximately 43.3. However, the median for Set B is still 20 because it is the middle number regardless of the extreme value 100. This demonstrates that the mean is heavily influenced by the outlier 100, while the median remains stable at 20.</div>
+</div>
+
+<h3>Common Traps</h3>
+<ul>
+  <li><strong>Forgetting to sort data:</strong> Students often try to find the median without arranging numbers in order, leading to incorrect identification of the middle value.</li>
+  <li><strong>Miscounting the divisor for variance:</strong> Using 'n' instead of 'n-1' when calculating sample variance is a frequent error that lowers the final result artificially.</li>
+  <li><strong>Ignoring negative deviations in variance:</strong> Failing to square the differences before averaging them causes positive and negative numbers to cancel out, resulting in a false zero variance.</li>
+  <li><strong>Multiplying dependent events incorrectly:</strong> Assuming independence when one event changes the conditions for the next, such as drawing cards without replacement.</li>
+</ul>
+
+<h3>Memory Tricks</h3>
+<ul>
+  <li><em>The "Balance Scale" for Mean:</em> Imagine a seesaw; the mean is the fulcrum where the total weight balances perfectly. If you add a heavy weight (outlier), the fulcrum must move toward it.</li>
+  <li><em>The "Middle Seat" for Median:</em> Visualize students sitting in a row. The median is simply the student sitting in the exact middle seat, regardless of how tall or short they are.</li>
+  <li><em>The "Most Popular" for Mode:</em> Think of a popularity contest; the mode is the candidate who receives the most votes, even if they do not win by a landslide.</li>
+  <li><em>The "Spread Checker" for Variance:</em> Variance tells you how far the students are standing from the center line. If everyone stands right next to the center, variance is low. If they scatter everywhere, variance is high.</li>
+</ul>
+
+<div class="tip-box">
+  <div class="tip-title">Exam-Day Strategy</div>
+  <div class="tip-text">When facing a statistics question on exam day, always write down the mean first if you need to find the variance or standard deviation. This saves time and prevents calculation errors later. For probability questions, draw a tree diagram mentally or on scratch paper to visualize independent versus dependent steps. If asked for the median, take one second to sort your numbers; it is faster than recalculating an average that might be skewed by outliers. Finally, read the question carefully to see if it asks for sample variance (divide by n-1) or population variance (divide by n), as this single detail determines your final answer.</div>
+</div>
+<h3>Weighted Mean and Combined Series</h3>
+<p>The simple arithmetic mean treats every observation as equally important. In many examination problems, however, data points carry different weights — for example, marks in subjects with different credit hours, or prices of commodities purchased in different quantities. The weighted mean is calculated by multiplying each value by its corresponding weight, summing these products, and then dividing by the sum of the weights. Symbolically, if the values are x₁, x₂, …, xₙ with weights w₁, w₂, …, wₙ, the weighted mean = (Σ wᵢ xᵢ) ÷ (Σ wᵢ). A common twist is to give two separate groups with their own means and sizes and ask for the combined mean. The combined mean of group A (size n₁, mean μ₁) and group B (size n₂, mean μ₂) is (n₁μ₁ + n₂μ₂) ÷ (n₁ + n₂). This formula extends naturally to any number of groups. Examiners often test whether you can recognise that the combined mean lies between the individual group means, and that it is pulled toward the group with the larger total weight. When weights are frequencies in a frequency distribution, the weighted mean reduces to the usual mean of grouped data. Care must be taken to use the correct totals: the sum of frequencies is the denominator, not the number of distinct classes.</p>
+<p>Another layer appears when the data are presented as a mixture of individual observations and a frequency table. In such cases, compute the contribution of each part separately and then apply the combined‑mean formula. For instance, if five students scored 70, 75, 80, 85, 90 and a second class of 20 students has a mean of 78, the overall mean for 25 students is (5 × 80 + 20 × 78) ÷ 25 = 78.4. Note that the mean of the first five scores is 80, not the sum of the scores. Misreading the given mean as a sum is a frequent error. The weighted mean also underpins the concept of expected value in probability, where probabilities act as weights. Understanding this link helps in solving problems that blend statistics and probability.</p>
+<p>When weights are not given explicitly but are implied by the context — such as “the average of three numbers is 12 and the average of another two numbers is 18” — the implied weights are the counts of numbers (3 and 2). The combined average is (3×12 + 2×18) ÷ 5 = 14.4. If the problem states “the overall average of all five numbers is 15”, you can set up an equation to find a missing group mean or a missing count. This algebraic manipulation is a favourite of examiners because it tests both statistical understanding and basic algebra.</p>
+<p>Finally, remember that the weighted mean is not resistant to outliers any more than the simple mean. A single extremely large value with a large weight can dominate the result. In contrast, the median of a weighted data set (the weighted median) is defined as the value where the cumulative weight reaches half the total weight. The weighted median is rarely asked directly, but knowing its definition prevents confusion when a question mentions “median of a frequency distribution”.</p>
+
+<h3>Grouped Data: Mean, Median, Mode from Frequency Tables</h3>
+<p>Large data sets are usually summarised in grouped frequency tables with class intervals. The mean of grouped data is estimated by assuming that all observations in a class are concentrated at the class midpoint. The midpoint (class mark) is (lower limit + upper limit) ÷ 2. Multiply each midpoint by its frequency, sum these products, and divide by the total frequency. This yields the estimated mean. The accuracy depends on the width of the classes; narrower classes give better approximations. When class intervals are not continuous (e.g., 0‑10, 11‑20), convert them to continuous form by adjusting the boundaries (subtract 0.5 from lower limits, add 0.5 to upper limits) before computing midpoints.</p>
+<p>The median of grouped data lies in the median class — the class where the cumulative frequency first reaches or exceeds N ÷ 2, where N is the total frequency. The formula is: Median = L + [(N÷2 − CF) ÷ f] × h, where L is the lower boundary of the median class, CF is the cumulative frequency of the class preceding the median class, f is the frequency of the median class, and h is the class width. This linear interpolation assumes a uniform distribution of observations within the median class. A common mistake is to use the lower limit instead of the lower boundary, or to forget to convert to continuous classes when the original intervals are discrete.</p>
+<p>The mode for grouped data is estimated using the modal class — the class with the highest frequency. The formula is: Mode = L + [(f₁ − f₀) ÷ (2f₁ − f₀ − f₂)] × h, where L is the lower boundary of the modal class, f₁ is the frequency of the modal class, f₀ is the frequency of the class preceding the modal class, f₂ is the frequency of the class succeeding the modal class, and h is the class width. This formula derives from fitting a parabola through the tops of the three histogram bars. If the modal class is the first or last class, the formula cannot be applied directly; in such cases the mode is simply taken as the midpoint of that class, or the question may state that the mode is not defined.</p>
+<p>Examiners often combine these three measures in a single question: “Find the mean, median, and mode of the following distribution.” They may also ask for the empirical relationship Mode ≈ 3 Median − 2 Mean, which holds approximately for moderately skewed distributions. Knowing when this relationship is applicable (unimodal, roughly symmetric) and when it fails (highly skewed, multimodal) is crucial. Additionally, questions may provide the mean and median and ask you to estimate the mode using the empirical formula, or vice‑versa. Always check whether the data are grouped or ungrouped before selecting the appropriate method.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Weighted Mean from Two Groups</div>
+<div class="ex-text">A class of 30 students has an average score of 72. Another class of 20 students has an average score of 85. What is the combined average score of all 50 students?</div>
+<div class="ex-soln">Step 1: Identify the group sizes (weights) and group means. Group 1: n₁ = 30, μ₁ = 72. Group 2: n₂ = 20, μ₂ = 85. Step 2: Apply the combined‑mean formula: Combined mean = (n₁μ₁ + n₂μ₂) ÷ (n₁ + n₂) = (30×72 + 20×85) ÷ 50 = (2160 + 1700) ÷ 50 = 3860 ÷ 50 = 77.2. The combined average is 77.2.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question gives two or more group means with their sizes, write the combined‑mean formula immediately. Plug the numbers in a single line to avoid transcription errors. For grouped data, always convert to continuous classes first; draw a small cumulative‑frequency column beside the table to locate the median and modal classes quickly.</div>
+</div>
+
+<h3>Measures of Dispersion: Standard Deviation and Coefficient of Variation</h3>
+<p>While the mean, median, and mode describe central tendency, measures of dispersion describe how spread out the data are. The most common measure is the standard deviation (σ for population, s for sample). It is the square root of the variance. For a population of N values xᵢ with mean μ, σ = √[ Σ (xᵢ − μ)² ÷ N ]. For a sample of n values with mean x̄, s = √[ Σ (xᵢ − x̄)² ÷ (n − 1) ]. The denominator n − 1 (Bessel’s correction) makes the sample variance an unbiased estimator of the population variance. In grouped data, replace each xᵢ by the class midpoint and each frequency by the weight; the formulas become σ = √[ Σ fᵢ (mᵢ − μ)² ÷ N ] and s = √[ Σ fᵢ (mᵢ − x̄)² ÷ (N − 1) ] where mᵢ are midpoints.</p>
+<p>A useful shortcut for ungrouped data is the “assumed mean” method: choose a convenient value A (often a midpoint), compute deviations dᵢ = xᵢ − A, then variance = (Σ dᵢ² ÷ n) − (Σ dᵢ ÷ n)² for population, and replace n by n−1 for sample. This reduces arithmetic with large numbers. For grouped data, use step‑deviation: let uᵢ = (mᵢ − A) ÷ h, where h is the class width. Then variance = h² [ (Σ fᵢ uᵢ² ÷ N) − (Σ fᵢ uᵢ ÷ N)² ]. The standard deviation is the square root of this variance. Examiners frequently test the step‑deviation method because it speeds up calculations dramatically.</p>
+<p>The coefficient of variation (CV) expresses the standard deviation as a percentage of the mean: CV = (σ ÷ μ) × 100 for population, or (s ÷ x̄) × 100 for sample. It is a dimensionless measure, allowing comparison of variability across data sets with different units or vastly different means. For example, a CV of 5 % indicates low relative dispersion, while a CV of 30 % signals high relative dispersion. In exam questions, you may be asked to determine which of two series is more consistent; the series with the lower CV is more consistent. Remember that CV is undefined when the mean is zero or negative.</p>
+<p>Another related concept is the mean deviation (average absolute deviation) about the mean or median. It is less used because it is not algebraically tractable, but it appears occasionally. The formula about the mean is MD = Σ |xᵢ − μ| ÷ N. For grouped data, use midpoints and frequencies. The standard deviation is always greater than or equal to the mean deviation for the same data set. Knowing this inequality can help eliminate impossible answer choices in multiple‑choice questions.</p>
+<p>Finally, be aware of the effect of linear transformations on dispersion. If each observation is multiplied by a constant k, the standard deviation is multiplied by |k|, and the variance is multiplied by k². Adding a constant shifts the mean but leaves the standard deviation unchanged. These properties are often tested in questions that ask for the new standard deviation after a change of scale (e.g., converting temperatures from Celsius to Fahrenheit).</p>
+
+<h3>Conditional Probability and Bayes' Theorem</h3>
+<p>Conditional probability quantifies the likelihood of an event given that another event has already occurred. If A and B are two events with P(B) > 0, the conditional probability of A given B is P(A|B) = P(A ∩ B) ÷ P(B). This definition is the foundation for many multi‑step probability problems. A typical exam scenario: “A bag contains 4 red and 6 blue balls. Two balls are drawn without replacement. Find the probability that the second ball is red given that the first ball was blue.” Here the sample space shrinks after the first draw, so P(Red₂ | Blue₁) = 4 ÷ 9. Recognising whether draws are with or without replacement determines whether events are independent or dependent.</p>
+<p>The multiplication rule follows directly: P(A ∩ B) = P(A) × P(B|A) = P(B) × P(A|B). For independent events, P(B|A) = P(B), so the rule reduces to P(A ∩ B) = P(A) × P(B). Examiners often test the distinction by asking for the probability of a sequence of events where the condition changes the composition of the sample space. Drawing cards, selecting students from a class, or successive machine operations are common contexts.</p>
+<p>Bayes' theorem reverses the conditioning: P(A|B) = [P(B|A) × P(A)] ÷ P(B). The denominator P(B) can be expanded using the law of total probability: P(B) = Σ P(B|Aᵢ) × P(Aᵢ) over a partition {Aᵢ} of the sample space. A classic problem: “A factory has two machines. Machine 1 produces 60 % of items with a 2 % defect rate; Machine 2 produces 40 % with a 5 % defect rate. An item is chosen at random and found defective. What is the probability it came from Machine 1?” Let D = defective, M₁ = from Machine 1. P(M₁|D) = P(D|M₁)P(M₁) ÷ [P(D|M₁)P(M₁) + P(D|M₂)P(M₂)] = (0.02×0.6) ÷ (0.02×0.6 + 0.05×0.4) = 0.012 ÷ 0.032 = 0.375. The answer is 37.5 %.</p>
+<p>When applying Bayes' theorem, always define the events clearly and write the partition. A common trap is to confuse P(A|B) with P(B|A). The theorem explicitly corrects this inversion. Another trap is to forget that the prior probabilities P(Aᵢ) must sum to 1. In medical testing problems, the prior is the disease prevalence; the likelihoods are sensitivity and false‑positive rate. The posterior probability (positive predictive value) is often surprisingly low when prevalence is low, a counter‑intuitive result that examiners like to highlight.</p>
+<p>Tree diagrams are an excellent visual aid for conditional probability and Bayes' theorem. Draw the first level branches for the partition events (e.g., machines), label each branch with its probability. From each, draw second‑level branches for the outcome (defective / non‑defective) with conditional probabilities. Multiply along the branches to get joint probabilities. The desired conditional probability is the ratio of the relevant joint probability to the sum of joint probabilities for the observed outcome. Practising tree diagrams reduces algebraic errors and makes the law of total probability transparent.</p>
+
+<h3>Probability Distributions: Binomial and Poisson Basics</h3>
+<p>Discrete probability distributions model the number of successes in a fixed number of trials or the number of events occurring in a fixed interval. The binomial distribution applies when there are n independent Bernoulli trials, each with two outcomes (success/failure) and constant success probability p. The probability of exactly k successes is P(X = k) = C(n, k) pᵏ (1−p)ⁿ⁻ᵏ, where C(n, k) = n! ÷ [k! (n−k)!]. The mean is np and the variance is np(1−p). Examiners often ask for the probability of “at most k” or “at least k” successes, requiring summation of several terms. Using the complement rule (1 − P(X ≤ k−1)) can save time.</p>
+<p>The Poisson distribution models rare events occurring randomly over a continuous interval (time, space) with a known average rate λ. The probability of exactly k events is P(X = k) = e⁻ˡ λᵏ ÷ k!. The mean and variance are both λ. A typical question: “A call centre receives an average of 3 calls per minute. Find the probability of receiving exactly 5 calls in a given minute.” Here λ = 3, k = 5, so P = e⁻³ 3⁵ ÷ 120 ≈ 0.1008. The Poisson distribution can approximate the binomial when n is large, p is small, and np = λ is moderate (usually np ≤ 5). This approximation is frequently tested: “Use Poisson approximation to find the probability of at most 2 defectives in a sample of 200 items with defect probability 0.01.” Here λ = 200×0.01 = 2, and the required probability is Σ<sub>k=0</sub><sup>2</sup> e⁻² 2ᵏ ÷ k!.</p>
+<p>Both distributions have a “memoryless” property in different senses. The binomial does not have memorylessness, but the geometric distribution (number of trials until first success) does. The Poisson process has independent increments, meaning the number of events in disjoint intervals are independent. Understanding these properties helps in recognising which distribution fits a described experiment. For instance, “number of typing errors per page” suggests Poisson; “number of heads in 10 coin tosses” suggests binomial.</p>
+<p>When solving distribution problems, always check the conditions: fixed number of trials, constant probability, independence for binomial; constant average rate, independence of intervals, negligible probability of more than one event in a very small interval for Poisson. If the problem states “with replacement”, trials are independent; “without replacement” leads to hypergeometric distribution, which is outside the basic syllabus but sometimes appears as a twist. In such cases, the binomial approximation may still be acceptable if the population is large relative to the sample.</p>
+<p>Finally, be comfortable with factorial notation and combination values. Memorise C(n, 0)=1, C(n, 1)=n, C(n, 2)=n(n−1)÷2, and the symmetry C(n, k)=C(n, n−k). For Poisson, know that e⁻¹ ≈ 0.3679, e⁻² ≈ 0.1353, e⁻³ ≈ 0.0498. These approximations allow quick mental checks of answer magnitudes. In multiple‑choice questions, an answer that is orders of magnitude off can be discarded immediately.</p>
+
+<ul>
+<li>Confusing weighted mean with simple mean when group sizes differ.</li>
+<li>Using class limits instead of class boundaries in median and mode formulas for grouped data.</li>
+<li>Forgetting Bessel’s correction (n−1) when calculating sample standard deviation.</li>
+<li>Mixing up P(A|B) and P(B|A) in conditional probability problems.</li>
+<li>Applying binomial formula when trials are not independent or probability changes.</li>
+<li>Review these traps before the exam to avoid common mistakes.</li>
+</ul>        <script>
+        (function(){try{
+          var m=document.getElementById("lesson-meta");if(!m)return;
+          var cur=m.getAttribute("data-version")||"";
+          var label=m.getAttribute("data-updated-label")||"";
+          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");
+          var k="vlymbooq-lesson-seen:"+location.pathname;
+          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}
+          var box=document.getElementById("lesson-new");
+          if(prev&&prev.v&&prev.v!==cur){
+            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});
+            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
+            if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
+            else{html+="The explanations and practice were revised.";}
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            box.innerHTML=html;box.hidden=false;
+            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
+            document.getElementById("lesson-new-ok").onclick=save;
+            return; // keep the old version stored until acknowledged
+          }
+          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));
+        }catch(e){}})();
+        </script>
+                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-trigonometry.html" class="btn btn-primary">&#x2190; Trigonometry</a>
+                    <a href="../index.html" class="btn btn-success">&#x2190; Course Home</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":101,"text":"Two classes took the same test. Class A has 30 students with a mean score of 68. Class B has 20 students with a mean score of 75. What is the combined mean score of all 50 students?","options":[{"l":"a","t":"70.2","c":false},{"l":"b","t":"70.8","c":true},{"l":"c","t":"71.4","c":false},{"l":"d","t":"72.0","c":false}],"sol":"The combined mean is the weighted average of the two class means using class sizes as weights. Total score for Class A = 30 × 68 = 2040. Total score for Class B = 20 × 75 = 1500. Sum of scores = 2040 + 1500 = 3540. Total students = 30 + 20 = 50. Combined mean = 3540 ÷ 50 = 70.8. The result lies between the two individual means and is pulled toward the larger class (Class A)."},{"id":102,"text":"A call centre receives an average of 4 calls per minute. Assuming a Poisson process, what is the probability of receiving exactly 6 calls in a given minute?","options":[{"l":"a","t":"0.084","c":false},{"l":"b","t":"0.104","c":true},{"l":"c","t":"0.124","c":false},{"l":"d","t":"0.144","c":false}],"sol":"For a Poisson distribution with rate λ = 4, P(X = k) = e^{-λ} λ^k / k!. Here k = 6. λ^6 = 4^6 = 4096. 6! = 720. e^{-4} ≈ 0.018315. Probability = 0.018315 × 4096 / 720 = 0.018315 × 5.6889 ≈ 0.1042. Rounded to three decimal places, the probability is 0.104."}];
+        var answered={},correctCount=0,lessonSlug="statistics";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("cds-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("cds-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("cds-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

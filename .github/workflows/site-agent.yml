@@ -1,0 +1,171 @@
+name: Site Agent
+
+# Infrastructure is an EXACT clone of llm-autofix.yml — the only workflow
+# that ever ran qwen3.8:27b on this runner (runs #10/#12 — the 27B has since been benched; see the tier notes below).
+# Do NOT add flash-attn, q8 KV, browser tests, warmups, or self-restarts:
+# every one of those "improvements" caused "fetch failed" on generation
+# (runs #44–#54: warmup loads, then every real call dies).
+#
+# Fully free: hosted free-tier models; no local model pull.
+#
+# Model tiers (2026-10-18): the default dispatch is now the FAST tier
+# (qwen3:4b — ~3GB, stays fully in RAM, cached between runs; see the model
+# cache step and the tier gate in scripts/site-agent.js). The 27B is 17GB:
+# it only fits with swap, costs ~25 min per pull, and can never fit the
+# 10GB Actions cache — so heavy agents (MainsFresh — the mains-fresh pool)
+# run in their own dispatches (agent_only=mainsfresh, model=qwen3.5:9b),
+# which the Agent Chain refills once a day.
+
+on:
+  # NO hourly cron: GitHub throttles schedules here to a 3-5h effective
+  # cadence, and cancel-in-progress made each late scheduled run KILL an
+  # in-progress chained run mid-publish. The Agent Chain workflow now
+  # dispatches the next run the moment one completes (back-to-back cycles),
+  # with a 6h seed cron as dead-man switch. Manual runs still allowed here.
+  workflow_dispatch:
+    inputs:
+      agent_only:
+        description: 'Run only these agents (comma list, e.g. practicesets). Empty = normal rotation. MainsFresh is heavy-tier: pair it with model=qwen3.5:9b.'
+        required: false
+        default: ''
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'qwen3.5:9b'
+
+concurrency:
+  group: site-agent
+  # false: the chained back-to-back runs above publish at the END (ci-push).
+  # A late-arriving trigger must WAIT — pending supersedes pending — not
+  # kill the in-progress run mid-publish (the same lesson chain.yml learned).
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    # Monitor-era runs: pull (20 min) + streamed LLM calls that legitimately
+    # take minutes each. 120 min cut publish off mid-run; 240 leaves room.
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          # data/questions (~9GB) is EXCLUDED — it caused 33-min checkouts
+          # that died with "early EOF" and OOM'd generation. Question work
+          # runs in question-quality.yml which checks out questions only.
+          sparse-checkout: |
+            scripts
+            js
+            /*.html
+            figures
+            languages
+            guides
+            .github/workflows
+            data/faults.json
+            data/browser-test.json
+            data/metalearn.json
+            data/agent-log.json
+            data/figure-gaps.json
+            data/topic-gaps.json
+            data/autofix-log.json
+            data/ideas.json
+            data/pyq-patterns.json
+            data/site-audit.json
+            data/practice-sets
+            data/topic-layers.json
+            data/mains-questions.json
+            data/mains-updates.json
+            data/mains-fresh.json
+            data/mains-coverage.json
+            data/inventions.json
+            data/mock-fresh.json
+            data/ssc-je-qfig.json
+            data/exam-patterns.json
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The 16GB swap file needs free disk. GitHub's stock runner image can be
+      # within ~1GB of full, and run #590 died at this exact step with
+      # "dd: IO error: No space left on device". scripts/ci-make-swap.sh
+      # reclaims the bundled toolchains first, falls back to 8GB, then
+      # continues without swap rather than failing setup.
+      - name: Run site agent (single pass — same shape as llm-autofix)
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Manual dispatches can pin the agent set (e.g. a practice-set run
+          # for one exam). Empty on normal runs -> full rotation.
+          AGENT_ONLY: ${{ github.event.inputs.agent_only }}
+          # Run the next 6 agents per run.
+          AGENT_ROTATE: '6'
+          # Single pass, not --loop.
+          AGENT_MAX_CYCLES: '1'
+          # Wall-clock guard: stop starting LLM work 120 min in so the job's
+          # publish step always runs (job cap 240; the heavy pull can eat 80).
+          # Skipped agents rotate in on the next run.
+          AGENT_DEADLINE_MIN: '120'
+          NODE_OPTIONS: '--max-old-space-size=2048'
+        run: node scripts/site-agent.js
+
+      - name: Refresh the Mains coverage report
+        run: node scripts/mains-coverage.js
+
+      - name: Publish agent work
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          # Per-path adds: git add is all-or-nothing per invocation, so ONE
+          # absent path (scripts/learned-fixes.js is written only by the
+          # SelfCheck agent, so it is usually not on disk) used to abort the
+          # whole add with the error hidden — every run from 2026-10-18
+          # 15:19 silently discarded its work this way ("nothing staged").
+          # The loop + visible warnings make that loss class impossible.
+          for p in data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/metalearn.json data/practice-sets data/topic-layers.json data/mains-fresh.json data/mains-updates.json data/mains-coverage.json data/inventions.json data/mock-fresh.json data/ssc-je-qfig.json data/exam-patterns.json scripts/learned-fixes.js; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          for p in figures *.html prototype-*.html; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add --sparse 2>/dev/null || true
+          # Self-diagnosis: if this pass modified tracked files but staged
+          # NOTHING, the adds above were defeated (ignored path, bad glob —
+          # the class that silently discarded 20h of work on 2026-10-18).
+          # First try one self-repair (force-add each modified tracked file);
+          # if even that stages nothing, fail LOUDLY with diagnostics instead
+          # of the silent-green "nothing staged".
+          MODN=$(git diff --name-only | wc -l)
+          STAGEDN=$(git diff --cached --name-only | wc -l)
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "[publish] safety-net: $MODN modified tracked file(s) but nothing staged — retrying with -f"
+            git diff --name-only | while read -r f; do git add --sparse -f "$f" || echo "[publish] WARNING: could not stage $f"; done
+            MODN=$(git diff --name-only | wc -l)
+            STAGEDN=$(git diff --cached --name-only | wc -l)
+            echo "[publish] after safety-net: staged=$STAGEDN modified-left=$MODN"
+          fi
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "::error::agent work exists but nothing could be staged — the silent-loss class (2026-10-18 incident). Diagnostics:"
+            git diff --name-only | sed 's/^/  unpushed: /'
+            exit 1
+          fi
+          echo "[publish] staged: $STAGEDN file(s)"
+          # Single shared publisher: PAT push, GITHUB_TOKEN fallback on PAT
+          # death (no lost work), loud alert. See scripts/ci-push.sh.
+          bash scripts/ci-push.sh "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"

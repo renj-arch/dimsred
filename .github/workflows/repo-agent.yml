@@ -1,0 +1,115 @@
+name: Repo Agent
+
+# Cloud maintenance agent. It takes a task and edits the repository on GitHub,
+# with the laptop off:
+#
+#   schedule       -> run the site audit and fix the first real finding
+#   issue label    -> body of an issue labelled `agent-task`
+#   /agent <task>  -> issue comment command
+#   manual run     -> free-form task
+#
+# It reads files, writes a minimal change, runs the relevant check, and opens a
+# PR. It never pushes to main and never merges. Reader-facing edits are allowed
+# only when the task is a concrete audit defect, and the site audit must not get
+# worse.
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'audit = pick a site-audit defect; task = use the task below'
+        type: choice
+        options: [audit, task]
+        default: audit
+      task:
+        description: 'Task for the agent (used when mode=task)'
+        required: false
+        default: ''
+
+concurrency:
+  group: repo-agent
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+  pull-requests: write
+  models: read
+
+jobs:
+  agent:
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && github.event.label.name == 'agent-task') ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request == null &&
+       github.event.comment.user.type != 'Bot' &&
+       startsWith(github.event.comment.body, '/agent'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+            .github
+            docs
+            js
+            css
+            /*.html
+            agniveer
+            cds
+            cgl
+            clat
+            ctet
+            gate
+            ibps-po
+            jee
+            nda
+            neet
+            rbi
+            sbi-clerk
+            ssc-gd
+            upsc
+            languages
+            figures
+            data/relations.json
+            package.json
+            package-lock.json
+            .gitignore
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Ensure the audit output directory exists
+        run: mkdir -p data
+
+      - name: Work the task
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+          REPO_MODE: ${{ github.event_name == 'schedule' && 'audit' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.mode || 'task') || 'task') }}
+          REPO_TASK: ${{ github.event.issue.body || github.event.comment.body || github.event.inputs.task || '' }}
+          REPO_ISSUE: ${{ github.event.issue.number || '' }}
+          REPO_AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association || github.event.issue.author_association || '' }}
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: '--max-old-space-size=2048'
+        run: node scripts/repo-agent.js
