@@ -78,16 +78,16 @@ sync_remote() {
   # keeping OUR side, then finish the merge so a push can actually happen.
   git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
   if [ -f .git/MERGE_HEAD ]; then
-    # A content conflict in the generated course state can survive -X ours
-    # when several lanes finish together (course-versions.json changed on both
-    # sides). Resolve those files explicitly, then commit the merge; leaving
-    # MERGE_HEAD behind is what left three lanes stuck "behind its remote
-    # counterpart" for every retry on 2026-11-20.
-    for f in scripts/course-versions.json scripts/course-depth.json \
-             scripts/course-data.json scripts/course-practice.json; do
+    # Resolve EVERY unmerged path, not a hardcoded list. The old code named
+    # four course-state files and then ran `git add -A`, which staged the
+    # conflict-marker working copies of everything else (scripts/course-addons
+    # .json grew `<<<<<<< HEAD` markers this way and stopped parsing). Keep our
+    # side here; the union_* steps below re-merge the append-only stores.
+    while IFS= read -r f; do
+      [ -n "$f" ] || continue
       git checkout --ours -- "$f" 2>/dev/null || true
-      git add "$f" 2>/dev/null || true
-    done
+      git add -- "$f" 2>/dev/null || true
+    done < <(git diff --name-only --diff-filter=U 2>/dev/null)
     git add -A 2>/dev/null || true
     git commit --no-edit >/dev/null 2>&1 || true
   fi
@@ -100,11 +100,11 @@ sync_remote() {
       echo "[ci-push] still behind after merge - replaying $OUR onto FETCH_HEAD"
       git reset --hard FETCH_HEAD 2>/dev/null || true
       if ! git cherry-pick "$OUR" >/dev/null 2>&1; then
-        for f in scripts/course-versions.json scripts/course-depth.json \
-                 scripts/course-data.json scripts/course-practice.json; do
+        while IFS= read -r f; do
+          [ -n "$f" ] || continue
           git checkout --theirs -- "$f" 2>/dev/null || true
-          git add "$f" 2>/dev/null || true
-        done
+          git add -- "$f" 2>/dev/null || true
+        done < <(git diff --name-only --diff-filter=U 2>/dev/null)
         git add -A 2>/dev/null || true
         git -c core.editor=true cherry-pick --continue >/dev/null 2>&1 || {
           git cherry-pick --abort >/dev/null 2>&1 || true
