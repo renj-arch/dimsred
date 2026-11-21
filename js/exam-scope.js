@@ -53,7 +53,11 @@
     'Energy & Power', 'Nuclear Energy & Technology', 'ICT Digital & Cyber',
     'Disaster Management', 'Education in India', 'Current Affairs',
     'Indian Languages - National & Regional', 'Awards & Honours',
-    'Books & Authors', 'Important Days', 'Sports'
+    'Books & Authors', 'Important Days', 'Sports',
+    // CSAT Paper II (qualifying but still part of the exam) and its sections.
+    'CSAT', 'Quantitative Aptitude', 'Numerical Ability', 'Aptitude',
+    'Reasoning', 'Logical Reasoning', 'Verbal Ability', 'English',
+    'Reading Comprehension', 'Comprehension', 'Data Interpretation'
   ];
 
   // Each anchor is specific. Never add a bare subject word here: the bug this
@@ -207,6 +211,16 @@
       'art and culture', 'art & culture', 'painting', 'sculpture', 'dance',
       'music', 'theatre', 'theater', 'architecture', 'monument', 'temple',
       'stupa', 'cave', 'classical', 'folk', 'handicraft', 'textile'
+    ] },
+    { id: 'csat', sources: ['upsc:CSAT', 'pyq:CSAT', 'pyq:Aptitude'], tier: 'medium', terms: [
+      'csat', 'aptitude', 'quantitative aptitude', 'numerical ability', 'percentage',
+      'profit and loss', 'profit & loss', 'simple interest', 'compound interest',
+      'ratio', 'proportion', 'average', 'time and work', 'time and distance',
+      'speed', 'mensuration', 'probability', 'permutation', 'combination',
+      'data interpretation', 'number series', 'syllogism', 'logical reasoning',
+      'blood relation', 'direction sense', 'coding decoding', 'reading comprehension',
+      'synonym', 'antonym', 'grammar', 'vocabulary', 'sentence correction',
+      'para jumble', 'cloze', 'comprehension'
     ] }
   ];
 
@@ -343,6 +357,13 @@
     var q = normalize(input);
     var reasons = [];
     var evidence = [];
+
+    // A question about the lesson itself ("According to the lesson, ...") is
+    // not exam content, however many syllabus words it contains.
+    if (/\b(?:the|this) lesson\b|\baccording to the (?:lesson|notes|course material)\b/i.test(q.question)) {
+      reasons.push('question-about-lesson');
+      return verdict(OUT, 'low', reasons, evidence);
+    }
 
     // 1. Explicit metadata wins. `importance` is intentionally NOT treated as
     // scope: the old importance scorer gives every `qa` item medium, which is

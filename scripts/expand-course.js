@@ -398,12 +398,25 @@ function collectDeepen() {
         if (passes >= DEPTH_PASS_MAX) return;
         var words = existing.reduce(function (m, f) { return Math.max(m, pageWords(path.join(ROOT, f))); }, 0);
         var target = handBuilt ? DEPTH_TARGET_WORDS_BUILT : DEPTH_TARGET_WORDS;
-        if (words >= target) return;
+        // The word target is a FLOOR for prioritisation, not a ceiling. A lesson
+        // that has reached it still returns for a REFRESH pass once it has aged,
+        // so new syllabus points, judgments, data and current developments keep
+        // being folded in. DEPTH_PASS_MAX (default 60) is the only hard stop and
+        // is a runaway guard, not a content limit.
+        var refresh = false;
+        if (words >= target) {
+          var REFRESH_DAYS = Math.max(1, parseInt(process.env.EXPAND_REFRESH_DAYS || '21', 10) || 21);
+          var lastMs = Date.parse(st.at || '') || 0;
+          var ageDays = lastMs ? (Date.now() - lastMs) / 86400000 : Infinity;
+          refresh = (process.env.EXPAND_REFRESH !== '0') && ageDays >= REFRESH_DAYS;
+          if (!refresh) return;
+        }
         out.push({
           key: key,
           mk: mk,
           slug: lesson.slug,
           role: handBuilt ? 'deepen-page' : 'deepen',
+          refresh: refresh,
           oldLen: content.length,
           pageSize: biggest,
           words: words,
@@ -817,11 +830,15 @@ function deepenPrompt(gap) {
     'Target quality — match this density and specificity (a real section from the hand-built polity lesson):',
     STYLE_EXEMPLAR,
     '',
-    gap.targetWords
-      ? ('Progress: the lesson currently has about ' + gap.words + ' words of prose; the depth target is ' +
-         gap.targetWords + ' (' + gap.deficit + ' words still to come across future passes). This pass still has to ' +
-         'stand on its own as a complete, exam-ready set of sections.')
-      : '',
+    gap.refresh
+      ? ('REFRESH PASS: this lesson already meets the depth floor (' + gap.words + ' words, last deepened ' +
+         (gap.lastAt ? gap.lastAt.slice(0, 10) : 'never') + '). Do NOT repeat anything above. Add what has changed or what the lesson still lacks: ' +
+         'newer developments, updated figures/data, recent judgments or schemes, and any syllabus sub-topic the headings above do not yet cover.')
+      : (gap.targetWords
+        ? ('Progress: the lesson currently has about ' + gap.words + ' words of prose; the depth target is ' +
+           gap.targetWords + ' (' + gap.deficit + ' words still to come across future passes). This pass still has to ' +
+           'stand on its own as a complete, exam-ready set of sections.')
+        : ''),
     'Write 4-5 NEW advanced sections that a serious aspirant needs but the list above does not cover (at least 3 if a later one would repeat an existing heading):',
     '- go deeper than the basics: mechanisms, exceptions, comparisons, landmark cases/data where textbook-standard, applied scenarios, chronology, cause and effect, and how the examiner twists the concept',
     '- each section starts with an <h3> title that is clearly different from every existing heading',

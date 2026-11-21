@@ -821,6 +821,23 @@
     // used first, so every topic gains new questions daily. A slow or failed
     // fetch must never block the drill: the generator starts immediately.
     var __topicBankPromise = null;
+    var __researchPromise = null;
+    function _mentNormStem(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 160); }
+    function loadMentalResearch() {
+        if (window.__mentalResearch) return Promise.resolve(window.__mentalResearch);
+        if (!__researchPromise) {
+            __researchPromise = fetch('data/research-invented.json')
+                .then(function(r) { return r.json(); })
+                .then(function(j) { window.__mentalResearch = (j && j.methods) || {}; })
+                .catch(function() { window.__mentalResearch = {}; });
+        }
+        return __researchPromise;
+    }
+    function _researchFor(stem) {
+        var m = window.__mentalResearch;
+        if (!m) return null;
+        return m[_mentNormStem(stem)] || null;
+    }
     function buildTopicBank(pool) {
         var bank = {};
         (pool || []).forEach(function(q) {
@@ -831,6 +848,7 @@
                 options: (q.options || []).slice(),
                 solution: q.solution || '',
                 hint: q.hint || '',
+                research: _researchFor(q.stem),
                 timeLimit: q.seconds || 40,
                 difficulty: ({ easy: 2, moderate: 3, hard: 4, veryhard: 5 })[q.difficulty] || 3,
                 section: q.section,
@@ -841,6 +859,10 @@
         window.__mentalTopicBank = bank;
     }
     function withTopicBank(done) {
+        loadMentalResearch().then(function() {
+            // Attach the Research Team method to every pooled item once loaded.
+            if (window.__inventedPool) buildTopicBank(window.__inventedPool);
+        });
         if (window.__mentalTopicBank) { done(); return; }
         if (!__topicBankPromise) {
             __topicBankPromise = fetch('data/invented/questions.json')
@@ -907,6 +929,7 @@
     function startInvented(diffKey) {
         var fallback = { easy: 'clerk', moderate: 'po', hard: 'mains', veryhard: 'expert' };
         var pts = { easy: 2, moderate: 3, hard: 4, veryhard: 5 };
+        loadMentalResearch();
         var sel = document.getElementById('invCount');
         var count = sel ? (parseInt(sel.value, 10) || 12) : 12;
         var go = function(pool) {
@@ -930,6 +953,7 @@
                     options: (q.options || []).slice(),
                     solution: q.solution || '',
                     hint: q.hint || '',
+                    research: _researchFor(q.stem),
                     timeLimit: q.seconds || 40,
                     difficulty: pts[q.difficulty] || 3,
                     section: q.section,
@@ -1177,8 +1201,15 @@ function selectOption(idx) {
 
         // Show solution explanation
         var solEl = document.getElementById('solutionDisplay');
-        if (q.solution) {
-            solEl.innerHTML = '📖 ' + q.solution;
+        var _esc = function(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function(c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
+        var solHtml = q.solution ? '📖 ' + _esc(q.solution) : '';
+        if (q.research && Array.isArray(q.research.steps) && q.research.steps.length) {
+            solHtml += '<div style="margin-top:8px;padding:8px 10px;background:rgba(99,102,241,.10);border:1px solid rgba(99,102,241,.32);border-radius:8px;color:#c7d2fe">'
+                + '<strong>🧪 Research Team · ~' + (parseInt(q.research.seconds, 10) || 10) + 's · ' + _esc(q.research.name || 'Alternative method') + '</strong>'
+                + '<ol style="margin:4px 0 0;padding-left:18px">' + q.research.steps.map(function(s) { return '<li>' + _esc(s) + '</li>'; }).join('') + '</ol></div>';
+        }
+        if (solHtml) {
+            solEl.innerHTML = solHtml;
             solEl.className = 'solution-box show';
         } else {
             solEl.className = 'solution-box';

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-21T06:02:09.035Z",
+  "updatedAt": "2026-11-21T18:51:44.087Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -25120,6 +25120,348 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-21T06:01:49.078Z"
+    },
+    {
+      "id": "01b89ecf95727683",
+      "exam": "neet",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "NEET UG Practice Set 18",
+      "paperPath": "neet/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 1,
+      "section": "Physics",
+      "question": "A rectangular coil of N turns and area A rotates at angular speed ω in a uniform magnetic field B. The maximum induced emf is ε_max. If the number of turns is doubled while the angular speed remains unchanged, the new maximum emf is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "ε_max",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2ε_max",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "4ε_max",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "ε_max/2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the formula for maximum induced emf in a rotating coil: ε_max = N B A ω.",
+        "Identify that ε_max is directly proportional to the number of turns N.",
+        "Given that N is doubled while B, A, and ω remain unchanged.",
+        "The new maximum emf becomes 2 × (N B A ω) = 2 ε_max.",
+        "Therefore, the correct option is B."
+      ],
+      "verifierCheck": "The maximum induced emf for a coil rotating in a uniform magnetic field is given by ε_max = N B A ω. If the number of turns is doubled to 2N while B, A, and ω remain unchanged, the new maximum emf becomes ε_max' = (2N) B A ω = 2 (N B A ω) = 2 ε_max.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Proportionality Rule",
+          "idea": "ε_max scales linearly with N",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "ε_max ∝ N (other factors constant)",
+            "Double N → double ε_max",
+            "Select B"
+          ]
+        },
+        {
+          "name": "Formula Recall",
+          "idea": "Direct formula substitution",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recall ε_max = N B A ω",
+            "Double N → new ε_max = 2N B A ω = 2 ε_max",
+            "Answer B"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-21T18:49:54.180Z"
+    },
+    {
+      "id": "10b44792b340c3ff",
+      "exam": "agniveer",
+      "paperSlug": "practice-set-21",
+      "paperTitle": "Agniveer Practice Set 21",
+      "paperPath": "agniveer/papers/practice-set-21.html",
+      "paperFile": "practice-set-21.json",
+      "questionNumber": 2,
+      "section": "Reasoning",
+      "question": "Introducing a boy, a girl said, 'He is the son of the only daughter of the father of my brother.' How is the boy related to the girl?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Brother",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Nephew",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Son",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Cousin",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the girl's brother.",
+        "The father of the brother is also the girl's father.",
+        "The only daughter of that father is the girl herself (since she is a daughter and the only one).",
+        "The boy is the son of that only daughter, i.e., the son of the girl.",
+        "Therefore, the boy is the girl's son."
+      ],
+      "verifierCheck": "From the girl's perspective: 'my brother' shares the same father. 'The father of my brother' is the girl's father. 'The only daughter of the father of my brother' is the only daughter of the girl's father; since the girl is a daughter and it's specified as the only daughter, this refers to the girl herself. 'The son of the only daughter...' is the son of the girl. Therefore the boy is the girl's son.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Self-substitution",
+          "idea": "Replace 'my brother' with 'me' because only daughter implies speaker",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Father of my brother = my father",
+            "Only daughter of my father = me",
+            "Son of me = my son"
+          ]
+        },
+        {
+          "name": "Reverse chain",
+          "idea": "Walk the phrase backwards from the girl to the boy",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Girl's brother shares her father",
+            "Father's only daughter is the girl herself",
+            "Son of that daughter is the girl's son"
+          ]
+        },
+        {
+          "name": "Mini tree",
+          "idea": "Sketch a 3-level tree in mind: Girl → Father → Girl → Boy",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Girl points to her father",
+            "Father's only daughter = Girl",
+            "Girl's son = Boy"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-21T18:50:35.572Z"
+    },
+    {
+      "id": "48dc2e3aeaba1730",
+      "exam": "cds",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "CDS Practice Set 9",
+      "paperPath": "cds/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "If a + b = 10 and ab = 21, what is the value of a² + b²?",
+      "options": [
+        {
+          "label": "A",
+          "text": "42",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "58",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "79",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "100",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Use the identity (a+b)² = a² + 2ab + b²",
+        "Rearrange to a² + b² = (a+b)² - 2ab",
+        "Substitute a+b = 10 and ab = 21",
+        "Compute 10² - 2*21 = 100 - 42 = 58"
+      ],
+      "verifierCheck": "Using the identity (a+b)² = a² + 2ab + b², we have a² + b² = (a+b)² - 2ab = 10² - 2·21 = 100 - 42 = 58. This matches option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Square Sum Identity",
+          "idea": "Use (a+b)² = a²+2ab+b² to isolate a²+b²",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Compute (a+b)² = 10² = 100",
+            "Compute 2ab = 2×21 = 42",
+            "Subtract: 100 − 42 = 58"
+          ]
+        },
+        {
+          "name": "Sum via Difference",
+          "idea": "Compute (a−b)² from (a+b)²−4ab, then average squares",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "(a−b)² = (a+b)² − 4ab = 100 − 84 = 16",
+            "a²+b² = ((a+b)²+(a−b)²)/2 = (100+16)/2 = 58"
+          ]
+        },
+        {
+          "name": "Quadratic Roots",
+          "idea": "Find a and b as roots of x²−(a+b)x+ab=0",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Form quadratic: x² − 10x + 21 = 0",
+            "Factor: (x−3)(x−7)=0 → roots 3 and 7",
+            "Square and sum: 3²+7² = 9+49 = 58"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-21T18:51:01.461Z"
+    },
+    {
+      "id": "bae38a60b7bb6b55",
+      "exam": "cds",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "CDS Practice Set 9",
+      "paperPath": "cds/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "In a circle of radius 10 cm, a chord subtends an angle of 60° at the centre. What is the length of the chord?",
+      "options": [
+        {
+          "label": "A",
+          "text": "10√3 cm",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "20 cm",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "10 cm",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "5√3 cm",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify given: radius r = 10 cm, central angle θ = 60°.",
+        "Chord length formula: chord = 2r sin(θ/2).",
+        "Compute θ/2 = 30°.",
+        "sin 30° = 1/2.",
+        "Chord = 2 * 10 * (1/2) = 10 cm.",
+        "Therefore, the chord length is 10 cm, which corresponds to option C."
+      ],
+      "verifierCheck": "The chord subtends a central angle of 60° in a circle of radius 10 cm. The triangle formed by the two radii and the chord is isosceles with vertex angle 60°, making it equilateral; thus the chord length equals the radius, 10 cm. Alternatively, chord length = 2r sin(θ/2) = 2×10×sin(30°) = 20×0.5 = 10 cm.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Equilateral Triangle",
+          "idea": "Central angle 60° makes isosceles triangle equilateral",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Draw radii to chord endpoints forming triangle with sides 10,10,chord.",
+            "Central angle 60° implies triangle is equilateral.",
+            "Chord = radius = 10 cm."
+          ]
+        },
+        {
+          "name": "Half-Angle Sine",
+          "idea": "Chord = 2r sin(θ/2) with θ=60°",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Chord length = 2 × radius × sin(central angle/2).",
+            "Plug r=10, θ=60° → 2×10×sin30° = 20×0.5 = 10 cm."
+          ]
+        },
+        {
+          "name": "Cosine Law Quick",
+          "idea": "Chord² = 2r²(1-cosθ) with cos60°=0.5",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Chord² = 10²+10²-2×10×10×cos60° = 200-100 = 100.",
+            "Chord = √100 = 10 cm."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-21T18:51:43.608Z"
     }
   ]
 }
