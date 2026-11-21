@@ -19,12 +19,13 @@
 
 // A question about how to take an exam is not an exam question.
 const META = [
-  /\bbest (?:strategy|way|approach|method) (?:for|to) (?:attempt|answer|solve|approach)\b/i,
-  /\bhow (?:should|do) (?:you|we) (?:attempt|approach|solve|prepare)\b/i,
-  /\bfirst thing (?:you|one) (?:should|must) do\b/i,
-  /\bwhich (?:is|would be) the (?:best|most appropriate) (?:way|strategy|approach)\b/i,
+  /\bbest (?:strategy|way|approach|method) (?:for|to) (?:attempt(?:ing)?|answer(?:ing)?)\b/i,
+  /\bbest (?:strategy|way|approach|method) (?:for|to) (?:the )?(?:exam|paper|test)\b/i,
+  /\bhow (?:should|do|can) (?:you|we|one|candidates?) (?:attempt|approach|solve|prepare for|manage) (?:the |a |this )?(?:exam|paper|test|section|questions?)\b/i,
+  /\bfirst thing (?:you|one) (?:should|must) do (?:in|during|while)\b/i,
+  /\bwhich (?:is|would be) the (?:best|most appropriate) (?:way|strategy|approach) (?:to|for) (?:attempt|answer)\b/i,
   /\btime management (?:in|during) the exam\b/i,
-  /\bhow to (?:attempt|prepare for|crack)\b/i
+  /\bhow to (?:attempt|prepare for|crack) (?:the )?(?:exam|paper|test)\b/i
 ];
 
 // Deliberation the model meant to keep to itself.

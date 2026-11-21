@@ -262,7 +262,15 @@ async function main() {
     const ra = relOf(a), rb = relOf(b);
     const ta = Date.parse(state.lessons[ra] || '') || 0;
     const tb = Date.parse(state.lessons[rb] || '') || 0;
-    return ta - tb || ra.localeCompare(rb);
+    // A lesson that changed AFTER its last audit goes first: the expanders keep
+    // adding sections, and those new claims have never been read. Only then do
+    // we rotate through the untouched corpus, oldest audit first.
+    let ma = 0, mb = 0;
+    try { ma = fs.statSync(a).mtimeMs; } catch (e) {}
+    try { mb = fs.statSync(b).mtimeMs; } catch (e) {}
+    const ca = ma > ta + 60000 ? 0 : 1;
+    const cb = mb > tb + 60000 ? 0 : 1;
+    return ca - cb || ta - tb || ra.localeCompare(rb);
   });
   if (LIMIT) files = files.slice(0, LIMIT);
 

@@ -15,10 +15,9 @@ name: Lesson Fact Audit
 
 on:
   schedule:
-    # Daily. One lesson per run was too slow: a full sweep of ~390 lessons takes
-    # a fortnight at 40 a week. At 60 a day the corpus is covered in about a
-    # week, and the lane keeps re-reading as lessons are rewritten.
-    - cron: '23 4 * * *'
+    # Four runs a day. Each stops at 75 minutes and saves after every lesson, so a
+    # cancelled run loses nothing and the next one continues the rotation.
+    - cron: '23 1,7,13,19 * * *'
   workflow_dispatch:
     inputs:
       limit:

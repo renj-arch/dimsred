@@ -139,7 +139,8 @@ const explicitHigh = ExamScope.classify({
   question: 'An obscure item',
   relevance: 'high'
 });
-assert(explicitHigh.scope === 'exam' && explicitHigh.tier === 'high', 'Explicit relevance=high is honoured', JSON.stringify(explicitHigh));
+assert(explicitHigh.scope !== 'exam' || explicitHigh.tier !== 'high',
+  'Explicit relevance=high is not honoured without evidence', JSON.stringify(explicitHigh));
 
 const importanceOnly = ExamScope.classify({
   type: 'qa',

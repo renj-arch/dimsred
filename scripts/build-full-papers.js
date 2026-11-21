@@ -31,7 +31,7 @@ function qTableData(td) {
   const body = td.rows.map(function (r) {
     return '<tr>' + (r || []).map(function (c) { return '<td style="padding:5px 10px;border-bottom:1px solid #e2e8f0">' + esc(c) + '</td>'; }).join('') + '</tr>';
   }).join('');
-  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px"><thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + body + '</tbody></table></div>';
+  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;color:#1f2937;border:1px solid #e2e8f0;border-radius:6px"><thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + body + '</tbody></table></div>';
 }
 
 function qChartData(cd) {
@@ -44,7 +44,7 @@ function qChartData(cd) {
   }).join('');
   const head = '<th style="text-align:left;padding:5px 10px;border-bottom:1px solid #cbd5e1">' + esc(cd.type || 'chart') + '</th>' +
     ds.map(function (d) { return '<th style="text-align:right;padding:5px 10px;border-bottom:1px solid #cbd5e1">' + esc(d.label || '') + '</th>'; }).join('');
-  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px"><caption style="caption-side:top;text-align:left;font-size:.85em;color:#475569;padding-bottom:4px">' + esc(cd.title || ((cd.type || 'Chart') + ' data')) + '</caption><thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+  return '<div style="margin:10px 0;overflow-x:auto"><table style="border-collapse:collapse;font-size:.9em;background:#f8fafc;color:#1f2937;border:1px solid #e2e8f0;border-radius:6px"><caption style="caption-side:top;text-align:left;font-size:.85em;color:#cbd5e1;padding-bottom:4px">' + esc(cd.title || ((cd.type || 'Chart') + ' data')) + '</caption><thead><tr style="background:#eef2ff">' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 
 function qFigure(q) {
