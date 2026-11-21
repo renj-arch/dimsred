@@ -1,0 +1,167 @@
+{
+ "updatedAt": "2026-11-21T19:02:00.930Z",
+ "note": "Original alternative methods for invented questions. Each is checked against the key by an independent call.",
+ "methods": {
+  "choose the most appropriate sentence that improves the one given below original the stock market crash was a real eye waterer for the traders a the stock market": {
+   "name": "Semantic Feature Matching",
+   "seconds": 10,
+   "steps": [
+    "List semantic features of 'stock market crash': sudden, negative, financial, severe impact.",
+    "Compare with features of each option: eye-opener (surprising, informative), heart-breaker (devastating, personal loss), tear-jerker (sad, narrative), eye-waterer (physically irritating).",
+    "Select the option with maximum feature overlap: heart-breaker (negative, severe impact, personal loss)."
+   ],
+   "answer": "The stock market crash was a real heart-breaker for the traders.",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:54:51.314Z",
+   "model": "hosted"
+  },
+  "a shopkeeper sells a cricket bat with a marked price of 5 000 he offers two alternatives scheme a 15 discount followed by a further 10 discount on the reduced p": {
+   "name": "Absolute Discount Summation",
+   "seconds": 10,
+   "steps": [
+    "Calculate total discount amount: 15% of 5000 + 10% of (85% of 5000) = 750 + 425 = 1175",
+    "Divide total discount by marked price: 1175 / 5000 = 0.235",
+    "Convert to percentage: 0.235 × 100 = 23.5%"
+   ],
+   "answer": "23.5%",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:55:29.453Z",
+   "model": "hosted"
+  },
+  "identify the next number in the series 2 6 12 20 30": {
+   "name": "Quadratic Difference Method",
+   "seconds": 10,
+   "steps": [
+    "Compute first differences: 4, 6, 8, 10",
+    "Compute second differences: constant 2",
+    "Apply quadratic formula n² + n for n=6 → 42"
+   ],
+   "answer": "42",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:55:57.208Z",
+   "model": "hosted"
+  },
+  "which word is opposite in meaning to mortal": {
+   "name": "Prefix Negation Scan",
+   "seconds": 10,
+   "steps": [
+    "Identify the root 'mort-' (Latin for death) in the question word",
+    "Scan options for a negation prefix (im-, un-, in-) attached to same root",
+    "Select 'Immortal' as only option with 'im-' + 'mortal' structure"
+   ],
+   "answer": "Immortal",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:56:13.590Z",
+   "model": "hosted"
+  },
+  "arrange the following words in dictionary order 1 apple 2 apricot 3 ant 4 arm": {
+   "name": "Second Letter Sort Method",
+   "seconds": 10,
+   "steps": [
+    "Observe all words start with 'A', so first letter gives no distinction.",
+    "List second letters: Ant→n, Apple→p, Apricot→p, Arm→r.",
+    "Sort by second letter: n (Ant), p (Apple, Apricot), r (Arm).",
+    "For the two with 'p', compare third letters: Apple→p, Apricot→r → Apple before Apricot."
+   ],
+   "answer": "3, 1, 2, 4",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:56:44.063Z",
+   "model": "hosted"
+  },
+  "a spy starts at a secure point x facing north his mission requires him to execute the following sequence of commands relative to his current direction where eve": {
+   "name": "Net Rotation Calculation",
+   "seconds": 10,
+   "steps": [
+    "Determine net rotation per command: Move=+90°, Left=+90°, Right=+180°",
+    "Sum rotations: 90+90+180+90=450°",
+    "Modulo 360°: 450°≡90° (East)",
+    "Final direction from North is East"
+   ],
+   "answer": "East",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:58:44.536Z",
+   "model": "hosted"
+  },
+  "the rbi governor announced that the newly issued sovereign bonds offer a financial instrument specifically designed to protect investors principal value against": {
+   "name": "Elimination by Definition",
+   "seconds": 10,
+   "steps": [
+    "Identify core need: instrument protecting principal against rising CPI (inflation).",
+    "Test Option 1: Deflationary Hedges guard against falling prices, not rising.",
+    "Test Option 3: Zero-Coupon Securities lack periodic inflation adjustment mechanism.",
+    "Test Option 4: Treasury Bills are short-term nominal debt, not inflation-linked.",
+    "Confirm Option 2: Inflation-Indexed Bonds explicitly tie principal to CPI."
+   ],
+   "answer": "Inflation-Indexed Bonds",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:59:36.636Z",
+   "model": "hosted"
+  },
+  "select the most appropriate word to fill the blank the departmental inquiry concluded that the official was guilty of severe negligence he had been completely b": {
+   "name": "Trap Metaphor Elimination",
+   "seconds": 10,
+   "steps": [
+    "Identify the metaphor: red tape and bureaucratic delays depict a trap.",
+    "Select the option meaning caught in a trap: ensnared.",
+    "Confirm other choices (deluded, distracted, obsessed) lack trap sense."
+   ],
+   "answer": "ensnared",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:59:47.711Z",
+   "model": "hosted"
+  },
+  "in a recent press briefing regarding the rising cost of living the minister stated that inflation hedging schemes must be restructured to account for administra": {
+   "name": "Metaphor Decoding Method",
+   "seconds": 10,
+   "steps": [
+    "Interpret 'hidden tax' as a metaphor for compliance costs imposed by excessive procedures.",
+    "Identify which option is a known metaphor for such procedural burden: 'red tape'.",
+    "Eliminate others (freneticism, bureaucracy, nepotism) as they denote behavior, structure, or corruption, not metaphorical waste.",
+    "Conclude the term is Red Tapeism."
+   ],
+   "answer": "A]Red Tapeism",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:00:39.551Z",
+   "model": "hosted"
+  },
+  "the district magistrate s decision to delay the release of flood relief funds by invoking a complex non existent circular was described by senior officers as a ": {
+   "name": "Antonym Elimination Method",
+   "seconds": 10,
+   "steps": [
+    "Detect the critical tone implying inefficiency and false procedure.",
+    "Eliminate options with positive/neutral connotations (pragmatic, visionary, expedient) as they contradict the described lethargy.",
+    "Select the only option with a negative administrative connotation: bureaucratic."
+   ],
+   "answer": "B. bureaucratic",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:01:17.824Z",
+   "model": "hosted"
+  },
+  "select the most appropriate word to complete the sentence with logical consistency the central board of direct taxes cbdt announced a on the new e filing format": {
+   "name": "Semantic Contrast Elimination",
+   "seconds": 10,
+   "steps": [
+    "First blank needs a word meaning temporary suspension; only \"moratorium\" fits.",
+    "Second blank needs a term for coexisting contradictory actions; \"paradox\" matches.",
+    "All other option pairs fail at least one blank."
+   ],
+   "answer": "moratorium, paradox",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:01:46.666Z",
+   "model": "hosted"
+  },
+  "in the recent parliamentary debate on railway safety a junior bureaucrat argued that while new surveillance cameras were installed across stations the silent wi": {
+   "name": "Metaphorical Contrast Analysis",
+   "seconds": 10,
+   "steps": [
+    "Contrast 'digital one' (cameras) with 'silent witness' to identify a pre-digital observer.",
+    "List entities that continuously monitor a station without human speech: nature, structures, or abstract concepts.",
+    "Eliminate options requiring human intent (A, D) or legal abstraction (C); only natural environment fits as a passive, historic witness."
+   ],
+   "answer": "The natural environment (wind, weather) that historically observed the station without human intervention.",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:02:00.930Z",
+   "model": "hosted"
+  }
+ }
+}
