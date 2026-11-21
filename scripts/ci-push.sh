@@ -26,6 +26,26 @@ if git diff --staged --quiet; then
   exit 0
 fi
 
+# A merge fallback once staged a marker-laden working copy with `git add -A`,
+# and 246 files were published with `<<<<<<< HEAD` blocks. Strip markers from
+# content files before the commit, then refuse to publish if anything remains
+# or a generated store no longer parses.
+if git diff --cached -U0 | grep -q '^+<<<<<<< '; then
+  echo "[ci-push] conflict markers in staged files — repairing before commit"
+  node scripts/resolve-conflict-markers.js || true
+  git add -A 2>/dev/null || true
+fi
+if git diff --cached -U0 | grep -q '^+<<<<<<< '; then
+  echo "[ci-push] refusing to commit files that still carry conflict markers"
+  exit 1
+fi
+if [ -f scripts/check-generated-state.js ] && [ -f scripts/course-addons.json ]; then
+  if ! node scripts/check-generated-state.js; then
+    echo "[ci-push] refusing to commit a corrupt generated state file"
+    exit 1
+  fi
+fi
+
 git commit -m "$MSG" || { echo "[ci-push] commit failed"; exit 1; }
 
 # Bring the local branch up to date with origin. Concurrent runs publish
