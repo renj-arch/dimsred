@@ -26,6 +26,26 @@ if git diff --staged --quiet; then
   exit 0
 fi
 
+# A merge fallback once staged a marker-laden working copy with `git add -A`,
+# and 246 files were published with `<<<<<<< HEAD` blocks. Strip markers from
+# content files before the commit, then refuse to publish if anything remains
+# or a generated store no longer parses.
+if git diff --cached -U0 | grep -q '^+<<<<<<< '; then
+  echo "[ci-push] conflict markers in staged files — repairing before commit"
+  node scripts/resolve-conflict-markers.js || true
+  git add -A 2>/dev/null || true
+fi
+if git diff --cached -U0 | grep -q '^+<<<<<<< '; then
+  echo "[ci-push] refusing to commit files that still carry conflict markers"
+  exit 1
+fi
+if [ -f scripts/check-generated-state.js ] && [ -f scripts/course-addons.json ]; then
+  if ! node scripts/check-generated-state.js; then
+    echo "[ci-push] refusing to commit a corrupt generated state file"
+    exit 1
+  fi
+fi
+
 git commit -m "$MSG" || { echo "[ci-push] commit failed"; exit 1; }
 
 # Bring the local branch up to date with origin. Concurrent runs publish
@@ -78,16 +98,16 @@ sync_remote() {
   # keeping OUR side, then finish the merge so a push can actually happen.
   git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
   if [ -f .git/MERGE_HEAD ]; then
-    # A content conflict in the generated course state can survive -X ours
-    # when several lanes finish together (course-versions.json changed on both
-    # sides). Resolve those files explicitly, then commit the merge; leaving
-    # MERGE_HEAD behind is what left three lanes stuck "behind its remote
-    # counterpart" for every retry on 2026-11-20.
-    for f in scripts/course-versions.json scripts/course-depth.json \
-             scripts/course-data.json scripts/course-practice.json; do
+    # Resolve EVERY unmerged path, not a hardcoded list. The old code named
+    # four course-state files and then ran `git add -A`, which staged the
+    # conflict-marker working copies of everything else (scripts/course-addons
+    # .json grew `<<<<<<< HEAD` markers this way and stopped parsing). Keep our
+    # side here; the union_* steps below re-merge the append-only stores.
+    while IFS= read -r f; do
+      [ -n "$f" ] || continue
       git checkout --ours -- "$f" 2>/dev/null || true
-      git add "$f" 2>/dev/null || true
-    done
+      git add -- "$f" 2>/dev/null || true
+    done < <(git diff --name-only --diff-filter=U 2>/dev/null)
     git add -A 2>/dev/null || true
     git commit --no-edit >/dev/null 2>&1 || true
   fi
@@ -100,11 +120,11 @@ sync_remote() {
       echo "[ci-push] still behind after merge - replaying $OUR onto FETCH_HEAD"
       git reset --hard FETCH_HEAD 2>/dev/null || true
       if ! git cherry-pick "$OUR" >/dev/null 2>&1; then
-        for f in scripts/course-versions.json scripts/course-depth.json \
-                 scripts/course-data.json scripts/course-practice.json; do
+        while IFS= read -r f; do
+          [ -n "$f" ] || continue
           git checkout --theirs -- "$f" 2>/dev/null || true
-          git add "$f" 2>/dev/null || true
-        done
+          git add -- "$f" 2>/dev/null || true
+        done < <(git diff --name-only --diff-filter=U 2>/dev/null)
         git add -A 2>/dev/null || true
         git -c core.editor=true cherry-pick --continue >/dev/null 2>&1 || {
           git cherry-pick --abort >/dev/null 2>&1 || true
@@ -203,7 +223,7 @@ guard_archive_index() {
 # key instead. Only runs when this checkout carries the files.
 union_course_state() {
   local f ref cand
-  for f in scripts/course-versions.json scripts/course-depth.json scripts/course-data.json scripts/course-practice.json; do
+  for f in scripts/course-versions.json scripts/course-depth.json scripts/course-data.json scripts/course-practice.json scripts/course-addons.json; do
     [ -f "$f" ] || continue
     ref=""
     for cand in FETCH_HEAD origin/main MERGE_HEAD; do
@@ -220,6 +240,26 @@ union_course_state() {
   done
 }
 
+// data/figures/invented.json is append-only and keyed by figure id. A lane
+// whose checkout predates another lane's figures used to overwrite the whole
+// library (254 -> 17 on 2026-11-21), collapsing the figure hub. Union by id.
+union_figures() {
+  local f=data/figures/invented.json
+  [ -f "$f" ] || return 0
+  local ref="" cand
+  for cand in FETCH_HEAD origin/main MERGE_HEAD; do
+    if git cat-file -e "$cand:$f" 2>/dev/null; then ref="$cand"; break; fi
+  done
+  [ -n "$ref" ] || return 0
+  git show "$ref:$f" > "$f.remote.json" 2>/dev/null || { rm -f "$f.remote.json"; return 0; }
+  node scripts/merge-figure-store.js "$f.remote.json" "$f" "$f" || true
+  rm -f "$f.remote.json"
+  git add "$f" 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit --amend --no-edit >/dev/null 2>&1 || true
+  fi
+}
+
 try_push() {
   # $1 = label for logs. Echoes server output to stdout, returns push status.
   local out
@@ -228,6 +268,7 @@ try_push() {
   union_mains_fresh
   guard_archive_index
   union_course_state
+  union_figures
   out=$(git push 2>&1)
   local st=$?
   echo "$out"
@@ -281,6 +322,7 @@ for i in 1 2 3 4 5 6 7 8 9 10; do
   union_invented
   union_mains_fresh
   union_course_state
+  union_figures
   if git push 2>&1; then
     if [ "$PAT_AUTH" = "1" ]; then
       # PAT is dead but GITHUB_TOKEN fallback published the work. This is not

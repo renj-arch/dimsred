@@ -85,5 +85,7 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git add -f data/fact-audit.json
           git add -f data/fact-audit-state.json
+          git add -f data/fact-corrections.json
+          git add -- */course 2>/dev/null || true
           git add upsc/course 2>/dev/null || true
           bash scripts/ci-push.sh "fact-audit: claims that do not hold up"

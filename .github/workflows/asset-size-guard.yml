@@ -77,7 +77,17 @@ jobs:
             console.log('checked ' + blobs.length + ' files at ' + sha);
 
             var bad = blobs
-              .filter(function (b) { return b.size > LIMIT && b.path.indexOf('data/questions/') !== 0; })
+              .filter(function (b) {
+                // data/questions/** and scripts/** are build-time only: no deploy
+                // path ships them to the CDN. slim-live removes data/questions and
+                // strips any remaining asset over Cloudflare's 25 MiB ceiling, so
+                // scripts/course-addons.json (30 MiB of generated addenda) never
+                // reaches production. Flagging it failed every push while the site
+                // deployed fine.
+                if (b.path.indexOf('data/questions/') === 0) return false;
+                if (b.path.indexOf('scripts/') === 0) return false;
+                return b.size > LIMIT;
+              })
               .sort(function (a, b) { return b.size - a.size; });
             if (bad.length) {
               console.log('::error::Deployable files over the 24 MiB guard (Cloudflare Pages limit is 25 MiB): ' +
@@ -88,7 +98,7 @@ jobs:
 
             console.log('OK: no deployable tracked file over 24 MiB');
             var top = blobs
-              .filter(function (b) { return b.path.indexOf('data/questions/') !== 0; })
+              .filter(function (b) { return b.path.indexOf('data/questions/') !== 0 && b.path.indexOf('scripts/') !== 0; })
               .sort(function (a, b) { return b.size - a.size; })
               .slice(0, 5);
             console.log('largest deployable files:');

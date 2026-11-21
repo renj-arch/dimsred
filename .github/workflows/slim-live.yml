@@ -180,6 +180,7 @@ jobs:
           # guard covers the same class for lesson bodies and hand-built pages,
           # which expand-course, site-agent and selfcheck-quick all rewrite.
           node scripts/lib/topic-index-guard.test.js
+          node scripts/check-generated-state.js
           node scripts/lib/content-baseline-guard.test.js
           # Flowchart relation store: every arrow must be authored or carry an
           # evidence sentence. A missing or malformed store leaves the page with
@@ -264,6 +265,10 @@ jobs:
           # A model-written data question arrives as a pipe table; render it as a
           # real table instead of leaving the reader a wall of pipes.
           node scripts/fix-question-tables.js .
+          # Verified fact-audit corrections, re-applied on the final tree: the
+          # expanders regenerate lesson pages and can drop a fix written only
+          # into a page (see data/fact-corrections.json).
+          node scripts/apply-fact-corrections.js .
           git add -A -- '*.html' 2>/dev/null || true
 
           TREE=$(git write-tree)
