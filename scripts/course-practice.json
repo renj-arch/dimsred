@@ -118117,6 +118117,141 @@
         }
       ],
       "sol": "The Newton-Raphson method approximates the function with a tangent line at x_n and finds the x-intercept of this tangent as the next approximation. The geometric derivation leads to the update rule x_{n+1} = x_n - f(x_n)/f'(x_n). This formula subtracts the ratio of the function value to its derivative from the current estimate. Options B, C, and D represent incorrect algebraic manipulations or different algorithms that do not correspond to the standard Newton-Raphson iteration for root finding."
+    },
+    {
+      "id": 2711,
+      "text": "According to complementary slackness in linear programming duality, for an optimal primal-dual pair, which condition must hold for each primal constraint and its corresponding dual variable?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Primal slack > 0 implies dual variable > 0",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Primal slack = 0 or dual variable = 0",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Both primal and dual slacks are zero",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Dual variable is always zero",
+          "c": false
+        }
+      ],
+      "sol": "Complementary slackness states that for each primal constraint, either the slack is zero (constraint is binding) or the corresponding dual variable is zero, and vice versa. This is a necessary and sufficient condition for optimality when both primal and dual are feasible. Option B correctly captures this disjunction. Option A reverses the implication, option C is too strong (both zero simultaneously is not required), and option D is false because dual variables can be positive for binding constraints."
+    },
+    {
+      "id": 2712,
+      "text": "For a random sample from a normal distribution N(μ, σ²) with both μ and σ² unknown, the maximum likelihood estimator of σ² uses which divisor?",
+      "options": [
+        {
+          "l": "a",
+          "t": "n",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "n-1",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "n+1",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "n/2",
+          "c": false
+        }
+      ],
+      "sol": "The MLE of σ² for a normal sample is (1/n) Σ (X_i - X̄)², i.e., the divisor is n. This differs from the unbiased sample variance which uses n-1. The lesson explicitly states that the MLE uses divisor n, not n-1. Options B, C, and D are incorrect divisors for the MLE."
+    },
+    {
+      "id": 2713,
+      "text": "Which statement about explicit Runge-Kutta methods applied to stiff ordinary differential equations is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "They have unbounded stability regions",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "They require step-size restrictions due to limited stability regions",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "They are unconditionally stable",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "They are not affected by stiffness",
+          "c": false
+        }
+      ],
+      "sol": "Explicit Runge-Kutta methods have bounded stability regions. For stiff problems, the eigenvalues of the Jacobian lie far into the left half-plane, forcing the step size to be very small to stay inside the stability region. This severe step-size restriction is a well-known drawback. Option A is false because stability regions are bounded. Option C describes implicit methods like backward Euler. Option D is false because stiffness directly impacts explicit methods."
+    },
+    {
+      "id": 2714,
+      "text": "The explicit FTCS finite difference scheme for the heat equation u_t = α u_xx is stable if the mesh ratio r = αΔt/Δx² satisfies which condition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "r ≤ 1",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "r ≤ 1/2",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "r ≤ 1/4",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "r ≤ 2",
+          "c": false
+        }
+      ],
+      "sol": "Von Neumann stability analysis of the FTCS scheme yields the amplification factor ξ = 1 - 4r sin²(kΔx/2). Stability requires |ξ| ≤ 1 for all wave numbers k, which holds if and only if r ≤ 1/2. This is the CFL condition for the parabolic heat equation. Options A, C, and D give incorrect bounds."
+    },
+    {
+      "id": 2715,
+      "text": "A function f(z) is conformal at a point z₀ if it satisfies which condition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "f is analytic and f'(z₀) ≠ 0",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "f is analytic and f'(z₀) = 0",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "f is continuous at z₀",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "f maps circles to circles",
+          "c": false
+        }
+      ],
+      "sol": "A conformal map preserves angles locally. The lesson defines a conformal map as an analytic function with non-zero derivative. If f'(z₀) = 0, angles are not preserved (they are multiplied by the order of the zero). Continuity alone is insufficient, and mapping circles to lines is a property of Möbius transformations, not the general definition of conformality."
     }
   ],
   "opt-physics/paper2": [
@@ -122056,6 +122191,141 @@
         }
       ],
       "sol": "Frequency Division Multiple Access (FDMA) allocates distinct, non-overlapping frequency bands to different users. In contrast, Code Division Multiple Access (CDMA) allows all users to transmit simultaneously over the same frequency band at the same time. The distinction between them is achieved using unique spreading codes assigned to each user in CDMA, which enables the receiver to separate signals based on code correlation rather than frequency separation."
+    },
+    {
+      "id": 3911,
+      "text": "In the diagonal (modal) canonical form of a linear time-invariant system with distinct eigenvalues, what is the necessary and sufficient condition for complete state controllability?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The system matrix A must be diagonalizable.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The controllability matrix must have full rank equal to the system order.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The input matrix B must have non-zero entries in every row corresponding to a modal state.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The transfer function derived from the model must have no pole-zero cancellations.",
+          "c": false
+        }
+      ],
+      "sol": "In the modal canonical form, the system dynamics are decoupled into independent modes. The controllability matrix rank test simplifies to checking the input matrix B. Since A is diagonal, the controllability matrix rows correspond directly to the rows of B scaled by eigenvalues. A mode is controllable if and only if the corresponding row in B is non-zero. Therefore, for complete controllability, every row of B (every modal direction) must have a non-zero entry. Option A is insufficient as diagonalizability does not guarantee controllability. Option B is the general definition but not the specific simplified condition for this canonical form. Option D relates to minimal realizations from transfer functions, not the internal modal structure."
+    },
+    {
+      "id": 3912,
+      "text": "According to the standard rule of thumb for selecting the sampling period in digital control implementation, how should the sampling period Ts relate to the desired closed-loop crossover frequency ωc?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Ts ≤ 0.1 × ωc",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Ts ≤ 0.1 / ωc",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Ts ≥ 10 / ωc",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Ts ≤ 1 / (2 × ωc)",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states the common rule of thumb for digital controller sampling period selection: Ts ≤ 0.1 / ωc, where ωc is the desired crossover frequency. This ensures the sampling frequency is at least 10 times the crossover frequency (approximately 60 times in rad/s), keeping discretization errors small and preserving continuous-time design margins. Option A inverts the relationship dimensionally. Option C suggests a lower bound, which would cause excessive discretization error. Option D resembles the Nyquist criterion for signal reconstruction but is not the cited control design rule of thumb for crossover frequency."
+    },
+    {
+      "id": 3913,
+      "text": "For an LLC resonant converter to maintain Zero Voltage Switching (ZVS) at minimum load, which condition regarding the magnetizing current is essential?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The magnetizing current must be zero to minimize circulating energy.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The magnetizing current must be sufficient to discharge the switch output capacitance.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The magnetizing current must exceed the peak resonant current during the switching transition.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The magnetizing current must equal the reflected load current at minimum load.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson identifies a specific examination trap: designing an LLC converter without verifying the ZVS condition at minimum load. It explicitly states that the magnetizing current must be sufficient to discharge the switch output capacitance. At light loads, the resonant current decreases, and the energy stored in the magnetizing inductance becomes the primary source for charging/discharging the parasitic capacitances (Coss) of the switches during dead time. If the magnetizing current is too small, the voltage across the switch cannot reach zero before the gate signal arrives, resulting in hard switching and increased losses. Options A, C, and D describe incorrect or irrelevant current relationships for ZVS initiation."
+    },
+    {
+      "id": 3914,
+      "text": "In a MIMO-OFDM system, what is the critical requirement for the cyclic prefix length to prevent Inter-Symbol Interference (ISI) and Inter-Carrier Interference (ICI)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It must exceed the symbol duration of a single OFDM subcarrier.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It must exceed the maximum channel delay spread across all MIMO paths.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It must be shorter than the channel coherence time.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It must be equal to the inverse of the subcarrier spacing.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson highlights a common trap: forgetting that the OFDM cyclic prefix must exceed the maximum channel delay spread across all MIMO paths. In a MIMO system, each transmit-receive antenna pair has a potentially different channel impulse response and delay spread. The cyclic prefix acts as a guard interval; if its length is shorter than the longest significant multipath delay among all spatial channels, the orthogonality of subcarriers is destroyed (causing ICI) and symbols overlap (causing ISI). Option A describes the useful symbol time, not the guard interval requirement. Option C relates to time variation (Doppler), not multipath delay. Option D defines the subcarrier spacing relationship, not the CP length."
+    },
+    {
+      "id": 3915,
+      "text": "The common-mode (CM) resonance frequency of an EMI input filter comprising a CM choke (inductance Lcm, parasitic capacitance Cp) and Y-capacitors (Cy) is correctly given by which formula?",
+      "options": [
+        {
+          "l": "a",
+          "t": "f_res = 1 / (2π √(Lcm × Cy))",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "f_res = 1 / (2π √(Lcm × (Cy/2 + Cp)))",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "f_res = 1 / (2π √(Lcm × (Cy + Cp)))",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "f_res = 1 / (2π √(Lcm × Cp))",
+          "c": false
+        }
+      ],
+      "sol": "The lesson provides a specific worked example for this calculation: f_res = 1 / (2π √(Lcm (Cy/2 + Cp))). The Y-capacitors (Cy) are connected from each line to ground. For common-mode currents, the two Y-capacitors appear in series, resulting in an equivalent capacitance of Cy/2 to ground. This series combination is in parallel with the choke's parasitic capacitance Cp. The total effective capacitance resonating with Lcm is therefore (Cy/2 + Cp). Option A ignores both the series division of Cy and the parasitic Cp. Option C incorrectly assumes Cy capacitors are in parallel for CM currents. Option D ignores the Y-capacitors entirely."
     }
   ],
   "opt-electrical-engineering/paper1": [
@@ -188057,6 +188327,141 @@
         }
       ],
       "sol": "The lesson states: \"Certain amendments affecting the federal structure, such as changes to the representation of states in Parliament, the extent of executive power, or the provisions of the Seventh Schedule, additionally require ratification by at least half of the state legislatures.\" Option B (representation of states in Parliament) is explicitly listed. The other options — PM's salary, President's election procedure, Lok Sabha qualifications — are not mentioned as federal-structure provisions requiring state ratification in the provided text."
+    },
+    {
+      "id": 106,
+      "text": "Which Supreme Court case first adopted a proportionality analysis for reviewing executive action that affects fundamental rights, moving beyond the Wednesbury unreasonableness test?",
+      "options": [
+        {
+          "l": "a",
+          "t": "State of U.P. v. Rajesh Gautam (2002)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Om Kumar v. Union of India (2000)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "K. S. Puttaswamy v. Union of India (2017)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Union of India v. G. Ganayutham (1997)",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the Supreme Court in Om Kumar v. Union of India (2000) held the Wednesbury standard insufficient for decisions affecting fundamental rights and adopted a proportionality analysis requiring suitability, necessity and balance. The three‑limbed test was later refined in Puttaswamy (2017), but the initial adoption occurred in Om Kumar (2000). The other cases either applied Wednesbury or dealt with legitimate expectation and service matters, not the first introduction of proportionality for fundamental rights review."
+    },
+    {
+      "id": 107,
+      "text": "What parliamentary majority is required to approve a proclamation of National Emergency under Article 352?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Simple majority of members present and voting",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Special majority of total membership and two‑thirds of members present and voting",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Two‑thirds majority of total membership only",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Majority of total membership only",
+          "c": false
+        }
+      ],
+      "sol": "According to the lesson, a National Emergency proclamation must be approved by both Houses of Parliament within one month by a special majority, defined as a majority of the total membership of each House and a two‑thirds majority of members present and voting. This distinguishes it from the simple majority required for President’s Rule under Article 356. The other options describe lesser majorities that do not satisfy the constitutional requirement for Article 352."
+    },
+    {
+      "id": 108,
+      "text": "What majority does the Constitution mandate for decisions of the Goods and Services Tax (GST) Council?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Simple majority",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Two‑thirds majority",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Three‑fourths weighted majority",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Unanimity",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly corrects the misconception that GST Council decisions require unanimity, stating that the Constitution mandates a three‑fourths weighted majority for its decisions. This weighted majority reflects the federal structure, giving the Centre one‑third weight and the states two‑thirds weight. The other options represent lower thresholds or unanimity, which are not the constitutionally prescribed voting rule for the GST Council."
+    },
+    {
+      "id": 109,
+      "text": "Which statement correctly describes the removal procedure for the Chief Election Commissioner (CEC) versus other Election Commissioners?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Both CEC and other Commissioners are removed by the President on the recommendation of the Prime Minister.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "CEC can be removed only by a special majority address of Parliament, while other Commissioners are removed by the President on the recommendation of the CEC.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "CEC and other Commissioners are removed by the President on the advice of the Council of Ministers.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "CEC is removed by the President on the recommendation of the Supreme Court, while other Commissioners are removed by the CEC.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson highlights a common error: treating the Election Commission’s removal procedure as identical to that of the CAG. It clarifies that the CEC requires a special‑majority address by Parliament for removal (similar to a Supreme Court judge), whereas the other Election Commissioners can be removed by the President on the recommendation of the CEC. This distinction ensures the CEC’s greater independence. The other options either conflate the procedures or introduce incorrect authorities such as the Prime Minister or Supreme Court."
+    },
+    {
+      "id": 110,
+      "text": "What is the extent of judicial review over parliamentary privileges as established by the Supreme Court?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Courts can review both the existence and the merits of disciplinary decisions of the House.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Courts can examine whether a claimed privilege exists under the Constitution but cannot review the merits of internal disciplinary decisions.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Courts have no jurisdiction to examine any aspect of parliamentary privileges.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Courts can review parliamentary privileges only if a fundamental right is violated, but not the existence of the privilege.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson cites Keshav Singh v. Speaker (1965), where the Supreme Court held that the judiciary may determine whether a privilege claimed by the House exists under Article 105, but it cannot review the House’s internal disciplinary decisions. Later, in Raja Ram Pal v. Speaker (2007), the Court added that parliamentary privilege is subject to fundamental rights, yet the core principle remains: courts adjudicate the existence of a privilege, not the merits of its exercise. Option B captures this precise scope, while the others either overextend or unduly restrict judicial review."
     }
   ],
   "mains-gs3/science-tech-digital": [
@@ -202068,6 +202473,141 @@
         }
       ],
       "sol": "The lesson text explicitly states: \"accompanied by massive communal violence and the displacement of an estimated ten to fifteen million people.\" This corresponds to 10-15 million, making option B correct. The other ranges are not mentioned in the provided material."
+    },
+    {
+      "id": 106,
+      "text": "Which of the following correctly identifies the primary literary sources of the Sangam period?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Ettuthokai and Pattuppattu",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Mahabharata and Ramayana",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Arthashastra and Manusmriti",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Puranas and Upanishads",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the primary sources of the Sangam period are the anthologies of Tamil poetry — Ettuthokai (Eight Anthologies) and Pattuppattu (Ten Idylls) — together with the grammatical treatise Tolkāppiyam. The other options refer to later Sanskrit epics, legal texts, and Puranic literature, which are not the Sangam sources. Therefore, option A is the only choice that matches the textual evidence."
+    },
+    {
+      "id": 107,
+      "text": "According to the Sangam poems, which sacrificial rite was performed by the king (ventar)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "velvi",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "yajna",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "homa",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "ashvamedha",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly mentions that the king (ventar) performed velvi (sacrificial rites) as part of the political organisation described in the poems. The terms yajna, homa, and ashvamedha are generic or later Vedic sacrificial forms not specified for the Sangam king in the provided text. Hence, option A is correct."
+    },
+    {
+      "id": 108,
+      "text": "The Periplus of the Erythraean Sea lists which three ports as major exporters of pepper, pearls, ivory and textiles to the Roman Empire?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Muziris, Tyndis, Korkai",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Arikamedu, Kaveripattinam, Alagankulam",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Vanji, Uraiyur, Madurai",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Palghat Gap, Kaveri delta, Vaigai basin",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the Periplus of the Erythraean Sea (mid‑1st century CE) and Ptolemy’s Geography list Muziris, Tyndis and Korkai as major ports exporting pepper, pearls, ivory and textiles. The other groups are archaeological sites, capital cities, or geographical features, not the ports named in the Periplus. Therefore, option A is the correct answer."
+    },
+    {
+      "id": 109,
+      "text": "Which Alvar concept of surrender to the divine parallels the Sufi notion of fana (annihilation of the self)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "prapatti",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "bhakti",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "moksha",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "dharma",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that the Alvars’ prapatti (surrender) mirrors the Sufi concept of fana, both emphasising a direct, personal relationship with the divine that bypasses priestly mediation. Bhakti is the broader devotional path, moksha denotes liberation, and dharma refers to duty; none of these specifically correspond to the Sufi idea of self‑annihilation. Thus, option A is correct."
+    },
+    {
+      "id": 110,
+      "text": "The Vernacular Press Act of 1878 was repealed after public outcry in which year?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1882",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "1885",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1890",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1879",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that the Vernacular Press Act (1878) was repealed in 1882 after public outcry, demonstrating the press’s capacity to mobilise opinion. The other years are not mentioned in the text. Consequently, option A is the only verifiable answer."
     }
   ],
   "general-awareness/sports-awards": [
@@ -202205,6 +202745,141 @@
         }
       ],
       "sol": "The lesson states that Abhinav Bindra's gold in the 10‑metre air rifle at the 2008 Beijing Olympics marked India's first individual Olympic gold. Vijender Singh, Sushil Kumar, and Neeraj Chopra won medals later or in different events."
+    },
+    {
+      "id": 106,
+      "text": "Which of the following is NOT a mandatory member of the Final Selection Committee for National Sports Awards, as per the provided text?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Union Sports Minister",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Secretary (Sports)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Director General of SAI",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "President of the Indian Olympic Association",
+          "c": true
+        }
+      ],
+      "sol": "The lesson text explicitly lists the mandatory members of the Final Selection Committee. It states that the committee is chaired by the Union Sports Minister and includes the Secretary (Sports), the Director General of SAI, two eminent sportspersons (one male, one female) nominated by the IOA, and a representative of the Ministry of Home Affairs for the Dhyan Chand award. While the IOA nominates sportspersons, its President is not listed as a mandatory member of the committee itself. Therefore, the President of the Indian Olympic Association is not a mandatory member."
+    },
+    {
+      "id": 107,
+      "text": "According to the 2023-2027 media rights cycle for the Indian Premier League (IPL), what percentage of the revenue is distributed equally among the ten franchises?",
+      "options": [
+        {
+          "l": "a",
+          "t": "50 %",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "45 %",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "5 %",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "25 %",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text details the revenue architecture of the IPL, specifically mentioning the distribution of the 2023-2027 media rights cycle. It states that the ₹48,390 crore media rights are split as follows: 50 % to the Board of Control for Cricket in India (BCCI), 45 % distributed equally among the ten franchises, and 5 % retained for league operations. Therefore, 45 % of the revenue is distributed equally among the ten franchises."
+    },
+    {
+      "id": 108,
+      "text": "What is the mandated target for female representation in coaching and administrative roles within National Sports Federations (NSFs) by 2025, and how is compliance monitored?",
+      "options": [
+        {
+          "l": "a",
+          "t": "25 % representation, monitored by the Ministry of Youth Affairs and Sports",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "30 % representation, monitored through the National Sports Governance Observer (NSGO) dashboard",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "30 % representation, monitored by annual audits",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "40 % representation, monitored by a whistle-blower portal",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text on Governance Structures of National Sports Federations states that the Code of Conduct requires NSFs to adopt a gender-equity policy ensuring at least 30 % female representation in coaching and administrative roles by 2025. It further specifies that compliance with this policy is monitored through the National Sports Governance Observer (NSGO) dashboard. Options A, C, and D contain incorrect percentages or monitoring mechanisms."
+    },
+    {
+      "id": 109,
+      "text": "How did India's overall medal conversion rate at the Summer Olympics change from London 2012 to Tokyo 2020 (held 2021), and which sports primarily drove this change?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Decreased from 0.058 to 0.032, driven by archery and badminton.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Improved from 0.032 to 0.058, driven by shooting, wrestling, boxing, and athletics.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Remained constant at approximately 0.045, with no specific sport identified as a primary driver.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Improved from 0.032 to 0.058, driven by table tennis and weightlifting.",
+          "c": false
+        }
+      ],
+      "sol": "The section on Medal Conversion Analytics states that India’s overall conversion rate at the Olympics improved from 0.032 (6 medals / 187 athletes) in London 2012 to 0.058 (7 medals / 121 athletes) in Tokyo 2020 (held 2021). The text explicitly attributes this rise to targeted investment in shooting, wrestling, boxing, and athletics under TOPS, where conversion rates exceed 0.15. Therefore, option B accurately reflects both the change in conversion rate and the driving sports."
+    },
+    {
+      "id": 110,
+      "text": "Which of the following transparency measures was explicitly stated to have been strengthened 'after controversies in 2018' regarding the National Sports Awards selection process?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Introduction of a Public Feedback Module for objections.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Publication of the Final Selection Committee's minutes on the ministry website within 30 days of the announcement.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Mandatory anti-doping clearance certificates from NADA for every nominee.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Institutionalization of character and antecedent verification from state police.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text discusses several transparency measures. It specifically states: 'The committee’s minutes are published on the ministry website within 30 days of the announcement, a transparency measure strengthened after controversies in 2018.' While other measures like the Public Feedback Module (2021 revision) and NADA clearance (since 2020) were also introduced or mandated after 2018, the publication of minutes is the one explicitly linked to being 'strengthened after controversies in 2018'. Character and antecedent verification was institutionalized after a 2016 incident."
     }
   ],
   "maths/average": [
