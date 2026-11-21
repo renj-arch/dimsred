@@ -24,6 +24,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'data', 'course-questions.json');
+const { isMetaQuestion, isLessonMeta, hasLeakedReasoning } = require('./lib/question-quality');
 
 const AMBIGUOUS = /not in options|not matching|closest|most likely|likely intended|expected answer|i'?ll go with|let me (just )?(take|use|recompute|recalculate)|hmm|not consistent|pattern may be/i;
 
@@ -142,6 +143,13 @@ function main() {
       const sol = clean(q.sol);
       if (text.length < 8) { drop('question text'); continue; }
       if (sol.length < 5) { drop('solution'); continue; }
+      // A question about the lesson or about how to take the exam is not an
+      // exam question. "According to the lesson, which ... describes the
+      // thematic composition of Paper I?" teaches nothing and was arriving
+      // labelled High relevance.
+      if (isLessonMeta(text)) { drop('lesson-meta'); continue; }
+      if (isMetaQuestion(text)) { drop('exam-strategy'); continue; }
+      if (hasLeakedReasoning(sol)) { drop('leaked reasoning'); continue; }
       if (AMBIGUOUS.test(text) || AMBIGUOUS.test(sol)) { drop('ambiguous solution'); continue; }
       if (!Array.isArray(q.options) || q.options.length < 2) { drop('options'); continue; }
       const correct = q.options.filter(function (o) { return o && o.c === true; });
@@ -164,6 +172,7 @@ function main() {
         q: text,
         a: answer,
         opts: opts,
+        solution: sol,
         source: 'course',
         subject: subject,
         type: 'mcq',
