@@ -207,7 +207,28 @@ function applyCorrection(file, quote, correction, problem) {
     'title="' + safeTitle + '">' + correction + '</span>';
   fs.writeFileSync(file, html.split(quote).join(marked), 'utf8');
   applyToSource(quote, marked);
+  // Source stores still get regenerated: a later expand pass can rebuild the
+  // page from a different key and drop the fix (the CLAT static-GK correction
+  // did exactly that). Record it for the deploy-time overlay, which rewrites
+  // the quote on the final deploy tree whatever the generator did.
+  recordCorrection(file, quote, correction, problem);
   return true;
+}
+
+function recordCorrection(file, quote, correction, problem) {
+  const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+  const store = loadJson('data/fact-corrections.json', { corrections: [] });
+  if (!Array.isArray(store.corrections)) store.corrections = [];
+  store.corrections = store.corrections.filter((c) => !(c.file === rel && c.quote === quote));
+  store.corrections.push({
+    file: rel,
+    quote,
+    correction,
+    problem: String(problem || '').slice(0, 300),
+    appliedAt: new Date().toISOString()
+  });
+  store.updatedAt = new Date().toISOString();
+  saveJson('data/fact-corrections.json', store);
 }
 
 // The page is the output; scripts/course-data.json and course-addons.json are
