@@ -326,6 +326,20 @@
   }
 
   function classify(input) {
+    // A bare relevance label is a hint, not evidence. The site agent used to
+    // write "high"/"medium" on unchecked items, which is why useless questions
+    // showed a high-relevance badge. Re-classify without the label first; the
+    // label may only LOWER the verdict, never raise it.
+    var declared = input && (input.relevance === 'high' || input.relevance === 'medium') ? input.relevance : '';
+    if (declared) {
+      var copy = Object.assign({}, input);
+      delete copy.relevance;
+      var ev = classify(copy);
+      ev.reasons.unshift('declared:relevance=' + declared + ' (must be supported by evidence)');
+      if (ev.scope === OUT || ev.scope === REVIEW) return ev;
+      if (declared === 'medium' && ev.tier === 'high') ev.tier = 'medium';
+      return ev;
+    }
     var q = normalize(input);
     var reasons = [];
     var evidence = [];

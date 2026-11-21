@@ -8493,14 +8493,45 @@ function generateWeakSpotQuestion(diff) {
   return generateExamRushQuestion(diff);
 }
 
+function _pullMentalBankQuestion(category) {
+  var bank = (typeof window !== 'undefined' && window.__mentalTopicBank) || null;
+  if (!bank) return null;
+  var want = category === 'verbal' ? 'english' : category;
+  var pool = [];
+  for (var k in bank) {
+    var list = bank[k] || [];
+    for (var i = 0; i < list.length; i++) {
+      if (!list[i]._used && list[i].section === want) pool.push(list[i]);
+    }
+  }
+  if (!pool.length) return null;
+  var b = pool[Math.floor(Math.random() * pool.length)];
+  b._used = true;
+  return {
+    question: b.question,
+    answer: b.answer,
+    options: (b.options || []).slice(),
+    solution: b.solution || '',
+    hint: b.hint || '',
+    timeLimit: b.timeLimit || 40,
+    difficulty: b.difficulty || 3,
+    section: b.section,
+    techniqueLabel: b.techniqueLabel
+  };
+}
+
 function generateGrandSlamQuestion(diff) {
   var examDiff = Math.max(4, diff);
   var category = pick(['quant', 'reasoning', 'verbal']);
-  var q;
-  switch (category) {
-    case 'quant': q = generateQuantQuestion(examDiff); break;
-    case 'reasoning': q = generateReasoningQuestion(examDiff); break;
-    case 'verbal': q = generateVerbalQuestion(examDiff); break;
+  // Grand Slam draws the same fresh CI-invented pool the topic drills use, so
+  // newly invented Quant/Reasoning/Verbal items appear here too.
+  var q = _pullMentalBankQuestion(category);
+  if (!q) {
+    switch (category) {
+      case 'quant': q = generateQuantQuestion(examDiff); break;
+      case 'reasoning': q = generateReasoningQuestion(examDiff); break;
+      case 'verbal': q = generateVerbalQuestion(examDiff); break;
+    }
   }
   if (!q) {
     q = generateNumberSenseQuestion(examDiff, 'exam');
@@ -8783,9 +8814,20 @@ window.getMentalQuestion = function(session) {
     if (!Array.isArray(q.options) || q.options.length < 2) q.options = ['Yes','No','Cannot determine','Option D'];
     q.options = q.options.filter(function(o){ return o !== undefined && o !== null && String(o) !== 'undefined' && String(o) !== 'NaN'; });
     if (q.options.indexOf(q.answer) < 0) q.options.unshift(q.answer);
-    if (q.options.length < 2) q.options.push('None of these');
-    if (q.options.length < 3) q.options.push('Cannot determine');
-    if (q.options.length < 4) q.options.push('Option D');
+    // Distinct choices only: several generators compared numeric distractors
+    // against string options and could emit the same option twice, leaving a
+    // three-choice question. Dedupe by rendered text and top up, so every
+    // generator (and every bank item) obeys the same four-choice invariant.
+    var seenOpt = {}, uniq = [];
+    for (var oi = 0; oi < q.options.length; oi++) {
+      var ok = String(q.options[oi]);
+      if (!seenOpt[ok]) { seenOpt[ok] = 1; uniq.push(q.options[oi]); }
+    }
+    q.options = uniq;
+    var fillers = ['None of these', 'Cannot determine', 'Option C', 'Option D'];
+    for (var fi = 0; fi < fillers.length && q.options.length < 4; fi++) {
+      if (!seenOpt[fillers[fi]]) { seenOpt[fillers[fi]] = 1; q.options.push(fillers[fi]); }
+    }
     shuffle(q.options);
     if (q.timeLimit === undefined) q.timeLimit = 15;
     q.hint = q.hint || '';

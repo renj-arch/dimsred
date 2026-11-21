@@ -865,7 +865,7 @@
             inPuzzleCluePhase = false;
             loadQuestion();
         };
-        if (mode === 'quant' || mode === 'reasoning' || mode === 'verbal') withTopicBank(begin);
+        if (mode === 'quant' || mode === 'reasoning' || mode === 'verbal' || mode === 'grandslam') withTopicBank(begin);
         else begin();
     }
 
@@ -892,14 +892,14 @@
         loadQuestion();
     }
 
-    // Exam-relevance suffix for invented questions (importance + importantFor,
-    // set by the CI setter; missing field = plain label). Honest labels only.
+    // Exam-relevance suffix for invented questions. The model's own
+    // importance label ("high-yield"/"exam-relevant") was not independently
+    // checked, and useless items were arriving labelled high. Keep the exams
+    // it names, but do not print a relevance claim the site cannot verify.
     function invYieldSuffix(q) {
-        if (!q || !q.importance) return '';
+        if (!q) return '';
         var exams = (q.importantFor && q.importantFor.length) ? ' · ' + q.importantFor.join(', ') : '';
-        if (q.importance === 'high') return ' · 🎯 high-yield' + exams;
-        if (q.importance === 'medium') return ' · 🎯 exam-relevant' + exams;
-        return ' · low priority';
+        return exams;
     }
     // Invented: questions made from scratch by the site's CI setter agent
     // (data/invented/questions.json). Same arena UI; falls back to Exam Sim

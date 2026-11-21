@@ -78,8 +78,40 @@ sync_remote() {
   # keeping OUR side, then finish the merge so a push can actually happen.
   git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
   if [ -f .git/MERGE_HEAD ]; then
+    # A content conflict in the generated course state can survive -X ours
+    # when several lanes finish together (course-versions.json changed on both
+    # sides). Resolve those files explicitly, then commit the merge; leaving
+    # MERGE_HEAD behind is what left three lanes stuck "behind its remote
+    # counterpart" for every retry on 2026-11-20.
+    for f in scripts/course-versions.json scripts/course-depth.json \
+             scripts/course-data.json scripts/course-practice.json; do
+      git checkout --ours -- "$f" 2>/dev/null || true
+      git add "$f" 2>/dev/null || true
+    done
     git add -A 2>/dev/null || true
     git commit --no-edit >/dev/null 2>&1 || true
+  fi
+  # Last resort: if we are still not a descendant of the fetched tip, put our
+  # commit on top of it. The generated state files are union-merged afterwards
+  # by union_course_state(), so a clean linear rebase is safe here.
+  if ! git merge-base --is-ancestor FETCH_HEAD HEAD 2>/dev/null; then
+    OUR=$(git rev-parse HEAD 2>/dev/null || true)
+    if [ -n "$OUR" ]; then
+      echo "[ci-push] still behind after merge - replaying $OUR onto FETCH_HEAD"
+      git reset --hard FETCH_HEAD 2>/dev/null || true
+      if ! git cherry-pick "$OUR" >/dev/null 2>&1; then
+        for f in scripts/course-versions.json scripts/course-depth.json \
+                 scripts/course-data.json scripts/course-practice.json; do
+          git checkout --theirs -- "$f" 2>/dev/null || true
+          git add "$f" 2>/dev/null || true
+        done
+        git add -A 2>/dev/null || true
+        git -c core.editor=true cherry-pick --continue >/dev/null 2>&1 || {
+          git cherry-pick --abort >/dev/null 2>&1 || true
+          git reset --hard "$OUR" >/dev/null 2>&1 || true
+        }
+      fi
+    fi
   fi
   return 0
 }
@@ -211,14 +243,14 @@ PAT_AUTH=0
 # attempt re-syncs, but another lane can land in the pull->push gap. Eight
 # jittered attempts (~2 min of coverage) beat the observed collision rate;
 # three fixed 5s retries lost whole 90-minute runs on 2026-11-13.
-for i in 1 2 3 4 5 6 7 8; do
+for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
   echo "[ci-push] push attempt $i (PAT)..."
   try_push "pat"
   ST=$?
   if [ $ST -eq 0 ]; then echo "[ci-push] Pushed with PAT"; exit 0; fi
   if [ $ST -eq 2 ]; then PAT_AUTH=1; echo "[ci-push] PAT looks dead"; break; fi
   echo "[ci-push] transient push failure, retrying..."
-  sleep $((4 + RANDOM % 12))
+  sleep $((4 + RANDOM % 10 + i))
 done
 
 # --- Fallback: same push via GITHUB_TOKEN ---
@@ -243,7 +275,7 @@ if [ "$PAT_AUTH" = "1" ]; then
   git add data/auth-status.json 2>/dev/null || true
   git commit -m "ci-push: PAT-dead fallback marker" 2>/dev/null || true
 fi
-for i in 1 2 3 4 5 6 7 8; do
+for i in 1 2 3 4 5 6 7 8 9 10; do
   echo "[ci-push] fallback push attempt $i (GITHUB_TOKEN)..."
   sync_remote
   union_invented
@@ -267,7 +299,7 @@ for i in 1 2 3 4 5 6 7 8; do
       exit 0
     fi
   fi
-  sleep $((4 + RANDOM % 12))
+  sleep $((4 + RANDOM % 10 + i))
 done
 # Not necessarily auth: sustained non-fast-forward races between parallel
 # lanes land here too. The message says both so nobody chases a dead secret.
