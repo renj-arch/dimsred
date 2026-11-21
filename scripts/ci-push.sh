@@ -223,7 +223,7 @@ guard_archive_index() {
 # key instead. Only runs when this checkout carries the files.
 union_course_state() {
   local f ref cand
-  for f in scripts/course-versions.json scripts/course-depth.json scripts/course-data.json scripts/course-practice.json; do
+  for f in scripts/course-versions.json scripts/course-depth.json scripts/course-data.json scripts/course-practice.json scripts/course-addons.json; do
     [ -f "$f" ] || continue
     ref=""
     for cand in FETCH_HEAD origin/main MERGE_HEAD; do
@@ -240,6 +240,26 @@ union_course_state() {
   done
 }
 
+// data/figures/invented.json is append-only and keyed by figure id. A lane
+// whose checkout predates another lane's figures used to overwrite the whole
+// library (254 -> 17 on 2026-11-21), collapsing the figure hub. Union by id.
+union_figures() {
+  local f=data/figures/invented.json
+  [ -f "$f" ] || return 0
+  local ref="" cand
+  for cand in FETCH_HEAD origin/main MERGE_HEAD; do
+    if git cat-file -e "$cand:$f" 2>/dev/null; then ref="$cand"; break; fi
+  done
+  [ -n "$ref" ] || return 0
+  git show "$ref:$f" > "$f.remote.json" 2>/dev/null || { rm -f "$f.remote.json"; return 0; }
+  node scripts/merge-figure-store.js "$f.remote.json" "$f" "$f" || true
+  rm -f "$f.remote.json"
+  git add "$f" 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit --amend --no-edit >/dev/null 2>&1 || true
+  fi
+}
+
 try_push() {
   # $1 = label for logs. Echoes server output to stdout, returns push status.
   local out
@@ -248,6 +268,7 @@ try_push() {
   union_mains_fresh
   guard_archive_index
   union_course_state
+  union_figures
   out=$(git push 2>&1)
   local st=$?
   echo "$out"
@@ -301,6 +322,7 @@ for i in 1 2 3 4 5 6 7 8 9 10; do
   union_invented
   union_mains_fresh
   union_course_state
+  union_figures
   if git push 2>&1; then
     if [ "$PAT_AUTH" = "1" ]; then
       # PAT is dead but GITHUB_TOKEN fallback published the work. This is not
