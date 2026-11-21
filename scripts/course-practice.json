@@ -5681,6 +5681,141 @@
         }
       ],
       "sol": "The lesson notes that while the general case is NP‑complete, exam puzzles have ≤12 entities and high clue density, making the constraint graph almost tree‑like. The recommended practical algorithm is a depth‑first search with constraint propagation (maintaining arc consistency) combined with the MRV variable‑ordering heuristic. This solves any exam‑level puzzle within seconds on paper. Exhaustive enumeration is infeasible, topological sorting only handles pure precedence, and Hopcroft‑Karp is specific to bipartite matching in double‑row puzzles."
+    },
+    {
+      "id": 111,
+      "text": "In a circular table with 8 equally spaced seats, A sits opposite B. If A is anchored at seat 1, which seat must B occupy?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Seat 4",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Seat 5",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Seat 6",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Seat 7",
+          "c": false
+        }
+      ],
+      "sol": "Opposite seats on an even‑sized circle are separated by half the total seats. With 8 seats, half is 4 steps. Starting from seat 1 and moving clockwise 4 positions lands on seat 5 (1→2→3→4→5). The 180° rotational flip would map seat 1 to itself and seat 5 to itself, so the opposite relation uniquely fixes B at seat 5. Therefore the correct seat is 5."
+    },
+    {
+      "id": 112,
+      "text": "A multi‑attribute puzzle assigns each person a profession and a floor. The clue \"The engineer lives on the third floor\" is processed by arc consistency (AC‑3). How are the domains pruned?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Removes all floors except third from engineer's floor domain and removes engineer from other persons' profession domains",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Removes only the third floor from engineer's floor domain",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Adds engineer to all persons' profession domains",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Leaves all domains unchanged",
+          "c": false
+        }
+      ],
+      "sol": "AC‑3 enforces binary constraints. The clue gives a unary restriction on the engineer's floor domain (only floor 3 remains) and a binary all‑different constraint on professions: since each profession is unique, \"engineer\" is eliminated from the profession domain of every other person. This simultaneous pruning of the floor and profession domains is exactly what arc consistency achieves for such a direct clue."
+    },
+    {
+      "id": 113,
+      "text": "A conditional clue states: \"If P sits at position 2 then Q sits at position 4.\" In an implication graph used for conditional clause chains, how is this clue represented?",
+      "options": [
+        {
+          "l": "a",
+          "t": "As a directed edge from node (P=2) to node (Q=4)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "As an undirected edge between P and Q",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "As a bidirectional edge between (P=2) and (Q=4)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "As a node labeled 'If-Then'",
+          "c": false
+        }
+      ],
+      "sol": "Implication graphs treat each possible assignment as a node. A conditional \"If antecedent then consequent\" becomes a directed edge from the antecedent node (P=2) to the consequent node (Q=4). The edge is activated only when the antecedent becomes true during search; it does not create a permanent binary constraint nor a bidirectional link. This representation allows unit propagation to fire Q=4 automatically once P=2 is assigned."
+    },
+    {
+      "id": 114,
+      "text": "In a linear row of 6 seats, A is to the left of B with at least one person sitting between them. What is the minimum possible number of seats separating A and B?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "3",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "4",
+          "c": false
+        }
+      ],
+      "sol": "\"At least one person between\" means the positional difference must be ≥2 seats (e.g., A at seat 1, one person at seat 2, B at seat 3). The distance measured as the number of seats from A to B exclusive of A but inclusive of B is 2. Any smaller gap would place B immediately next to A, violating the condition. Hence the minimum separation is 2 seats."
+    },
+    {
+      "id": 115,
+      "text": "Floors are numbered 1 to 4. The clue \"The engineer's floor number is the square of the teacher's floor number\" appears. Which teacher–engineer floor pair is forced by this arithmetic constraint?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Teacher 1, Engineer 1",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Teacher 2, Engineer 4",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Teacher 3, Engineer 9",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Teacher 4, Engineer 16",
+          "c": false
+        }
+      ],
+      "sol": "We need integer floors t (teacher) and e (engineer) with e = t² and both in {1,2,3,4}. Testing t=1 gives e=1 (valid but does not use the square relation uniquely). t=2 gives e=4 (both within range). t=3 gives e=9 (out of range). t=4 gives e=16 (out of range). Only the pair (2,4) satisfies the square relation while keeping both floors inside the allowed domain, so the clue deterministically fixes teacher=2 and engineer=4."
     }
   ],
   "reasoning/calendar-clock": [
@@ -209276,6 +209411,141 @@
         }
       ],
       "sol": "NARCL, set up in 2021 with a ₹30,600 crore government guarantee, acquires stressed loans from banks at a discount. In return, it issues security receipts (SRs) to the selling banks. These SRs are gradually redeemed as recoveries materialise, improving banks’ balance sheets. NARCL does not pay face value in cash, nor does it swap equity or directly manage debtor firms; those functions are handled by the separate asset management company IDRCL. Hence, option B accurately describes NARCL’s acquisition method."
+    },
+    {
+      "id": 111,
+      "text": "Which statement correctly describes the Marginal Standing Facility (MSF) introduced by the RBI in 2011?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Allows banks to borrow overnight against non‑SLR securities at the repo rate.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Allows banks to borrow up to a prescribed fraction of their NDTL at a penal rate above the repo rate, using SLR securities as collateral.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Replaces the reverse repo window as the floor for the call money rate.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Operates on a fixed‑rate, fixed‑volume auction format.",
+          "c": false
+        }
+      ],
+      "sol": "The MSF was introduced as a safety‑valve enabling banks to borrow up to a stipulated portion of their Net Demand and Time Liabilities (NDTL) at a rate penalised above the policy repo rate (originally 100 bps, later 25 bps). Crucially, banks may dip into their Statutory Liquidity Ratio (SLR) holdings for this borrowing, unlike the repo window which uses non‑SLR collateral. The MSF does not replace the reverse repo floor, nor does it follow a fixed‑rate, fixed‑volume auction; the LAF moved to a variable‑rate, variable‑volume (VRVR) format in 2015."
+    },
+    {
+      "id": 112,
+      "text": "The Union Budget 2023‑24 projected gross market borrowing of ₹15.4 lakh crore. Through which electronic platform does the RBI conduct primary auctions for these dated securities and treasury bills?",
+      "options": [
+        {
+          "l": "a",
+          "t": "NDS‑OM",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "e‑Kuber",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "NSE‑Bond",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "BSE‑Debt",
+          "c": false
+        }
+      ],
+      "sol": "The Reserve Bank of India acts as the debt manager for the Centre and conducts primary issuance of government dated securities and treasury bills on its proprietary electronic auction platform called e‑Kuber. NDS‑OM is the secondary market order‑matching system for government securities, while NSE‑Bond and BSE‑Debt are stock‑exchange platforms for corporate debt, not for primary government borrowing."
+    },
+    {
+      "id": 113,
+      "text": "Which of the following correctly describes the role of Foreign Direct Investment (FDI) in India's external sector financing?",
+      "options": [
+        {
+          "l": "a",
+          "t": "FDI inflows are used to finance the Centre's fiscal deficit directly.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "FDI inflows finance the current account deficit.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "FDI inflows are counted as part of market borrowings.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "FDI inflows are routed through the National Small Savings Fund.",
+          "c": false
+        }
+      ],
+      "sol": "FDI represents a stable, long‑term capital inflow that enters the capital account of the Balance of Payments. It is used to finance the Current Account Deficit (CAD) by providing foreign exchange to pay for imports of goods and services. FDI does not directly fund the government's fiscal deficit, nor is it classified as market borrowing or routed through the National Small Savings Fund, which mobilises domestic small savings."
+    },
+    {
+      "id": 114,
+      "text": "What is the key distinction between outcome budgeting and zero‑based budgeting as practised in India?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Outcome budgeting focuses on developmental impacts, while zero‑based budgeting requires justification of every expense each year across all ministries.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Outcome budgeting tracks outputs only, zero‑based budgeting tracks outcomes.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Zero‑based budgeting is applied uniformly every year, outcome budgeting is selective.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Outcome budgeting replaces zero‑based budgeting in all ministries.",
+          "c": false
+        }
+      ],
+      "sol": "Outcome budgeting shifts the focus from mere financial outlays (outputs) to measurable developmental outcomes and impacts, linking expenditure to results. Zero‑based budgeting (ZBB) in principle demands that every programme justify its entire budget from a zero base each year, but in practice India applies ZBB selectively and incrementally rather than uniformly across all ministries. The two approaches are complementary, not mutually exclusive, and neither replaces the other."
+    },
+    {
+      "id": 115,
+      "text": "Regarding the settlement of UPI transactions, which statement is accurate?",
+      "options": [
+        {
+          "l": "a",
+          "t": "UPI transactions are settled in real time on a gross settlement basis across banks.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "UPI transactions are settled on a deferred net settlement basis via the NPCI clearing house.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "UPI transactions are settled instantly through the RBI's RTGS system.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "UPI transactions require bilateral settlement between sender and receiver banks.",
+          "c": false
+        }
+      ],
+      "sol": "UPI operates on the Immediate Payment Service (IMPS) rails but the actual inter‑bank settlement occurs on a deferred net settlement (DNS) basis through the National Payments Corporation of India (NPCI) clearing house. This means that while the customer experiences instant credit, the banks' net positions are settled in batches later, not on a real‑time gross settlement (RTGS) or bilateral basis."
     }
   ],
   "gs/geography-physical-prelims": [
@@ -210554,6 +210824,141 @@
         }
       ],
       "sol": "India’s nuclear doctrine rests on Credible Minimum Deterrence, No First Use (NFU) against nuclear attacks only, and civilian control through the Nuclear Command Authority (NCA) chaired by the Prime Minister. The Strategic Forces Command (SFC), established in 2003, executes NCA directives and oversees the triad of Agni missiles, submarine‑launched ballistic missiles, and air‑delivered platforms. India is not a party to the NPT or CTBT. Hence, option C correctly describes the command‑control structure."
+    },
+    {
+      "id": 111,
+      "text": "Which of the following statements about the Public Accounts Committee (PAC) is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Its recommendations are binding on the government.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Chairperson is conventionally from the ruling party.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It examines the CAG's audit reports on government expenditure.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "It has a quorum of two-thirds of its membership.",
+          "c": false
+        }
+      ],
+      "sol": "The PAC is one of the three financial standing committees. Its primary function is to examine the Comptroller and Auditor General's (CAG) audit reports on government expenditure to ensure that money voted by Parliament has been spent for the authorised purpose. The committee's recommendations are not binding, though the government must submit an Action Taken Report within six months. By convention since 1967, the Chairperson of PAC is from the opposition, not the ruling party. The quorum for committee meetings is one-third of the total membership, not two-thirds."
+    },
+    {
+      "id": 112,
+      "text": "Under which Article is the removal procedure of the Chief Election Commissioner (CEC) prescribed?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Article 124(4)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Article 324(5)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Article 324(2)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Article 324(1)",
+          "c": false
+        }
+      ],
+      "sol": "The Election Commission of India is established under Article 324. The Chief Election Commissioner enjoys security of tenure and can be removed only through a process akin to that of a Supreme Court judge — proved misbehaviour or incapacity, resolved by both Houses with a special majority. This removal procedure is explicitly laid down in Article 324(5). Article 124(4) governs the removal of Supreme Court judges, not the CEC. Articles 324(1) and 324(2) deal with the constitution and appointment of the Commission, not removal."
+    },
+    {
+      "id": 113,
+      "text": "In the Union Budget process, what is the power of the Rajya Sabha regarding a Money Bill?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It can amend the Money Bill.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It can reject the Money Bill.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It may only recommend amendments; Lok Sabha has final say.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "It has equal legislative power as Lok Sabha.",
+          "c": false
+        }
+      ],
+      "sol": "A Money Bill, which includes the Finance Bill, can be introduced only in the Lok Sabha. The Rajya Sabha cannot amend or reject a Money Bill; it may only make recommendations within 14 days. The Lok Sabha may accept or reject these recommendations, and its decision is final. This asymmetry reflects the constitutional design that the directly elected House controls financial matters. The Rajya Sabha's role is advisory in respect of Money Bills, unlike ordinary Bills where both Houses have equal powers."
+    },
+    {
+      "id": 114,
+      "text": "The National Green Tribunal (NGT) is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "A constitutional court under Article 21.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A statutory tribunal established under the NGT Act, 2010.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "A body created by an executive order.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "A part of the Supreme Court.",
+          "c": false
+        }
+      ],
+      "sol": "The National Green Tribunal was set up by the National Green Tribunal Act, 2010, making it a statutory body. It is not a constitutional court; its creation derives from legislative enactment, not from the Constitution. It functions as a specialised environmental tribunal with powers to hear civil cases relating to environmental protection and conservation of forests and other natural resources. It is independent of the Supreme Court, though its orders can be appealed to the Supreme Court. The confusion often arises because it exercises judicial functions, but its origin is statutory."
+    },
+    {
+      "id": 115,
+      "text": "The National Quantum Mission (NQM) approved in 2023 is steered by which department?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Department of Space (ISRO)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Department of Science and Technology (DST)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Department of Atomic Energy",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Defence Research and Development Organisation",
+          "c": false
+        }
+      ],
+      "sol": "The National Quantum Mission (NQM), approved in 2023 with an outlay of ₹6,000 crore for 2023‑31, targets quantum computing, communication, sensing, and materials. The mission is steered by the Department of Science and Technology (DST) with participation from multiple agencies, not by ISRO alone. ISRO operates under the Department of Space and focuses on launch vehicles and satellite missions. The Department of Atomic Energy handles nuclear power and advanced reactors, while DRDO develops strategic defence systems. The DST's role as the nodal agency for NQM is explicitly mentioned in the lesson."
     }
   ],
   "ga/industrial-relations": [
