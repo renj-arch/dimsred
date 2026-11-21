@@ -199896,57 +199896,84 @@
   "maths/statistics": [
     {
       "id": 101,
-      "text": "Two classes took the same test. Class A has 30 students with a mean score of 68. Class B has 20 students with a mean score of 75. What is the combined mean score of all 50 students?",
+      "text": "A factory operates two shifts. Shift A has 120 workers with an average daily output of 85 units. Shift B has 80 workers with an average daily output of 92 units. What is the overall average daily output per worker for the factory?",
       "options": [
         {
           "l": "a",
-          "t": "70.2",
+          "t": "87.5",
           "c": false
         },
         {
           "l": "b",
-          "t": "70.8",
+          "t": "87.8",
           "c": true
         },
         {
           "l": "c",
-          "t": "71.4",
+          "t": "88.0",
           "c": false
         },
         {
           "l": "d",
-          "t": "72.0",
+          "t": "88.2",
           "c": false
         }
       ],
-      "sol": "The combined mean is the weighted average of the two class means using class sizes as weights. Total score for Class A = 30 × 68 = 2040. Total score for Class B = 20 × 75 = 1500. Sum of scores = 2040 + 1500 = 3540. Total students = 30 + 20 = 50. Combined mean = 3540 ÷ 50 = 70.8. The result lies between the two individual means and is pulled toward the larger class (Class A)."
+      "sol": "The combined mean is the weighted average of the two shifts. Total output = (120 × 85) + (80 × 92) = 10200 + 7360 = 17560 units. Total workers = 120 + 80 = 200. Overall average = 17560 / 200 = 87.8 units per worker."
     },
     {
       "id": 102,
-      "text": "A call centre receives an average of 4 calls per minute. Assuming a Poisson process, what is the probability of receiving exactly 6 calls in a given minute?",
+      "text": "The mean height of a group of students is 165 cm with a standard deviation of 9 cm. Their mean weight is 55 kg with a standard deviation of 6 kg. Which statement about relative variability is correct?",
       "options": [
         {
           "l": "a",
-          "t": "0.084",
+          "t": "Heights have greater relative variability.",
           "c": false
         },
         {
           "l": "b",
-          "t": "0.104",
+          "t": "Weights have greater relative variability.",
           "c": true
         },
         {
           "l": "c",
-          "t": "0.124",
+          "t": "Both have the same relative variability.",
           "c": false
         },
         {
           "l": "d",
-          "t": "0.144",
+          "t": "Relative variability cannot be compared.",
           "c": false
         }
       ],
-      "sol": "For a Poisson distribution with rate λ = 4, P(X = k) = e^{-λ} λ^k / k!. Here k = 6. λ^6 = 4^6 = 4096. 6! = 720. e^{-4} ≈ 0.018315. Probability = 0.018315 × 4096 / 720 = 0.018315 × 5.6889 ≈ 0.1042. Rounded to three decimal places, the probability is 0.104."
+      "sol": "Coefficient of variation (CV) = (σ/μ)×100%. For heights: CV = (9/165)×100 ≈ 5.45%. For weights: CV = (6/55)×100 ≈ 10.91%. Since 10.91% > 5.45%, weights exhibit greater relative variability than heights."
+    },
+    {
+      "id": 103,
+      "text": "A machine produces 5% defective items. If a random sample of 20 items is inspected, what is the probability that exactly 2 items are defective?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0.188",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "0.190",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "0.192",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.194",
+          "c": false
+        }
+      ],
+      "sol": "This is a binomial experiment with n = 20, p = 0.05. P(X = 2) = C(20,2) × (0.05)² × (0.95)¹⁸ = 190 × 0.0025 × 0.95¹⁸. 0.95¹⁸ ≈ 0.397. Product = 190 × 0.0009925 ≈ 0.1886, which rounds to 0.188."
     }
   ],
   "gs/science-tech-prelims": [
