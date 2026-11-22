@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22T05:44:23.491Z",
+  "updatedAt": "2026-11-22T14:27:58.010Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -26521,6 +26521,1069 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-22T05:44:23.486Z"
+    },
+    {
+      "id": "d083a8fc59ec9f7e",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-14",
+      "paperTitle": "SSC GD Constable Practice Set 14",
+      "paperPath": "ssc-gd/papers/practice-set-14.html",
+      "paperFile": "practice-set-14.json",
+      "questionNumber": 3,
+      "section": "Elementary Mathematics",
+      "question": "Three partners A, B and C invest in a business. A invests ₹50,000 for 12 months, B invests ₹60,000 for 10 months and C invests ₹70,000 for 8 months. If the total profit at the end of the year is ₹44,000, what is B's share?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹12,000",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "₹15,000",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "₹14,000",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹13,000",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate investment-time product for A: 50,000 × 12 = 600,000",
+        "Calculate investment-time product for B: 60,000 × 10 = 600,000",
+        "Calculate investment-time product for C: 70,000 × 8 = 560,000",
+        "Sum the products: 600,000 + 600,000 + 560,000 = 1,760,000",
+        "Compute B's share: (600,000 / 1,760,000) × 44,000 = 15,000"
+      ],
+      "verifierCheck": "The profit sharing ratio is based on capital-months: A = 50,000×12 = 600,000; B = 60,000×10 = 600,000; C = 70,000×8 = 560,000. Total = 1,760,000. B's share = (600,000/1,760,000)×44,000 = (15/44)×44,000 = 15,000.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Fraction of Total",
+          "idea": "B's share = (B's investment-months ÷ total investment-months) × total profit.",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Total investment-months = 50,000×12 + 60,000×10 + 70,000×8 = 1,760,000",
+            "B's investment-months = 600,000",
+            "B's fraction = 600,000 ÷ 1,760,000 = 15/44",
+            "Profit = 44,000 × 15/44 = 15,000"
+          ]
+        },
+        {
+          "name": "Equal Product Shortcut",
+          "idea": "A and B have equal investment-months, so they share equally; C's share follows ratio.",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Compute A: 50,000 × 12 = 600,000",
+            "Compute B: 60,000 × 10 = 600,000",
+            "Compute C: 70,000 × 8 = 560,000",
+            "Ratio = 600:600:560 = 15:15:14",
+            "Total parts = 44, profit = 44,000 → 1 part = 1,000",
+            "B's share = 15 × 1,000 = 15,000"
+          ]
+        },
+        {
+          "name": "Ratio Simplification",
+          "idea": "Divide by 1,000 then by 40 to get simplest integer ratio quickly.",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Divide investments by 1,000: 50, 60, 70",
+            "Multiply by months: 50×12=600, 60×10=600, 70×8=560",
+            "Divide all by 40: 15, 15, 14",
+            "Sum = 44 parts",
+            "B = (15/44) × 44,000 = 15,000"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:17:27.889Z"
+    },
+    {
+      "id": "0cb51fde1d989b69",
+      "exam": "upsc",
+      "paperSlug": "practice-set-14",
+      "paperTitle": "UPSC Civil Services Practice Set 14",
+      "paperPath": "upsc/papers/practice-set-14.html",
+      "paperFile": "practice-set-14.json",
+      "questionNumber": 3,
+      "section": "CSAT",
+      "question": "A shopkeeper marks his goods 40% above cost price and offers a discount of 15% on the marked price. What is his profit percent?",
+      "options": [
+        {
+          "label": "A",
+          "text": "19%",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "20%",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "21%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "22%",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Assume cost price = 100",
+        "Marked price = 100 + 40% of 100 = 140",
+        "Discount = 15% of 140 = 21",
+        "Selling price = 140 - 21 = 119",
+        "Profit = 119 - 100 = 19",
+        "Profit percent = (19/100) × 100 = 19%"
+      ],
+      "verifierCheck": "Let cost price be 100. Marked price = 140 (40% above cost). Discount of 15% on marked price = 21, so selling price = 119. Profit = 19, profit percent = 19%.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Factor multiply",
+          "idea": "Multiply price factors directly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Factor for 40% up = 1.4",
+            "Factor for 15% off = 0.85",
+            "Overall factor = 1.4 × 0.85 = 1.19",
+            "Profit = (1.19 - 1) × 100 = 19%"
+          ]
+        },
+        {
+          "name": "Successive %",
+          "idea": "Combine mark-up and discount via formula a+b+ab/100",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Mark-up = +40%, Discount = -15%",
+            "Net % = 40 + (-15) + (40×-15)/100",
+            "= 25 - 6 = 19%",
+            "Profit = 19%"
+          ]
+        },
+        {
+          "name": "Base 100",
+          "idea": "Assume cost 100 for instant mental math",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let CP = 100",
+            "MP = 100 + 40% = 140",
+            "SP = 140 - 15% = 140 × 0.85 = 119",
+            "Profit = 119 - 100 = 19 → 19%"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:18:14.926Z"
+    },
+    {
+      "id": "e0ac77c3391f5fa0",
+      "exam": "apfc",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "UPSC APFC Practice Set 3",
+      "paperPath": "apfc/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "The HCF of two numbers is 12 and their LCM is 360. If one of the numbers is 60, what is the other number?",
+      "options": [
+        {
+          "label": "A",
+          "text": "84",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "72",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "96",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "108",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Use the relationship: product of two numbers = HCF × LCM.",
+        "Let the other number be x. Then 60 × x = 12 × 360.",
+        "Solve for x: x = (12 × 360) / 60 = 12 × 6 = 72.",
+        "Verify: HCF(60,72)=12, LCM(60,72)=360."
+      ],
+      "verifierCheck": "Using the relationship HCF × LCM = product of the two numbers: 12 × 360 = 60 × other number. So other number = (12 × 360) / 60 = 12 × 6 = 72. Verification: HCF(60,72)=12 and LCM(60,72)=360, confirming the result.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ratio Method",
+          "idea": "Cancel HCF to simplify division",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Divide LCM by HCF: 360/12 = 30",
+            "Divide given number by HCF: 60/12 = 5",
+            "Divide results: 30/5 = 6",
+            "Multiply by HCF: 6×12 = 72"
+          ]
+        },
+        {
+          "name": "Product Formula",
+          "idea": "Use HCF×LCM = product of numbers",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Multiply HCF 12 and LCM 360 to get 4320",
+            "Divide 4320 by given number 60 to get 72"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:19:16.938Z"
+    },
+    {
+      "id": "149f7d2930065f60",
+      "exam": "cds",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "CDS Practice Set 9",
+      "paperPath": "cds/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "A pipe can fill a tank in 6 hours and another pipe can empty the same tank in 8 hours. If both pipes are opened simultaneously, how long will it take to fill the tank?",
+      "options": [
+        {
+          "label": "A",
+          "text": "20 hours",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "24 hours",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "28 hours",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "14 hours",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Filling rate = 1/6 tank per hour",
+        "Emptying rate = 1/8 tank per hour",
+        "Net rate = 1/6 - 1/8 = 1/24 tank per hour",
+        "Time to fill = 1 / (1/24) = 24 hours"
+      ],
+      "verifierCheck": "The filling rate is 1/6 tank per hour, emptying rate is 1/8 tank per hour. Net rate = 1/6 - 1/8 = 1/24 tank per hour. Time to fill = 1 / (1/24) = 24 hours.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Reciprocal Difference",
+          "idea": "Apply formula ab/(b-a) for fill time a, empty time b",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Formula: Time = (6*8)/(8-6)",
+            "Calculate: 48/2 = 24 hours"
+          ]
+        },
+        {
+          "name": "LCM Net Rate",
+          "idea": "Use LCM as tank capacity to avoid fractions",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "LCM of 6 and 8 is 24 units",
+            "Fill rate = 24/6 = 4 units/hr",
+            "Empty rate = 24/8 = 3 units/hr",
+            "Net rate = 4 - 3 = 1 unit/hr",
+            "Time = 24/1 = 24 hours"
+          ]
+        },
+        {
+          "name": "Fraction Subtraction",
+          "idea": "Directly subtract fractional rates",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Fill rate = 1/6 tank/hr",
+            "Empty rate = 1/8 tank/hr",
+            "Net rate = 1/6 - 1/8 = 1/24 tank/hr",
+            "Time = 1 / (1/24) = 24 hours"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:19:50.381Z"
+    },
+    {
+      "id": "5a043efc353e8311",
+      "exam": "jee",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "JEE Main Practice Set 18",
+      "paperPath": "jee/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 4,
+      "section": "Chemistry",
+      "question": "Which of the following compounds will NOT give a positive iodoform test (yellow precipitate of CHI₃) with I₂/NaOH?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Ethanol (CH₃CH₂OH)",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Acetaldehyde (CH₃CHO)",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Acetone (CH₃COCH₃)",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Benzaldehyde (C₆H₅CHO)",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the structural requirement for a positive iodoform test: presence of CH3CO- group or ability to form it via oxidation.",
+        "Ethanol (CH3CH2OH) oxidizes to acetaldehyde (CH3CHO) which has CH3CO- group.",
+        "Acetaldehyde (CH3CHO) directly has CH3CO- group.",
+        "Acetone (CH3COCH3) is a methyl ketone with CH3CO- group.",
+        "Benzaldehyde (C6H5CHO) lacks a CH3CO- group; it is an aromatic aldehyde with no alpha-methyl group.",
+        "Therefore, benzaldehyde does not give a positive iodoform test."
+      ],
+      "verifierCheck": "The iodoform test (I₂/NaOH) gives a yellow precipitate of CHI₃ for compounds containing a CH₃CO– group (methyl ketones) or those that can be oxidized to it (e.g., ethanol → acetaldehyde, secondary alcohols with CH₃CH(OH)R). Ethanol (A) is oxidized to acetaldehyde, which has CH₃CHO and gives a positive test. Acetaldehyde (B) itself undergoes the haloform reaction because it has a methyl group adjacent to the carbonyl. Acetone (C) is a methyl ketone (CH₃COCH₃) and gives a positive test. Benzaldehyde (D) lacks a methyl group attached to the carbonyl (it is C₆H₅CHO), so it cannot form the required trihalomethyl intermediate and does not give a positive iodoform test.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Methyl Carbonyl Scan",
+          "idea": "Spot CH3CO- or CH3CH(OH)- or CH3CHO in seconds",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Scan each formula for CH3-C=O or CH3-CH(OH) or CH3-CHO",
+            "A: CH3CH2OH has CH3CH(OH) after oxidation → positive",
+            "B: CH3CHO is acetaldehyde → positive",
+            "C: CH3COCH3 has CH3CO- → positive",
+            "D: C6H5CHO has no CH3 on carbonyl carbon → negative"
+          ]
+        },
+        {
+          "name": "Alpha-Methyl Rule",
+          "idea": "Must have CH3 directly attached to C=O or CHOH",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall: iodoform needs CH3-C(=O)- or CH3-CH(OH)-",
+            "Check alpha-carbon to carbonyl/alcohol for methyl group",
+            "A: Ethanol → CH3CH2OH oxidizes to CH3CHO (alpha-CH3) ✓",
+            "B: Acetaldehyde → CH3CHO (alpha-CH3) ✓",
+            "C: Acetone → CH3COCH3 (alpha-CH3) ✓",
+            "D: Benzaldehyde → PhCHO (alpha = H, not CH3) ✗"
+          ]
+        },
+        {
+          "name": "Three-Class Filter",
+          "idea": "Only 3 classes give positive: methyl ketones, acetaldehyde, ethanol-type",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Memorize the three positive classes only",
+            "Class 1: CH3CO-R (methyl ketones) → acetone ✓",
+            "Class 2: CH3CHO (acetaldehyde) → acetaldehyde ✓",
+            "Class 3: CH3CH2OH (ethanol) → ethanol ✓",
+            "Class 4: Everything else → benzaldehyde is aromatic aldehyde, not in list ✗"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:20:47.504Z"
+    },
+    {
+      "id": "fce6e3e3411279e7",
+      "exam": "nda",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "NDA Practice Set 11",
+      "paperPath": "nda/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "The principal argument of (1 + i)^12 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "π/2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "π",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "3π/2",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Express 1+i in polar form: modulus √2, argument π/4.",
+        "Apply De Moivre's theorem: (1+i)^12 = (√2)^12 * e^(i * 12 * π/4) = 64 * e^(i * 3π).",
+        "Simplify the angle: 3π is equivalent to π modulo 2π (since 3π - 2π = π).",
+        "The complex number is -64, a negative real number, whose principal argument is π."
+      ],
+      "verifierCheck": "The complex number 1+i has modulus √2 and argument π/4. Raising to the 12th power gives modulus (√2)^12 = 64 and argument 12*(π/4) = 3π. Since 3π is equivalent to π modulo 2π, the principal argument (in [0, 2π) or (-π, π]) is π. Thus (1+i)^12 = -64, with argument π.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Polar Exponentiation",
+          "idea": "Convert to polar, multiply angle, reduce modulo 2π",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Arg(1+i)=π/4",
+            "12×π/4=3π",
+            "Principal arg = 3π mod 2π = π"
+          ]
+        },
+        {
+          "name": "Square and Reduce",
+          "idea": "Use (1+i)^2 = 2i, then powers of i cycle",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "(1+i)^2 = 2i",
+            "(2i)^6 = 64 i^6 = 64(-1) = -64",
+            "Arg(-64) = π"
+          ]
+        },
+        {
+          "name": "De Moivre Direct",
+          "idea": "Apply De Moivre's theorem directly",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "r=√2, θ=π/4",
+            "r^12=2^6=64, θ=12π/4=3π",
+            "Principal arg = 3π-2π=π"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:21:35.858Z"
+    },
+    {
+      "id": "25477c1c09f30b9e",
+      "exam": "rbi",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "RBI Grade B Practice Set 18",
+      "paperPath": "rbi/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 4,
+      "section": "Reasoning",
+      "question": "In a certain coded language: 'P + Q' means 'P is the father of Q'; 'P - Q' means 'P is the mother of Q'; 'P * Q' means 'P is the brother of Q'; 'P / Q' means 'P is the sister of Q'; 'P % Q' means 'P is the husband of Q'; 'P $ Q' means 'P is the wife of Q'. Based on the above codes, in the expression **'P + Q - R * S % T'**, how is **P** related to **T**?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Grandfather",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Grandfather-in-law",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Father-in-law",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Uncle",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Parse the expression as a chain: P + Q (P father of Q), Q - R (Q mother of R), R * S (R brother of S), S % T (S husband of T).",
+        "Deduce genders: P male, Q female, R male, S male, T female.",
+        "Since Q is mother of R and R is brother of S, Q is also mother of S (full siblings).",
+        "Thus P is father of Q and Q is mother of S, making P the grandfather of S.",
+        "S is husband of T, so T is wife of S; therefore P is grandfather-in-law of T."
+      ],
+      "verifierCheck": "P + Q means P is father of Q. Q - R means Q is mother of R, so P is maternal grandfather of R. R * S means R is brother of S, so S is also a child of Q, making P maternal grandfather of S. S % T means S is husband of T, so T is the wife of S. Therefore P is the grandfather-in-law of T.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Generation & Marriage Count",
+          "idea": "Count blood generations from P to spouse of T, then add in-law.",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "P to Q: 1 gen (father)",
+            "Q to R/S: 1 gen (mother) → P to S = 2 gens (grandfather)",
+            "S % T: S is husband of T → T is wife of S",
+            "Grandfather of spouse = grandfather-in-law",
+            "Thus P is grandfather-in-law of T"
+          ]
+        },
+        {
+          "name": "Gender & Role Tracking",
+          "idea": "Track genders and marital links to spot in-law connection fast.",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "+ = father (male), - = mother (female)",
+            "* = brother (male), % = husband (male)",
+            "$ = wife (female), / = sister (female)",
+            "P male, Q female, R male, S male, T female",
+            "Blood: P→Q→R/S (2 gens), Marriage: S–T",
+            "P is grandfather of S → grandfather-in-law of T"
+          ]
+        },
+        {
+          "name": "Chain Decoding",
+          "idea": "Decode each symbol left-to-right building a mini family tree.",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "P + Q → P father of Q",
+            "Q - R → Q mother of R (Q female)",
+            "R * S → R brother of S (R male, S sibling)",
+            "S % T → S husband of T (S male, T wife)",
+            "Q mother of S → P grandfather of S",
+            "P grandfather of S → P grandfather-in-law of T"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:23:13.598Z"
+    },
+    {
+      "id": "daa08eb57f1f1c85",
+      "exam": "upsc",
+      "paperSlug": "practice-set-14",
+      "paperTitle": "UPSC Civil Services Practice Set 14",
+      "paperPath": "upsc/papers/practice-set-14.html",
+      "paperFile": "practice-set-14.json",
+      "questionNumber": 4,
+      "section": "CSAT",
+      "question": "If 5 men can complete a piece of work in 20 days, how many days will it take for 10 men to complete the same work?",
+      "options": [
+        {
+          "label": "A",
+          "text": "10 days",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "40 days",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "15 days",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5 days",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total work = 5 men × 20 days = 100 man-days",
+        "Days for 10 men = Total work / 10 men = 100 / 10 = 10 days"
+      ],
+      "verifierCheck": "The total work is 5 men × 20 days = 100 man-days. With 10 men, the time required is 100 man-days ÷ 10 men = 10 days.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Double Men Halve Days",
+          "idea": "Inverse proportion: double workers halves time",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Men double from 5 to 10",
+            "Halve 20 days to 10 days"
+          ]
+        },
+        {
+          "name": "Ratio Inversion",
+          "idea": "Use ratio of men and invert for days",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Men ratio = 10/5 = 2",
+            "Days = 20 ÷ 2 = 10"
+          ]
+        },
+        {
+          "name": "Man-Days Invariant",
+          "idea": "Total work constant in man-days",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Compute 5 men × 20 days = 100 man-days",
+            "Divide 100 by 10 men = 10 days"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:23:40.466Z"
+    },
+    {
+      "id": "1b1fd529bdf0ed04",
+      "exam": "cds",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "CDS Practice Set 9",
+      "paperPath": "cds/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 5,
+      "section": "Mathematics",
+      "question": "In triangle ABC, medians AD, BE, and CF intersect at centroid G. If the area of triangle ABC is 72 cm², what is the area of triangle BGD?",
+      "options": [
+        {
+          "label": "A",
+          "text": "6 cm²",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "8 cm²",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "16 cm²",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "12 cm²",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "The three medians intersect at the centroid G, dividing the triangle into 6 smaller triangles of equal area.",
+        "Total area is 72 cm², so each small triangle has area 72 ÷ 6 = 12 cm².",
+        "Triangle BGD is one of these six small triangles.",
+        "Thus its area is 12 cm²."
+      ],
+      "verifierCheck": "The three medians divide triangle ABC into six smaller triangles of equal area because the centroid G splits each median in a 2:1 ratio, making the six regions congruent in area. Hence each small triangle, including BGD (with vertices B, the centroid G, and the midpoint D of side AC), has area 72 cm² ÷ 6 = 12 cm².",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Six Equal Triangles",
+          "idea": "Medians split triangle into 6 equal-area pieces",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recall three medians divide any triangle into 6 smaller triangles of equal area.",
+            "Divide total area 72 by 6 to get 12 cm²."
+          ]
+        },
+        {
+          "name": "Half-Area + Centroid Ratio",
+          "idea": "Median gives half area; centroid splits median 2:1 giving 1/3 of half",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Median AD splits ABC into two equal areas: area ABD = 36 cm².",
+            "Centroid G divides AD in ratio AG:GD = 2:1, so area BGD = (1/3) area ABD = 12 cm²."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:25:28.861Z"
+    },
+    {
+      "id": "3b8fe7a018e98c7b",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "IBPS PO Practice Set 13",
+      "paperPath": "ibps-po/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 5,
+      "section": "Reasoning Ability",
+      "question": "Rahul starts walking from point X. He walks 10 m North, turns right and walks 15 m, turns left and walks 10 m, then turns left again and walks 15 m to reach point Y. What is the shortest distance between X and Y?",
+      "options": [
+        {
+          "label": "A",
+          "text": "20 m",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "25 m",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "30 m",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "15 m",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Set coordinate system with X at origin (0,0).",
+        "Walk 10 m North to (0,10).",
+        "Turn right (East) and walk 15 m to (15,10).",
+        "Turn left (North) and walk 10 m to (15,20).",
+        "Turn left (West) and walk 15 m to (0,20).",
+        "Shortest distance between X(0,0) and Y(0,20) is 20 m."
+      ],
+      "verifierCheck": "Starting at X (0,0), Rahul walks 10 m North to (0,10). A right turn from North faces East; he walks 15 m to (15,10). A left turn from East faces North; he walks 10 m to (15,20). Another left turn from North faces West; he walks 15 m to (0,20). The final point Y is (0,20), so the straight-line distance from X (0,0) is 20 m.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Rectangle Insight",
+          "idea": "Path traces rectangle; X,Y are vertical corners",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Draw: up 10, right 15, up 10, left 15",
+            "Shape is 20×15 rectangle",
+            "X bottom-left, Y top-left"
+          ]
+        },
+        {
+          "name": "Net Displacement",
+          "idea": "Sum North/South and East/West separately",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "North: +10 +10 = +20 m",
+            "East: +15 -15 = 0 m",
+            "Distance = 20 m"
+          ]
+        },
+        {
+          "name": "Coordinate Snap",
+          "idea": "Track (x,y) from origin (0,0)",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Start (0,0)",
+            "North 10 → (0,10)",
+            "Right 15 → (15,10)",
+            "North 10 → (15,20)",
+            "Left 15 → (0,20)",
+            "Distance = 20"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:26:14.334Z"
+    },
+    {
+      "id": "063867ad0055f79b",
+      "exam": "jee",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "JEE Main Practice Set 18",
+      "paperPath": "jee/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 5,
+      "section": "Chemistry",
+      "question": "Which of the following molecules has a net dipole moment of zero?",
+      "options": [
+        {
+          "label": "A",
+          "text": "NH₃",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "BF₃",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "H₂O",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "SO₂",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify molecular geometry of each option",
+        "Evaluate bond polarities and symmetry",
+        "Determine if bond dipoles cancel"
+      ],
+      "verifierCheck": "BF3 has trigonal planar geometry with three identical B-F bonds arranged at 120° angles. Each B-F bond has a dipole moment due to electronegativity difference (F more electronegative than B). The vector sum of three equal magnitude dipoles at 120° in a plane cancels out, resulting in a net dipole moment of zero. In contrast, NH3 (trigonal pyramidal), H2O (bent), and SO2 (bent) have asymmetric charge distributions leading to nonzero net dipole moments.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Symmetry Shortcut",
+          "idea": "Planar trigonal symmetry cancels dipoles instantly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify central atom with 3 identical bonds and no lone pairs",
+            "Recognize trigonal planar geometry (120°)",
+            "Dipole vectors cancel → net zero"
+          ]
+        },
+        {
+          "name": "VSEPR Quick Scan",
+          "idea": "Use VSEPR shapes to spot nonpolar molecules fast",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Count electron domains on central atom",
+            "NH3: 4 domains (1 lone pair) → pyramidal, polar",
+            "BF3: 3 domains, no lone pairs → trigonal planar, nonpolar",
+            "H2O: 4 domains (2 lone pairs) → bent, polar",
+            "SO2: 3 domains (1 lone pair) → bent, polar"
+          ]
+        },
+        {
+          "name": "Electronegativity Vector Sum",
+          "idea": "Sum bond dipoles using symmetry to find zero net",
+          "kind": "estimate",
+          "seconds": 7,
+          "steps": [
+            "Note B-F bonds are polar but arranged symmetrically at 120°",
+            "Vector sum of three equal dipoles in plane = 0",
+            "Other options have asymmetric shapes → net dipole"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:27:03.628Z"
+    },
+    {
+      "id": "b942226c6ce3dfee",
+      "exam": "nda",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "NDA Practice Set 11",
+      "paperPath": "nda/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 5,
+      "section": "Mathematics",
+      "question": "The value of the definite integral ∫_0^1 (3x^2 + 2x + 1) dx is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "6",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Find antiderivative: x^3 + x^2 + x",
+        "Evaluate from 0 to 1: (1+1+1) - 0 = 3"
+      ],
+      "verifierCheck": "The antiderivative of 3x^2+2x+1 is x^3+x^2+x. Evaluating from 0 to 1 gives (1+1+1)-(0)=3.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Polynomial Shortcut",
+          "idea": "use formula ∫_0^1 (ax^2+bx+c) dx = a/3 + b/2 + c",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify a=3, b=2, c=1",
+            "Compute 3/3 + 2/2 + 1 = 1+1+1=3"
+          ]
+        },
+        {
+          "name": "Termwise Area",
+          "idea": "compute each term's definite integral separately",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "∫3x^2 dx from 0 to 1 = 3*(1/3)=1",
+            "∫2x dx = 2*(1/2)=1",
+            "∫1 dx = 1",
+            "Sum = 3"
+          ]
+        },
+        {
+          "name": "Power Rule Sum",
+          "idea": "integrate term by term using power rule",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Antiderivative: x^3 + x^2 + x",
+            "Evaluate at 1: 1+1+1=3",
+            "Subtract at 0: 0"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T14:27:58.003Z"
     }
   ]
 }
