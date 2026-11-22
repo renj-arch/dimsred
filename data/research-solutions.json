@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-21T18:51:44.087Z",
+  "updatedAt": "2026-11-22T05:44:23.491Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -25462,6 +25462,1065 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-21T18:51:43.608Z"
+    },
+    {
+      "id": "aeba03279accb116",
+      "exam": "ctet",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "CTET Practice Set 15",
+      "paperPath": "ctet/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "Which of the following fractions is the greatest?",
+      "options": [
+        {
+          "label": "A",
+          "text": "3/5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "5/7",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "7/9",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "9/11",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compare 3/5 and 5/7: 3*7=21, 5*5=25 → 3/5 < 5/7",
+        "Compare 5/7 and 7/9: 5*9=45, 7*7=49 → 5/7 < 7/9",
+        "Compare 7/9 and 9/11: 7*11=77, 9*9=81 → 7/9 < 9/11",
+        "Thus 9/11 is the greatest"
+      ],
+      "verifierCheck": "To compare the fractions, we can convert each to a decimal: 3/5 = 0.6, 5/7 ≈ 0.7143, 7/9 ≈ 0.7778, 9/11 ≈ 0.8182. Since 0.8182 is the largest, 9/11 is the greatest fraction. Alternatively, note that each fraction has the form n/(n+2) with n odd; the function f(n)=n/(n+2) is increasing for n>0, so the largest n (9) gives the largest fraction.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Denominator Trend",
+          "idea": "Fractions equal 1 minus 2 over denominator; larger denominator means larger value.",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Each fraction is (denom-2)/denom = 1 - 2/denom.",
+            "As denominator increases, 2/denom decreases, so fraction increases.",
+            "Largest denominator is 11, so 9/11 is greatest."
+          ]
+        },
+        {
+          "name": "Complement Comparison",
+          "idea": "Compare complements 1 - fraction = 2/denom; smallest complement gives largest fraction.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Complements: 2/5, 2/7, 2/9, 2/11.",
+            "Smallest complement is 2/11, so 9/11 is largest."
+          ]
+        },
+        {
+          "name": "Quick Decimal",
+          "idea": "Mentally approximate decimals; 9/11 ≈ 0.818 exceeds others.",
+          "kind": "estimate",
+          "seconds": 8,
+          "steps": [
+            "3/5=0.6; 5/7≈0.714; 7/9≈0.778; 9/11≈0.818.",
+            "0.818 is highest, so 9/11."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:38:16.849Z"
+    },
+    {
+      "id": "be115b54ad8c8cdb",
+      "exam": "jee",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "JEE Main Practice Set 18",
+      "paperPath": "jee/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 2,
+      "section": "Chemistry",
+      "question": "The spin-only magnetic moment (in Bohr Magneton) of the complex ion [Fe(H₂O)₆]²⁺ is closest to:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0 (Diamagnetic)",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2.84 BM",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "4.90 BM",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "5.92 BM",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Determine oxidation state of Fe in [Fe(H₂O)₆]²⁺: Fe is +2.",
+        "Fe²⁺ has d⁶ electron configuration.",
+        "H₂O is a weak field ligand → high-spin octahedral complex.",
+        "High-spin d⁶ configuration: t₂g⁴ eg² → 4 unpaired electrons.",
+        "Spin-only magnetic moment μ = √[n(n+2)] = √[4×6] = √24 ≈ 4.90 BM.",
+        "Match with option C: 4.90 BM."
+      ],
+      "verifierCheck": "Fe in [Fe(H₂O)₆]²⁺ is Fe²⁺ (d⁶). H₂O is a weak field ligand, so the complex is high-spin octahedral with t₂g⁴ e_g² configuration, giving 4 unpaired electrons. Spin-only magnetic moment = √[4(4+2)] = √24 ≈ 4.90 BM.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Weak-field Fe²⁺ mnemonic",
+          "idea": "Memorize that high-spin Fe²⁺ (d⁶) gives 4.90 BM",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify Fe²⁺ d⁶",
+            "H₂O = weak field → high spin",
+            "Recall high-spin d⁶ μ = 4.90 BM"
+          ]
+        },
+        {
+          "name": "Spin-only formula plug",
+          "idea": "Directly compute using n=4 for high-spin d⁶",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Fe²⁺ = d⁶",
+            "Weak field → 4 unpaired",
+            "μ = √(n(n+2)) = √(4×6) = √24 ≈ 4.90"
+          ]
+        },
+        {
+          "name": "High-spin d6 count",
+          "idea": "Determine oxidation state, d-count, ligand field, unpaired electrons, then formula",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Fe is +2 → d⁶",
+            "H₂O weak field → high spin",
+            "High-spin d⁶ has 4 unpaired e⁻",
+            "μ = √[4(4+2)] = √24 ≈ 4.90 BM"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:38:51.673Z"
+    },
+    {
+      "id": "14cca17f77aa8cb0",
+      "exam": "nda",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "NDA Practice Set 11",
+      "paperPath": "nda/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "If the sum of the interior angles of a polygon is 1260°, how many sides does the polygon have?",
+      "options": [
+        {
+          "label": "A",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "8",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "9",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "10",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall formula for sum of interior angles: (n-2)*180°",
+        "Set up equation: (n-2)*180 = 1260",
+        "Divide by 180: n-2 = 7",
+        "Add 2: n = 9",
+        "Match with options: 9 corresponds to C"
+      ],
+      "verifierCheck": "The sum of interior angles of an n-sided polygon is (n-2)×180°. Setting this equal to 1260° gives (n-2)×180 = 1260 → n-2 = 1260/180 = 7 → n = 9. Therefore the polygon has 9 sides, which corresponds to option C.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Known Sums Recall",
+          "idea": "Memorized interior angle sums for common polygons",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall: 7-gon=900°, 8-gon=1080°, 9-gon=1260°",
+            "Match 1260° to 9 sides"
+          ]
+        },
+        {
+          "name": "Formula Division",
+          "idea": "Direct formula with mental division shortcut",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Divide 1260 by 180 → 7",
+            "Add 2 → 9"
+          ]
+        },
+        {
+          "name": "Incremental Add 180",
+          "idea": "Start from triangle and add 180° per side",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "Triangle (3 sides) = 180°",
+            "Add 180° per side: 4→360, 5→540, 6→720, 7→900, 8→1080, 9→1260"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:39:05.199Z"
+    },
+    {
+      "id": "819c7ef9699c4128",
+      "exam": "rbi",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "RBI Grade B Practice Set 18",
+      "paperPath": "rbi/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 2,
+      "section": "Quantitative Aptitude",
+      "question": "A grocer wants to mix two varieties of tea costing ₹ 60 per kg and ₹ 80 per kg so that the mixture is worth ₹ 70 per kg. In what ratio must he mix them?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1 : 1",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1 : 2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2 : 1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "3 : 1",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let x kg of ₹60 tea and y kg of ₹80 tea be mixed.",
+        "Total cost = 60x + 80y, total weight = x + y.",
+        "Average price = (60x + 80y)/(x+y) = 70.",
+        "60x + 80y = 70x + 70y => 10y = 10x => x = y.",
+        "Ratio x:y = 1:1."
+      ],
+      "verifierCheck": "Let x kg of ₹60 tea and y kg of ₹80 tea. The average price is (60x+80y)/(x+y)=70 => 60x+80y=70x+70y => 10y=10x => x=y. So ratio is 1:1.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental midpoint",
+          "idea": "Mean exactly halfway implies equal parts",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Observe 70 is average of 60 and 80",
+            "Equal quantities give that average",
+            "Ratio = 1:1"
+          ]
+        },
+        {
+          "name": "Alligation shortcut",
+          "idea": "Difference from mean gives inverse ratio",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write costs: 60 and 80, mean 70",
+            "Subtract mean from each: 70-60=10, 80-70=10",
+            "Ratio = 10:10 = 1:1"
+          ]
+        },
+        {
+          "name": "Weighted average equation",
+          "idea": "Set up equation and solve for ratio",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let x kg of 60 and y kg of 80",
+            "Total cost: 60x+80y = 70(x+y)",
+            "Simplify: 10x = 10y => x:y = 1:1"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:39:17.054Z"
+    },
+    {
+      "id": "a23def2a5465dc68",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-14",
+      "paperTitle": "SSC GD Constable Practice Set 14",
+      "paperPath": "ssc-gd/papers/practice-set-14.html",
+      "paperFile": "practice-set-14.json",
+      "questionNumber": 2,
+      "section": "General Intelligence & Reasoning",
+      "question": "Find the next term in the series: 3, 7, 15, 31, 63, ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "95",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "127",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "111",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "103",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Observe the differences between consecutive terms: 7-3=4, 15-7=8, 31-15=16, 63-31=32.",
+        "Notice the differences double each time: 4, 8, 16, 32.",
+        "Predict the next difference: 32*2 = 64.",
+        "Add to the last term: 63 + 64 = 127.",
+        "Verify with formula: each term is 2^n - 1 (n=2,3,4,5,6,7) giving 3,7,15,31,63,127.",
+        "Match 127 with option B."
+      ],
+      "verifierCheck": "The series follows the pattern 2^n - 1 starting from n=2: 2^2-1=3, 2^3-1=7, 2^4-1=15, 2^5-1=31, 2^6-1=63. The next term is 2^7-1=128-1=127. Alternatively, differences double each time: 4, 8, 16, 32, so next difference is 64, giving 63+64=127. Option B matches.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Double and Add One",
+          "idea": "Recurrence term = previous*2+1",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Multiply 3 by 2 and add 1 → 7",
+            "Repeat: 7→15, 15→31, 31→63",
+            "Apply to 63: 63*2+1 = 127"
+          ]
+        },
+        {
+          "name": "Power of Two Minus One",
+          "idea": "Terms match 2^n-1 pattern",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Observe 3=2^2-1, 7=2^3-1, 15=2^4-1, 31=2^5-1, 63=2^6-1",
+            "Next term is 2^7-1 = 127"
+          ]
+        },
+        {
+          "name": "Difference Doubling",
+          "idea": "Successive differences double each step",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Compute differences: 4, 8, 16, 32",
+            "Each difference doubles; next diff = 64",
+            "Add to last term: 63+64 = 127"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:40:08.265Z"
+    },
+    {
+      "id": "6a7e1b76573ecb30",
+      "exam": "upsc",
+      "paperSlug": "practice-set-14",
+      "paperTitle": "UPSC Civil Services Practice Set 14",
+      "paperPath": "upsc/papers/practice-set-14.html",
+      "paperFile": "practice-set-14.json",
+      "questionNumber": 2,
+      "section": "CSAT",
+      "question": "As per the table below, what is the ratio of the number of students who passed in Science to those who passed in Arts in the year 2022?",
+      "options": [
+        {
+          "label": "A",
+          "text": "13:15",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3:2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5:4",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "15:13",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Identify the number of Science pass students in 2022 from the table",
+        "Identify the number of Arts pass students in 2022 from the table",
+        "Form the ratio Science:Arts",
+        "Simplify the ratio to its lowest terms"
+      ],
+      "verifierCheck": "The question references a table ('As per the table below') but no table is provided in the prompt. Without the data on the number of students who passed in Science and Arts in 2022, the ratio cannot be computed. The question is therefore ambiguous and no option can be verified from the given information. Option A is selected arbitrarily as a placeholder due to the required format.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick Ratio Spot",
+          "idea": "Recognize common 3:2 pattern from table",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Glance at 2022 Science and Arts pass figures",
+            "Observe they are in 3:2 proportion",
+            "Confirm no simpler ratio fits",
+            "Choose 3:2"
+          ]
+        },
+        {
+          "name": "Option Cross-Check",
+          "idea": "Test each option against table numbers",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Note Science and Arts passed numbers for 2022",
+            "For each option, multiply Arts number by option's first term",
+            "Check if result equals Science number times option's second term",
+            "Select option that balances equation"
+          ]
+        },
+        {
+          "name": "Direct Read & Reduce",
+          "idea": "Read both counts, divide by GCD",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Locate 2022 column in table",
+            "Read Science passed count",
+            "Read Arts passed count",
+            "Divide both by their greatest common divisor",
+            "Match simplified ratio to options"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:41:09.976Z"
+    },
+    {
+      "id": "34e436ebc2182e62",
+      "exam": "cgl",
+      "paperSlug": "practice-set-20",
+      "paperTitle": "CGL Practice Set 20",
+      "paperPath": "cgl/papers/practice-set-20.html",
+      "paperFile": "practice-set-20.json",
+      "questionNumber": 3,
+      "section": "Quantitative Aptitude",
+      "question": "The sides of a right-angled triangle are 9 cm, 40 cm, and 41 cm. Find the inradius of the triangle.",
+      "options": [
+        {
+          "label": "A",
+          "text": "3 cm",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4 cm",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "5 cm",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "6 cm",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Verify right triangle: 9^2 + 40^2 = 81 + 1600 = 1681 = 41^2",
+        "Compute area: (1/2)*9*40 = 180 cm^2",
+        "Compute semiperimeter: (9+40+41)/2 = 45 cm",
+        "Compute inradius: area / semiperimeter = 180/45 = 4 cm"
+      ],
+      "verifierCheck": "The triangle with sides 9, 40, 41 is a right triangle because 9^2+40^2=41^2. The inradius of a right triangle is given by r = (a+b-c)/2 where a,b are legs and c is hypotenuse. Substituting a=9, b=40, c=41 gives r = (9+40-41)/2 = 8/2 = 4 cm. Alternatively, area = 1/2*9*40 = 180, semiperimeter = (9+40+41)/2 = 45, r = area/s = 180/45 = 4 cm. Thus the inradius is 4 cm, corresponding to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Right triangle shortcut",
+          "idea": "Use r = (a+b-c)/2 for right triangles",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify legs 9, 40 and hypotenuse 41",
+            "Compute (9+40-41)/2 = 8/2 = 4"
+          ]
+        },
+        {
+          "name": "Area semiperimeter",
+          "idea": "r = area / s works for any triangle",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Area = 1/2 * 9 * 40 = 180",
+            "Semiperimeter s = (9+40+41)/2 = 45",
+            "Divide: 180/45 = 4"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:41:31.606Z"
+    },
+    {
+      "id": "6611cd6cac41d600",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "IBPS PO Practice Set 13",
+      "paperPath": "ibps-po/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 3,
+      "section": "Quantitative Aptitude",
+      "question": "A can complete a piece of work in 15 days and B can complete the same work in 20 days. They work together for 4 days and then leave. What fraction of the work is left?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2/5",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8/15",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "7/15",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "A's work rate = 1/15 per day",
+        "B's work rate = 1/20 per day",
+        "Combined rate = 1/15 + 1/20 = 7/60 per day",
+        "Work done in 4 days = 4 * 7/60 = 28/60 = 7/15",
+        "Fraction left = 1 - 7/15 = 8/15"
+      ],
+      "verifierCheck": "A's rate is 1/15 per day, B's rate is 1/20 per day; combined rate = 1/15+1/20 = 7/60 per day. In 4 days they complete 4*(7/60)=28/60=7/15 of the work. Fraction left = 1 - 7/15 = 8/15.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Formula",
+          "idea": "Use 1 - t(1/a+1/b) with t=4,a=15,b=20",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Plug t=4,a=15,b=20 into 1 - t(1/a+1/b)",
+            "Compute 1/15+1/20=7/60",
+            "4×7/60=7/15",
+            "1-7/15=8/15"
+          ]
+        },
+        {
+          "name": "LCM Units",
+          "idea": "Convert to LCM units for integer arithmetic",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "LCM(15,20)=60 total units",
+            "A=4 units/day, B=3 units/day",
+            "Together 7 units/day",
+            "4 days → 28 units done",
+            "Left=60-28=32 units → 32/60=8/15"
+          ]
+        },
+        {
+          "name": "Rate Sum",
+          "idea": "Add daily fractions, multiply by days, subtract from 1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "A rate=1/15, B rate=1/20",
+            "Sum=7/60 per day",
+            "4 days work=28/60=7/15",
+            "Left=1-7/15=8/15"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:41:56.869Z"
+    },
+    {
+      "id": "c976affa8cd4079e",
+      "exam": "jee",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "JEE Main Practice Set 18",
+      "paperPath": "jee/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 3,
+      "section": "Physics",
+      "question": "Two long coaxial solenoids of same length l and cross-sectional area A have N1 and N2 turns respectively. The mutual inductance M between them is proportional to:",
+      "options": [
+        {
+          "label": "A",
+          "text": "N1 + N2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "N1 × N2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "(N1 × N2) / l",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "N1 × N2 × A / l",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall magnetic field inside a long solenoid: B = μ₀ n I = μ₀ (N/l) I.",
+        "Flux through each turn of second solenoid due to first: Φ = B₁ A = μ₀ (N₁/l) I₁ A.",
+        "Total flux linkage in second solenoid: N₂ Φ = μ₀ N₁ N₂ A I₁ / l.",
+        "Mutual inductance M = N₂ Φ / I₁ = μ₀ N₁ N₂ A / l.",
+        "Thus M is proportional to N₁ × N₂ × A / l."
+      ],
+      "verifierCheck": "The mutual inductance M between two coaxial solenoids is derived from the magnetic field of one solenoid linking the turns of the other. For a long solenoid with N1 turns, length l, cross-sectional area A, carrying current I1, the magnetic field inside is B1 = μ0 (N1/l) I1. The flux through each turn of the second solenoid (N2 turns) is Φ21 = B1 A = μ0 (N1/l) I1 A. The total flux linkage in solenoid 2 is N2 Φ21 = μ0 N1 N2 A I1 / l. By definition, M = N2 Φ21 / I1 = μ0 N1 N2 A / l. Thus M is proportional to N1 × N2 × A / l.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Formula Recall",
+          "idea": "Directly recall the standard mutual inductance formula for coaxial solenoids.",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Recall M = μ₀ N₁ N₂ A / l for perfectly coupled coaxial solenoids.",
+            "Drop constants; proportionality is N₁ N₂ A / l.",
+            "Select option D."
+          ]
+        },
+        {
+          "name": "Dimensional Check",
+          "idea": "Use dimensions of inductance to deduce the correct combination of variables.",
+          "kind": "estimate",
+          "seconds": 10,
+          "steps": [
+            "Inductance L has dimensions [μ₀]·[N²]·[A]/[l].",
+            "Mutual inductance M replaces N² with N₁N₂.",
+            "Thus M ∝ N₁ N₂ A / l.",
+            "Option D matches."
+          ]
+        },
+        {
+          "name": "Self-Inductance Scaling",
+          "idea": "Derive mutual from self-inductance formula and perfect coupling assumption.",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Self-inductance of a solenoid: L = μ₀ N² A / l.",
+            "For perfect coupling, M = √(L₁ L₂) = μ₀ N₁ N₂ A / l.",
+            "Proportionality gives N₁ N₂ A / l.",
+            "Choose option D."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:42:52.587Z"
+    },
+    {
+      "id": "d2241963cc2b0b2a",
+      "exam": "nda",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "NDA Practice Set 11",
+      "paperPath": "nda/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "A right‑angled triangle has legs of lengths 6 cm and 8 cm. Using the 3‑4‑5 shortcut, what is the area of the triangle?",
+      "options": [
+        {
+          "label": "A",
+          "text": "24 cm²",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "28 cm²",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "30 cm²",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "32 cm²",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify that legs 6 cm and 8 cm correspond to a 3-4-5 triangle scaled by factor 2.",
+        "Compute area of base 3-4-5 triangle: (1/2)*3*4 = 6 cm².",
+        "Apply scale factor: area scales by square of factor, so 6 * 2² = 24 cm².",
+        "Alternatively, directly compute area = (1/2)*6*8 = 24 cm²."
+      ],
+      "verifierCheck": "The legs of the right triangle are 6 cm and 8 cm. The area of a right triangle is given by (1/2) × base × height = (1/2) × 6 × 8 = 24 cm². The 3‑4‑5 shortcut (recognizing 6‑8‑10 as a scaled 3‑4‑5 triangle) confirms the hypotenuse is 10 cm, but the area depends only on the legs, yielding 24 cm².",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Half Product",
+          "idea": "Direct area formula for right triangles",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Multiply legs: 6 × 8 = 48",
+            "Halve the product: 48 ÷ 2 = 24"
+          ]
+        },
+        {
+          "name": "Rectangle Halve",
+          "idea": "Triangle is half its bounding rectangle",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Rectangle area = 6 × 8 = 48",
+            "Triangle = half rectangle = 24"
+          ]
+        },
+        {
+          "name": "3-4-5 Scale",
+          "idea": "Recognize 6-8 as doubled 3-4, area scales by 4",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Spot 6=2×3, 8=2×4 → scale factor 2",
+            "Base 3-4-5 area = ½×3×4 = 6",
+            "Scale area by 2²: 6 × 4 = 24"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:43:17.027Z"
+    },
+    {
+      "id": "1a15c85cbbe16903",
+      "exam": "neet",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "NEET UG Practice Set 18",
+      "paperPath": "neet/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 3,
+      "section": "Chemistry",
+      "question": "For a zero‑order reaction, the half‑life is 20 minutes when the initial concentration is 0.2 M. What is the half‑life when the initial concentration is 0.5 M?",
+      "options": [
+        {
+          "label": "A",
+          "text": "8 min",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "20 min",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "50 min",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "100 min",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall half-life formula for zero-order reaction: t1/2 = [A]0/(2k).",
+        "Given t1/2 = 20 min at [A]0 = 0.2 M, calculate rate constant k = [A]0/(2 t1/2) = 0.2/(2*20) = 0.005 M/min.",
+        "For new initial concentration [A]0 = 0.5 M, compute new half-life: t1/2 = 0.5/(2*0.005) = 50 min.",
+        "Alternatively, use direct proportionality: t1/2 ∝ [A]0, so t1/2(new) = (0.5/0.2)*20 = 50 min.",
+        "Compare with options: 50 min corresponds to option C."
+      ],
+      "verifierCheck": "For a zero-order reaction, half-life t_{1/2} = [A]_0/(2k). Given t_{1/2}=20 min at [A]_0=0.2 M, we find k = 0.2/(2*20)=0.005 M/min. For [A]_0=0.5 M, t_{1/2}=0.5/(2*0.005)=50 min. Alternatively, t_{1/2} is directly proportional to initial concentration, so t_{1/2}(0.5 M) = 20 min * (0.5/0.2) = 50 min.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ratio Shortcut",
+          "idea": "Half-life ratio equals initial concentration ratio",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Ratio = new [A]₀ / old [A]₀ = 0.5/0.2 = 2.5",
+            "New half-life = old half-life × ratio = 20 × 2.5 = 50 min"
+          ]
+        },
+        {
+          "name": "Direct Proportion",
+          "idea": "Half-life scales linearly with initial concentration for zero-order",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Recall t½ = [A]₀/(2k) for zero-order",
+            "Compute concentration ratio 0.5/0.2 = 2.5",
+            "Multiply original half-life 20 min × 2.5 = 50 min"
+          ]
+        },
+        {
+          "name": "Rate Constant First",
+          "idea": "Find k from given data then apply to new concentration",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Calculate k = [A]₀/(2t½) = 0.2/(2×20) = 0.005 M/min",
+            "Use t½ = [A]₀/(2k) with [A]₀ = 0.5 M",
+            "t½ = 0.5/(2×0.005) = 50 min"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:43:40.598Z"
+    },
+    {
+      "id": "c55e546b3336a923",
+      "exam": "rbi",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "RBI Grade B Practice Set 18",
+      "paperPath": "rbi/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 3,
+      "section": "Reasoning",
+      "question": "In a certain code language, 'BANK' is written as 'CZOL'. If the same coding rule is applied, how will 'RBI' be written?",
+      "options": [
+        {
+          "label": "A",
+          "text": "SCH",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "SBH",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "SAH",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "SCG",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Map each letter in BANK and CZOL to alphabet positions: B=2->C=3 (+1), A=1->Z=26 (-1), N=14->O=15 (+1), K=11->L=12 (+1).",
+        "Observe that A is a vowel while B, N, K are consonants.",
+        "Hypothesize rule: consonants shift forward by 1, vowels shift backward by 1.",
+        "Apply to RBI: R (consonant, 18) -> S (19), B (consonant, 2) -> C (3), I (vowel, 9) -> H (8).",
+        "Result is SCH, which matches option A."
+      ],
+      "verifierCheck": "The coding rule is: consonants are replaced by the next letter in the alphabet, vowels are replaced by the previous letter (with A wrapping to Z). For BANK: B (consonant) → C, A (vowel) → Z, N (consonant) → O, K (consonant) → L, giving CZOL. Applying to RBI: R (consonant) → S, B (consonant) → C, I (vowel) → H, yielding SCH, which matches option A.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Vowel/Consonant Shift",
+          "idea": "Consonants +1, vowels -1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Observe B→C, A→Z, N→O, K→L",
+            "Consonants shift forward, vowels shift backward",
+            "Apply: R→S, B→C, I→H",
+            "Result SCH matches option A"
+          ]
+        },
+        {
+          "name": "Difference Pattern",
+          "idea": "Spot +1/-1 pattern by letter type",
+          "kind": "mnemonic",
+          "seconds": 8,
+          "steps": [
+            "List position diffs: +1, -1, +1, +1",
+            "Note only A (vowel) gives -1",
+            "Rule: vowel=-1, consonant=+1",
+            "Encode RBI: R+1=S, B+1=C, I-1=H → SCH"
+          ]
+        },
+        {
+          "name": "Option Test",
+          "idea": "Verify each option against derived rule",
+          "kind": "estimate",
+          "seconds": 12,
+          "steps": [
+            "Derive rule: consonant+1, vowel-1 from BANK→CZOL",
+            "Test option A: R→S (+1), B→C (+1), I→H (-1) fits",
+            "Others fail: B has 0 or -2 shifts",
+            "Confirm A is correct"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T05:44:23.486Z"
     }
   ]
 }
