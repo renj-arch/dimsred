@@ -270,6 +270,8 @@ jobs:
           # expanders regenerate lesson pages and can drop a fix written only
           # into a page (see data/fact-corrections.json).
           node scripts/apply-fact-corrections.js .
+          node scripts/apply-question-fixes.js .
+          git add -f data/course-questions.json 2>/dev/null || true
           git add -A -- '*.html' 2>/dev/null || true
 
           TREE=$(git write-tree)

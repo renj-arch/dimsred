@@ -80,19 +80,22 @@ function build() {
 }
 
 function replaceBlock(text, block) {
-  const s = text.indexOf(START);
-  const e = text.indexOf(END);
-  if (s !== -1 && e !== -1 && e > s) return text.slice(0, s) + block + text.slice(e + END.length);
-  // First time: put it right after the opening of the lesson body so it is the
-  // first thing a reader sees on the Current Affairs page.
-  const marker = '<div class="lesson-body"';
-  const i = text.indexOf(marker);
-  if (i !== -1) {
-    const close = text.indexOf('>', i);
-    if (close !== -1) return text.slice(0, close + 1) + '\n' + block + '\n' + text.slice(close + 1);
+  let body = text;
+  // Remove an existing block first so it can be MOVED if its old position was
+  // wrong (it used to sit at the very top of the lesson, pushing the lesson
+  // itself far down the page).
+  const s = body.indexOf(START);
+  const e = body.indexOf(END);
+  if (s !== -1 && e !== -1 && e > s) body = body.slice(0, s) + body.slice(e + END.length);
+
+  // Put it at the END of the lesson, before the lesson navigation.
+  const navMarkers = ['<!-- lesson-nav -->', '<div class="lesson-nav"', 'class="lesson-nav"'];
+  for (const m of navMarkers) {
+    const i = body.indexOf(m);
+    if (i !== -1) return body.slice(0, i) + block + '\n' + body.slice(i);
   }
-  // Source store: the value is the lesson body itself, with no wrapper.
-  return block + '\n' + text;
+  // Source store (no nav): append at the end of the body.
+  return body.replace(/\s+$/, '') + '\n' + block + '\n';
 }
 
 const block = build();
