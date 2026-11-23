@@ -6370,7 +6370,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
                 displayText += '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
                 if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
-                if (q.fact || q.solution) displayText += '<div style="font-size:.9em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
+                if (q.fact || q.solution) displayText += '<div style="font-size:.9em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>'; if (window._qaResearchHtml) displayText += window._qaResearchHtml(q);
                 displayText += _yieldChipHtml(q);
                 document.getElementById('qText').innerHTML = displayText;
                 document.getElementById('qText').style.fontSize = '.95em';
@@ -9122,7 +9122,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                 }
                 displayText += '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
             if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">✅ ' + q.a + '</div>';
-            if (q.fact || q.solution) displayText += '<div style="font-size:.9em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
+            if (q.fact || q.solution) displayText += '<div style="font-size:.9em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>'; if (window._qaResearchHtml) displayText += window._qaResearchHtml(q);
             document.getElementById('qText').innerHTML = displayText;
             document.getElementById('optGrid').innerHTML = '';
             document.getElementById('optGrid').style.display = 'block';
@@ -9826,7 +9826,29 @@ var fact = q.fact || q.solution || q.explanation || '';
             el.textContent = label;
             el.style.display = label ? 'inline-block' : 'none';
         }
-        function _isUpscTopic(aq) {
+        // Research Team method for any question, attached by text. Course-lesson and
+// invented questions were missing this; the store is shared.
+window.__qaResearch = null;
+try {
+  fetch('data/research-invented.json').then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { window.__qaResearch = (j && j.methods) || {}; })
+    .catch(function () { window.__qaResearch = {}; });
+} catch (e) { window.__qaResearch = {}; }
+window._qaResearchFor = function (text) {
+  var m = window.__qaResearch;
+  if (!m) return null;
+  var k = String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 160);
+  return m[k] || null;
+};
+window._qaResearchHtml = function (q) {
+  var r = window._qaResearchFor(q && q.q);
+  if (!r || !Array.isArray(r.steps) || !r.steps.length) return '';
+  var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\x22/g, '&quot;'); };
+  return '<div style="margin-top:10px;padding:9px 11px;background:rgba(99,102,241,.10);border:1px solid rgba(99,102,241,.32);border-radius:9px;color:#c7d2fe">'
+    + '<strong>🧪 Research Team · ~' + (parseInt(r.seconds, 10) || 10) + 's · ' + esc(r.name || 'Fastest route') + '</strong>'
+    + '<ol style="margin:5px 0 0;padding-left:18px">' + r.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol></div>';
+};
+function _isUpscTopic(aq) {
             // The paper-shape bank is written from the UPSC syllabus, shape by
             // shape, so it is UPSC material by construction. Its subject field is
             // "topic · shape" and never matched the subject whitelist, which is

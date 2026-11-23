@@ -66,7 +66,29 @@ const VERIFY = 'You are an independent verifier. Given the question, the options
 
 (async function main() {
   if (!hosted.enabled()) { console.error('no model route configured'); process.exitCode = 1; return; }
-  const pool = load(POOL, { questions: [] }).questions || [];
+  const pool = (function () {
+  const inv = load(POOL, { questions: [] }).questions || [];
+  // Course-lesson questions are served in current-affairs too; they had only
+  // the standard working, so the Research Team method was missing exactly where
+  // a student answers most questions. Include them in the same store.
+  const course = load(path.join(ROOT, 'data', 'course-questions.json'), { questions: [] }).questions || [];
+  const all = inv.concat(course.map((q) => ({
+    stem: q.q,
+    answer: q.a,
+    options: q.opts,
+    section: q._exam || 'course',
+    topic: q.subject || '',
+    difficulty: ''
+  })));
+  const seen = new Set();
+  return all.filter((q) => {
+    if (!q || !q.stem || !q.answer) return false;
+    const k = keyOf(q.stem);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+})();
   const todo = pool.filter((q) => q && q.stem && q.answer && q.options && q.options.length >= 4 && !store.methods[keyOf(q.stem)]);
   console.log('pool ' + pool.length + ', already researched ' + Object.keys(store.methods).length + ', to do ' + todo.length);
   const startedAt = Date.now();
