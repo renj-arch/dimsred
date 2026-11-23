@@ -257,6 +257,7 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions invented from lesson paragraphs by the hosted setter, each verified against its own passage"><input type="checkbox" id="lessonInvToggle" style="accent-color:var(--cyan);width:14px;height:14px"> 🧠 From lesson text</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions written in the shapes the real UPSC paper uses — multi-statement, match-the-following, chronology, assertion-reason"><input type="checkbox" id="shapeToggle" style="accent-color:var(--amber);width:14px;height:14px"> 📐 Paper shapes</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="The micro-test banks: General Knowledge, General Studies, Mathematics, Science, English, Reasoning"><input type="checkbox" id="microToggle" style="accent-color:var(--emerald);width:14px;height:14px"> 🧩 Micro-test banks</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="The site's own invented pool — brand-new questions, same source as Grand Slam"><input type="checkbox" id="invToggle" style="accent-color:var(--purple);width:14px;height:14px"> 🧪 Invented (fresh)</label>
                 <a href="mental.html" style="padding:3px 12px;border-radius:100px;border:1px solid rgba(167,139,250,.5);background:rgba(167,139,250,.12);color:#ddd6fe;font-size:.75em;font-weight:700;text-decoration:none">🏆 Grand Slam mixed drill →</a>
                 <button id="upscToggle" onclick="toggleUpscOnly()" title="Only UPSC-relevant topics — uses deterministic exam-scope ground check (examScope=exam). Topics without syllabus anchors are excluded." style="padding:3px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.75em;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit">🎯 UPSC only</button>
             </div>
@@ -348,6 +349,7 @@
                 var useLessonInv = document.getElementById('lessonInvToggle')?.checked === true;
                 var usePaperShape = document.getElementById('shapeToggle')?.checked === true;
                 var useMicro = document.getElementById('microToggle')?.checked === true;
+                var useInv = document.getElementById('invToggle')?.checked === true;
                 var src = (q.source || q._src || '').toLowerCase();
                 var wikiCat = (q._wikiCat || '').toLowerCase();
                 var subject = (q.subject || '').toLowerCase();
@@ -369,6 +371,9 @@
                 }
                 if (src === 'microtest') {
                     return useMicro;
+                }
+                if (src === 'invented') {
+                    return useInv;
                 }
                 if (src === 'course' || src === 'lesson' ||
                     wikiCat === 'course-lesson' || subject.indexOf('lesson') !== -1) {
@@ -406,7 +411,7 @@
             }
             // Attach to checkboxes
             document.addEventListener('DOMContentLoaded', function() {
-                ['archiveToggle','courseToggle','genToggle','pibToggle','lessonInvToggle','shapeToggle','microToggle'].forEach(function(id) {
+                ['archiveToggle','courseToggle','genToggle','pibToggle','lessonInvToggle','shapeToggle','microToggle','invToggle'].forEach(function(id) {
                     var el = document.getElementById(id);
                     if (el) el.addEventListener('change', _applyContentFilter);
                 });
@@ -8297,7 +8302,17 @@ function prevQuestion() {
                                     added++;
                                 }
                             });
-                            _continueGeneration();
+                            _loadInventedPool(function(invQs) {
+                                invQs.forEach(function(q) {
+                                    if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
+                                        existingSet[q.q] = true;
+                                        existingSet[q.a] = true;
+                                        state.questions.push(q);
+                                        added++;
+                                    }
+                                });
+                                _continueGeneration();
+                            });
                         });
                     });
                 });
@@ -8537,6 +8552,45 @@ function prevQuestion() {
                 xhr.timeout = 18000;
                 xhr.send();
             });
+        }
+
+        // The site's own invented pool (same source Grand Slam draws from).
+        var _invCache = null;
+        function _loadInventedPool(cb) {
+            if (_invCache) { cb(_invCache); return; }
+            var finished = false;
+            function finish(list) { if (finished) return; finished = true; _invCache = list; cb(list); }
+            var timer = setTimeout(function () { finish([]); }, 15000);
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                clearTimeout(timer);
+                var out = [];
+                try {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        (data.questions || []).slice(0, 1000).forEach(function (q) {
+                            if (!q || !q.stem || !q.answer || !Array.isArray(q.options) || q.options.length < 4) return;
+                            var opts = q.options.map(function (o) { return String(o); });
+                            if (opts.indexOf(String(q.answer)) === -1) return;
+                            out.push({
+                                q: q.stem,
+                                a: String(q.answer),
+                                opts: opts,
+                                solution: q.solution || '',
+                                subject: 'Invented · ' + (q.section || '') + (q.topic ? ' · ' + q.topic : ''),
+                                source: 'invented',
+                                _src: 'invented',
+                                type: 'mcq'
+                            });
+                        });
+                    }
+                } catch (e) {}
+                finish(out);
+            };
+            xhr.onerror = xhr.ontimeout = function () { clearTimeout(timer); finish([]); };
+            xhr.open('GET', 'data/invented/questions.json?t=' + Date.now(), true);
+            xhr.timeout = 15000;
+            xhr.send();
         }
         
 
@@ -9751,6 +9805,8 @@ var fact = q.fact || q.solution || q.explanation || '';
                 label = 'UPSC · ' + (q.shape || 'paper shape');
             } else if (src === 'microtest') {
                 label = 'Micro-test bank';
+            } else if (src === 'invented') {
+                label = 'Invented (fresh)';
             }
             el.textContent = label;
             el.style.display = label ? 'inline-block' : 'none';
