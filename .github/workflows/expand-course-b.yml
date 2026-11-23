@@ -118,7 +118,7 @@ jobs:
           # claims before publish. Costs ~2x calls; mains lane has the
           # smallest key set so the quota cost is acceptable here.
           EXPAND_REVISE: '1'
-          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
+          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '12' }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
           EXPAND_SKIP_EXAMS: ${{ inputs.focus == 'upsc' && 'neet,jee,ctet,gate,agniveer,rbi,cgl,nda,cds,clat,english,apfc,ibps-po,sbi-clerk,ssc-gd,rrb-station-master' || '' }}
@@ -128,7 +128,7 @@ jobs:
           # words to the biggest remaining gaps until they reach the target;
           # EXPAND_DEPTH_PASS_MAX is only a backstop for a page that cannot
           # converge.
-          EXPAND_DEPTH_TARGET_WORDS: '8000'
+          EXPAND_DEPTH_TARGET_WORDS: '20000'
           EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
           EXPAND_DEPTH_PASS_MAX: '60'
           # Keys restricts the run to named lessons; the thin threshold lifts
@@ -221,7 +221,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXPAND_THIN_THRESHOLD: '6000'
-          EXPAND_DEPTH_TARGET_WORDS: '8000'
+          EXPAND_DEPTH_TARGET_WORDS: '20000'
           EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
         run: |
           KEYS=$(node scripts/course-lane.js --lane 1 --lanes 4 --limit 20)

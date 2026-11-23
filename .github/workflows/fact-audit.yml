@@ -17,13 +17,13 @@ on:
   schedule:
     # Four runs a day. Each stops at 75 minutes and saves after every lesson, so a
     # cancelled run loses nothing and the next one continues the rotation.
-    - cron: '23 1,7,13,19 * * *'
+    - cron: '*/30 * * * *'   # every 30 minutes, continuous fact checking
   workflow_dispatch:
     inputs:
       limit:
         description: 'Lessons to audit this run'
         required: false
-        default: '60'
+        default: '20'
       apply:
         description: 'Apply verified high-confidence corrections (marked green on the page)'
         required: false
@@ -65,10 +65,10 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LIMIT: ${{ github.event.inputs.limit || '60' }}
+          LIMIT: ${{ github.event.inputs.limit || '20' }}
           APPLY: ${{ github.event.inputs.apply || 'true' }}
           FILE: ${{ github.event.inputs.file || '' }}
-          AUDIT_DEADLINE_MIN: '75'
+          AUDIT_DEADLINE_MIN: '25'
           AUDIT_WORKERS: '3'
         run: |
           ARGS="--report data/fact-audit.json"
