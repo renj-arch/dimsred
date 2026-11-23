@@ -1,0 +1,58 @@
+name: Solve Micro Topics
+
+# Topic-bank questions ship a placeholder solution ("Correct answer: X."). This
+# lane writes a real worked solution and an original Research Team method for
+# each, verified against the key, into data/micro-solutions.json. micro-test.js
+# attaches them when a question is answered or reviewed.
+
+on:
+  schedule:
+    - cron: '13 */2 * * *'
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'Questions to solve this run'
+        required: false
+        default: '8'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: solve-micro-topics
+  cancel-in-progress: false
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Solve topic-bank questions
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MICRO_SOLVE_COUNT: ${{ github.event.inputs.count || '8' }}
+          MICRO_SOLVE_DEADLINE_MIN: '30'
+        run: node scripts/solve-micro-topics.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -f data/micro-solutions.json
+          bash scripts/ci-push.sh "micro: worked solutions + research methods for topic questions"

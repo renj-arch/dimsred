@@ -1,30 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-23T05:53:22.520Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
-   "at": "2026-11-23T05:54:33.772Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-23T05:55:44.226Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -179,8 +155,122 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-23T07:56:44.380Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 4
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 226513 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 53 overlapping subtopics into correct categories"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Converted 84 fill-in-blank questions to proper Q&A"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Updated 63 question files"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-23T09:08:36.574Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 16,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 16
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "agniveer/course/index.html",
+       "fix": "Nav: \"Agniveer\" → /agniveer/ (was ../index.html)"
+      },
+      {
+       "page": "cds/course/index.html",
+       "fix": "Nav: \"CDS\" → /cds/ (was ../index.html)"
+      },
+      {
+       "page": "cgl/course/index.html",
+       "fix": "Nav: \"SSC CGL\" → /cgl/ (was ../index.html)"
+      },
+      {
+       "page": "clat/course/index.html",
+       "fix": "Nav: \"CLAT\" → /clat/ (was ../index.html)"
+      },
+      {
+       "page": "ctet/course/index.html",
+       "fix": "Nav: \"CTET\" → /ctet/ (was ../index.html)"
+      },
+      {
+       "page": "gate/course/index.html",
+       "fix": "Nav: \"GATE\" → /gate/ (was ../index.html)"
+      },
+      {
+       "page": "ibps-po/course/index.html",
+       "fix": "Nav: \"IBPS PO\" → /ibps-po/ (was ../index.html)"
+      },
+      {
+       "page": "jee/course/index.html",
+       "fix": "Nav: \"JEE\" → /jee/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-23T06:48:02.131Z",
+ "lastRun": "2026-11-23T09:08:36.574Z",
  "model": "qwen3.5:9b"
 }
