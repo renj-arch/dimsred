@@ -148,8 +148,24 @@ function figureBlock(fig, fromFile) {
 // 100,000-word lesson is not served by one diagram at the top. The position is
 // derived from the <h2> count, which every lesson has, so a second run lands a
 // figure in a different part of the page rather than on top of the first.
-function inject(html, block, slot, perLesson) {
+function inject(html, block, slot, perLesson, fig) {
   if (!slot) {
+    // Place the figure under the section it explains, not blindly at the top.
+    // Score the figure's own words against each h2/h3 heading; a real match
+    // puts the drawing beside the passage that needs it.
+    try {
+      const words = (String((fig && fig.title) || '') + ' ' + String((fig && fig.intro) || '') + ' ' + String((fig && fig.tag) || ''))
+        .toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 4);
+      const set = new Set(words);
+      let best = null;
+      for (const m of html.matchAll(/<h([23])\b[^>]*>([\s\S]*?)<\/h\1>/gi)) {
+        const text = m[2].replace(/<[^>]+>/g, ' ').toLowerCase();
+        let score = 0;
+        for (const w of text.split(/[^a-z0-9]+/)) if (set.has(w)) score++;
+        if (score >= 2 && (!best || score > best.score)) best = { score, at: m.index + m[0].length };
+      }
+      if (best) return html.slice(0, best.at) + '\n' + block + '\n' + html.slice(best.at);
+    } catch (e) { /* fall through to the top */ }
     const anchor = /<div class="lesson-body">/i;
     if (anchor.test(html)) return html.replace(anchor, (m) => m + '\n' + block);
     const h1 = /<\/h1>/i;
@@ -310,7 +326,7 @@ async function main() {
       const re = new RegExp('<!-- course-figure:[a-z0-9-]+ -->[\\s\\S]*?</figure>');
       next = html.replace(re, block);
     } else {
-      next = inject(html, block, existing.length, perLesson);
+      next = inject(html, block, existing.length, perLesson, fig);
     }
     if (!next) { missing++; continue; }
     if (next === html) continue;
