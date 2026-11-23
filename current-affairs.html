@@ -386,7 +386,17 @@
                 state.idx = 0;
                 state._fullPool = fullPool;
                 if (state.questions.length > 0 && window.showQuestion) showQuestion();
-                else if (state.restartFn) state.restartFn();
+                else {
+                    // Do NOT restart the quiz here. With UPSC-only + a source
+                    // toggle that has no matching items this used to call
+                    // restartFn(), which reloaded the whole pool and filtered it
+                    // to zero again: an endless "Loading..." loop. Say what
+                    // happened and leave the pool alone.
+                    var qt = document.getElementById('qText');
+                    if (qt) qt.innerHTML = 'No questions match the current toggles. Turn on another source (Archive / Course Lessons / Generators / Paper shapes) or switch off UPSC-only.';
+                    var og = document.getElementById('optGrid');
+                    if (og) og.innerHTML = '';
+                }
             }
             // Attach to checkboxes
             document.addEventListener('DOMContentLoaded', function() {
@@ -8276,13 +8286,15 @@ function prevQuestion() {
                 });
             });
             function _continueGeneration() {
-                // No artificial cap — keep round-robin until every generator is
-                // exhausted (several consecutive passes add nothing new), with only
-                // a high safety ceiling to guard against a pathological generator.
+                // Cap the pool. The old loop generated up to 100,000 questions
+                // synchronously, which freezes the tab ("keeps loading") once a
+                // source filter has removed most of them. 3,000 is already far
+                // more than a session needs; UPSC-only is tighter still.
+                var cap = _upscOnlyActive() ? 900 : 3000;
                 var emptyRounds = 0;
-                while (emptyRounds < 20 && added < 100000) {
+                while (emptyRounds < 20 && added < cap) {
                     var addedThisRound = 0;
-                    for (var ci = 0; ci < allCats.length && added < 100000; ci++) {
+                    for (var ci = 0; ci < allCats.length && added < cap; ci++) {
                         try {
                             var q = GK_GENERATORS[allCats[ci]]();
                             if (!q || !q.q || !q.a) continue;
@@ -9539,7 +9551,17 @@ var fact = q.fact || q.solution || q.explanation || '';
                     }
                 }
             } else if (note) note.remove();
-            if (state.restartFn && state.questions && state.questions.length > 0) state.restartFn();
+            // Re-filter the pool already in memory instead of re-running the
+            // whole Static GK load. Restarting mid-load is what produced the
+            // endless spinner when UPSC-only and a source toggle were switched
+            // together.
+            if (state.questions && state.questions.length) {
+                var pool = state._fullPool || state.questions.slice();
+                state.questions = _upscOnlyActive() ? pool.filter(_isUpscTopic) : pool.slice();
+                state._fullPool = pool;
+                state.idx = 0;
+                _applyContentFilter();
+            }
             if (on && note) setTimeout(function() { var n = document.getElementById('upscOnlyNote'); if (n && n.style.display !== 'none') n.remove(); }, 6000);
         }
         // Restore the UPSC-only tab across reloads (same persistence idea as the
@@ -9660,6 +9682,11 @@ var fact = q.fact || q.solution || q.explanation || '';
             el.style.display = label ? 'inline-block' : 'none';
         }
         function _isUpscTopic(aq) {
+            // The paper-shape bank is written from the UPSC syllabus, shape by
+            // shape, so it is UPSC material by construction. Its subject field is
+            // "topic · shape" and never matched the subject whitelist, which is
+            // why turning on UPSC-only emptied the pool.
+            if (aq && (aq._src === 'papershape' || aq.source === 'papershape')) return true;
             // One gate for archive and generator items: subject whitelist plus
             // the relevance classifier. Archive items expose the sub-topic as
             // `subSubject` (its on-disk field), not `subTopic` — reading only
