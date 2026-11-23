@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-23T06:28:38.074Z",
+  "updatedAt": "2026-11-23T23:41:58.642Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -29624,6 +29624,1091 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-23T06:28:38.067Z"
+    },
+    {
+      "id": "41506189655294ad",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "If tanθ = 1, then secθ + cosecθ = ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "√2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2√2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "3√2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "tanθ = 1 implies sinθ = cosθ.",
+        "Using sin²θ + cos²θ = 1, we get 2 sin²θ = 1, so sinθ = ±1/√2, cosθ = ±1/√2.",
+        "For the principal value (θ = 45°), sinθ = cosθ = 1/√2.",
+        "Then secθ = 1/cosθ = √2, cosecθ = 1/sinθ = √2.",
+        "Sum = √2 + √2 = 2√2.",
+        "Thus the answer is 2√2, which corresponds to option B."
+      ],
+      "verifierCheck": "tanθ = 1 implies sinθ = cosθ = ±1/√2. For the principal acute angle (θ = 45°), sinθ = cosθ = 1/√2, so secθ = √2, cosecθ = √2, and their sum is 2√2. The negative sum -2√2 is not among the options, so the answer is 2√2 (option B).",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Pythagorean Shortcut",
+          "idea": "Use 1+tan²=sec² and 1+cot²=cosec²",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "1+tan²θ = sec²θ ⇒ secθ = √(1+1) = √2",
+            "cotθ = 1/tanθ = 1 ⇒ 1+cot²θ = cosec²θ ⇒ cosecθ = √2",
+            "secθ + cosecθ = √2 + √2 = 2√2"
+          ]
+        },
+        {
+          "name": "Direct Angle Substitution",
+          "idea": "tanθ=1 gives θ=45°, use known values",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "tanθ=1 ⇒ θ=45° (or π/4)",
+            "sin45°=cos45°=√2/2",
+            "secθ=1/cosθ=√2, cosecθ=1/sinθ=√2",
+            "Sum = √2+√2 = 2√2"
+          ]
+        },
+        {
+          "name": "Identity Ratio",
+          "idea": "Express sum as (sin+cos)/(sin cos), use tan=1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "secθ+cosecθ = (sinθ+cosθ)/(sinθ cosθ)",
+            "tanθ=1 ⇒ sinθ=cosθ",
+            "Let sinθ=cosθ=k, then k^2+k^2=1 ⇒ k=±√2/2",
+            "Sum = (2k)/(k^2) = 2/k = ±2√2, take positive 2√2"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:33:02.635Z"
+    },
+    {
+      "id": "7aa481dce23af49a",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "A contractor undertakes a project to be completed in 20 days. He starts with 20 men and 30 women. The efficiency of a man is twice that of a woman. After 10 days, 5 men leave and 10 women join. After another 5 days, 5 men join and 5 women leave. The work finishes exactly on the 20th day. The total wages paid to all workers is ₹1,42,500, distributed in proportion to the work done by each worker. What is the daily wage of a woman?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹80",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "₹100",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "₹120",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹150",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let efficiency of a woman = 1 unit/day, so a man = 2 units/day.",
+        "Phase 1 (days 1-10): 20 men, 30 women → daily work = 20×2 + 30×1 = 70 units; 10 days = 700 units.",
+        "Phase 2 (days 11-15): 15 men, 40 women → daily work = 15×2 + 40×1 = 70 units; 5 days = 350 units.",
+        "Phase 3 (days 16-20): 20 men, 35 women → daily work = 20×2 + 35×1 = 75 units; 5 days = 375 units.",
+        "Total work = 700 + 350 + 375 = 1425 units.",
+        "Total wages ₹1,42,500 ÷ 1425 units = ₹100 per unit; woman's daily wage = 1 unit × ₹100 = ₹100."
+      ],
+      "verifierCheck": "Let a woman's efficiency be w units/day, so a man's efficiency is 2w. Total work = (20*2w+30*w)*10 + (15*2w+40*w)*5 + (20*2w+35*w)*5 = 700w+350w+375w = 1425w. Total wages ₹1,42,500 are distributed in proportion to work done, so wage per unit work = 1,42,500/1425w = 100/w. A woman's daily wage = w * (100/w) = ₹100.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Efficiency Wage Shortcut",
+          "idea": "Convert work to unit totals using efficiency, then use total wage = unit wage × total units",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Set woman's efficiency =1, man's =2.",
+            "Compute work each period: 10 days·(20·2+30·1)=700; 5 days·(15·2+40·1)=350; 5 days·(20·2+35·1)=375.",
+            "Add: total units = 700+350+375 = 1425.",
+            "Total wages = ₹1,42,500 = unit wage × 1425 ⇒ unit wage = 100.",
+            "Woman's daily wage = unit wage = ₹100."
+          ]
+        },
+        {
+          "name": "Weighted Man‑Day",
+          "idea": "Treat a man as two women, sum weighted man‑days, then divide total wages",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Convert men to women: 20 men = 40 women; add 30 women → 70 women for first 10 days.",
+            "Work = 70·10 = 700 woman‑days.",
+            "Next 5 days: 15 men =30 women +40 women =70 → 70·5 =350.",
+            "Last 5 days: 20 men =40 women +35 women =75 → 75·5 =375.",
+            "Total woman‑day equivalents = 1425; wage per woman‑day = 1,42,500/1425 =100.",
+            "Daily wage of a woman = ₹100."
+          ]
+        },
+        {
+          "name": "Proportional Pay",
+          "idea": "Use proportion of work each worker does; solve for woman's rate directly",
+          "kind": "mnemonic",
+          "seconds": 7,
+          "steps": [
+            "Let woman’s daily wage = w, man’s =2w.",
+            "Total wage = w·(30·20 +20·2·20) = w·(600+800)=w·1400? Wait compute correctly:",
+            "Sum wages = w·[30·20 +20·2·20] = w·[600+800]=w·1400.",
+            "Set w·1400 = 1,42,500 ⇒ w = 101.79? Realize need weighted days; use proper total work 1425 units.",
+            "Thus w = 1,42,500/1425 =100.",
+            "Answer B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:35:12.183Z"
+    },
+    {
+      "id": "5cfb873434d89ce0",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "A sphere of radius 10 cm is cut by a plane at a distance of 6 cm from its centre. What is the volume of the resulting spherical cap?",
+      "options": [
+        {
+          "label": "A",
+          "text": "(416/3)π cm³",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "(400/3)π cm³",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "(432/3)π cm³",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "(384/3)π cm³",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Sphere radius R = 10 cm, distance from center to plane d = 6 cm.",
+        "Height of smaller spherical cap h = R - d = 4 cm.",
+        "Volume formula for spherical cap: V = (πh²/3)(3R - h).",
+        "Substitute: V = (π·16/3)(30 - 4) = (16π/3)·26 = 416π/3 cm³.",
+        "This matches option A."
+      ],
+      "verifierCheck": "The sphere radius R = 10 cm. The plane is at distance d = 6 cm from the centre, so the height of the smaller spherical cap is h = R - d = 4 cm. The volume of a spherical cap is V = (πh²/3)(3R - h) = (π·16/3)(30 - 4) = (16π/3)·26 = 416π/3 cm³, which matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Cap Height Formula",
+          "idea": "Direct plug into V = πh²(3R-h)/3",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Height h = R - d = 10 - 6 = 4 cm",
+            "V = π·4²·(30-4)/3 = 16π·26/3 = 416π/3"
+          ]
+        },
+        {
+          "name": "Base Radius Formula",
+          "idea": "Use V = πh(3a²+h²)/6 with base radius a",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Base radius a = √(R²-d²) = √(100-36) = 8 cm",
+            "Height h = R - d = 4 cm",
+            "V = π·4·(3·64+16)/6 = 4π·208/6 = 416π/3"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:35:40.753Z"
+    },
+    {
+      "id": "249e52b89eba0ec0",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "A rectangular agricultural field is partitioned into three sections by two perpendicular internal fences (one vertical, one horizontal) that do not meet at the center. Section 1 (bottom-left) contains a pond with area 30 sq meters. Section 2 (top-right) has an area of 75 sq meters. Section 3 (composed of the remaining L-shaped area formed by Sections 4 and 5 in a conceptual grid, but here treated as a single region for crop yield calculation) is where crops are grown. If the total area of the field is 200 sq meters, what is the difference between the sum of the areas of Section 1 and Section 2, and the area of Section 3?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) 5 sq meters",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B) 10 sq meters",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C) 15 sq meters",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) 20 sq meters",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total area = Section1 + Section2 + Section3 = 200 sq m",
+        "Section1 + Section2 = 30 + 75 = 105 sq m",
+        "Section3 = 200 - 105 = 95 sq m",
+        "Difference = (Section1+Section2) - Section3 = 105 - 95 = 10 sq m"
+      ],
+      "verifierCheck": "Section 1 + Section 2 = 30 m² + 75 m² = 105 m². Since the whole field is 200 m² and only three sections exist, Section 3 = 200 m² – 105 m² = 95 m². The difference between the sum of Sections 1 and 2 and Section 3 is 105 m² – 95 m² = 10 m², which corresponds to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Double-Sum Minus Total",
+          "idea": "Difference = 2*(S1+S2) - Total, skipping Section 3 explicitly.",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Sum S1+S2 = 30 + 75 = 105",
+            "Difference = 2*105 - 200 = 10"
+          ]
+        },
+        {
+          "name": "Direct Subtraction",
+          "idea": "Total area minus given sections yields Section 3; then subtract.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Total area = 200 sq m",
+            "Section 1 = 30, Section 2 = 75",
+            "Section 3 = 200 - 30 - 75 = 95",
+            "Difference = (30+75) - 95 = 10"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:36:47.621Z"
+    },
+    {
+      "id": "2bc1aeff66bdbdc0",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 5,
+      "section": "Mathematics",
+      "question": "A cricket team needs to chase a target of 250 runs in 50 overs. In the first 30 overs, they score at a run rate of 4.5 runs per over. What should be the required run rate in the remaining overs to reach the target?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5.5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "5.75",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "6.0",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "6.25",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate runs scored in first 30 overs: 30 * 4.5 = 135",
+        "Calculate remaining runs needed: 250 - 135 = 115",
+        "Calculate remaining overs: 50 - 30 = 20",
+        "Compute required run rate: 115 / 20 = 5.75",
+        "Match with option B"
+      ],
+      "verifierCheck": "In the first 30 overs at 4.5 runs per over, the team scores 30 × 4.5 = 135 runs. The target is 250, so 115 runs are needed in the remaining 20 overs. The required run rate is 115 ÷ 20 = 5.75 runs per over, which matches option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Deficit per Over",
+          "idea": "Find total deficit from target run rate and spread over remaining overs",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Target run rate = 250 / 50 = 5",
+            "Deficit per over = 5 - 4.5 = 0.5",
+            "Total deficit = 0.5 * 30 = 15",
+            "Extra per remaining over = 15 / 20 = 0.75",
+            "Required rate = 5 + 0.75 = 5.75"
+          ]
+        },
+        {
+          "name": "Direct Calculation",
+          "idea": "Compute runs scored, remaining runs, divide by remaining overs",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Runs scored = 30 * 4.5 = 135",
+            "Remaining runs = 250 - 135 = 115",
+            "Remaining overs = 50 - 30 = 20",
+            "Required rate = 115 / 20 = 5.75"
+          ]
+        },
+        {
+          "name": "Weighted Average",
+          "idea": "Set up average equation and solve for unknown run rate",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Equation: (30*4.5 + 20*x) / 50 = 5",
+            "135 + 20x = 250",
+            "20x = 115",
+            "x = 5.75"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:37:09.074Z"
+    },
+    {
+      "id": "0431dcf5f329c78e",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "A and B together can complete a task in 10 days. They work together for 4 days, after which A leaves. B finishes the remaining work in 12 days. If A's efficiency were 25% higher, how many days would A alone take to complete the entire task?",
+      "options": [
+        {
+          "label": "A",
+          "text": "16 days",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "18 days",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20 days",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "24 days",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let total work = 1 unit. Combined rate of A and B: a + b = 1/10.",
+        "Work done in 4 days together = 4*(1/10) = 2/5. Remaining work = 3/5.",
+        "B completes remaining in 12 days => b = (3/5)/12 = 1/20.",
+        "A's rate a = 1/10 - 1/20 = 1/20.",
+        "A's efficiency increased by 25% => new rate = 1.25 * (1/20) = 1/16.",
+        "Time for A alone at new rate = 1 / (1/16) = 16 days."
+      ],
+      "verifierCheck": "Let total work = 1 unit. Combined rate of A and B is a+b = 1/10 per day. In 4 days they complete 4/10 = 2/5 of the work, leaving 3/5. B finishes the remaining 3/5 in 12 days, so B's rate b = (3/5)/12 = 1/20 per day. Then A's rate a = 1/10 - 1/20 = 1/20 per day, so A alone would take 20 days originally. With 25% higher efficiency, A's new rate = 1.25 * 1/20 = 1/16 per day, thus time = 16 days. Therefore the correct option is A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Rate Subtraction",
+          "idea": "Direct rates from given times",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Combined rate = 1/10 task/day",
+            "Work in 4 days = 4/10 = 2/5; remaining = 3/5",
+            "B's rate = (3/5)/12 = 1/20 task/day",
+            "A's rate = 1/10 - 1/20 = 1/20 task/day",
+            "25% higher rate = 1.25 * 1/20 = 1/16 task/day",
+            "Time = 16 days"
+          ]
+        },
+        {
+          "name": "Efficiency Ratio",
+          "idea": "Solve for individual days then scale",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Let A take x days, B take y days: 1/x + 1/y = 1/10",
+            "4 days together complete 4/10 = 2/5; remaining 3/5 done by B in 12 days => 12/y = 3/5 => y = 20",
+            "Then 1/x = 1/10 - 1/20 = 1/20 => x = 20",
+            "25% higher efficiency means 1.25 times rate => days = 20/1.25 = 16"
+          ]
+        },
+        {
+          "name": "Work Units",
+          "idea": "Use LCM to avoid fractions",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Total work = LCM(10,12,4) = 60 units",
+            "Combined rate = 60/10 = 6 units/day",
+            "4 days together = 24 units; remaining = 36 units",
+            "B's rate = 36/12 = 3 units/day",
+            "A's rate = 6 - 3 = 3 units/day",
+            "25% higher = 3.75 units/day; time = 60/3.75 = 16 days"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:37:51.537Z"
+    },
+    {
+      "id": "4d81952ea07a9713",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 7,
+      "section": "Mathematics",
+      "question": "A retailer marks up a commodity by 25% above its cost price. He then offers a discount of x% on this marked price. If the final selling price equals the original cost price plus half of the initial profit he would have made had there been no discount, what is the value of x?",
+      "options": [
+        {
+          "label": "A",
+          "text": "10",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "12",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "15",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let cost price = C.",
+        "Marked price = C + 25% of C = 1.25C.",
+        "Initial profit (no discount) = 1.25C - C = 0.25C.",
+        "Half of initial profit = 0.125C.",
+        "Final selling price = C + 0.125C = 1.125C.",
+        "Discount equation: 1.25C * (1 - x/100) = 1.125C => x = 10."
+      ],
+      "verifierCheck": "Let cost price = C. Marked price = 1.25C. Initial profit = 0.25C. Half of initial profit = 0.125C. Final selling price = C + 0.125C = 1.125C. Discount x% on marked price gives selling price = 1.25C*(1 - x/100). Equate: 1.25C*(1 - x/100) = 1.125C => 1 - x/100 = 1.125/1.25 = 0.9 => x/100 = 0.1 => x = 10.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ratio Insight",
+          "idea": "Directly compare final and marked prices as decimals",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Final price = Cost + 0.5*(0.25 Cost) = 1.125 Cost",
+            "Marked price = 1.25 Cost",
+            "Ratio final/marked = 1.125 / 1.25 = 0.9",
+            "Discount = 1 - 0.9 = 0.1 = 10%"
+          ]
+        },
+        {
+          "name": "Assume Cost 100",
+          "idea": "Plug in 100 for cost to avoid algebra",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let cost = 100",
+            "Marked price = 125 (25% markup)",
+            "Profit = 25, half profit = 12.5",
+            "Final price = 100 + 12.5 = 112.5",
+            "Discount % = (125 - 112.5) / 125 * 100 = 10%"
+          ]
+        },
+        {
+          "name": "Fraction Shortcut",
+          "idea": "Use fractions for exact mental arithmetic",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Cost = C, 25% markup = 1/4 C",
+            "Marked price = 5/4 C",
+            "Initial profit = 1/4 C, half = 1/8 C",
+            "Final price = C + 1/8 C = 9/8 C",
+            "Discount factor = (9/8) / (5/4) = 9/10, so discount = 10%"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:38:21.100Z"
+    },
+    {
+      "id": "f05264d69f36151a",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 8,
+      "section": "Mathematics",
+      "question": "A retailer marks up a festive gift item by 40% over its cost price to sell it at a premium. However, due to post-festival inflation and supply chain delays, the final selling price ends up being exactly equal to what it would have been if the item were sold at a 15% profit on the original cost price WITHOUT any markup. What is the Cost Price of the item if the Final Selling Price was Rs. 230?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 186.50",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Rs. 200.00",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Rs. 192.40",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 210.00",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let cost price be C.",
+        "Final selling price = 15% profit on cost price = 1.15 * C.",
+        "Given final selling price = Rs. 230.",
+        "So 1.15 * C = 230 => C = 230 / 1.15 = 200.",
+        "Cost price = Rs. 200.00.",
+        "Option B."
+      ],
+      "verifierCheck": "Let the cost price be C. A 15% profit without any markup gives a selling price of 1.15 C. The problem states this equals the final selling price of Rs 230, so 1.15 C = 230 ⇒ C = 230 ÷ 1.15 = 200. Hence the cost price is Rs 200, matching option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Division",
+          "idea": "Final SP = 1.15 × CP, so CP = 230 ÷ 1.15",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Compute 230 ÷ 1.15 = 200",
+            "Match option B"
+          ]
+        },
+        {
+          "name": "Fraction Conversion",
+          "idea": "15% = 3/20, so 1.15 = 23/20, CP = 230 × 20/23 = 200",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Convert 15% to fraction 3/20",
+            "1.15 = 23/20",
+            "CP = 230 × 20/23 = 10 × 20 = 200",
+            "Select B"
+          ]
+        },
+        {
+          "name": "Option Check",
+          "idea": "Test each option: 200 × 1.15 = 230",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Multiply option B (200) by 1.15",
+            "200 × 1.15 = 230 matches final SP",
+            "Confirm B is correct"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:39:21.266Z"
+    },
+    {
+      "id": "8fbf87ddfd413aaa",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 9,
+      "section": "Mathematics",
+      "question": "A person deposits Rs 10,000 in a bank. The bank offers an annual compound interest rate of 5% for the first 3 years and then increases the rate to 8% per annum for the next 2 years, both compounded yearly. What will be the amount at the end of 5 years?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs 13,502.54",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Rs 13,450.00",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Rs 13,600.00",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs 13,200.00",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate amount after 3 years at 5%: 10000 × (1.05)^3 = 11576.25",
+        "Calculate amount after next 2 years at 8%: 11576.25 × (1.08)^2 = 11576.25 × 1.1664 = 13502.538 ≈ 13502.54"
+      ],
+      "verifierCheck": "The principal is Rs 10,000. For the first 3 years at 5% compounded annually, the amount becomes 10000 × (1.05)^3 = 10000 × 1.157625 = Rs 11,576.25. For the next 2 years at 8% compounded annually, this amount grows to 11576.25 × (1.08)^2 = 11576.25 × 1.1664 = Rs 13,502.538, which rounds to Rs 13,502.54. This matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Factor Multiply",
+          "idea": "Multiply period growth factors",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Compute 1.05^3 = 1.157625",
+            "Compute 1.08^2 = 1.1664",
+            "Multiply factors: 1.157625 × 1.1664 = 1.350254",
+            "Multiply by 10000 → 13502.54"
+          ]
+        },
+        {
+          "name": "Yearly Build",
+          "idea": "Apply interest sequentially each year",
+          "kind": "mnemonic",
+          "seconds": 12,
+          "steps": [
+            "Y1: 10000×1.05=10500",
+            "Y2: 10500×1.05=11025",
+            "Y3: 11025×1.05=11576.25",
+            "Y4: 11576.25×1.08=12502.35",
+            "Y5: 12502.35×1.08=13502.54"
+          ]
+        },
+        {
+          "name": "Fraction Power",
+          "idea": "Use integer powers to avoid decimals",
+          "kind": "invariant",
+          "seconds": 15,
+          "steps": [
+            "Amount = 10000 × (105/100)^3 × (108/100)^2",
+            "= (105^3 × 108^2) / 10^6",
+            "105^3 = 1157625",
+            "108^2 = 11664",
+            "Product = 1157625 × 11664 = 13502538000",
+            "Divide by 1,000,000 → 13502.54"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:39:59.460Z"
+    },
+    {
+      "id": "2fe51b7fa349f4f1",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 10,
+      "section": "Mathematics",
+      "question": "Four workers, each of whom can complete a piece of work alone in 20 days, start the job together. After 4 days, two of these workers leave and are replaced by three new workers, each of whom can complete the same work alone in 30 days. Assuming all workers work at the same constant rate, how many additional days will be required to finish the remaining work?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. 1 day",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B. 2 days",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C. 3 days",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. 4 days",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Each original worker rate = 1/20 work/day. Four workers rate = 4/20 = 1/5 work/day.",
+        "Work done in 4 days = 4 * (1/5) = 4/5. Remaining work = 1/5.",
+        "After 4 days, 2 original workers remain (rate 2/20 = 1/10) and 3 new workers added (rate 3/30 = 1/10). Combined rate = 1/10 + 1/10 = 1/5 work/day.",
+        "Time to finish remaining work = (1/5) / (1/5) = 1 day."
+      ],
+      "verifierCheck": "Total work = 1 unit. Each original worker rate = 1/20 per day. Four workers work 4 days: work done = 4 * (1/20) * 4 = 16/20 = 4/5. Remaining work = 1/5. After 4 days, 2 original workers leave, 3 new workers (rate 1/30 each) join. New team: 2 original (2/20 = 1/10) + 3 new (3/30 = 1/10) = combined rate 1/5 per day. Time to finish remaining work = (1/5) / (1/5) = 1 day.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Rate Equality",
+          "idea": "Notice new team's combined rate equals original team's rate.",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Original 4 workers rate = 4/20 = 1/5 work/day.",
+            "After 4 days, work done = 4*(1/5) = 4/5; remaining = 1/5.",
+            "New team: 2 original (2/20=1/10) + 3 new (3/30=1/10) = 1/5 work/day.",
+            "Same rate → remaining work takes 1 day."
+          ]
+        },
+        {
+          "name": "Fraction Done",
+          "idea": "Compute fraction completed, then find new rate as fraction per day.",
+          "kind": "shortcut",
+          "seconds": 7,
+          "steps": [
+            "Each original worker: 1/20 per day. 4 workers: 1/5 per day.",
+            "In 4 days: 4/5 done, 1/5 left.",
+            "Two original remain: 2/20 = 1/10 per day.",
+            "Three new: 3/30 = 1/10 per day.",
+            "Combined new rate = 1/10+1/10 = 1/5 per day.",
+            "Time = (1/5) / (1/5) = 1 day."
+          ]
+        },
+        {
+          "name": "LCM Units",
+          "idea": "Use LCM of 20 and 30 as total work units for integer arithmetic.",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Let total work = LCM(20,30) = 60 units.",
+            "Original worker rate = 60/20 = 3 units/day.",
+            "4 workers do 12 units/day; in 4 days = 48 units.",
+            "Remaining = 12 units.",
+            "New team: 2 original = 6 units/day, 3 new = 60/30=2 each → 6 units/day, total 12 units/day.",
+            "Time = 12/12 = 1 day."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:40:42.795Z"
+    },
+    {
+      "id": "a8270fd7a229baf2",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 11,
+      "section": "Mathematics",
+      "question": "A shopkeeper purchases an article for a certain cost price. He marks it up by 50% and then offers two successive discounts of 20% and 10% on the marked price. After the discounts, a service charge of 5% is levied on the resulting price. If the customer finally pays ₹1134, what is the cost price of the article?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹1000",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "₹1050",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "₹1080",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹900",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let cost price be C.",
+        "Marked price = 1.5C (50% markup).",
+        "After 20% discount: 1.5C × 0.8 = 1.2C.",
+        "After 10% discount: 1.2C × 0.9 = 1.08C.",
+        "After 5% service charge: 1.08C × 1.05 = 1.134C.",
+        "Set 1.134C = 1134 → C = 1000."
+      ],
+      "verifierCheck": "Let cost price be C. Marked price = 1.5C. After 20% and 10% successive discounts, price = 1.5C × 0.8 × 0.9 = 1.08C. Adding 5% service charge gives final price = 1.08C × 1.05 = 1.134C. Given final price = 1134, so C = 1134 / 1.134 = 1000. Thus cost price is ₹1000, option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Multiplier Chain",
+          "idea": "Compute single net multiplier then divide",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Multiply successive factors: 1.5 × 0.8 × 0.9 × 1.05 = 1.134",
+            "Divide final price by multiplier: 1134 ÷ 1.134 = 1000"
+          ]
+        },
+        {
+          "name": "Fraction Shortcut",
+          "idea": "Use fractions to see 1.134 = 1134/1000 instantly",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Write factors as fractions: 3/2, 4/5, 9/10, 21/20",
+            "Multiply: (3×4×9×21)/(2×5×10×20) = 2268/2000 = 1.134",
+            "Since 1134 = 1.134 × 1000, cost price = 1000"
+          ]
+        },
+        {
+          "name": "Reverse Calculation",
+          "idea": "Undo each operation backwards from final price",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Remove 5% service charge: 1134 ÷ 1.05 = 1080",
+            "Remove 10% discount: 1080 ÷ 0.9 = 1200",
+            "Remove 20% discount: 1200 ÷ 0.8 = 1500",
+            "Remove 50% markup: 1500 ÷ 1.5 = 1000"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:41:25.801Z"
+    },
+    {
+      "id": "1bdf8fb5dc0351cd",
+      "exam": "cds",
+      "paperSlug": "full-2026-11-23-cds-maths",
+      "paperTitle": "CDS — Elementary Mathematics (Full Paper)",
+      "paperPath": "cds/mock-tests/full-2026-11-23-cds-maths.html",
+      "paperFile": "full-2026-11-23-cds-maths.json",
+      "questionNumber": 12,
+      "section": "Mathematics",
+      "question": "A gadget has a marked price (MRP) of ₹1,500. The shop first offers a flat 10% discount on the MRP, and then an additional 5% discount on the price obtained after the first discount. After all discounts, a GST of 18% is levied on the discounted price. What is the final selling price (including GST) of the gadget?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. ₹1,513.35",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B. ₹1,510.00",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C. ₹1,520.00",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. ₹1,500.00",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate price after first discount: 1500 * 0.90 = 1350",
+        "Calculate price after second discount: 1350 * 0.95 = 1282.50",
+        "Calculate GST amount: 1282.50 * 0.18 = 230.85",
+        "Add GST to discounted price: 1282.50 + 230.85 = 1513.35",
+        "Match with options: ₹1,513.35 corresponds to option A"
+      ],
+      "verifierCheck": "The MRP is ₹1500. After 10% discount, price = 1500 * 0.9 = ₹1350. After additional 5% discount, price = 1350 * 0.95 = ₹1282.50. Adding 18% GST: 1282.50 * 1.18 = ₹1513.35. This matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Multiply Factors Directly",
+          "idea": "Chain multipliers: 0.9 × 0.95 × 1.18",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Multiply discount factors: 0.9 × 0.95 = 0.855.",
+            "Multiply by GST factor: 0.855 × 1.18 = 1.0089.",
+            "Final price = 1500 × 1.0089 = 1513.35."
+          ]
+        },
+        {
+          "name": "Equivalent Discount + GST",
+          "idea": "Combine discounts into one then apply GST",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Compute single discount: 10% + 5% - (10*5)/100 = 14.5%.",
+            "Discounted price = 1500 × (1 - 0.145) = 1500 × 0.855 = 1282.5.",
+            "Add 18% GST: 1282.5 × 1.18 = 1513.35."
+          ]
+        },
+        {
+          "name": "Fraction Multiplier",
+          "idea": "Use fractions 9/10, 19/20, 59/50 for exact multiplier",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Write multipliers as fractions: 10% off = 9/10; 5% off = 19/20; 18% GST = 59/50.",
+            "Multiply: (9×19×59)/(10×20×50) = 10089/10000 = 1.0089.",
+            "Multiply by MRP: 1500 × 10089/10000 = (1500/10000)×10089 = 0.15×10089 = 1513.35."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-23T23:41:58.634Z"
     }
   ]
 }
