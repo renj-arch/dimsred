@@ -88088,6 +88088,33 @@
         }
       ],
       "sol": "For a cylinder with given total surface area S, volume is maximum when height h = 2r. Total surface area S = 2πr² + 2πrh = 2πr² + 2πr(2r) = 6πr². Given S = 924 cm² and π = 22/7, we have 6 × (22/7) × r² = 924 → (132/7) r² = 924 → r² = 924 × 7 / 132 = 49 → r = 7 cm."
+    },
+    {
+      "id": 107,
+      "text": "Two frustums of cones are similar. The ratio of their corresponding radii is 2 : 5. What is the ratio of their volumes?",
+      "options": [
+        {
+          "l": "a",
+          "t": "8 : 125",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "4 : 25",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "2 : 5",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "16 : 625",
+          "c": false
+        }
+      ],
+      "sol": "For similar solids, linear dimensions scale by factor k. Here k = 2/5. Volume scales by k³. So volume ratio = (2³) : (5³) = 8 : 125."
     }
   ],
   "gk/indian-geography": [
@@ -106442,6 +106469,141 @@
         }
       ],
       "sol": "A singular term denotes a class with exactly one member, so ‘Socrates is mortal’ carries existential import automatically. Interpreting it as a Boolean universal (which lacks existential force) and then drawing a particular conclusion from such premises commits the existential fallacy — deriving existence from premises that do not assert it."
+    },
+    {
+      "id": 111,
+      "text": "Consider the following premises:\n1. All engineers are technicians.\n2. Some technicians are managers.\nThe term \"technicians\" is used in the first premise to denote a professional qualification and in the second premise to denote a functional role. Which of the following correctly describes the logical status of the argument?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Some engineers are managers.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "No engineers are managers.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Either some engineers are managers or no engineers are managers.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No conclusion follows.",
+          "c": true
+        }
+      ],
+      "sol": "The argument contains four distinct terms: engineers, technicians (qualification), technicians (role), and managers. Because the middle term is not identical in both premises, the syllogism commits the fallacy of four terms (quaternio terminorum). The standard distribution rules break down — the middle term is undistributed in both premises — so no valid categorical inference can be drawn. Hence none of the offered conclusions is forced; the correct response is that no conclusion follows."
+    },
+    {
+      "id": 112,
+      "text": "Premises:\n1. All scientists respect some philosophers.\n2. All philosophers respect some artists.\nWhich conclusion, if any, follows validly from these premises?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Some scientists respect some artists.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "All scientists respect some artists.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "No scientists respect any artists.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No conclusion follows.",
+          "c": true
+        }
+      ],
+      "sol": "The first premise formalises as ∀x(Scientist(x) → ∃y(Philosopher(y) ∧ Respects(x,y))). The second is ∀z(Philosopher(z) → ∃w(Artist(w) ∧ Respects(z,w))). The existential quantifiers are scoped inside the universal quantifiers, so the philosopher respected by a given scientist need not be the same philosopher who respects an artist. Therefore a chain of respect linking a scientist directly to an artist cannot be guaranteed. None of the three positive conclusions is entailed; the only logically correct choice is that no conclusion follows."
+    },
+    {
+      "id": 113,
+      "text": "Under the modern Boolean interpretation (no existential import unless explicitly stated), which immediate inference from the proposition \"All A are B\" is valid?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Some A are B.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Some B are A.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "No A are non‑B.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "All non‑B are non‑A.",
+          "c": false
+        }
+      ],
+      "sol": "In Boolean logic, universal affirmatives (A) have no existential import. Subalternation (\"All A are B\" → \"Some A are B\") and conversion by limitation (\"All A are B\" → \"Some B are A\") both require the subject class to be non‑empty, which is not given. Contraposition (\"All A are B\" → \"All non‑B are non‑A\") also fails when the subject class is empty. Obversion, however, does not depend on existential import: \"All A are B\" is equivalent to \"No A are non‑B\". Hence only the obverse is valid."
+    },
+    {
+      "id": 114,
+      "text": "Premise: \"If the contract is signed, then the project will start.\"\nFact: \"The project has started.\"\nWhich conclusion is logically justified?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The contract was signed.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The contract was not signed.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The contract may or may not have been signed.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The project will not start.",
+          "c": false
+        }
+      ],
+      "sol": "The premise is a conditional (P → Q). The fact affirms the consequent (Q). Affirming the consequent is a formal fallacy; from P → Q and Q one cannot infer P. The contract could have been signed (making Q true) or the project could have started for other reasons. Therefore the only warranted conclusion is that the contract’s status is undetermined — it may or may not have been signed."
+    },
+    {
+      "id": 115,
+      "text": "Premise: \"Either the meeting is on Monday or it is on Tuesday.\"\nFact: \"The meeting is not on Monday.\"\nAssuming the disjunction is inclusive unless exclusivity is stated, which conclusion follows?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The meeting is on Tuesday.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The meeting is not on Tuesday.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The meeting is on Monday.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No conclusion follows.",
+          "c": false
+        }
+      ],
+      "sol": "The premise presents an inclusive disjunction (P ∨ Q). The fact denies the first disjunct (¬P). By the rule of disjunctive syllogism for inclusive \"or\", ¬P together with P ∨ Q validly yields Q. Hence we can conclude that the meeting is on Tuesday. If the disjunction were exclusive, the same inference would still hold, but the inclusive reading is the default in the absence of \"but not both\". Therefore the meeting being on Tuesday is the logically compelled conclusion."
     }
   ],
   "quant/numerical-ability": [
@@ -182278,6 +182440,141 @@
         }
       ],
       "sol": "The lesson states that methodologically historians treat a statement as more credible when it appears in at least two independent source types, giving the example of a land grant recorded in both a copper plate and a Persian chronicle. Relying solely on Persian chronicles, accepting European estimates without corroboration, or prioritizing epigraphy alone are explicitly cautioned against as limitations. Hence, cross‑checking across source types is the recommended approach."
+    },
+    {
+      "id": 111,
+      "text": "Which post‑Mauryan dynasty in the north‑west is known for issuing bilingual (Greek and Prakrit) inscriptions and Hellenistic coinage at cities such as Taxila and Sagala?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Indo‑Greek kingdoms",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Shunga dynasty",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Satavahana dynasty",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Western Kshatrapas",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the Indo‑Greek kingdoms (c. 180 BCE – 10 CE) introduced Hellenistic coinage, bilingual inscriptions, and urban planning at Taxila and Sagala. The Shungas were centred on Pataliputra, the Satavahanas ruled the Deccan, and the Western Kshatrapas were satrapies under Kushana suzerainty in the western Deccan. Therefore, the Indo‑Greek kingdoms match the description."
+    },
+    {
+      "id": 112,
+      "text": "According to the Sangam texts described in the lesson, which of the following ports is NOT mentioned as a centre where Roman gold coins (aurei) have been excavated?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Muziris",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Tyndis",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Kaveripattinam",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Bharuch",
+          "c": true
+        }
+      ],
+      "sol": "The lesson explicitly lists Muziris, Tyndis, and Kaveripattinam as ports where Roman gold coins have been found in significant hoards. Bharuch (Broach) is not mentioned in the Sangam‑age trade context provided. Hence Bharuch is the correct choice."
+    },
+    {
+      "id": 113,
+      "text": "Which of the following statements reflects a common misconception about the Chishti concept of sulh‑i‑kul, as highlighted in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It was a political policy of Akbar",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "It emphasized universal peace and harmony",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It reflected the Sufi order’s independent spiritual agenda",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It was later adopted as a courtly ideal by the Mughals",
+          "c": false
+        }
+      ],
+      "sol": "The lesson warns against \"Equating the Chishti sulh‑i‑kul with Akbar’s political policy without recognizing the Sufi order’s independent spiritual agenda.\" Thus, treating sulh‑i‑kul as Akbar’s political policy is the misconception. The other options describe genuine features of the concept or its later influence."
+    },
+    {
+      "id": 114,
+      "text": "What does the lesson indicate about the relative share of Indian merchants in Indian Ocean trade during the 17th century?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Portuguese dominated the entire Indian Ocean trade by the 16th century",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Indian merchants retained dominant shares well into the 17th century",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Portuguese controlled the entire pepper trade from the Malabar coast",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Portuguese established a monopoly over all maritime routes in the Arabian Sea",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states: \"Overstating Portuguese control of Indian Ocean trade; Indian merchants retained dominant shares well into the 17th century.\" This directly supports option B. The other options exaggerate Portuguese dominance, which the lesson identifies as a misconception."
+    },
+    {
+      "id": 115,
+      "text": "In Akbar’s zabt revenue system, the term \"polaj\" designated which category of land?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Annually cultivated land",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Fallow land",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Occasionally cultivated land",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Uncultivated land",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists the land classifications under Akbar’s zabt: \"polaj (annually cultivated), parauti (fallow), chachar (occasionally cultivated), and banjar (uncultivated) land, each taxed at graded rates.\" Therefore, polaj corresponds to annually cultivated land."
     }
   ],
   "chemistry/basic-concepts": [
@@ -211354,6 +211651,141 @@
         }
       ],
       "sol": "Down the noble‑gas group the ionisation energy decreases (Kr ≈ 14.0 eV, Ar ≈ 15.8 eV) and krypton possesses low‑lying 4d orbitals that can accept electron density from fluorine, enabling covalent Kr–F bonding. Argon lacks accessible d orbitals and has a higher ionisation energy, preventing formation of a stable ArF2."
+    },
+    {
+      "id": 111,
+      "text": "Which statement correctly describes the anomalous behaviour of boron, the first element of Group 13?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Boron exhibits a stable +1 oxidation state like its heavier congeners",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Boron forms electron-deficient covalent compounds due to the absence of low-lying d-orbitals",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Boron has a lower ionisation energy than aluminium",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Boron readily expands its octet to form six-coordinate complexes",
+          "c": false
+        }
+      ],
+      "sol": "Boron is a non-metal with high ionisation energy (801 kJ mol⁻¹) and lacks accessible d-orbitals in its valence shell. This prevents octet expansion, so boron forms electron-deficient compounds such as B₂H₆ and BF₃ where it has only six valence electrons. Unlike Al, Ga, In, and Tl, boron never shows a +1 oxidation state. The small atomic size and high charge density further enhance its covalent character. Option A is incorrect because the +1 state becomes stable only for heavier Group 13 elements due to the inert pair effect. Option C is false as boron's IE is higher than aluminium's. Option D is incorrect because octet expansion requires d-orbitals, which boron lacks."
+    },
+    {
+      "id": 112,
+      "text": "The exceptional stability of the +1 oxidation state of thallium compared to its +3 state is best explained by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "High electronegativity of thallium",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Relativistic contraction of the 6s orbital and poor shielding by filled 4f and 5d subshells",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Availability of low-lying 6d orbitals for bonding in Tl(I)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "High lattice energy of thallium(I) halides",
+          "c": false
+        }
+      ],
+      "sol": "The inert pair effect arises because relativistic effects contract and stabilise the 6s orbital in heavy p-block elements (6th period). The filled 4f and 5d subshells provide poor shielding, increasing the effective nuclear charge on the 6s electrons. This lowers the 6s orbital energy and raises the ionisation energy required to remove the 6s² pair, making the +1 state (6s² retained) more stable than the +3 state (6s² lost). For Tl, E°(Tl³⁺/Tl⁺) = +1.25 V confirms Tl³⁺ is a strong oxidant. Option A is incorrect; electronegativity does not drive this trend. Option C is wrong as 6d orbitals are not involved. Option D is a consequence, not the fundamental cause."
+    },
+    {
+      "id": 113,
+      "text": "In hot concentrated alkaline solution, the disproportionation of hypochlorite ion (ClO⁻) yields which products?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Cl⁻ and ClO₂⁻",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Cl⁻ and ClO₃⁻",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Cl₂ and ClO₃⁻",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Cl⁻ and ClO₄⁻",
+          "c": false
+        }
+      ],
+      "sol": "The disproportionation of hypochlorite in hot concentrated alkali follows the reaction: 3 ClO⁻ → 2 Cl⁻ + ClO₃⁻. Chlorine in ClO⁻ has oxidation state +1; it is simultaneously reduced to Cl⁻ (−1) and oxidised to ClO₃⁻ (+5). This reaction is thermodynamically favourable (E°cell > 0) and kinetically accessible under heating. In cold dilute alkali, the reaction is slower and may stop at chlorite (ClO₂⁻), but the text specifies hot concentrated conditions giving chlorate. Perchlorate (ClO₄⁻) is not formed because perhalates are kinetically inert. Option A represents the cold/dilute pathway. Option C is unbalanced. Option D involves a 7-electron oxidation to +7, which does not occur under these conditions."
+    },
+    {
+      "id": 114,
+      "text": "The catalyst employed in the Contact process for the industrial manufacture of sulphuric acid is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Platinum",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Vanadium pentoxide (V₂O₅)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Iron promoted with K₂O and Al₂O₃",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Platinum-rhodium gauze",
+          "c": false
+        }
+      ],
+      "sol": "The Contact process oxidises SO₂ to SO₃ using a vanadium pentoxide (V₂O₅) catalyst at 450 °C and 1–2 atm. Historically platinum was used but it is expensive and poisoned by arsenic impurities. V₂O₅ is cheaper, more resistant to poisoning, and operates effectively at the optimum temperature where equilibrium yield and reaction rate are balanced. The iron catalyst with K₂O/Al₂O₃ promoters is used in the Haber–Bosch process for ammonia synthesis. Platinum-rhodium gauze is the catalyst for the Ostwald process (ammonia oxidation to NO). Modern developments include caesium-promoted V₂O₅ for lower-temperature operation, but the standard catalyst remains V₂O₅."
+    },
+    {
+      "id": 115,
+      "text": "Which green chemistry strategy is specifically mentioned for recovering phosphorus from wastewater to combat eutrophication?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Precipitation as calcium phosphate",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Precipitation as struvite (NH₄MgPO₄·6H₂O)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Adsorption on activated carbon",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Membrane filtration with reverse osmosis",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text explicitly states that advanced wastewater treatment precipitates phosphate as struvite (NH₄MgPO₄·6H₂O) for recovery. Struvite crystallisation removes phosphorus and nitrogen simultaneously, producing a slow-release fertiliser, thereby closing the nutrient loop and reducing eutrophication. Calcium phosphate precipitation occurs but is not highlighted as the green chemistry strategy in the given text. Activated carbon adsorption and reverse osmosis are general water treatment methods but are not cited for phosphorus recovery in this context. The Montreal Protocol and CFC replacement address halogenated organics, while phytoremediation targets heavy metals like arsenic."
     }
   ],
   "biology/cell-structure-cycle": [
@@ -211599,6 +212031,141 @@
         }
       ],
       "sol": "The text states: 'The DNA-damage checkpoint is inactive, and the spindle assembly checkpoint is attenuated... they lack p53-mediated arrest and rely on maternal stores.' The DNA-damage checkpoint (p53-mediated) is explicitly noted as inactive. The spindle assembly checkpoint is attenuated but not fully inactive. The G1/S restriction point is absent due to the lack of G1 phase, but the question asks for the inactive checkpoint mechanism."
+    },
+    {
+      "id": 110,
+      "text": "Which kinase initiates procentriole assembly on the mother centriole during early G1 phase?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Aurora A",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Plk4",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "CDK1-cyclin B",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "DDK",
+          "c": false
+        }
+      ],
+      "sol": "Plk4 is recruited by the scaffold protein CEP152 to the proximal end of each mother centriole in early G1. Its autophosphorylation creates a negative feedback loop that restricts procentriole formation to one per mother centriole, preventing over-duplication. Aurora A functions later in PCM maturation, CDK1-cyclin B drives mitotic entry, and DDK (Dbf4-dependent kinase) acts in origin firing during S phase."
+    },
+    {
+      "id": 111,
+      "text": "What prevents re-licensing of replication origins within the same cell cycle after S phase begins?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Degradation of ORC subunits",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Phosphorylation and degradation of Cdc6 and Cdt1 by rising CDK activity",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Inhibition of MCM2-7 helicase loading by geminin",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Activation of the ATR-Chk1 checkpoint",
+          "c": false
+        }
+      ],
+      "sol": "Pre-RC assembly (licensing) occurs in late M/early G1 when CDK activity is low. As cells enter S phase, rising CDK activity phosphorylates Cdc6 and Cdt1, targeting them for degradation. This prevents re-loading of the MCM2-7 helicase onto origins, ensuring each origin fires only once per cycle. ORC remains bound throughout, geminin inhibits Cdt1 in metazoans but the primary block is CDK-mediated degradation, and ATR-Chk1 responds to replication stress, not licensing control."
+    },
+    {
+      "id": 112,
+      "text": "The intra-S checkpoint stabilizes stalled replication forks primarily by preventing degradation of nascent DNA by which nucleases?",
+      "options": [
+        {
+          "l": "a",
+          "t": "MRE11 and EXO1",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "DNA2 and WRN",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "FEN1 and RNase H",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "APE1 and XPG",
+          "c": false
+        }
+      ],
+      "sol": "Replication stress from lesions or nucleotide depletion activates the ATR-Chk1 intra-S checkpoint. This pathway phosphorylates downstream effectors that protect stalled forks by blocking nucleolytic degradation of newly synthesized DNA by the MRE11 and EXO1 nucleases. BRCA1/2 and FANCD2 further promote fork reversal and homologous recombination-mediated restart. The other nuclease pairs function in Okazaki fragment processing, base excision repair, or nucleotide excision repair, not fork protection."
+    },
+    {
+      "id": 113,
+      "text": "In mammals, PRDM9 directs meiotic double-strand breaks to specific hotspots by recognizing which sequence feature?",
+      "options": [
+        {
+          "l": "a",
+          "t": "A 13-mer DNA motif",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "CpG island methylation status",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "H3K4me3 histone marks",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Telomeric repeat sequences",
+          "c": false
+        }
+      ],
+      "sol": "PRDM9 contains a zinc finger array that binds a specific 13-mer DNA motif enriched at recombination hotspots. Its SET domain then deposits H3K4me3 and H3K36me3 marks, recruiting the DSB machinery (SPO11). The major PRDM9 allele recognizes one 13-mer motif, while minority alleles recognize distinct motifs, leading to allele-specific hotspot usage. In PRDM9-knockout mice or species lacking PRDM9 (dogs, birds), DSBs default to accessible chromatin features like promoters and CpG islands, but PRDM9 itself acts via sequence-specific DNA binding."
+    },
+    {
+      "id": 114,
+      "text": "Embryonic stem cells maintain pluripotency partly through a truncated G1 phase. Which molecular feature directly contributes to this short G1?",
+      "options": [
+        {
+          "l": "a",
+          "t": "High p21 and p27 expression",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Constitutive cyclin E and cyclin A expression with low CDK inhibitors",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Active p53-FoxO transcription factor network",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Extended Rb-mediated E2F repression",
+          "c": false
+        }
+      ],
+      "sol": "ESCs exhibit a 2-3 hour G1 due to constitutive expression of cyclin E and cyclin A, low levels of CDK inhibitors p21 and p27, and a hyperactive Rb-E2F axis that keeps E2F targets perpetually active. This short G1 limits the window for differentiation signals to act. During differentiation, p21/p27 are upregulated, cyclin E/A downregulated, and the p53-FoxO network lengthens G1 to allow chromatin remodeling and fate commitment. High p21/p27 and active p53-FoxO are features of differentiating cells, not pluripotent ESCs."
     }
   ],
   "biology/ecology-ecosystem": [
@@ -216188,6 +216755,141 @@
         }
       ],
       "sol": "The lesson details the standard workflow: \"PCR amplification of universal markers (12S rRNA for vertebrates, COI for invertebrates, ITS for fungi); (4) high‑throughput sequencing (Illumina MiSeq 2 × 250 bp).\" Thus, vertebrate eDNA uses the 12S rRNA marker sequenced on Illumina MiSeq with 2 × 250 bp chemistry. COI is for invertebrates; ITS for fungi. NovaSeq, Nanopore, and PacBio are not the specified standard platform."
+    },
+    {
+      "id": 111,
+      "text": "Which indicator tracks population trends of vertebrate species globally since 1970 and is used to report progress toward reducing the rate of biodiversity loss?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Living Planet Index (LPI)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Biodiversity Intactness Index (BII)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "IUCN Red List Index",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Essential Biodiversity Variables (EBVs)",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the Living Planet Index (LPI), compiled by WWF and the Zoological Society of London, tracks population trends of vertebrate species since 1970 and is widely used to report progress toward Target 2 (reducing the rate of biodiversity loss). The Biodiversity Intactness Index estimates average abundance of originally present species, the Red List Index measures extinction‑risk change, and EBVs are a framework of six variable classes for harmonised reporting. Therefore, the correct indicator is the Living Planet Index."
+    },
+    {
+      "id": 112,
+      "text": "Which framework, endorsed by GEO BON, standardises six variable classes (genetic composition, species populations, species traits, community composition, ecosystem structure, ecosystem function) to harmonise biodiversity reporting across countries?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Essential Biodiversity Variables (EBVs)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Global Biodiversity Information Facility (GBIF)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "National Biodiversity Observation Networks (BONs)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "UNEP‑WCMC Biodiversity Indicators Partnership",
+          "c": false
+        }
+      ],
+      "sol": "The text explicitly mentions that the Essential Biodiversity Variables (EBVs) framework, endorsed by the Group on Earth Observations Biodiversity Observation Network (GEO BON), standardises six variable classes to harmonise reporting across countries. GBIF is a data portal, BONs are national observation networks integrating citizen science, and the UNEP‑WCMC partnership aggregates national reports into the Global Biodiversity Outlook. Hence, EBVs is the correct framework."
+    },
+    {
+      "id": 113,
+      "text": "The Costa Rica Payment for Ecosystem Services (PES) programme (1997) pioneered national‑scale payments for forest conservation. According to the lesson, many PES schemes, including Costa Rica's, are funded through which mechanisms rather than a buyer‑seller contract?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Carbon market credits",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Water‑user fees and fiscal transfers",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "International donor grants",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Private buyer‑seller contracts",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that many PES schemes are funded through fiscal transfers or water‑user fees without a buyer‑seller contract, and it cites the Costa Rica PES programme as a pioneer. Carbon market credits and private buyer‑seller contracts represent market‑based mechanisms, while international donor grants are not highlighted as the primary funding source for Costa Rica's scheme. Therefore, water‑user fees and fiscal transfers is the correct answer."
+    },
+    {
+      "id": 114,
+      "text": "Under the Nagoya Protocol, which procedure requires prior informed consent (PIC) and mutually agreed terms (MAT) for access to genetic resources, operating bilaterally between provider and user?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Multilateral System of the ITPGRFA",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Bilateral PIC/MAT procedures",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Standard Material Transfer Agreement (SMTA)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Open Access Framework",
+          "c": false
+        }
+      ],
+      "sol": "The lesson distinguishes the Multilateral System of the ITPGRFA (facilitated access via SMTA) from the bilateral Nagoya Protocol procedures that require prior informed consent (PIC) and mutually agreed terms (MAT). The SMTA is the standardised contract used under the ITPGRFA multilateral system, not the Nagoya bilateral process. An open access framework is not mentioned. Thus, the bilateral PIC/MAT procedures under the Nagoya Protocol are the correct answer."
+    },
+    {
+      "id": 115,
+      "text": "According to the lesson, what proportion of the terrestrial surface is managed by Indigenous Peoples and Local Communities (IPLCs) and what share of remaining biodiversity do they harbour?",
+      "options": [
+        {
+          "l": "a",
+          "t": "25‑30 % of terrestrial surface; 80 % of remaining biodiversity",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "10‑15 % of terrestrial surface; 50 % of remaining biodiversity",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "40‑50 % of terrestrial surface; 90 % of remaining biodiversity",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "5‑10 % of terrestrial surface; 30 % of remaining biodiversity",
+          "c": false
+        }
+      ],
+      "sol": "The text states that Indigenous Peoples and Local Communities (IPLCs) manage an estimated 25‑30 % of the terrestrial surface, harbouring 80 % of remaining biodiversity. The other options present different percentages not supported by the lesson. Therefore, the correct combination is 25‑30 % of terrestrial surface and 80 % of remaining biodiversity."
     }
   ],
   "biology/human-physiology-basics": [
@@ -216433,6 +217135,141 @@
         }
       ],
       "sol": "MTP is essential for lipidating apolipoprotein B‑48 during chylomicron assembly in the enterocyte smooth endoplasmic reticulum. Without functional MTP, apoB‑48 cannot acquire lipids, nascent chylomicrons are not formed, and dietary triglycerides cannot be exported into lymph. This condition is abetalipoproteinemia, presenting with fat malabsorption, steatorrhea, and deficiency of fat‑soluble vitamins. Chylomicron retention disease (Anderson disease) results from SAR1B mutations impairing pre‑chylomicron transport vesicle formation, while intestinal lymphangiectasia involves lymphatic obstruction, and type III hyperlipoproteinemia is due to defective apoE‑mediated remnant clearance."
+    },
+    {
+      "id": 110,
+      "text": "Which secretagogue stimulates parietal cells by binding to H₂ receptors and increasing intracellular cAMP?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Gastrin",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Histamine",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Acetylcholine",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Somatostatin",
+          "c": false
+        }
+      ],
+      "sol": "Histamine released from enterochromaffin‑like cells binds to H₂ receptors on parietal cells. This activates adenylate cyclase, raising cAMP and activating protein kinase A, which promotes translocation of H⁺/K⁺‑ATPase vesicles to the apical membrane. Gastrin and acetylcholine act via CCK₂ and M₃ receptors, respectively, increasing intracellular Ca²⁺, while somatostatin inhibits acid secretion through Gi‑coupled SSTR₂ receptors."
+    },
+    {
+      "id": 111,
+      "text": "Proton‑pump inhibitors (PPIs) such as omeprazole require an acidic environment for activation, whereas H₂‑receptor antagonists do not. Which statement correctly describes this difference?",
+      "options": [
+        {
+          "l": "a",
+          "t": "PPIs are activated at neutral pH and reversibly block the H⁺/K⁺‑ATPase.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "H₂ blockers require acidic pH to covalently inhibit the proton pump.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "PPIs are prodrugs that become activated in the acidic canaliculus and covalently block the H⁺/K⁺‑ATPase.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "H₂ blockers covalently bind the H⁺/K⁺‑ATPase after acid activation.",
+          "c": false
+        }
+      ],
+      "sol": "PPIs are weak bases that accumulate in the acidic secretory canaliculus of parietal cells. There they are protonated to the active sulfenamide form, which covalently binds cysteine residues on the H⁺/K⁺‑ATPase, irreversibly inhibiting acid secretion until new pumps are synthesized. H₂‑receptor antagonists (e.g., ranitidine) competitively block histamine at the H₂ receptor on the basolateral membrane; their action is reversible and does not depend on an acidic pH for activation."
+    },
+    {
+      "id": 112,
+      "text": "Why does administration of 100 % inspired O₂ fail to fully correct hypoxemia caused by a true anatomic shunt?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The shunt fraction increases as FiO₂ rises.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Shunted blood bypasses ventilated alveoli and never contacts alveolar gas.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Alveolar PO₂ falls when FiO₂ is 100 %.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Diffusion limitation becomes the dominant defect at high FiO₂.",
+          "c": false
+        }
+      ],
+      "sol": "A true anatomic shunt (e.g., bronchial or thebesian venous return) delivers deoxygenated blood directly to the left heart without passing through ventilated alveoli. Because this fraction of cardiac output never equilibrates with alveolar gas, raising the inspired O₂ concentration cannot oxygenate the shunted blood. The arterial PO₂ therefore remains low despite 100 % O₂, distinguishing shunt from low V̇A/Q̇ regions where high FiO₂ can improve oxygenation."
+    },
+    {
+      "id": 113,
+      "text": "The Winter formula is used to estimate the expected arterial PaCO₂ for a given metabolic acidosis. Which statement about its applicability is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It predicts the expected PaCO₂ in metabolic alkalosis.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It is valid only for metabolic acidosis.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It calculates the expected bicarbonate in respiratory acidosis.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It estimates the anion gap in mixed acid‑base disorders.",
+          "c": false
+        }
+      ],
+      "sol": "Winter’s formula (expected PaCO₂ = 1.5 × [HCO₃⁻] + 8 ± 2) provides the appropriate respiratory compensation for a primary metabolic acidosis. It is not applicable to metabolic alkalosis, respiratory disorders, or anion‑gap calculations. Using it outside metabolic acidosis leads to erroneous interpretation of the acid‑base status."
+    },
+    {
+      "id": 114,
+      "text": "Which organ is primarily responsible for converting toxic ammonia produced from amino‑acid deamination into urea for excretion?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Kidney",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Liver",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Lung",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Skin",
+          "c": false
+        }
+      ],
+      "sol": "The liver houses the complete urea cycle (ornithine transcarbamylase, argininosuccinate synthetase, argininosuccinate lyase, arginase) that transforms ammonia into urea. Urea then enters the bloodstream, is freely filtered by the glomerulus, and about 50 % is reabsorbed in the renal tubules, while the remainder is excreted in urine. The kidneys, lungs, and skin do not synthesize urea from ammonia."
     }
   ],
   "mains-gs3/monetary-policy": [
@@ -224963,6 +225800,141 @@
         }
       ],
       "sol": "The lesson states that Sovereign Green Bonds are accounted as part of market borrowings and count toward the fiscal deficit. They are not off‑budget, nor are they merely capital receipts or excluded from debt statistics. This treatment means the issuance of SGrBs increases the government's fiscal deficit just like conventional dated securities."
+    },
+    {
+      "id": 111,
+      "text": "What were the horizontal distribution weights recommended by the Fifteenth Finance Commission (2020‑25) for inter‑state sharing of Union tax proceeds?",
+      "options": [
+        {
+          "l": "a",
+          "t": "45% population (2011 Census), 15% area, 15% forest and ecology, 12.5% income distance, 10% demographic performance, 2.5% tax effort",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "40% population, 20% area, 10% forest, 15% income distance, 10% demographic performance, 5% tax effort",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "50% population, 10% area, 10% forest, 10% income distance, 15% demographic performance, 5% tax effort",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "30% population, 20% area, 20% forest, 15% income distance, 10% demographic performance, 5% tax effort",
+          "c": false
+        }
+      ],
+      "sol": "The Fifteenth Finance Commission retained the 41% vertical devolution share and prescribed a new horizontal formula. According to the lesson, the weights are: 45% for population (2011 Census), 15% for area, 15% for forest and ecology, 12.5% for income distance, 10% for demographic performance and 2.5% for tax effort. Option A matches this exact breakdown, while the other options present different percentage allocations not mentioned in the text."
+    },
+    {
+      "id": 112,
+      "text": "Under Article 279A, what is the voting weight of the Union and the States in the GST Council and what majority is required for decisions?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Union one‑third, States two‑thirds; simple majority",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Union one‑third, States two‑thirds; three‑fourths majority",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Union one‑half, States one‑half; three‑fourths majority",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Union two‑thirds, States one‑third; simple majority",
+          "c": false
+        }
+      ],
+      "sol": "The GST Council is a constitutional body under Article 279A. The lesson states that the Union holds one‑third of the voting weight, the States together hold two‑thirds, and decisions require a three‑fourths majority. This structure gives States a veto on rate changes while preserving the Centre’s ability to push reforms. Option B correctly reflects both the voting weights and the required majority."
+    },
+    {
+      "id": 113,
+      "text": "Which statement correctly describes the applicability of the Fiscal Responsibility and Budget Management (FRBM) Act?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It sets a uniform fiscal deficit ceiling of 3% of GDP for both the Centre and all States.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It binds only the Central government; States have their own separate FRBM legislation.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It mandates a debt‑to‑GDP target of 40% for both the Centre and States by 2024‑25.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It requires the Centre to maintain a 3% fiscal deficit while States must target 4%.",
+          "c": false
+        }
+      ],
+      "sol": "The FRBM Act, 2003 (amended in 2012, 2018, 2021) applies only to the Central government, prescribing a debt‑to‑GDP target of 40% by 2024‑25 and a fiscal deficit ceiling of 3% of GDP. States are governed by their own FRBM laws enacted by respective legislatures. The lesson explicitly warns against assuming a single deficit target for both tiers. Therefore, option B is the accurate description."
+    },
+    {
+      "id": 114,
+      "text": "What is the prescribed timeline for a Corporate Insolvency Resolution Process (CIRP) under the IBC and what is the average actual resolution time as of March 2024?",
+      "options": [
+        {
+          "l": "a",
+          "t": "180 days with no extensions; average resolution 180 days",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "180 days extendable by 90 days; average resolution 420 days",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "270 days fixed; average resolution 300 days",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "120 days for all cases; average resolution 200 days",
+          "c": false
+        }
+      ],
+      "sol": "The IBC mandates that a resolution plan be approved by 66% of financial creditors within 180 days, extendable by a further 90 days. The lesson notes that extensions are routine and the average resolution time for admitted cases (including extensions) stands at 420 days as of March 2024. Option B correctly captures both the statutory timeline with extension provision and the observed average duration."
+    },
+    {
+      "id": 115,
+      "text": "How does the National Asset Reconstruction Company Ltd (NARCL) / India Debt Resolution Company Ltd (IDRCL) structure its acquisition of stressed assets?",
+      "options": [
+        {
+          "l": "a",
+          "t": "100% cash payment for assets above ₹500 crore",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "15% cash and 85% security receipts backed by government guarantee for assets above ₹500 crore",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "50% cash and 50% security receipts for assets above ₹1,000 crore",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "85% cash and 15% security receipts for assets above ₹500 crore",
+          "c": false
+        }
+      ],
+      "sol": "The ‘Bad Bank’ comprising NARCL and IDRCL was set up in 2021 to acquire stressed assets above ₹500 crore. The lesson specifies the consideration as 15% cash and 85% security receipts backed by a government guarantee. This structure aims to limit upfront cash outlay while providing a sovereign-backed instrument for the balance. Option B matches this description exactly."
     }
   ],
   "general-awareness/indian-history": [
