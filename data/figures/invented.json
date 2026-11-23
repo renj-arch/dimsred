@@ -40865,6 +40865,632 @@
         "by": "scripts/invent-figure.js",
         "lesson": "/home/runner/work/dimsred/dimsred/ctet/course/evs/lesson-science-concepts.html"
       }
+    },
+    {
+      "id": "numerical-methods-figure",
+      "title": "Spatial Interpolation Methods Comparison for GIS Analysis",
+      "paper": "GS1",
+      "tag": "Geography",
+      "intro": "Compares four core interpolation techniques used in geographical spatial analysis with key parameters and exam-relevant distinctions.",
+      "items": [
+        {
+          "type": "text",
+          "x": 380,
+          "y": 20,
+          "text": "SPATIAL INTERPOLATION METHODS",
+          "size": 16
+        },
+        {
+          "type": "line",
+          "x1": 40,
+          "y1": 50,
+          "x2": 720,
+          "y2": 50
+        },
+        {
+          "type": "pill",
+          "w": 160,
+          "h": 30,
+          "x": 40,
+          "y": 60,
+          "text": "Inverse Distance\nWeighting (IDW)"
+        },
+        {
+          "type": "pill",
+          "w": 160,
+          "h": 30,
+          "x": 210,
+          "y": 60,
+          "text": "Kriging (Ordinary)"
+        },
+        {
+          "type": "pill",
+          "w": 160,
+          "h": 30,
+          "x": 380,
+          "y": 60,
+          "text": "Spline\n(Regularized)"
+        },
+        {
+          "type": "pill",
+          "w": 160,
+          "h": 30,
+          "x": 550,
+          "y": 60,
+          "text": "Thiessen Polygons"
+        },
+        {
+          "type": "line",
+          "x1": 40,
+          "y1": 100,
+          "x2": 720,
+          "y2": 100
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 115,
+          "text": "Weight = 1/distance^p",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 135,
+          "text": "Power parameter p=2 default",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 155,
+          "text": "Deterministic, exact interpolator",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 175,
+          "text": "Bullseye effect at data points",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 195,
+          "text": "Fast, no spatial autocorrelation needed",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 220,
+          "y": 115,
+          "text": "Uses semivariogram model",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 220,
+          "y": 135,
+          "text": "Nugget, Sill, Range parameters",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 220,
+          "y": 155,
+          "text": "Best Linear Unbiased Predictor (BLUP)",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 220,
+          "y": 175,
+          "text": "Provides prediction variance map",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 220,
+          "y": 195,
+          "text": "Requires stationarity assumption",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 390,
+          "y": 115,
+          "text": "Minimizes curvature (thin plate)",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 390,
+          "y": 135,
+          "text": "Tension parameter controls stiffness",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 390,
+          "y": 155,
+          "text": "Smooth surface, exact interpolator",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 390,
+          "y": 175,
+          "text": "Overshoots at data extremes",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 390,
+          "y": 195,
+          "text": "Good for elevation, temperature",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 560,
+          "y": 115,
+          "text": "Nearest neighbor assignment",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 560,
+          "y": 135,
+          "text": "Voronoi diagram / Dirichlet tessellation",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 560,
+          "y": 155,
+          "text": "Constant value per polygon",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 560,
+          "y": 175,
+          "text": "Abrupt boundaries, no smoothing",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 560,
+          "y": 195,
+          "text": "Used for nominal data, service areas",
+          "size": 11
+        },
+        {
+          "type": "line",
+          "x1": 40,
+          "y1": 220,
+          "x2": 720,
+          "y2": 220
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 235,
+          "text": "Cross-validation: RMSE, MAE",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 220,
+          "y": 235,
+          "text": "Variogram modelling critical step",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 390,
+          "y": 235,
+          "text": "Regularized vs Tension spline",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 560,
+          "y": 235,
+          "text": "Delaunay triangulation dual",
+          "size": 11
+        },
+        {
+          "type": "line",
+          "x1": 40,
+          "y1": 260,
+          "x2": 720,
+          "y2": 260
+        },
+        {
+          "type": "text",
+          "x": 50,
+          "y": 275,
+          "text": "Exam hook: IDW for dense uniform points",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 220,
+          "y": 275,
+          "text": "Exam hook: Kriging = geostatistics, variogram",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 390,
+          "y": 275,
+          "text": "Exam hook: Spline for smooth surfaces (DEM)",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 560,
+          "y": 275,
+          "text": "Exam hook: Thiessen for rain gauge networks",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 380,
+          "y": 310,
+          "text": "Real example: IMD rainfall interpolation uses Kriging",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 380,
+          "y": 330,
+          "text": "Real example: SRTM DEM void filling uses Spline",
+          "size": 11
+        }
+      ],
+      "invented": {
+        "at": "2026-11-23T16:05:04.502Z",
+        "by": "scripts/invent-figure.js",
+        "lesson": "/home/runner/work/dimsred/dimsred/gate/course/maths/lesson-numerical-methods.html"
+      }
+    },
+    {
+      "id": "critical-reasoning-figure",
+      "title": "Geographical Reasoning Chain: Models to Spatial Decisions",
+      "paper": "GS1",
+      "tag": "Geography",
+      "intro": "Shows the logical chain from core geographical models to applied spatial reasoning used in UPSC map-based questions.",
+      "items": [
+        {
+          "type": "box",
+          "w": 200,
+          "h": 60,
+          "x": 30,
+          "y": 50,
+          "text": "Central Place\nTheory Christaller\n(1933)",
+          "size": 12
+        },
+        {
+          "type": "arrow",
+          "x1": 230,
+          "y1": 80,
+          "x2": 270,
+          "y2": 80,
+          "label": "hexagonal\nhinterlands",
+          "lx": 240,
+          "ly": 70
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 60,
+          "x": 290,
+          "y": 50,
+          "text": "Threshold\nPopulation & Range\nof Good",
+          "size": 12
+        },
+        {
+          "type": "arrow",
+          "x1": 490,
+          "y1": 80,
+          "x2": 530,
+          "y2": 80,
+          "label": "minimum market\nsize",
+          "lx": 500,
+          "ly": 70
+        },
+        {
+          "type": "box",
+          "w": 180,
+          "h": 60,
+          "x": 550,
+          "y": 50,
+          "text": "Rank-Size Rule Zipf\nDistribution",
+          "size": 12
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 60,
+          "x": 30,
+          "y": 150,
+          "text": "Von Thunen Model\nConcentric Land-Use\nRings",
+          "size": 12
+        },
+        {
+          "type": "arrow",
+          "x1": 230,
+          "y1": 180,
+          "x2": 270,
+          "y2": 180,
+          "label": "transport cost\ngradient",
+          "lx": 240,
+          "ly": 170
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 60,
+          "x": 290,
+          "y": 150,
+          "text": "Economic Rent\nBid-Rent Curve",
+          "size": 12
+        },
+        {
+          "type": "arrow",
+          "x1": 490,
+          "y1": 180,
+          "x2": 530,
+          "y2": 180,
+          "label": "distance decay\nfunction",
+          "lx": 500,
+          "ly": 170
+        },
+        {
+          "type": "box",
+          "w": 180,
+          "h": 60,
+          "x": 550,
+          "y": 150,
+          "text": "Agglomeration\nEconomies",
+          "size": 12
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 60,
+          "x": 30,
+          "y": 250,
+          "text": "Weber's Least Cost\nLocation Triangle",
+          "size": 12
+        },
+        {
+          "type": "arrow",
+          "x1": 230,
+          "y1": 280,
+          "x2": 270,
+          "y2": 280,
+          "label": "material index\nweight loss",
+          "lx": 240,
+          "ly": 270
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 60,
+          "x": 290,
+          "y": 250,
+          "text": "Locational Triangle\nWeight-Gaining vs\nLosing",
+          "size": 12
+        },
+        {
+          "type": "arrow",
+          "x1": 490,
+          "y1": 280,
+          "x2": 530,
+          "y2": 280,
+          "label": "critical isodapane",
+          "lx": 500,
+          "ly": 270
+        },
+        {
+          "type": "box",
+          "w": 180,
+          "h": 60,
+          "x": 550,
+          "y": 250,
+          "text": "Gravity Model\nPopulation ×\nDistance⁻²",
+          "size": 12
+        },
+        {
+          "type": "pill",
+          "w": 300,
+          "h": 30,
+          "x": 30,
+          "y": 340,
+          "text": "Exam Hook: Identify\nmodel from map\npattern (hexagons → Christaller; rings → Von Thunen)"
+        },
+        {
+          "type": "pill",
+          "w": 350,
+          "h": 30,
+          "x": 360,
+          "y": 340,
+          "text": "Key Fallacy:\nEnvironmental\nDeterminism — ignore human agency & technology"
+        }
+      ],
+      "invented": {
+        "at": "2026-11-23T16:05:31.274Z",
+        "by": "scripts/invent-figure.js",
+        "lesson": "/home/runner/work/dimsred/dimsred/rbi/course/reasoning/lesson-critical-reasoning.html"
+      }
+    },
+    {
+      "id": "differential-equations-figure",
+      "title": "Differential Equations: Classification, Methods & Geography Models",
+      "paper": "GS1",
+      "tag": "Geography",
+      "intro": "Compares DE types, solution techniques, and geographical applications for quick revision.",
+      "items": [
+        {
+          "type": "text",
+          "x": 380,
+          "y": 20,
+          "text": "Differential Equations: Classification, Methods & Geography Models",
+          "size": 14
+        },
+        {
+          "type": "text",
+          "x": 150,
+          "y": 50,
+          "text": "Classification",
+          "size": 12
+        },
+        {
+          "type": "text",
+          "x": 380,
+          "y": 50,
+          "text": "Solution Techniques",
+          "size": 12
+        },
+        {
+          "type": "text",
+          "x": 610,
+          "y": 50,
+          "text": "Geographical Models",
+          "size": 12
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 50,
+          "y": 80,
+          "text": "Order & Degree",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 50,
+          "y": 130,
+          "text": "Linear vs\nNon-linear",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 50,
+          "y": 180,
+          "text": "Homogeneous vs\nNon-homogeneous",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 50,
+          "y": 230,
+          "text": "Ordinary vs Partial",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 280,
+          "y": 80,
+          "text": "Separation of\nVariables",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 280,
+          "y": 130,
+          "text": "Integrating Factor",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 280,
+          "y": 180,
+          "text": "Exact Equations",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 280,
+          "y": 230,
+          "text": "Characteristic\nEquation",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 510,
+          "y": 80,
+          "text": "Exponential Growth\nModel",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 510,
+          "y": 130,
+          "text": "Logistic Growth\nModel",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 510,
+          "y": 180,
+          "text": "Diffusion Equation",
+          "size": 11
+        },
+        {
+          "type": "box",
+          "w": 200,
+          "h": 40,
+          "x": 510,
+          "y": 230,
+          "text": "Heat Equation",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 100,
+          "y": 350,
+          "text": "Exam Hook: Order & degree decide solution method; linearity determines superposition.",
+          "size": 11
+        },
+        {
+          "type": "text",
+          "x": 100,
+          "y": 380,
+          "text": "GS1 Geography: Population dynamics use logistic DE; heat flow uses heat equation.",
+          "size": 11
+        }
+      ],
+      "invented": {
+        "at": "2026-11-23T16:06:17.257Z",
+        "by": "scripts/invent-figure.js",
+        "lesson": "/home/runner/work/dimsred/dimsred/gate/course/maths/lesson-differential-equations.html"
+      }
     }
   ]
 }
