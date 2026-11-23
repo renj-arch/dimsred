@@ -1,54 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-21T08:46:33.508Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 5,
-   "byAgent": [
-    {
-     "agent": "proposals",
-     "count": 5
-    }
-   ],
-   "details": [
-    {
-     "agent": "proposals",
-     "fixes": [
-      {
-       "kind": "proposal",
-       "fix": "Add explicit Next button to homepage quiz flow",
-       "detail": "Browser test shows ‘flow-skipped on Homepage — no visible Next button’ (19/22 pages passed but quiz flow not exercised).",
-       "text": "Insert a clearly styled Next button element after each question container in the homepage HTML/JS, and update the quiz‑flow script to listen for its click event to advance to the next question. Ensure the button is always rendered even when JavaScript is delayed."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Retry and log on‑demand lane failures for lyrics and tts",
-       "detail": "Recent on‑demand failures: lyrics payload JSON errors (2) and tts edge‑tts errors (2) indicate transient or formatting issues.",
-       "text": "Wrap the lyrics and tts generation steps in a retry loop (max 2 attempts) and capture the raw payload/error to a log file in data/failed‑on‑demand/*.json. Add a simple GitHub Action step that re‑runs failed jobs automatically on the next workflow run."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Expose inventory of invented‑pool difficulty levels on mains page",
-       "detail": "Invented pool holds 412 questions with a detailed difficulty breakdown, but mains page only shows 19 hand‑authored + 45 AI‑batch items.",
-       "text": "Create a collapsible summary widget on the mains page that reads mental.html’s JSON and displays counts per difficulty (easy, moderate, hard, veryhard). Link each count to a filtered view of those questions, making the large pool discoverable without altering existing content."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Automate daily wiki fill pipeline restart on stall",
-       "detail": "Fault board notes ‘Corpus fill run in progress — daily-wiki-fill #700, #699’, suggesting the pipeline may be stuck.",
-       "text": "Add a GitHub Action step that checks the status of the daily‑wiki‑fill workflow; if it remains running beyond a threshold (e.g., 2 hours), cancel and re‑trigger it. Log the action in the workflow run summary."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Add sanity check for on‑demand JSON payloads before processing",
-       "detail": "Multiple on‑demand failures stem from malformed JSON payloads (lyrics lane).",
-       "text": "Before invoking the model, validate the incoming payload with a lightweight JSON schema (required fields: prompt, type). Reject and record malformed inputs, returning a user‑friendly error message instead of crashing the lane."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-21T09:44:31.762Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 178,
@@ -263,8 +215,20 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-23T05:57:47.522Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-23T05:56:47.096Z",
+ "lastRun": "2026-11-23T05:57:47.522Z",
  "model": "qwen3.5:9b"
 }
