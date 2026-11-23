@@ -240,9 +240,9 @@ union_course_state() {
   done
 }
 
-// data/figures/invented.json is append-only and keyed by figure id. A lane
-// whose checkout predates another lane's figures used to overwrite the whole
-// library (254 -> 17 on 2026-11-21), collapsing the figure hub. Union by id.
+# data/figures/invented.json is append-only and keyed by figure id. A lane
+# whose checkout predates another lane's figures used to overwrite the whole
+# library (254 -> 17 on 2026-11-21), collapsing the figure hub. Union by id.
 union_figures() {
   local f=data/figures/invented.json
   [ -f "$f" ] || return 0
@@ -269,7 +269,7 @@ try_push() {
   guard_archive_index
   union_course_state
   union_figures
-  out=$(git push 2>&1)
+  out=$(git push origin HEAD:main 2>&1)
   local st=$?
   echo "$out"
   if [ $st -eq 0 ]; then return 0; fi
@@ -323,7 +323,7 @@ for i in 1 2 3 4 5 6 7 8 9 10; do
   union_mains_fresh
   union_course_state
   union_figures
-  if git push 2>&1; then
+  if git push origin HEAD:main 2>&1; then
     if [ "$PAT_AUTH" = "1" ]; then
       # PAT is dead but GITHUB_TOKEN fallback published the work. This is not
       # a failure — the commit reached main. Warn so the skipped downstream
