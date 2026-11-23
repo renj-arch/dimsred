@@ -11,7 +11,7 @@ name: Paper Shape Questions
 
 on:
   schedule:
-    - cron: '17 */3 * * *'
+    - cron: '17 */2 * * *'
   workflow_dispatch:
     inputs:
       count:
@@ -58,7 +58,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COUNT: ${{ github.event.inputs.count || '6' }}
+          COUNT: ${{ github.event.inputs.count || '12' }}
           SHAPE: ${{ github.event.inputs.shape || '' }}
         run: |
           if [ -n "$SHAPE" ]; then

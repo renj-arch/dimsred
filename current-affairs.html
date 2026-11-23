@@ -255,6 +255,7 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="genToggle" checked style="accent-color:var(--cyan);width:14px;height:14px"> ⚡ Generators</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="pibToggle" checked style="accent-color:var(--amber);width:14px;height:14px"> 📰 PIB/CA Feed</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions invented from lesson paragraphs by the hosted setter, each verified against its own passage"><input type="checkbox" id="lessonInvToggle" style="accent-color:var(--cyan);width:14px;height:14px"> 🧠 From lesson text</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions written in the shapes the real UPSC paper uses — multi-statement, match-the-following, chronology, assertion-reason"><input type="checkbox" id="shapeToggle" style="accent-color:var(--amber);width:14px;height:14px"> 📐 Paper shapes</label>
                 <button id="upscToggle" onclick="toggleUpscOnly()" title="Only UPSC-relevant topics — uses deterministic exam-scope ground check (examScope=exam). Topics without syllabus anchors are excluded." style="padding:3px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.75em;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit">🎯 UPSC only</button>
             </div>
 
@@ -343,6 +344,7 @@
                 var useGen = document.getElementById('genToggle')?.checked !== false;
                 var usePib = document.getElementById('pibToggle')?.checked !== false;
                 var useLessonInv = document.getElementById('lessonInvToggle')?.checked === true;
+                var usePaperShape = document.getElementById('shapeToggle')?.checked === true;
                 var src = (q.source || q._src || '').toLowerCase();
                 var wikiCat = (q._wikiCat || '').toLowerCase();
                 var subject = (q.subject || '').toLowerCase();
@@ -358,6 +360,9 @@
                 }
                 if (src === 'lessoninvented') {
                     return useLessonInv;
+                }
+                if (src === 'papershape') {
+                    return usePaperShape;
                 }
                 if (src === 'course' || src === 'lesson' ||
                     wikiCat === 'course-lesson' || subject.indexOf('lesson') !== -1) {
@@ -385,7 +390,7 @@
             }
             // Attach to checkboxes
             document.addEventListener('DOMContentLoaded', function() {
-                ['archiveToggle','courseToggle','genToggle','pibToggle'].forEach(function(id) {
+                ['archiveToggle','courseToggle','genToggle','pibToggle','lessonInvToggle','shapeToggle'].forEach(function(id) {
                     var el = document.getElementById(id);
                     if (el) el.addEventListener('change', _applyContentFilter);
                 });
@@ -6809,7 +6814,8 @@ function prevQuestion() {
                 _src: raw._src || raw.source || '',
                 sourceExam: raw.sourceExam || '',
                 _exam: raw._exam || '',
-                _lesson: raw._lesson || ''
+                _lesson: raw._lesson || '',
+                shape: raw.shape || ''
             });
         }
         function nextQuestion() {
@@ -8255,7 +8261,18 @@ function prevQuestion() {
                             added++;
                         }
                     });
-                    _continueGeneration();
+                    // UPSC paper-shape bank, answerable behind its own toggle.
+                    _loadPaperShapeQuestions(function(shapeQs) {
+                        shapeQs.forEach(function(q) {
+                            if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
+                                existingSet[q.q] = true;
+                                existingSet[q.a] = true;
+                                state.questions.push(q);
+                                added++;
+                            }
+                        });
+                        _continueGeneration();
+                    });
                 });
             });
             function _continueGeneration() {
@@ -8380,6 +8397,60 @@ function prevQuestion() {
             xhr.onerror = function() { clearTimeout(timer); finish([]); };
             xhr.ontimeout = function() { clearTimeout(timer); finish([]); };
             xhr.open('GET', 'data/lesson-invented.json?t=' + Date.now(), true);
+            xhr.timeout = 15000;
+            xhr.send();
+        }
+
+        // The UPSC paper-shape bank: questions written in the forms the real
+        // paper uses (multi-statement, match-the-following, chronology,
+        // assertion-reason). Previously it was only counted on the coverage
+        // page; this makes it answerable.
+        var _shapeCache = null;
+        function _loadPaperShapeQuestions(cb) {
+            if (_shapeCache) { cb(_shapeCache); return; }
+            var finished = false;
+            function finish(list) {
+                if (finished) return;
+                finished = true;
+                _shapeCache = list || [];
+                cb(_shapeCache);
+            }
+            var timer = setTimeout(function() { finish([]); }, 15000);
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                clearTimeout(timer);
+                if (xhr.status !== 200) { finish([]); return; }
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    var list = (data && data.questions) || [];
+                    for (var i = 0; i < list.length; i++) {
+                        var q = list[i];
+                        if (!q || !q.question || !Array.isArray(q.options) || !q.options.length) continue;
+                        var stem = q.question;
+                        if (Array.isArray(q.statements) && q.statements.length) {
+                            stem = stem + '\n' + q.statements.map(function (s, n) { return (n + 1) + '. ' + s; }).join('\n');
+                        }
+                        var ans;
+                        if (typeof q.answer === 'number' && q.options[q.answer] != null) ans = q.options[q.answer];
+                        else if (q.options.indexOf(q.answer) !== -1) ans = q.answer;
+                        else ans = String(q.answer);
+                        q.q = stem;
+                        q.a = String(ans);
+                        q.opts = q.options.map(function (o) { return String(o); });
+                        if (q.opts.indexOf(q.a) === -1) continue; // cannot key it
+                        q.solution = q.explanation || q.solution || '';
+                        q.subject = (q.topic || 'Paper shape') + ' · ' + (q.shape || 'shape');
+                        q.source = 'papershape';
+                        q._src = 'papershape';
+                        q.shape = q.shape || '';
+                        q.type = 'mcq';
+                    }
+                    finish(list.filter(function (q) { return q && q.q && q.a; }));
+                } catch (e) { finish([]); }
+            };
+            xhr.onerror = function() { clearTimeout(timer); finish([]); };
+            xhr.ontimeout = function() { clearTimeout(timer); finish([]); };
+            xhr.open('GET', 'data/upsc-format-questions.json?t=' + Date.now(), true);
             xhr.timeout = 15000;
             xhr.send();
         }
@@ -9582,6 +9653,8 @@ var fact = q.fact || q.solution || q.explanation || '';
                 label = 'PIB / news';
             } else if (src === 'generator') {
                 label = 'Generated · static GK';
+            } else if (src === 'papershape') {
+                label = 'UPSC · ' + (q.shape || 'paper shape');
             }
             el.textContent = label;
             el.style.display = label ? 'inline-block' : 'none';
