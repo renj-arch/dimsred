@@ -5816,6 +5816,141 @@
         }
       ],
       "sol": "We need integer floors t (teacher) and e (engineer) with e = t² and both in {1,2,3,4}. Testing t=1 gives e=1 (valid but does not use the square relation uniquely). t=2 gives e=4 (both within range). t=3 gives e=9 (out of range). t=4 gives e=16 (out of range). Only the pair (2,4) satisfies the square relation while keeping both floors inside the allowed domain, so the clue deterministically fixes teacher=2 and engineer=4."
+    },
+    {
+      "id": 116,
+      "text": "In a circular seating puzzle, fixing one person breaks rotational symmetry. What additional clue is needed to eliminate the remaining reflection symmetry?",
+      "options": [
+        {
+          "l": "a",
+          "t": "A clue stating the person faces north",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "A clue stating two persons are adjacent",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "A clue stating the number of persons is even",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "A clue stating the table has a diameter",
+          "c": false
+        }
+      ],
+      "sol": "A circular arrangement has dihedral symmetry Dn. Fixing one person removes the rotational part, but a reflection (180° flip) may still map the arrangement onto itself. An asymmetric clue such as \"A faces north\" distinguishes the two mirror images because facing direction changes under reflection. Adjacency, even count, or table diameter do not break the reflection symmetry. Therefore, a facing clue is required."
+    },
+    {
+      "id": 117,
+      "text": "Which propagation method is necessary to enforce a global cardinality constraint like \"exactly three doctors\" in a seating puzzle?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Pairwise arc consistency (AC-3)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Flow-based filtering on a bipartite graph",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Simple domain reduction by counting",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Breadth-first search from an anchor",
+          "c": false
+        }
+      ],
+      "sol": "Global cardinality constraints couple many variables simultaneously. Pairwise arc consistency only checks binary relations and cannot guarantee that the overall count of a value (e.g., doctors) can be satisfied. The standard algorithm builds a flow network: source to variable nodes (capacity 1), variable to value nodes (capacity 1), value nodes to sink with capacity equal to the allowed maximum (and lower bound for minimum). A feasible flow proves GCC consistency, and edges carrying zero flow in all maximum flows are pruned. This flow-based filtering is stronger than AC-3."
+    },
+    {
+      "id": 118,
+      "text": "When multiple step-size clues are given on a circular arrangement, which invariant must be checked to avoid inconsistency?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The sum of all step sizes must equal the number of persons",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The parity (even/odd) of the distance between any two persons must be consistent across all clues",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The step sizes must all be prime numbers",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The clockwise distance must always be less than the anticlockwise distance",
+          "c": false
+        }
+      ],
+      "sol": "Step-size clues on a circle fix distances modulo the number of persons. If several clues relate the same pair of persons through different paths, the parity (mod 2) of the resulting distances must agree; otherwise the clues contradict. For example, if one clue says A is 3 steps clockwise from B (odd distance) and another implies an even distance between them, the puzzle is inconsistent. Checking parity consistency is a quick necessary condition before deeper search. The other options are not general invariants."
+    },
+    {
+      "id": 119,
+      "text": "In a puzzle where each profession allows only a subset of colours, what propagation technique removes a profession value when none of its allowed colours remain?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Simple domain intersection",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Support-count propagation from child to parent",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Flow-based global cardinality filtering",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "SAT encoding with cardinality networks",
+          "c": false
+        }
+      ],
+      "sol": "The hierarchy has parent attributes (profession) and child attributes (colour). Each profession value maintains a counter of currently supported colour values. When a colour is eliminated from a person's domain, the counters for professions that allowed that colour are decremented. If a profession's counter drops to zero, that profession value has no remaining support and is deleted from the domain. This bottom-up support-checking is analogous to arc consistency on the hierarchy edges and is more efficient than treating all profession-colour pairs as independent flat domains."
+    },
+    {
+      "id": 120,
+      "text": "How should the conditional clue \"If A sits at position 3 then B is a Doctor\" be encoded in a SAT/SMT model?",
+      "options": [
+        {
+          "l": "a",
+          "t": "As a permanent binary constraint between A's position and B's profession",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "As an implication clause (x_A,3 → y_B,Doctor)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "As a global cardinality constraint on the number of doctors",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "As a parity constraint on the positions",
+          "c": false
+        }
+      ],
+      "sol": "In SAT/SMT encoding, each possible assignment becomes a Boolean variable (e.g., x_A,3 for \"A at position 3\", y_B,Doctor for \"B is Doctor\"). A conditional clue is an implication that activates only when the antecedent holds. It is encoded as the clause (¬x_A,3 ∨ y_B,Doctor), which is logically equivalent to x_A,3 → y_B,Doctor. A permanent binary constraint would force the relation even when A is not at position 3, which is incorrect. Global cardinality and parity constraints address different aspects."
     }
   ],
   "reasoning/calendar-clock": [
@@ -254502,6 +254637,141 @@
         }
       ],
       "sol": "UPI operates on the Immediate Payment Service (IMPS) rails but the actual inter‑bank settlement occurs on a deferred net settlement (DNS) basis through the National Payments Corporation of India (NPCI) clearing house. This means that while the customer experiences instant credit, the banks' net positions are settled in batches later, not on a real‑time gross settlement (RTGS) or bilateral basis."
+    },
+    {
+      "id": 116,
+      "text": "In a uniform‑price (Dutch) auction for Government of India dated securities, all successful competitive bidders receive the same yield. What determines this common yield?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The lowest yield quoted among competitive bids",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The weighted average yield of all competitive bids",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The highest accepted yield (cut‑off yield)",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The yield quoted by the largest Primary Dealer",
+          "c": false
+        }
+      ],
+      "sol": "In a uniform‑price auction the RBI accepts bids starting from the lowest yield upward until the notified amount is filled. The yield of the last accepted bid — the highest accepted yield — becomes the cut‑off yield, and every successful competitive bidder is allotted securities at that single cut‑off yield. This differs from a multiple‑price (French) auction where each winning bid receives its own quoted yield. The weighted average yield is used only for non‑competitive bidders, not for the competitive allotment."
+    },
+    {
+      "id": 117,
+      "text": "Which of the following statements about Primary Dealers (PDs) in the Government securities market is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "PDs are required to bid for at least 10 per cent of the notified amount in each auction",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "There are currently 15 PDs registered with the RBI",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "PDs must maintain a minimum net owned fund and submit daily position reports to the RBI",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "PDs participate only in the primary market and are not counterparties for RBI’s Open Market Operations",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that Primary Dealers are entities registered with the RBI that undertake to bid for a minimum share of the notified amount (typically 5 per cent), maintain a minimum net owned fund, submit daily position reports, and act as counterparties in the RBI’s Open Market Operations (OMOs) and Liquidity Adjustment Facility (LAF). The current number of PDs is 22, not 15, and the minimum bidding commitment is 5 per cent, not 10 per cent. PDs operate in both primary and secondary markets."
+    },
+    {
+      "id": 118,
+      "text": "A steepening of the Indian government securities yield curve is most likely to signal which of the following market expectations?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Anticipated rate cuts by the RBI in the near term",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Improved fiscal consolidation and lower borrowing",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Expectations of tighter monetary policy or higher fiscal deficits",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Increased demand for short‑dated Treasury Bills relative to long‑dated bonds",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that the yield curve reflects market expectations of future short‑term rates, inflation, and fiscal risk. A steepening curve — where long‑term yields rise relative to short‑term yields — typically signals expectations of tighter monetary policy (higher future policy rates) or higher fiscal deficits (greater long‑term borrowing). Conversely, a flattening curve may indicate anticipated rate cuts or improved fiscal consolidation. Therefore, steepening points to tighter policy or higher deficits."
+    },
+    {
+      "id": 119,
+      "text": "When the RBI sterilizes its foreign exchange intervention by selling government securities through Open Market Operations (OMOs), what is the likely impact on the yield curve?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The yield curve remains unchanged because sterilization neutralizes liquidity effects",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The short end of the curve falls while the long end rises, flattening the curve",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Large OMO sales to absorb surplus liquidity can steepen the yield curve",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The entire curve shifts downward uniformly as liquidity is withdrawn",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly warns against the misconception that sterilized forex intervention always leaves the yield curve unchanged. It states that large OMO sales undertaken to sterilize capital‑inflow‑driven liquidity can steepen the curve. This occurs because the sale of securities pushes up yields, especially at longer maturities, while the short end is anchored by the LAF corridor (SDF/MSF). Hence, sterilization via OMO sales can steepen, not flatten or leave unchanged, the yield curve."
+    },
+    {
+      "id": 120,
+      "text": "Regarding the Countercyclical Capital Buffer (CCyB) and the Capital Conservation Buffer (CCB) under the Basel III framework as applied in India, which statement is accurate?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Both buffers are fixed at 2.5 per cent of CET1 capital for all banks",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The CCyB is a fixed 2.5 per cent requirement, while the CCB is variable and activated by the regulator",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The CCB is a fixed 2.5 per cent CET1 requirement for all banks, whereas the CCyB is variable and activated by the regulator based on systemic risk",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The CCyB and CCB are identical tools; the difference is only in nomenclature",
+          "c": false
+        }
+      ],
+      "sol": "The lesson highlights a common confusion: the Capital Conservation Buffer (CCB) is a fixed 2.5 per cent Common Equity Tier 1 (CET1) requirement applicable to all banks at all times. The Countercyclical Capital Buffer (CCyB), by contrast, is a variable buffer that the regulator (RBI) activates only when systemic risk builds up (e.g., excessive credit growth) and can be set between 0 and 2.5 per cent. Thus, the CCB is permanent and uniform, while the CCyB is discretionary and cyclical."
     }
   ],
   "gs/geography-physical-prelims": [
@@ -256375,6 +256645,114 @@
         }
       ],
       "sol": "The National Quantum Mission (NQM), approved in 2023 with an outlay of ₹6,000 crore for 2023‑31, targets quantum computing, communication, sensing, and materials. The mission is steered by the Department of Science and Technology (DST) with participation from multiple agencies, not by ISRO alone. ISRO operates under the Department of Space and focuses on launch vehicles and satellite missions. The Department of Atomic Energy handles nuclear power and advanced reactors, while DRDO develops strategic defence systems. The DST's role as the nodal agency for NQM is explicitly mentioned in the lesson."
+    },
+    {
+      "id": 116,
+      "text": "What is the term of office for the Chairperson and members of the National Commission for Scheduled Castes (NCSC) and National Commission for Scheduled Tribes (NCST)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Six years or until age 65",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Five years",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Three years",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "During the pleasure of the President",
+          "c": false
+        }
+      ],
+      "sol": "As per Articles 338(5) and 338A(5), the Chairpersons, Vice-Chairpersons, and members of both the NCSC and NCST hold office for a term of three years. This differs from the Election Commission, UPSC, and CAG, which have a tenure of six years or until age 65. The Finance Commission is constituted every five years. Thus, option C is correct."
+    },
+    {
+      "id": 117,
+      "text": "Under which Article does the Supreme Court have limited appellate jurisdiction over inter-state water dispute tribunal awards?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Article 131",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Article 136",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Article 262",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Article 32",
+          "c": false
+        }
+      ],
+      "sol": "Article 262 empowers Parliament to adjudicate inter-state water disputes. The ISRWD Act, 1956 establishes tribunals whose awards are final and binding. The Supreme Court's jurisdiction is limited to appellate review under Article 136 (Special Leave Petition). Article 131 deals with original jurisdiction between states, Article 32 with fundamental rights. Hence, option B is correct."
+    },
+    {
+      "id": 118,
+      "text": "According to the dualist approach followed by India, when does a treaty become enforceable in domestic courts?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Immediately upon ratification by the President",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "After the Cabinet approves the treaty",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Only after Parliament enacts enabling legislation",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "When the Supreme Court issues a directive",
+          "c": false
+        }
+      ],
+      "sol": "India follows a dualist system of international law. Ratification by the executive (President on Cabinet advice) creates international obligations, but domestic enforceability requires incorporation through an Act of Parliament. The Supreme Court in Gramophone Co. v. Birendra Bahadur Pandey (1984) confirmed unincorporated treaties are not enforceable in municipal courts. Thus, option C is correct."
+    },
+    {
+      "id": 119,
+      "text": "Which Parliamentary committee examines the texts of treaties before ratification?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Public Accounts Committee",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Committee on External Affairs",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Committee on Subordinate Legislation",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Business Advisory Committee",
+          "c": false
+        }
+      ],
+      "sol": "The text states that the Committee on External Affairs examines treaty texts before ratification, while the Public Accounts Committee reviews financial implications. The Committee on Subordinate Legislation scrutinizes delegated legislation, and the Business Advisory Committee manages parliamentary business. Therefore, option B is correct."
     }
   ],
   "ga/industrial-relations": [
