@@ -8,6 +8,35 @@ var currentIdx = 0;
 var results = [];
 var answered = false;
 
+// Detailed solutions + Research Team methods for topic-bank questions. The
+// banks ship a placeholder ("Correct answer: X."), so the real working and an
+// alternative method come from data/micro-solutions.json, keyed by question text.
+var microSol = null;
+try {
+  fetch('data/micro-solutions.json').then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { microSol = j || null; }).catch(function () {});
+} catch (e) {}
+function solKey(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 160); }
+function solHtml(q) {
+  if (!q) return '';
+  var out = '';
+  var plain = q.solution && !/^Correct answer:/i.test(String(q.solution)) ? String(q.solution) : '';
+  if (plain) out += '<div class="rev-sol">' + plain + '</div>';
+  var extra = microSol && microSol[solKey(q.text)];
+  if (extra) {
+    if (extra.solution) out += '<div class="rev-sol">' + extra.solution + '</div>';
+    if (extra.research && Array.isArray(extra.research.steps) && extra.research.steps.length) {
+      out += '<div class="rev-sol" style="margin-top:8px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.35);border-radius:8px;padding:8px 10px;color:#c7d2fe">'
+        + '<strong>🧪 Research Team · ~' + (parseInt(extra.research.seconds, 10) || 10) + 's · ' + (extra.research.name || 'Alternative method') + '</strong>'
+        + '<ol style="margin:4px 0 0;padding-left:18px">' + extra.research.steps.map(function (s) { return '<li>' + s + '</li>'; }).join('') + '</ol></div>';
+    }
+  }
+  if (!out && q.options && q.options[q.answer]) {
+    out = '<div class="rev-sol">Correct answer: ' + q.options[q.answer].label + '. ' + q.options[q.answer].text + '</div>';
+  }
+  return out || '<div class="rev-sol">Correct answer confirmed.</div>';
+}
+
 var examGrid = document.getElementById('examGrid');
 var topicList = document.getElementById('topicList');
 var countGrid = document.getElementById('countGrid');
@@ -382,7 +411,7 @@ function selectAnswer(idx){
   nextBtn.disabled = false;
   var explDiv = document.getElementById('qExplanation');
   if(explDiv){
-    explDiv.innerHTML = '<div class="rev-sol">' + (q.solution || 'Correct answer: ' + q.options[q.answer].label + '. ' + q.options[q.answer].text) + '</div>';
+    explDiv.innerHTML = solHtml(q);
     explDiv.style.display = 'block';
   }
 }
@@ -420,7 +449,7 @@ function showResults(){
       '<div class="rev-q">Q' + (i + 1) + '. ' + q.text + '</div>' +
       '<div class="rev-ans"><span class="ck">✔ Correct: ' + answerText + '</span></div>' +
       (r.correct ? '' : '<div class="rev-ans"><span class="cr">✘ You chose: ' + chosenText + '</span></div>') +
-      (q.solution ? '<div class="rev-sol">' + q.solution + '</div>' : '');
+      solHtml(q);
     reviewList.appendChild(div);
   }
   saveResult(selectedExam, selectedTopic, correct, wrong, total);

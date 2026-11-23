@@ -392,6 +392,10 @@
             // Apply content filter to state.questions in-place
             function _applyContentFilter() {
                 if (!window.state || !state.questions) return;
+                // Do not wipe a pool that is still loading: toggling a checkbox
+                // while startStaticGk is fetching used to leave _fullPool empty
+                // and then empty the quiz permanently.
+                if (!state._fullPool && !state.questions.length) return;
                 var fullPool = state._fullPool || state.questions.slice();
                 state.questions = fullPool.filter(_passesContentFilter);
                 state.idx = 0;
@@ -6187,7 +6191,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 for (var qi = 0; qi < state.questions.length; qi++) {
                     if (!state.questions[qi].subject) state.questions[qi].subject = state.categoryName;
                 }
-                state.questions = _upscFilterList(state.questions);
+                var _before = state.questions.length;
+                var _filtered = _upscFilterList(state.questions);
+                // If nothing maps, keep the topic's own questions rather than
+                // returning an empty quiz ("No questions loaded").
+                if (_filtered.length || !_before) state.questions = _filtered;
             }
             if (state.questions.length === 0) {
                 if (typeof WIKI === 'undefined' || !WIKI._pool) { alert('No questions available for this category right now. The data feed may still be loading.'); return; }
@@ -8351,7 +8359,14 @@ function prevQuestion() {
                     var gq = state.questions[gi];
                     if (gq && _isUpscTopic(gq)) kept.push(gq);
                 }
-                state.questions = _upscOrder(kept);
+                if (!kept.length && state.questions.length) {
+                    // Nothing in the pool maps to the syllabus (common when only
+                    // Micro-test / Invented are on). Never hand the reader an
+                    // empty quiz: keep what loaded and say why.
+                    state._upscFallback = true;
+                } else {
+                    state.questions = _upscOrder(kept);
+                }
             } else {
                 shuffleArray(state.questions);
             }
@@ -9881,7 +9896,11 @@ var fact = q.fact || q.solution || q.explanation || '';
                 for (var qi = 0; qi < state.questions.length; qi++) {
                     if (!state.questions[qi].subject) state.questions[qi].subject = state.categoryName;
                 }
-                state.questions = _upscFilterList(state.questions);
+                var _before = state.questions.length;
+                var _filtered = _upscFilterList(state.questions);
+                // If nothing maps, keep the topic's own questions rather than
+                // returning an empty quiz ("No questions loaded").
+                if (_filtered.length || !_before) state.questions = _filtered;
             }
             } finally { Math.random = _origRandom; }
             if (state.questions.length === 0) return;
