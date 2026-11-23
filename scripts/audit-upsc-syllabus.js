@@ -338,7 +338,30 @@ function main() {
     '<div class="card"><b>' + missing + '</b><span>missing</span></div>' +
     '<div class="card"><b>' + report.summary.shapedShare + '%</b><span>questions in a paper shape</span></div>' +
     '</div>' +
-    '<h2>Question shapes</h2>' +
+    '<h2>Gaps to close</h2>';
+
+  const gapRows = [];
+  for (const subject of Object.keys(report.subjects)) {
+    report.subjects[subject].forEach(function (r) {
+      if (r.status !== 'covered') gapRows.push({ subject: subject, topic: r.topic, status: r.status, hits: r.hits, lessons: r.lessons });
+    });
+  }
+  report.gaps = gapRows;
+  fs.writeFileSync(OUT_JSON, JSON.stringify(report, null, 1) + '\n', 'utf8');
+  if (!gapRows.length) {
+    html += '<p class="small" style="color:#34d399">No thin or missing topic in this reading. The queue is empty; the lanes keep refreshing depth and news.</p>';
+  } else {
+    html += '<table><tr><th>Subject</th><th>Topic</th><th>Status</th><th>Mentions</th><th>Lesson to expand</th></tr>' +
+      gapRows.map(function (r) {
+        const link = r.lessons && r.lessons.length
+          ? '<a href="../' + esc(r.lessons[0].lesson) + '">' + esc(r.lessons[0].lesson.split('/').slice(-1)[0].replace('.html', '')) + '</a>'
+          : '<span class="small">no lesson yet — needs a new chapter</span>';
+        return '<tr><td>' + esc(r.subject) + '</td><td>' + esc(r.topic) + '</td>' +
+          '<td><span class="tag" style="background:' + colour[r.status] + '22;color:' + colour[r.status] + '">' + r.status + '</span></td>' +
+          '<td>' + r.hits + '</td><td class="small">' + link + '</td></tr>';
+      }).join('') + '</table>';
+  }
+  html += '<h2>Question shapes</h2>' +
     '<table><tr><th>Shape</th><th>Legacy bank (sampled)</th><th>Paper-shape bank</th></tr>' +
     SHAPES.map(function (pair) {
       const name = pair[0];
