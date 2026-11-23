@@ -256,6 +256,9 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="pibToggle" checked style="accent-color:var(--amber);width:14px;height:14px"> 📰 PIB/CA Feed</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions invented from lesson paragraphs by the hosted setter, each verified against its own passage"><input type="checkbox" id="lessonInvToggle" style="accent-color:var(--cyan);width:14px;height:14px"> 🧠 From lesson text</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions written in the shapes the real UPSC paper uses — multi-statement, match-the-following, chronology, assertion-reason"><input type="checkbox" id="shapeToggle" style="accent-color:var(--amber);width:14px;height:14px"> 📐 Paper shapes</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="The micro-test banks: General Knowledge, General Studies, Mathematics, Science, English, Reasoning"><input type="checkbox" id="microToggle" style="accent-color:var(--emerald);width:14px;height:14px"> 🧩 Micro-test banks</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="The site's own invented pool — brand-new questions, same source as Grand Slam"><input type="checkbox" id="invToggle" style="accent-color:var(--purple);width:14px;height:14px"> 🧪 Invented (fresh)</label>
+                <a href="mental.html" style="padding:3px 12px;border-radius:100px;border:1px solid rgba(167,139,250,.5);background:rgba(167,139,250,.12);color:#ddd6fe;font-size:.75em;font-weight:700;text-decoration:none">🏆 Grand Slam mixed drill →</a>
                 <button id="upscToggle" onclick="toggleUpscOnly()" title="Only UPSC-relevant topics — uses deterministic exam-scope ground check (examScope=exam). Topics without syllabus anchors are excluded." style="padding:3px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.75em;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit">🎯 UPSC only</button>
             </div>
 
@@ -345,6 +348,8 @@
                 var usePib = document.getElementById('pibToggle')?.checked !== false;
                 var useLessonInv = document.getElementById('lessonInvToggle')?.checked === true;
                 var usePaperShape = document.getElementById('shapeToggle')?.checked === true;
+                var useMicro = document.getElementById('microToggle')?.checked === true;
+                var useInv = document.getElementById('invToggle')?.checked === true;
                 var src = (q.source || q._src || '').toLowerCase();
                 var wikiCat = (q._wikiCat || '').toLowerCase();
                 var subject = (q.subject || '').toLowerCase();
@@ -364,6 +369,12 @@
                 if (src === 'papershape') {
                     return usePaperShape;
                 }
+                if (src === 'microtest') {
+                    return useMicro;
+                }
+                if (src === 'invented') {
+                    return useInv;
+                }
                 if (src === 'course' || src === 'lesson' ||
                     wikiCat === 'course-lesson' || subject.indexOf('lesson') !== -1) {
                     return useCourse;
@@ -381,6 +392,10 @@
             // Apply content filter to state.questions in-place
             function _applyContentFilter() {
                 if (!window.state || !state.questions) return;
+                // Do not wipe a pool that is still loading: toggling a checkbox
+                // while startStaticGk is fetching used to leave _fullPool empty
+                // and then empty the quiz permanently.
+                if (!state._fullPool && !state.questions.length) return;
                 var fullPool = state._fullPool || state.questions.slice();
                 state.questions = fullPool.filter(_passesContentFilter);
                 state.idx = 0;
@@ -400,7 +415,7 @@
             }
             // Attach to checkboxes
             document.addEventListener('DOMContentLoaded', function() {
-                ['archiveToggle','courseToggle','genToggle','pibToggle','lessonInvToggle','shapeToggle'].forEach(function(id) {
+                ['archiveToggle','courseToggle','genToggle','pibToggle','lessonInvToggle','shapeToggle','microToggle','invToggle'].forEach(function(id) {
                     var el = document.getElementById(id);
                     if (el) el.addEventListener('change', _applyContentFilter);
                 });
@@ -6176,7 +6191,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 for (var qi = 0; qi < state.questions.length; qi++) {
                     if (!state.questions[qi].subject) state.questions[qi].subject = state.categoryName;
                 }
-                state.questions = _upscFilterList(state.questions);
+                var _before = state.questions.length;
+                var _filtered = _upscFilterList(state.questions);
+                // If nothing maps, keep the topic's own questions rather than
+                // returning an empty quiz ("No questions loaded").
+                if (_filtered.length || !_before) state.questions = _filtered;
             }
             if (state.questions.length === 0) {
                 if (typeof WIKI === 'undefined' || !WIKI._pool) { alert('No questions available for this category right now. The data feed may still be loading.'); return; }
@@ -8281,7 +8300,28 @@ function prevQuestion() {
                                 added++;
                             }
                         });
-                        _continueGeneration();
+                        // Micro-test combined banks, behind their own toggle.
+                        _loadMicroBanks(function(microQs) {
+                            microQs.forEach(function(q) {
+                                if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
+                                    existingSet[q.q] = true;
+                                    existingSet[q.a] = true;
+                                    state.questions.push(q);
+                                    added++;
+                                }
+                            });
+                            _loadInventedPool(function(invQs) {
+                                invQs.forEach(function(q) {
+                                    if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
+                                        existingSet[q.q] = true;
+                                        existingSet[q.a] = true;
+                                        state.questions.push(q);
+                                        added++;
+                                    }
+                                });
+                                _continueGeneration();
+                            });
+                        });
                     });
                 });
             });
@@ -8319,7 +8359,14 @@ function prevQuestion() {
                     var gq = state.questions[gi];
                     if (gq && _isUpscTopic(gq)) kept.push(gq);
                 }
-                state.questions = _upscOrder(kept);
+                if (!kept.length && state.questions.length) {
+                    // Nothing in the pool maps to the syllabus (common when only
+                    // Micro-test / Invented are on). Never hand the reader an
+                    // empty quiz: keep what loaded and say why.
+                    state._upscFallback = true;
+                } else {
+                    state.questions = _upscOrder(kept);
+                }
             } else {
                 shuffleArray(state.questions);
             }
@@ -8463,6 +8510,100 @@ function prevQuestion() {
             xhr.onerror = function() { clearTimeout(timer); finish([]); };
             xhr.ontimeout = function() { clearTimeout(timer); finish([]); };
             xhr.open('GET', 'data/upsc-format-questions.json?t=' + Date.now(), true);
+            xhr.timeout = 15000;
+            xhr.send();
+        }
+
+        // The micro-test combined banks: General Knowledge, General Studies,
+        // Mathematics, Science, English, Reasoning. Each is a topic file with
+        // sections; this samples a bounded slice per bank so the page stays fast.
+        var _microCache = null;
+        function _loadMicroBanks(cb) {
+            if (_microCache) { cb(_microCache); return; }
+            var banks = ['general-knowledge', 'general-studies', 'mathematics', 'science', 'english', 'reasoning'];
+            var perBank = 250;
+            var out = [];
+            var done = 0;
+            var finished = false;
+            function finish() {
+                if (finished) return;
+                finished = true;
+                _microCache = out;
+                cb(out);
+            }
+            var hardStop = setTimeout(finish, 20000);
+            banks.forEach(function (bank) {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    try {
+                        if (xhr.status === 200) {
+                            var data = JSON.parse(xhr.responseText);
+                            (data.sections || []).forEach(function (sec) {
+                                (sec.questions || []).slice(0, 40).forEach(function (q) {
+                                    if (!q || !q.text || !Array.isArray(q.options) || q.options.length < 4) return;
+                                    var opts = q.options.map(function (o) { return String((o && o.text) || o); });
+                                    var ans = q.options[Math.max(0, Math.min(3, Number(q.answer) || 0))];
+                                    var a = String((ans && ans.text) || ans || '');
+                                    if (opts.indexOf(a) === -1) return;
+                                    out.push({
+                                        q: q.text,
+                                        a: a,
+                                        opts: opts,
+                                        solution: q.solution || '',
+                                        subject: (sec.name || bank) + ' · micro-test',
+                                        source: 'microtest',
+                                        _src: 'microtest',
+                                        type: 'mcq'
+                                    });
+                                });
+                            });
+                        }
+                    } catch (e) {}
+                    if (out.length > banks.length * perBank) out = out.slice(0, banks.length * perBank);
+                    if (++done === banks.length) { clearTimeout(hardStop); finish(); }
+                };
+                xhr.onerror = xhr.ontimeout = function () { if (++done === banks.length) { clearTimeout(hardStop); finish(); } };
+                xhr.open('GET', 'data/topics/' + bank + '.json?t=' + Date.now(), true);
+                xhr.timeout = 18000;
+                xhr.send();
+            });
+        }
+
+        // The site's own invented pool (same source Grand Slam draws from).
+        var _invCache = null;
+        function _loadInventedPool(cb) {
+            if (_invCache) { cb(_invCache); return; }
+            var finished = false;
+            function finish(list) { if (finished) return; finished = true; _invCache = list; cb(list); }
+            var timer = setTimeout(function () { finish([]); }, 15000);
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                clearTimeout(timer);
+                var out = [];
+                try {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        (data.questions || []).slice(0, 1000).forEach(function (q) {
+                            if (!q || !q.stem || !q.answer || !Array.isArray(q.options) || q.options.length < 4) return;
+                            var opts = q.options.map(function (o) { return String(o); });
+                            if (opts.indexOf(String(q.answer)) === -1) return;
+                            out.push({
+                                q: q.stem,
+                                a: String(q.answer),
+                                opts: opts,
+                                solution: q.solution || '',
+                                subject: 'Invented · ' + (q.section || '') + (q.topic ? ' · ' + q.topic : ''),
+                                source: 'invented',
+                                _src: 'invented',
+                                type: 'mcq'
+                            });
+                        });
+                    }
+                } catch (e) {}
+                finish(out);
+            };
+            xhr.onerror = xhr.ontimeout = function () { clearTimeout(timer); finish([]); };
+            xhr.open('GET', 'data/invented/questions.json?t=' + Date.now(), true);
             xhr.timeout = 15000;
             xhr.send();
         }
@@ -9677,6 +9818,10 @@ var fact = q.fact || q.solution || q.explanation || '';
                 label = 'Generated · static GK';
             } else if (src === 'papershape') {
                 label = 'UPSC · ' + (q.shape || 'paper shape');
+            } else if (src === 'microtest') {
+                label = 'Micro-test bank';
+            } else if (src === 'invented') {
+                label = 'Invented (fresh)';
             }
             el.textContent = label;
             el.style.display = label ? 'inline-block' : 'none';
@@ -9751,7 +9896,11 @@ var fact = q.fact || q.solution || q.explanation || '';
                 for (var qi = 0; qi < state.questions.length; qi++) {
                     if (!state.questions[qi].subject) state.questions[qi].subject = state.categoryName;
                 }
-                state.questions = _upscFilterList(state.questions);
+                var _before = state.questions.length;
+                var _filtered = _upscFilterList(state.questions);
+                // If nothing maps, keep the topic's own questions rather than
+                // returning an empty quiz ("No questions loaded").
+                if (_filtered.length || !_before) state.questions = _filtered;
             }
             } finally { Math.random = _origRandom; }
             if (state.questions.length === 0) return;
