@@ -176,6 +176,20 @@ function page() {
     '<p class="lead">A solver, an inventor and a verifier work on each question. Methods are grouped by subject and topic so you can revise one topic at a time.</p>' +
     '<div class="disc">"Original" means original to this lab - no world-first claim. Every published method passed an independent solve. Time is how long a prepared student needs, not model latency.</div>' +
     '<div class="stats"><span>' + entries.length + ' questions</span><span>' + totalMethods + ' methods</span><span>' + order.length + ' subjects</span></div>' +
+    (function () {
+      const fast = entries
+        .map(function (e) { return { e: e, m: (e.methods || [])[0] }; })
+        .filter(function (x) { return x.m && x.m.steps && x.m.steps.length; })
+        .sort(function (a, b) { return (a.m.seconds || 99) - (b.m.seconds || 99); })
+        .slice(0, 10);
+      if (!fast.length) return '';
+      return '<h2 id="fastest" style="margin-top:8px">⚡ Fastest routes</h2>' +
+        '<p class="lead" style="margin:0 0 8px">Before working the long way: check the options for range, units or a single plausible value, then use the route with the lowest seconds. These are the ten quickest in the bank.</p>' +
+        '<ol style="margin:0 0 16px;padding-left:20px;color:#d4d4d8;font-size:13px">' +
+        fast.map(function (x) {
+          return '<li style="margin:4px 0"><b style="color:#60a5fa">~' + (parseInt(x.m.seconds, 10) || 10) + 's · ' + esc(x.m.name || 'Fastest route') + '</b> — ' + esc(x.e.question.slice(0, 110)) + '</li>';
+        }).join('') + '</ol>';
+    })() +
     nav +
     '<div class="controls"><input id="search" type="search" placeholder="Search a question or topic (interest, work, coding, synonym...)">' +
     '<select id="group"><option value="">All subjects</option>' + order.map(function (g) { return '<option value="' + esc(g) + '">' + esc(g) + '</option>'; }).join('') + '</select></div>' +
