@@ -145932,6 +145932,141 @@
         }
       ],
       "sol": "The lesson provides the bearing characteristic frequencies explicitly. BPFO (ball pass frequency outer race) is defined as n/2 · f_r · (1 − d/D cos α), where n is the number of rolling elements, f_r is the shaft rotation frequency, d is the ball diameter, D is the pitch diameter, and α is the contact angle. The second option corresponds to BPFI (inner race), the third to BSF (ball spin frequency), and the fourth to FTF (fundamental train frequency). Therefore, the correct formula for BPFO is the first option."
+    },
+    {
+      "id": 5071,
+      "text": "What is the primary condition for the validity of Linear Elastic Fracture Mechanics (LEFM) according to the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Plastic zone size must be small relative to crack length and component thickness",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Stress intensity factor must exceed the plane-strain fracture toughness",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Crack growth rate must be below the threshold ΔK_th",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "J-integral must be used instead of stress intensity factor",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that for LEFM to be valid, the plastic zone size rp = (1/2π)(K/σy)² must be small relative to the crack length and component thickness. If this condition is not met, elastic-plastic fracture mechanics (EPFM) using the J-integral or CTOD is required. Option B describes unstable fracture (K_max = K_IC), not LEFM validity. Option C relates to the fatigue threshold below which crack growth is negligible. Option D is an EPFM parameter used when LEFM validity criteria fail."
+    },
+    {
+      "id": 5072,
+      "text": "What does a Niyama criterion value below the material-specific threshold indicate in casting simulation?",
+      "options": [
+        {
+          "l": "a",
+          "t": "High risk of shrinkage porosity",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Adequate feeding from risers",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Low gas porosity",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Uniform solidification structure",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that the Niyama criterion G/√R identifies regions prone to shrinkage porosity, and values below the material-specific threshold (≈0.3 °C·s½/cm for Al-Si alloys) flag high-risk zones. A low Niyama criterion results from a low thermal gradient or high cooling rate, which promotes isolated liquid pools that cannot be fed by risers, leading to shrinkage porosity. Options B, C, and D describe favorable solidification conditions that are contrary to the implication of a low Niyama value."
+    },
+    {
+      "id": 5073,
+      "text": "What is the consequence of neglecting the minimum chip thickness in micro-milling?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Ploughing-dominated cutting and erroneous force predictions",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Increased tool life and reduced wear",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Improved surface finish and dimensional accuracy",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Reduced cutting forces and power consumption",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists \"Neglecting the minimum chip thickness in micro‑milling, leading to ploughing‑dominated cutting and erroneous force predictions\" as a key pitfall. In micro-machining, when the uncut chip thickness approaches the tool edge radius, material is ploughed rather than sheared, which increases cutting forces, generates excessive heat, and degrades surface quality. Options B, C, and D describe beneficial outcomes that are opposite to the actual detrimental consequences of ignoring this critical scale effect."
+    },
+    {
+      "id": 5074,
+      "text": "Why is it incorrect to apply a single TMF damage parameter like SWT for both in-phase and out-of-phase loading?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Because phasing correction is needed for different loading phasing",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Because SWT parameter only applies to creep-fatigue interaction",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Because out-of-phase loading does not contribute to damage",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Because the C* integral must be used instead for all TMF cases",
+          "c": false
+        }
+      ],
+      "sol": "The lesson identifies \"Applying a single TMF damage parameter (e.g., SWT) for both in‑phase and out‑of‑phase loading without phasing correction\" as a critical error. In-phase and out-of-phase thermo-mechanical loading produce different damage mechanisms (e.g., oxidation-dominated vs. creep-cavitation-dominated), requiring distinct damage parameters or phasing corrections. Option B is incorrect because SWT is a fatigue parameter, not exclusive to creep-fatigue. Option C is false as out-of-phase loading causes significant damage. Option D is incorrect because the C* integral is for steady-state creep crack growth, not general TMF damage assessment."
+    },
+    {
+      "id": 5075,
+      "text": "What is the typical minimum strut diameter for reliable fusion in laser powder-bed fusion (LPBF) according to the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "≥ 300 µm",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "≥ 100 µm",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "≥ 50 µm",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "≥ 150 µm",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that LPBF melt-pool dimensions (width ≈ 100–150 µm, depth ≈ 30–50 µm) dictate the minimum strut diameter that can be reliably fused, which is typically ≥ 300 µm. Designing lattice struts below this process-minimum diameter causes systematic lack-of-fusion defects. Options B and D correspond to the melt-pool width range, while Option C corresponds to the melt-pool depth; all are insufficient for stable strut formation because multiple overlapping tracks and adequate heat dissipation are needed to achieve full density."
     }
   ],
   "opt-medical-science/overview": [
@@ -163489,6 +163624,141 @@
         }
       ],
       "sol": "The lesson explicitly outlines the feedback loop: \"jury composition (often senior university professors and previous awardees) reflects prevailing academic tastes; the award then validates those tastes, influencing university reading lists, research funding, and PhD topics.\" It also mentions the 1985 Parishat recommendation leading to 1995 critical edition prompted by 1983 Akademi award to Masti, showing award → curriculum/philological infrastructure. Option A correctly sequences: Jury composition (reflects tastes) → Award (validates) → Curriculum committee (influences reading lists) → Prescribed text → Research funding/PhD topics. Option B starts with Award before Jury. Option C starts with Curriculum committee. Option D starts with Research funding."
+    },
+    {
+      "id": 7197,
+      "text": "Which structural feature of vachana literature is described as a \"vacana‑vacana\" dialogue that creates a polyphonic texture?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Use of a fixed six‑line stanza with strict metre",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Direct address to the deity, community, or self within each vachana",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Inclusion of Sanskrit‑derived philosophical terminology only",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Narrative progression through a linear plot",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the structural hallmark of vachana literature is the \"vacana‑vacana\" dialogue, where the speaker addresses the deity, the community, or the self, producing a polyphonic texture. This matches option B. The other options describe features not identified as the hallmark: vachanas use concise four‑line stanzas, blend colloquial Kannada with philosophical terms, and are aphoristic rather than narrative."
+    },
+    {
+      "id": 7198,
+      "text": "The Navya (modernist) shift in Kannada short story during the 1950s‑60s was influenced by European existentialism and the French nouveau roman, but the lesson also notes the role of indigenous metres. Which indigenous metres are mentioned as shaping narrative rhythm?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Tripadi and Ragale",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Shatpadi and Sangatya",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Kanda and Vachana",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Bhamini and Champu",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly says that attributing Navya formal innovations solely to Western influence ignores the indigenous \"tripadi\" and \"ragale\" metres that shape narrative rhythm. Therefore option A is correct. The other pairs are not mentioned in the context of Navya rhythm."
+    },
+    {
+      "id": 7199,
+      "text": "Regarding Yakshagana, the lesson warns against treating it as a static folk form. What nineteenth‑century development does it highlight?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Adoption of printed scripts for performances",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Adaptation to company‑theatre conventions",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Introduction of female actors on stage",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Standardisation of musical notation",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists as a common pitfall \"Treating Yakshagana as a static folk form and overlooking its nineteenth‑century adaptation to company‑theatre conventions.\" Hence the highlighted development is the adaptation to company‑theatre conventions, making option B correct."
+    },
+    {
+      "id": 7200,
+      "text": "In Kannada literary studies, how does the lesson distinguish Marxist criticism from Subaltern criticism?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Marxist criticism focuses on caste, Subaltern on class",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Both use identical analytical frameworks",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Marxist criticism is class‑based, Subaltern criticism is caste‑based",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Subaltern criticism rejects historical materialism entirely",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly warns against \"Equating Marxist criticism with Subaltern criticism and failing to distinguish class‑based from caste‑based analytical frameworks.\" This indicates Marxist criticism operates on a class basis while Subaltern criticism operates on a caste basis, making option C the correct distinction."
+    },
+    {
+      "id": 7201,
+      "text": "Which dictionary project incorporated dialectal variants from the Halegannada (Old Kannada) corpus and modern technical terminology?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Reverend Ferdinand Kittel’s Kannada‑English Dictionary (1894)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Kannada Sahitya Parishat’s Kannada Nighantu (completed 1995)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Digital Corpus of Kannada (DC‑Kannada, 2012)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Karnataka Knowledge Commission’s Terminology Bank (2008)",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the Kannada Sahitya Parishat’s \"Kannada Nighantu\" project, finalised in 1995, incorporated dialectal variants from the \"Halegannada\" corpus and modern technical terminology. Kittel’s dictionary is the baseline but does not include those dialect entries; the Digital Corpus and Terminology Bank are later digital initiatives. Thus option B is correct."
     }
   ],
   "opt-kannada/paper1": [
@@ -170467,6 +170737,141 @@
         }
       ],
       "sol": "The lesson states: 'Parallel to the Academy's organ, the theatre collective Mithila Manch launched Mithila Manch Patrika in 1975... This journal pioneered the use of Brechtian terminology (Verfremdungseffekt, epic theatre) in Maithili criticism...' Option B is correct. Maithili Alochana focused on peer-reviewed articles (blind review from 1995). Maithili Sahitya Patrika emphasized comparative poetics. The MDC is a digital corpus, not a journal."
+    },
+    {
+      "id": 116,
+      "text": "The four-step analytical template formalised at the 1985 Bihar Maithili Academy's Maithili Dhvani-Vimarsh seminar for analysing focalisation in Maithili short fiction requires the critic to first:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Identify the focaliser",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Locate the narrative instance",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Define the mode of representation",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Evaluate the ideological effect",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states the four-step template in sequence: (1) identify the focaliser, (2) locate the narrative instance, (3) define the mode of representation (direct, indirect, free indirect), and (4) evaluate the ideological effect. Therefore, the first step is to identify the focaliser."
+    },
+    {
+      "id": 117,
+      "text": "Which of the following was NOT a recommendation of the Bihar Maithili Academy's standing committee in its 1974 report on orthographic standardisation for Devanagari-rendered Maithili?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Adoption of the schwa-deletion rule for word-final inherent vowels",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Consistent representation of the retroflex series distinct from the dental series",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Use of the anusvara (ं) for nasalisation instead of the older candrabindu (ँ)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Mandatory use of the candrabindu (ँ) for all nasalised vowels in printed editions",
+          "c": true
+        }
+      ],
+      "sol": "The 1974 committee recommended (a) schwa-deletion rule, (b) consistent retroflex representation, and (c) use of anusvara (ं) for nasalisation rather than the older candrabindu (ँ). Option D contradicts recommendation (c) by suggesting mandatory use of candrabindu, which is the opposite of the committee's decision."
+    },
+    {
+      "id": 118,
+      "text": "In the analysis of modern Maithili drama's folk theatre roots, what critical distinction must be maintained when examining dramatic structure?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The distinction between the Bidesia narrator and the classical sutradhara",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The distinction between the Nautanki style and the Jatra tradition",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The distinction between the Vidyapati songs and the Bhikhari Thakur plays",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The distinction between the Sanskrit natya tradition and the folk performance",
+          "c": false
+        }
+      ],
+      "sol": "The lesson's 'Confusing the Academy's 1974 orthographic norms...' section explicitly lists as a common error: 'Overlooking the distinction between Bidesia narrator and classical sutradhara when analysing dramatic structure.' This confirms that maintaining this distinction is a critical requirement for dramatic structure analysis in Paper II."
+    },
+    {
+      "id": 119,
+      "text": "According to the ecocritical reading of modern Maithili Barahmasa poetry discussed in the lesson, the structural rupture from the traditional twelve-stanza form to free verse in a poem depicting hybrid seeds and chemical fertilisers enacts a Rasa-bhanga from:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Shringara to Karuna",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Karuna to Bibhatsa",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Veera to Shanta",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Adbhuta to Bhayanaka",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: 'The shift is marked by a formal rupture: the poem abandons the twelve-stanza structure for a free-verse cascade, signalling a Rasa-bhanga from Karuna to Bibhatsa (disgust).' This directly identifies the Rasa shift as from Karuna (compassion/pathos) to Bibhatsa (disgust) in response to ecological disruption."
+    },
+    {
+      "id": 120,
+      "text": "Regarding the Maithili Digital Corpus (MDC) launched in 2021, which statement accurately reflects the syllabus requirement for citation in Paper II examinations?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The MDC replaces printed critical editions; candidates must cite only the MDC's diplomatic view",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Candidates must cite printed edition page numbers, though the MDC's dual-layer architecture can supplement preparation",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The MDC's CollateX algorithm output in CSV format is the primary citation format for apparatus criticus entries",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The normative view of the MDC conforming to the 1974 orthography is the only acceptable textual source for examination answers",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states: 'From an examination perspective, the MDC does not replace the printed edition; the syllabus explicitly requires citation of printed page numbers.' However, it adds that candidates who can articulate the corpus's dual-layer architecture and collation workflow demonstrate awareness of current scholarly practice, which is rewarded in meta-critical questions."
     }
   ],
   "opt-malayalam/overview": [
