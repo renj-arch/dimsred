@@ -129673,6 +129673,141 @@
         }
       ],
       "sol": "A conformal map preserves angles locally. The lesson defines a conformal map as an analytic function with non-zero derivative. If f'(z₀) = 0, angles are not preserved (they are multiplied by the order of the zero). Continuity alone is insufficient, and mapping circles to lines is a property of Möbius transformations, not the general definition of conformality."
+    },
+    {
+      "id": 2716,
+      "text": "Regarding the Fredholm alternative for a linear integral equation of the second kind with a symmetric kernel, which statement is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The inhomogeneous equation always has a unique solution for any f.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "If the homogeneous equation has non-trivial solutions, the inhomogeneous equation is solvable only if f is orthogonal to all solutions of the adjoint homogeneous equation.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The homogeneous equation has non-trivial solutions only if the kernel is degenerate.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The parameter λ must be an eigenvalue for the inhomogeneous equation to have a solution.",
+          "c": false
+        }
+      ],
+      "sol": "The Fredholm alternative states that for a linear integral equation of the second kind, exactly one of two alternatives holds. First, the homogeneous equation has only the trivial solution, implying the inhomogeneous equation has a unique solution for every f. Second, the homogeneous equation has non-trivial solutions; then the inhomogeneous equation has a solution if and only if the forcing function f is orthogonal to every solution of the adjoint homogeneous equation. For symmetric kernels, the adjoint solutions coincide with the homogeneous solutions. Option B correctly captures the solvability condition for the second alternative."
+    },
+    {
+      "id": 2717,
+      "text": "For a functional J[y] = ∫ F(x, y, y') dx where F does not depend explicitly on x, which first integral holds along an extremal?",
+      "options": [
+        {
+          "l": "a",
+          "t": "∂F/∂y' = constant",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "F - y' ∂F/∂y' = constant",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "∂F/∂y = 0",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "F + y' ∂F/∂y' = constant",
+          "c": false
+        }
+      ],
+      "sol": "When the integrand F(x, y, y') of a functional J[y] = ∫ F dx does not depend explicitly on the independent variable x, the Euler-Lagrange equation admits a first integral known as the Beltrami identity. It is derived by computing the total derivative dF/dx = ∂F/∂x + y' ∂F/∂y + y'' ∂F/∂y'. Since ∂F/∂x = 0 and using the Euler-Lagrange equation ∂F/∂y = d/dx(∂F/∂y'), this simplifies to d/dx(F - y' ∂F/∂y') = 0. Hence F - y' ∂F/∂y' = constant along any extremal. Option B states this identity correctly."
+    },
+    {
+      "id": 2718,
+      "text": "In the context of the QR algorithm for a real non-symmetric matrix, why are double shifts typically employed?",
+      "options": [
+        {
+          "l": "a",
+          "t": "To accelerate convergence for matrices with clustered eigenvalues.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "To ensure the iterates remain real when complex conjugate eigenvalue pairs are present.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "To reduce the computational cost from O(n³) to O(n²) per iteration.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "To guarantee convergence for defective matrices.",
+          "c": false
+        }
+      ],
+      "sol": "The standard QR algorithm applied to a real non-symmetric matrix produces complex iterates if the matrix has complex conjugate eigenvalue pairs, because the eigenvalues appear as 2×2 blocks on the diagonal of the real Schur form. To maintain real arithmetic throughout the computation, the double-shift (or Francis) QR step is used. It applies two shifts simultaneously, typically the eigenvalues of the trailing 2×2 submatrix, which are either real or complex conjugates. This ensures the similarity transformations remain real, preserving the real structure of the iterates while converging to the real Schur form. Option B correctly identifies this purpose."
+    },
+    {
+      "id": 2719,
+      "text": "Let X₁, ..., Xₙ be a random sample from Nₚ(μ, Σ) with sample mean X̄ and sample covariance matrix S. Which statement about the distribution of (n-1)S is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It follows a Wishart distribution Wₚ(Σ, n) with n degrees of freedom.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It follows a Wishart distribution Wₚ(Σ, n-1) and is independent of X̄.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It follows a chi-square distribution with p(n-1) degrees of freedom.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It follows a Wishart distribution Wₚ(Σ, n) and is distributed as χ²ₚ when p=1.",
+          "c": false
+        }
+      ],
+      "sol": "For a random sample of size n from a p-variate normal distribution Nₚ(μ, Σ), the scatter matrix (n-1)S = Σ(Xᵢ - X̄)(Xᵢ - X̄)ᵀ follows a Wishart distribution Wₚ(Σ, n-1) with n-1 degrees of freedom. A fundamental property of the multivariate normal sample is the independence of the sample mean X̄ and the sample covariance matrix S (Basu's theorem / Cochran's theorem analogue). Therefore, (n-1)S ~ Wₚ(Σ, n-1) and is independent of X̄. Option A incorrectly states n degrees of freedom. Option C confuses the matrix-variate Wishart with the scalar chi-square. Option D mixes degrees of freedom."
+    },
+    {
+      "id": 2720,
+      "text": "Consider a minimization problem with inequality constraints gᵢ(x) ≤ 0 and equality constraints hⱼ(x) = 0. The Mangasarian-Fromovitz Constraint Qualification (MFCQ) at a feasible point x* requires the existence of a direction d such that:",
+      "options": [
+        {
+          "l": "a",
+          "t": "∇gᵢ(x*)ᵀ d < 0 for all active constraints and ∇hⱼ(x*)ᵀ d = 0 for all equality constraints.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "∇gᵢ(x*)ᵀ d ≤ 0 for all active constraints and the gradients of active constraints are linearly independent.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "∇gᵢ(x*)ᵀ d = 0 for all active constraints with λᵢ > 0 and ∇gᵢ(x*)ᵀ d < 0 for active constraints with λᵢ = 0.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The gradients of all active inequality constraints and equality constraints are linearly independent.",
+          "c": false
+        }
+      ],
+      "sol": "The Mangasarian-Fromovitz Constraint Qualification (MFCQ) is a regularity condition weaker than LICQ. For a problem with inequalities gᵢ(x) ≤ 0 and equalities hⱼ(x) = 0, MFCQ holds at a feasible point x* if the gradients of the equality constraints are linearly independent, and there exists a vector d such that ∇hⱼ(x*)ᵀ d = 0 for all j, and ∇gᵢ(x*)ᵀ d < 0 for all active inequality constraints (i.e., gᵢ(x*) = 0). This ensures the existence of a feasible direction pointing strictly into the interior of the inequality constraints while staying on the equality manifold. Option A matches this definition exactly. Option D describes LICQ. Option B describes a condition related to the critical cone or Abadie CQ. Option C describes conditions on the critical cone for second-order sufficiency."
     }
   ],
   "opt-physics/paper2": [
@@ -135043,6 +135178,141 @@
         }
       ],
       "sol": "The lesson provides a specific worked example for this calculation: f_res = 1 / (2π √(Lcm (Cy/2 + Cp))). The Y-capacitors (Cy) are connected from each line to ground. For common-mode currents, the two Y-capacitors appear in series, resulting in an equivalent capacitance of Cy/2 to ground. This series combination is in parallel with the choke's parasitic capacitance Cp. The total effective capacitance resonating with Lcm is therefore (Cy/2 + Cp). Option A ignores both the series division of Cy and the parasitic Cp. Option C incorrectly assumes Cy capacitors are in parallel for CM currents. Option D ignores the Y-capacitors entirely."
+    },
+    {
+      "id": 3916,
+      "text": "For a single-input nonlinear system ẋ = f(x) + g(x)u with output y = h(x), what is the necessary condition for full state feedback linearization via static state feedback?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Relative degree r = n (system dimension)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Relative degree r < n",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "System is minimum phase",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Zero dynamics are asymptotically stable",
+          "c": false
+        }
+      ],
+      "sol": "For a single-input nonlinear system ẋ = f(x) + g(x)u, full state feedback linearization via static feedback requires the relative degree r to equal the system dimension n. If r = n, the diffeomorphism z = Φ(x) with z₁ = h(x), z₂ = L_f h(x), …, z_n = L_f^{n-1} h(x) transforms the system into the normal form (chain of integrators). The control law u = (v - L_f^n h(x)) / L_g L_f^{n-1} h(x) then yields the linear input-output map y^{(n)} = v. If r < n, only partial linearization is possible, requiring dynamic extension. Minimum-phase zero dynamics are necessary for internal stability but do not enable full linearization if r < n."
+    },
+    {
+      "id": 3917,
+      "text": "In a Modular Multilevel Converter (MMC), what is the primary consequence of omitting a circulating current suppression controller?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Increased fundamental frequency output voltage ripple",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Uncontrolled second-harmonic arm currents and capacitor voltage ripple",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Loss of neutral-point voltage balance in submodules",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Inability to synthesize multilevel voltage waveform",
+          "c": false
+        }
+      ],
+      "sol": "In an MMC, circulating current flows between the upper and lower arms of a phase leg without contributing to the AC output power. This current contains a dominant second-harmonic component (twice the fundamental frequency). Without a dedicated circulating current suppression controller (typically a PI or resonant controller in the dq-frame), this second-harmonic current remains uncontrolled. It causes significant ripple in the submodule capacitor voltages, increases semiconductor losses, and stresses the arm inductors. The suppression controller injects a common-mode voltage component to actively damp this circulating current."
+    },
+    {
+      "id": 3918,
+      "text": "For a MIMO channel where the transmitter has only statistical Channel State Information (CSIT) and the receiver has perfect instantaneous CSIR, which power allocation strategy achieves ergodic capacity?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Water-filling over instantaneous channel eigenvalues",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Beamforming along the strongest eigenmode",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Equal power allocation across all transmit antennas",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Water-filling over average channel eigenvalues",
+          "c": false
+        }
+      ],
+      "sol": "Ergodic capacity with only Channel State Information at the Receiver (CSIR) and no instantaneous CSIT is achieved by equal power allocation across all transmit antennas. Water-filling power allocation requires instantaneous knowledge of the channel eigenvalues at the transmitter to allocate more power to stronger spatial modes. With only statistical CSIT (channel distribution), the transmitter cannot adapt power to specific channel realizations. Since the channel is unknown at the transmitter, the optimal input covariance matrix is a scaled identity matrix, corresponding to uniform power distribution. Beamforming requires instantaneous CSIT to align with the strongest eigenmode."
+    },
+    {
+      "id": 3919,
+      "text": "Why is the improved Generalized Steinmetz Equation (iGSE) preferred over the simple Steinmetz equation for core loss calculation in high-frequency magnetic components with non-sinusoidal excitation?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Simple Steinmetz equation overestimates losses for non-sinusoidal excitation",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Simple Steinmetz equation underestimates losses by 30-50% for non-sinusoidal excitation",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "iGSE accounts for proximity effect in multi-layer windings",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "iGSE eliminates the need for skin depth calculations in conductors",
+          "c": false
+        }
+      ],
+      "sol": "The simple Steinmetz equation (SE) is empirically derived for purely sinusoidal flux density waveforms. In power electronics, magnetic components experience non-sinusoidal, often pulsed or PWM, excitation. Applying the simple SE to such waveforms underestimates the core losses significantly, typically by 30–50%. The improved Generalized Steinmetz Equation (iGSE) addresses this by incorporating the time derivative of flux density (dB/dt), enabling accurate loss prediction for arbitrary periodic waveforms. Proximity effect and skin depth are winding loss phenomena related to conductor geometry and frequency, not core loss modeling limitations of the Steinmetz equation."
+    },
+    {
+      "id": 3920,
+      "text": "In a power quality monitor compliant with IEC 61000-4-30 Class A, what is the primary function of a PLL-based frequency tracking algorithm during DFT-based harmonic analysis?",
+      "options": [
+        {
+          "l": "a",
+          "t": "To increase the ADC sampling rate to 12.8 kHz",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "To resample the waveform to a fixed number of samples per cycle, preventing spectral leakage due to frequency deviations",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "To apply a Hanning window for spectral leakage reduction",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "To compute the short-term flicker severity Pst",
+          "c": false
+        }
+      ],
+      "sol": "IEC 61000-4-30 Class A permits a ±0.5% frequency tolerance. A fixed sampling rate (e.g., 12.8 kHz) with a fixed window length (N=256) yields exact 50 Hz bin spacing only at nominal frequency. Grid frequency deviations cause the signal period to mismatch the DFT window, resulting in spectral leakage that spreads harmonic energy across bins and violates Class A accuracy limits. A PLL-based frequency tracking algorithm measures the instantaneous fundamental frequency and controls a resampling process (or adjusts the sampling clock) to maintain exactly N samples per cycle. This coherent sampling ensures harmonic components fall precisely into DFT bins, eliminating leakage."
     }
   ],
   "opt-electrical-engineering/paper1": [
@@ -202949,6 +203219,141 @@
         }
       ],
       "sol": "The ribosome is a ribozyme; the peptidyl transferase center that catalyzes peptide bond formation is composed entirely of ribosomal RNA (23S rRNA in prokaryotes, 28S in eukaryotes). Ribosomal proteins provide structural support but do not possess catalytic activity for this reaction. Aminoacyl-tRNA synthetases charge tRNAs, and EF-Tu delivers aminoacyl-tRNA to the A site using GTP hydrolysis, but neither catalyzes peptide bond formation."
+    },
+    {
+      "id": 111,
+      "text": "Phosphorylation of glycogen phosphorylase at Ser14 by phosphorylase kinase converts it from the inactive b form to the active a form. Which phosphatase reverses this modification?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Protein phosphatase‑1 (PP1)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Protein phosphatase‑2A (PP2A)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Protein phosphatase‑2B (PP2B)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Protein phosphatase‑2C (PP2C)",
+          "c": false
+        }
+      ],
+      "sol": "Glycogen phosphorylase a is dephosphorylated by protein phosphatase‑1 (PP1), restoring the inactive b form. PP1 activity is regulated by inhibitor‑1 (phosphorylated by PKA) and the glycogen‑targeting subunit GM, linking hormonal signals to glycogenolysis. PP2A, PP2B, and PP2C act on other substrates and are not the primary phosphatase for glycogen phosphorylase in this pathway."
+    },
+    {
+      "id": 112,
+      "text": "Enteropeptidase in the duodenum initiates pancreatic zymogen activation by cleaving which precursor?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Trypsinogen",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Chymotrypsinogen",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Procarboxypeptidase A",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Proelastase",
+          "c": false
+        }
+      ],
+      "sol": "Enteropeptidase (enterokinase) specifically cleaves the N‑terminal activation peptide of trypsinogen, generating active trypsin. Trypsin then activates the other pancreatic zymogens (chymotrypsinogen, procarboxypeptidases, proelastase) by proteolytic cleavage. This hierarchical activation ensures controlled digestive enzyme activation only in the intestinal lumen."
+    },
+    {
+      "id": 113,
+      "text": "The entry of long‑chain acyl‑CoA into mitochondria for β‑oxidation is controlled by carnitine palmitoyltransferase I (CPT I). Which metabolite allosterically inhibits CPT I, providing reciprocal regulation with fatty‑acid synthesis?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Malonyl‑CoA",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Acetyl‑CoA",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Citrate",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "NADH",
+          "c": false
+        }
+      ],
+      "sol": "Malonyl‑CoA, the first committed intermediate of fatty‑acid synthesis, binds to CPT I and inhibits its activity. This prevents simultaneous fatty‑acid oxidation and synthesis, ensuring metabolic reciprocity. Acetyl‑CoA, citrate, and NADH do not directly inhibit CPT I; they serve other regulatory roles in energy metabolism."
+    },
+    {
+      "id": 114,
+      "text": "In Metabolic Control Analysis, the flux control coefficient C_Ei^J quantifies the fractional change in steady‑state flux J per fractional change in enzyme activity E_i. The summation theorem states that the sum of all flux control coefficients in a pathway equals:",
+      "options": [
+        {
+          "l": "a",
+          "t": "0",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "1",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "-1",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Depends on pathway architecture",
+          "c": false
+        }
+      ],
+      "sol": "The summation theorem of Metabolic Control Analysis dictates Σ C_Ei^J = 1 for any metabolic pathway at steady state. This means flux control is distributed among all enzymes; no single enzyme possesses complete control unless all others have zero coefficients. The theorem holds regardless of pathway complexity or regulation."
+    },
+    {
+      "id": 115,
+      "text": "Polyubiquitin chains linked through which lysine residue of ubiquitin serve as the canonical signal for 26S proteasomal degradation?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Lys48",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Lys63",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Lys11",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Met1 (linear)",
+          "c": false
+        }
+      ],
+      "sol": "Lys48‑linked polyubiquitin chains are the primary recognition signal for the 26S proteasome, targeting substrates for degradation. Lys63‑linked and linear (Met1) chains mainly function in signalling, DNA repair, and NF‑κB activation, while Lys11 chains have specialized roles in cell‑cycle regulation. The distinct linkage determines the downstream fate of the ubiquitinated protein."
     }
   ],
   "biology/evolution": [
@@ -212385,6 +212790,114 @@
         }
       ],
       "sol": "The lesson cites Keshav Singh v. Speaker (1965), where the Supreme Court held that the judiciary may determine whether a privilege claimed by the House exists under Article 105, but it cannot review the House’s internal disciplinary decisions. Later, in Raja Ram Pal v. Speaker (2007), the Court added that parliamentary privilege is subject to fundamental rights, yet the core principle remains: courts adjudicate the existence of a privilege, not the merits of its exercise. Option B captures this precise scope, while the others either overextend or unduly restrict judicial review."
+    },
+    {
+      "id": 111,
+      "text": "Which of the following statements correctly reflects the effect of the 91st Constitutional Amendment (2003) on the Tenth Schedule?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The one‑third split defence for a legislature party was retained, while the merger exception was removed.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A merger of a legislature party with another party is recognised only if at least two‑thirds of its members agree to the merger.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The Speaker’s decision on disqualification petitions became final and non‑reviewable by any court.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The amendment introduced a new ground of disqualification for voting against a party whip without prior permission.",
+          "c": false
+        }
+      ],
+      "sol": "The 91st Amendment (2003) removed the \"split\" exception that previously protected a group of one‑third members of a legislature party from disqualification. It retained only the \"merger\" exception, stipulating that a merger is recognised only when at least two‑thirds of the legislature party agrees to merge with another party. The amendment did not alter the Speaker’s adjudicatory role; the Supreme Court in Kihoto Hollohan (1992) had already held that the Speaker’s decision is subject to judicial review for jurisdictional error, mala fide, perversity or breach of natural justice."
+    },
+    {
+      "id": 112,
+      "text": "Regarding the special provisions for States under Articles 371 to 371J, which of the following is accurate?",
+      "options": [
+        {
+          "l": "a",
+          "t": "These articles can be amended by a simple majority of Parliament.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "They require a special majority of Parliament and, where specified, ratification by the concerned State legislature(s).",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "They apply exclusively to the erstwhile State of Jammu and Kashmir.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "They are not part of the Constitution but are statutory provisions enacted by Parliament.",
+          "c": false
+        }
+      ],
+      "sol": "Articles 371 to 371J constitute special provisions for certain States (e.g., Maharashtra, Gujarat, Nagaland, Assam, Manipur, Andhra Pradesh, Sikkim, Mizoram, Arunachal Pradesh, Goa, Karnataka). As part of the Constitution, any amendment to these articles follows the procedure under Article 368: a special majority of Parliament and, where the provision explicitly requires it, ratification by the legislature(s) of the affected State(s). They are not ordinary statutes and cannot be altered by a simple majority."
+    },
+    {
+      "id": 113,
+      "text": "The 73rd and 74th Constitutional Amendments devolve functions to Panchayats and Municipalities through the Eleventh and Twelfth Schedules. Which statement correctly describes the operational requirement for this devolution?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The functions listed in the Schedules are automatically transferred to local bodies without any State legislation.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "State conformity legislation is mandatory to actualise the devolution of functions, finances and functionaries to local bodies.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Only Panchayats receive devolved functions; Municipalities are governed solely by State municipal acts.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Fiscal devolution to local bodies is optional and left entirely to the discretion of the State Finance Commission.",
+          "c": false
+        }
+      ],
+      "sol": "The 73rd and 74th Amendments inserted Part IX and Part IXA and the Eleventh and Twelfth Schedules, listing 29 and 18 functions respectively. However, the Constitution requires States to enact conformity legislation to devolve these functions, along with finances and functionaries, to Panchayats and Municipalities. The Schedules merely enumerate the subjects; they do not automatically transfer powers. State laws must provide for the composition, powers, and fiscal resources of local bodies, and the State Finance Commission recommends the distribution of finances, but the devolution itself is not optional."
+    },
+    {
+      "id": 114,
+      "text": "A State legislature enacts a law that incidentally encroaches upon a Union List subject. To determine whether the law is within the State’s legislative competence, the Supreme Court will primarily apply which doctrine?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Doctrine of Eclipse",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Doctrine of Severability",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Doctrine of Pith and Substance",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Doctrine of Colourable Legislation",
+          "c": false
+        }
+      ],
+      "sol": "The Doctrine of Pith and Substance is used to ascertain the true nature and character of a legislation. If the pith and substance of a State law falls within a State List entry, incidental encroachment on a Union List subject does not render the law ultra vires. This doctrine was illustrated in K. C. Gajapati v. State of Orissa (1954) and State of Karnataka v. Union of India (1977). The Doctrine of Eclipse applies only to pre‑Constitution laws inconsistent with fundamental rights; Severability deals with separating invalid portions of a statute; Colourable Legislation examines whether a legislature is indirectly doing what it cannot do directly, which is a secondary test after establishing the pith and substance."
     }
   ],
   "mains-gs3/science-tech-digital": [
@@ -233009,6 +233522,141 @@
         }
       ],
       "sol": "The text explicitly says: \"The Bushveld Complex in South Africa contains the world’s largest reserves of platinum‑group elements and chromium, formed by layered mafic intrusion.\" This matches option B. The other options refer to mineral associations linked to different geological settings (e.g., iron ore in Archean cratons, copper‑gold in the Ring of Fire, bauxite in lateritic profiles). Hence, B is correct."
+    },
+    {
+      "id": 106,
+      "text": "What is the approximate equilibrium line altitude (ELA) in the western Himalaya according to the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "4,800 m",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "5,200 m",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "5,500 m",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "4,500 m",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the equilibrium line altitude (ELA) in the western Himalaya lies near 5,200 m, while in the eastern sector it descends to about 4,800 m due to higher precipitation. Therefore, the correct value for the western Himalaya is 5,200 m. The other options correspond to the eastern ELA or unrelated figures."
+    },
+    {
+      "id": 107,
+      "text": "Which river basin receives the highest proportion of glacial melt during pre‑monsoon months as per the given estimates?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Upper Indus",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Ganga",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Brahmaputra",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "All receive equal proportions",
+          "c": false
+        }
+      ],
+      "sol": "The lesson provides estimated contributions of glacial melt to pre‑monsoon flow: 30‑40% for the upper Indus, 10‑15% for the Ganga, and 5‑10% for the Brahmaputra. The upper Indus clearly has the highest share, making it the correct answer."
+    },
+    {
+      "id": 108,
+      "text": "What documented effect do hard engineering structures such as groynes have on adjacent shorelines?",
+      "options": [
+        {
+          "l": "a",
+          "t": "They completely stop erosion everywhere",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "They transfer erosion downdrift causing retreat",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "They increase sediment supply to the coast",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "They have no measurable impact",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that hard works often transfer erosion downdrift, citing studies at the Kakinada groyne field where shoreline retreat of about 30 m occurred in five years. This demonstrates that hard structures shift erosion rather than eliminate it."
+    },
+    {
+      "id": 109,
+      "text": "According to the Indus Waters Treaty, which set of rivers is allocated for exclusive use by India?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Western rivers (Indus, Jhelum, Chenab)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Eastern rivers (Ravi, Beas, Sutlej)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "All six rivers",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "None of the rivers",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly warns against confusing the allocation and states that the treaty gives India exclusive use of the eastern rivers, not the western ones. The eastern rivers are the Ravi, Beas, and Sutlej, while the western rivers (Indus, Jhelum, Chenab) are allocated to Pakistan."
+    },
+    {
+      "id": 110,
+      "text": "What does Land Degradation Neutrality (LDN) entail as defined by the UNCCD?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Complete cessation of all land degradation",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Balanced loss and gain so that net land resources remain stable or increase",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Restoration of all degraded land to its original state",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No change in land use patterns",
+          "c": false
+        }
+      ],
+      "sol": "The lesson quotes the UNCCD definition: LDN is a state whereby the amount and quality of land resources necessary to support ecosystem functions and services remain stable or increase. It also highlights a trap: LDN allows balanced loss and gain, not absolute cessation of degradation."
     }
   ],
   "general-awareness/indian-economy": [
@@ -233688,6 +234336,141 @@
         }
       ],
       "sol": "The lesson explicitly states that the Vernacular Press Act (1878) was repealed in 1882 after public outcry, demonstrating the press’s capacity to mobilise opinion. The other years are not mentioned in the text. Consequently, option A is the only verifiable answer."
+    },
+    {
+      "id": 111,
+      "text": "Which legislative act was a direct response to the Santhal Hul (1855‑56)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Deccan Agriculturists’ Relief Act 1879",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Chotanagpur Tenancy Act 1908",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Santhal Parganas Act 1855",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Bengal Land Reforms Act 1950",
+          "c": false
+        }
+      ],
+      "sol": "The Santhal Hul erupted in 1855‑56 against zamindari exactions and loss of forest access. The colonial state responded by creating the Santhal Parganas district through the Santhal Parganas Act of 1855, which aimed to isolate the rebellion’s leadership and restore revenue control. The Deccan Agriculturists’ Relief Act (1879) followed the Deccan Riots, the Chotanagpur Tenancy Act (1908) followed the Munda Ulgulan, and the Bengal Land Reforms Act (1950) followed the Tebhaga Movement. Therefore, the correct legislative response to the Santhal Hul is the Santhal Parganas Act 1855."
+    },
+    {
+      "id": 112,
+      "text": "Who hoisted the Congress flag at Gowalia Tank Maidan during the Quit India Movement after the arrest of senior leaders?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Sarojini Naidu",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Aruna Asaf Ali",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Usha Mehta",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Matangini Hazra",
+          "c": false
+        }
+      ],
+      "sol": "During the Quit India Movement (1942), after the arrest of top Congress leaders, Aruna Asaf Ali hoisted the Congress flag at Gowalia Tank Maidan in Bombay, becoming a symbol of defiance. Sarojini Naidu and Kasturba Gandhi were active in the Non‑Cooperation Movement, Usha Mehta ran the clandestine Congress Radio, and Matangini Hazra led a procession in Tamluk where she died under police fire. The text explicitly identifies Aruna Asaf Ali as the person who hoisted the flag at Gowalia Tank Maidan."
+    },
+    {
+      "id": 113,
+      "text": "Which constitutional document introduced universal adult franchise in India?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Government of India Act 1909",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Government of India Act 1919",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Government of India Act 1935",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Constitution of India 1950",
+          "c": true
+        }
+      ],
+      "sol": "The Government of India Act 1919 granted only limited voting rights to women, not universal adult franchise. The 1935 Act proposed a federal scheme that never came into force because princely states did not accede. Universal adult franchise was finally established by the Constitution of India adopted in 1950, which extended the vote to all adult citizens regardless of gender, property, or education. Hence, the 1950 Constitution is the correct answer."
+    },
+    {
+      "id": 114,
+      "text": "What was the nature of production in the Mughal karkhana system?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Standardized interchangeable parts",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Craft‑based batch production",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Assembly line mass production",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Fully mechanized factory production",
+          "c": false
+        }
+      ],
+      "sol": "The Mughal karkhana system organized artisans in state‑run workshops for cannon casting, textile weaving, and other crafts. However, production remained craft‑based and carried out in batches; it did not achieve standardized interchangeable parts, assembly lines, or full mechanization. The text explicitly warns against the misconception that the karkhanas produced standardized interchangeable parts, clarifying that they remained craft‑based batch production."
+    },
+    {
+      "id": 115,
+      "text": "The Chola Kudimaramath system for irrigation maintenance relied on which institutional arrangement?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Centralized state bureaucracy",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Village‑level elected tank committees",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Private contractors appointed by the king",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Merchant guild funding only",
+          "c": false
+        }
+      ],
+      "sol": "The Chola empire’s Kudimaramath system obliged village assemblies (ur) to maintain irrigation tanks and channels. The Uttaramerur inscriptions (c. 920 CE) detail elected tank committees with accountability clauses, showing that maintenance was managed by village‑level elected bodies, not a centralized bureaucracy, private contractors, or merchant guilds alone. The text also notes the misconception of treating Kudimaramath as a purely state‑run bureaucracy, confirming the role of elected committees."
     }
   ],
   "general-awareness/sports-awards": [
@@ -233960,6 +234743,141 @@
         }
       ],
       "sol": "The lesson text discusses several transparency measures. It specifically states: 'The committee’s minutes are published on the ministry website within 30 days of the announcement, a transparency measure strengthened after controversies in 2018.' While other measures like the Public Feedback Module (2021 revision) and NADA clearance (since 2020) were also introduced or mandated after 2018, the publication of minutes is the one explicitly linked to being 'strengthened after controversies in 2018'. Character and antecedent verification was institutionalized after a 2016 incident."
+    },
+    {
+      "id": 111,
+      "text": "In the Indian sports dispute resolution architecture, which body serves as the appellate forum for decisions of a National Sports Federation's internal Dispute Resolution Committee (DRC)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Sports Authority of India (SAI)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Indian Olympic Association (IOA) Ethics Commission",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Court of Arbitration for Sport (CAS)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Ministry of Youth Affairs and Sports",
+          "c": false
+        }
+      ],
+      "sol": "The National Sports Development Code requires each recognised NSF to constitute a Dispute Resolution Committee (DRC). Decisions of the DRC are appealable to the Indian Olympic Association (IOA) Ethics Commission, an independent body. Only after exhausting this internal appeal can a party approach the Court of Arbitration for Sport (CAS). The Sports Authority of India (SAI) and the Ministry do not serve as the first appellate forum for DRC decisions. Therefore, the correct appellate body is the IOA Ethics Commission."
+    },
+    {
+      "id": 112,
+      "text": "Under which Indian legislation are foreign arbitral awards of the Court of Arbitration for Sport (CAS) enforced in domestic courts?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Indian Contract Act, 1872",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Arbitration and Conciliation Act, 1996 (as amended)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "National Sports Development Code",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Sports Authority of India Act",
+          "c": false
+        }
+      ],
+      "sol": "The Arbitration and Conciliation Act, 1996 (as amended) governs the enforcement of foreign arbitral awards in India. CAS awards are treated as foreign arbitral awards under the New York Convention, and the Act provides the statutory framework for their recognition and enforcement by Indian courts. The Indian Contract Act, 1872 deals with contractual obligations, while the National Sports Development Code and SAI Act are policy and administrative instruments, not enforcement statutes. Hence, the applicable legislation is the Arbitration and Conciliation Act, 1996."
+    },
+    {
+      "id": 113,
+      "text": "The revised National Sports Development Code mandates a minimum threshold of female representation in coaching, technical, and administrative positions within NSFs. Which mechanism monitors compliance with this gender‑equity policy?",
+      "options": [
+        {
+          "l": "a",
+          "t": "SAI annual audit",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "National Sports Governance Observer (NSGO) dashboard",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "IOA Ethics Commission",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Ministry's internal review committee",
+          "c": false
+        }
+      ],
+      "sol": "The revised National Sports Development Code introduced a binding gender‑equity policy with a minimum female representation threshold. Compliance is tracked through the National Sports Governance Observer (NSGO) dashboard, which publishes periodic compliance reports. Federations falling short receive show‑cause notices. The SAI annual audit, IOA Ethics Commission, and Ministry’s internal review are not the designated monitoring tools for this specific policy. Thus, the NSGO dashboard is the correct monitoring mechanism."
+    },
+    {
+      "id": 114,
+      "text": "According to the Emerging Sports Framework (ESF), which organisation is designated as the nodal agency for talent identification, coaching certification, and international exposure for emerging sports?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Indian Olympic Association (IOA)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Sports Authority of India (SAI)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Ministry of Youth Affairs and Sports",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "National Institute of Sports",
+          "c": false
+        }
+      ],
+      "sol": "The Emerging Sports Framework (ESF) designates the Sports Authority of India (SAI) as the nodal agency responsible for talent identification, coaching certification, and international exposure for emerging sports such as sport climbing, skateboarding, breaking, esports, and surfing. The IOA, Ministry, and National Institute of Sports have other roles but are not named as the nodal agency under the ESF. Therefore, SAI is the correct answer."
+    },
+    {
+      "id": 115,
+      "text": "What is the prescribed three‑tier qualification pathway for athletes in emerging sports to secure berths in multi‑sport events under the ESF?",
+      "options": [
+        {
+          "l": "a",
+          "t": "National Championships → World Ranking/Olympic Qualifying Series → Continental Qualifiers",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Continental Qualifiers → National Championships → World Ranking/Olympic Qualifying Series",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "National Championships → Continental Qualifiers → World Ranking/Olympic Qualifying Series",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "World Ranking/Olympic Qualifying Series → National Championships → Continental Qualifiers",
+          "c": false
+        }
+      ],
+      "sol": "Under the ESF, qualification for multi‑sport events follows a three‑tier pathway: (1) National Championships serve as the primary selection trial; (2) Continental Qualifiers (e.g., Asian Championships or Asian Games qualifiers) organised by the respective Asian Continental Federation; (3) World Ranking or Olympic Qualifying Series where athletes must achieve a minimum ranking or accumulate qualifying points at IF‑sanctioned events. This sequence is explicitly stated in the lesson. Options A, B, and D reorder the stages incorrectly. Hence, the correct order is National Championships → Continental Qualifiers → World Ranking/Olympic Qualifying Series."
     }
   ],
   "maths/average": [
@@ -236036,6 +236954,60 @@
         }
       ],
       "sol": "Use Leibniz rule: (uv)^{(n)} = Σ_{k=0}^n C(n,k) u^{(k)} v^{(n-k)}. Let u=x^2, v=e^x. Derivatives: u(0)=0, u'(0)=0, u''(0)=2, u'''(0)=0, u^{(4)}(0)=0. v^{(k)}(0)=1 for all k. For n=4, only k=2 contributes because u^{(k)}(0)=0 for k≠2. Term: C(4,2) * u''(0) * v^{(2)}(0) = 6 * 2 * 1 = 12. Hence the 4th derivative at 0 is 12."
+    },
+    {
+      "id": 105,
+      "text": "Consider the series ∑_{n=1}^{∞} x^n / n^2 on the interval [−1, 1]. Which of the following statements is true?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The series converges pointwise but not uniformly on [−1, 1].",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The series converges uniformly on [−1, 1] and its sum is continuous there.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Termwise differentiation of the series is valid on (−1, 1) because the original series converges uniformly.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The Weierstrass M‑test fails because ∑ 1/n^2 diverges.",
+          "c": false
+        }
+      ],
+      "sol": "For each n, |x^n / n^2| ≤ 1/n^2 on [−1, 1]. Since ∑ 1/n^2 converges, the Weierstrass M‑test guarantees uniform convergence of the series on [−1, 1]. Uniform limit of continuous functions is continuous, so the sum is continuous on [−1, 1]. Termwise differentiation would require uniform convergence of the differentiated series ∑ x^{n-1}/n, which does not hold at the endpoints; hence statement 3 is false. Statement 4 is false because ∑ 1/n^2 converges."
+    },
+    {
+      "id": 106,
+      "text": "Let f(x) = √x on [0, 1]. Which of the following correctly describes the continuity properties of f?",
+      "options": [
+        {
+          "l": "a",
+          "t": "f is Lipschitz continuous on [0, 1] with Lipschitz constant 1.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "f is uniformly continuous on [0, 1] but not Lipschitz continuous.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "f is not uniformly continuous on [0, 1] because its derivative is unbounded near 0.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "f is Hölder continuous of order α = 1/2 on [0, 1] and also Lipschitz continuous.",
+          "c": false
+        }
+      ],
+      "sol": "√x is continuous on the compact interval [0, 1], hence uniformly continuous. Its derivative f'(x)=1/(2√x) is unbounded as x→0⁺, so no finite L satisfies |√x−√y| ≤ L|x−y| for all x,y; thus f is not Lipschitz. However, |√x−√y| ≤ |x−y|^{1/2} holds, so f is Hölder continuous of order 1/2. Therefore only statement 2 is correct."
     }
   ],
   "maths/data-interpretation": [
@@ -236148,6 +237120,87 @@
         }
       ],
       "sol": "Sum = Σ_{n=1}^∞ ∫_0^1 x^{n-1}(1-x) dx = ∫_0^1 (1-x) Σ_{n=1}^∞ x^{n-1} dx = ∫_0^1 (1-x)/(1-x) dx = ∫_0^1 1 dx = 1."
+    },
+    {
+      "id": 104,
+      "text": "Let a_1, a_2, ..., a_n be positive real numbers such that Σ_{k=1}^n a_k = 1. The minimum value of Σ_{k=1}^n (k^2 / a_k) is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "n^2 (n+1)^2 / 4",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "n(n+1)/2",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "n^2 (n+1)^2 / 2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "n(n+1)(2n+1)/6",
+          "c": false
+        }
+      ],
+      "sol": "Apply Cauchy-Schwarz in Engel form: Σ (k^2 / a_k) ≥ (Σ k)^2 / Σ a_k. Since Σ a_k = 1 and Σ k = n(n+1)/2, the lower bound is [n(n+1)/2]^2 = n^2 (n+1)^2 / 4. Equality holds when a_k is proportional to k, i.e., a_k = 2k / [n(n+1)]."
+    },
+    {
+      "id": 105,
+      "text": "The linear recurrence a_n = 3 a_{n-1} - 2 a_{n-2} for n ≥ 2, with initial values a_0 = 1, a_1 = 2, can be represented by the matrix equation [a_n; a_{n-1}] = M [a_{n-1}; a_{n-2}]. The companion matrix M is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "[[3, -2], [1, 0]]",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "[[3, 2], [1, 0]]",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "[[3, -2], [0, 1]]",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "[[2, -3], [1, 0]]",
+          "c": false
+        }
+      ],
+      "sol": "For a recurrence a_n = p a_{n-1} + q a_{n-2}, the companion matrix is [[p, q], [1, 0]]. Here p = 3 and q = -2. Therefore M = [[3, -2], [1, 0]]."
+    },
+    {
+      "id": 106,
+      "text": "The fundamental solution (x, y) in positive integers to the Pell equation x^2 - 2 y^2 = 1 is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "(3, 2)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "(1, 1)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "(2, 1)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "(5, 3)",
+          "c": false
+        }
+      ],
+      "sol": "The continued fraction expansion of √2 is [1; 2, 2, 2, ...] with period 1 (odd). For odd period, the fundamental solution to x^2 - D y^2 = 1 is given by the convergent at the end of the second period. The convergents are 1/1, 3/2, 7/5, ... The second convergent 3/2 yields 3^2 - 2·2^2 = 9 - 8 = 1. Thus (3, 2) is the fundamental solution."
     }
   ]
 }
