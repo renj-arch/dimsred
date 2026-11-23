@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22T14:27:58.010Z",
+  "updatedAt": "2026-11-22T23:27:25.477Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -27584,6 +27584,978 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-22T14:27:58.003Z"
+    },
+    {
+      "id": "52a9fd7b93f9bb8b",
+      "exam": "neet",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "NEET UG Practice Set 18",
+      "paperPath": "neet/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 5,
+      "section": "Physics",
+      "question": "In a series LCR circuit, the resonant frequency is f₀. If the inductance is doubled and the capacitance is halved, the new resonant frequency becomes:",
+      "options": [
+        {
+          "label": "A",
+          "text": "f₀",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "2f₀",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "f₀/√2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "f₀/2",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the resonant frequency formula for a series LCR circuit: f₀ = 1/(2π√(LC)).",
+        "Let the new inductance be L' = 2L and new capacitance be C' = C/2.",
+        "Compute the new resonant frequency: f' = 1/(2π√(L'C')) = 1/(2π√(2L × C/2)).",
+        "Simplify the product inside the square root: 2L × C/2 = LC.",
+        "Thus f' = 1/(2π√(LC)) = f₀.",
+        "Therefore the new resonant frequency equals the original f₀."
+      ],
+      "verifierCheck": "The resonant frequency of a series LCR circuit is given by f₀ = 1/(2π√(LC)). When the inductance is doubled (L' = 2L) and the capacitance is halved (C' = C/2), the product L'C' = (2L)(C/2) = LC remains unchanged. Therefore, the new resonant frequency f' = 1/(2π√(L'C')) = 1/(2π√(LC)) = f₀.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "LC Product Invariant",
+          "idea": "LC product unchanged so frequency unchanged",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Write resonant frequency f = 1/(2π√(LC))",
+            "New inductance L' = 2L, new capacitance C' = C/2",
+            "Compute L'C' = (2L)(C/2) = LC",
+            "Conclude f' = f₀"
+          ]
+        },
+        {
+          "name": "Quick Substitution",
+          "idea": "Plug changes directly into formula",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "f₀ = 1/(2π√(LC))",
+            "f_new = 1/(2π√(2L * C/2))",
+            "Simplify inside sqrt: 2L * C/2 = LC",
+            "f_new = 1/(2π√(LC)) = f₀"
+          ]
+        },
+        {
+          "name": "Ratio Shortcut",
+          "idea": "Frequency proportional to 1/√(LC); combine factors",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "f ∝ 1/√(LC)",
+            "L doubles → factor 1/√2",
+            "C halves → factor 1/√(1/2) = √2",
+            "Multiply factors: (1/√2)*√2 = 1",
+            "New frequency = f₀"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:22:42.571Z"
+    },
+    {
+      "id": "e3bfba58718a005b",
+      "exam": "rbi",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "RBI Grade B Practice Set 18",
+      "paperPath": "rbi/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 5,
+      "section": "Quantitative Aptitude",
+      "question": "What is the unit digit of the expression \\((347)^{89} \\times (562)^{103} \\times (789)^{56}\\)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "6",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "8",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Find unit digits of bases: 7, 2, 9",
+        "Determine cyclicity: 7 has cycle 4, 2 has cycle 4, 9 has cycle 2",
+        "Compute exponents modulo cycle lengths: 89 mod 4 = 1, 103 mod 4 = 3, 56 mod 2 = 0",
+        "Find unit digits of powers: 7^1=7, 2^3=8, 9^even=1",
+        "Multiply unit digits: 7 × 8 × 1 = 56",
+        "Unit digit of product is 6"
+      ],
+      "verifierCheck": "Unit digits: 347^89 -> 7^89, cycle of 7: 7,9,3,1; 89 mod 4 = 1 => 7. 562^103 -> 2^103, cycle of 2: 2,4,8,6; 103 mod 4 = 3 => 8. 789^56 -> 9^56, cycle of 9: 9,1; 56 even => 1. Product unit digit: 7*8*1=56 => 6.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Cyclicity Shortcut",
+          "idea": "Use known unit digit cycles for 7, 2, 9",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Find unit digit of each base: 7, 2, 9.",
+            "Reduce exponents modulo cycle length: 89 mod 4 = 1, 103 mod 4 = 3, 56 mod 2 = 0.",
+            "Compute unit digits: 7^1 = 7, 2^3 = 8, 9^0 = 1.",
+            "Multiply unit digits: 7 × 8 = 56 → 6, 6 × 1 = 6."
+          ]
+        },
+        {
+          "name": "Modulo 10 Product",
+          "idea": "Compute each term modulo 10 using exponent reduction",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "347^89 mod 10 = 7^89 mod 10. Since 7^4 ≡ 1, 7^89 = 7^(4×22+1) ≡ 7.",
+            "562^103 mod 10 = 2^103 mod 10. Since 2^4 ≡ 6? Actually cycle 4: 2^103 = 2^(4×25+3) ≡ 2^3 = 8.",
+            "789^56 mod 10 = 9^56 mod 10. Since 9^2 ≡ 1, 9^56 ≡ 1.",
+            "Multiply residues: 7 × 8 × 1 = 56 ≡ 6 mod 10."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:23:16.152Z"
+    },
+    {
+      "id": "20ab0cb509d543b4",
+      "exam": "ssc-gd",
+      "paperSlug": "practice-set-14",
+      "paperTitle": "SSC GD Constable Practice Set 14",
+      "paperPath": "ssc-gd/papers/practice-set-14.html",
+      "paperFile": "practice-set-14.json",
+      "questionNumber": 5,
+      "section": "General Intelligence & Reasoning",
+      "question": "Which letter comes next in the series: A, C, F, J, O, ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "T",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "V",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "U",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "W",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Convert letters to alphabetical positions: A=1, C=3, F=6, J=10, O=15",
+        "Compute differences: 3-1=2, 6-3=3, 10-6=4, 15-10=5",
+        "Observe differences increase by 1 each step: +2, +3, +4, +5",
+        "Predict next difference: +6",
+        "Add to last position: 15+6=21",
+        "Convert 21 to letter: U"
+      ],
+      "verifierCheck": "The series A, C, F, J, O corresponds to alphabet positions 1, 3, 6, 10, 15. The differences between consecutive positions are +2, +3, +4, +5, increasing by 1 each step. The next difference should be +6, giving position 15+6=21, which is the letter U. Therefore the next letter is U, option C.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Triangular Numbers",
+          "idea": "Positions match triangular number sequence",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recognize positions: 1,3,6,10,15 are triangular numbers",
+            "Next triangular number = 21",
+            "21st letter = U"
+          ]
+        },
+        {
+          "name": "Incremental Differences",
+          "idea": "Spot increasing gaps between letter positions",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write positions: A=1, C=3, F=6, J=10, O=15",
+            "Compute gaps: +2, +3, +4, +5",
+            "Next gap +6 → 15+6=21",
+            "21st letter = U"
+          ]
+        },
+        {
+          "name": "Alphabet Skip Count",
+          "idea": "Count skipped letters between terms",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "After A skip 1 (B) → C",
+            "After C skip 2 (D,E) → F",
+            "After F skip 3 (G,H,I) → J",
+            "After J skip 4 (K,L,M,N) → O",
+            "Next skip 5 (P,Q,R,S,T) → U"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:23:40.164Z"
+    },
+    {
+      "id": "3fdd07997c9cdc10",
+      "exam": "agniveer",
+      "paperSlug": "practice-set-21",
+      "paperTitle": "Agniveer Practice Set 21",
+      "paperPath": "agniveer/papers/practice-set-21.html",
+      "paperFile": "practice-set-21.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "The value of tan 10° × tan 20° × tan 30° × tan 40° × tan 50° × tan 60° × tan 70° × tan 80° is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "√3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1/√3",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify complementary angle pairs: (10°,80°), (20°,70°), (30°,60°), (40°,50°).",
+        "Use identity tan θ × tan(90°-θ) = tan θ × cot θ = 1.",
+        "Multiply the four pairs: 1 × 1 × 1 × 1 = 1."
+      ],
+      "verifierCheck": "Using the identity tan(90° - θ) = cot θ = 1/tan θ, we pair terms: tan 80° = cot 10° = 1/tan 10°, tan 70° = cot 20° = 1/tan 20°, tan 60° = cot 30° = 1/tan 30°, tan 50° = cot 40° = 1/tan 40°. The product becomes tan 10° × tan 20° × tan 30° × tan 40° × (1/tan 40°) × (1/tan 30°) × (1/tan 20°) × (1/tan 10°) = 1.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Complementary Pairing",
+          "idea": "Pair angles summing to 90°, tan θ × cot θ = 1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Pair 10° with 80°, 20° with 70°, 30° with 60°, 40° with 50°",
+            "Each pair product = tan θ × cot θ = 1",
+            "Multiply all pairs: 1 × 1 × 1 × 1 = 1"
+          ]
+        },
+        {
+          "name": "Known Product Identity",
+          "idea": "Product of tan 10° to 80° step 10° equals 1",
+          "kind": "mnemonic",
+          "seconds": 10,
+          "steps": [
+            "Recall standard result: tan10°·tan20°·...·tan80° = 1",
+            "Answer directly = 1"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:24:08.560Z"
+    },
+    {
+      "id": "cbb7673468840ead",
+      "exam": "cds",
+      "paperSlug": "practice-set-09",
+      "paperTitle": "CDS Practice Set 9",
+      "paperPath": "cds/papers/practice-set-09.html",
+      "paperFile": "practice-set-09.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "In what ratio must a grocer mix tea costing Rs 60 per kg with tea costing Rs 80 per kg so that the mixture is worth Rs 70 per kg?",
+      "options": [
+        {
+          "label": "A",
+          "text": "2:1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1:1",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "1:2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "3:2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let the quantities of tea costing Rs 60/kg and Rs 80/kg be x kg and y kg respectively.",
+        "The average cost of the mixture is (60x + 80y)/(x+y) = 70.",
+        "Solve: 60x + 80y = 70x + 70y => 10y = 10x => x = y.",
+        "Thus the ratio x:y = 1:1."
+      ],
+      "verifierCheck": "Let the quantities be x kg of Rs 60 tea and y kg of Rs 80 tea. The average cost is (60x+80y)/(x+y)=70 => 60x+80y=70x+70y => 10y=10x => x=y => ratio 1:1.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Midpoint Recognition",
+          "idea": "Target price is exact average of two costs",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "See 70 is exactly halfway between 60 and 80",
+            "Equal distances mean equal weights",
+            "Ratio = 1:1"
+          ]
+        },
+        {
+          "name": "Alligation Diagram",
+          "idea": "Cross-subtraction gives ratio instantly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write 60 and 80 on sides, 70 in middle",
+            "Subtract diagonally: 80-70=10, 70-60=10",
+            "Ratio = 10:10 = 1:1"
+          ]
+        },
+        {
+          "name": "Algebraic Balance",
+          "idea": "One-line equation solves for ratio",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Let x kg of Rs60 and y kg of Rs80",
+            "60x+80y=70(x+y) => 10y=10x => x=y",
+            "Ratio x:y = 1:1"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:24:24.974Z"
+    },
+    {
+      "id": "390a72711b289a4e",
+      "exam": "cgl",
+      "paperSlug": "practice-set-20",
+      "paperTitle": "CGL Practice Set 20",
+      "paperPath": "cgl/papers/practice-set-20.html",
+      "paperFile": "practice-set-20.json",
+      "questionNumber": 6,
+      "section": "Quantitative Aptitude",
+      "question": "A solid metallic cylinder of radius 6 cm and height 10 cm is melted and recast into solid spheres of radius 3 cm each. The number of spheres formed is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "8",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "9",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "10",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "12",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compute volume of cylinder: π × 6² × 10 = 360π cm³",
+        "Compute volume of one sphere: (4/3)π × 3³ = 36π cm³",
+        "Divide cylinder volume by sphere volume: 360π / 36π = 10"
+      ],
+      "verifierCheck": "Volume of cylinder = π × 6² × 10 = 360π cm³. Volume of one sphere = (4/3)π × 3³ = 36π cm³. Number of spheres = 360π / 36π = 10.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Dimension Ratio Shortcut",
+          "idea": "Use radius ratio to cancel π and simplify",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Note cylinder radius = 2 × sphere radius (6 = 2×3).",
+            "Cylinder volume = π(2r)²h = 4πr²h.",
+            "Sphere volume = (4/3)πr³.",
+            "Divide: (4πr²h) / ((4/3)πr³) = 3h/r.",
+            "Plug h=10, r=3 → 30/3 = 10 spheres."
+          ]
+        },
+        {
+          "name": "Quick Mental Math",
+          "idea": "Cancel π, compute numbers mentally",
+          "kind": "mnemonic",
+          "seconds": 8,
+          "steps": [
+            "Cancel π from both volumes.",
+            "Cylinder: 6×6×10 = 360.",
+            "Sphere: (4/3)×27 = 36.",
+            "360 ÷ 36 = 10."
+          ]
+        },
+        {
+          "name": "Direct Volume Division",
+          "idea": "Compute volumes exactly and divide",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Cylinder volume = π × 6² × 10 = 360π.",
+            "Sphere volume = (4/3)π × 3³ = 36π.",
+            "Number = 360π / 36π = 10."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:24:47.511Z"
+    },
+    {
+      "id": "730ed1a50860fcbc",
+      "exam": "jee",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "JEE Main Practice Set 18",
+      "paperPath": "jee/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "Using the first two terms of the binomial expansion, the approximate value of (1.01)^5 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1.05",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1.051",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1.0505",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1.052",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify binomial expansion: (1+x)^n ≈ 1 + nx for small x.",
+        "Substitute x=0.01, n=5.",
+        "Compute 1 + 5*0.01 = 1.05.",
+        "Compare with options: A is 1.05."
+      ],
+      "verifierCheck": "The binomial expansion of (1+x)^5 is 1 + 5x + 10x^2 + ... Using the first two terms (1 + 5x) with x = 0.01 gives 1 + 5*0.01 = 1.05.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental Multiply",
+          "idea": "First two binomial terms: 1 + 5x",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall binomial: (1+x)^5 ≈ 1+5x",
+            "Plug x=0.01 → 1+0.05=1.05",
+            "Choose A"
+          ]
+        },
+        {
+          "name": "Binomial Two-Term",
+          "idea": "Use (1+x)^n ≈ 1+nx for small x",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify x=0.01, n=5",
+            "Compute 1 + 5*0.01 = 1.05",
+            "Match option A"
+          ]
+        },
+        {
+          "name": "Linear Approximation",
+          "idea": "Tangent line approximation at x=0",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "f(x)=(1+x)^5, f'(x)=5(1+x)^4",
+            "At x=0, f(0)=1, f'(0)=5",
+            "Approx f(0.01)≈1+5*0.01=1.05",
+            "Select A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:25:10.567Z"
+    },
+    {
+      "id": "9c1e0f90c90d402c",
+      "exam": "nda",
+      "paperSlug": "practice-set-11",
+      "paperTitle": "NDA Practice Set 11",
+      "paperPath": "nda/papers/practice-set-11.html",
+      "paperFile": "practice-set-11.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "The value of the definite integral ∫_0^(π/2) log(tan x) dx is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "π/2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "-1",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let I = ∫_0^(π/2) log(tan x) dx.",
+        "Substitute x → π/2 - x. Then tan(π/2 - x) = cot x = 1/tan x.",
+        "I = ∫_0^(π/2) log(cot x) dx = ∫_0^(π/2) -log(tan x) dx = -I.",
+        "Thus 2I = 0, so I = 0."
+      ],
+      "verifierCheck": "Let I = ∫_0^{π/2} log(tan x) dx. Substitute x = π/2 - t, then dx = -dt, and the limits reverse: I = ∫_{π/2}^0 log(tan(π/2 - t)) (-dt) = ∫_0^{π/2} log(cot t) dt = ∫_0^{π/2} log(1/tan t) dt = ∫_0^{π/2} -log(tan t) dt = -I. Hence 2I = 0, so I = 0. Alternatively, log(tan x) = log(sin x) - log(cos x), and ∫_0^{π/2} log(sin x) dx = ∫_0^{π/2} log(cos x) dx by symmetry, so their difference is 0. Therefore the integral equals 0.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Symmetry Substitution",
+          "idea": "Exploit tan(π/2 - x) = cot x = 1/tan x",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let I = ∫_0^{π/2} log(tan x) dx.",
+            "Substitute x → π/2 - x: I = ∫_0^{π/2} log(tan(π/2 - x)) dx = ∫_0^{π/2} log(cot x) dx = ∫_0^{π/2} -log(tan x) dx = -I.",
+            "Thus I = -I ⇒ 2I = 0 ⇒ I = 0."
+          ]
+        },
+        {
+          "name": "Log Difference",
+          "idea": "log(tan x) = log(sin x) - log(cos x); known integrals cancel",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Recall ∫_0^{π/2} log(sin x) dx = ∫_0^{π/2} log(cos x) dx = -π/2 log 2.",
+            "Write log(tan x) = log(sin x) - log(cos x).",
+            "Integral = (-π/2 log 2) - (-π/2 log 2) = 0."
+          ]
+        },
+        {
+          "name": "Reciprocal Substitution",
+          "idea": "Let t = tan x, then t → 1/t shows integral is zero",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Substitute t = tan x, dx = dt/(1+t^2): I = ∫_0^∞ log(t)/(1+t^2) dt.",
+            "Split at 1: I = ∫_0^1 + ∫_1^∞. In second, let u = 1/t ⇒ du = -dt/t^2.",
+            "∫_1^∞ log(t)/(1+t^2) dt = ∫_1^0 log(1/u)/(1+1/u^2) (-du/u^2) = ∫_0^1 -log(u)/(1+u^2) du.",
+            "Sum cancels: I = 0."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:25:38.794Z"
+    },
+    {
+      "id": "96085bc97a42e383",
+      "exam": "neet",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "NEET UG Practice Set 18",
+      "paperPath": "neet/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 6,
+      "section": "Physics",
+      "question": "According to the Bohr model, the kinetic energy of the electron in the nth orbit of hydrogen is K_n. The ratio K₂ : K₃ is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "4/9",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2/3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "9/4",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "3/2",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall that in the Bohr model, the kinetic energy of the electron in the nth orbit is K_n = 13.6 eV / n^2 (or proportional to 1/n^2).",
+        "Write the ratio K₂ : K₃ = (1/2^2) : (1/3^2) = 1/4 : 1/9.",
+        "Simplify the ratio: (1/4) / (1/9) = 9/4.",
+        "Identify the matching option: 9/4 corresponds to option C."
+      ],
+      "verifierCheck": "In the Bohr model, the kinetic energy K_n = (1/2) m v^2. From Coulomb's law and quantization of angular momentum (m v r = n ħ), the radius r_n ∝ n^2, so K_n ∝ 1/r_n ∝ 1/n^2. Therefore K₂/K₃ = (1/2^2)/(1/3^2) = 9/4.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Virial Theorem",
+          "idea": "K = -E, E ∝ 1/n²",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Virial theorem: kinetic energy K = -total energy E for Coulomb potential.",
+            "Bohr energy E_n ∝ -1/n², so K_n ∝ 1/n².",
+            "Ratio K₂:K₃ = (3²)/(2²) = 9/4."
+          ]
+        },
+        {
+          "name": "Velocity Scaling",
+          "idea": "v ∝ 1/n, K ∝ v² ∝ 1/n²",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Bohr model: orbital velocity v_n ∝ 1/n.",
+            "Kinetic energy K_n = ½ m v_n² ∝ 1/n².",
+            "Ratio K₂/K₃ = (n₃/n₂)² = (3/2)² = 9/4."
+          ]
+        },
+        {
+          "name": "Energy Level Recall",
+          "idea": "K_n = 13.6/n² eV",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Memorize: K_n = 13.6/n² eV for hydrogen.",
+            "K₂ = 13.6/4, K₃ = 13.6/9.",
+            "Ratio = (13.6/4) / (13.6/9) = 9/4."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:26:14.841Z"
+    },
+    {
+      "id": "b22e315190651e01",
+      "exam": "rbi",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "RBI Grade B Practice Set 18",
+      "paperPath": "rbi/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 6,
+      "section": "Reasoning",
+      "question": "Rahul starts from point A, walks 5 m north, then turns right and walks 12 m, then turns left and walks 5 m, and finally turns right and walks 12 m. What is the straight-line distance between his final position and point A?",
+      "options": [
+        {
+          "label": "A",
+          "text": "24 m",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "26 m",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "28 m",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "30 m",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Set coordinate system with A at (0,0), north as +y, east as +x.",
+        "Walk 5 m north to (0,5).",
+        "Turn right (east) and walk 12 m to (12,5).",
+        "Turn left (north) and walk 5 m to (12,10).",
+        "Turn right (east) and walk 12 m to (24,10).",
+        "Compute distance from (0,0) to (24,10): sqrt(24^2+10^2)=26 m."
+      ],
+      "verifierCheck": "Starting at origin (0,0) with north as +y and east as +x: walk 5 north to (0,5); turn right (east) walk 12 to (12,5); turn left (north) walk 5 to (12,10); turn right (east) walk 12 to (24,10). Straight-line distance from (0,0) is sqrt(24^2 + 10^2) = sqrt(576+100) = sqrt(676) = 26 m.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Double 5-12-13",
+          "idea": "Each 5-12 pair gives 13; double legs gives 26",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "First 5N+12E = 13 m diagonal",
+            "Second 5N+12E = 13 m diagonal",
+            "Collinear diagonals sum to 26 m"
+          ]
+        },
+        {
+          "name": "Vector Sum",
+          "idea": "Sum N/E components, use Pythagoras",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "North: 5+5=10 m",
+            "East: 12+12=24 m",
+            "Distance = √(10²+24²)=26 m"
+          ]
+        },
+        {
+          "name": "Coordinate Grid",
+          "idea": "Plot points, compute final coordinates",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Start A(0,0)",
+            "After moves: (24,10)",
+            "Distance = √(24²+10²)=26 m"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:26:39.257Z"
+    },
+    {
+      "id": "3dee779a0862bdb9",
+      "exam": "apfc",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "UPSC APFC Practice Set 3",
+      "paperPath": "apfc/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 7,
+      "section": "Mathematics",
+      "question": "In how many ways can 5 different books be arranged on a shelf such that two particular books are always together?",
+      "options": [
+        {
+          "label": "A",
+          "text": "24",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "72",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "48",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "120",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the two particular books that must be together.",
+        "Treat the two books as a single block.",
+        "Arrange the block and the other 3 books: 4! = 24 ways.",
+        "Arrange the two books within the block: 2! = 2 ways.",
+        "Multiply: 24 × 2 = 48 total arrangements."
+      ],
+      "verifierCheck": "Treat the two particular books as a single block. Then we have 4 items to arrange (the block and the other 3 books). These 4 items can be arranged in 4! = 24 ways. Within the block, the two books can be ordered in 2! = 2 ways. Total = 24 * 2 = 48.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Bundle & Permute",
+          "idea": "Treat the two books as a single block, permute blocks, then permute inside.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Consider the two particular books as one combined item.",
+            "Now we have 4 items to arrange: the block and the other 3 books.",
+            "Arrange these 4 items in 4! = 24 ways.",
+            "The two books inside the block can be ordered in 2! = 2 ways.",
+            "Multiply: 24 × 2 = 48."
+          ]
+        },
+        {
+          "name": "Gap Insertion",
+          "idea": "Arrange the other books first, then place the pair in gaps.",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Arrange the 3 other books in 3! = 6 ways.",
+            "These create 4 gaps (including ends) to insert the pair as a block.",
+            "Choose 1 gap out of 4: 4 ways.",
+            "The two books can be ordered within the block in 2! = 2 ways.",
+            "Total: 6 × 4 × 2 = 48."
+          ]
+        },
+        {
+          "name": "Total Minus Separated",
+          "idea": "Subtract arrangements where the two books are apart from total arrangements.",
+          "kind": "estimate",
+          "seconds": 15,
+          "steps": [
+            "Total arrangements of 5 books: 5! = 120.",
+            "Count arrangements where the two books are separated: treat them as distinct and place them in non-adjacent positions.",
+            "Alternatively, use complement: total - together = separated, but we want together.",
+            "Directly: together = total - separated. Separated count: arrange 3 others (3! = 6), choose 2 gaps out of 4 for the two books (P(4,2)=12), total separated = 6×12=72.",
+            "Together = 120 - 72 = 48."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-22T23:27:25.470Z"
     }
   ]
 }

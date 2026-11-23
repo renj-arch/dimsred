@@ -80,6 +80,28 @@ var DEPTH_TARGET_WORDS_BUILT = Math.max(1000, parseInt(process.env.EXPAND_DEPTH_
 var DEPTH_PASS_MAX = Math.max(1, parseInt(process.env.EXPAND_DEPTH_PASS_MAX || '60', 10));
 var DEPTH_FILE = path.join(__dirname, 'course-depth.json');
 var ADDONS_FILE = path.join(__dirname, 'course-addons.json');
+
+// The syllabus audit writes the exact thin/missing UPSC topics and the lesson
+// that should carry them (data/upsc-syllabus-coverage.json, report.gaps). The
+// expander reads that list and works those lessons FIRST, so the thinnest topic
+// is always expanded ahead of any comfortable page. Without this the queue was
+// advisory; now it drives the order.
+var GAP_LESSONS = {};
+try {
+  var _cov = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'upsc-syllabus-coverage.json'), 'utf8'));
+  (_cov.gaps || []).forEach(function (g) {
+    (g.lessons || []).forEach(function (l) {
+      if (l && l.lesson) GAP_LESSONS[String(l.lesson).replace(/\\/g, '/')] = 1;
+    });
+  });
+} catch (e) { /* audit not run yet */ }
+function isGapCandidate(cand) {
+  var files = cand && cand.files || [];
+  for (var i = 0; i < files.length; i++) {
+    if (GAP_LESSONS[String(files[i]).replace(/\\/g, '/')]) return true;
+  }
+  return false;
+}
 // Full rewrite mode: rewrites ALL lessons (including hand-built ones) with
 // high-quality model-generated content. No gap-filling, no protection of
 // hand-written pages — every lesson gets a complete rewrite.
@@ -434,8 +456,12 @@ function collectDeepen() {
       });
     });
   });
-  // Never-deepened first, then the least recently deepened, then shortest.
+  // Syllabus gaps first (the audit's thin/missing topics), then never-deepened,
+// then the least recently deepened, then shortest.
   out.sort(function (a, b) {
+    var ga = isGapCandidate(a) ? 0 : 1;
+    var gb = isGapCandidate(b) ? 0 : 1;
+    if (ga !== gb) return ga - gb;
     if (a.lastAt !== b.lastAt) {
       if (!a.lastAt) return -1;
       if (!b.lastAt) return 1;
