@@ -140339,6 +140339,141 @@
         }
       ],
       "sol": "At threshold the net gain equals the cavity loss. For a four-level laser with N_1≈0, the steady-state inversion is N_2 = R_p τ_2. The photon rate equation gives d n/dt = B n N_2 - n/τ_c. Setting d n/dt = 0 and substituting N_2 yields B R_p τ_2 = 1/τ_c. Solving for the pump rate gives R_th = 1/(B τ_c τ_2). Below this pump rate the photon number decays; above it the laser oscillates and gain saturation clamps the inversion at the threshold value. The other options invert the relationship or combine terms incorrectly."
+    },
+    {
+      "id": 125,
+      "text": "The Lorentz-Abraham-Dirac (LAD) equation for radiation reaction contains a term proportional to the third derivative of the four-velocity. What pathologies does this term introduce, and how does the Landau-Lifshitz reduction resolve them?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It causes runaway solutions and pre-acceleration; resolved by replacing the third derivative with the derivative of the external force.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "It violates Lorentz covariance; resolved by adding a mass renormalization counter-term.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It leads to negative energy states; resolved by introducing a non-local integro-differential equation.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It breaks gauge invariance; resolved by imposing the Lorenz gauge condition on the self-field.",
+          "c": false
+        }
+      ],
+      "sol": "The LAD equation's third-derivative term (Schott term) leads to runaway solutions (exponential self-acceleration without external force) and pre-acceleration (acceleration before force application). The Landau-Lifshitz reduction substitutes the third derivative using the external force equation of motion, yielding a second-order equation free of these pathologies while preserving energy-momentum conservation to the required order."
+    },
+    {
+      "id": 126,
+      "text": "In the addition of two spin-1/2 particles, the total spin states decompose into a triplet (s=1) and a singlet (s=0). What are the symmetry properties of these states under exchange of the two particles?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The triplet states are antisymmetric and the singlet state is symmetric.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The triplet states are symmetric and the singlet state is antisymmetric.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Both triplet and singlet states are symmetric.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Both triplet and singlet states are antisymmetric.",
+          "c": false
+        }
+      ],
+      "sol": "The triplet states (|1,1⟩, |1,0⟩, |1,-1⟩) are symmetric under particle exchange, while the singlet state (|0,0⟩) is antisymmetric. This follows from the Clebsch-Gordan construction: |1,1⟩ = |↑↑⟩, |1,-1⟩ = |↓↓⟩, and |1,0⟩ = (|↑↓⟩ + |↓↑⟩)/√2 are symmetric; |0,0⟩ = (|↑↓⟩ - |↓↑⟩)/√2 is antisymmetric."
+    },
+    {
+      "id": 127,
+      "text": "Using the first Chapman-Enskog approximation for the Boltzmann transport equation of a monatomic ideal gas, the Prandtl number Pr = η cp / κ is derived as a specific numerical constant. What is this value?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1/2",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2/3",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "1",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "5/3",
+          "c": false
+        }
+      ],
+      "sol": "The Chapman-Enskog expansion yields transport coefficients η = (1/3) n m v̄ λ, κ = (5/2) η k_B/m, and cp = (5/2) k_B/m for a monatomic gas. Substituting into Pr = η cp / κ gives Pr = η (5/2 k_B/m) / (5/2 η k_B/m) = 2/3. This is a standard result examiners expect for monatomic ideal gases."
+    },
+    {
+      "id": 128,
+      "text": "A fundamental optical soliton in a single-mode fiber is described by the nonlinear Schrödinger equation (NLSE). What is the required sign of the group-velocity dispersion parameter β₂ and the expression for the peak power P₀ for a pulse of width T₀?",
+      "options": [
+        {
+          "l": "a",
+          "t": "β₂ > 0 (normal dispersion), P₀ = |β₂|/(γ T₀²)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "β₂ < 0 (anomalous dispersion), P₀ = |β₂|/(γ T₀²)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "β₂ < 0 (anomalous dispersion), P₀ = γ T₀²/|β₂|",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "β₂ > 0 (normal dispersion), P₀ = γ T₀²/|β₂|",
+          "c": false
+        }
+      ],
+      "sol": "Bright solitons require anomalous dispersion (β₂ < 0) to balance the self-phase modulation (γ > 0). The fundamental soliton solution is A(z,t) = √P₀ sech(t/T₀) exp(iγP₀z/2) with the peak power condition P₀ = |β₂|/(γ T₀²). This ensures the soliton order N = √(γP₀T₀²/|β₂|) equals 1."
+    },
+    {
+      "id": 129,
+      "text": "The Wigner-Eckart theorem separates the matrix element of a tensor operator T⁽ᵏ⁾_q into a reduced matrix element and a Clebsch-Gordan coefficient. What selection rules for the angular momentum quantum numbers does this imply for the matrix element ⟨j,m|T⁽ᵏ⁾_q|j′,m′⟩?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Δj = 0, ±1; Δm = 0",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Δj = 0, ±1 … ±k; Δm = q",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Δj = ±k; Δm = ±q",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Δj = 0; Δm = q",
+          "c": false
+        }
+      ],
+      "sol": "The Wigner-Eckart theorem states ⟨j,m|T⁽ᵏ⁾_q|j′,m′⟩ = ⟨j||T⁽ᵏ⁾||j′⟩ ⟨j′ m′ k q | j m⟩. The Clebsch-Gordan coefficient ⟨j′ m′ k q | j m⟩ is non-zero only if the triangle condition |j′ - k| ≤ j ≤ j′ + k holds (i.e., Δj = 0, ±1, ..., ±k) and the magnetic quantum numbers satisfy m = m′ + q (i.e., Δm = q)."
     }
   ],
   "opt-psychology/overview": [
@@ -146783,6 +146918,87 @@
         }
       ],
       "sol": "The first-order delta method requires g to be differentiable at the limit point θ. For g(x)=x^2, the derivative at 0 is 0, but the method still applies (though the asymptotic variance is zero, requiring a second-order expansion for a non-degenerate limit). For g(x)=√x at 0, the derivative is infinite, so the method fails; however, the function is not differentiable at 0. For g(x)=log(x) at 1, the derivative exists and is 1, so the method works. For g(x)=|x| at 0, the function is not differentiable (left and right derivatives differ), so the standard first-order delta method fails. Hence, option D is the correct choice."
+    },
+    {
+      "id": 124,
+      "text": "Which location estimator has the maximum possible breakdown point of 0.5?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Sample mean",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Sample median",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Huber M‑estimator",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Tukey biweight M‑estimator",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly gives the breakdown points: the sample mean has ε* = 0, the median has ε* = 0.5, which is the maximum possible for a location estimator. Huber’s ψ-function yields gross‑error sensitivity γ* = c but its breakdown point is not 0.5; Tukey’s biweight has redescending influence but also does not achieve the maximal 0.5 breakdown point. Hence the sample median is the correct answer."
+    },
+    {
+      "id": 125,
+      "text": "The Lasso prediction error bound O_P(s log p / n) holds under which design condition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Restricted eigenvalue condition",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Irrepresentable condition",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Mutual incoherence condition",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Orthogonal design condition",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: \"Under the restricted eigenvalue (RE) condition on X, the Lasso achieves prediction error ||X(β̂ − β)||₂²/n = O_P(s log p / n).\" The irrepresentable and mutual incoherence conditions are related to variable selection consistency, not directly to the prediction error bound. Orthogonal design is a special case but not the general condition cited. Therefore the required condition is the restricted eigenvalue condition."
+    },
+    {
+      "id": 126,
+      "text": "For the SCAD penalty to possess the oracle property, the tuning parameter λ must satisfy which rates?",
+      "options": [
+        {
+          "l": "a",
+          "t": "λ → 0 and √n λ → ∞",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "λ → ∞ and √n λ → 0",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "λ fixed",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "λ → 0 only",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists a common mistake: \"Believing that SCAD’s oracle property holds for any tuning parameter λ; it requires λ → 0 and √n λ → ∞ at appropriate rates, otherwise selection consistency fails.\" This directly states the necessary asymptotic rates for λ. The other options contradict this requirement: λ → ∞ would over‑penalize, a fixed λ would not vanish, and λ → 0 alone without √n λ → ∞ would not guarantee selection consistency."
     }
   ],
   "opt-statistics/paper2": [
