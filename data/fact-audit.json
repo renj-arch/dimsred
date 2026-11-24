@@ -1,10 +1,41 @@
 {
- "generatedAt": "2026-11-24T19:33:50.163Z",
+ "generatedAt": "2026-11-24T19:39:23.858Z",
  "lessonsAudited": 1,
- "flagged": 0,
- "applied": 0,
- "modelCalls": 1,
+ "flagged": 3,
+ "applied": 1,
+ "modelCalls": 2,
  "modelFailures": 0,
  "deadlineHit": false,
- "problems": []
+ "problems": [
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-coding-decoding.html",
+   "quote": "If CAT → DDU",
+   "problem": "The example CAT → DDU does not follow a +1 shift per letter; C+1=D, A+1=B, T+1=U gives DBU, not DDU.",
+   "correction": "If CAT → DBU",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original CAT→DDU violates stated +1 shift rule; correction CAT→DBU correctly applies C+1=D, A+1=B, T+1=U.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-coding-decoding.html",
+   "quote": "keyword determines the order of rows and columns",
+   "problem": "In a Polybius square, the keyword determines the arrangement of letters in the square (the mixed alphabet), not the order of rows and columns. Rows and columns are typically fixed (1-5).",
+   "correction": "keyword determines the arrangement of letters in the square",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original wrong: keyword determines letter arrangement, not row/column order. Correction accurate.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-coding-decoding.html",
+   "quote": "rotation is invertible only when s and L are coprime",
+   "problem": "Modular rotation (adding s mod L) is always invertible; its inverse is subtraction of s mod L. The condition for the permutation to be a single cycle (full period) is that s and L are coprime.",
+   "correction": "rotation forms a single cycle only when s and L are coprime",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original wrong: modular addition always invertible; coprimality needed for single cycle. Correction accurate.",
+   "applied": false
+  }
+ ]
 }
