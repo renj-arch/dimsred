@@ -1,71 +1,41 @@
 {
- "generatedAt": "2026-11-24T19:49:02.564Z",
+ "generatedAt": "2026-11-24T19:56:38.450Z",
  "lessonsAudited": 1,
- "flagged": 6,
- "applied": 5,
- "modelCalls": 2,
- "modelFailures": 1,
+ "flagged": 3,
+ "applied": 0,
+ "modelCalls": 3,
+ "modelFailures": 0,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
-   "problem": "The sun is directly overhead only in the tropics; at most latitudes solar noon sun is not overhead and shadows exist (though shortest).",
-   "correction": "At solar noon, the sun is at its highest altitude; shadows are shortest but not zero except in the tropics.",
+   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
+   "quote": "strict signs ( or )",
+   "problem": "Parentheses are not strict inequality signs; the strict signs are > and <.",
+   "correction": "strict signs (> or <)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original is false; sun overhead only in tropics. Correction accurate.",
-   "applied": true
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "Bearing = arctan(37.14 / -15.67) ≈ 112°",
-   "problem": "arctan(37.14 / -15.67) ≈ -67°, not 112°; the bearing after quadrant correction is 112°.",
-   "correction": "Bearing = arctan(37.14 / -15.67) with quadrant correction ≈ 112°",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Arctan gives -67°; bearing requires quadrant correction to 112°. Correction correct.",
+   "verifierReason": "Parentheses are not inequality signs; strict signs are > and <. Correction accurate.",
    "applied": false
   },
   {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "At any other time, the azimuth can be approximated by the hour angle: each hour before/after noon shifts the azimuth by 15°.",
-   "problem": "The Sun's azimuth does not shift uniformly by 15° per hour; this is only true at the equator. Azimuth shift varies with latitude and declination.",
-   "correction": "The Sun's hour angle changes by 15° per hour, but azimuth shift varies with latitude and declination.",
+   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
+   "quote": "a − k , a − k ≤ x ≤ a + k , x a + k , and x ≤ a − k or x ≥ a + k respectively",
+   "problem": "The first and third compound interval expressions are missing inequality operators, making them mathematically incorrect and incomplete.",
+   "correction": "a − k < x < a + k , a − k ≤ x ≤ a + k , x < a − k or x > a + k , and x ≤ a − k or x ≥ a + k respectively",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Azimuth shift not uniform 15°/hr; varies with latitude/declination. Correction accurate.",
-   "applied": true
+   "verifierReason": "Original missing operators in first/third expressions; correction supplies standard interval forms accurately.",
+   "applied": false
   },
   {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "cos(d/R) = cos(h/R)·cos(R_slant/R) + sin(h/R)·sin(R_slant/R)·cos(α)",
-   "problem": "The spherical law of cosines is misapplied; the correct relation uses the plane law of cosines: R_slant² = R² + (R+h)² - 2R(R+h) cos(d/R).",
-   "correction": "cos(d/R) = (R² + (R+h)² - R_slant²) / (2R(R+h))",
+   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
+   "quote": "replace C in the third inequality with its upper bound A + B to get E ≥ 2(A + B) − D",
+   "problem": "Substituting an upper bound for C into E ≥ 2C − D does not yield a lower bound on E; because 2C−D is increasing in C, an upper bound on C gives an upper bound on 2C−D, not a lower bound on E.",
+   "correction": "Using C's upper bound gives an upper bound on 2C−D, not a lower bound on E.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original misapplies spherical law; plane law of cosines is correct for triangle with sides R, R+h, R_slant.",
-   "applied": true
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "cos(d/R) = cos((R+h)/R)·cos(R_slant/R) + sin((R+h)/R)·sin(R_slant/R)",
-   "problem": "The reduced formula for nadir viewing incorrectly replaces h/R with (R+h)/R and still uses spherical law of cosines; the correct formula is the plane law of cosines.",
-   "correction": "cos(d/R) = (R² + (R+h)² - R_slant²) / (2R(R+h))",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Same misapplication; (R+h)/R not an arc length; plane law correct.",
-   "applied": true
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "dS/dt = (hH / (H - h)²) * (dx/dt)",
-   "problem": "The derivative of shadow length S = hx/(H-h) with respect to time is dS/dt = h/(H-h) * dx/dt, not the given expression.",
-   "correction": "dS/dt = (h/(H-h)) * (dx/dt)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Derivative of S = hx/(H-h) w.r.t. time is h/(H-h) dx/dt if h,H constants; original has extra factor.",
-   "applied": true
+   "verifierReason": "Original incorrectly substitutes upper bound into lower bound; correction correctly states it gives upper bound on 2C-D, not lower bound on E.",
+   "applied": false
   }
  ]
 }
