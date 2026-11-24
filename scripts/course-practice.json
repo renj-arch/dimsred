@@ -294930,6 +294930,87 @@
         }
       ],
       "sol": "Set ∇f = λ∇g => (y, x) = λ(1,1) => y = λ, x = λ => x = y. Constraint gives 2x = 10 => x = y = 5. Maximum value f = 5*5 = 25. The bordered Hessian confirms a maximum."
+    },
+    {
+      "id": 112,
+      "text": "The maximum value of f(x,y)=xy subject to the constraint x^2+y^2=1 is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "1/2",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "1/4",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0",
+          "c": false
+        }
+      ],
+      "sol": "Using Lagrange multipliers, set ∇f=λ∇g with g=x^2+y^2-1=0. This gives y=2λx and x=2λy. Eliminating λ yields x^2=y^2. With the constraint, 2x^2=1 => x=±1/√2, y=±1/√2. Evaluating f=xy gives 1/2 for (1/√2,1/√2) and (-1/√2,-1/√2), and -1/2 for the other two points. The maximum is 1/2."
+    },
+    {
+      "id": 113,
+      "text": "The Lagrange remainder after the degree-2 Maclaurin polynomial of e^x at x=1 is R_2(1)=e^c/6 for some c∈(0,1). The maximum possible error is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "e/6",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "e/3",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "e/2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "e",
+          "c": false
+        }
+      ],
+      "sol": "The remainder in Lagrange form is R_n(x)=f^{(n+1)}(c)/(n+1)! (x-a)^{n+1}. For e^x, all derivatives are e^x. With a=0, n=2, x=1, we get R_2(1)=e^c/3! = e^c/6. Since c∈(0,1), e^c ≤ e^1 = e. Thus the maximum possible error is e/6."
+    },
+    {
+      "id": 114,
+      "text": "Using Newton's method to solve x^2-2=0 with initial guess x_0=1, the next approximation x_1 is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1.5",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "1.4",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1.6",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1.3",
+          "c": false
+        }
+      ],
+      "sol": "Newton's iteration: x_{n+1}=x_n - f(x_n)/f'(x_n). Here f(x)=x^2-2, f'(x)=2x. With x_0=1, f(1)=-1, f'(1)=2. Then x_1 = 1 - (-1)/2 = 1 + 0.5 = 1.5."
     }
   ],
   "quant/mathematics": [
@@ -295665,6 +295746,87 @@
         }
       ],
       "sol": "Expected frequency per face = 120/6 = 20. χ² = Σ(O-E)²/E = (22-20)²/20 + (18-20)²/20 + (20-20)²/20 + (25-20)²/20 + (17-20)²/20 + (18-20)²/20 = 0.2+0.2+0+1.25+0.45+0.2 = 2.30. Degrees of freedom = 6-1 = 5. Critical χ²₀.₀₅,₅ = 11.07. Since 2.30 < 11.07, we fail to reject the null hypothesis that the die is fair."
+    },
+    {
+      "id": 108,
+      "text": "The time to failure of a component follows an exponential distribution with failure rate λ = 0.02 per hour. What is the probability that the component lasts more than 50 hours?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0.368",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "0.632",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "0.500",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.135",
+          "c": false
+        }
+      ],
+      "sol": "For an exponential distribution, P(X > x) = e^(−λx). Here λ = 0.02 and x = 50, so λx = 1. Hence P(X > 50) = e^(−1) ≈ 0.3679, which rounds to 0.368."
+    },
+    {
+      "id": 109,
+      "text": "A manufacturer claims the mean life of a bulb is 1000 hours. A sample of 25 bulbs gives a mean of 980 hours with sample standard deviation 50 hours. Test H₀: μ = 1000 against H₁: μ ≠ 1000 at the 5% significance level. What is the correct decision?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Reject H₀",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Fail to reject H₀",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Inconclusive",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Accept H₀",
+          "c": false
+        }
+      ],
+      "sol": "Test statistic t = (980 − 1000) / (50/√25) = −20 / 10 = −2.0. Degrees of freedom = 24. Two‑tailed critical value at α = 0.05 is approximately ±2.064. Since |t| = 2.0 < 2.064, we do not reject H₀."
+    },
+    {
+      "id": 110,
+      "text": "In a survey of 400 voters, 230 support a policy. Construct a 95% confidence interval for the true proportion of supporters using the normal approximation.",
+      "options": [
+        {
+          "l": "a",
+          "t": "(0.527, 0.623)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "(0.530, 0.620)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "(0.525, 0.625)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "(0.540, 0.610)",
+          "c": false
+        }
+      ],
+      "sol": "Sample proportion p̂ = 230/400 = 0.575. Standard error = √[p̂(1−p̂)/n] = √[0.575×0.425/400] ≈ 0.0247. Margin of error = 1.96 × 0.0247 ≈ 0.0485. Confidence interval = 0.575 ± 0.0485 = (0.5265, 0.6235), which rounds to (0.527, 0.623)."
     }
   ],
   "gs/science-tech-prelims": [
@@ -296398,6 +296560,87 @@
         }
       ],
       "sol": "Start facing North. Turn 90° clockwise → facing East. Walk 10 m → position (10,0). Platform rotates 90° anticlockwise; the person's heading rotates with it: East → North. Walk 10 m forward (North) → position (10,10). The vector from origin to (10,10) points North‑East."
+    },
+    {
+      "id": 111,
+      "text": "Complete the multi‑step analogy chain: 12 : 4 :: 27 : ? :: CAT : DBU",
+      "options": [
+        {
+          "l": "a",
+          "t": "9",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "8",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "10",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "7",
+          "c": false
+        }
+      ],
+      "sol": "The first link is a numerical proportion: 12 ÷ 3 = 4, so 27 ÷ 3 = 9. The second link is a letter‑shift: each letter of CAT moves +1 to become DBU. The chain requires the result of the first link (9) to be the stimulus for the second, but the second link is independent; the missing term is the numeric result 9."
+    },
+    {
+      "id": 112,
+      "text": "Using the conditional coding rule – letters A‑M are replaced by their Atbash mirror; letters N‑Z are replaced by the next letter – what is the code for HELLO?",
+      "options": [
+        {
+          "l": "a",
+          "t": "SVOOP",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "SVOOL",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "IFMMP",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "SVOON",
+          "c": false
+        }
+      ],
+      "sol": "H (8th) → mirror S; E (5th) → mirror V; L (12th) → mirror O; L → O; O (15th, second half) → next letter P. The coded word is SVOOP. The other options result from applying the wrong rule to one or more positions."
+    },
+    {
+      "id": 113,
+      "text": "Agent A starts at the origin facing North, moves 3 steps, turns right, moves 4 steps. Agent B starts at the origin facing East, moves 2 steps, turns left, moves 5 steps. What is the direction of B relative to A?",
+      "options": [
+        {
+          "l": "a",
+          "t": "North‑West",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "North‑East",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "South‑West",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "South‑East",
+          "c": false
+        }
+      ],
+      "sol": "A’s final position: (0,3) → turn right (East) → (4,3). B’s final position: (2,0) → turn left (North) → (2,5). Vector from A to B = (2‑4, 5‑3) = (‑2, 2). Both components have equal magnitude with negative x (West) and positive y (North), giving a North‑West bearing."
     }
   ],
   "reasoning/non-verbal": [
@@ -297023,6 +297266,114 @@
         }
       ],
       "sol": "The argument gaps the link between reduced fuel consumption and lower operating costs. The lesson states the missing premise should directly bridge this gap without extra assumptions. Option B supplies the specific link: if fuel cost is the major component of operating expenses, then reducing fuel consumption will lower total operating costs. Option A introduces a counter‑premise that could negate the conclusion. Option C is irrelevant to the logical connection. Option D is broader than necessary (\"always leads\") and adds an untested universal claim. The most parsimonious premise that validates the deduction is Option B."
+    },
+    {
+      "id": 110,
+      "text": "A railway official states: \"If the new signalling system is installed, then, provided the staff are trained, punctuality will improve.\" Which of the following is an implicit premise required for the argument to hold?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The signalling system is capable of delivering punctuality gains when operated correctly.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The budget for the signalling system has already been approved.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "All staff members are currently untrained.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Punctuality has been declining over the past five years.",
+          "c": false
+        }
+      ],
+      "sol": "The statement is a nested conditional: Installation → (Training → Punctuality). For the inner consequent (punctuality) to follow, both antecedents must be true and the link Training → Punctuality must be reliable. The explicit premises are installation and the training condition; the unstated bridge is that the system can actually produce punctuality gains when operated correctly. Option A states exactly this bridge. Option B concerns budget, not the logical link. Option C contradicts the training antecedent. Option D is background information, not a logical premise. Therefore, the implicit premise is A."
+    },
+    {
+      "id": 111,
+      "text": "Consider the universal statement: \"All scheduled services on Route X run on time.\" Under the classical Aristotelian convention followed in the exam, which of the following conclusions is logically permissible?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Some scheduled services on Route X run on time.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "No scheduled services on Route X run on time.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "All on‑time services are scheduled services on Route X.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Some on‑time services are not scheduled services on Route X.",
+          "c": false
+        }
+      ],
+      "sol": "Classical logic grants existential import to universal affirmatives, so \"All S are P\" entails \"Some S are P\". Here S = scheduled services on Route X, P = run on time. Hence \"Some scheduled services on Route X run on time\" follows directly. Option B contradicts the premise. Option C is an illicit conversion (distribution error). Option D introduces a new class not mentioned. Thus only option A is a valid inference."
+    },
+    {
+      "id": 112,
+      "text": "A policy passage reads: \"If the ministry approves the budget, then if the contractor is selected, work will begin. The ministry has approved the budget. Therefore, work will begin.\" Which diagram correctly represents the logical structure and reveals the missing premise?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Budget → (Contractor → Work); Budget; ∴ Work",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Budget → (Contractor → Work); Budget; Contractor; ∴ Work",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Budget → (Contractor → Work); ¬Budget; ∴ ¬Work",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Budget → (Contractor → Work); Contractor; ∴ Work",
+          "c": false
+        }
+      ],
+      "sol": "The passage contains a nested conditional: Budget → (Contractor → Work). The premise given is only Budget. To derive Work, both Budget and Contractor must be affirmed (modus ponens twice). The correct diagram therefore includes both antecedents: Budget → (Contractor → Work); Budget; Contractor; ∴ Work. Option A omits Contractor, making the conclusion invalid. Option C uses ¬Budget, irrelevant. Option D omits Budget. Hence option B is the accurate representation."
+    },
+    {
+      "id": 113,
+      "text": "An official argues: \"We must adopt the new automated ticketing system; otherwise, the railway will lose passengers to private operators. Critics who oppose the system are simply against any modernization.\" Which fallacy is committed?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Straw man",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Post hoc ergo propter hoc",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Slippery slope",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "False dilemma",
+          "c": false
+        }
+      ],
+      "sol": "The argument misrepresents the critics' position by portraying them as opposed to any modernization, rather than addressing their specific concerns about the automated system. This is the classic straw man fallacy: distorting an opponent's stance to make it easier to attack. Post hoc would claim causation from temporal succession, which is absent. Slippery slope would predict a chain of dire consequences without evidence. False dilemma would present only two extreme options. The passage does neither; it only caricatures the opposition. Therefore, the fallacy is straw man."
     }
   ],
   "maths/speed-distance": [
