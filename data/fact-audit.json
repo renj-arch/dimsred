@@ -1,171 +1,31 @@
 {
- "generatedAt": "2026-11-23T21:48:06.081Z",
- "lessonsAudited": 10,
- "flagged": 16,
- "applied": 2,
- "modelCalls": 15,
- "modelFailures": 4,
+ "generatedAt": "2026-11-24T08:23:10.616Z",
+ "lessonsAudited": 2,
+ "flagged": 2,
+ "applied": 1,
+ "modelCalls": 3,
+ "modelFailures": 3,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "jee/course/maths/lesson-limits-continuity.html",
-   "quote": "2 sin 2 (x/2)",
-   "problem": "Incorrect trigonometric identity; the correct identity is 1 - cos x = 2 sin^2(x/2).",
-   "correction": "2 sin^2(x/2)",
+   "file": "rrb-station-master/course/maths/lesson-simple-compound-interest.html",
+   "quote": "approaches e r ÷ 100 , the continuous‑compounding limit",
+   "problem": "The limit of (1 + r/(100m))^m as m→∞ is e^{r/100}, not e * r/100.",
+   "correction": "approaches e^{r/100}, the continuous‑compounding limit",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original '2 sin 2 (x/2)' is not a valid identity; correction '2 sin^2(x/2)' is the correct RHS of 1-cos x identity.",
+   "verifierReason": "Original writes e r ÷ 100 meaning e*r/100; correct limit is e^{r/100}. Correction fixes it.",
    "applied": false
   },
   {
-   "file": "jee/course/maths/lesson-limits-continuity.html",
-   "quote": "while f″(x) (n) = Σ k=0 n C(n,k) f^{(k)} g^{(n−k)}",
-   "problem": "Misplaced Leibniz rule formula; the sentence starts with concavity but inserts the nth derivative product rule incorrectly.",
-   "correction": "while f″(x) < 0 indicates concave downward. The Leibniz rule is (fg)^{(n)} = Σ_{k=0}^n C(n,k) f^{(k)} g^{(n-k)}.",
+   "file": "rrb-station-master/course/maths/lesson-simple-compound-interest.html",
+   "quote": "The same result is obtained if the compounding is half‑yearly",
+   "problem": "The difference between compound and simple interest for two years is not the same under half‑yearly compounding; it is larger.",
+   "correction": "The result differs if the compounding is half‑yearly",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original garbles concavity and Leibniz rule; correction correctly states f''(x)<0 for concave down and gives proper Leibniz formula.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-matrices-determinants.html",
-   "quote": "det(kA) = k n det(A)",
-   "problem": "Missing exponent: determinant of scalar multiple is k^n det(A), not k n det(A).",
-   "correction": "det(kA) = k^n det(A)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misses exponent notation; correction states standard determinant property correctly.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-differentiation-applications.html",
-   "quote": "revenue increases with price when demand is inelastic (| E | E | > 1).",
-   "problem": "The condition for inelastic demand is |E| < 1, not >1; the notation is also garbled.",
-   "correction": "revenue increases with price when demand is inelastic (|E| < 1).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original incorrectly states inelastic demand as |E|>1 (elastic). Correction fixes inequality to |E|<1 and notation.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-limits-continuity.html",
-   "quote": "This symmetry, on an interval, often forces f ′ to be constant ±1, leading to f ( x ) = x or f ( x ) = c − x .",
-   "problem": "The claim that a differentiable involution on an interval must have constant derivative ±1 is false; counterexample: f(x)=1/x on (0,∞) is an involution with f'(x)=-1/x^2.",
-   "correction": "This symmetry implies f'(f(x)) f'(x)=1, but f' need not be constant; e.g., f(x)=1/x on (0,∞).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Quote incorrectly states involution forces constant derivative ±1; correction gives true derivative identity and valid counterexample f(x)=1/x.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "P(X = k) = binom{n}{k} p^k (1−p) n−k",
-   "problem": "Missing exponent on (1-p); the binomial PMF requires (1-p)^{n-k}.",
-   "correction": "P(X = k) = binom{n}{k} p^k (1−p)^{n−k}",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misses exponent on (1-p); correction matches standard binomial PMF.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "P(X = k) = e −λ λ^k / k!",
-   "problem": "Missing exponent on e; the Poisson PMF requires e^{-λ}.",
-   "correction": "P(X = k) = e^{-λ} λ^k / k!",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original reads as subtraction; correction adds required exponent for Poisson PMF.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "P(X = k) = (1−p) k−1 p",
-   "problem": "Missing exponent on (1-p); the geometric PMF requires (1-p)^{k-1}.",
-   "correction": "P(X = k) = (1−p)^{k-1} p",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misses exponent on (1-p); correction matches standard geometric PMF.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-quadratic-sequences.html",
-   "quote": "When Δ is positive and a perfect square, the roots are rational and distinct",
-   "problem": "This statement is false for general real coefficients; a perfect-square discriminant only guarantees rational roots when the coefficients a, b, c are rational.",
-   "correction": "When Δ is positive and a perfect square, the roots are rational and distinct for rational coefficients",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks coefficient domain; correction adds rational coefficients, making statement true.",
+   "verifierReason": "Original claims same result for half-yearly compounding; actually difference changes. Correction states result differs, which is accurate.",
    "applied": true
-  },
-  {
-   "file": "jee/course/maths/lesson-quadratic-sequences.html",
-   "quote": "This formula is linear in n²",
-   "problem": "The sum formula Sₙ = n/2[2a+(n−1)d] is a quadratic polynomial in n, not linear in n².",
-   "correction": "This formula is quadratic in n",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "S_n is quadratic in n, not linear in n²; correction correctly states quadratic in n.",
-   "applied": true
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "2 n/d",
-   "problem": "Missing exponent in formula for binary necklaces; should be 2^{n/d}",
-   "correction": "2^{n/d}",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks exponent; binary necklace formula requires 2^{n/d}.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "n·2 ⌈n/2⌉",
-   "problem": "Missing exponent in formula for bracelets with odd n; should be n·2^{⌈n/2⌉}",
-   "correction": "n·2^{⌈n/2⌉}",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks exponent; bracelet formula for odd n requires n·2^{⌈n/2⌉}.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "x₁ n₁ x₂ n₂ … xₖ nₖ",
-   "problem": "Missing exponents in multinomial theorem term; should be x₁^{n₁} x₂^{n₂} … xₖ^{nₖ}",
-   "correction": "x₁^{n₁} x₂^{n₂} … xₖ^{nₖ}",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks exponents; multinomial theorem term is x₁^{n₁}…xₖ^{nₖ}.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "p₁ n₁ … pₖ nₖ",
-   "problem": "Missing exponents in multinomial probability mass function; should be p₁^{n₁} … pₖ^{nₖ}",
-   "correction": "p₁^{n₁} … pₖ^{nₖ}",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks exponents; multinomial PMF term is p₁^{n₁}…pₖ^{nₖ}.",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "E[e tX ]",
-   "problem": "Missing exponent in definition of moment generating function; should be E[e^{tX}]",
-   "correction": "E[e^{tX}]",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks exponent; MGF definition is E[e^{tX}].",
-   "applied": false
-  },
-  {
-   "file": "jee/course/maths/lesson-permutations-probability.html",
-   "quote": "e λ(s−1)",
-   "problem": "Missing exponent in Poisson probability generating function; should be e^{λ(s-1)}",
-   "correction": "e^{λ(s-1)}",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks exponent; Poisson PGF is e^{λ(s-1)}.",
-   "applied": false
   }
  ]
 }
