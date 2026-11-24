@@ -296,6 +296,8 @@
   </figcaption>
 </figure>
 
+
+
 <p>Time‑weighted averages arise when a quantity varies over time and the average over a period is required. If a variable takes value vᵢ for duration tᵢ, the time‑weighted average = Σ(vᵢ×tᵢ) ÷ Σtᵢ. This is identical to the weighted average formula with time as weight. In a journey with speed changes, this reduces to total distance ÷ total time, which is the definition of average speed.</p>
 <p>A moving average of order k smooths a time series by averaging the most recent k observations. For a sequence x₁, x₂, …, the simple moving average at time n (n ≥ k) is (xₙ + xₙ₋₁ + … + xₙ₋ₖ₊₁) ÷ k. The recursive update: SMAₙ = SMAₙ₋₁ + (xₙ – xₙ₋ₖ) ÷ k. This allows O(1) computation per new data point.</p>
 <p>An exponential moving average (EMA) gives more weight to recent observations: EMAₙ = α×xₙ + (1–α)×EMAₙ₋₁, where α = 2 ÷ (k+1) for a span equivalent to a simple moving average of length k. EMA is used in financial technical analysis; exam problems may ask to compute EMA for a short series given α.</p>
