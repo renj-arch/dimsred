@@ -1,21 +1,61 @@
 {
- "generatedAt": "2026-11-24T08:36:53.832Z",
+ "generatedAt": "2026-11-24T08:44:12.838Z",
  "lessonsAudited": 2,
- "flagged": 1,
- "applied": 0,
+ "flagged": 5,
+ "applied": 4,
  "modelCalls": 3,
- "modelFailures": 2,
+ "modelFailures": 1,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rrb-station-master/course/reasoning/lesson-coding-decoding.html",
-   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
-   "problem": "The example claims each letter is shifted by +1, but CAT shifted by +1 would be DBU (C→D, A→B, T→U), not DDU.",
-   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "Either statement I or II alone is sufficient.",
+   "problem": "Standard data sufficiency options include 'Each statement alone is sufficient' (both individually sufficient), not 'Either statement I or II alone is sufficient' which is ambiguous and not the standard phrasing.",
+   "correction": "Each statement alone is sufficient",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original has internal contradiction: rule says +1 but example CAT→DDU violates it (A→D is +3). Correction CAT→DBU aligns with rule and yields correct DOG→EPH.",
+   "verifierReason": "Original phrasing is non-standard and ambiguous; correction uses standard DS option wording.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "Together they intersect at 99 only",
+   "problem": "99 is not a two-digit number with digit sum 9 (9+9=18). The sets of numbers from Statement I (digit sum 9) and Statement II (multiples of 11) have no intersection.",
+   "correction": "Together they have no common candidate (no two-digit multiple of 11 has digit sum 9)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "99 has digit sum 18, not 9; no two-digit multiple of 11 has digit sum 9, so intersection is empty.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "we need the three single‑set totals, the three pairwise intersections, and the triple intersection — six independent pieces",
+   "problem": "The listed items total seven (three single-set totals, three pairwise intersections, one triple intersection), not six.",
+   "correction": "we need the three single‑set totals, the three pairwise intersections, and the triple intersection — seven independent pieces",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original counts 7 items but says six; correction correctly says seven.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "Statement 1 alone makes the sets of managers and leaders identical, which would make the conclusion true",
+   "problem": "Statement 1 (“Every leader is a manager”) only gives Leaders ⊆ Managers, not equality; it does not make the conclusion “All managers are leaders” true.",
+   "correction": "Statement 1 alone does not make the sets identical; it only states every leader is a manager, which is insufficient to determine the conclusion",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Statement 1 gives Leaders ⊆ Managers, not equality; original wrongly claims identity. Correction accurate.",
    "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "Since the two statements contradict each other, they cannot both be true in a consistent scenario",
+   "problem": "Statement 1 (“Every leader is a manager”) and Statement 2 (“Some managers are not leaders”) are consistent (e.g., Leaders={Alice}, Managers={Alice, Bob}).",
+   "correction": "The two statements are consistent; they can both be true (e.g., some managers are not leaders while every leader is a manager)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Statements are consistent (Leaders ⊆ Managers and some Managers not Leaders); original wrongly says contradictory. Correction accurate.",
+   "applied": true
   }
  ]
 }
