@@ -1,10 +1,31 @@
 {
- "generatedAt": "2026-11-24T11:32:55.100Z",
+ "generatedAt": "2026-11-24T11:38:11.714Z",
  "lessonsAudited": 1,
- "flagged": 0,
+ "flagged": 2,
  "applied": 0,
- "modelCalls": 1,
+ "modelCalls": 2,
  "modelFailures": 0,
  "deadlineHit": false,
- "problems": []
+ "problems": [
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-coding-decoding.html",
+   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "problem": "The example claims CAT becomes DDU with a uniform +1 shift, but C+1=D, A+1=B, T+1=U gives DBU, not DDU. The premise is inconsistent with the stated rule.",
+   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original CAT→DDU contradicts +1 shift; correction CAT→DBU matches rule and DOG→EPH is correct.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-coding-decoding.html",
+   "quote": "rotation is invertible only when s and L are coprime",
+   "problem": "Rotation (cyclic shift) is always invertible; the condition for a single cycle is that s and L are coprime.",
+   "correction": "rotation is a single cycle only when s and L are coprime",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original falsely claims invertibility requires coprimality; rotation is always invertible. Correction correctly states single-cycle condition.",
+   "applied": false
+  }
+ ]
 }
