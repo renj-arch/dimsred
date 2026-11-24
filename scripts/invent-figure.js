@@ -105,11 +105,18 @@ function lessonContext(file) {
   const html = fs.readFileSync(file, 'utf8');
   const title = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [])[1] || '';
   const h2 = [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)].map((m) => m[1]).slice(0, 10);
-  const text = (s) => String(s).replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+  const text = (s) => String(s).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<svg[\s\S]*?<\/svg>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+  // The drawing must be bespoke to THIS passage, so the model gets the passage
+  // itself, not only the section titles.
+  const bodyStart = html.indexOf('<div class="lesson-body"');
+  let body = bodyStart !== -1 ? html.slice(bodyStart) : html;
+  const cut = body.indexOf('id="practice-qs"');
+  if (cut > 0) body = body.slice(0, cut);
   return {
     path: file,
     title: text(title),
-    sections: h2.map(text).filter(Boolean)
+    sections: h2.map(text).filter(Boolean),
+    body: text(body).slice(0, 2600)
   };
 }
 
@@ -120,6 +127,11 @@ function prompt(ctx, id, paper, tag) {
     'Subject: ' + ctx.title,
     ctx.sections.length ? 'Sections in this lesson:\n' + ctx.sections.map((s) => '  - ' + s).join('\n') : '',
     'Paper: ' + paper + '  Tag: ' + tag,
+    '',
+    'THE PASSAGE TO DRAW (use its own entities, numbers, names and examples — a drawing that could belong to any other lesson is a failure):',
+    String(ctx.body || '').slice(0, 2200),
+    '',
+    'BESPOKE RULE: name the passage\'s central insight in the title. Draw what the passage argues, not a list of its keywords. If the passage explains a distinction, the drawing must make the distinction visible; if it explains a process, the drawing must show the mechanism; if it describes a place or building, draw its parts. Never settle for generic captions like "Types", "Process", "Structure" or "Features".',
     '',
     'FIRST decide what kind of drawing the content actually needs. Do not default to boxes and arrows: a page of flowcharts teaches nothing that the prose did not. Pick one archetype:',
     '  chain      a real process or causal sequence, where order matters (box -> box -> box)',
