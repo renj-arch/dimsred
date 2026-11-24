@@ -1,31 +1,51 @@
 {
- "generatedAt": "2026-11-24T10:59:44.699Z",
+ "generatedAt": "2026-11-24T11:16:19.727Z",
  "lessonsAudited": 1,
- "flagged": 2,
- "applied": 2,
- "modelCalls": 3,
+ "flagged": 4,
+ "applied": 0,
+ "modelCalls": 1,
  "modelFailures": 2,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/quant/lesson-ratio-proportion.html",
-   "quote": "the relationship remains valid if each term is increased or decreased by the same amount, provided the operation respects the original units.",
-   "problem": "Adding or subtracting the same amount to all four terms of a proportion does not preserve the equality; this is a common misconception.",
-   "correction": "the relationship is not preserved by adding or subtracting the same amount to all terms.",
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2",
+   "problem": "Missing exponent; the difference formula should be P*(R/100)^2, not P*(R/100)*2.",
+   "correction": "CI – SI = P (R/100)^2",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Adding same amount to all terms of a proportion does not preserve equality; correction is accurate.",
-   "applied": true
+   "verifierReason": "Original lacks exponent; correction gives correct 2-year CI-SI difference formula.",
+   "applied": false
   },
   {
-   "file": "sbi-clerk/course/quant/lesson-ratio-proportion.html",
-   "quote": "the final ratio of all components remains unique.",
-   "problem": "For three or more ingredients, the weighted average equation has infinitely many solutions; the ratio is not uniquely determined by the mean alone.",
-   "correction": "the final ratio of all components is not unique without extra constraints.",
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2 (300 + R)/100",
+   "problem": "Missing exponent on (R/100); should be squared.",
+   "correction": "CI – SI = P (R/100)^2 (300 + R)/100",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Weighted average of three+ components does not determine unique ratio; correction correctly states non-uniqueness.",
-   "applied": true
+   "verifierReason": "Original missing exponent on (R/100); correction yields proper 3-year CI-SI formula.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "PV = X [1 – (1 + r) - n] / r",
+   "problem": "Incorrect present value annuity formula; should use negative exponent (1+r)^{-n}.",
+   "correction": "PV = X [1 - (1+r)^{-n}] / r",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses (1+r)-n instead of (1+r)^{-n}; correction fixes exponent.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "X = P r / [1 – (1 + r) - n]",
+   "problem": "Incorrect formula for installment amount; denominator should be [1 - (1+r)^{-n}].",
+   "correction": "X = P r / [1 - (1+r)^{-n}]",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original denominator incorrect; correction uses standard loan installment formula.",
+   "applied": false
   }
  ]
 }
