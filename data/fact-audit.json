@@ -1,30 +1,110 @@
 {
- "generatedAt": "2026-11-24T06:57:36.817Z",
+ "generatedAt": "2026-11-24T07:04:28.155Z",
  "lessonsAudited": 3,
- "flagged": 2,
- "applied": 1,
+ "flagged": 10,
+ "applied": 5,
  "modelCalls": 5,
- "modelFailures": 3,
+ "modelFailures": 2,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rbi/course/reasoning/lesson-coding-decoding.html",
-   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
-   "problem": "The example CAT→DDU does not follow a fixed shift of +1 (C→D is +1, A→D is +3, T→U is +1), contradicting the rule that each letter is shifted by a fixed number.",
-   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "place Q at seat 4 (third left)",
+   "problem": "The parenthetical '(third left)' misdescribes the placement; with P fixed at seat 1 and clockwise numbering, Q at seat 4 is third to the right of P, not third left.",
+   "correction": "place Q at seat 4 (third right of P)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original CAT→DDU inconsistent with fixed +1 shift; correction CAT→DBU fixes it.",
+   "verifierReason": "Original misstates direction; with clockwise numbering seat 4 is third right of seat 1. Correction correctly states third right.",
    "applied": false
   },
   {
-   "file": "rbi/course/quant/lesson-time-work.html",
-   "quote": "“penalty is deducted from each worker’s share in proportion to his work” means multiply each worker’s base share by (1 – penalty fraction).",
-   "problem": "The formula allocates penalty in proportion to base share, not work. If wage rates differ, base share is not proportional to work.",
-   "correction": "“penalty is deducted from each worker’s share in proportion to his work” means each worker’s penalty = (his work/total work)×total penalty; net share = base share − penalty.",
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "add “Q is not third left of P”",
+   "problem": "The negation of 'P sits third to the left of Q' is 'P does not sit third to the left of Q', not 'Q is not third left of P'. The latter expresses a different spatial relation.",
+   "correction": "add “P is not third left of Q”",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original formula allocates penalty ∝ base share, not work; correction uses work proportion.",
+   "verifierReason": "Negation of 'P third left of Q' is 'P not third left of Q', not 'Q not third left of P'. Correction provides proper negation.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "A faces the centre (left is clockwise) or outward (left is anticlockwise)",
+   "problem": "The mapping of facing direction to left/right orientation is reversed. Standard convention: a person facing the centre has left = anticlockwise; a person facing outward has left = clockwise.",
+   "correction": "A faces the centre (left is anticlockwise) or outward (left is clockwise)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original reverses standard left/right mapping for facing centre/outward; correction matches convention.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "A vacancy variable V_f ∈ {0,1} indicates whether floor f is occupied. ... If the puzzle also states “the topmost floor is vacant”, then V_max = 1",
+   "problem": "The definition states V_f indicates occupancy (implying 1 = occupied), but the example sets V_max = 1 for a vacant floor, contradicting the definition.",
+   "correction": "A vacancy variable V_f ∈ {0,1} indicates whether floor f is vacant (1 = vacant, 0 = occupied).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original defines V_f as occupancy but example uses 1 for vacant; correction redefines as vacancy indicator, resolving contradiction.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "If a second statement supplies the parity of k or a bound like k < 10, the exact exponent becomes known.",
+   "problem": "For 3^k ≡ 7 (mod 10), k ≡ 3 (mod 4). A bound k<10 gives k=3 or 7 (not unique); parity adds no information since k≡3 (mod 4) already implies k is odd.",
+   "correction": "A bound like k<10 may not give a unique exponent (k=3 or 7); parity adds no new information.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claims bound/parity gives unique exponent; counterexample shows not unique. Correction accurate.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "When three sets A, B, C are involved, the Venn diagram has seven disjoint regions (including the outside).",
+   "problem": "Three sets have 2^3 = 8 disjoint regions including the outside region.",
+   "correction": "When three sets A, B, C are involved, the Venn diagram has eight disjoint regions (including the outside).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Three sets have 8 disjoint regions, not 7. Correction correct.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "we need the three single‑set totals, the three pairwise intersections, and the triple intersection — six independent pieces.",
+   "problem": "The list contains seven items (3+3+1), not six, and they are not all independent.",
+   "correction": "we need the three single‑set totals, the three pairwise intersections, and the triple intersection — seven pieces, though not all independent.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "There are 7 pieces (3+3+1), not 6, and not all independent. Correction accurate.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "if Statement 2 gives only a₁₀ − a₅ = 96, the recurrence alone may not fix a₁; an extra condition is needed.",
+   "problem": "For the given recurrence aₙ₊₁=2aₙ+3, a₁₀−a₅=96 uniquely determines a₁ (a₁=−87/31). The claim is false for this example.",
+   "correction": "For aₙ₊₁=2aₙ+3, a₁₀−a₅=96 does fix a₁; the statement only holds for recurrences like arithmetic progressions.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "For given recurrence, a10-a5=96 determines a1 uniquely. Correction correct.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "Statement 1 alone makes the sets of managers and leaders identical, which would make the conclusion true.",
+   "problem": "“Every leader is a manager” means leaders ⊆ managers, not identical. The conclusion “All managers are leaders” does not follow.",
+   "correction": "Statement 1 alone makes leaders a subset of managers, not identical; the conclusion does not follow.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "\"Every leader is a manager\" means subset, not identical. Correction accurate.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "Since the two statements contradict each other, they cannot both be true in a consistent scenario",
+   "problem": "“All leaders are managers” and “Some managers are not leaders” are consistent (e.g., leaders={1}, managers={1,2}).",
+   "correction": "The two statements are consistent (e.g., leaders={1}, managers={1,2}); they do not contradict.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "\"All leaders are managers\" and \"Some managers are not leaders\" are consistent. Correction correct.",
    "applied": true
   }
  ]
