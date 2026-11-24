@@ -1,10 +1,51 @@
 {
- "generatedAt": "2026-11-24T12:03:02.844Z",
+ "generatedAt": "2026-11-24T12:12:29.608Z",
  "lessonsAudited": 1,
- "flagged": 0,
- "applied": 0,
- "modelCalls": 1,
- "modelFailures": 1,
+ "flagged": 4,
+ "applied": 2,
+ "modelCalls": 3,
+ "modelFailures": 0,
  "deadlineHit": false,
- "problems": []
+ "problems": [
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "place Q at seat 4 (third left)",
+   "problem": "With P fixed at seat 1 and seats numbered clockwise, seat 4 is third to the right of P (since P is third to the left of Q). The parenthetical \"(third left)\" incorrectly describes Q's position relative to P.",
+   "correction": "place Q at seat 4 (third right of P)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "With seats numbered clockwise, seat 4 is third right of P; 'third left' is incorrect.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "add “Q is not third left of P”",
+   "problem": "The negation of the clue \"P sits third to the left of Q\" is \"P does not sit third to the left of Q\". The statement \"Q is not third left of P\" is not logically equivalent and would not correctly enforce the exclusive either‑or branch.",
+   "correction": "add “P is not third left of Q”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Negation of 'P third left of Q' is 'P not third left of Q'; 'Q not third left of P' is not equivalent.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "depending on whether A faces the centre (left is clockwise) or outward (left is anticlockwise)",
+   "problem": "In circular arrangement puzzles, the phrase 'A sits third to the left of B' refers to the left direction from B's perspective, so the interpretation depends on B's facing direction, not A's.",
+   "correction": "depending on whether B faces the centre (left is clockwise) or outward (left is anticlockwise)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original incorrectly uses A's facing direction; correction correctly uses B's facing direction for left interpretation.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "where the sign is + if D_A = C and – if D_A = O",
+   "problem": "The sign in the modular equation for 'A sits k-th to the left of B' depends on B's facing direction (D_B), not A's (D_A).",
+   "correction": "where the sign is + if D_B = C and – if D_B = O",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses D_A for sign; correction correctly uses D_B as left direction depends on B's facing.",
+   "applied": false
+  }
+ ]
 }
