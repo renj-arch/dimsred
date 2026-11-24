@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-23T23:56:25.584Z",
+ "updatedAt": "2026-11-24T02:55:14.021Z",
  "note": "Original alternative methods for invented questions. Each is checked against the key by an independent call.",
  "methods": {
   "choose the most appropriate sentence that improves the one given below original the stock market crash was a real eye waterer for the traders a the stock market": {
@@ -964,6 +964,21 @@
    "verified": true,
    "generatedAt": "2026-11-23T23:56:25.584Z",
    "model": "hosted"
+  },
+  "a merchant has 500 l of a solution containing 8 salt he removes 50 l of the mixture and replaces it with water then he adds 30 l of a 20 salt solution after tha": {
+   "name": "Carry salt mass, not %",
+   "seconds": 25,
+   "steps": [
+    "Track only the mass of salt; every removal takes salt in proportion to the volume removed.",
+    "Start 40 kg salt in 500 L. Remove 50 L -> salt x (1 - 50/500) = 40 x 0.9 = 36 kg, then top up to 500 L.",
+    "Add 30 L of 20% (6 kg) -> 42 kg in 530 L.",
+    "Remove 40 L -> 42 x (1 - 40/530) = 42 x 490/530 = 38.83 kg in 530 L after topping up.",
+    "Final % = 38.83 / 530 x 100 = 7.33%. Never recompute the concentration mid-way; one salt column avoids every rounding slip."
+   ],
+   "answer": "7.33%",
+   "verified": true,
+   "generatedAt": "2026-11-24T02:55:14.012Z",
+   "model": "seeded"
   }
  }
 }
