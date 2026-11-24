@@ -142498,6 +142498,141 @@
         }
       ],
       "sol": "The Mangasarian-Fromovitz Constraint Qualification (MFCQ) is a regularity condition weaker than LICQ. For a problem with inequalities gᵢ(x) ≤ 0 and equalities hⱼ(x) = 0, MFCQ holds at a feasible point x* if the gradients of the equality constraints are linearly independent, and there exists a vector d such that ∇hⱼ(x*)ᵀ d = 0 for all j, and ∇gᵢ(x*)ᵀ d < 0 for all active inequality constraints (i.e., gᵢ(x*) = 0). This ensures the existence of a feasible direction pointing strictly into the interior of the inequality constraints while staying on the equality manifold. Option A matches this definition exactly. Option D describes LICQ. Option B describes a condition related to the critical cone or Abadie CQ. Option C describes conditions on the critical cone for second-order sufficiency."
+    },
+    {
+      "id": 2721,
+      "text": "If a Lagrangian does not depend explicitly on a generalized coordinate q_k, which quantity is conserved according to Noether's theorem?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The corresponding generalized velocity q̇_k",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The corresponding conjugate momentum p_k = ∂L/∂q̇_k",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The Hamiltonian H",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The action integral S",
+          "c": false
+        }
+      ],
+      "sol": "The Lagrangian L(q, q̇, t) yields conjugate momentum p_k = ∂L/∂q̇_k. If L does not depend explicitly on q_k, then ∂L/∂q_k = 0. The Euler–Lagrange equation d/dt(∂L/∂q̇_k) - ∂L/∂q_k = 0 reduces to d p_k/dt = 0, so p_k is constant. This is a direct consequence of Noether's theorem linking cyclic coordinates to conserved momenta. The Hamiltonian is not necessarily conserved unless L has no explicit time dependence. The action integral is stationary but not conserved. The generalized velocity q̇_k is not guaranteed to be constant."
+    },
+    {
+      "id": 2722,
+      "text": "According to the tennis racket theorem, rotation about which principal axis of a rigid body is unstable?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Axis with maximum moment of inertia",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Axis with minimum moment of inertia",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Axis with intermediate moment of inertia",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "All principal axes are stable",
+          "c": false
+        }
+      ],
+      "sol": "Euler's equations for torque-free motion are I₁ω̇₁ = (I₂ - I₃)ω₂ω₃, etc. The two integrals are L² = Σ I_i² ω_i² and 2T = Σ I_i ω_i². The intersection of these ellipsoids in ω-space gives polhode curves. Linear stability analysis shows that rotation about the principal axis with the maximum or minimum moment of inertia is stable, while rotation about the intermediate axis is unstable. This is known as the tennis racket theorem or Dzhanibekov effect. Therefore, the intermediate axis is the unstable one."
+    },
+    {
+      "id": 2723,
+      "text": "The orthogonality relation for Bessel functions of the first kind J_ν(x) on the interval [0, a] with zeros α_νm is given by which expression?",
+      "options": [
+        {
+          "l": "a",
+          "t": "∫_0^a x J_ν(α_νm x/a) J_ν(α_νn x/a) dx = ½ a² J_ν+1²(α_νm) δ_mn",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "∫_0^a J_ν(α_νm x/a) J_ν(α_νn x/a) dx = ½ a J_ν+1²(α_νm) δ_mn",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "∫_0^a x² J_ν(α_νm x/a) J_ν(α_νn x/a) dx = ⅓ a³ J_ν+1²(α_νm) δ_mn",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "∫_0^a x J_ν(α_νm x/a) J_ν(α_νn x/a) dx = a² J_ν²(α_νm) δ_mn",
+          "c": false
+        }
+      ],
+      "sol": "The orthogonality of Bessel functions J_ν(α_νm x/a) on [0, a] with weight x is derived from Sturm–Liouville theory. The zeros α_νm are the positive roots of J_ν(x) = 0. The normalization integral is ∫_0^a x J_ν(α_νm x/a) J_ν(α_νn x/a) dx = (a²/2) [J_ν+1(α_νm)]² δ_mn. This matches the standard result given in the lesson. Options B, C, D have incorrect weight functions or normalization factors."
+    },
+    {
+      "id": 2724,
+      "text": "The Laplace transform of the convolution (f * g)(t) = ∫_0^t f(τ) g(t-τ) dτ is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "F(s) + G(s)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "F(s) G(s)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "F(s) / G(s)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "d/ds [F(s) G(s)]",
+          "c": false
+        }
+      ],
+      "sol": "The convolution theorem for Laplace transforms states that the transform of the convolution (f * g)(t) = ∫_0^t f(τ) g(t-τ) dτ is the product of the individual transforms: ℒ{f * g} = F(s) G(s). This property is used to solve integral equations and PDEs by converting convolution into multiplication. The other options correspond to addition, division, or differentiation of transforms, which are not the convolution theorem."
+    },
+    {
+      "id": 2725,
+      "text": "For a canonical transformation generated by a function F₂(q, P, t), the transformation equations are:",
+      "options": [
+        {
+          "l": "a",
+          "t": "p_i = ∂F₂/∂q_i, Q_i = ∂F₂/∂P_i",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "p_i = ∂F₂/∂q_i, Q_i = -∂F₂/∂P_i",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "p_i = -∂F₂/∂q_i, Q_i = ∂F₂/∂P_i",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "p_i = ∂F₂/∂P_i, Q_i = ∂F₂/∂q_i",
+          "c": false
+        }
+      ],
+      "sol": "Canonical transformations can be generated by four types of generating functions. For type F₂(q, P, t), the old momenta and new coordinates are given by p_i = ∂F₂/∂q_i and Q_i = ∂F₂/∂P_i. The new Hamiltonian is K = H + ∂F₂/∂t. The other types have different sign conventions: F₁(q, Q, t) gives p_i = ∂F₁/∂q_i, P_i = -∂F₁/∂Q_i; F₃(p, Q, t) and F₄(p, P, t) are analogous. Option A correctly states the relations for F₂."
     }
   ],
   "opt-physics/paper2": [
@@ -149866,6 +150001,141 @@
         }
       ],
       "sol": "IEC 61000-4-30 Class A permits a ±0.5% frequency tolerance. A fixed sampling rate (e.g., 12.8 kHz) with a fixed window length (N=256) yields exact 50 Hz bin spacing only at nominal frequency. Grid frequency deviations cause the signal period to mismatch the DFT window, resulting in spectral leakage that spreads harmonic energy across bins and violates Class A accuracy limits. A PLL-based frequency tracking algorithm measures the instantaneous fundamental frequency and controls a resampling process (or adjusts the sampling clock) to maintain exactly N samples per cycle. This coherent sampling ensures harmonic components fall precisely into DFT bins, eliminating leakage."
+    },
+    {
+      "id": 3921,
+      "text": "In small‑signal stability analysis, a mode is considered poorly damped and a primary target for a Power System Stabilizer when its damping ratio falls below:",
+      "options": [
+        {
+          "l": "a",
+          "t": "0.02",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "0.05",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "0.10",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.20",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that a mode is poorly damped when its damping ratio ζ = –σ/√(σ²+ω²) falls below 0.05. Such modes are the primary target for Power System Stabilizers (PSS). Therefore the threshold value is 0.05."
+    },
+    {
+      "id": 3922,
+      "text": "For a single‑machine infinite‑bus system subjected to a temporary three‑phase fault, the equal‑area criterion requires that the accelerating area A₁ be:",
+      "options": [
+        {
+          "l": "a",
+          "t": "greater than the decelerating area A₂",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "equal to the decelerating area A₂",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "less than the decelerating area A₂",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "zero",
+          "c": false
+        }
+      ],
+      "sol": "The equal‑area criterion (EAC) gives a quick analytical check for a SMIB system: the accelerating area A₁ (integral of Pₘ–Pₑ during fault) must be less than the decelerating area A₂ (integral after fault clearing). If A₁ < A₂ the system remains stable; otherwise it loses synchronism."
+    },
+    {
+      "id": 3923,
+      "text": "What limits the reactive current a STATCOM can inject at very low AC voltage?",
+      "options": [
+        {
+          "l": "a",
+          "t": "DC link voltage",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Converter rating",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "AC system impedance",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Transformer tap position",
+          "c": false
+        }
+      ],
+      "sol": "The lesson highlights an examiner trap: assuming a STATCOM can supply unlimited reactive current at zero voltage. In practice, the STATCOM’s current limit is set by the converter rating, which caps the maximum reactive current irrespective of voltage level."
+    },
+    {
+      "id": 3924,
+      "text": "The energy available for synthetic inertia from a wind turbine is primarily limited by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Rotor kinetic energy",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "DC‑link capacitor size",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Grid frequency deviation",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Pitch controller bandwidth",
+          "c": false
+        }
+      ],
+      "sol": "The lesson warns against overlooking the energy limitation of synthetic inertia when sizing H_syn for a wind farm with a small DC‑link capacitor. The DC‑link capacitor stores the energy that can be released as synthetic inertia; its size therefore directly limits the available energy."
+    },
+    {
+      "id": 3925,
+      "text": "For non‑self‑restoring insulation, the safety factor applied to lightning over‑voltages (K_l) is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1.15",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "1.25",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1.30",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1.50",
+          "c": true
+        }
+      ],
+      "sol": "The lesson specifies that for non‑self‑restoring insulation (solid dielectrics) the safety factors are higher: K_s = 1.3 for switching and K_l = 1.5 for lightning over‑voltages. Hence the lightning safety factor K_l is 1.50."
     }
   ],
   "opt-electrical-engineering/paper1": [
@@ -240803,6 +241073,141 @@
         }
       ],
       "sol": "Lys48‑linked polyubiquitin chains are the primary recognition signal for the 26S proteasome, targeting substrates for degradation. Lys63‑linked and linear (Met1) chains mainly function in signalling, DNA repair, and NF‑κB activation, while Lys11 chains have specialized roles in cell‑cycle regulation. The distinct linkage determines the downstream fate of the ubiquitinated protein."
+    },
+    {
+      "id": 116,
+      "text": "In a ping‑pong Bi Bi enzyme mechanism, double‑reciprocal (Lineweaver‑Burk) plots obtained at different fixed concentrations of one substrate produce a family of lines that are:",
+      "options": [
+        {
+          "l": "a",
+          "t": "intersecting on the 1/v axis",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "intersecting on the –1/Km axis",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "parallel",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "intersecting on the x‑axis",
+          "c": false
+        }
+      ],
+      "sol": "In a ping‑pong (double‑displacement) mechanism the first product leaves before the second substrate binds, so no ternary complex forms. The rate equation lacks the [A][B] term in the denominator, giving a linear equation of the form 1/v = (KmA/Vmax)(1/[A]) + (1/Vmax)(1 + KmB/[B]). When 1/v is plotted against 1/[A] at several fixed [B], the slopes change but the intercepts on the 1/v axis remain constant, yielding a set of parallel lines. This distinguishes ping‑pong from sequential mechanisms, where lines intersect on the 1/v axis."
+    },
+    {
+      "id": 117,
+      "text": "Which statement correctly describes mechanism‑based (suicide) enzyme inhibitors?",
+      "options": [
+        {
+          "l": "a",
+          "t": "They bind reversibly and can be removed by dialysis.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "They form a covalent bond only after the enzyme catalyzes a reaction on the inhibitor.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "They are structural analogs that alkylate the active site without catalysis.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "They show a linear dependence of inactivation rate on inhibitor concentration.",
+          "c": false
+        }
+      ],
+      "sol": "Mechanism‑based (suicide) inhibitors are initially recognized as substrates; the enzyme catalyzes a normal reaction step that converts the inhibitor into a highly reactive intermediate. This intermediate then forms a covalent bond with an active‑site residue, irreversibly inactivating the enzyme. Because the inhibitor must be processed by the enzyme, the inactivation rate shows saturation kinetics (hyperbolic dependence on inhibitor concentration), not a linear one. They cannot be reversed by dilution or dialysis, unlike reversible tight‑binding inhibitors. Affinity labels, by contrast, react without catalytic turnover."
+    },
+    {
+      "id": 118,
+      "text": "Which RNA modification is correctly paired with its primary functional role?",
+      "options": [
+        {
+          "l": "a",
+          "t": "m⁶A – solely regulates mRNA splicing",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "tRNA wobble base modifications – ensure translation fidelity",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "rRNA pseudouridylation – primarily controls mRNA export",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "snRNA methylation – exclusively directs DNA replication",
+          "c": false
+        }
+      ],
+      "sol": "tRNA wobble position modifications (e.g., inosine, lysidine) expand codon‑anticodon pairing flexibility, allowing a single tRNA to recognize multiple codons and maintaining accurate reading frame, thus directly ensuring translation fidelity. m⁶A affects mRNA stability, translation, and splicing but is not the sole regulator of splicing. rRNA pseudouridylation stabilizes ribosome structure and fine‑tunes translation, not mRNA export. snRNA methylation (e.g., m³G cap) is important for spliceosome assembly and splicing, not DNA replication."
+    },
+    {
+      "id": 119,
+      "text": "Treatment of cells with methyl‑β‑cyclodextrin to deplete cholesterol:",
+      "options": [
+        {
+          "l": "a",
+          "t": "selectively disrupts lipid rafts without affecting other membrane proteins",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "also extracts phospholipids and can perturb non‑raft membrane proteins",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "increases the size and stability of lipid rafts",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "has no effect on membrane fluidity",
+          "c": false
+        }
+      ],
+      "sol": "Methyl‑β‑cyclodextrin (MβCD) forms inclusion complexes with cholesterol, extracting it from the plasma membrane. However, MβCD also removes phospholipids to a significant extent, especially at higher concentrations. This non‑specific lipid extraction disrupts the overall membrane environment, affecting both raft‑associated and non‑raft membrane proteins, and alters membrane fluidity. Therefore, cholesterol depletion by MβCD cannot be considered a specific tool for raft disruption alone."
+    },
+    {
+      "id": 120,
+      "text": "Immobilization of an enzyme on a solid support typically results in:",
+      "options": [
+        {
+          "l": "a",
+          "t": "decreased apparent Km and increased Vmax",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "increased apparent Km and decreased Vmax",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "no change in kinetic parameters",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "decreased apparent Km with unchanged Vmax",
+          "c": false
+        }
+      ],
+      "sol": "Immobilization introduces diffusional barriers (external mass‑transfer resistance and internal pore diffusion) that lower the substrate concentration at the enzyme surface. This manifests as an increased apparent Km (lower apparent affinity) while the maximal catalytic rate Vmax often decreases because a fraction of enzyme molecules may be conformationally restricted or inaccessible. The intrinsic catalytic constants (kcat, true Km) of the enzyme are unchanged, but the observed kinetic parameters reflect mass‑transfer limitations. Cross‑linked enzyme aggregates (CLEAs) can mitigate some losses but still show elevated apparent Km."
     }
   ],
   "biology/evolution": [
@@ -255288,6 +255693,141 @@
         }
       ],
       "sol": "The Doctrine of Pith and Substance is used to ascertain the true nature and character of a legislation. If the pith and substance of a State law falls within a State List entry, incidental encroachment on a Union List subject does not render the law ultra vires. This doctrine was illustrated in K. C. Gajapati v. State of Orissa (1954) and State of Karnataka v. Union of India (1977). The Doctrine of Eclipse applies only to pre‑Constitution laws inconsistent with fundamental rights; Severability deals with separating invalid portions of a statute; Colourable Legislation examines whether a legislature is indirectly doing what it cannot do directly, which is a secondary test after establishing the pith and substance."
+    },
+    {
+      "id": 115,
+      "text": "According to the Supreme Court's test for repugnancy under Article 254, which of the following is a required condition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The Union law must have been enacted under an exclusive Union power",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The State law must have received Presidential assent under Article 254(2)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Both laws must operate on the same field and contain directly contradictory provisions",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The State law must be on a subject enumerated in the Union List",
+          "c": false
+        }
+      ],
+      "sol": "The Court's repugnancy test (M. Karunanidhi, Hoechst Pharmaceuticals) requires three elements: (1) both laws operate on the same field; (2) their provisions are directly contradictory so that obedience to one entails disobedience to the other; and (3) the Union law was not enacted under a power that excludes State legislation altogether (the \"occupied field\" doctrine). Presidential assent under Article 254(2) is a saving mechanism, not a prerequisite for repugnancy. Repugnancy arises only on Concurrent List subjects, not Union List subjects. Therefore, option C correctly states a required condition."
+    },
+    {
+      "id": 116,
+      "text": "Under Article 239AA of the Constitution, the Lieutenant Governor of the National Capital Territory of Delhi exercises discretionary powers only in matters relating to:",
+      "options": [
+        {
+          "l": "a",
+          "t": "All legislative and executive matters of the NCT",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Public order, police and land",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Finance, taxation and planning",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Education, health and local government",
+          "c": false
+        }
+      ],
+      "sol": "Article 239AA(3)(a) provides that the Lieutenant Governor of Delhi shall act on the aid and advice of the Council of Ministers except in so far as he is required by or under any law to act in his discretion. The Constitution (Sixty‑ninth Amendment) Act, 1991 and the Government of National Capital Territory of Delhi Act, 1991 limit this discretion to three specific subjects: public order, police and land. The LG does not have general discretion over finance, education or other transferred subjects. Hence, option B is correct."
+    },
+    {
+      "id": 117,
+      "text": "The Provisions of the Panchayats (Extension to Scheduled Areas) Act, 1996 (PESA) extends the provisions of Part IX of the Constitution to:",
+      "options": [
+        {
+          "l": "a",
+          "t": "All tribal areas across India",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Only the Fifth Schedule Areas",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Only the Sixth Schedule Areas",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Both Fifth and Sixth Schedule Areas",
+          "c": false
+        }
+      ],
+      "sol": "PESA was enacted under Article 243M(4)(b) to extend the Panchayati Raj provisions (Part IX) to the \"Scheduled Areas\" referred to in Article 244(1), i.e., the Fifth Schedule Areas. The Sixth Schedule Areas (Assam, Meghalaya, Tripura, Mizoram) have their own autonomous district and regional councils under Articles 244(2) and 275(1) and are expressly excluded from PESA's application. Therefore, PESA applies only to Fifth Schedule Areas, making option B the correct answer."
+    },
+    {
+      "id": 118,
+      "text": "Article 345 of the Constitution empowers a State Legislature to adopt as the official language of the State:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Only languages included in the Eighth Schedule",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Any language in use in the State",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Only Hindi and English",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Only the language spoken by the majority of the State's population",
+          "c": false
+        }
+      ],
+      "sol": "Article 345 states that the Legislature of a State may by law adopt any one or more of the languages in use in the State or Hindi as the official language(s) of that State. The provision does not restrict the choice to the Eighth Schedule languages; several States have adopted languages not listed in the Eighth Schedule (e.g., Khasi in Meghalaya, Mizo in Mizoram). The Eighth Schedule merely lists languages for the Union's official purposes and for certain constitutional guarantees. Hence, option B correctly reflects the constitutional position."
+    },
+    {
+      "id": 119,
+      "text": "In the three‑step judicial analysis for a State measure challenged under Article 301, the second step requires the Court to examine whether the measure:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Directly restricts the inter‑State movement of goods",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Is a compensatory tax or a regulatory measure saved by Article 304(b) with Presidential assent",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Falls within the exemption provided by the Goods and Services Tax regime",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Has been enacted under a Union List entry",
+          "c": false
+        }
+      ],
+      "sol": "The Supreme Court's framework (Atiabari, Automobile Transport, Hansa Corporation, Jindal Stainless) involves: (1) determining if the measure restricts inter‑State trade; (2) if it does, checking whether it qualifies as a compensatory tax for services rendered or a regulatory measure under Article 304(b) that has received Presidential assent; and (3) assessing whether the goods are covered by the GST regime, which subsumes most indirect taxes but leaves Article 301 operative for non‑GST goods like petroleum and alcohol. The second step is precisely the compensatory tax/Article 304(b) inquiry, making option B correct."
     }
   ],
   "mains-gs3/science-tech-digital": [
@@ -286014,6 +286554,141 @@
         }
       ],
       "sol": "The Chola empire’s Kudimaramath system obliged village assemblies (ur) to maintain irrigation tanks and channels. The Uttaramerur inscriptions (c. 920 CE) detail elected tank committees with accountability clauses, showing that maintenance was managed by village‑level elected bodies, not a centralized bureaucracy, private contractors, or merchant guilds alone. The text also notes the misconception of treating Kudimaramath as a purely state‑run bureaucracy, confirming the role of elected committees."
+    },
+    {
+      "id": 116,
+      "text": "Which of the following statements accurately describes the political consequence of the 1945 Red Fort trials of INA officers?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The trials led to the immediate disbandment of the British Indian Army.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The trials were boycotted by the Indian National Congress and the Muslim League.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The trials triggered mass demonstrations and a joint defence by Congress, Muslim League, and Communist Party, eroding British Indian Army morale.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The trials resulted in the execution of all three accused officers, sparking the 1946 Royal Indian Navy mutiny.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the November–December 1945 Red Fort trials of Shah Nawaz Khan, Prem Sahgal, and Gurbaksh Singh Dhillon triggered mass demonstrations. Congress, the Muslim League, and the Communist Party jointly defended them, turning the trials into a referendum on British legitimacy. Public sympathy eroded British Indian Army morale, contributing to the February 1946 Royal Indian Navy mutiny. Option A is incorrect as the army was not immediately disbanded. Option B is false because major parties jointly defended the accused. Option D is false; the officers were not executed."
+    },
+    {
+      "id": 117,
+      "text": "Regarding the Permanent Settlement of 1793, which statement is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It introduced the Ryotwari system in Bengal, Bihar, and Orissa.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It fixed land revenue demand permanently and recognised zamindars as proprietors of the land.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It was implemented in the Madras Presidency under Lord Cornwallis.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It abolished intermediate tenures such as jotedars to protect peasant rights.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states the Permanent Settlement (1793) fixed the land revenue demand in perpetuity and conferred proprietary rights on zamindars in Bengal, Bihar, and Orissa. It did not introduce ryotwari (that was the Madras and Bombay systems), nor was it applied in Madras. Intermediate tenures such as jotedars proliferated under the settlement rather than being abolished. This matches the examiner's trap explanation provided in the text."
+    },
+    {
+      "id": 118,
+      "text": "What was the nature of the 'guarantee system' used to finance railway construction in colonial India?",
+      "options": [
+        {
+          "l": "a",
+          "t": "A direct annual subsidy paid by the British Parliament to railway companies.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A contingent liability where the Government of India guaranteed a fixed rate of return on capital, converting shortfalls into a sterling debt obligation.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "A profit-sharing agreement where the British government received 50% of railway surplus revenue.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "A land-grant system where railway companies were given free land in lieu of interest payments.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson identifies a common confusion: 'Treating the railway guarantee system as a direct British government subsidy rather than a contingent liability that became a sterling debt obligation.' The guarantee system meant the Government of India guaranteed a minimum return (typically 5%) to private investors; if earnings fell short, the deficit was covered by Indian revenues and recorded as a sterling debt, not a direct parliamentary subsidy. Options A, C, and D describe mechanisms not mentioned in the lesson."
+    },
+    {
+      "id": 119,
+      "text": "When and where was the first Indian Civil Service (ICS) examination held simultaneously in India?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1855 in London only.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "1912 in Allahabad as recommended by the Islington Commission.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1922 in Allahabad following partial adoption of the Islington Commission recommendations.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "1935 in Delhi under the Government of India Act.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: 'The 1912 Islington Commission proposed simultaneous exams in India and Britain, partially adopted in 1922 with the first Indian exam at Allahabad.' It also lists as a confusion point: 'Believing the ICS examinations were held simultaneously in India and Britain from the outset; the first Indian‑held exam occurred only in 1922.' Option B incorrectly cites 1912 (the year of the commission report, not implementation). Option D refers to the 1935 Act which expanded provincial autonomy but did not initiate the Indian exam."
+    },
+    {
+      "id": 120,
+      "text": "Which of the following accurately reflects the Constituent Assembly's decision on minority representation in 1949?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Separate electorates were abolished for all minorities including Scheduled Castes and Scheduled Tribes.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Separate electorates for Muslims were abolished and replaced with joint electorates with reserved seats, while reservations for Scheduled Castes and Tribes continued.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The Assembly adopted permanent separate electorates for Muslims, Sikhs, Christians, and Anglo-Indians.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Minority safeguards were entirely rejected in favour of a uniform adult franchise with no reservations.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: 'The Assembly adopted temporary separate electorates for Muslims, abolished in 1949 for joint electorates with reserved seats.' It also lists as a confusion point: 'Overstating the immediate abolition of separate electorates for all minorities in 1949; only Muslim separate electorates were removed, while reservations for Scheduled Castes and Tribes continued.' Option A is incorrect because SC/ST reservations continued. Option C is wrong as separate electorates were not made permanent. Option D is false as minority safeguards (reservations) were retained."
     }
   ],
   "general-awareness/sports-awards": [
@@ -286421,6 +287096,114 @@
         }
       ],
       "sol": "Under the ESF, qualification for multi‑sport events follows a three‑tier pathway: (1) National Championships serve as the primary selection trial; (2) Continental Qualifiers (e.g., Asian Championships or Asian Games qualifiers) organised by the respective Asian Continental Federation; (3) World Ranking or Olympic Qualifying Series where athletes must achieve a minimum ranking or accumulate qualifying points at IF‑sanctioned events. This sequence is explicitly stated in the lesson. Options A, B, and D reorder the stages incorrectly. Hence, the correct order is National Championships → Continental Qualifiers → World Ranking/Olympic Qualifying Series."
+    },
+    {
+      "id": 116,
+      "text": "What is the mandated composition of a national classification panel conducted by the Paralympic Committee of India (PCI)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "A certified classifier, a medical doctor, and a technical official.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Officials nominated solely by the concerned National Sports Federation.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "A two-member panel comprising a classifier and a team coach.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Representatives from SAI, the Ministry, and the IPC.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: “In India, the Paralympic Committee of India (PCI) conducts national classification panels with a certified classifier, a medical doctor, and a technical official.” This three-member composition is mandatory. Option B reflects the examiner’s trap of confusing the panel with NSF-only officials. Option C incorrectly reduces the panel to two members and substitutes a coach for the medical doctor. Option D lists administrative bodies not mentioned as panel members."
+    },
+    {
+      "id": 117,
+      "text": "Which of the following correctly lists the three verticals of the Sports Science and Sports Medicine Centre (SSSMC) established in 2020?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Physiology, Biomechanics, and Nutrition.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Psychology, Physiotherapy, and Nutrition.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Physiology, Biomechanics, and Psychology.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Strength & Conditioning, Physiotherapy, and Nutrition.",
+          "c": false
+        }
+      ],
+      "sol": "The text specifies: “The SSSMC established 2020 under SAI… Three verticals: physiology, biomechanics, nutrition.” Option A matches this exactly. Option B replaces physiology and biomechanics with psychology and physiotherapy. Option C substitutes nutrition with psychology. Option D lists entirely different verticals not mentioned in the lesson."
+    },
+    {
+      "id": 118,
+      "text": "Regarding officiating technologies adopted in India, which statement is factually correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Hawk-Eye uses a calibrated camera array for ball tracking with a small margin of error.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "VAR in the ISL reviews all fouls and offside decisions during a match.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "DRS components (Hawk-Eye, UltraEdge, Hot Spot) are optional in BCCI bilateral series.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Goal-Line Technology sends an encrypted signal to the referee’s watch within 10 seconds.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: “Hawk-Eye uses a calibrated camera array for ball tracking with a small margin of error.” Option A is verbatim. Option B falls into the examiner’s trap – VAR is limited to four match-changing situations, not all fouls. Option C contradicts the text that DRS is mandatory in BCCI bilateral series and the IPL. Option D is incorrect because GLT sends the signal within a second, not 10 seconds."
+    },
+    {
+      "id": 119,
+      "text": "Under the Athlete Welfare Framework (AWF) notified in 2021, what constitutes the three-tier support architecture?",
+      "options": [
+        {
+          "l": "a",
+          "t": "National, state, and camp-level officers.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Central government, state government, and SAI officials.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "TOPS athletes, Khelo India athletes, and para-athletes.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Medical officers, psychologists, and nutritionists at each camp.",
+          "c": false
+        }
+      ],
+      "sol": "The text explicitly states: “The AWF, notified in 2021, establishes a three-tier support architecture with national, state, and camp-level officers.” Option A matches this definition. Option B misidentifies the tiers as governmental bodies. Option C confuses athlete categories with administrative tiers. Option D describes professional roles, not the structural tiers mandated by the AWF."
     }
   ],
   "maths/average": [
@@ -289500,6 +290283,87 @@
         }
       ],
       "sol": "The continued fraction expansion of √2 is [1; 2, 2, 2, ...] with period 1 (odd). For odd period, the fundamental solution to x^2 - D y^2 = 1 is given by the convergent at the end of the second period. The convergents are 1/1, 3/2, 7/5, ... The second convergent 3/2 yields 3^2 - 2·2^2 = 9 - 8 = 1. Thus (3, 2) is the fundamental solution."
+    },
+    {
+      "id": 107,
+      "text": "A sequence is defined by a cubic polynomial f(n) with f(0)=2, f(1)=5, f(2)=12, f(3)=23. Using Newton's forward interpolation formula, the value of f(5) is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "57",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "48",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "62",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "51",
+          "c": false
+        }
+      ],
+      "sol": "We construct the forward difference table:\nf(n) values:\nf(0) = 2\nf(1) = 5\nf(2) = 12\nf(3) = 23\n\nFirst differences (Δf(n)):\nΔf(0) = f(1) - f(0) = 5 - 2 = 3\nΔf(1) = f(2) - f(1) = 12 - 5 = 7\nΔf(2) = f(3) - f(2) = 23 - 12 = 11\n\nSecond differences (Δ²f(n)):\nΔ²f(0) = Δf(1) - Δf(0) = 7 - 3 = 4\nΔ²f(1) = Δf(2) - Δf(1) = 11 - 7 = 4\n\nThird differences (Δ³f(n)):\nΔ³f(0) = Δ²f(1) - Δ²f(0) = 4 - 4 = 0\n\nSince Δ³f(0) = 0, this confirms f(n) is a cubic polynomial.\nNewton's forward interpolation formula is: f(n) = f(0) + C(n,1)Δf(0) + C(n,2)Δ²f(0) + C(n,3)Δ³f(0).\nWe need to find f(5). So, n = 5.\nC(5,1) = 5! / (1!4!) = 5\nC(5,2) = 5! / (2!3!) = (5 × 4) / 2 = 10\nC(5,3) = 5! / (3!2!) = (5 × 4) / 2 = 10\n\nSubstitute the values into the formula:\nf(5) = 2 + (5 × 3) + (10 × 4) + (10 × 0)\nf(5) = 2 + 15 + 40 + 0\nf(5) = 57\nThus, f(5) is 57."
+    },
+    {
+      "id": 108,
+      "text": "Consider the sum S(n) = Σₖ₌₁ⁿ (k² + 2k). As a polynomial in n, the degree of S(n) is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "2",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "3",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "4",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "5",
+          "c": false
+        }
+      ],
+      "sol": "The given sum is S(n) = Σₖ₌₁ⁿ (k² + 2k).\nThe term being summed, f(k) = k² + 2k, is a polynomial in k of degree 2.\nThe lesson states that 'the sum of p-th powers is a polynomial in n of degree p+1 with zero constant term'. This principle extends to any polynomial sequence.\nIf f(k) is a polynomial of degree p, then the sum Σₖ₌₁ⁿ f(k) will be a polynomial in n of degree p+1.\nIn this case, f(k) = k² + 2k has a degree p = 2.\nTherefore, the sum S(n) will be a polynomial in n of degree 2 + 1 = 3.\nFor example, we know Σₖ₌₁ⁿ k² = n(n+1)(2n+1)/6, which is a cubic polynomial in n. And Σₖ₌₁ⁿ k = n(n+1)/2, which is a quadratic polynomial in n.\nThe sum of two polynomials in n, where the highest degree is 3, will result in a polynomial of degree 3.\nThus, the degree of S(n) as a polynomial in n is 3."
+    },
+    {
+      "id": 109,
+      "text": "For the polynomial P(z) = z⁴ − 5z³ + 6z² − 4z + 8, according to Cauchy's bound, every root ζ satisfies |ζ| ≤:",
+      "options": [
+        {
+          "l": "a",
+          "t": "9",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "8",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "10",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1 + max(|aᵢ|)",
+          "c": false
+        }
+      ],
+      "sol": "The given polynomial is P(z) = z⁴ − 5z³ + 6z² − 4z + 8.\nCauchy's bound states that for a polynomial P(z) = aₙ zⁿ + … + a₀ with aₙ ≠ 0, every root ζ satisfies |ζ| ≤ 1 + max₀≤ᵢ<ₙ |aᵢ/aₙ|.\nIn this polynomial, the leading coefficient aₙ (which is a₄ in this case) is 1.\nThe other coefficients are a₃ = -5, a₂ = 6, a₁ = -4, a₀ = 8.\nWe need to find the maximum of the absolute values of the ratios of these coefficients to the leading coefficient:\n|a₃/a₄| = |-5/1| = 5\n|a₂/a₄| = |6/1| = 6\n|a₁/a₄| = |-4/1| = 4\n|a₀/a₄| = |8/1| = 8\nThe maximum of these values is max(5, 6, 4, 8) = 8.\nApplying Cauchy's bound:\n|ζ| ≤ 1 + max₀≤ᵢ<ₙ |aᵢ/aₙ|\n|ζ| ≤ 1 + 8\n|ζ| ≤ 9\nThus, every root ζ satisfies |ζ| ≤ 9."
     }
   ],
   "opt-malayalam/paper-a-malayalam": [
