@@ -1,31 +1,51 @@
 {
- "generatedAt": "2026-11-24T10:59:44.699Z",
+ "generatedAt": "2026-11-24T12:12:29.608Z",
  "lessonsAudited": 1,
- "flagged": 2,
+ "flagged": 4,
  "applied": 2,
  "modelCalls": 3,
- "modelFailures": 2,
+ "modelFailures": 0,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/quant/lesson-ratio-proportion.html",
-   "quote": "the relationship remains valid if each term is increased or decreased by the same amount, provided the operation respects the original units.",
-   "problem": "Adding or subtracting the same amount to all four terms of a proportion does not preserve the equality; this is a common misconception.",
-   "correction": "the relationship is not preserved by adding or subtracting the same amount to all terms.",
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "place Q at seat 4 (third left)",
+   "problem": "With P fixed at seat 1 and seats numbered clockwise, seat 4 is third to the right of P (since P is third to the left of Q). The parenthetical \"(third left)\" incorrectly describes Q's position relative to P.",
+   "correction": "place Q at seat 4 (third right of P)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Adding same amount to all terms of a proportion does not preserve equality; correction is accurate.",
+   "verifierReason": "With seats numbered clockwise, seat 4 is third right of P; 'third left' is incorrect.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "add “Q is not third left of P”",
+   "problem": "The negation of the clue \"P sits third to the left of Q\" is \"P does not sit third to the left of Q\". The statement \"Q is not third left of P\" is not logically equivalent and would not correctly enforce the exclusive either‑or branch.",
+   "correction": "add “P is not third left of Q”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Negation of 'P third left of Q' is 'P not third left of Q'; 'Q not third left of P' is not equivalent.",
    "applied": true
   },
   {
-   "file": "sbi-clerk/course/quant/lesson-ratio-proportion.html",
-   "quote": "the final ratio of all components remains unique.",
-   "problem": "For three or more ingredients, the weighted average equation has infinitely many solutions; the ratio is not uniquely determined by the mean alone.",
-   "correction": "the final ratio of all components is not unique without extra constraints.",
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "depending on whether A faces the centre (left is clockwise) or outward (left is anticlockwise)",
+   "problem": "In circular arrangement puzzles, the phrase 'A sits third to the left of B' refers to the left direction from B's perspective, so the interpretation depends on B's facing direction, not A's.",
+   "correction": "depending on whether B faces the centre (left is clockwise) or outward (left is anticlockwise)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Weighted average of three+ components does not determine unique ratio; correction correctly states non-uniqueness.",
+   "verifierReason": "Original incorrectly uses A's facing direction; correction correctly uses B's facing direction for left interpretation.",
    "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "where the sign is + if D_A = C and – if D_A = O",
+   "problem": "The sign in the modular equation for 'A sits k-th to the left of B' depends on B's facing direction (D_B), not A's (D_A).",
+   "correction": "where the sign is + if D_B = C and – if D_B = O",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses D_A for sign; correction correctly uses D_B as left direction depends on B's facing.",
+   "applied": false
   }
  ]
 }
