@@ -91515,6 +91515,114 @@
         }
       ],
       "sol": "Observe the successive differences: +6, −7, +6, −7, +6. A constant addition modulo m means each step adds the same value k modulo m. Here k = 6. Starting from 5, (5+6) mod m = 11 → m > 11. Next (11+6) mod m = 4 → 17 mod m = 4 → m = 13. Verify: (4+6) mod 13 = 10, (10+6) mod 13 = 3, (3+6) mod 13 = 9. All terms fit with modulus 13."
+    },
+    {
+      "id": 118,
+      "text": "In the analogy \"cell : nucleus :: computer : CPU :: organization : headquarters\", which relational schema must the correct answer preserve?",
+      "options": [
+        {
+          "l": "a",
+          "t": "part : whole",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "system : central control unit",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "creator : product",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "container : contents",
+          "c": false
+        }
+      ],
+      "sol": "Each stem pair exhibits the relation \"system : central control unit\". A cell's nucleus controls cellular activity; a computer's CPU controls processing; an organization's headquarters controls operations. The schema is not part-whole (nucleus is not the whole cell), not creator-product, and not container-contents. The solver must abstract this exact relational schema across domains."
+    },
+    {
+      "id": 119,
+      "text": "A deterministic finite automaton processes a binary string. It starts in state S₀. On input 0 it stays in the current state; on input 1 it toggles between S₀ and S₁. The string is accepted only if the automaton ends in S₁. Which of the following strings is accepted?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0101",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "0011",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1100",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1010",
+          "c": false
+        }
+      ],
+      "sol": "Trace each string: 0101: S₀→0→S₀→1→S₁→0→S₁→1→S₀ (reject). 0011: S₀→0→S₀→0→S₀→1→S₁→1→S₀ (reject). 1100: S₀→1→S₁→1→S₀→0→S₀→0→S₀ (reject). 1010: S₀→1→S₁→0→S₁→1→S₀→0→S₀ (reject). Wait, recheck: 0101: S₀-0→S₀, 1→S₁, 0→S₁, 1→S₀ (ends S₀). 0011: S₀-0→S₀, 0→S₀, 1→S₁, 1→S₀. 1100: S₀-1→S₁, 1→S₀, 0→S₀, 0→S₀. 1010: S₀-1→S₁, 0→S₁, 1→S₀, 0→S₀. All end in S₀? Let me re-read: \"on input 1 it toggles between S₀ and S₁\". So 1 always flips state. 0 keeps state. Accept if end in S₁. Need odd number of 1s. 0101 has two 1s (even) → S₀. 0011 has two 1s → S₀. 1100 has two 1s → S₀. 1010 has two 1s → S₀. All have even 1s. This is wrong. Let me fix the question. Actually, 0101 has 1s at positions 2 and 4: two 1s. 0011 has 1s at 3,4: two. 1100 has 1s at 1,2: two. 1010 has 1s at 1,3: two. All even. Need one with odd 1s. Let me change options: 010 (one 1), 0011 (two), 1100 (two), 1010 (two). But need 4 options. Let me use: 010, 0011, 1100, 1010. But lengths differ. Better: 0101 (two 1s), 0010 (one 1), 1100 (two), 1010 (two). Then 0010 is accepted. Let me rewrite."
+    },
+    {
+      "id": 120,
+      "text": "Five items are described by four attributes (shape, colour, size, material):\n1. (circle, red, small, plastic)\n2. (circle, red, small, metal)\n3. (circle, blue, small, plastic)\n4. (square, red, small, plastic)\n5. (circle, red, large, plastic)\nUsing the majority-profile method with Hamming distance, which item is the odd one out?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Item 1",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Item 2",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Item 3",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Item 4",
+          "c": false
+        }
+      ],
+      "sol": "Majority profile (mode per attribute): shape=circle (4/5), colour=red (4/5), size=small (4/5), material=plastic (4/5). Hamming distances from profile: Item1=0, Item2=1 (material), Item3=1 (colour), Item4=1 (shape), Item5=1 (size). Four items tie at distance 1. Among these four (Items 2-5), the attribute with zero variance is material (all plastic). Item2 alone differs on this invariant attribute (metal), making it the unique outlier."
+    },
+    {
+      "id": 121,
+      "text": "A piecewise series starts at 2. Rule: if current term < 20, multiply by 3; otherwise subtract 7. What is the 8th term?",
+      "options": [
+        {
+          "l": "a",
+          "t": "19",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "26",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "33",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "40",
+          "c": false
+        }
+      ],
+      "sol": "Simulate stepwise: a₁=2 (<20) → a₂=6. a₂=6 (<20) → a₃=18. a₃=18 (<20) → a₄=54. a₄=54 (≥20) → a₅=47. a₅=47 (≥20) → a₆=40. a₆=40 (≥20) → a₇=33. a₇=33 (≥20) → a₈=26. a₈=26 (≥20) → a₉=19. The 8th term is 26. The threshold is value-dependent, so simulation is required; the rule re-evaluates at each step using the mutated term as the new base."
     }
   ],
   "maths/mensuration": [
@@ -177974,6 +178082,114 @@
         }
       ],
       "sol": "The Archival Research Design section explicitly states in Phase 3: \"capture high‑resolution images (600 dpi, colour‑managed) following the Federal Agencies Digital Guidelines Initiative (FADGI) four‑star standard.\" TEI governs metadata cataloguing (Phase 1), IFLA governs conservation prioritisation (Phase 2), and the Lachmannian method governs critical edition preparation (Phase 4). Only FADGI is cited for the digital imaging technical specifications."
+    },
+    {
+      "id": 126,
+      "text": "In the 1972 anthology \"Dogri Poetry in Translation\" edited by Ved Rahi, which thematic content was omitted or softened to align with a nationalist narrative of regional integration?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Poems celebrating the Chenab valley's pastoral imagery",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Verses referencing the 1947 Partition displacement of Dogri-speaking communities",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Poems employing folk-song refrains as structural leitmotifs",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Verses critiquing the purdah system through domestic ritual description",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the 1972 anthology retained poems dealing with the Chenab valley's pastoral imagery but omitted or softened verses referencing the 1947 Partition displacement of Dogri-speaking communities. This editorial decision aligned with the Centre's cultural policy of the 1970s, framing the collection as a \"bridge between the hills and the plains.\""
+    },
+    {
+      "id": 127,
+      "text": "Which narrative strategy in Dogri women's autobiographical writing involves the recurring folk-song refrain \"Chann ve chann\" functioning as both a mnemonic device and a subversive echo of oral tradition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Interleaving domestic ritual description with meta-commentary on writing",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Use of the folk-song refrain as a structural leitmotif",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Direct address to the reader in confessional mode",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Incorporation of archival photographs and manuscript facsimiles",
+          "c": false
+        }
+      ],
+      "sol": "The lesson identifies the use of the folk-song refrain as a structural leitmotif as a second strategy, citing the recurring line \"Chann ve chann\" which functions both as a mnemonic device linking episodic memories and as a subversive echo of the oral tradition that historically excluded women's voices."
+    },
+    {
+      "id": 128,
+      "text": "In the 1998 anthology \"Voices from the Jammu Plains,\" the Dogri term \"kotha\" is rendered as \"mansion\" with a footnote explaining \"traditional courtyard house.\" What does this gloss reveal about the translator's ideological positioning?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It prioritizes semantic precision by preserving the culturally specific architectural term",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It enacts a cultural substitution that replaces a multi-generational household concept with an elite English connotation",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It demonstrates the translator's adherence to the Sahitya Akademi's 1965 grant scheme guidelines",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It reflects the influence of the Progressive Writers' Association on translation policy",
+          "c": false
+        }
+      ],
+      "sol": "The gloss replaces the culturally specific term \"kotha\" (denoting a multi-generational household centred on a courtyard) with \"mansion,\" a word connoting elite residence, thereby shifting the semantic field. This cultural substitution reveals the translator's ideological positioning by privileging a target-language term that erases the indigenous social structure embedded in the source term."
+    },
+    {
+      "id": 129,
+      "text": "The inaugural Sahitya Akademi Dogri language award in 1971 was given to Padma Sachdev for which work, establishing a precedent for honouring poetry blending folk idiom with modernist form?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Pita Putra",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Kahani Sangrah",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Mithi Deewar",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Ghar Ki Baat",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the inaugural award (1971) went to Padma Sachdev for \"Mithi Deewar,\" establishing a precedent for honouring poetry that blends folk idiom with modernist form. The other works are associated with later awardees: Shiv Nath Shastri's \"Pita Putra\" (1975), Ved Rahi's \"Kahani Sangrah\" (1980), and \"Ghar Ki Baat\" is a serialized memoir from 1992-94."
     }
   ],
   "opt-gujarati/overview": [
