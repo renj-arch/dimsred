@@ -1,50 +1,49 @@
 {
- "generatedAt": "2026-11-24T12:12:29.608Z",
+ "generatedAt": "2026-11-24T13:24:11.419Z",
  "lessonsAudited": 1,
  "flagged": 4,
  "applied": 2,
- "modelCalls": 3,
- "modelFailures": 0,
+ "modelCalls": 2,
+ "modelFailures": 2,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
-   "quote": "place Q at seat 4 (third left)",
-   "problem": "With P fixed at seat 1 and seats numbered clockwise, seat 4 is third to the right of P (since P is third to the left of Q). The parenthetical \"(third left)\" incorrectly describes Q's position relative to P.",
-   "correction": "place Q at seat 4 (third right of P)",
+   "file": "ssc-gd/course/gk/lesson-indian-geography.html",
+   "quote": "Note that Kangchenjunga is not in India but on the border; the highest peak entirely within Indian territory is Nanda Devi.",
+   "problem": "Kangchenjunga (Kanchenjunga) lies on the India–Nepal border, so it is partly in India; it is incorrect to say it is not in India.",
+   "correction": "Note that Kangchenjunga lies on the India–Nepal border; the highest peak entirely within Indian territory is Nanda Devi.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "With seats numbered clockwise, seat 4 is third right of P; 'third left' is incorrect.",
-   "applied": false
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
-   "quote": "add “Q is not third left of P”",
-   "problem": "The negation of the clue \"P sits third to the left of Q\" is \"P does not sit third to the left of Q\". The statement \"Q is not third left of P\" is not logically equivalent and would not correctly enforce the exclusive either‑or branch.",
-   "correction": "add “P is not third left of Q”",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Negation of 'P third left of Q' is 'P not third left of Q'; 'Q not third left of P' is not equivalent.",
+   "verifierReason": "Original falsely claims Kangchenjunga is not in India; it straddles the border so it is partly in India. Correction accurately states it lies on the border and Nanda Devi is highest entirely within In",
    "applied": true
   },
   {
-   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
-   "quote": "depending on whether A faces the centre (left is clockwise) or outward (left is anticlockwise)",
-   "problem": "In circular arrangement puzzles, the phrase 'A sits third to the left of B' refers to the left direction from B's perspective, so the interpretation depends on B's facing direction, not A's.",
-   "correction": "depending on whether B faces the centre (left is clockwise) or outward (left is anticlockwise)",
+   "file": "ssc-gd/course/gk/lesson-indian-geography.html",
+   "quote": "Kanchenjunga is in Sikkim, but Kangchenjunga is on the border with Nepal.",
+   "problem": "Kanchenjunga and Kangchenjunga are the same peak; it lies on the India–Nepal border in Sikkim.",
+   "correction": "Kanchenjunga (Kangchenjunga) lies on the India–Nepal border in Sikkim.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original incorrectly uses A's facing direction; correction correctly uses B's facing direction for left interpretation.",
+   "verifierReason": "Original incorrectly treats Kanchenjunga and Kangchenjunga as two different peaks; they are alternate spellings of the same peak on the India–Nepal border in Sikkim. Correction fixes this.",
    "applied": true
   },
   {
-   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
-   "quote": "where the sign is + if D_A = C and – if D_A = O",
-   "problem": "The sign in the modular equation for 'A sits k-th to the left of B' depends on B's facing direction (D_B), not A's (D_A).",
-   "correction": "where the sign is + if D_B = C and – if D_B = O",
+   "file": "ssc-gd/course/gk/lesson-indian-geography.html",
+   "quote": "Each link requires clearance under the Inter‑State River Water Disputes Act 1956, environmental impact assessment under the Environment (Protection) Act 1986, and techno‑economic appraisal by the Cent",
+   "problem": "The Inter‑State River Water Disputes Act 1956 provides for adjudication of disputes, not for project clearance. Inter‑basin links require environmental clearance, techno‑economic appraisal, and inter‑state agreements.",
+   "correction": "Each link requires environmental impact assessment under the Environment (Protection) Act 1986, techno‑economic appraisal by the Central Water Commission, and inter‑state agreement.",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Inter-State River Water Disputes Act 1956 is for adjudication, not project clearance. Correction correctly replaces it with inter-state agreement, retaining EIA and techno-economic appraisal requireme"
+  },
+  {
+   "file": "ssc-gd/course/gk/lesson-indian-geography.html",
+   "quote": "GLIMS integrated with ISRO ’s Resourcesat‑2A and Cartosat‑3 provides near‑real‑time lake‑area alerts",
+   "problem": "GLIMS is a global glacier inventory database, not an operational near‑real‑time alert system; ISRO uses its own satellites for lake monitoring",
+   "correction": "ISRO’s Resourcesat‑2A and Cartosat‑3 provide near‑real‑time lake‑area alerts",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original uses D_A for sign; correction correctly uses D_B as left direction depends on B's facing.",
+   "verifierReason": "GLIMS is a static inventory, not an alert system; ISRO satellites do provide lake monitoring data.",
    "applied": false
   }
  ]
