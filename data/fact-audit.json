@@ -1,40 +1,50 @@
 {
- "generatedAt": "2026-11-24T11:47:52.304Z",
+ "generatedAt": "2026-11-24T11:54:04.875Z",
  "lessonsAudited": 1,
- "flagged": 3,
- "applied": 0,
- "modelCalls": 1,
- "modelFailures": 1,
+ "flagged": 4,
+ "applied": 1,
+ "modelCalls": 2,
+ "modelFailures": 0,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
-   "problem": "The sun is directly overhead only at solar noon for locations between the Tropics; for most latitudes (including India) the sun is never overhead, and shadows are shortest but not zero at noon.",
-   "correction": "At solar noon in the tropics the sun can be overhead; otherwise shadows are shortest at noon.",
+   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
+   "quote": "strict signs ( or )",
+   "problem": "Missing inequality symbols in parentheses for strict signs",
+   "correction": "strict signs (> or <)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing inequality symbols; correction adds correct strict signs (> or <).",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
+   "quote": "A B C implies A C",
+   "problem": "Missing inequality symbols in chain example for strict signs",
+   "correction": "A > B > C implies A > C",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original lacks symbols in chain; correction gives valid transitive example A > B > C implies A > C.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
+   "quote": "strict inequality (or a strict equality)",
+   "problem": "Equality is not strict; 'strict equality' is a contradiction in terms",
+   "correction": "strict inequality (or equality)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "'Strict equality' is contradictory; correction correctly changes to 'strict inequality (or equality)'.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
+   "quote": "I. X Y II. X ≤ Y",
+   "problem": "Missing inequality symbol in first conclusion of either-or example",
+   "correction": "I. X > Y II. X ≤ Y",
    "confidence": "medium",
    "verified": true,
-   "verifierReason": "Original false; correction accurately states overhead only in tropics."
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "the Sun’s azimuth is 090° – 45° = 045° (North‑East), so shadows fall towards 225° (South‑West).",
-   "problem": "In the northern hemisphere at 09:00 the sun's azimuth is around 135° (South‑East), not 045°; shadows fall towards 315° (North‑West).",
-   "correction": "the Sun’s azimuth is approximately 135° (South‑East), so shadows fall towards 315° (North‑West).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original azimuth wrong; correction gives plausible 135° and opposite shadow direction.",
-   "applied": false
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "Distance each travelled: A = 10 km, B = 10 km.",
-   "problem": "B travels at 5√2 km/h for 2 hours, covering 10√2 km, not 10 km.",
-   "correction": "Distance each travelled: A = 10 km, B = 10√2 km.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original distance wrong; correction correctly uses 10√2 km for B.",
-   "applied": false
+   "verifierReason": "Given II X ≤ Y, the complementary either-or conclusion must be X > Y; correction is logically necessary."
   }
  ]
 }
