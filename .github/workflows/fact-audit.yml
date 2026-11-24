@@ -15,9 +15,10 @@ name: Lesson Fact Audit
 
 on:
   schedule:
-    # Four runs a day. Each stops at 75 minutes and saves after every lesson, so a
-    # cancelled run loses nothing and the next one continues the rotation.
-    - cron: '*/30 * * * *'   # every 30 minutes, continuous fact checking
+    # The 30-minute cron was throttled by GitHub on this busy public repo (the
+    # lane ran only a few times a day). Each run now dispatches the next one
+    # itself; this cron is a restart net, not the engine.
+    - cron: '23 */6 * * *'
   workflow_dispatch:
     inputs:
       limit:
@@ -35,6 +36,10 @@ on:
 
 permissions:
   contents: write
+  # The cron is throttled on a busy public repo (the lane was running only a
+  # few times a day at */30). Each run now queues the next one itself; the cron
+  # is a restart net, not the engine.
+  actions: write
 
 concurrency:
   group: fact-audit
@@ -89,3 +94,23 @@ jobs:
           git add -- */course 2>/dev/null || true
           git add upsc/course 2>/dev/null || true
           bash scripts/ci-push.sh "fact-audit: claims that do not hold up"
+
+      # Keep the lane continuous without relying on a frequent cron: GitHub
+      # heavily throttles */30 schedules on busy public repos. A run with a
+      # 25-minute deadline ends, queues the next, and the chain continues. The
+      # cron above only restarts a broken chain.
+      - name: Queue the next audit run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          for i in 1 2 3; do
+            if gh workflow run fact-audit.yml --ref main -f limit=20; then
+              echo "Queued the next fact-audit run"
+              exit 0
+            fi
+            echo "dispatch attempt $i failed, retrying..."
+            sleep $((5 + RANDOM % 10))
+          done
+          echo "::warning::could not queue the next fact-audit run; the 6-hourly cron will restart it"
