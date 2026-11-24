@@ -5951,6 +5951,141 @@
         }
       ],
       "sol": "In SAT/SMT encoding, each possible assignment becomes a Boolean variable (e.g., x_A,3 for \"A at position 3\", y_B,Doctor for \"B is Doctor\"). A conditional clue is an implication that activates only when the antecedent holds. It is encoded as the clause (¬x_A,3 ∨ y_B,Doctor), which is logically equivalent to x_A,3 → y_B,Doctor. A permanent binary constraint would force the relation even when A is not at position 3, which is incorrect. Global cardinality and parity constraints address different aspects."
+    },
+    {
+      "id": 121,
+      "text": "In a multi-stage puzzle, three conditionals form a cycle: if A then B, if B then C, and if C then A. What does this cycle force about the truth values of the antecedents?",
+      "options": [
+        {
+          "l": "a",
+          "t": "All three antecedents must be true",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "All three antecedents must be false",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Either all three are true or all three are false",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "No definite conclusion can be drawn",
+          "c": false
+        }
+      ],
+      "sol": "The three conditionals create a directed cycle in the implication graph. In Boolean logic, a cycle of implications (A→B, B→C, C→A) means A, B, and C are logically equivalent: each implies the others. Therefore they must share the same truth value. The only consistent assignments are all true or all false. Recognising this hidden equivalence lets the solver collapse the chain into a single binary choice, drastically reducing the search space."
+    },
+    {
+      "id": 122,
+      "text": "A scheduling puzzle includes the clue \"A and B cannot overlap\". Before branching on the disjunction, which propagation technique can tighten the earliest and latest start bounds of the tasks?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Forward propagation only",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Backward propagation only",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Edge-finding rules",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Unit propagation",
+          "c": false
+        }
+      ],
+      "sol": "The non-overlap clue creates a disjunctive constraint: either A finishes before B starts or B finishes before A starts. Before case splitting, the solver applies edge-finding rules, which examine the cumulative resource profile and the relative ordering of tasks to deduce tighter bounds on start times. Edge-finding can prove that one of the two orders is impossible, thereby narrowing the temporal windows without explicit branching."
+    },
+    {
+      "id": 123,
+      "text": "A double-row puzzle states \"the two rows are mirror images\". Which single anchoring constraint is sufficient to break the row-wise reflection symmetry?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Fix the rightmost person of the second row",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Fix the leftmost person of the first row",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Fix the middle person of both rows",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No anchoring is needed",
+          "c": false
+        }
+      ],
+      "sol": "A mirror-image clue introduces a reflection symmetry that swaps the two rows while reversing left-right order. This symmetry has order 2. To break it, we must fix a variable that is not mapped onto itself by the reflection. Fixing the leftmost person of the first row selects a unique representative from each orbit of the group action, eliminating the duplicate solution branches caused by the row-swap symmetry."
+    },
+    {
+      "id": 124,
+      "text": "In a hybrid seating-resource puzzle, after listing all feasible seat-person pairs from the seating sub-problem, what is the correct next step to verify resource feasibility?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Assign resources greedily to the highest-ranked persons",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Build a bipartite graph between persons and resource units and compute a maximum matching",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Ignore resource constraints and solve seating completely first",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Randomly pair persons with resources until all capacities are filled",
+          "c": false
+        }
+      ],
+      "sol": "The coupling clues link seats to resources, so resource assignment depends on which person occupies which seat. After obtaining the support matrix of feasible seat-person pairs, we construct a bipartite graph where persons are connected to resource units they are eligible for. Running a maximum-matching algorithm (e.g., Hopcroft-Karp) determines whether a perfect matching exists. If not, any seat-person pair that participates in no perfect matching is pruned, and the process iterates to a fixed point."
+    },
+    {
+      "id": 125,
+      "text": "What is the direct consequence of failing to propagate the contrapositive of a conditional clue during puzzle solving?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Antecedents that should be false remain active",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Consequents become true prematurely",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The implication graph becomes acyclic",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "All literals become unassigned",
+          "c": false
+        }
+      ],
+      "sol": "A conditional \"if X then Y\" yields the contrapositive \"if not Y then not X\". When Y is proven false, the contrapositive forces X to be false. If this propagation is omitted, X stays marked as active (possible) even though it must be false. This leaves spurious antecedents in the implication graph, potentially triggering incorrect consequents later and expanding the search space with invalid branches."
     }
   ],
   "reasoning/calendar-clock": [
@@ -19674,6 +19809,141 @@
         }
       ],
       "sol": "The lesson states NAFCC was 'established in 2015-16 with a corpus of ₹350 crore, later enhanced to ₹1,000 crore in the 2021-22 budget' and the misconceptions list notes: 'Believing the National Adaptation Fund is financed solely by the central budget; it also receives bilateral and multilateral grants.' Regarding GCF: 'India accesses the Green Climate Fund (GCF) and the Adaptation Fund (AF) through accredited entities such as NABARD, SIDBI, and the Indian Renewable Energy Development Agency (IREDA).' Option C correctly combines both facts. Options A, B, and D each contain factual errors about funding sources or GCF access mechanisms."
+    },
+    {
+      "id": 113,
+      "text": "What is the total financial outlay approved for the National Green Hydrogen Mission and its targeted annual green hydrogen production capacity by 2030?",
+      "options": [
+        {
+          "l": "a",
+          "t": "₹19,744 crore and 5 million metric tonnes",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "₹15,000 crore and 3 million metric tonnes",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "₹20,000 crore and 10 million metric tonnes",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "₹12,000 crore and 2 million metric tonnes",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the Union Cabinet approved the National Green Hydrogen Mission on 4 January 2023 with a total outlay of ₹19,744 crore for the period 2023‑24 to 2029‑30 and aims for an annual production capacity of 5 million metric tonnes (MMT) by 2030. Only option A matches both figures."
+    },
+    {
+      "id": 114,
+      "text": "Under which of the four labour codes is the statutory floor wage provision introduced?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Code on Wages",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Industrial Relations Code",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Code on Social Security",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Occupational Safety, Health and Working Conditions Code",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly mentions that the Code on Wages introduces a statutory floor wage fixed by the central government (initially ₹178 per day) below which no state minimum wage can be set. The other codes deal with industrial relations, social security, and occupational safety, not the floor wage."
+    },
+    {
+      "id": 115,
+      "text": "What is the primary role of IN‑SPACe in India's space sector reforms?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Operates launch vehicles",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Authorises and facilitates access to ISRO facilities",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Manufactures satellites",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Regulates foreign investment in space",
+          "c": false
+        }
+      ],
+      "sol": "According to the lesson, IN‑SPACe only authorises and facilitates access to ISRO facilities; it does not directly operate launch vehicles, manufacture satellites, or regulate foreign investment. Hence option B correctly describes its role."
+    },
+    {
+      "id": 116,
+      "text": "What percentage of polling stations does the Supreme Court mandate for VVPAT verification in each constituency?",
+      "options": [
+        {
+          "l": "a",
+          "t": "100%",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "5% random sample",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "10%",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No verification required",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that the Supreme Court mandated only a 5% random sample of polling stations per constituency for VVPAT verification, not 100% or any other figure. Therefore option B is the correct statement."
+    },
+    {
+      "id": 117,
+      "text": "The consent‑manager framework of the Ayushman Bharat Digital Mission is modelled on which architecture?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Data Empowerment and Protection Architecture (DEPA)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Digital Personal Data Protection (DPDP) Act",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Aadhaar Act",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "National Health Policy",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that data governance under ABDM rests on a consent‑manager framework modelled on the Data Empowerment and Protection Architecture (DEPA). The DPDP Act, Aadhaar Act, and National Health Policy are separate legal bases and not the model for ABDM's consent manager."
     }
   ],
   "english/grammar-basics": [
@@ -103432,6 +103702,141 @@
         }
       ],
       "sol": "Step 1: Note that the police is a collective noun that is always plural in standard English; it refers to the body of officers, not a singular unit. Step 2: Contrast with the singular police force. Step 3: The verb must be plural to agree with this invariant plural subject. Step 4: Select are (present plural). Is and was are singular; has is a singular auxiliary and cannot serve as the progressive auxiliary."
+    },
+    {
+      "id": 114,
+      "text": "That the proposals were rejected ______ surprising.",
+      "options": [
+        {
+          "l": "a",
+          "t": "is",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "are",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "were",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "have been",
+          "c": false
+        }
+      ],
+      "sol": "The subject is a that‑clause (\"That the proposals were rejected\"). Clausal subjects are syntactically singular units, so the verb must be singular regardless of any plural nouns inside the clause. \"Is\" is the singular present‑tense form that agrees with the clausal subject. \"Are,\" \"were,\" and \"have been\" are plural or past forms and would incorrectly treat the clause as plural."
+    },
+    {
+      "id": 115,
+      "text": "Only the managers ______ responsible for the decision.",
+      "options": [
+        {
+          "l": "a",
+          "t": "is",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "are",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "was",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "has been",
+          "c": false
+        }
+      ],
+      "sol": "The focus particle \"only\" precedes the true subject \"the managers\" but does not carry number. The verb must agree with the head noun \"managers,\" which is plural. Therefore the plural verb \"are\" is correct. \"Is,\" \"was,\" and \"has been\" are singular and would mistakenly let the particle dictate agreement."
+    },
+    {
+      "id": 116,
+      "text": "A variety of options ______ available.",
+      "options": [
+        {
+          "l": "a",
+          "t": "is",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "are",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "was",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "has been",
+          "c": false
+        }
+      ],
+      "sol": "With collective quantifiers like \"a variety of,\" the verb agrees with the noun following \"of\" (the of‑complement). Here \"options\" is a plural countable noun, so the verb must be plural. \"Are\" is the plural present form; \"is,\" \"was,\" and \"has been\" are singular and would incorrectly match the quantifier head instead of the of‑noun."
+    },
+    {
+      "id": 117,
+      "text": "The bulk of the data ______ corrupted.",
+      "options": [
+        {
+          "l": "a",
+          "t": "is",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "are",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "was",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "has been",
+          "c": false
+        }
+      ],
+      "sol": "In partitive expressions such as \"the bulk of,\" the verb mirrors the number of the of‑noun. The lesson notes that \"data\" is traditionally plural in formal usage, so the verb must be plural. \"Are\" is the correct plural present form. \"Is,\" \"was,\" and \"has been\" are singular and would wrongly agree with the singular partitive head \"bulk.\""
+    },
+    {
+      "id": 118,
+      "text": "Not only the students but also the teacher ______ responsible.",
+      "options": [
+        {
+          "l": "a",
+          "t": "are",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "is",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "were",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "have been",
+          "c": false
+        }
+      ],
+      "sol": "The correlative \"not only … but also\" follows the proximity rule: the verb agrees with the subject nearest to it. In this sentence the nearer subject is \"the teacher\" (singular), so the verb must be singular. \"Is\" is the singular present form. \"Are,\" \"were,\" and \"have been\" are plural and would incorrectly apply a default plural agreement because two entities are mentioned."
     }
   ],
   "grammar/articles-prepositions": [
@@ -105438,6 +105843,114 @@
         }
       ],
       "sol": "RST analysis in the lesson describes the Summary relation as typically appearing in the final sentence, restating the nuclear claim with higher‑level abstraction. Reliable cues are summative markers (\"in short\", \"overall\", \"ultimately\") and a high density of anaphoric references to earlier nuclei. A forward‑looking modal suggests a projective conclusion, not a summary; \"however\" signals contrast, not closure; introducing a new topic violates the summary function. Option B captures the definitive summary cues."
+    },
+    {
+      "id": 116,
+      "text": "In a paragraph, a bridging reference such as \"The instrument\" must follow the sentence that introduces its antecedent (e.g., \"a spectrometer\"). Which ordering respects this constraint?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The instrument had been calibrated yesterday. The laboratory was equipped with a spectrometer.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The laboratory was equipped with a spectrometer. The instrument had been calibrated yesterday.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "A spectrometer was in the laboratory. The instrument had been calibrated yesterday.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The laboratory was equipped with a spectrometer. An instrument had been calibrated yesterday.",
+          "c": false
+        }
+      ],
+      "sol": "Bridging references rely on a semantic link (instrument‑of) from the definite description to a previously introduced entity. The antecedent \"a spectrometer\" appears in the first sentence of option B, licensing the definite description \"The instrument\" in the second. Option A places the bridge before its source, causing a coherence break. Option C uses an indefinite antecedent \"A spectrometer\" but the bridge \"The instrument\" still requires a definite antecedent; the indefinite article does not activate the referent sufficiently. Option D replaces the definite bridge with an indefinite \"An instrument,\" which fails to signal the bridging relation. Thus, only B maintains the correct bridge directionality."
+    },
+    {
+      "id": 117,
+      "text": "Verbs like \"cause\" project a forward‑looking effect, so the sentence describing the outcome should follow the cause sentence. Which pair observes this implicit causality ordering?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The streets were submerged. The heavy rain caused flooding.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The heavy rain caused flooding. The streets were submerged.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The heavy rain caused flooding. Because the streets were submerged.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The streets were submerged because the heavy rain caused flooding.",
+          "c": false
+        }
+      ],
+      "sol": "Implicit causality means the verb \"caused\" creates an expectation for a subsequent effect clause. Option B presents the cause sentence first (\"The heavy rain caused flooding\") and the effect sentence second (\"The streets were submerged\"), matching the forward‑looking bias. Option A reverses the order, placing the effect before the cause without an explicit connector, violating the verb‑specific expectation. Option C adds a backward‑looking \"Because\" clause, which changes the causal framing and is not a simple two‑sentence sequence. Option D merges both clauses into a single sentence with an explicit connector, bypassing the implicit causality test. Therefore, B is the only ordering that respects the verb's inherent causal direction."
+    },
+    {
+      "id": 118,
+      "text": "An appositive definite description (e.g., \"The Nobel laureate\") presupposes a proper noun already introduced. Which sentence order satisfies this presupposition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The Nobel laureate was born in Warsaw. Marie Curie discovered radium.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Marie Curie discovered radium. The Nobel laureate was born in Warsaw.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Marie Curie discovered radium. A Nobel laureate was born in Warsaw.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The Nobel laureate was born in Warsaw. A scientist discovered radium.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that a definite description in an appositive role must follow its proper noun antecedent; otherwise the description lacks a referent. Option B introduces \"Marie Curie\" first, then uses the definite description \"The Nobel laureate\" in the next sentence, fulfilling the presupposition. Option A places the definite description before the proper noun, creating a cataphoric reference that is disallowed in expository paragraphs. Option C replaces the definite description with an indefinite \"A Nobel laureate,\" which does not carry the same presuppositional force. Option D both reverses the order and uses an indefinite \"A scientist,\" failing the requirement. Hence, only B respects the appositive‑host ordering."
+    },
+    {
+      "id": 119,
+      "text": "The correlative pair \"not only … but also\" imposes a fixed linear order: the \"not only\" clause must precede the \"but also\" clause. Which two‑sentence sequence obeys this constraint?",
+      "options": [
+        {
+          "l": "a",
+          "t": "But also she donated the money. Not only did she win the prize.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Not only did she win the prize. But also she donated the money.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "She donated the money. Not only did she win the prize.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Not only did she win the prize. She donated the money.",
+          "c": false
+        }
+      ],
+      "sol": "Comparative correlatives such as \"not only … but also\" are syntactically and informationally licensed only when the head (\"not only\") appears before its partner (\"but also\"). Option B presents the \"not only\" clause in the first sentence and the \"but also\" clause in the second, preserving the mandatory order. Option A reverses the pair, violating the licensing condition. Option C omits the \"but also\" clause entirely, breaking the correlative structure. Option D includes the \"not only\" clause but replaces the required \"but also\" with a simple declarative, again failing to complete the correlative pair. Therefore, only B satisfies the ordering constraint."
     }
   ],
   "grammar/active-passive": [
@@ -105926,6 +106439,114 @@
         }
       ],
       "sol": "The lesson provides specific percentages: \"In academic prose, the passive accounts for approximately 25% of finite clauses, whereas in conversation it drops below 5%. In news reportage, the passive appears in about 15% of clauses.\" Academic prose (25%) is higher than news reportage (15%) and far higher than conversation (<5%). Fiction is not given a passive percentage, but the data clearly identifies academic prose as the register with the highest passive frequency."
+    },
+    {
+      "id": 119,
+      "text": "In indirect speech with a past reporting verb, how does the modal stack \"might have been able to\" change?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It remains \"might have been able to\".",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "It becomes \"might have had been able to\".",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It becomes \"could have been able to\".",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It becomes \"might have been able to have\".",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that when a modal perfect or modal stack appears, the modal \"might\" has no past form, so it stays \"might\". The perfect aspect \"have been able\" already marks anteriority, so no further backshift occurs. Therefore the whole stack \"might have been able to\" remains unchanged. Options B, C, and D each introduce an illicit additional auxiliary or an incorrect modal substitution, violating the backshift rules for modal stacking described in the text."
+    },
+    {
+      "id": 120,
+      "text": "Which sentence correctly passivises an ergative verb?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The window broke by the wind.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The window was broken by the wind.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The window broke.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The window was broke by the wind.",
+          "c": false
+        }
+      ],
+      "sol": "Ergative verbs like \"break\" have both transitive and intransitive uses. Only the transitive alternant admits a passive. \"The window was broken by the wind\" is the passive of the transitive \"The wind broke the window\", with the patient promoted to subject and the agent in a by‑phrase. Option A uses the intransitive past tense \"broke\" with a by‑phrase, which is ungrammatical. Option C is the intransitive active, not a passive. Option D uses the ungrammatical form \"was broke\". Thus only option B correctly applies the passive to the transitive alternant of the ergative verb."
+    },
+    {
+      "id": 121,
+      "text": "Which indirect‑speech version correctly reports the performative verb \"order\" in standard British usage?",
+      "options": [
+        {
+          "l": "a",
+          "t": "He ordered that I leave the room.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "He ordered me to leave the room.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "He ordered me that I leave the room.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "He ordered me leaving the room.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that performative verbs have specific subcategorisation frames. \"Order\" takes a to‑infinitive complement (\"ordered me to leave\") in standard British English; a that‑clause is not standard. The performative itself is not backshifted. Option B follows the required frame. Option A uses a that‑clause, which the text marks as non‑standard. Option C mixes the frames incorrectly. Option D uses a gerund complement, which is not licensed by \"order\". Therefore option B is the only correct transformation."
+    },
+    {
+      "id": 122,
+      "text": "In the following discourse, which continuation best maintains topical cohesion? \"The committee reviewed the proposal. ______ was approved unanimously.\"",
+      "options": [
+        {
+          "l": "a",
+          "t": "They approved it unanimously.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The proposal was approved unanimously.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The committee approved it unanimously.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It approved unanimously.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that passive voice promotes the current topic (the proposal) to subject position, preserving cohesion. After the first sentence, the proposal is the established topic. Option B uses a passive with \"The proposal\" as subject, keeping it topical. Option A introduces a new agent topic (\"They\"), breaking continuity. Option C repeats the agent \"The committee\" as subject, shifting focus away from the proposal. Option D uses \"It\" as subject with an active verb, which is ungrammatical and does not maintain the proposal as topic. Hence option B is the discourse‑appropriate choice."
     }
   ],
   "vocabulary/vocabulary": [
@@ -177614,6 +178235,141 @@
         }
       ],
       "sol": "The lesson contrasts three anthology moments: (1) 1915 B.M. Srikantaiah — 'golden age' narrative privileging court poets (Option D). (2) Post-independence (1965, 1972) — 'reproduced this hierarchy, reinforcing a Sanskritised aesthetic' (Option C). (3) 1990s corrective wave — 'deliberately assembled poems by writers excluded from mainstream volumes, providing editorial introductions that framed the selections as political interventions' (Option B). Option A describes the 2021 digital 'Open Anthology' project, not the 1990s print anthologies. The 1990s anthologies are explicitly defined by their political interventionism against the preceding consensus canon."
+    },
+    {
+      "id": 7221,
+      "text": "Which translation work by B. M. Srikantaiah introduced the sonnet and lyric stanza to Kannada readers in 1914, influencing poets like Kuvempu and D. R. Bendre?",
+      "options": [
+        {
+          "l": "a",
+          "t": "English Geethegalu",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Speaking of Siva",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The Interior Landscape",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Samskara",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that B.M. Srikantaiah's 1914 translation \"English Geethegalu\" introduced the sonnet and lyric stanza to Kannada readers, prompting poets such as Kuvempu and D. R. Bendre to experiment with metrical regularity and personal voice. Ramanujan's \"Speaking of Siva\" (1973) and \"The Interior Landscape\" (1990) translated Vachana poetry much later. \"Samskara\" is a novel by U.R. Ananthamurthy translated by Ramanujan in 1976. Therefore, only \"English Geethegalu\" matches the description."
+    },
+    {
+      "id": 7222,
+      "text": "The episodic, cliff-hanger structure of which performance tradition's prasanga informed the chapter design of early Navodaya novels such as \"Chomana Dudi\"?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Bayalata",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Harikatha",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Yakshagana",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Dollu Kunitha",
+          "c": false
+        }
+      ],
+      "sol": "The lesson identifies three feedback mechanisms from performance traditions to written literature. The first is narrative pacing: \"the episodic, cliff‑hanger structure of Yakshagana prasanga informs the chapter design of early Navodaya novels such as 'Chomana Dudi'\". Bayalata contributed stylised dialogic technique, while Harikatha contributed performative rhetoric like direct address. Dollu Kunitha is not mentioned in the lesson. Thus, Yakshagana is the correct answer."
+    },
+    {
+      "id": 7223,
+      "text": "Critics such as Keerthinath Kurtakoti and G. S. Amur have argued that the Karnataka Sahitya Academy's selection committees historically favoured which group of writers?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Dalit, tribal, and women writers",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Dominant-caste, male, and urban writers",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Translators and scholars of Sanskrit classics",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Folk performers and oral tradition bearers",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that critics like Keerthinath Kurtakoti and G. S. Amur argued the Academy's selection committees \"historically favoured dominant-caste, male, and urban writers, marginalising Dalit, tribal, and women's voices until the 1990s.\" The Academy commissioned translations of major novels but did not exclusively reward translators. It did not prioritize folk performers as a policy, nor did it favor Dalit/tribal/women writers historically — rather, it marginalized them. Option B directly reflects the cited criticism."
+    },
+    {
+      "id": 7224,
+      "text": "The Appiko movement (1983) in Uttara Kannada, led by Panduranga Hegde, finds poetic resonance in the works of which poet?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Kuvempu",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Chandrashekhar Kambar",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "H. S. Venkateshamurthy",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "D. R. Bendre",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly links the Appiko movement (1983) in Uttara Kannada to the works of H. S. Venkateshamurthy: \"The Appiko movement (1983) in Uttara Kannada, led by Panduranga Hegde, finds poetic resonance in the works of later poets such as H. S. Venkateshamurthy.\" Kuvempu's \"Kanooru Heggaditi\" maps Malnad ecology. Chandrashekhar Kambar's poetry is rooted in North Karnataka plains. D.R. Bendre is associated with Navodaya poetry and metrical experimentation. Only H.S. Venkateshamurthy is connected to the Appiko movement in the text."
+    },
+    {
+      "id": 7225,
+      "text": "Devanur Mahadeva's Dalit short story \"Kusuma Bale\" (1990) is noted for deploying which narrative strategy to articulate community trauma?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Linear realist structure with an omniscient narrator and moral closure",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Limited third-person focalisation and stream-of-consciousness passages",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Collective \"we\" narrator and non-linear vignettes",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Metafictional story-within-a-story and intertextual pastiche",
+          "c": false
+        }
+      ],
+      "sol": "The lesson describes the evolution of the Kannada short story across phases. For the Dalit short story, it specifically states: \"The Dalit short story, exemplified by Devanur Mahadeva's 'Kusuma Bale' (1990), deploys a collective 'we' narrator and non‑linear vignettes to articulate community trauma, challenging the individualistic bias of earlier modernist forms.\" Option A describes the early modernist phase (Masti, A.N. Krishna Rao). Option B describes the Navya period (Lankesh, Chittal). Option D describes postmodern strategies (Vasudhendra, Banu Mushtaq). Only option C matches the textual description of Mahadeva's technique."
     }
   ],
   "opt-kashmiri/overview": [
@@ -181107,6 +181863,114 @@
         }
       ],
       "sol": "The lesson states: 'Frequency analyses from this corpus have revised earlier assumptions about the productivity of the \"-che\" genitive marker versus the \"-k\" possessive clitic, showing a clear script-correlated distribution.' This means the choice of marker correlates with the script (Devanagari vs Roman), not that either is exclusive to one script (options A and B are too absolute) or that there is no pattern (option D). The corpus evidence specifically highlights a script-correlated distribution, making option C the accurate reflection of the research finding."
+    },
+    {
+      "id": 7036,
+      "text": "Which award is correctly matched with its instituting body and year as per the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Sahitya Akademi Award for Konkani - First conferred in 1976 by the Goa Konkani Akademi.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Goa State Cultural Award (Konkani literature category) - Instituted in 1978 by the Government of Goa.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Karnataka Konkani Sahitya Akademi Award - Established in 1994 by the Sahitya Akademi, New Delhi.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Vaman Sardesai Puraskar - Instituted in 1992 by the Goa Konkani Akademi.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: 'The Goa State Cultural Award (instituted 1978) includes a Konkani literature category.' Option A is incorrect because the Sahitya Akademi Award is a national honour conferred by the Sahitya Akademi, New Delhi, not the Goa Konkani Akademi. Option C is incorrect because the Karnataka Konkani Sahitya Akademi Award was established by the Karnataka Konkani Sahitya Akademi itself in 1994. Option D is incorrect because the Vaman Sardesai Puraskar (1992) is awarded by the Konkani Bhasha Mandal, a private trust, not the Goa Konkani Akademi."
+    },
+    {
+      "id": 7037,
+      "text": "Regarding Konkani oral performance genres beyond Tiatr, which structural feature is correctly attributed to its genre?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Zagor is characterized by a fixed choreography and stanzaic rhyme scheme.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Khell is distinguished by its improvisatory dialogue structure.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Mando is defined by its stanzaic rhyme scheme.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "All three genres — Zagor, Khell, and Mando — share the same improvisatory dialogue format.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly contrasts the three genres: 'zagor's improvisatory dialogue vs. khell's fixed choreography vs. mando's stanzaic rhyme scheme.' Therefore, Mando is correctly identified by its stanzaic rhyme scheme. Option A incorrectly assigns Khell's fixed choreography and Mando's rhyme scheme to Zagor. Option B incorrectly assigns Zagor's improvisatory dialogue to Khell. Option D is factually wrong as the lesson emphasizes their distinct structural conventions."
+    },
+    {
+      "id": 7038,
+      "text": "What is the official translation model adopted by the Goa Konkani Akademi's 'Equivalence Guidelines' (1995)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Formal equivalence prioritizing literal fidelity to the source text.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Functional equivalence prioritizing cultural transposition over formal fidelity.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Dynamic equivalence focusing solely on reader response in the target language.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Communicative equivalence rejecting any form of cultural adaptation.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: 'The bureau's \"Equivalence Guidelines\" (1995) adopted a functional-equivalence model, prioritising cultural transposition over formal fidelity; this is evident in the 1998 Konkani rendering of Mahabharata where the term \"dharma\" is rendered as \"dharmik kartavya\" rather than the Sanskrit loan.' This directly confirms Option B. Options A, C, and D describe alternative translation theories not adopted as the official Akademi stance per the text."
+    },
+    {
+      "id": 7039,
+      "text": "Which of the following milestones in Konkani translation history is correctly sequenced and attributed?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Krista Purana (1616) by Fr. Thomas Stephens in Devanagari script; Konkani New Testament (1821) by Serampore Press in Roman script.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Krista Purana (1616) by Fr. Thomas Stephens in Romanised orthography; Konkani New Testament (1821) by Serampore Press in Devanagari script.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Krista Purana (1616) by Serampore Press in Romanised orthography; Konkani New Testament (1821) by Fr. Thomas Stephens in Devanagari script.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Krista Purana (1821) by Fr. Thomas Stephens in Devanagari script; Konkani New Testament (1616) by Serampore Press in Roman script.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: 'The first complete Bible in Konkani, Krista Purana (1616, by Fr. Thomas Stephens), employed a Romanised orthography and a Sanskritised lexicon... The 19th-century Protestant mission produced the \"Konkani New Testament\" (1821, Serampore Press) in Devanagari, initiating the script bifurcation that persists today.' Option B matches this exactly. Options A, C, and D contain factual errors in authorship, script, or chronology."
     }
   ],
   "opt-konkani/paper2": [
@@ -187892,6 +188756,60 @@
         }
       ],
       "sol": "The text states: \"Numit Kappa exists in at least three manuscript families: the Royal Chronicle version (c. 1720), the Lai Haraoba ritual version (transcribed 1935), and a Bengali-script print edition (1952) edited by N. Khelchandra Singh.\" Option B lists all three correctly. Option A omits the Lai Haraoba version. Option C adds an unsupported Tibetan translation. Option D contradicts the explicit mention of multiple families."
+    },
+    {
+      "id": 7129,
+      "text": "The 1965 split in the Manipur Progressive Writers’ Association produced two parallel critical journals. Which pair correctly identifies these journals and their respective ideological orientations?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Lal Sahitya (1966) — hard‑line Marxist; Meitei Sahitya (1967) — cultural‑nationalist",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Lal Sahitya (1966) — cultural‑nationalist; Meitei Sahitya (1967) — hard‑line Marxist",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Manipuri Sahitya (1953) — hard‑line Marxist; Kangleipak (1963) — cultural‑nationalist",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Sahitya Sabha (1952) — hard‑line Marxist; Bal Sahitya (1954) — cultural‑nationalist",
+          "c": false
+        }
+      ],
+      "sol": "The text states that the 1965 PWA split created a \"hard‑line\" faction aligned with the CPI(M) and a \"cultural‑nationalist\" faction emphasising Meitei identity. It explicitly names the two resulting journals: Lal Sahitya (1966) for the hard‑line faction, which published structuralist analyses of the Khamba‑Thoibi epic as proletarian allegory, and Meitei Sahitya (1967) for the cultural‑nationalist faction, which foregrounded nativist aesthetics. Manipuri Sahitya (1953) was the PWA’s inaugural journal before the split, and Kangleipak (1963) was a little magazine associated with modernist fiction. Sahitya Sabha refers to annual meetings, not a journal, and Bal Sahitya Prakashan (1954) is a children’s press. Hence, option A is the only accurate pairing."
+    },
+    {
+      "id": 7130,
+      "text": "Scholarship on Kabaw Valley manuscript networks highlights specific orthographic innovations recorded in colophons. Which of the following features are documented as innovations in these Puya manuscripts?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Archaic kok marker and Burmese punctuation",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Meitei Mayek script standardisation and Bengali script adoption",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Roman script transliteration and Arabic numeral pagination",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Devanagari vowel signs and Persian marginal glosses",
+          "c": false
+        }
+      ],
+      "sol": "The lesson warns against treating Kabaw Valley manuscripts as a monolithic traditional corpus and specifically notes \"orthographic innovations (archaic kok marker, Burmese punctuation) documented in colophons.\" This directly identifies the archaic kok marker and Burmese punctuation as the recorded innovations. The 1953 orthography reform and 1979 Meitei Mayek revival pertain to later state script policies, not the Kabaw Valley manuscripts. Roman script appears later in 1990s bilingual children’s editions, and Devanagari/Persian elements are not mentioned in the context of these Puya texts. Therefore, option A alone reflects the documented features."
     }
   ],
   "opt-manipuri/paper2": [
@@ -204840,6 +205758,141 @@
         }
       ],
       "sol": "The lesson states: 'Sangam poems treat these landscapes not as mere backdrop but as active participants shaping emotion and ethics; the kurinji night‑blooming flower signals clandestine union, while the drying palai riverbed embodies existential desolation.' It also warns against 'Assuming the tiṇai system is a mere decorative taxonomy rather than an ethical‑ecological framework that informs both classical and contemporary texts.' Option B captures this active, ethical-ecological role. Option A describes the misconception warned against. Option C is incorrect as the lesson shows continuity and rupture. Option D limits it to Bhakti literature, while the framework originates in and extends beyond Sangam."
+    },
+    {
+      "id": 7115,
+      "text": "The Tamil Lexicon (1924-1939) adopted a philological principle of 'chronological layering' for its entries. This methodology primarily implies that:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Each headword is traced to its earliest verifiable occurrence across source texts",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Sanskrit loanwords are excluded to maintain linguistic purity of the Tamil lexicon",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Only literary Tamil (centamiḻ) citations are used, excluding spoken varieties (koṭuntamiḻ)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Entries are arranged alphabetically rather than by semantic fields or historical development",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that the Tamil Lexicon adopted a 'philological principle of chronological layering: each sense is dated to the earliest verifiable occurrence'. This mirrors the Oxford English Dictionary approach but adapts it to Tamil's diglossic tradition. The Lexicon includes Sanskrit loanwords with Tamilised phonology (e.g., arakkam from arakṣa) and draws from over 1,200 source texts including both literary and inscriptional evidence, not just centamiḻ. The chronological layering principle is about dating senses historically, not about alphabetical arrangement."
+    },
+    {
+      "id": 7116,
+      "text": "Which of the following statements accurately distinguishes the three major ritualised koothu forms mentioned in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Terukkūttu is performed on wooden stages, kattaikkūttu in village squares, and kuravañci is a dance-drama",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Terukkūttu is street theatre, kattaikkūttu is wooden-stage theatre, and kuravañci is a dance-drama",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "All three forms follow the Nāṭyaśāstra strictly without improvisation, differing only in performance venue",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Kuravañci is the only form retaining improvisational core, while terukkūttu and kattaikkūttu are fully scripted",
+          "c": false
+        }
+      ],
+      "sol": "The lesson clearly defines the three forms: 'terukkūttu (street theatre), kattaikkūttu (wooden‑stage theatre), and kuravañci (dance‑drama)'. It also states that Tamil koothu retains a strong improvisational core across forms, with the vidushaka figure (kōmakkaḷ) interpolating contemporary commentary. Option A incorrectly assigns venues. Option C is wrong because koothu retains improvisation and Nāṭyaśāstra influence is mediated through Tamil commentarial tradition (Kūttanūl), not followed strictly. Option D incorrectly limits improvisation to only kuravañci."
+    },
+    {
+      "id": 7117,
+      "text": "A high-scoring answer on Tamil literary criticism would avoid which of the following methodological errors?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Contrasting the Tolkāppiyam's indigenous akam/puram framework with Sanskrit rasa theory",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Applying Sanskrit rasa theory uncritically to Tamil akam poetics without accounting for Tolkāppiyam's framework",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Analyzing how the Kūttanūl codifies abhinaya and metres for Tamil performance traditions",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Discussing the interplay of akam (inner) and puram (outer) emotions in Tamil dramatic practice",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly lists as a common error: 'Applying Sanskrit rasa theory uncritically to Tamil akam poetics without accounting for the Tolkāppiyam's indigenous framework.' This is highlighted in the 'Confusing...' section at the end. Options A, C, and D represent valid analytical approaches: contrasting frameworks (A), analyzing the Kūttanūl's codification (C), and discussing akam/puram interplay in drama (D) are all supported by the lesson content as legitimate scholarly activities."
+    },
+    {
+      "id": 7118,
+      "text": "The descriptive dialect dictionaries produced by Tamil University (Thanjavur) and Madurai Kamaraj University Folklore Department differ from the Tamil Lexicon primarily in that they:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Exclude Sanskrit loanwords entirely to focus on pure Dravidian vocabulary",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Capture regional variants like Kongu retroflex ḷ and Jaffna vowel lengthening omitted by the Lexicon",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Adopt a chronological layering principle more rigorous than the Lexicon's methodology",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Focus exclusively on modern spoken Tamil, ignoring classical literary attestations",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the later dialect dictionaries 'capture regional variants like the Kongu retroflex ḷ and the Jaffna vowel lengthening that the Lexicon omits.' This is the key distinction: the Lexicon is prescriptive and standardising, while the dialect dictionaries are descriptive and capture regional variation. The Lexicon includes Sanskrit loanwords (e.g., arakkam), so dialect dictionaries don't exclude them 'entirely' as a defining feature. The Lexicon uses chronological layering; the dialect dictionaries are not described as adopting a 'more rigorous' version. They document regional speech, not exclusively modern spoken Tamil to the exclusion of classical attestations."
+    },
+    {
+      "id": 7119,
+      "text": "The 2016 'Digital Tirukkuṟaḷ' project (IIT Madras) enables scholars to query variant readings across manuscript witnesses. This digital critical edition specifically reveals about Kural 1.1 that:",
+      "options": [
+        {
+          "l": "a",
+          "t": "The reading 'aṟam' clusters in Pandya-region palm-leaf manuscripts (12th-13th century) while 'aram' dominates Chola-region paper copies (16th century)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Both 'aṟam' and 'aram' readings appear uniformly across all geographic regions and time periods",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The 'aram' reading is found only in 18th-century printed editions, proving it is a modern corruption",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The variant distribution confirms a single authoritative manuscript stemma for the entire Tirukkuṟaḷ tradition",
+          "c": false
+        }
+      ],
+      "sol": "The lesson provides this exact finding: 'the reading aṟam vs aram in Kural 1.1 — across geographic provenance and date, revealing that the aṟam form clusters in Pandya‑region palm‑leaf manuscripts (12th‑13th century) while aram dominates Chola‑region paper copies (16th century).' This granularity informs debates about orthographic reform under Vijayanagara administration. Option B contradicts the stated geographic/temporal clustering. Option C is incorrect as both readings appear in medieval manuscripts. Option D is wrong because the digital edition enables computational collation, moving away from stemmatic reconstruction to reveal complex variant distributions, not a single stemma."
     }
   ],
   "opt-tamil/paper1": [
@@ -205598,6 +206651,60 @@
         }
       ],
       "sol": "The lesson notes: \"The 'Kavithai Kalai' YouTube channel (launched 2012) hosts weekly performance‑poetry sessions where poets such as Salma, Perumal Murugan..., and the Dalit‑feminist Meena Kandasamy read before live audiences.\" Project Madurai began in 2005, the Tamil Wikipedia Poetry Project started in 2015, and the Journal of Tamil Studies has existed since 1970."
+    },
+    {
+      "id": 7129,
+      "text": "Regarding Costanzo Giuseppe Beschi's (Veeramamunivar) Thembavani (1736), which characterisation is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It is a direct prose translation of the Bible into colloquial Tamil for missionary use.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It is an original epic composition in 3,615 viruttam verses employing high classical diction (centamil) and akam conventions.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It was the first book printed in Tamil at the Tranquebar Mission press in 1715.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It follows the structure of the Tirukkural with 1,330 couplets on Christian ethics.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson describes Thembavani as an epic on the life of St. Joseph in 3,615 viruttam verses that deploys high classical diction (centamil) and akam conventions — the heroine's iraicci (suggestion) being a key feature. It explicitly warns against the error of misreading Thembavani as a mere translation of the Bible rather than an original epic composition in classical Tamil metres adapting Christian narrative to akam/puram poetics. Option A describes a translation, which the lesson contradicts. Option C refers to the Tamil New Testament (1715) printed at Tranquebar, not Thembavani. Option D incorrectly imposes the Tirukkural's couplet structure onto Thembavani, which uses the viruttam metre."
+    },
+    {
+      "id": 7130,
+      "text": "How does the lesson characterise the status of Villuppattu and Nattuppurappattu in contemporary scholarship?",
+      "options": [
+        {
+          "l": "a",
+          "t": "As static folk artefacts preserved unchanged from ancient oral tradition without print influence.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "As living traditions with documented improvisatory mechanics and print-mediated standardisation.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "As literary genres that emerged only after the advent of Tamil cinema in the 1930s.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "As ritual performances exclusively confined to temple precincts with no written counterparts.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists as a key examiner error: \"Treating Villuppattu and Nattuppurappattu as static 'folk' artefacts rather than living traditions with documented improvisatory mechanics and print-mediated standardisation.\" This directly supports Option B. Option A describes the erroneous view the lesson warns against. Option C is historically inaccurate as these forms predate cinema. Option D is incorrect because the lesson emphasises the oral-written interface, implying written counterparts exist."
     }
   ],
   "opt-tamil/paper2": [
@@ -208711,6 +209818,33 @@
         }
       ],
       "sol": "The lesson explicitly mentions: 'Controversies illustrate the stakes: the 1998 Sahitya Akademi Award to the Dalit poet Gurram Jashuva (posthumous) was contested by traditionalist critics who argued his work lacked \"classical refinement\".' The 1972 award to Sri Sri is noted as the first Telugu Sahitya Akademi award. The 2015 award to a diaspora poet sparked debate about 'authenticity', not classical refinement. The 1970 Jnanpith to Viswanatha Satyanarayana is mentioned as the first Telugu Jnanpith recipient without controversy details."
+    },
+    {
+      "id": 7170,
+      "text": "Which of the following little magazines, launched in the mid-1960s to 1970s, was edited by G. V. Subba Rao and functioned as a correspondence hub for debates on vachana-style prose and Marxist aesthetics?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Kavita (1965)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Sahiti (1970)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Vipula (1972)",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Katha (1975)",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that Vipula (1972) was edited by G. V. Subba Rao. It also describes how these magazines' letters columns hosted debates on the legitimacy of vachana-style prose, the ethics of Sanskritised diction, and the relevance of Marxist aesthetics, functioning as correspondence hubs. Kavita was edited by Sri Sri, Sahiti by K. V. Ramana, and Katha by R. S. Rao."
     }
   ],
   "opt-urdu/overview": [
@@ -216225,6 +217359,141 @@
         }
       ],
       "sol": "Coherent states are not orthogonal. Their inner product is ⟨α|β⟩ = exp[−½|α−β|² + i Im(α*β)]. The factor ½ in the exponent comes from the Gaussian wavepacket overlap, and the phase term i Im(α*β) accounts for the displacement in phase space. The other options miss either the ½ factor or the phase term."
+    },
+    {
+      "id": 116,
+      "text": "For an initial velocity profile u(x,0)=u0 sin(kx) in the inviscid Burgers equation, the shock formation time t_s is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1/(u0 k)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "u0/k",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "k/u0",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1/(u0^2 k)",
+          "c": false
+        }
+      ],
+      "sol": "For the inviscid Burgers equation ∂u/∂t + u ∂u/∂x = 0, the method of characteristics gives shock formation time t_s = -1 / min(∂u/∂x|t=0). With u(x,0)=u0 sin(kx), ∂u/∂x = u0 k cos(kx). The minimum value is -u0 k, so t_s = -1/(-u0 k) = 1/(u0 k)."
+    },
+    {
+      "id": 117,
+      "text": "The classical Johnson‑Nyquist voltage noise formula S_V = 4 k_B T R is valid in which regime?",
+      "options": [
+        {
+          "l": "a",
+          "t": "ħω << k_B T",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "ħω >> k_B T",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "ω = 0",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "T = 0",
+          "c": false
+        }
+      ],
+      "sol": "The classical Johnson‑Nyquist expression S_V = 4 k_B T R is derived in the high‑temperature limit where thermal energy k_B T greatly exceeds the quantum energy ħω. When ħω ≫ k_B T the quantum coth factor deviates from unity and zero‑point fluctuations dominate, so the classical formula no longer holds. Hence it is valid for ħω << k_B T."
+    },
+    {
+      "id": 118,
+      "text": "In cavity optomechanics the effective coupling G = g₀ α, where α represents:",
+      "options": [
+        {
+          "l": "a",
+          "t": "intracavity photon number",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "intracavity field amplitude",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "cavity decay rate",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "mechanical frequency",
+          "c": false
+        }
+      ],
+      "sol": "The linearised optomechanical coupling is G = g₀ α, with g₀ the single‑photon coupling rate. The lesson explicitly warns against confusing the intracavity photon number |α|² with the field amplitude α. Therefore α denotes the steady‑state intracavity field amplitude, not the photon number."
+    },
+    {
+      "id": 119,
+      "text": "A complete acoustic band gap in a phononic crystal requires:",
+      "options": [
+        {
+          "l": "a",
+          "t": "a gap only at the Brillouin zone boundary for longitudinal waves",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "a gap for all polarizations and all propagation directions",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "a gap for transverse waves only",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "a gap at the Γ point only",
+          "c": false
+        }
+      ],
+      "sol": "A complete phononic band gap means that no propagating elastic modes exist for any polarization (longitudinal or transverse) and any wavevector direction within a frequency range. The first Bragg gap may appear only for a specific polarization or direction; to be complete it must be verified across all polarizations and all directions in the Brillouin zone."
+    },
+    {
+      "id": 120,
+      "text": "Stochastic resonance in a bistable oscillator occurs when the periodic driving force is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "above the critical threshold A_c",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "below the critical threshold A_c",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "exactly equal to A_c",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "independent of A_c",
+          "c": false
+        }
+      ],
+      "sol": "Stochastic resonance is a noise‑induced enhancement of the response to a weak periodic signal. The signal amplitude must be sub‑threshold (A < A_c) so that without noise the particle remains trapped in one well. If the signal exceeds the critical threshold A_c, the system switches deterministically and adding noise only degrades the signal‑to‑noise ratio. Thus SR requires a sub‑threshold drive."
     }
   ],
   "physics/properties-of-matter": [
@@ -216632,6 +217901,141 @@
         }
       ],
       "sol": "The Marangoni number Ma = |dγ/dT| ΔT L/(μ α) where dγ/dT is the temperature coefficient of surface tension, ΔT the temperature difference along the interface, L a characteristic length, μ the dynamic viscosity and α the thermal diffusivity. The other expressions correspond to the Rayleigh number (buoyancy‑driven convection), Reynolds number (inertia vs. viscosity) and Weber number (inertia vs. surface tension)."
+    },
+    {
+      "id": 116,
+      "text": "The pressure reflection coefficient for a planar acoustic wave incident from medium 1 (impedance Z1) to medium 2 (impedance Z2) is given by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "(Z2 - Z1) / (Z2 + Z1)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "(Z1 - Z2) / (Z1 + Z2)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "2 Z2 / (Z2 + Z1)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "2 Z1 / (Z2 + Z1)",
+          "c": false
+        }
+      ],
+      "sol": "The pressure reflection coefficient R is derived from continuity of pressure and particle velocity at the interface. For a wave travelling from medium 1 to medium 2, the reflected pressure amplitude divided by the incident pressure amplitude equals (Z2 - Z1)/(Z2 + Z1). The transmission coefficient for pressure is 2 Z2/(Z2 + Z1). Option A matches the standard formula given in the lesson."
+    },
+    {
+      "id": 117,
+      "text": "The cavitation number σ for a liquid flow with far‑field pressure p∞, vapour pressure pv, density ρ and characteristic velocity V is defined as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "(p∞ - pv) / (0.5 ρ V²)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "(p∞ - pv) / (ρ V²)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "(p∞ + pv) / (0.5 ρ V²)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "(p∞ - pv) / (2 ρ V²)",
+          "c": false
+        }
+      ],
+      "sol": "The dimensionless cavitation number characterises the tendency for cavitation. It is defined as the ratio of the pressure margin above vapour pressure to the dynamic pressure: σ = (p∞ - pv) / (½ ρ V²). This exact expression appears in the lesson text and the worked example. Options B, C and D either omit the factor ½, add pv, or use an incorrect denominator."
+    },
+    {
+      "id": 118,
+      "text": "Darcy’s law for flow through a porous medium is strictly valid only when the flow Reynolds number based on pore diameter is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Very low (Re ≪ 1)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Moderate (Re ≈ 10)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "High (Re > 100)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Independent of Reynolds number",
+          "c": false
+        }
+      ],
+      "sol": "Darcy’s law assumes viscous forces dominate and inertial effects are negligible, which occurs at very low Reynolds numbers (creeping flow). The lesson explicitly states that applying Darcy’s law beyond its low‑Reynolds‑number validity without the Forchheimer correction leads to under‑prediction of pressure drop. Hence the law is valid only for Re ≪ 1."
+    },
+    {
+      "id": 119,
+      "text": "For two elastic spheres pressed together with a normal force F, the maximum Hertzian contact pressure p₀ varies with force as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "p₀ ∝ F¹ᐟ³",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "p₀ ∝ F²ᐟ³",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "p₀ ∝ F",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "p₀ ∝ F¹ᐟ²",
+          "c": false
+        }
+      ],
+      "sol": "In Hertzian contact, the contact radius a ∝ (F R*)¹ᐟ³ where R* is the effective radius. The maximum pressure p₀ = 3F/(2π a²). Substituting a ∝ F¹ᐟ³ gives p₀ ∝ F / F²ᐟ³ = F¹ᐟ³. Thus p₀ scales with the cube root of the applied force. The other exponents correspond to incorrect combinations of the Hertz relations."
+    },
+    {
+      "id": 120,
+      "text": "In Basquin’s law for high‑cycle fatigue, σₐ = σ_f' (2 N_f)^b, the fatigue strength exponent b for most metallic materials typically lies in the range:",
+      "options": [
+        {
+          "l": "a",
+          "t": "-0.05 to -0.12",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "-0.5 to -1.0",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "-0.01 to -0.04",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "-0.2 to -0.4",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the fatigue strength exponent b is typically between -0.05 and -0.12 for metals. This narrow negative range reflects the shallow slope of the S‑N curve in the high‑cycle regime. The other ranges are either too large in magnitude or positive, which would not represent the usual Basquin behaviour for metallic alloys."
     }
   ],
   "mains-gs1/modern-india-1919-1947": [
@@ -228899,6 +230303,141 @@
         }
       ],
       "sol": "Photoelectron spectroscopy measures binding energies of electrons. Spin–orbit coupling splits subshells with orbital angular momentum l>0 into two components (j = l±½). s orbitals have l=0, so they show a single peak. p orbitals (l=1) split into p1/2 and p3/2, appearing as a doublet. d and f orbitals show similar but more complex splitting. Therefore spin–orbit splitting is observed for p orbitals as a doublet."
+    },
+    {
+      "id": 119,
+      "text": "For a carbon atom with the electron configuration 2p², the ground term symbol under LS coupling is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "³P₀",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "³P₁",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "³P₂",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "¹D₂",
+          "c": false
+        }
+      ],
+      "sol": "For the 2p² configuration, LS coupling yields the terms ³P, ¹D, and ¹S. Hund's first rule selects the maximum multiplicity, giving the triplet ³P (S=1). The second rule chooses the maximum L for that multiplicity, which is L=1 (P). Since the p subshell is less than half‑filled (2 electrons out of 6), Hund's third rule gives J = |L−S| = |1−1| = 0. Hence the ground term is ³P₀."
+    },
+    {
+      "id": 120,
+      "text": "In jj coupling, the correct level notation for the Tl⁺ ion (6s²6p¹) is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "(6s²)(6p₁/₂)₁/₂",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "(6s²)(6p₃/₂)₃/₂",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "(6s²)(6p₁/₂)₃/₂",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "(6s²)(6p₃/₂)₁/₂",
+          "c": false
+        }
+      ],
+      "sol": "In jj coupling each electron's orbital and spin angular momenta combine to give j = l ± ½. For the single 6p electron (l=1) the possible j values are ½ and 3/2. The 6s² core is closed and contributes zero angular momentum. For a less‑than‑half‑filled subshell the level with the smallest j lies lowest in energy, so the ground level has j = ½. The total J of the atom equals this j, giving the notation (6s²)(6p₁/₂)₁/₂."
+    },
+    {
+      "id": 121,
+      "text": "Which of the following electric dipole transitions is allowed under LS‑coupling selection rules?",
+      "options": [
+        {
+          "l": "a",
+          "t": "³P₁ → ³S₁",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "¹S₀ → ¹S₀",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "³P₀ → ³P₀",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "³P₁ → ¹D₂",
+          "c": false
+        }
+      ],
+      "sol": "LS‑coupling electric dipole rules require ΔS=0, ΔL=0,±1 (L=0↔0 forbidden), ΔJ=0,±1 (J=0↔0 forbidden), and a parity change. Option A: ³P₁ (L=1, S=1, J=1, odd parity) → ³S₁ (L=0, S=1, J=1, even parity) satisfies all conditions. Option B violates L=0↔0. Option C violates J=0↔0. Option D violates ΔS=0."
+    },
+    {
+      "id": 122,
+      "text": "The approximate quantum defect δ_f for the f orbital in alkali metals is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1.35",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "0.85",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "0.01",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.001",
+          "c": true
+        }
+      ],
+      "sol": "Quantum defects measure core penetration of the Rydberg electron. For alkali metals the defects are δ_s ≈ 1.3–1.4, δ_p ≈ 0.8–0.9, δ_d ≈ 0.01, and δ_f ≈ 0.001. The f orbital has the smallest radial extent near the nucleus, so its defect is closest to zero, about 0.001."
+    },
+    {
+      "id": 123,
+      "text": "A necessary condition for autoionization of a discrete excited state is that the state and the ionization continuum share the same:",
+      "options": [
+        {
+          "l": "a",
+          "t": "principal quantum number",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "parity and total angular momentum J",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "spin multiplicity",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "orbital angular momentum L",
+          "c": false
+        }
+      ],
+      "sol": "Autoionization occurs when a discrete state lies above the ionization threshold and can decay by ejecting an electron. The transition matrix element vanishes unless the initial discrete state and the final continuum state have identical symmetry. In atoms this means they must have the same total angular momentum J and the same parity. If J or parity differ, autoionization into that continuum is forbidden."
     }
   ],
   "mains-gs1/architecture-heritage": [
@@ -236832,6 +238371,141 @@
         }
       ],
       "sol": "Le Chatelier's principle states that a system at equilibrium responds to a perturbation by shifting in a direction that counteracts the change. For a liquid‑vapour equilibrium, the Clapeyron equation dp/dT = Δs/Δv shows that at constant temperature an increase in pressure favors the phase with the smaller molar volume (Δv = v_vapour – v_liquid > 0). Since the liquid phase has a much smaller molar volume than the vapour, the equilibrium shifts toward the liquid, reducing the total volume and partially offsetting the pressure increase. This is consistent with the stability condition κ_T > 0."
+    },
+    {
+      "id": 116,
+      "text": "The variance of energy fluctuations in a system at temperature T is related to which thermodynamic quantity?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Heat capacity at constant volume",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Isothermal compressibility",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Thermal conductivity",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Shear viscosity",
+          "c": false
+        }
+      ],
+      "sol": "In the canonical ensemble the probability of a microstate is proportional to exp(–E/k_B T). The variance of the energy is σ²_E = k_B T² C_V, directly linking energy fluctuations to the heat capacity at constant volume. Isothermal compressibility relates to particle‑number fluctuations, while thermal conductivity and shear viscosity appear in Green‑Kubo formulas for transport coefficients, not in the equilibrium energy variance."
+    },
+    {
+      "id": 117,
+      "text": "For an endoreversible engine operating at maximum power between reservoirs at T_H and T_C, the efficiency is given by which expression?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1 – T_C/T_H",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "1 – √(T_C/T_H)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "1 – (T_C/T_H)²",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1 – (T_C/T_H)^(1/3)",
+          "c": false
+        }
+      ],
+      "sol": "Finite‑time thermodynamics shows that a Carnot engine running infinitely slowly gives η_C = 1 – T_C/T_H but zero power. The Curzon‑Ahlborn model for an endoreversible engine with Newtonian heat transfer yields maximum power at η_CA = 1 – √(T_C/T_H). This efficiency is always lower than the Carnot value and depends on the heat‑transfer exponent; the other options correspond to different exponents or incorrect forms."
+    },
+    {
+      "id": 118,
+      "text": "The Thomson coefficient τ is defined as which of the following?",
+      "options": [
+        {
+          "l": "a",
+          "t": "τ = T dS/dT",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "τ = S/T",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "τ = dS/dT",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "τ = T² dS/dT",
+          "c": false
+        }
+      ],
+      "sol": "The Thomson effect describes reversible heating or cooling when a current flows through a temperature gradient. The Thomson coefficient is defined by τ = T (dS/dT), where S is the Seebeck coefficient. This relation follows from the Kelvin relations linking Seebeck, Peltier, and Thomson effects. The other options either miss the factor T or have an incorrect power of T."
+    },
+    {
+      "id": 119,
+      "text": "Hawking temperature of a Schwarzschild black hole is proportional to which fundamental constant?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Planck constant ħ",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Boltzmann constant k_B",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Speed of light c",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Gravitational constant G",
+          "c": false
+        }
+      ],
+      "sol": "Black‑hole thermodynamics assigns a temperature T_H = ħ c³/(8π G M k_B) to a Schwarzschild black hole. The temperature vanishes in the classical limit ħ → 0, showing its quantum origin. While k_B, c, and G appear in the full expression, the proportionality to ħ is the key quantum factor that distinguishes Hawking temperature from a purely classical thermodynamic temperature."
+    },
+    {
+      "id": 120,
+      "text": "The Jarzynski equality relates the exponential average of work performed during a non‑equilibrium process to which equilibrium quantity?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Free energy difference ΔF",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Entropy production ΔS",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Heat exchanged Q",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Internal energy change ΔU",
+          "c": false
+        }
+      ],
+      "sol": "The Jarzynski equality states ⟨exp(–W/k_B T)⟩ = exp(–ΔF/k_B T), where the average is over many repetitions of the same protocol. It connects the non‑equilibrium work distribution to the equilibrium free‑energy difference ΔF between initial and final states. Entropy production, heat, and internal energy change do not appear directly in this equality; they are related through other fluctuation theorems such as the Crooks theorem or the integral fluctuation theorem for total entropy production."
     }
   ],
   "biology/biomolecules-enzymes": [
@@ -242898,6 +244572,141 @@
         }
       ],
       "sol": "For a rolling body on a moving incline the relative acceleration is s̈ = (g sinα − a_p cosα) / (1 + I/(mR²)). For a solid cylinder I = ½ mR², so 1 + I/(mR²) = 3/2. Hence s̈ = (2/3)(g sinα − a_p cosα). This matches the expression derived in the lesson for a prescribed horizontal acceleration a_p of the plane."
+    },
+    {
+      "id": 121,
+      "text": "Two blocks of masses 2 kg and 3 kg are connected by a light spring on a smooth horizontal surface. An external force of 10 N acts on the 2 kg block. The acceleration of the centre of mass of the system is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1 m/s²",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2 m/s²",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "3 m/s²",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "4 m/s²",
+          "c": false
+        }
+      ],
+      "sol": "The centre‑of‑mass acceleration equals the net external force divided by the total mass of the system. The only external horizontal force is 10 N. Total mass = 2 kg + 3 kg = 5 kg. Hence a_cm = 10 N / 5 kg = 2 m/s². Internal spring forces cancel in pairs and do not affect the COM motion."
+    },
+    {
+      "id": 122,
+      "text": "A block of mass m slides down a rough incline of length L and angle θ. The coefficient of kinetic friction varies as μ = αx, where x is the distance measured from the top. The work done by friction during the slide is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "-α mg cosθ L²/2",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "-α mg cosθ L²",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "-α mg sinθ L²/2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "-α mg sinθ L²",
+          "c": false
+        }
+      ],
+      "sol": "Friction force at position x is f = μ N = αx (mg cosθ). The work done by friction is W = -∫₀ᴸ f dx = -∫₀ᴸ αx mg cosθ dx = -α mg cosθ [x²/2]₀ᴸ = -α mg cosθ L²/2. The negative sign indicates energy loss."
+    },
+    {
+      "id": 123,
+      "text": "A particle of mass 1 kg moves with velocity 2 m/s eastward in a reference frame rotating with angular velocity 0.5 rad/s about a vertical axis. The magnitude of the Coriolis force acting on the particle is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1 N",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2 N",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "4 N",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.5 N",
+          "c": false
+        }
+      ],
+      "sol": "In a rotating frame the Coriolis force is F_c = -2m (Ω × v'). Its magnitude is 2 m Ω v' sinφ. Here Ω is vertical, v' is horizontal eastward, so φ = 90° and sinφ = 1. Substituting m = 1 kg, Ω = 0.5 rad/s, v' = 2 m/s gives F_c = 2 × 1 × 0.5 × 2 = 2 N."
+    },
+    {
+      "id": 124,
+      "text": "A car of mass m travels on a banked curve of radius r and banking angle θ. The coefficient of static friction is μ_s. For high speed the friction acts down the bank. The maximum speed without skidding is given by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "v² = rg (tanθ + μ_s)/(1 - μ_s tanθ)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "v² = rg (tanθ - μ_s)/(1 + μ_s tanθ)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "v² = rg (μ_s + tanθ)/(1 + μ_s tanθ)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "v² = rg (μ_s - tanθ)/(1 - μ_s tanθ)",
+          "c": false
+        }
+      ],
+      "sol": "Resolving forces on a banked curve with friction down the bank yields the no‑skid condition v²/r = g (tanθ + μ_s)/(1 - μ_s tanθ). Multiplying by r gives v² = rg (tanθ + μ_s)/(1 - μ_s tanθ). This corresponds to the upper sign in the formula for high speed."
+    },
+    {
+      "id": 125,
+      "text": "A sphere of mass m and radius R falls through a viscous fluid of viscosity η. At low Reynolds number the drag force follows Stokes' law F_d = 6πηR v. The terminal velocity of the sphere is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "mg/(6πηR)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "6πηR/mg",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "mg/(3πηR)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "3πηR/mg",
+          "c": false
+        }
+      ],
+      "sol": "At terminal velocity the drag force balances the weight: 6πηR v_t = mg. Solving for v_t gives v_t = mg/(6πηR). This is the standard result for a sphere in the linear (Stokes) drag regime."
     }
   ],
   "mains-gs3/disaster-management": [
@@ -249097,6 +250906,141 @@
         }
       ],
       "sol": "For a DC motor the applied voltage V equals the sum of back emf E_b (= kω) and the resistive drop I R. Electrical input power is V I = (kω + I R)I = kω I + I²R. The term kω I equals the mechanical power τ ω (since τ = k I). The remaining term I²R represents the power dissipated as heat in the armature resistance, i.e., the copper loss. This loss accounts for the difference between input electrical power and output mechanical power."
+    },
+    {
+      "id": 120,
+      "text": "A bar of length L, cross‑sectional area A and Young’s modulus E is subjected to a gradually applied force F. The strain energy stored in the bar is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "F²L/(AE)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "F²L/(2AE)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "FL/(2AE)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "F²L/(4AE)",
+          "c": false
+        }
+      ],
+      "sol": "The strain energy stored in a linearly elastic bar under a gradually applied force F equals the work done by the force. The elongation δ = FL/(AE). Since the force increases linearly from 0 to F, the average force is F/2, so work = (F/2) × δ = F²L/(2AE). This matches the expression U = ½ Fδ = F²L/(2AE)."
+    },
+    {
+      "id": 121,
+      "text": "In Lagrangian mechanics, the generalized force Q_k corresponding to a conservative force derived from a potential V(q) is given by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Q_k = ∂V/∂q_k",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Q_k = -∂V/∂q_k",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Q_k = ∂T/∂q_k",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Q_k = d/dt(∂T/∂q̇_k)",
+          "c": false
+        }
+      ],
+      "sol": "In Lagrangian mechanics, the virtual work of conservative forces is δW = -δV. For a virtual displacement δq_k, δW = Σ Q_k δq_k = - Σ (∂V/∂q_k) δq_k. Since the δq_k are independent, the generalized force is Q_k = -∂V/∂q_k. This relation ensures that the Lagrange equations reproduce the work–energy theorem for conservative systems."
+    },
+    {
+      "id": 122,
+      "text": "In an AC circuit, the apparent power S is related to the real power P and reactive power Q by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "S = P + Q",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "S = P - Q",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "S = √(P² + Q²)",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "S = P² + Q²",
+          "c": false
+        }
+      ],
+      "sol": "Apparent power S is the magnitude of the complex power S = P + jQ, where P = VI cos φ is real power and Q = VI sin φ is reactive power. The magnitude is S = √(P² + Q²). It cannot be obtained by simple arithmetic addition because P and Q are orthogonal components in the complex plane. The power factor is cos φ = P/S."
+    },
+    {
+      "id": 123,
+      "text": "Which overpotential becomes significant at high current densities due to depletion of reactants at the electrode surface?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Activation overpotential",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Ohmic overpotential",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Concentration overpotential",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Thermodynamic overpotential",
+          "c": false
+        }
+      ],
+      "sol": "Concentration overpotential arises when the rate of reactant supply to the electrode surface cannot keep up with the consumption at high current densities. This creates a concentration gradient and a corresponding potential loss described by the Nernst equation. Activation overpotential dominates at low currents, ohmic overpotential is proportional to current, but concentration overpotential becomes significant only at high currents where mass transport limits the reaction."
+    },
+    {
+      "id": 124,
+      "text": "For steady incompressible flow in a pipe, the Darcy–Weisbach formula gives the head loss h_L due to friction as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "h_L = f (L/D) v²/(2g)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "h_L = f (D/L) v²/(2g)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "h_L = f (L/D) v/(2g)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "h_L = f (L/D) v²/g",
+          "c": false
+        }
+      ],
+      "sol": "For steady, incompressible flow in a pipe, the Darcy–Weisbach equation gives the head loss due to friction as h_L = f (L/D) (v²/(2g)), where f is the Darcy friction factor, L pipe length, D hydraulic diameter, v average velocity, and g gravitational acceleration. This term appears in the extended Bernoulli equation to account for mechanical energy dissipated as heat by viscous shear."
     }
   ],
   "mains-gs3/inflation-prices": [
@@ -274860,6 +276804,141 @@
         }
       ],
       "sol": "The lesson highlights a common confusion: the Capital Conservation Buffer (CCB) is a fixed 2.5 per cent Common Equity Tier 1 (CET1) requirement applicable to all banks at all times. The Countercyclical Capital Buffer (CCyB), by contrast, is a variable buffer that the regulator (RBI) activates only when systemic risk builds up (e.g., excessive credit growth) and can be set between 0 and 2.5 per cent. Thus, the CCB is permanent and uniform, while the CCyB is discretionary and cyclical."
+    },
+    {
+      "id": 121,
+      "text": "Under the Reserve Bank of India Act, how is a tie in the Monetary Policy Committee resolved?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The Deputy Governor casts the deciding vote",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Governor has a casting vote",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The external members collectively decide",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The matter is referred to the Central Board",
+          "c": false
+        }
+      ],
+      "sol": "The MPC consists of six members. Decisions are taken by simple majority. In the event of a tie, the Governor, who is the ex‑officio chairperson, exercises a casting vote to break the deadlock. This rule is explicitly provided in the RBI Act as amended by the Finance Act, 2016. The Deputy Governor does not have a separate casting vote, nor do the external members or the Central Board intervene in a tied vote."
+    },
+    {
+      "id": 122,
+      "text": "Which statement correctly describes the forward guidance introduced by the MPC in February 2021?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It commits the Committee to a fixed numeric path for the repo rate",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It is a qualitative indication of the likely policy stance conditional on inflation outlook",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It binds future MPC meetings to the announced rate trajectory",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It replaces the publication of the Monetary Policy Report",
+          "c": false
+        }
+      ],
+      "sol": "The forward guidance adopted in February 2021 is qualitative, not a binding numeric commitment. The MPC indicates the expected direction of the policy repo rate over the next few quarters conditional on the evolving inflation outlook. It does not bind future committees, nor does it substitute the Monetary Policy Report, which continues to be published twice a year with staff projections and alternative scenarios."
+    },
+    {
+      "id": 123,
+      "text": "What is the primary purpose of the Market Stabilisation Scheme (MSS) securities issued by the RBI?",
+      "options": [
+        {
+          "l": "a",
+          "t": "To finance the Central Government's fiscal deficit",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "To absorb surplus liquidity arising from large capital inflows",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "To conduct routine day‑to‑day open market operations",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "To provide long‑term funding to commercial banks",
+          "c": false
+        }
+      ],
+      "sol": "The MSS was introduced in 2004 under the RBI Act specifically to sterilise the monetary impact of large foreign exchange purchases by the RBI. When the RBI buys foreign currency, it injects rupee liquidity; MSS securities are issued to absorb this surplus liquidity. They are distinct from government market borrowing and from routine OMOs, which are used for day‑to‑day liquidity management."
+    },
+    {
+      "id": 124,
+      "text": "Which of the following is true about the Financial Stability and Development Council (FSDC)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It is a statutory body with enforcement powers over macro‑prudential measures",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Its decisions are advisory but carry significant weight",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It is chaired by the RBI Governor",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Its sub‑committee on financial stability is headed by the Finance Secretary",
+          "c": false
+        }
+      ],
+      "sol": "The FSDC is a non‑statutory coordination body; its decisions are advisory in nature but carry considerable weight because it brings together all financial sector regulators. It is chaired by the Union Finance Minister, not the RBI Governor. The Sub‑Committee on Financial Stability, which conducts macro‑prudential surveillance, is chaired by the RBI Governor, not the Finance Secretary."
+    },
+    {
+      "id": 125,
+      "text": "In the construction of the RBI's 36‑currency Real Effective Exchange Rate (REER), which weighting scheme is used?",
+      "options": [
+        {
+          "l": "a",
+          "t": "GDP‑weighted shares of partner countries",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Trade‑weighted shares based on merchandise exports plus imports averaged over three years",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Equal weights for all 36 currencies",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Weights derived from foreign direct investment flows",
+          "c": false
+        }
+      ],
+      "sol": "The RBI derives REER weights from India's merchandise trade (exports plus imports) with each partner country, averaged over a three‑year period. The basket is therefore trade‑weighted, not GDP‑weighted or equally weighted, and it does not use FDI flows. The weights are updated periodically; the latest revision (effective January 2022) shifted weight from the EU toward China and the ASEAN bloc, reflecting changing trade patterns."
     }
   ],
   "gs/geography-physical-prelims": [
@@ -277192,6 +279271,141 @@
         }
       ],
       "sol": "The text states that the Committee on External Affairs examines treaty texts before ratification, while the Public Accounts Committee reviews financial implications. The Committee on Subordinate Legislation scrutinizes delegated legislation, and the Business Advisory Committee manages parliamentary business. Therefore, option B is correct."
+    },
+    {
+      "id": 120,
+      "text": "According to the Supreme Court's ruling in Keshav Singh v. Speaker, Legislative Assembly (1965) and Raja Ram Pal v. Hon'ble Speaker, Lok Sabha (2007), the power of a House to punish for contempt is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Absolute and not subject to any judicial review.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Subject to judicial review on grounds of mala fide, excess of jurisdiction, or violation of natural justice.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Governed by the Contempt of Courts Act, 1971.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Exercisable only with the prior consent of the President.",
+          "c": false
+        }
+      ],
+      "sol": "The Supreme Court in Keshav Singh (1965) held that the power to punish for contempt is a judicial function subject to judicial review on grounds of mala fide, excess of jurisdiction, or violation of natural justice. In Raja Ram Pal (2007), the Court clarified that while the House is the sole judge of its privileges, the judiciary can examine whether the claimed privilege exists under the Constitution and whether the procedure followed was fair. Option A is incorrect because the power is not absolute. Option C is incorrect because the Contempt of Courts Act, 1971 does not apply to parliamentary contempt. Option D is incorrect as no such presidential consent is required."
+    },
+    {
+      "id": 121,
+      "text": "Which of the following statements correctly reflects the principle laid down by the Supreme Court in S.R. Bommai v. Union of India (1994) regarding the imposition of President's Rule under Article 356?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The Governor's report recommending President's Rule is immune from judicial scrutiny.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Governor may summon or prorogue the State Legislative Assembly at his own discretion in all circumstances.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The imposition of President's Rule is subject to judicial review and the Governor's report must be based on objective material.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The Governor's discretionary powers under Article 163(1) are wide and include policy decisions.",
+          "c": false
+        }
+      ],
+      "sol": "In S.R. Bommai v. Union of India (1994), the Supreme Court held that the imposition of President's Rule under Article 356 is subject to judicial review. The Court mandated that the Governor's report recommending President's Rule must be based on objective material and not on political whim. Option A is incorrect because the report is not immune from scrutiny. Option B is incorrect because Nabam Rebia (2016) held the Governor cannot summon or prorogue the Assembly unilaterally without the Council of Ministers' aid and advice, except when the government has lost majority. Option D is incorrect because Article 163(1) limits discretionary powers to specific constitutional exceptions."
+    },
+    {
+      "id": 122,
+      "text": "With reference to the Finance Commission constituted under Article 280 of the Constitution, which of the following statements is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The recommendations of the Finance Commission are binding on the President of India.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Finance Commission's recommendations are advisory in nature and the President may modify them before implementation.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The 15th Finance Commission recommended a vertical devolution of 50% of the divisible pool to States.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The Terms of Reference of the Finance Commission are determined by the Parliament.",
+          "c": false
+        }
+      ],
+      "sol": "The Finance Commission's recommendations are advisory in nature; the President is not bound by them and may modify them before implementation. This is a common misconception tested in examinations. Option A states the opposite of the correct legal position. Option C invents a specific statistic (50%) not mentioned in the provided lesson text. Option D is incorrect because the Terms of Reference are specified by the President, not Parliament."
+    },
+    {
+      "id": 123,
+      "text": "Regarding the maintainability of Public Interest Litigation (PIL) in Indian courts, which of the following propositions is accurate based on current judicial practice?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Any citizen can file a PIL on any matter and the Court is bound to entertain it.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Supreme Court requires a genuine public interest for maintaining a PIL and may impose costs for frivolous petitions.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The doctrine of locus standi has been completely abolished in Indian jurisprudence.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Public Interest Litigation can only be filed by a person who has suffered a direct legal injury.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text explicitly warns against the misconception that every Public Interest Litigation is automatically maintainable. The Supreme Court now requires the petitioner to demonstrate a genuine public interest and has the power to impose costs on petitioners filing frivolous or vexatious PILs. This reflects the evolution of locus standi from a strict 'person aggrieved' rule to a relaxed but regulated regime. Option A is incorrect because the Court screens PILs for genuineness. Option C is incorrect because locus standi has been relaxed, not abolished. Option D describes the traditional rule of locus standi which PIL jurisprudence has departed from."
+    },
+    {
+      "id": 124,
+      "text": "Under Article 254(2) of the Constitution, if a State law on a Concurrent subject receives Presidential assent after being reserved, what is the effect of such assent?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The State law prevails over the Central law in that State and Parliament cannot override it subsequently.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The State law becomes void ab initio as the Central law occupies the field.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The State law prevails only in that State and can be overridden by a subsequent Central law.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The doctrine of repugnancy does not apply and both laws operate concurrently without conflict.",
+          "c": false
+        }
+      ],
+      "sol": "Article 254(2) provides that if a State law on a Concurrent subject is reserved for the President's consideration and receives his assent, it prevails in that State notwithstanding a Central law. However, this prevalence is not absolute: Parliament can subsequently enact a law overriding the State law. The doctrine of repugnancy applies only to Concurrent List conflicts (not Union List), and 'pith and substance' determines legislative competence, not repugnancy resolution. Option A is incorrect because it omits Parliament's power to override. Option B is incorrect as the State law does not become void; it prevails until overridden. Option D is incorrect because repugnancy does apply and the mechanism resolves the conflict."
     }
   ],
   "ga/industrial-relations": [
@@ -280583,6 +282797,141 @@
         }
       ],
       "sol": "The lesson quotes the UNCCD definition: LDN is a state whereby the amount and quality of land resources necessary to support ecosystem functions and services remain stable or increase. It also highlights a trap: LDN allows balanced loss and gain, not absolute cessation of degradation."
+    },
+    {
+      "id": 111,
+      "text": "Under the Energy Conservation Building Code (ECBC) 2017, what are the specified minimum values for solar reflectance and thermal emittance for cool-roof programmes in new commercial buildings?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Solar reflectance ≥0.60 and thermal emittance ≥0.70",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Solar reflectance ≥0.70 and thermal emittance ≥0.75",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Solar reflectance ≥0.75 and thermal emittance ≥0.80",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Solar reflectance ≥0.65 and thermal emittance ≥0.70",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states: \"Cool‑roof programmes, encouraged under the Energy Conservation Building Code (ECBC) 2017 for new commercial buildings, typically specify solar reflectance ≥0.70 and thermal emittance ≥0.75.\" Option B matches these exact thresholds. The other options present lower or higher values not mentioned in the text."
+    },
+    {
+      "id": 112,
+      "text": "According to the Wetlands (Conservation and Management) Rules, 2017, what is mandated for each Ramsar site within two years of designation?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Preparation of a Wetland Health Card",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Constitution of a State Wetland Authority",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Preparation of an Integrated Management Plan (IMP)",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Demarcation of the wetland boundary using GPS",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: \"The Wetlands (Conservation and Management) Rules, 2017... mandate the preparation of Integrated Management Plans (IMPs) for each Ramsar site within two years of designation.\" Option C directly reflects this requirement. While State Wetland Authorities are established by the Rules, the two‑year mandate specifically concerns IMPs."
+    },
+    {
+      "id": 113,
+      "text": "Which of the following statements about the Soil Health Card Scheme is accurate based on the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It provides only NPK fertilizer recommendations for major crops.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It includes micronutrient status (Zn, Fe, Cu, Mn, B) along with pH and EC data.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It is issued annually by the Indian Council of Agricultural Research (ICAR).",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It replaces the need for laboratory soil testing at the village level.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists a misconception: \"Believing the Soil Health Card Scheme provides only NPK recommendations; cards also include micronutrient (Zn, Fe, Cu, Mn, B) and pH/EC data.\" Therefore, the correct fact is that the cards contain micronutrient information plus pH and electrical conductivity (EC) data, not just NPK."
+    },
+    {
+      "id": 114,
+      "text": "What does paleoseismic evidence indicate about rupture patterns of Himalayan faults?",
+      "options": [
+        {
+          "l": "a",
+          "t": "All major Himalayan faults rupture simultaneously during a great earthquake.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Faults rupture segment‑wise with distinct recurrence intervals.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Ruptures occur only along the Main Frontal Thrust (MFT) with uniform periodicity.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Paleoseismic data is insufficient to determine rupture patterns.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly corrects a misconception: \"Assuming all Himalayan faults rupture simultaneously; paleoseismic evidence shows segment‑wise rupture with distinct recurrence intervals.\" This directly supports option B. The evidence shows that faults do not rupture all at once but in segments, each with its own recurrence history."
+    },
+    {
+      "id": 115,
+      "text": "Regarding the Southwest Monsoon Current (SMC) in the northern Indian Ocean, which statement is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The SMC flows westward along the Indian coast during June‑September.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The SMC flows eastward along the Indian coast during June‑September.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The SMC is a permanent current unaffected by monsoon reversal.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The SMC flows northward along the western boundary of the Arabian Sea.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: \"the Southwest Monsoon Current (SMC) flows eastward along the Indian coast (June‑September)\" and later lists as a misconception: \"Confusing the direction of the Southwest Monsoon Current with the Northeast Monsoon Current; the SMC flows eastward along the Indian coast during June‑September.\" Option B matches this description exactly."
     }
   ],
   "general-awareness/indian-economy": [
@@ -284663,6 +287012,60 @@
         }
       ],
       "sol": "√x is continuous on the compact interval [0, 1], hence uniformly continuous. Its derivative f'(x)=1/(2√x) is unbounded as x→0⁺, so no finite L satisfies |√x−√y| ≤ L|x−y| for all x,y; thus f is not Lipschitz. However, |√x−√y| ≤ |x−y|^{1/2} holds, so f is Hölder continuous of order 1/2. Therefore only statement 2 is correct."
+    },
+    {
+      "id": 107,
+      "text": "For a fixed integer k = 3, the limit as n → ∞ of (1^3 + 2^3 + … + n^3) / n^4 equals:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1/4",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "1/3",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1/2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1",
+          "c": false
+        }
+      ],
+      "sol": "Apply the Stolz–Cesàro theorem (∞/∞ case) with a_n = Σ_{i=1}^n i^3 and b_n = n^4. Then a_{n+1} - a_n = (n+1)^3 and b_{n+1} - b_n = (n+1)^4 - n^4 = 4n^3 + 6n^2 + 4n + 1. The ratio (a_{n+1}-a_n)/(b_{n+1}-b_n) = (n+1)^3 / (4n^3 + …) → 1/4 as n→∞. Hence the original limit is 1/4."
+    },
+    {
+      "id": 108,
+      "text": "Let f : ℝ → ℝ satisfy the Cauchy functional equation f(x + y) = f(x) + f(y) for all real x, y. If f is differentiable at x = 0, then f'(x) for any x is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "f'(0)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "x f'(0)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "0",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "f'(0) + x",
+          "c": false
+        }
+      ],
+      "sol": "Differentiability at 0 implies continuity at 0. For Cauchy's equation, continuity at a single point forces f(x) = c x for all x, where c = f'(0). Hence f is linear with constant derivative c. Therefore f'(x) = c = f'(0) for every x."
     }
   ],
   "maths/data-interpretation": [
