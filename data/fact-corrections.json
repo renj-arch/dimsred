@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-24T19:39:23.856Z",
+ "updatedAt": "2026-11-24T19:49:02.562Z",
  "corrections": [
   {
    "file": "cgl/course/reasoning/lesson-venn-diagram.html",
@@ -1883,6 +1883,41 @@
    "correction": "keyword determines the arrangement of letters in the square",
    "problem": "In a Polybius square, the keyword determines the arrangement of letters in the square (the mixed alphabet), not the order of rows and columns. Rows and columns are typically fixed (1-5).",
    "appliedAt": "2026-11-24T19:39:23.856Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
+   "correction": "At solar noon, the sun is at its highest altitude; shadows are shortest but not zero except in the tropics.",
+   "problem": "The sun is directly overhead only in the tropics; at most latitudes solar noon sun is not overhead and shadows exist (though shortest).",
+   "appliedAt": "2026-11-24T19:44:01.293Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "At any other time, the azimuth can be approximated by the hour angle: each hour before/after noon shifts the azimuth by 15°.",
+   "correction": "The Sun's hour angle changes by 15° per hour, but azimuth shift varies with latitude and declination.",
+   "problem": "The Sun's azimuth does not shift uniformly by 15° per hour; this is only true at the equator. Azimuth shift varies with latitude and declination.",
+   "appliedAt": "2026-11-24T19:44:01.723Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "cos(d/R) = cos(h/R)·cos(R_slant/R) + sin(h/R)·sin(R_slant/R)·cos(α)",
+   "correction": "cos(d/R) = (R² + (R+h)² - R_slant²) / (2R(R+h))",
+   "problem": "The spherical law of cosines is misapplied; the correct relation uses the plane law of cosines: R_slant² = R² + (R+h)² - 2R(R+h) cos(d/R).",
+   "appliedAt": "2026-11-24T19:49:01.840Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "cos(d/R) = cos((R+h)/R)·cos(R_slant/R) + sin((R+h)/R)·sin(R_slant/R)",
+   "correction": "cos(d/R) = (R² + (R+h)² - R_slant²) / (2R(R+h))",
+   "problem": "The reduced formula for nadir viewing incorrectly replaces h/R with (R+h)/R and still uses spherical law of cosines; the correct formula is the plane law of cosines.",
+   "appliedAt": "2026-11-24T19:49:02.279Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "dS/dt = (hH / (H - h)²) * (dx/dt)",
+   "correction": "dS/dt = (h/(H-h)) * (dx/dt)",
+   "problem": "The derivative of shadow length S = hx/(H-h) with respect to time is dS/dt = h/(H-h) * dx/dt, not the given expression.",
+   "appliedAt": "2026-11-24T19:49:02.562Z"
   }
  ]
 }
