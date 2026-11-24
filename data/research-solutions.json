@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24T09:00:35.101Z",
+  "updatedAt": "2026-11-24T22:12:11.812Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -31761,6 +31761,1010 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-24T09:00:35.092Z"
+    },
+    {
+      "id": "065a9125c8b14449",
+      "exam": "agniveer",
+      "paperSlug": "practice-set-23",
+      "paperTitle": "Agniveer Practice Set 23",
+      "paperPath": "agniveer/papers/practice-set-23.html",
+      "paperFile": "practice-set-23.json",
+      "questionNumber": 1,
+      "section": "Reasoning",
+      "question": "A group of students are seated in a line facing North. In the coded language used by their teacher, 'CLOUD' is written as 'DMPVE'. If the word 'STORM' is written using the same logic, which of the following will be its code?",
+      "options": [
+        {
+          "label": "A",
+          "text": "TUPSN",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "UPTSO",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "VQUTP",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "WQVTQ",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Map each letter of CLOUD to DMPVE: C->D, L->M, O->P, U->V, D->E",
+        "Identify pattern: each letter shifted forward by 1 in alphabet",
+        "Apply same shift to STORM: S->T, T->U, O->P, R->S, M->N",
+        "Form coded word: TUPSN",
+        "Match with options: Option A is TUPSN"
+      ],
+      "verifierCheck": "Each letter in CLOUD is shifted forward by 1 in the alphabet: C->D, L->M, O->P, U->V, D->E. Applying the same shift to STORM: S->T, T->U, O->P, R->S, M->N gives TUPSN, which matches option A.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Alphabet Shift",
+          "idea": "Each letter moves forward by one in the alphabet",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Observe C→D, L→M, O→P, U→V, D→E: all +1",
+            "Apply +1 to S,T,O,R,M → T,U,P,S,N",
+            "Match TUPSN with option A"
+          ]
+        },
+        {
+          "name": "First Letter Check",
+          "idea": "Use first letter pair to deduce the shift, then verify",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "C→D shows shift of +1",
+            "Confirm L→M also +1",
+            "Shift STORM by +1 → TUPSN → option A"
+          ]
+        },
+        {
+          "name": "Option Elimination",
+          "idea": "Reverse the code on each option to find the original word",
+          "kind": "estimate",
+          "seconds": 10,
+          "steps": [
+            "For each option, shift every letter back by 1",
+            "Option A: T→S, U→T, P→O, S→R, N→M gives STORM",
+            "Only option A yields STORM"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:02:16.440Z"
+    },
+    {
+      "id": "6fa29b8153f1dd6d",
+      "exam": "jee",
+      "paperSlug": "practice-set-20",
+      "paperTitle": "JEE Main Practice Set 20",
+      "paperPath": "jee/papers/practice-set-20.html",
+      "paperFile": "practice-set-20.json",
+      "questionNumber": 1,
+      "section": "Chemistry",
+      "question": "Which of the following sets of monomers is used in the synthesis of Nylon-6,6?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Caprolactam",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Hexamethylenediamine and Adipic acid",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Phenol and Formaldehyde",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Ethylene glycol and Terephthalic acid",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify Nylon-6,6 as a polyamide formed by condensation polymerization.",
+        "Recall that Nylon-6,6 specifically uses hexamethylenediamine and adipic acid as monomers.",
+        "Eliminate other options: Caprolactam gives Nylon-6; phenol and formaldehyde give Bakelite; ethylene glycol and terephthalic acid give PET."
+      ],
+      "verifierCheck": "Nylon-6,6 is a polyamide synthesized by step-growth polymerization of hexamethylenediamine (H2N-(CH2)6-NH2) and adipic acid (HOOC-(CH2)4-COOH); the numbers 6,6 indicate the six carbon atoms in each monomer. Caprolactam (A) yields Nylon-6 via ring-opening polymerization, phenol and formaldehyde (C) produce phenol-formaldehyde resins (Bakelite), and ethylene glycol with terephthalic acid (D) yields polyethylene terephthalate (PET). Thus the correct monomer set is hexamethylenediamine and adipic acid, corresponding to option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "6-6 Mnemonic",
+          "idea": "Double six means two hexamers",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Nylon-6,6 = 6 and 6 carbons",
+            "Hexa = 6 in both names",
+            "Hexamethylenediamine + Adipic acid",
+            "Only option B has two 6C units"
+          ]
+        },
+        {
+          "name": "Nylon Name Decode",
+          "idea": "Nylon-X,Y numbers reveal monomer carbon counts",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "See Nylon-6,6 → two 6-carbon monomers",
+            "Hexamethylenediamine = 6C diamine",
+            "Adipic acid = 6C diacid",
+            "Match option B"
+          ]
+        },
+        {
+          "name": "Polymer Elimination",
+          "idea": "Each option is a distinct famous polymer",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "A: Caprolactam → Nylon-6",
+            "B: Hexamethylenediamine + Adipic acid → Nylon-6,6",
+            "C: Phenol + Formaldehyde → Bakelite",
+            "D: Ethylene glycol + Terephthalic acid → PET",
+            "Select B for Nylon-6,6"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:04:49.324Z"
+    },
+    {
+      "id": "2ccc7a4e074fc903",
+      "exam": "neet",
+      "paperSlug": "practice-set-20",
+      "paperTitle": "NEET UG Practice Set 20",
+      "paperPath": "neet/papers/practice-set-20.html",
+      "paperFile": "practice-set-20.json",
+      "questionNumber": 1,
+      "section": "Chemistry",
+      "question": "A buffer solution is prepared by mixing 100 mL of 0.1 M CH₃COOH (pKa = 4.74) and 100 mL of 0.1 M CH₃COONa. To this solution, 1 mmol of solid NaOH is added. The new pH of the buffer is approximately: (Assume volume change negligible)",
+      "options": [
+        {
+          "label": "A",
+          "text": "4.66",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4.74",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "4.82",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "4.90",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate initial moles of CH3COOH and CH3COONa: each = 0.1 L × 0.1 M = 0.01 mol = 10 mmol.",
+        "After mixing, total volume = 200 mL. Initial pH = pKa = 4.74 because [HA] = [A-].",
+        "Add 1 mmol NaOH; it reacts with CH3COOH: CH3COOH + OH- → CH3COO- + H2O.",
+        "New moles: CH3COOH = 10 - 1 = 9 mmol; CH3COO- = 10 + 1 = 11 mmol.",
+        "Use Henderson-Hasselbalch: pH = pKa + log([A-]/[HA]) = 4.74 + log(11/9) = 4.74 + log(1.222) ≈ 4.74 + 0.087 = 4.827.",
+        "Approximate pH ≈ 4.83, closest option is 4.82 (C)."
+      ],
+      "verifierCheck": "Initial buffer: 100 mL 0.1 M CH3COOH (10 mmol) and 100 mL 0.1 M CH3COONa (10 mmol) gives equal moles, pH = pKa = 4.74. Adding 1 mmol NaOH consumes 1 mmol CH3COOH and produces 1 mmol CH3COO-, resulting in 9 mmol CH3COOH and 11 mmol CH3COO-. Volume remains 200 mL, so ratio [base]/[acid] = 11/9 ≈ 1.222. log(1.222) ≈ 0.087. New pH = 4.74 + 0.087 = 4.827 ≈ 4.82.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental Log Approximation",
+          "idea": "Memorize log(1.22)≈0.086 or compute log(11)-log(9)",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "After NaOH: HA=9 mmol, A⁻=11 mmol.",
+            "Ratio = 11/9 ≈ 1.222.",
+            "log(1.22) ≈ 0.086 (known) or log11−log9 = 0.087.",
+            "pH = 4.74 + 0.087 = 4.827.",
+            "Answer C."
+          ]
+        },
+        {
+          "name": "Equimolar Buffer Shift",
+          "idea": "Use fraction f = added base / initial acid for equimolar buffer",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Initial acid = 10 mmol. f = 1 mmol / 10 mmol = 0.1.",
+            "Ratio = (1+f)/(1-f) = 1.1/0.9 = 1.222.",
+            "log(1.222) ≈ 0.087.",
+            "pH = 4.74 + 0.087 = 4.827.",
+            "Select option C."
+          ]
+        },
+        {
+          "name": "Mole Ratio HH",
+          "idea": "Volume cancels, use moles directly in Henderson-Hasselbalch",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Initial moles HA = A⁻ = 10 mmol (0.1 M × 0.1 L each).",
+            "Add 1 mmol NaOH: HA → 9 mmol, A⁻ → 11 mmol.",
+            "pH = pKa + log(11/9) = 4.74 + log(1.222).",
+            "log(1.222) ≈ 0.087 → pH ≈ 4.827.",
+            "Choose option C (4.82)."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:06:06.040Z"
+    },
+    {
+      "id": "bd7f01522698077d",
+      "exam": "rbi",
+      "paperSlug": "practice-set-20",
+      "paperTitle": "RBI Grade B Practice Set 20",
+      "paperPath": "rbi/papers/practice-set-20.html",
+      "paperFile": "practice-set-20.json",
+      "questionNumber": 1,
+      "section": "Reasoning",
+      "question": "Statements: Some Trains are Metro. All Metro are Rail. No Rail is Bus. Conclusions: I. Some Trains are not Bus. II. All Metro being Bus is a possibility.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Only Conclusion I follows",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Only Conclusion II follows",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Either Conclusion I or II follows",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Neither Conclusion I nor II follows",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "From 'All Metro are Rail' and 'No Rail is Bus', deduce 'No Metro is Bus'.",
+        "From 'Some Trains are Metro' and 'No Metro is Bus', deduce 'Some Trains are not Bus'.",
+        "Conclusion I follows.",
+        "Conclusion II claims 'All Metro being Bus is a possibility', but 'No Metro is Bus' makes it impossible.",
+        "Therefore only Conclusion I follows."
+      ],
+      "verifierCheck": "From the statements: Some Trains are Metro (1), All Metro are Rail (2), No Rail is Bus (3). From (1) and (2), some Trains are Rail. From (3), those Trains that are Rail are not Bus, so some Trains are not Bus. Conclusion I follows. For Conclusion II: All Metro are Rail and No Rail is Bus implies No Metro is Bus, so it is impossible for all Metro to be Bus. Conclusion II does not follow. Hence only Conclusion I follows.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Negative Block",
+          "idea": "Use universal negative to block possibility",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "\"No Rail is Bus\" means Rail and Bus are disjoint sets.",
+            "All Metro are Rail, so Metro is inside Rail, thus Metro cannot touch Bus.",
+            "Conclusion II claims Metro could be Bus, contradiction -> II false.",
+            "Some Trains are Metro (inside Rail) so some Trains are not Bus -> I true."
+          ]
+        },
+        {
+          "name": "Chain Rule",
+          "idea": "Link statements to derive conclusions directly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Some Trains are Metro + All Metro are Rail => Some Trains are Rail.",
+            "Some Trains are Rail + No Rail is Bus => Some Trains are not Bus (I follows).",
+            "All Metro are Rail + No Rail is Bus => No Metro is Bus, so II impossible."
+          ]
+        },
+        {
+          "name": "Venn Flash",
+          "idea": "Mental Venn diagram for instant validation",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Draw three circles: Trains, Metro, Rail, Bus.",
+            "Some Trains overlap Metro; Metro inside Rail; Rail separate from Bus.",
+            "Trains overlapping Metro are inside Rail, so not in Bus -> Some Trains not Bus (I true).",
+            "Metro inside Rail, Rail separate from Bus -> Metro cannot be Bus (II false)."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:06:44.502Z"
+    },
+    {
+      "id": "2fb675235cca571d",
+      "exam": "sbi-clerk",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "SBI Clerk Practice Set 13",
+      "paperPath": "sbi-clerk/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 1,
+      "section": "Reasoning Ability",
+      "question": "In a row of students, Rohan is 12th from the left end and 18th from the right end. If 5 students leave the row from the right end, what will be Rohan's new position from the right end?",
+      "options": [
+        {
+          "label": "A",
+          "text": "14th",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "13th",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "15th",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "16th",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total students = 12 + 18 - 1 = 29",
+        "5 students leave from right end, so new total = 24",
+        "Rohan's left position unchanged at 12",
+        "New right position = 24 - 12 + 1 = 13"
+      ],
+      "verifierCheck": "Initially total students = 12 + 18 - 1 = 29. After 5 students leave from the right end, total becomes 24. Rohan's position from left remains 12th, so his new position from right = 24 - 12 + 1 = 13th. Alternatively, originally there were 17 students to his right; after 5 leave, 12 remain, making him 13th from the right.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Subtract",
+          "idea": "Subtract leavers from original right rank",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Original right rank = 18",
+            "5 students leave from right end",
+            "New right rank = 18 - 5 = 13"
+          ]
+        },
+        {
+          "name": "Mental Shift",
+          "idea": "Visualize row shrinking from right",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Picture Rohan 18th from right",
+            "Remove 5 from far right",
+            "Rohan shifts 5 places leftward → 13th"
+          ]
+        },
+        {
+          "name": "Total Invariant",
+          "idea": "Use total students invariant to recompute right rank",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Total students = 12 + 18 - 1 = 29",
+            "After 5 leave, total = 24",
+            "Rohan's left rank stays 12",
+            "New right rank = 24 - 12 + 1 = 13"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:07:18.643Z"
+    },
+    {
+      "id": "7083427cdae25434",
+      "exam": "agniveer",
+      "paperSlug": "practice-set-23",
+      "paperTitle": "Agniveer Practice Set 23",
+      "paperPath": "agniveer/papers/practice-set-23.html",
+      "paperFile": "practice-set-23.json",
+      "questionNumber": 2,
+      "section": "Reasoning",
+      "question": "Pointing to a woman in a photograph, a man says, 'She is the mother of the only daughter of my son.' How is the woman related to the man?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Daughter",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Daughter-in-law",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Sister",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Wife",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify \"my son\" as the man's son.",
+        "\"The only daughter of my son\" is the man's granddaughter.",
+        "\"The mother of the only daughter of my son\" is the mother of that granddaughter.",
+        "The mother of the man's granddaughter is the wife of the man's son.",
+        "The wife of the man's son is the man's daughter-in-law.",
+        "Therefore, the woman is the man's daughter-in-law."
+      ],
+      "verifierCheck": "The man refers to 'my son', so the son is the man's child. The 'only daughter of my son' is the man's granddaughter (the son's daughter). The woman is described as 'the mother of the only daughter of my son', meaning she is the mother of that granddaughter. In a typical family, the mother of a man's son's daughter is the wife of that son, i.e., the man's daughter-in-law. Therefore, the woman is the man's daughter-in-law.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Self-Substitution",
+          "idea": "Replace pronouns with self to simplify",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Replace \"my\" with \"I\".",
+            "My son's only daughter = my granddaughter.",
+            "Her mother = my son's wife.",
+            "My son's wife = my daughter-in-law."
+          ]
+        },
+        {
+          "name": "Reverse Chain",
+          "idea": "Trace relations backward from the man",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify \"my son\".",
+            "\"Only daughter of my son\" = my granddaughter.",
+            "\"Mother of that daughter\" = my son's wife.",
+            "Therefore, woman is my daughter-in-law."
+          ]
+        },
+        {
+          "name": "Option Elimination",
+          "idea": "Use logical constraints to discard wrong choices",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "Woman is mother of man's granddaughter.",
+            "Cannot be man's daughter (would be mother of her own niece).",
+            "Cannot be man's sister (would be aunt).",
+            "Cannot be man's wife (would imply incest).",
+            "Only daughter-in-law remains."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:08:03.469Z"
+    },
+    {
+      "id": "3c66a3aa184d0dc2",
+      "exam": "cgl",
+      "paperSlug": "practice-set-22",
+      "paperTitle": "CGL Practice Set 22",
+      "paperPath": "cgl/papers/practice-set-22.html",
+      "paperFile": "practice-set-22.json",
+      "questionNumber": 2,
+      "section": "General Intelligence & Reasoning",
+      "question": "Starting from point X, Ravi walks 10 m north, turns right and walks 15 m, then turns left and walks 10 m. In which direction is he from the starting point?",
+      "options": [
+        {
+          "label": "A",
+          "text": "North",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "East",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "North-West",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "North-East",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Set coordinate system: origin at X, north = +y, east = +x.",
+        "Walk 10 m north to (0,10).",
+        "Turn right (east), walk 15 m to (15,10).",
+        "Turn left (north), walk 10 m to (15,20).",
+        "Final position is 15 m east and 20 m north of start.",
+        "Direction from start is North-East."
+      ],
+      "verifierCheck": "Starting at origin (0,0), Ravi walks 10 m north to (0,10); turning right (east) he walks 15 m to (15,10); turning left (north) he walks 10 m to (15,20). The final position is 15 m east and 20 m north of the start, which lies in the North-East direction.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Turn Tracking",
+          "idea": "Follow facing direction changes",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Start facing North",
+            "Right turn -> face East, walk 15",
+            "Left turn -> face North, walk 10",
+            "Net: 20 North, 15 East => North-East"
+          ]
+        },
+        {
+          "name": "Vector Sum",
+          "idea": "Add north/east components",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "North 10 + North 10 = 20 m North",
+            "Right turn = East 15 m",
+            "Both components positive => North-East"
+          ]
+        },
+        {
+          "name": "Coordinate Plot",
+          "idea": "Map steps to (x,y) grid",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Origin (0,0)",
+            "North 10 -> (0,10)",
+            "East 15 -> (15,10)",
+            "North 10 -> (15,20)",
+            "Positive x,y => North-East"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:08:31.732Z"
+    },
+    {
+      "id": "1eb820ff3917c6f1",
+      "exam": "ibps-po",
+      "paperSlug": "practice-set-15",
+      "paperTitle": "IBPS PO Practice Set 15",
+      "paperPath": "ibps-po/papers/practice-set-15.html",
+      "paperFile": "practice-set-15.json",
+      "questionNumber": 2,
+      "section": "Reasoning Ability",
+      "question": "In a row of students, A is 12th from the left end and B is 18th from the right end. If they interchange their positions, A becomes 22nd from the left end. How many students are there in the row?",
+      "options": [
+        {
+          "label": "A",
+          "text": "38",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "39",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "40",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "41",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let total students = N.",
+        "B's position from left = N - 18 + 1 = N - 17.",
+        "After interchange, A moves to B's original position, so A's new left position = N - 17.",
+        "Given A's new left position = 22.",
+        "Thus N - 17 = 22 => N = 39.",
+        "Option B corresponds to 39."
+      ],
+      "verifierCheck": "Let total students be N. Initially, A is 12th from left, so position of A = 12. B is 18th from right, so position of B from left = N - 18 + 1 = N - 17. After interchanging, A moves to B's original position, so A's new position from left = N - 17. Given that after interchange A becomes 22nd from left, we have N - 17 = 22, so N = 39. Verification: With N=39, B's initial position = 39 - 17 = 22; after swap A is at 22, consistent. Hence total students = 39.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Interchange Sum",
+          "idea": "Add A's new left and B's original right positions, subtract 1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "B was 18th from right originally.",
+            "After swap, A is at B's old spot, now 22nd from left.",
+            "Total students = 22 + 18 - 1 = 39."
+          ]
+        },
+        {
+          "name": "Spot Invariant",
+          "idea": "The swapped spot has fixed left+right sum",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "Before swap, B occupies the spot 18th from right.",
+            "After swap, A occupies that same spot, now 22nd from left.",
+            "For any spot, left rank + right rank = total + 1 → total = 22 + 18 - 1 = 39."
+          ]
+        },
+        {
+          "name": "Shift Count",
+          "idea": "A's left shift reveals distance between A and B",
+          "kind": "shortcut",
+          "seconds": 7,
+          "steps": [
+            "A moves from 12th to 22nd left → shift of 10 right.",
+            "So B was 10 places right of A → B's left position = 12 + 10 = 22.",
+            "Total = B's left (22) + B's right (18) - 1 = 39."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:10:07.534Z"
+    },
+    {
+      "id": "48355b34b2c03c2a",
+      "exam": "jee",
+      "paperSlug": "practice-set-20",
+      "paperTitle": "JEE Main Practice Set 20",
+      "paperPath": "jee/papers/practice-set-20.html",
+      "paperFile": "practice-set-20.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "If A is a non-singular square matrix of order 3 such that |A| = 5, then the value of |adj(adj A)| is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "125",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "625",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "25",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "3125",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall property: For a non-singular matrix A of order n, |adj(A)| = |A|^{n-1}.",
+        "Apply to A (n=3, |A|=5): |adj(A)| = 5^{2} = 25.",
+        "Then |adj(adj A)| = |adj A|^{n-1} = 25^{2} = 625.",
+        "Alternatively, use formula |adj(adj A)| = |A|^{(n-1)^2} = 5^{4} = 625.",
+        "Conclude answer is 625, which corresponds to option B."
+      ],
+      "verifierCheck": "For a non-singular matrix A of order n, |adj(A)| = |A|^{n-1}. Here n=3, |A|=5, so |adj(A)| = 5^2 = 25. Then |adj(adj A)| = |adj(A)|^{n-1} = 25^2 = 625. Alternatively, adj(adj A) = |A|^{n-2} A = 5 A, so its determinant is 5^3 * 5 = 625.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Exponent Trick",
+          "idea": "Remember exponent pattern: |adj A| = |A|^{n-1}, then |adj(adj A)| = |adj A|^{n-1}.",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "|adj A| = |A|^{n-1} = 5^2 = 25.",
+            "|adj(adj A)| = |adj A|^{n-1} = 25^2 = 625."
+          ]
+        },
+        {
+          "name": "Power Formula",
+          "idea": "Use |adj(adj A)| = |A|^{(n-1)^2} for n=3.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall formula: |adj(adj A)| = |A|^{(n-1)^2} for n×n non-singular A.",
+            "Plug n=3, |A|=5: exponent = (3-1)^2 = 4.",
+            "Compute 5^4 = 625."
+          ]
+        },
+        {
+          "name": "Adj Chain",
+          "idea": "Apply adj(A) = |A| A^{-1} twice.",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "adj A = |A| A^{-1} = 5 A^{-1}.",
+            "adj(adj A) = adj(5 A^{-1}) = 5^{2} adj(A^{-1}) (since n=3).",
+            "adj(A^{-1}) = (adj A)^{-1} = (5 A^{-1})^{-1} = (1/5) A.",
+            "So adj(adj A) = 25 * (1/5) A = 5 A.",
+            "Determinant: |5 A| = 5^3 |A| = 125 * 5 = 625."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:10:51.615Z"
+    },
+    {
+      "id": "2a0c85ad5d6f2fac",
+      "exam": "sbi-clerk",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "SBI Clerk Practice Set 13",
+      "paperPath": "sbi-clerk/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 2,
+      "section": "Reasoning Ability",
+      "question": "In the following question, a statement is given followed by four conclusions. Assuming the statement to be true, decide which conclusion(s) logically follow(s). Statement: P ≤ Q < R = S ≥ T > U Conclusions: I. P < R II. S > U III. Q < S IV. R > U",
+      "options": [
+        {
+          "label": "A",
+          "text": "Only I and II follow",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Only II and III follow",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Only I, II and III follow",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "All follow",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Parse the statement: P ≤ Q < R = S ≥ T > U",
+        "Derive chain: P ≤ Q < R = S ≥ T > U",
+        "Check I: P ≤ Q < R ⇒ P < R (follows)",
+        "Check II: S ≥ T > U ⇒ S > U (follows)",
+        "Check III: Q < R = S ⇒ Q < S (follows)",
+        "Check IV: R = S ≥ T > U ⇒ R > U (follows)"
+      ],
+      "verifierCheck": "From the chain P ≤ Q < R = S ≥ T > U, we derive: P ≤ Q and Q < R ⇒ P < R (I); R = S and S ≥ T > U ⇒ S > U (II) and R > U (IV); Q < R = S ⇒ Q < S (III). All four conclusions follow logically.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Chain Fusion",
+          "idea": "Merge all relations into one chain to see every connection instantly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write chain: P ≤ Q < R = S ≥ T > U",
+            "Read I: P ≤ Q < R ⇒ P < R",
+            "Read II: S = R ≥ T > U ⇒ S > U",
+            "Read III: Q < R = S ⇒ Q < S",
+            "Read IV: R = S ≥ T > U ⇒ R > U"
+          ]
+        },
+        {
+          "name": "Symbol Flow",
+          "idea": "Trace inequality symbols stepwise to confirm each conclusion",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "≤ then < yields <",
+            "= then ≥ then > yields >",
+            "< then = yields <",
+            "= then ≥ then > yields >"
+          ]
+        },
+        {
+          "name": "Transitive Check",
+          "idea": "Apply transitivity to each conclusion separately for rapid verification",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "I: P ≤ Q < R ⇒ P < R",
+            "II: S = R ≥ T > U ⇒ S > U",
+            "III: Q < R = S ⇒ Q < S",
+            "IV: R = S ≥ T > U ⇒ R > U"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:11:51.227Z"
+    },
+    {
+      "id": "16c628265788e76e",
+      "exam": "cgl",
+      "paperSlug": "practice-set-22",
+      "paperTitle": "CGL Practice Set 22",
+      "paperPath": "cgl/papers/practice-set-22.html",
+      "paperFile": "practice-set-22.json",
+      "questionNumber": 3,
+      "section": "General Intelligence & Reasoning",
+      "question": "‘Doctor’ is related to ‘Hospital’ in the same way as ‘Teacher’ is related to ______.",
+      "options": [
+        {
+          "label": "A",
+          "text": "School",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Student",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Book",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Classroom",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the relationship: a doctor works in a hospital.",
+        "Apply the same relationship to a teacher: a teacher works in a school.",
+        "Select the option that matches 'School'."
+      ],
+      "verifierCheck": "The analogy follows a professional-to-workplace relationship: a doctor primarily works in a hospital, and a teacher primarily works in a school. While a teacher also works in a classroom, the broader institutional workplace is the school, making 'School' the most direct parallel to 'Hospital'.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Analogy Template",
+          "idea": "Apply standard Professional:Workplace pattern",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall Professional:Workplace pair",
+            "Doctor:Hospital → Teacher:School",
+            "Pick School"
+          ]
+        },
+        {
+          "name": "Workplace Match",
+          "idea": "Direct professional-to-institution mapping",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Doctor works in Hospital",
+            "Teacher works in School",
+            "Select School"
+          ]
+        },
+        {
+          "name": "Category Filter",
+          "idea": "Eliminate non-workplace options instantly",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Student=person, Book=tool, Classroom=room",
+            "Only School=institution",
+            "Match Hospital level"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T22:12:11.803Z"
     }
   ]
 }

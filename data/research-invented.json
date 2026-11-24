@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-24T02:55:14.021Z",
+ "updatedAt": "2026-11-24T22:37:18.840Z",
  "note": "Original alternative methods for invented questions. Each is checked against the key by an independent call.",
  "methods": {
   "choose the most appropriate sentence that improves the one given below original the stock market crash was a real eye waterer for the traders a the stock market": {
@@ -979,6 +979,96 @@
    "verified": true,
    "generatedAt": "2026-11-24T02:55:14.012Z",
    "model": "seeded"
+  },
+  "in a specific logic gate language the symbols represent operations as follows means is less than or equal to means is greater than means is not equal to means i": {
+   "name": "Proof by Contradiction",
+   "seconds": 10,
+   "steps": [
+    "Assume the negation of option 3: either D < C or E = A.",
+    "If D < C, then from III (D = B) we get B < C, contradicting II (B > C).",
+    "If E = A, it directly contradicts IV (E != A). Therefore option 3 must be true."
+   ],
+   "answer": "D >= C and E != A",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:21:56.511Z",
+   "model": "hosted"
+  },
+  "a and b are siblings c is the father of b d is the mother of a e is the son of d who is e to c": {
+   "name": "Generational Option Elimination",
+   "seconds": 10,
+   "steps": [
+    "Identify generations: C (father of B) and D (mother of A) are parental generation; A, B (siblings) and E (son of D) are children generation.",
+    "Evaluate options: Son (child of C) fits child generation; Grandson is two generations below; Brother is same generation as parents; Nephew requires C's sibling, not given.",
+    "Only Son satisfies all relational constraints."
+   ],
+   "answer": "Son",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:28:49.130Z",
+   "model": "hosted"
+  },
+  "choose the word that is most nearly opposite in meaning to obstinate": {
+   "name": "Synonym Elimination Method",
+   "seconds": 10,
+   "steps": [
+    "Identify that options 2, 3, and 4 (Stubborn, Rigid, Persistent) are synonyms of 'Obstinate'.",
+    "The remaining option, 'Flexible', is not a synonym and therefore must be the antonym."
+   ],
+   "answer": "Flexible",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:31:13.980Z",
+   "model": "hosted"
+  },
+  "in a certain code language cat is written as 3120 what is the code for dog": {
+   "name": "ASCII subtraction method",
+   "seconds": 10,
+   "steps": [
+    "Get ASCII values: C=67, A=65, T=84",
+    "Subtract 64 from each: 3, 1, 20 → matches 3120",
+    "For DOG: D=68, O=79, G=71 → subtract 64 → 4, 15, 7 → code 4157"
+   ],
+   "answer": "4157",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:32:17.752Z",
+   "model": "hosted"
+  },
+  "a basket contains 50 apples if 20 are rotten how many good apples are left": {
+   "name": "Grouping Method",
+   "seconds": 10,
+   "steps": [
+    "Express 20% as 1/5, so 1 rotten apple per 5 apples.",
+    "Divide 50 apples into groups of 5: 50 ÷ 5 = 10 groups.",
+    "Each group has 4 good apples, so total good = 10 × 4 = 40."
+   ],
+   "answer": "40",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:36:17.645Z",
+   "model": "hosted"
+  },
+  "arrange the following words in a logical sequence 1 egg 2 chicken 3 bird 4 baby": {
+   "name": "Sentence Construction Method",
+   "seconds": 10,
+   "steps": [
+    "Form a cause-effect sentence: \"An egg hatches into a baby, which grows into a chicken, a type of bird.\"",
+    "Extract the key nouns in order of appearance: Egg, Baby, Chicken, Bird.",
+    "Map to given numbers (1=Egg, 4=Baby, 2=Chicken, 3=Bird) to obtain sequence 1,4,2,3."
+   ],
+   "answer": "1, 4, 2, 3",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:36:56.051Z",
+   "model": "hosted"
+  },
+  "a contractor promises to complete a project in 40 days he employs 60 men however due to supply shortages the work rate of every single man drops by 25 immediate": {
+   "name": "Half-Work Inverse Rate Method",
+   "seconds": 10,
+   "steps": [
+    "Remaining work equals first half (1200 man-days) with 20 days left, so at full rate 60 men would suffice.",
+    "With 25% rate drop, each man is 75% efficient; required men = 60 / 0.75 = 80.",
+    "Additional men = 80 - 60 = 20."
+   ],
+   "answer": "20",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:37:18.839Z",
+   "model": "hosted"
   }
  }
 }
