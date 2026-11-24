@@ -304,3 +304,18 @@ a:hover{opacity:.85}
   .dash-stat{padding:12px}
   .dash-num{font-size:1.2em}
 }
+
+/* A lesson diagram sits to the RIGHT of the passage it explains, so the text
+   and the picture are read together. On narrow screens it becomes a normal
+   full-width block above/below the paragraph. */
+.lesson-figure {
+  float: right;
+  width: min(340px, 42%);
+  margin: 0 0 14px 18px;
+  clear: none;
+}
+.lesson-figure svg { max-width: 100%; height: auto; }
+.lesson-figure figcaption { line-height: 1.45; }
+@media (max-width: 760px) {
+  .lesson-figure { float: none; width: 100%; margin: 14px 0; }
+}

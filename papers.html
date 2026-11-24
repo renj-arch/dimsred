@@ -286,7 +286,7 @@ function renderPaperGrid() {
   document.getElementById('emptyState').style.display = 'none';
   grid.innerHTML = '';
   papers.forEach(function(p) {
-    var qCount = p.questions ? p.questions.length : (p.totalQ || '?');
+    var qCount = (p.questions && p.questions.length) || p.totalQuestions || p.totalQ || '?';
     var card = document.createElement('div');
     card.className = 'paper-card';
     card.innerHTML = '<div class="exam-badge">' + p.exam + '</div>' +
