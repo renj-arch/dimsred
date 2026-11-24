@@ -145458,6 +145458,114 @@
         }
       ],
       "sol": "Rotatability of a central composite design means that the prediction variance depends only on the distance from the design centre. For a design with a full 2^k factorial core, the axial distance α must satisfy α = (2^k)^{1/4}. This result follows from equating the moments of the design points on the factorial and axial portions. The lesson states this condition explicitly. Options B, C, and D give incorrect powers or bases. Therefore option A is the correct answer."
+    },
+    {
+      "id": 120,
+      "text": "In kernel density estimation, the bandwidth h that minimises the mean integrated squared error (MISE) satisfies h ∝ n^α. What is the value of α?",
+      "options": [
+        {
+          "l": "a",
+          "t": "-1/3",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "-1/5",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "-1/2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "-2/5",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the MISE is minimised by h ∝ n^{-1/5}. This rate arises from balancing the squared bias (order h^4) and variance (order 1/(nh)) terms in the MISE expansion for a second‑order kernel. Setting derivative to zero gives h ∝ n^{-1/5}. The other exponents correspond to different bias‑variance trade‑offs or to optimal rates for derivative estimation, not for density estimation itself."
+    },
+    {
+      "id": 121,
+      "text": "For an irreducible, aperiodic, positive‑recurrent discrete‑time Markov chain with transition matrix P, which of the following characterises the unique stationary distribution π?",
+      "options": [
+        {
+          "l": "a",
+          "t": "π_i = 1/|S| for all i",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "π_i = lim_{n→∞} P^n_{ij} for all j",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "π_i = 0 for all i",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "π_i = Σ_j P_{ij}",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that for such a chain a unique stationary distribution π exists solving πP = π, Σ π_i = 1, and π_i = lim_{n→∞} P^n_{ij} for all j. Option B reproduces this limit property. Option A holds only for doubly stochastic matrices, not in general. Option C contradicts positivity of π. Option D gives the row sums of P, which equal 1, not the stationary probabilities."
+    },
+    {
+      "id": 122,
+      "text": "Principal Component Analysis performed on the correlation matrix versus the covariance matrix yields different component loadings unless a specific condition holds. What is that condition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The variables are uncorrelated",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The variables are standardised",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The sample size exceeds the number of variables",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The covariance matrix is diagonal",
+          "c": false
+        }
+      ],
+      "sol": "The lesson warns that confusing eigenvalues of the correlation matrix with those of the covariance matrix gives different loadings unless variables are standardised. Standardising each variable to zero mean and unit variance makes the covariance matrix equal to the correlation matrix, so the two PCAs coincide. Uncorrelatedness or a diagonal covariance matrix does not guarantee equality of the two matrices; they would still differ by the variances on the diagonal."
+    },
+    {
+      "id": 123,
+      "text": "Consider a three‑way I × J × K contingency table. The saturated log‑linear model includes all main effects, two‑factor interactions, and the three‑factor interaction. The model of no three‑factor interaction omits the three‑factor term. The likelihood‑ratio statistic G² for testing this reduced model against the saturated model has degrees of freedom equal to:",
+      "options": [
+        {
+          "l": "a",
+          "t": "(I-1)(J-1)(K-1)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "IJK - 1",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "(I-1)+(J-1)+(K-1)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "(I-1)(J-1)+(J-1)(K-1)+(I-1)(K-1)",
+          "c": false
+        }
+      ],
+      "sol": "The saturated model contains a three‑factor interaction term with (I-1)(J-1)(K-1) free parameters (due to identifiability constraints). Removing this term reduces the parameter count by exactly that amount. Hence the difference in the number of free parameters between the saturated and the no‑three‑factor‑interaction model is (I-1)(J-1)(K-1), which is the degrees of freedom for the G² test. The other options correspond to total cells minus one, main‑effect parameters, or two‑factor interaction parameters."
     }
   ],
   "opt-statistics/paper1": [
@@ -168240,6 +168348,141 @@
         }
       ],
       "sol": "The lesson text explicitly defines the RE-AIM model as \"(Reach, Effectiveness, Adoption, Implementation, Maintenance)\". Option B matches this exact terminology. Option A uses \"Efficacy\" instead of \"Effectiveness\". Options C and D substitute incorrect terms for the standard acronym components."
+    },
+    {
+      "id": 124,
+      "text": "According to the 2023 Beers Criteria and STOPP/START version 3, which statement is correct regarding potentially inappropriate medications (PIMs) in adults ≥65 years?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Anticholinergic burden score ≥3 correlates with a 30 % increase in incident dementia over six years.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The Beers Criteria lists only drugs to avoid and does not address prescribing omissions.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "STOPP/START version 3 applies exclusively to nursing‑home residents.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "A classic prescribing cascade is treating NSAID‑induced hypertension with a beta‑blocker.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that an anticholinergic burden (ACB) score ≥3 correlates with a 30 % increase in incident dementia over six years. The Beers Criteria includes both potentially inappropriate medications and prescribing omissions, so option B is false. STOPP/START is intended for all older adults, not only nursing‑home residents, making option C false. The described prescribing cascade example in the text is NSAID‑induced hypertension treated with an ACE inhibitor, not a beta‑blocker, so option D is incorrect."
+    },
+    {
+      "id": 125,
+      "text": "In a patient with chronic kidney disease stage 4 (eGFR ≈20 mL/min), which direct oral anticoagulant dosing recommendation aligns with the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Apixaban 5 mg twice daily",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Dabigatran 150 mg twice daily",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Apixaban 2.5 mg twice daily",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Rivaroxaban 20 mg daily",
+          "c": false
+        }
+      ],
+      "sol": "The lesson specifies that for CrCl 15‑29 mL/min, apixaban 2.5 mg twice daily is preferred over warfarin, while dabigatran is contraindicated in this renal function range. Rivaroxaban dosing for severe renal impairment is not mentioned as a preferred option in the provided text. Therefore, only option C matches the guideline excerpt."
+    },
+    {
+      "id": 126,
+      "text": "Which description best captures the principle of oncogene addiction illustrated by tyrosine‑kinase inhibitors (TKIs) in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Tumors become dependent on a single activated oncogenic pathway, so inhibition yields dramatic response.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Resistance arises only through secondary mutations in the same kinase domain.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "All EGFR‑mutated NSCLC should receive chemotherapy before TKI therapy.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Antibody‑drug conjugates replace TKIs as first‑line for all molecular subtypes.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that TKIs such as imatinib, erlotinib, and osimertinib exemplify oncogene addiction — tumors rely on a single driver oncogene, making targeted inhibition highly effective. Option B is incorrect because resistance mechanisms also include bypass pathway activation and histologic transformation. Option C contradicts the NCCN recommendation for frontline osimertinib in EGFR‑mutated NSCLC. Option D is not supported; ADCs are mentioned as a separate class, not as universal first‑line replacements."
+    },
+    {
+      "id": 127,
+      "text": "Regarding advanced mechanical circulatory support, which statement correctly distinguishes ECMO “bridge to decision” from VAD “bridge to transplant” eligibility?",
+      "options": [
+        {
+          "l": "a",
+          "t": "ECMO bridge to decision is limited to ≤7 days, whereas VAD bridge to transplant requires INTERMACS profiling.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Both ECMO and VAD are limited to ≤7 days for bridge to decision.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "VAD bridge to transplant does not require hemodynamic profiling.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "ECMO bridge to decision requires INTERMACS profiling.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that “bridge to decision” ECMO duration is ≤7 days, while “bridge to transplant” VAD eligibility requires INTERMACS profiling. Option B incorrectly applies the 7‑day limit to VAD. Option C is false because INTERMACS profiling is explicitly required for VAD bridge‑to‑transplant. Option D reverses the roles, assigning INTERMACS to ECMO, which is not stated."
+    },
+    {
+      "id": 128,
+      "text": "In kidney transplant recipients, which factor is a contraindication for conversion to belatacept‑based maintenance immunosuppression?",
+      "options": [
+        {
+          "l": "a",
+          "t": "eGFR >30 mL/min",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Epstein‑Barr virus‑naïve status",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "History of acute cellular rejection treated with pulse steroids",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Presence of donor‑specific antibodies with MFI >1000",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that belatacept is contraindicated in Epstein‑Barr virus‑naïve recipients because of an increased risk of post‑transplant lymphoproliferative disorder. An eGFR >30 mL/min is actually a prerequisite for belatacept conversion, not a contraindication. Prior treated acute cellular rejection and the presence of donor‑specific antibodies are not listed as absolute contraindications for belatacept in the provided text."
     }
   ],
   "opt-zoology/overview": [
