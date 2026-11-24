@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-24T16:30:54.914Z",
+ "updatedAt": "2026-11-24T17:02:26.798Z",
  "corrections": [
   {
    "file": "cgl/course/reasoning/lesson-venn-diagram.html",
@@ -1680,6 +1680,76 @@
    "correction": "In an alternate schedule, calculate total work done in one full cycle (the repeating pattern of work days).",
    "problem": "The example given (A works Mon/Wed, B works Tue/Thu) has a 4-day cycle with two turns each, but the method describes a cycle as one turn each.",
    "appliedAt": "2026-11-24T16:30:54.914Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
+   "correction": "At solar noon, the sun is at its highest altitude; shadows are shortest but not zero unless overhead.",
+   "problem": "The sun is directly overhead at noon only at specific latitudes and times (between the Tropics). In most places, the sun is not overhead at noon and shadows exist.",
+   "appliedAt": "2026-11-24T16:54:32.907Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "Together they intersect at 99 only",
+   "correction": "Together they have no common value",
+   "problem": "99 has digit sum 18, not 9; the two sets have no intersection.",
+   "appliedAt": "2026-11-24T16:56:05.669Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "knowing only the radius and an inscribed angle does not determine the chord length unless the central angle is also known",
+   "correction": "knowing the radius and an inscribed angle determines the chord length",
+   "problem": "Radius and inscribed angle determine the central angle (twice the inscribed angle), which then determines the chord length.",
+   "appliedAt": "2026-11-24T16:56:06.218Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "the simultaneous congruences have solutions 4, 10, 16,… (all ≡ 0 mod 4) and 2, 8, 14,… (≡ 2 mod 4)",
+   "correction": "the simultaneous congruences have solutions 4, 10, 16, 22, 28,… which alternate between ≡ 0 and ≡ 2 mod 4",
+   "problem": "The example solutions are wrong: 10 ≡ 2 mod 4, not 0; and 2, 8, 14 are not solutions to k even and k ≡ 1 (mod 3).",
+   "appliedAt": "2026-11-24T16:58:06.971Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "The remaining two seats are for B and the remaining person.",
+   "correction": "The remaining seat is for B.",
+   "problem": "There are only five persons (A, B, C, D, E); the block uses C, D, E and A occupies an end, leaving only one seat for B, not two seats.",
+   "appliedAt": "2026-11-24T17:01:44.686Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "The three statements together become sufficient.",
+   "correction": "The three statements together are still insufficient.",
+   "problem": "The three statements (A at an end, C between D and E, B not at an end) do not uniquely determine whether B sits immediately to the right of A; two arrangements exist (A at left end gives yes, A at right end gives no), so data remain insufficient.",
+   "appliedAt": "2026-11-24T17:01:44.978Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "cos(d/R) = cos(h/R)·cos(R_slant/R) + sin(h/R)·sin(R_slant/R)·cos(α)",
+   "correction": "R_slant² = (R+h)² + R² - 2R(R+h) cos(d/R)",
+   "problem": "The formula presented as the spherical law of cosines is incorrect for the geometry of a satellite at altitude h measuring a slant range to a ground point. The correct relation uses the planar law of cosines on the triangle formed by Earth's centre, the satellite, and the target.",
+   "appliedAt": "2026-11-24T17:02:25.698Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "cos(d/R) = cos((R+h)/R)·cos(R_slant/R) + sin((R+h)/R)·sin(R_slant/R)",
+   "correction": "cos(d/R) = ((R+h)² + R² - R_slant²) / (2R(R+h))",
+   "problem": "The reduction for nadir viewing (α=0) is based on the same incorrect spherical law of cosines and is therefore wrong.",
+   "appliedAt": "2026-11-24T17:02:26.211Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "dS/dt = (hH / (H - h)²) * (dx/dt)",
+   "correction": "dS/dt = h/(H-h) * dx/dt",
+   "problem": "The derivative of shadow length S = hx/(H-h) with respect to time is dS/dt = h/(H-h) * dx/dt, not the given expression.",
+   "appliedAt": "2026-11-24T17:02:26.503Z"
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "its speed is not constant but depends on the person's distance from the light source",
+   "correction": "its speed is constant if the person's speed is constant",
+   "problem": "If the person moves at constant speed dx/dt, the shadow length S is linear in x, so dS/dt is constant. The shadow tip speed (d(x+S)/dt) is also constant.",
+   "appliedAt": "2026-11-24T17:02:26.798Z"
   }
  ]
 }
