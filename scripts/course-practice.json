@@ -155922,6 +155922,141 @@
         }
       ],
       "sol": "The lesson states that LPBF melt-pool dimensions (width ≈ 100–150 µm, depth ≈ 30–50 µm) dictate the minimum strut diameter that can be reliably fused, which is typically ≥ 300 µm. Designing lattice struts below this process-minimum diameter causes systematic lack-of-fusion defects. Options B and D correspond to the melt-pool width range, while Option C corresponds to the melt-pool depth; all are insufficient for stable strut formation because multiple overlapping tracks and adequate heat dissipation are needed to achieve full density."
+    },
+    {
+      "id": 5076,
+      "text": "In damage-tolerant design philosophy, the maximum allowable inspection interval ΔN_insp is specified as a fraction of the total predicted fatigue life N_total. What is this fraction according to the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0.25 N_total",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "0.5 N_total",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "0.75 N_total",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1.0 N_total",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states: 'In design, the damage‑tolerant philosophy requires inspection intervals ΔN_insp ≤ 0.5 N_total to ensure detection before critical size.' This means inspections must occur at least twice during the component's predicted total fatigue life, providing a safety margin to detect cracks before they reach the critical size a_c. Options A, C, and D do not match the specified requirement."
+    },
+    {
+      "id": 5077,
+      "text": "Which heat-affected zone (HAZ) sub-zone in a steel weldment experiences peak temperatures above the upper critical temperature Ac3, resulting in grain growth and reduced toughness?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Fine-grained HAZ (FGHAZ)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Intercritical HAZ (ICHAZ)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Subcritical HAZ (SCHAZ)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Coarse-grained HAZ (CGHAZ)",
+          "c": true
+        }
+      ],
+      "sol": "The lesson describes the HAZ sub-zones: 'the coarse‑grained HAZ (CGHAZ) adjacent to the fusion line experiences peak temperatures above the upper critical temperature Ac3, leading to grain growth and reduced toughness.' The FGHAZ sees temperatures just above Ac3 producing refined microstructure; ICHAZ undergoes partial transformation between Ac1 and Ac3; SCHAZ is tempered below Ac1. Therefore, CGHAZ is the correct sub-zone."
+    },
+    {
+      "id": 5078,
+      "text": "Why is the thin-plate springback formula considered inadequate for predicting springback in thick-walled sections?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Thick sections exhibit plane-stress conditions",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Thick sections exhibit plane-strain conditions",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Thin-plate formula ignores material anisotropy",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Thin-plate formula overestimates yield strength",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists a common trap: 'Applying the thin‑plate springback formula to thick‑walled sections where plane‑strain conditions dominate.' In thick sections, the constraint through the thickness creates plane-strain conditions, altering the stress distribution and springback behavior compared to plane-stress conditions assumed in thin-plate theory. The other options are incorrect: thick sections are plane-strain, not plane-stress; anisotropy and yield strength are not the primary reasons cited in the lesson."
+    },
+    {
+      "id": 5079,
+      "text": "According to the lesson, what is the consequence of ignoring fouling resistance (R_f) in the initial overall heat transfer coefficient (U) calculation for a heat exchanger?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Oversized heat exchanger area",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Undersized heat exchanger area",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "No effect on area calculation",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Increased tube velocity requirement",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: 'Ignoring fouling resistance in the initial U‑value calculation, causing undersized heat‑exchanger area.' Fouling adds resistance R_f = 1/h_f to the overall resistance 1/U. If this resistance is omitted during design, the calculated U will be higher than the actual operating U after fouling occurs. To meet the required heat duty with the inflated U, the calculated heat transfer area will be smaller than needed, resulting in an undersized exchanger that cannot perform after fouling accumulates."
+    },
+    {
+      "id": 5080,
+      "text": "In Value Stream Mapping, the number of kanban cards is calculated using which formula?",
+      "options": [
+        {
+          "l": "a",
+          "t": "(Demand during lead time + safety factor) × container size",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "(Demand during lead time × safety factor) / container size",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "(Demand during lead time / safety factor) × container size",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Demand during lead time × safety factor × container size",
+          "c": false
+        }
+      ],
+      "sol": "The lesson provides the kanban formula: 'kanban cards = (demand during lead time × safety factor) / container size.' This calculates the number of containers (cards) needed to cover demand during the replenishment lead time with a safety margin, divided by the quantity each container holds. Option A adds instead of multiplies safety factor and multiplies by container size. Option C divides by safety factor and multiplies by container size. Option D multiplies all three terms. Only option B matches the given formula."
     }
   ],
   "opt-medical-science/overview": [
@@ -175882,6 +176017,141 @@
         }
       ],
       "sol": "The lesson states that the Kannada Sahitya Parishat’s \"Kannada Nighantu\" project, finalised in 1995, incorporated dialectal variants from the \"Halegannada\" corpus and modern technical terminology. Kittel’s dictionary is the baseline but does not include those dialect entries; the Digital Corpus and Terminology Bank are later digital initiatives. Thus option B is correct."
+    },
+    {
+      "id": 7202,
+      "text": "Which syntactic feature of the vachana corpus, identified by M. M. Kalburgi, is explicitly noted as surviving in contemporary Kannada prose through the absolutive (gerund) construction?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The use of finite verb at clause end",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The preference for coordinate clauses over subordinate embedding",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The extensive deployment of the vocative case",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The frequent use of the absolutive (gerund) construction ‘-i’ to chain actions",
+          "c": true
+        }
+      ],
+      "sol": "The lesson states: ‘a high-scoring answer will not merely list major vachanakaras but will analyse how specific syntactic features — such as the frequent use of the absolutive (gerund) construction ‘-i’ to chain actions — survive in contemporary Kannada prose.’ While the other options (finite verb at clause end, coordinate clauses, vocative case) are mentioned as features of vachana syntax that trace the evolution of modern prose, only the absolutive ‘-i’ construction is explicitly singled out as a specific feature whose survival in contemporary prose should be analysed for a high-scoring answer."
+    },
+    {
+      "id": 7203,
+      "text": "According to the lesson, what distinguishes the ‘badagu tittu’ and ‘tenku tittu’ styles of Yakshagana in terms of their textual transcription?",
+      "options": [
+        {
+          "l": "a",
+          "t": "They employ distinct tala-matra patterns",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "They use different stock characters (vesha)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "They follow separate metrical structures (prasanga)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "They draw on different oral epic traditions",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly warns against ‘Assuming Yakshagana’s metres are uniform across coastal and interior troupes; the ‘badagu tittu’ and ‘tenku tittu’ styles employ distinct tala-matra patterns that affect textual transcription.’ This is listed as one of the traps to avoid. The other options (different vesha, separate prasanga, different epic traditions) are not mentioned as distinguishing features between these two styles in the text."
+    },
+    {
+      "id": 7204,
+      "text": "The lesson identifies a specific trap regarding the Haridasa kirtanas: what is the error scholars should avoid when analysing their language?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Overstating the Sanskritisation while ignoring deliberate retention of Dravidian sandhi-free compounds in palm-leaf manuscripts",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Assuming all kirtanas follow a uniform metrical structure across regions",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Confusing the Haridasa movement with the earlier Vachana movement",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Neglecting the influence of the Natya Shastra on kirtana performance",
+          "c": false
+        }
+      ],
+      "sol": "The lesson lists as a trap: ‘Overstating the Sanskritisation of Haridasa kirtanas while ignoring the deliberate retention of Dravidian sandhi-free compounds in the original palm-leaf manuscripts.’ This directly matches option A. The other options describe errors not mentioned in the text — there is no mention of uniform metrical structure assumptions, confusion with Vachana movement, or Natya Shastra influence on kirtanas."
+    },
+    {
+      "id": 7205,
+      "text": "How does the lesson characterise the relationship between Navodaya, Navya, and Bandaya criticism in Kannada literary history?",
+      "options": [
+        {
+          "l": "a",
+          "t": "As a linear progression where each movement supersedes the previous one",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "As overlapping, often antagonistic discourses that coexist in journals and university departments",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "As three distinct phases separated by clear chronological boundaries",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "As movements unified by their shared rejection of Sanskritised literary language",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly warns against ‘Presenting Navodaya, Navya, and Bandaya criticism as a linear progression rather than as overlapping, often antagonistic, discourses that coexist in journals and university departments.’ This is listed as one of the traps to avoid. Option B correctly states the lesson’s characterization. Option A describes the erroneous linear view the lesson warns against. Options C and D are not supported by the text."
+    },
+    {
+      "id": 7206,
+      "text": "For a high-scoring answer on Dalit literature in the optional examination, the lesson emphasizes tracing which institutional pathway?",
+      "options": [
+        {
+          "l": "a",
+          "t": "From the 1973 Dalit Sangharsha Samiti, through the 1975 ‘Dalit Voice’ journal, the 1994 syllabus amendment, to the 2003 UGC endorsement",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "From the 1975 ‘Dalit Voice’ journal, through the 1976 manifesto, the 1988 ‘Kusumabale’ publication, to the 1998 Parishat resolution",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "From the 1976 manifesto ‘Dalit Sahitya: Ondu Parichaya’, through the 1994 syllabus revision, the 1998 Parishat resolution, to the 2001 critical edition",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "From the 1973 Dalit Sangharsha Samiti, through the 1978 Kannada Language Policy, the 1994 syllabus revision, to the 2003 UGC model curriculum",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: ‘For the optional examination, a high-scoring response will trace the institutional pathway: from the 1973 Dalit Sangharsha Samiti, through the 1975 ‘Dalit Voice’ journal, the 1994 syllabus amendment, to the 2003 UGC endorsement.’ This exact sequence appears in option A. Option B incorrectly orders events and includes ‘Kusumabale’ (1988) as an institutional step. Option C starts with the 1976 manifesto instead of the 1973 Samiti. Option D incorrectly includes the 1978 Kannada Language Policy, which the lesson explicitly distinguishes from the 1994 syllabus revision (‘Confusing the 1994 syllabus revision... with the 1978 Kannada Language Policy’)."
     }
   ],
   "opt-kannada/paper1": [
