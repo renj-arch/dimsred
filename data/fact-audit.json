@@ -1,31 +1,21 @@
 {
- "generatedAt": "2026-11-24T19:21:35.612Z",
+ "generatedAt": "2026-11-24T19:32:13.091Z",
  "lessonsAudited": 1,
- "flagged": 2,
- "applied": 0,
- "modelCalls": 2,
- "modelFailures": 0,
+ "flagged": 1,
+ "applied": 1,
+ "modelCalls": 3,
+ "modelFailures": 1,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/quant/lesson-speed-distance.html",
-   "quote": "drift = –s × t_min (downstream)",
-   "problem": "With downstream positive, drift should be +s × t_min; the minus sign contradicts the stated sign convention.",
-   "correction": "drift = s × t_min (downstream)",
+   "file": "sbi-clerk/course/quant/lesson-time-work.html",
+   "quote": "If the total work on each project is known (or can be taken as LCM), solve for a, b, c.",
+   "problem": "With only two pairwise combined rates (a+b and b+c) and three unknown efficiencies (a,b,c), the system is underdetermined; individual efficiencies cannot be solved uniquely even if total works W1 and W2 are known.",
+   "correction": "A third independent equation is needed to solve for a, b, c.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Minus sign contradicts 'downstream' label; correction fixes sign.",
-   "applied": false
-  },
-  {
-   "file": "sbi-clerk/course/quant/lesson-speed-distance.html",
-   "quote": "If s > b, the boat cannot cancel the drift; the minimum drift is achieved by pointing straight upstream (θ = 90°), but the boat will still be carried downstream.",
-   "problem": "Pointing straight upstream gives zero across-river component, so the boat never crosses. Minimum drift while crossing occurs at sin θ = b/s.",
-   "correction": "If s > b, the boat cannot cancel the drift; the minimum drift while crossing is achieved at sin θ = b/s, giving drift = w√(s²–b²)/b.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Pointing straight upstream yields zero across-component; min drift while crossing at sin θ=b/s.",
-   "applied": false
+   "verifierReason": "Original quote wrongly implies two equations suffice; three unknowns require three independent equations.",
+   "applied": true
   }
  ]
 }
