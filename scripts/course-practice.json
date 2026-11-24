@@ -118758,6 +118758,114 @@
         }
       ],
       "sol": "The volume of a spherical segment (cap) of height h from a sphere of radius R is V = π h^2 (R − h/3). Substituting h = 3 and R = 5 gives h^2 = 9 and R − h/3 = 5 − 1 = 4. Hence V = π × 9 × 4 = 36π. The other options arise from common errors such as using the formula for a spherical zone, forgetting the factor 1/3, or miscalculating the height term."
+    },
+    {
+      "id": 117,
+      "text": "When computing the last three digits of 7^1000 using Carmichael's theorem, which step correctly applies the universal exponent?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Reduce the exponent 1000 modulo φ(1000)=400",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Reduce the exponent 1000 modulo λ(1000)=100",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Since gcd(7,1000)≠1, factor 1000 and apply the Chinese Remainder Theorem",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Use Euler's theorem directly because λ(1000)=φ(1000)",
+          "c": false
+        }
+      ],
+      "sol": "λ(1000)=lcm(λ(8),λ(125))=lcm(2,100)=100. Because gcd(7,1000)=1, Carmichael's theorem gives 7^1000 ≡ 7^(1000 mod 100) = 7^0 ≡ 1 (mod 1000). The last three digits are 001. Reducing modulo φ(1000)=400 would also work but is not the sharpest exponent; the universal exponent λ(1000)=100 is the smallest positive integer that works for all bases coprime to 1000."
+    },
+    {
+      "id": 118,
+      "text": "A semicircle of radius 6 cm is revolved about its diameter to generate a sphere. Using Pappus's first centroid theorem, what is the volume of the sphere?",
+      "options": [
+        {
+          "l": "a",
+          "t": "288π cm³",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "144π cm³",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "96π cm³",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "72π cm³",
+          "c": false
+        }
+      ],
+      "sol": "Area of semicircle = (1/2)πr² = 18π cm². Centroid distance from diameter = 4r/(3π) = 8/π cm. Distance traveled by centroid = 2π × (8/π) = 16 cm. Volume = Area × distance = 18π × 16 = 288π cm³. This matches the known formula (4/3)πr³ = 288π cm³ for r=6."
+    },
+    {
+      "id": 119,
+      "text": "A board consists of two disjoint 2×2 blocks. The rook polynomial for a single 2×2 block is R(x)=1+4x+2x². How many ways are there to place 2 non‑attacking rooks on the combined board?",
+      "options": [
+        {
+          "l": "a",
+          "t": "8",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "12",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "16",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "20",
+          "c": true
+        }
+      ],
+      "sol": "The rook polynomial for the union of disjoint boards is the product: (1+4x+2x²)² = 1 + 8x + (16+4)x² + … = 1 + 8x + 20x² + … The coefficient of x² is 20, which equals the number of ways to place 2 non‑attacking rooks on the combined board."
+    },
+    {
+      "id": 120,
+      "text": "The simple continued fraction for √2 is [1;2] with period m=1 (odd). According to the lesson, which convergent gives the fundamental solution of the negative Pell equation x² − 2y² = −1?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1/1",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "3/2",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "7/5",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "17/12",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that for √2 the convergents are 1/1, 3/2, 7/5, 17/12, … and that the next convergent after 3/2, namely 7/5, satisfies 7² − 2·5² = −1, giving the fundamental solution of the negative Pell equation. Although 1/1 also yields −1, the lesson explicitly identifies 7/5 as the fundamental solution in this context."
     }
   ],
   "opt-agriculture/overview": [
@@ -123146,6 +123254,114 @@
         }
       ],
       "sol": "The lesson states that the 2020 National Digital Health Mission created a Unique Health ID (UHID) linked to Aadhaar, enabling longitudinal health records. This linkage is central to the digital health architecture discussed. PAN card, Voter ID, and Passport are not mentioned as the linked identity system for UHID."
+    },
+    {
+      "id": 127,
+      "text": "According to NFHS‑5 (2019‑21), what was the national percentage of institutional births in India?",
+      "options": [
+        {
+          "l": "a",
+          "t": "88.6%",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "75.2%",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "92.1%",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "61.8%",
+          "c": false
+        }
+      ],
+      "sol": "NFHS‑5 reports that 88.6% of births nationally occurred in health institutions. The figure 61.8% refers specifically to Nagaland, while 75.2% and 92.1% are not mentioned in the lesson. Therefore the correct national estimate is 88.6%."
+    },
+    {
+      "id": 128,
+      "text": "Which provision is correctly described under the 2021 Assisted Reproductive Technology (Regulation) Act and the 2021 Surrogacy (Regulation) Act?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Commercial surrogacy is permitted for foreign nationals",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Altruistic surrogacy is allowed for Indian married couples with proven infertility",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Pre‑implantation genetic testing is mandatory for all embryos",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The surrogate mother must be a close relative of the intending couple",
+          "c": false
+        }
+      ],
+      "sol": "The 2021 Acts explicitly ban commercial surrogacy and restrict surrogacy to altruistic arrangements for Indian married couples (woman 23‑50, man 26‑55) with proven infertility. Pre‑implantation genetic testing is mandated only for specified genetic disorders, not universally, and there is no requirement that the surrogate be a close relative."
+    },
+    {
+      "id": 129,
+      "text": "In the Pressure and Release (PAR) model of disaster risk, how are \"dynamic pressures\" distinguished from \"root causes\"?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Dynamic pressures are deep structural/historical factors; root causes are contemporary processes",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Root causes are contemporary processes like urbanisation; dynamic pressures are deep structural factors",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Dynamic pressures are contemporary processes that channel root causes into unsafe conditions",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Both terms are synonymous and can be used interchangeably",
+          "c": false
+        }
+      ],
+      "sol": "The lesson clarifies that dynamic pressures are contemporary processes (e.g., urbanisation, debt, deforestation) that channel root causes — deep structural/historical factors such as political economy and ideology — into unsafe conditions. Confusing the two is a common error."
+    },
+    {
+      "id": 130,
+      "text": "Regarding the 2020 Labour Codes, which statement accurately reflects the impact on gig workers?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The Social Security Code extends ESI coverage to gig workers but with a high earnings floor",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The Wage Code universalises minimum wage and includes a 15‑day overtime limit",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The Industrial Relations Code lowers the strike threshold for gig workers",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The Occupational Safety and Health Code covers all establishments regardless of size",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that the four 2020 Labour Codes have divergent impacts. Specifically, the Social Security Code extends Employees' State Insurance (ESI) to gig workers, yet imposes a high earnings floor, limiting effective coverage. The Wage Code universalises minimum wage but excludes the 15‑day overtime limit; the Industrial Relations Code raises the strike threshold; and the OSH Code excludes small establishments."
     }
   ],
   "opt-anthropology/paper1": [
@@ -128452,6 +128668,60 @@
         }
       ],
       "sol": "Section 53 of the IBC establishes the following order of priority in liquidation: (1) insolvency resolution process costs and liquidation costs; (2) workmen’s dues for the preceding 24 months and debts due to secured creditors who have relinquished security (ranked pari passu); (3) wages and unpaid dues of employees (other than workmen) for the preceding 12 months; (4) financial debts of unsecured creditors; (5) government dues; (6) remaining debts; (7) preference shareholders; (8) equity shareholders. Option B captures the first three tiers correctly. Options A, C and D misorder the statutory hierarchy."
+    },
+    {
+      "id": 129,
+      "text": "Under Ind AS 21, when an entity changes its functional currency, the effect of the change is accounted for:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Retrospectively with restatement of prior period financial statements",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Prospectively from the date of change with the effect recognised in profit or loss",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Prospectively from the date of change with the effect recognised in other comprehensive income",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Retrospectively with the effect recognised in the foreign currency translation reserve",
+          "c": false
+        }
+      ],
+      "sol": "Ind AS 21 requires that a change in functional currency be accounted for prospectively from the date of change. The effect of the change is recognised in profit or loss, not in OCI or equity. The standard explicitly states this treatment as a common examiner twist. Retrospective application or recognition in OCI/translation reserve is incorrect."
+    },
+    {
+      "id": 130,
+      "text": "Under Ind AS 40, a change from the cost model to the fair value model for investment property is treated as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "A change in accounting estimate applied prospectively",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A change in accounting policy applied retrospectively",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "A correction of prior period error applied retrospectively",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "A change in measurement basis applied prospectively with disclosure only",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that failing to recognise a change from cost model to fair value model for investment property as a retrospective change in accounting policy is a common pitfall. Ind AS 40 requires such a change to be accounted for as a change in accounting policy under Ind AS 8, applied retrospectively with restatement of comparatives, not prospectively as an estimate change."
     }
   ],
   "opt-commerce-accountancy/paper1": [
@@ -148571,6 +148841,114 @@
         }
       ],
       "sol": "The lesson lists a common trap: \"Assuming all Bessel functions J_ν are linearly independent for integer ν; remember J_{-n} = (-1)^n J_n.\" For integer order n, the two solutions J_n and J_{-n} are not linearly independent; they satisfy J_{-n}(x) = (-1)^n J_n(x). This identity follows from the series definition of Bessel functions. Therefore the correct relation is J_{-n} = (-1)^n J_n."
+    },
+    {
+      "id": 124,
+      "text": "For the general second-degree equation in three variables, if the rank of the 3x3 matrix A of quadratic coefficients is 3 and the rank of the 4x4 augmented matrix B is 3, the surface represents a:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Central conicoid",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Cone",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Paraboloid",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Cylinder",
+          "c": false
+        }
+      ],
+      "sol": "The classification of the general second-degree equation F(x,y,z)=0 depends on the ranks of the 3x3 matrix A of quadratic coefficients and the 4x4 augmented matrix B. According to the given criteria, if rank(A) = 3 and rank(B) = 3, the surface represents a cone. A central conicoid requires rank(B)=4, a paraboloid requires rank(A)=2, and a cylinder requires rank(A)=2 and rank(B)=3. Therefore, the correct classification for rank(A)=3, rank(B)=3 is a cone."
+    },
+    {
+      "id": 125,
+      "text": "What is the necessary and sufficient condition for the existence of the Riemann-Stieltjes integral ∫ f dα when f is continuous and α is of bounded variation on [a,b]?",
+      "options": [
+        {
+          "l": "a",
+          "t": "f and α have no common discontinuities",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "α is monotonically increasing",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "f is of bounded variation",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "α is continuous",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that a necessary and sufficient condition for the existence of the Riemann-Stieltjes integral ∫ f dα, when f is continuous and α is of bounded variation, is that f and α have no common discontinuities. If they share a discontinuity point, the Riemann-Stieltjes sums do not converge to a unique limit. The other options (α monotonic, f BV, α continuous) are either not necessary or not sufficient by themselves for this specific existence theorem."
+    },
+    {
+      "id": 126,
+      "text": "In the Schwarz-Christoffel transformation mapping the upper half-plane to a polygon, the cyclic order of the pre-vertices on the real axis must:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Be in reverse order of the polygon vertices",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Match the cyclic order of the polygon vertices",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Be symmetric about the origin",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Be arbitrary as long as they are distinct",
+          "c": false
+        }
+      ],
+      "sol": "The Schwarz-Christoffel transformation maps the real axis in the ζ-plane to the boundary of a polygon in the w-plane. The pre-vertices (points on the real axis mapping to polygon vertices) must appear in the same cyclic order as the corresponding vertices of the polygon. Placing them in the wrong order results in a mapping to a different polygon (e.g., self-intersecting) or an incorrect domain. The lesson highlights this as a common error: the cyclic order of wₖ must match the cyclic order of polygon vertices."
+    },
+    {
+      "id": 127,
+      "text": "Why is the standard quadratic formula x = (–b ± √(b²–4ac))/(2a) avoided in numerical algorithms when b² ≫ 4ac?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It causes overflow errors",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It causes catastrophic cancellation",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It requires complex arithmetic",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It converges too slowly",
+          "c": false
+        }
+      ],
+      "sol": "When b² ≫ 4ac, the term √(b²–4ac) is very close to |b|. In the standard formula, the root involving subtraction (–b + √(b²–4ac) for b>0, or –b – √(b²–4ac) for b<0) computes the difference of two nearly equal large numbers, leading to catastrophic cancellation and severe loss of significant digits. The stable rearrangement q = –½(b + sign(b)√(b²–4ac)) avoids this subtraction, computing one root accurately as q/a and the other as c/q."
     }
   ],
   "opt-mathematics/paper2": [
@@ -159567,6 +159945,141 @@
         }
       ],
       "sol": "The 15th Finance Commission (2021-26) recommended that 41% of the divisible pool of central taxes be devolved to the states as vertical devolution. This is a reduction from the 42% recommended by the 14th Finance Commission. The horizontal distribution among states uses criteria with weights: income distance (45%), population (15%), area (15%), forest and ecology (10%), demographic performance (12.5%), and tax effort (2.5%)."
+    },
+    {
+      "id": 5031,
+      "text": "In the discrete‑time debt dynamics equation Δd = (r – g) d – p, the debt‑stabilising primary balance p* is given by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "p* = (r – g) d",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "p* = (g – r) d",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "p* = (r + g) d",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "p* = d/(r – g)",
+          "c": false
+        }
+      ],
+      "sol": "Setting the change in the debt‑to‑GDP ratio to zero (Δd = 0) for a stable debt path gives 0 = (r – g) d – p. Rearranging yields p = (r – g) d. This primary surplus exactly offsets the automatic increase in the debt ratio when the nominal interest rate exceeds nominal GDP growth. If r > g, a positive primary surplus is required; if g > r, a primary deficit can be compatible with a falling debt ratio. The formula p* = (r – g) d is therefore the debt‑stabilising primary balance."
+    },
+    {
+      "id": 5032,
+      "text": "Which of the following is NOT one of the three pillars of an inflation‑targeting regime as described in the lesson?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Explicit quantitative inflation target with tolerance band",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Central‑bank instrument independence",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Fixed exchange‑rate peg",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "High transparency and accountability through inflation reports",
+          "c": false
+        }
+      ],
+      "sol": "The lesson defines inflation targeting by three pillars: (1) an explicit quantitative inflation target, usually a point target with a symmetric tolerance band; (2) central‑bank instrument independence to set the short‑term policy rate; and (3) a high degree of transparency and accountability, implemented through regular inflation reports and parliamentary testimony. A fixed exchange‑rate peg is an alternative nominal anchor, not a pillar of inflation targeting. Hence the fixed exchange‑rate peg is the correct choice."
+    },
+    {
+      "id": 5033,
+      "text": "The Shapiro‑Stiglitz efficiency‑wage (no‑shirking) condition requires specification of which two parameters?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Detection probability and effort cost",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Vacancy‑posting cost and matching elasticity",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Discount rate and depreciation rate",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Wage elasticity and unemployment benefit",
+          "c": false
+        }
+      ],
+      "sol": "In the Shapiro‑Stiglitz model, workers choose effort to avoid being caught shirking. The no‑shirking condition equates the expected cost of shirking (probability of detection multiplied by the penalty, which is the loss of the wage rent) to the disutility of effort. Therefore the condition explicitly requires the detection probability and the effort cost (or disutility of effort). The other pairs belong to the DMP matching framework or to general macro parameters, not to the Shapiro‑Stiglitz no‑shirking condition."
+    },
+    {
+      "id": 5034,
+      "text": "When calculating an incremental cost‑effectiveness ratio (ICER) for a health intervention, the lesson recommends discounting future costs and health effects at what rate?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0 %",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "3 %",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "5 %",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "10 %",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that a common mistake is calculating an ICER without discounting future costs and health effects at the recommended 3 % rate. Standard practice in cost‑effectiveness analysis, including the WHO‑CHOICE guidelines, applies a 3 % annual discount rate to both costs and health outcomes (QALYs or DALYs) to reflect time preference. Using a zero discount rate overstates long‑term benefits, while higher rates (5 % or 10 %) are not the recommended default for health‑technology assessment."
+    },
+    {
+      "id": 5035,
+      "text": "According to the 15th Finance Commission’s recommendation cited in the lesson, the general‑government debt‑to‑GDP target to be achieved by 2025‑26 is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "40 %",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "50 %",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "60 %",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "70 %",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly mentions that the 15th Finance Commission recommended a glide path to a 60 % general‑government debt‑to‑GDP ratio by 2025‑26, with annual borrowing ceilings for the Centre and States linked to nominal GDP growth. This target replaces the earlier 14th Finance Commission trajectory and is a key benchmark in India’s fiscal consolidation framework under the FRBM Act."
     }
   ],
   "opt-history/paper1": [
