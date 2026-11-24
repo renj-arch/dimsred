@@ -1,10 +1,51 @@
 {
- "generatedAt": "2026-11-24T19:08:14.318Z",
+ "generatedAt": "2026-11-24T19:15:37.706Z",
  "lessonsAudited": 1,
- "flagged": 0,
- "applied": 0,
- "modelCalls": 4,
+ "flagged": 4,
+ "applied": 1,
+ "modelCalls": 2,
  "modelFailures": 1,
  "deadlineHit": false,
- "problems": []
+ "problems": [
+  {
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2 .",
+   "problem": "The formula for the difference between compound and simple interest over two years is missing the exponent; it should be squared.",
+   "correction": "CI – SI = P (R/100)^2 .",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing exponent; correction adds square, correct formula for 2-year CI-SI difference.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "PV = X [1 – (1 + r) - n] / r",
+   "problem": "The exponent -n is missing on (1+r); it should be (1+r)^{-n}.",
+   "correction": "PV = X [1 – (1 + r)^{-n}] / r",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing negative exponent; correction adds (1+r)^{-n}, standard PV annuity formula.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "X = P r / [1 – (1 + r) - n]",
+   "problem": "The exponent -n is missing on (1+r); it should be (1+r)^{-n}.",
+   "correction": "X = P r / [1 – (1 + r)^{-n}]",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing negative exponent; correction adds (1+r)^{-n}, standard loan payment formula.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
+   "quote": "because each payment has one extra period of discounting",
+   "problem": "In an annuity due, payments are made at the beginning of each period, so they have one less period of discounting compared to an ordinary annuity, not one extra.",
+   "correction": "because each payment has one less period of discounting",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Annuity due payments occur at period start, reducing discounting periods by one vs ordinary annuity. Original quote incorrectly states 'extra'.",
+   "applied": true
+  }
+ ]
 }
