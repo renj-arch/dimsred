@@ -216,6 +216,9 @@ jobs:
           EXPAND_THIN_THRESHOLD: '6000'
           EXPAND_DEPTH_TARGET_WORDS: '20000'
           EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
+          # Carry the focus into the slice, so a focus=upsc lane keeps asking
+          # the expander for UPSC-only work instead of the whole site.
+          EXPAND_SKIP_EXAMS: ${{ (github.event.inputs.focus || 'all') == 'upsc' && 'neet,jee,ctet,gate,agniveer,rbi,cgl,nda,cds,clat,english,apfc,ibps-po,sbi-clerk,ssc-gd,rrb-station-master' || '' }}
         run: |
           KEYS=$(node scripts/course-lane.js --lane 2 --lanes 4 --limit 20)
           if [ -z "$KEYS" ]; then
@@ -223,7 +226,7 @@ jobs:
             exit 0
           fi
           for i in 1 2 3; do
-            if gh workflow run expand-course-c.yml --ref main -f keys="$KEYS" -f per_run=20; then
+            if gh workflow run expand-course-c.yml --ref main -f keys="$KEYS" -f per_run=20 -f focus=${{ github.event.inputs.focus || 'all' }}; then
               echo "Queued the next course-deepen run (starts when this run completes)"
               exit 0
             fi
