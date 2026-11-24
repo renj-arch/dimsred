@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-23T23:41:58.642Z",
+  "updatedAt": "2026-11-24T09:00:35.101Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -30709,6 +30709,1058 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-23T23:41:58.634Z"
+    },
+    {
+      "id": "8423456fd85f6f11",
+      "exam": "nda",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "NDA Practice Set 13",
+      "paperPath": "nda/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "A fair coin is tossed 4 times. The probability of getting at least one head is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/16",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7/8",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "3/4",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "15/16",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total outcomes = 2^4 = 16",
+        "Probability of no heads (all tails) = (1/2)^4 = 1/16",
+        "Probability of at least one head = 1 - 1/16 = 15/16"
+      ],
+      "verifierCheck": "The total number of outcomes when a fair coin is tossed 4 times is 2^4 = 16. The probability of getting at least one head is 1 minus the probability of getting no heads (all tails). The probability of all tails is (1/2)^4 = 1/16. Therefore, the desired probability is 1 - 1/16 = 15/16, which corresponds to option D.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Complement Rule",
+          "idea": "subtract all-tails probability from 1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Probability of all tails = (1/2)^4 = 1/16",
+            "P(at least one head) = 1 - 1/16 = 15/16"
+          ]
+        },
+        {
+          "name": "Binary Pattern",
+          "idea": "treat tosses as bits; exclude all-zero pattern",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Each toss is a bit: H=1, T=0",
+            "At least one head means not all zeros",
+            "All-zero pattern occurs once in 16",
+            "Probability = 15/16"
+          ]
+        },
+        {
+          "name": "Direct Count",
+          "idea": "count total outcomes minus the single all-tails case",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Total outcomes = 2^4 = 16",
+            "Only one outcome has no heads (TTTT)",
+            "Favorable outcomes = 16 - 1 = 15",
+            "Probability = 15/16"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:54:25.111Z"
+    },
+    {
+      "id": "c79b6ec97a943c92",
+      "exam": "upsc",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "UPSC Civil Services Practice Set 16",
+      "paperPath": "upsc/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 1,
+      "section": "CSAT",
+      "question": "The difference between compound interest and simple interest on a certain sum for 2 years at 10% per annum is ₹100. Find the principal sum.",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹5,000",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "₹10,000",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "₹15,000",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹20,000",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let principal = P. Simple interest for 2 years at 10% = P * 0.10 * 2 = 0.2P.",
+        "Compound interest for 2 years at 10% compounded annually: Amount = P(1.10)^2 = 1.21P, so CI = 0.21P.",
+        "Difference = CI - SI = 0.21P - 0.2P = 0.01P.",
+        "Given difference = ₹100, so 0.01P = 100.",
+        "Solve: P = 100 / 0.01 = 10,000.",
+        "Option B matches ₹10,000."
+      ],
+      "verifierCheck": "Let principal be P. Simple interest for 2 years at 10% = P × 10/100 × 2 = 0.2P. Compound interest = P(1+10/100)^2 - P = P(1.21) - P = 0.21P. Difference = 0.21P - 0.2P = 0.01P = 100 ⇒ P = 100/0.01 = 10,000. Hence principal is ₹10,000, which corresponds to option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Difference Formula",
+          "idea": "Use direct 2-year CI-SI formula",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Diff = P × (r/100)² for 2 years",
+            "Plug r=10%, diff=100 → P = 100 / 0.01 = 10000"
+          ]
+        },
+        {
+          "name": "Percent Shortcut",
+          "idea": "Diff equals 1% of principal at 10% for 2 years",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "At 10% for 2 years, CI-SI = 1% of P",
+            "So 1% of P = 100 → P = 100 × 100 = 10000"
+          ]
+        },
+        {
+          "name": "Option Back-Check",
+          "idea": "Verify each option with quick interest calc",
+          "kind": "estimate",
+          "seconds": 10,
+          "steps": [
+            "Take option B: P=10000",
+            "SI = 10000×10×2/100 = 2000",
+            "CI = 10000×(1.1²-1) = 2100",
+            "Diff = 2100-2000 = 100 ✓"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:54:55.102Z"
+    },
+    {
+      "id": "47484a03ef852ed9",
+      "exam": "ctet",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "CTET Practice Set 16",
+      "paperPath": "ctet/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "A Class III student identifies a square correctly when its sides are horizontal and vertical. However, when the same square is rotated by 45 degrees, the student insists it is a 'diamond' and not a square. According to Van Hiele's levels of geometric thinking, this student is operating at which level?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Level 0: Visualization",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Level 1: Analysis",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Level 2: Informal Deduction",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Level 3: Deduction",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall Van Hiele levels of geometric thinking.",
+        "Note that the student recognizes a square only in standard orientation and calls a rotated square a 'diamond'.",
+        "This indicates classification by visual appearance rather than properties.",
+        "Level 0 (Visualization) is characterized by recognition based on overall shape and orientation."
+      ],
+      "verifierCheck": "The student recognizes a square only in its standard orientation (horizontal/vertical sides) and fails to identify it when rotated 45°, calling it a 'diamond' instead. This behavior indicates reliance on visual appearance rather than geometric properties, which is characteristic of Van Hiele Level 0 (Visualization). At Level 1 (Analysis), students would identify the shape by its properties (four equal sides, four right angles) regardless of orientation.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Level 0 Keyword Link",
+          "idea": "Keyword 'visualization' matches orientation dependence",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Link 'diamond' label to visual orientation",
+            "Associate with Van Hiele Level 0 name: Visualization",
+            "Choose option A"
+          ]
+        },
+        {
+          "name": "Property Absence Check",
+          "idea": "No property use eliminates higher levels",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Observe student does not use side/angle properties",
+            "Eliminate Levels 1 (analysis), 2 (informal deduction), 3 (deduction)",
+            "Only Level 0 remains"
+          ]
+        },
+        {
+          "name": "Visual Cue Match",
+          "idea": "Student relies on orientation, not properties → Level 0",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Spot that rotated square is called 'diamond'",
+            "Recall Level 0: shapes recognized by visual look only",
+            "Match behavior to Visualization level"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:55:21.102Z"
+    },
+    {
+      "id": "ec9155b0914608e8",
+      "exam": "nda",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "NDA Practice Set 13",
+      "paperPath": "nda/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 2,
+      "section": "Mathematics",
+      "question": "The distance between the parallel planes 2x - 3y + 6z = 5 and 4x - 6y + 12z = 15 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5/7",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1/7",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5/14",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "10/7",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Verify planes are parallel: normal vectors (2,-3,6) and (4,-6,12) are scalar multiples.",
+        "Rewrite second plane with same normal coefficients: divide 4x-6y+12z=15 by 2 to get 2x-3y+6z=7.5.",
+        "Apply distance formula for parallel planes Ax+By+Cz=D1 and Ax+By+Cz=D2: distance = |D1-D2|/√(A²+B²+C²).",
+        "Compute: |5 - 7.5| = 2.5; √(2²+(-3)²+6²) = √49 = 7.",
+        "Distance = 2.5/7 = 5/14.",
+        "Match with option C."
+      ],
+      "verifierCheck": "The planes are 2x-3y+6z=5 and 4x-6y+12z=15. The second plane divided by 2 gives 2x-3y+6z=7.5. The distance between parallel planes ax+by+cz=d1 and ax+by+cz=d2 is |d1-d2|/√(a²+b²+c²). Here a=2,b=-3,c=6, d1=5, d2=7.5. √(4+9+36)=7. Distance = |5-7.5|/7 = 2.5/7 = 5/14.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Scale & Subtract",
+          "idea": "Make normals identical by scaling, then apply distance formula",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Divide 2nd plane by 2: 2x - 3y + 6z = 7.5",
+            "Constants: 5 and 7.5, difference = 2.5",
+            "Normal magnitude: √(2²+(-3)²+6²) = 7",
+            "Distance = 2.5 / 7 = 5/14"
+          ]
+        },
+        {
+          "name": "Direct Distance Formula",
+          "idea": "Use formula for parallel planes after normalizing coefficients",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "Rewrite planes as 2x-3y+6z-5=0 and 4x-6y+12z-15=0",
+            "Divide second by 2: 2x-3y+6z-7.5=0",
+            "Apply |D1-D2|/√(A²+B²+C²) = |-5+7.5|/7 = 2.5/7",
+            "Simplify: 5/14"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:56:09.136Z"
+    },
+    {
+      "id": "565170b216c1b67a",
+      "exam": "upsc",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "UPSC Civil Services Practice Set 16",
+      "paperPath": "upsc/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 2,
+      "section": "CSAT",
+      "question": "A line graph shows the average monthly rainfall (in mm) in City X from Jan to Jun: Jan‑80, Feb‑95, Mar‑110, Apr‑130, May‑120, Jun‑100. In which month does the rainfall increase most sharply compared to the previous month?",
+      "options": [
+        {
+          "label": "A",
+          "text": "February",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "March",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "April",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "May",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "List monthly rainfall values: Jan=80, Feb=95, Mar=110, Apr=130, May=120, Jun=100",
+        "Calculate month-over-month increases: Feb-Jan=15, Mar-Feb=15, Apr-Mar=20, May-Apr=-10, Jun-May=-20",
+        "Identify the largest positive increase: 20 mm in April"
+      ],
+      "verifierCheck": "The month-over-month increases are: Feb: 95-80=15, Mar: 110-95=15, Apr: 130-110=20, May: 120-130=-10, Jun: 100-120=-20. The maximum increase is 20 mm in April.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Max Jump",
+          "idea": "Spot the biggest upward jump by scanning pairs",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Pair consecutive months: Jan-Feb, Feb-Mar, Mar-Apr, Apr-May, May-Jun",
+            "Note increases: 15,15,20,-,-",
+            "Largest increase is 20 from Mar to Apr",
+            "Answer April"
+          ]
+        },
+        {
+          "name": "Delta Scan",
+          "idea": "Compute month-to-month differences and pick the largest positive",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "List rainfall: 80,95,110,130,120,100",
+            "Subtract each from next: +15,+15,+20,-10,-20",
+            "Identify max positive: +20 at Apr",
+            "Select April"
+          ]
+        },
+        {
+          "name": "Slope Spot",
+          "idea": "Visually estimate steepest rising segment on the graph",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Imagine points plotted Jan to Jun",
+            "Look for steepest upward slope",
+            "Segment Mar-Apr rises 20 mm in one month, others less",
+            "Conclude April"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:56:36.418Z"
+    },
+    {
+      "id": "2be28b054773cb8d",
+      "exam": "nda",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "NDA Practice Set 13",
+      "paperPath": "nda/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "If f(x) = x³ + 2x² - 5x + 7, what is f'(1)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Differentiate f(x) = x^3 + 2x^2 - 5x + 7 to get f'(x) = 3x^2 + 4x - 5.",
+        "Evaluate f'(1) = 3(1)^2 + 4(1) - 5 = 3 + 4 - 5 = 2."
+      ],
+      "verifierCheck": "The derivative of f(x) = x³ + 2x² - 5x + 7 is f'(x) = 3x² + 4x - 5. Evaluating at x = 1 gives f'(1) = 3(1)² + 4(1) - 5 = 3 + 4 - 5 = 2, which corresponds to option D.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Coefficient-Exponent Sum",
+          "idea": "f'(1) equals sum of exponent times coefficient",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Write terms with exponents: 1x³, 2x², -5x¹, 7x⁰",
+            "Multiply each coefficient by its exponent: 3, 4, -5, 0",
+            "Add: 3+4-5=2"
+          ]
+        },
+        {
+          "name": "Power Rule",
+          "idea": "Differentiate termwise then substitute",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Differentiate: f'(x)=3x²+4x-5",
+            "Evaluate at x=1: 3+4-5=2"
+          ]
+        },
+        {
+          "name": "Horner's Scheme",
+          "idea": "Evaluate polynomial and derivative together",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Horner for f at 1: coeffs 1,2,-5,7 → f(1)=5",
+            "Derivative via Horner: bring down 1, then 1*1+2=3, 3*1+(-5)=-2, -2*1+7=5",
+            "Derivative coefficients: 1, 1*1+3=4, 4*1+(-2)=2 → f'(1)=2"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:57:04.232Z"
+    },
+    {
+      "id": "f6f51c8dde1c4514",
+      "exam": "upsc",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "UPSC Civil Services Practice Set 16",
+      "paperPath": "upsc/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 3,
+      "section": "CSAT",
+      "question": "She is proficient ______ French.",
+      "options": [
+        {
+          "label": "A",
+          "text": "in",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "at",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "on",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "with",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Identify the correct preposition that follows 'proficient' in standard English usage.",
+        "Select the option that matches 'in'."
+      ],
+      "verifierCheck": "The adjective 'proficient' typically collocates with the preposition 'in' when referring to a language or field of knowledge (e.g., 'proficient in French', 'proficient in mathematics'). While 'proficient at' can be used with gerunds (e.g., 'proficient at speaking French'), and 'proficient with' is used for tools or instruments, the direct object 'French' as a language requires 'in'. Corpus data and standard grammar references confirm 'proficient in' as the correct choice for languages.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Collocation Recall",
+          "idea": "Fixed phrase 'proficient in' for languages/skills",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall phrase: proficient in French",
+            "Select A"
+          ]
+        },
+        {
+          "name": "Preposition Rule",
+          "idea": "Adjective 'proficient' governs 'in' for domains",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify adjective: proficient",
+            "Apply rule: proficient + in + skill/language",
+            "Select A"
+          ]
+        },
+        {
+          "name": "Elimination",
+          "idea": "Test each option for natural fit",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Test 'proficient at' → specific tasks only",
+            "Test 'proficient on/with' → unnatural",
+            "Remaining 'proficient in' → correct",
+            "Select A"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:57:21.170Z"
+    },
+    {
+      "id": "9fa0cd9c256ce79d",
+      "exam": "nda",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "NDA Practice Set 13",
+      "paperPath": "nda/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "What is the unit digit of (7^95 + 3^58)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "6",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Find unit digit pattern for powers of 7: 7,9,3,1 repeating every 4.",
+        "Compute 95 mod 4 = 3, so unit digit of 7^95 is 3.",
+        "Find unit digit pattern for powers of 3: 3,9,7,1 repeating every 4.",
+        "Compute 58 mod 4 = 2, so unit digit of 3^58 is 9.",
+        "Add unit digits: 3 + 9 = 12, unit digit is 2.",
+        "Match with option B."
+      ],
+      "verifierCheck": "Unit digit of 7^95: cycle of 7 is 7,9,3,1; 95 mod 4 = 3 => unit digit 3. Unit digit of 3^58: cycle of 3 is 3,9,7,1; 58 mod 4 = 2 => unit digit 9. Sum = 3+9=12 => unit digit 2.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Modular Arithmetic",
+          "idea": "Compute each term modulo 10 using Euler's theorem",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "7^4 ≡ 1 (mod 10) → 7^95 = 7^(4·23+3) ≡ 7^3 ≡ 343 ≡ 3 (mod 10)",
+            "3^4 ≡ 1 (mod 10) → 3^58 = 3^(4·14+2) ≡ 3^2 ≡ 9 (mod 10)",
+            "Sum mod 10: 3 + 9 = 12 ≡ 2 (mod 10)",
+            "Answer B"
+          ]
+        },
+        {
+          "name": "Cycle Shortcut",
+          "idea": "Use 4-length cycles for unit digits",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "7^n unit digits cycle: 7,9,3,1 (period 4)",
+            "95 mod 4 = 3 → 7^95 unit digit = 3",
+            "3^n unit digits cycle: 3,9,7,1 (period 4)",
+            "58 mod 4 = 2 → 3^58 unit digit = 9",
+            "Add: 3 + 9 = 12 → unit digit 2",
+            "Answer B"
+          ]
+        },
+        {
+          "name": "Pattern Memory",
+          "idea": "Recall memorized cycles for 7 and 3",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Memorize: 7^n ends in 7,9,3,1 repeating; 3^n ends in 3,9,7,1 repeating",
+            "95 ÷ 4 remainder 3 → 7^95 ends in 3",
+            "58 ÷ 4 remainder 2 → 3^58 ends in 9",
+            "3 + 9 = 12 → unit digit 2",
+            "Answer B"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:58:08.167Z"
+    },
+    {
+      "id": "88189f91c971274f",
+      "exam": "upsc",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "UPSC Civil Services Practice Set 16",
+      "paperPath": "upsc/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 4,
+      "section": "CSAT",
+      "question": "A train 150 m long crosses a platform 250 m long in 20 seconds. What is the speed of the train in km/h?",
+      "options": [
+        {
+          "label": "A",
+          "text": "54 km/h",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "72 km/h",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "60 km/h",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "90 km/h",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total distance = train length + platform length = 150 m + 250 m = 400 m",
+        "Time taken = 20 seconds",
+        "Speed in m/s = distance / time = 400 m / 20 s = 20 m/s",
+        "Convert m/s to km/h: multiply by 3.6 → 20 × 3.6 = 72 km/h"
+      ],
+      "verifierCheck": "The train must cover its own length plus the platform length: 150 m + 250 m = 400 m. At 20 seconds, speed = 400/20 = 20 m/s. Converting to km/h: 20 × 3.6 = 72 km/h.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Instant m/s to km/h",
+          "idea": "Recognize 20 m/s equals 72 km/h directly",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Total distance 400 m in 20 s gives 20 m/s",
+            "Recall 1 m/s = 3.6 km/h, so 20 m/s = 72 km/h"
+          ]
+        },
+        {
+          "name": "Total Distance Shortcut",
+          "idea": "Combine lengths, divide by time, convert with 3.6",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Add train and platform lengths: 150+250=400 m",
+            "Divide by time: 400/20=20 m/s",
+            "Multiply by 3.6: 20×3.6=72 km/h"
+          ]
+        },
+        {
+          "name": "Fraction Cancel",
+          "idea": "Convert units in one fraction using 3600/1000",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "Write speed = (150+250) m / 20 s",
+            "Multiply by 3600/1000 = 3.6",
+            "Compute: 400/20 × 3.6 = 20 × 3.6 = 72"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:58:40.435Z"
+    },
+    {
+      "id": "9c8ea32252995146",
+      "exam": "nda",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "NDA Practice Set 13",
+      "paperPath": "nda/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 5,
+      "section": "Mathematics",
+      "question": "A number is divisible by 9 if the sum of its digits is divisible by 9. Using this rule, which of the following numbers is NOT divisible by 9?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5,832",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7,245",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "9,018",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "6,321",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Compute sum of digits for each option: A: 5+8+3+2=18, B: 7+2+4+5=18, C: 9+0+1+8=18, D: 6+3+2+1=12",
+        "Check divisibility by 9: 18 is divisible by 9, 12 is not",
+        "Therefore D is not divisible by 9"
+      ],
+      "verifierCheck": "For each option, sum the digits: A: 5+8+3+2=18 (divisible by 9); B: 7+2+4+5=18 (divisible); C: 9+0+1+8=18 (divisible); D: 6+3+2+1=12 (not divisible by 9). Therefore D is not divisible by 9.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Modulo 9 Shortcut",
+          "idea": "Compute digit sum modulo 9 directly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Calculate digit sum mod 9 for each: 18→0, 18→0, 18→0, 12→3",
+            "The option with non-zero mod 9 is the answer"
+          ]
+        },
+        {
+          "name": "Cross-out 9s",
+          "idea": "Eliminate digits that sum to 9 for faster mental check",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "For each number, cross out any 9 or digit pairs that sum to 9 (e.g., 5+4, 8+1, 7+2, 6+3)",
+            "Sum the remaining uncrossed digits",
+            "The number with a non-zero remainder is not divisible by 9"
+          ]
+        },
+        {
+          "name": "Digit Sum Check",
+          "idea": "Sum digits and test divisibility by 9",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Add the digits of each option: 5+8+3+2=18, 7+2+4+5=18, 9+0+1+8=18, 6+3+2+1=12",
+            "Identify which sum is not a multiple of 9",
+            "Select that option"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:59:12.148Z"
+    },
+    {
+      "id": "472140795da9425a",
+      "exam": "upsc",
+      "paperSlug": "practice-set-16",
+      "paperTitle": "UPSC Civil Services Practice Set 16",
+      "paperPath": "upsc/papers/practice-set-16.html",
+      "paperFile": "practice-set-16.json",
+      "questionNumber": 5,
+      "section": "CSAT",
+      "question": "What is the value of tan(45°)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Undefined",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "None of these",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall definition: tan(θ) = sin(θ)/cos(θ).",
+        "For θ = 45°, sin(45°) = √2/2 and cos(45°) = √2/2.",
+        "Compute tan(45°) = (√2/2) / (√2/2) = 1."
+      ],
+      "verifierCheck": "tan(45°) = sin(45°)/cos(45°) = (√2/2)/(√2/2) = 1, so the value is 1.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Unit Circle Recall",
+          "idea": "Instant recall of standard angle coordinates",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Visualize 45° on unit circle: coordinates (√2/2, √2/2)",
+            "Compute tan = y/x = (√2/2)/(√2/2)",
+            "Result is 1"
+          ]
+        },
+        {
+          "name": "45-45-90 Triangle",
+          "idea": "Use isosceles right triangle side ratios",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Sketch 45-45-90 triangle with legs = 1",
+            "Hypotenuse = √2 by Pythagoras",
+            "tan 45 = opposite/adjacent = 1/1 = 1"
+          ]
+        },
+        {
+          "name": "Sine/Cosine Ratio",
+          "idea": "tan = sin/cos, both equal at 45°",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Recall sin 45° = √2/2",
+            "Recall cos 45° = √2/2",
+            "Divide: (√2/2) ÷ (√2/2) = 1"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T08:59:33.571Z"
+    },
+    {
+      "id": "cd31ffcd86667ec9",
+      "exam": "nda",
+      "paperSlug": "practice-set-13",
+      "paperTitle": "NDA Practice Set 13",
+      "paperPath": "nda/papers/practice-set-13.html",
+      "paperFile": "practice-set-13.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "The value of the definite integral ∫₀^(π/2) sin³x / (sin³x + cos³x) dx is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "π/4",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "π/2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "π/8",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let I = ∫₀^(π/2) sin³x/(sin³x+cos³x) dx.",
+        "Substitute x → π/2 - x to get I = ∫₀^(π/2) cos³x/(sin³x+cos³x) dx.",
+        "Add the two expressions: 2I = ∫₀^(π/2) (sin³x+cos³x)/(sin³x+cos³x) dx = ∫₀^(π/2) 1 dx = π/2.",
+        "Therefore I = π/4."
+      ],
+      "verifierCheck": "Using the substitution x -> π/2 - x, we get I = ∫_0^{π/2} cos^3 x/(sin^3 x+cos^3 x) dx. Adding the original and transformed integrals gives 2I = ∫_0^{π/2} 1 dx = π/2, so I = π/4.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Known Formula Recall",
+          "idea": "Memorize that ∫₀^(π/2) sin^n x/(sin^n x+cos^n x) dx = π/4 for any n.",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recognize the integral matches the standard form with n=3.",
+            "Apply the known result: value = π/4."
+          ]
+        },
+        {
+          "name": "Complementary Sum",
+          "idea": "Note that f(x)+f(π/2-x)=1, so integral = half the interval length.",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Define f(x)=sin³x/(sin³x+cos³x).",
+            "Observe f(π/2-x)=cos³x/(cos³x+sin³x).",
+            "Then f(x)+f(π/2-x)=1.",
+            "∫₀^(π/2) f(x) dx = 1/2 ∫₀^(π/2) [f(x)+f(π/2-x)] dx = 1/2 * π/2 = π/4."
+          ]
+        },
+        {
+          "name": "Symmetry Trick",
+          "idea": "Use substitution x → π/2 - x to get a second integral, add them to simplify.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Let I = ∫₀^(π/2) sin³x/(sin³x+cos³x) dx.",
+            "Substitute x = π/2 - t → I = ∫₀^(π/2) cos³t/(cos³t+sin³t) dt.",
+            "Add the two expressions: 2I = ∫₀^(π/2) (sin³x+cos³x)/(sin³x+cos³x) dx = ∫₀^(π/2) 1 dx = π/2.",
+            "Therefore I = π/4."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-24T09:00:35.092Z"
     }
   ]
 }
