@@ -1,21 +1,31 @@
 {
- "generatedAt": "2026-11-24T16:36:58.396Z",
+ "generatedAt": "2026-11-24T16:48:49.927Z",
  "lessonsAudited": 2,
- "flagged": 1,
- "applied": 1,
+ "flagged": 2,
+ "applied": 0,
  "modelCalls": 3,
- "modelFailures": 1,
+ "modelFailures": 2,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rrb-station-master/course/maths/lesson-time-work.html",
-   "quote": "In an alternate schedule where they work on different days, you calculate the total work done in one full cycle (A's turn + B's turn).",
-   "problem": "The example given (A works Mon/Wed, B works Tue/Thu) has a 4-day cycle with two turns each, but the method describes a cycle as one turn each.",
-   "correction": "In an alternate schedule, calculate total work done in one full cycle (the repeating pattern of work days).",
+   "file": "rrb-station-master/course/reasoning/lesson-coding-decoding.html",
+   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "problem": "The example claims CAT → DDU demonstrates a +1 letter shift, but a uniform +1 shift of CAT yields DBU (C→D, A→B, T→U), not DDU.",
+   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original defines cycle as one turn each; example shows 4-day cycle with two turns each. Correction generalizes correctly.",
-   "applied": true
+   "verifierReason": "Original example CAT→DDU contradicts stated +1 shift; correction CAT→DBU aligns with rule and yields correct DOG→EPH.",
+   "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-coding-decoding.html",
+   "quote": "rotation is invertible only when s and L are coprime",
+   "problem": "A rotation (cyclic shift) is always invertible as a permutation; its inverse is rotation by L-s. The condition for the permutation to consist of a single cycle (i.e., to be a full cyclic shift) is that s and L are coprime, not for invertibility.",
+   "correction": "rotation forms a single cycle only when s and L are coprime",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original confuses invertibility (always true for permutations) with being a single cycle; correction accurately states the coprime condition for a single cycle.",
+   "applied": false
   }
  ]
 }
