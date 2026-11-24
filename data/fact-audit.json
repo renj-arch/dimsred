@@ -1,30 +1,20 @@
 {
- "generatedAt": "2026-11-24T08:31:07.651Z",
+ "generatedAt": "2026-11-24T08:36:53.832Z",
  "lessonsAudited": 2,
- "flagged": 2,
- "applied": 1,
- "modelCalls": 4,
- "modelFailures": 0,
+ "flagged": 1,
+ "applied": 0,
+ "modelCalls": 3,
+ "modelFailures": 2,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rrb-station-master/course/maths/lesson-time-work.html",
-   "quote": "remember that the numerator of the answer is usually small (like 1 or 2) and the denominator is the LCM",
-   "problem": "The denominator of the simplified fraction sum is not necessarily the LCM; it is the LCM only before simplification. For 1/10+1/15, the sum is 1/6, denominator 6, not LCM 30.",
-   "correction": "remember that the numerator of the answer is usually small (like 1 or 2) and the common denominator used is the LCM",
+   "file": "rrb-station-master/course/reasoning/lesson-coding-decoding.html",
+   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "problem": "The example claims each letter is shifted by +1, but CAT shifted by +1 would be DBU (C→D, A→B, T→U), not DDU.",
+   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original incorrectly states final denominator is LCM; correction correctly identifies LCM as common denominator used.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/maths/lesson-time-work.html",
-   "quote": "If a pipe of nominal rate R (units/hour) is closed to p % of its area, the new rate is R × (p/100).",
-   "problem": "The phrase 'closed to p % of its area' incorrectly states that the remaining open area is p%; if a pipe is closed to p% of its area, the open area is (100-p)%, so the rate should be R × (100-p)/100. The subsequent example uses open-area fraction (1 - 0.10t).",
-   "correction": "If a pipe of nominal rate R (units/hour) is open to p % of its area, the new rate is R × (p/100).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misstates: 'closed to p%' implies closed portion p%, so open is (100-p)%; correction rephrases to 'open to p%' matching formula.",
+   "verifierReason": "Original has internal contradiction: rule says +1 but example CAT→DDU violates it (A→D is +3). Correction CAT→DBU aligns with rule and yields correct DOG→EPH.",
    "applied": false
   }
  ]
