@@ -1,10 +1,31 @@
 {
- "generatedAt": "2026-11-24T09:19:00.652Z",
- "lessonsAudited": 2,
- "flagged": 0,
+ "generatedAt": "2026-11-24T09:47:40.964Z",
+ "lessonsAudited": 1,
+ "flagged": 2,
  "applied": 0,
  "modelCalls": 2,
- "modelFailures": 0,
+ "modelFailures": 1,
  "deadlineHit": false,
- "problems": []
+ "problems": [
+  {
+   "file": "sbi-clerk/course/quant/lesson-percentage.html",
+   "quote": "EAR = (1 + r/k) k – 1",
+   "problem": "Missing exponent k on the factor (1 + r/k); the correct formula for effective annual rate is (1 + r/k)^k - 1.",
+   "correction": "EAR = (1 + r/k)^k – 1",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing exponent k; correction gives standard EAR formula (1+r/k)^k-1.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-percentage.html",
+   "quote": "the factor for that year becomes (1 + r₁/100) t × (1 + r₂/100) 1‑t",
+   "problem": "Missing exponents t and 1-t on the growth factors; the correct factor is (1 + r₁/100)^t × (1 + r₂/100)^(1-t).",
+   "correction": "the factor for that year becomes (1 + r₁/100)^t × (1 + r₂/100)^(1-t)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original writes t and 1-t as multipliers; correction correctly makes them exponents.",
+   "applied": false
+  }
+ ]
 }
