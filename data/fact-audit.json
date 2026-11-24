@@ -1,51 +1,31 @@
 {
- "generatedAt": "2026-11-24T19:15:37.706Z",
+ "generatedAt": "2026-11-24T19:21:35.612Z",
  "lessonsAudited": 1,
- "flagged": 4,
- "applied": 1,
+ "flagged": 2,
+ "applied": 0,
  "modelCalls": 2,
- "modelFailures": 1,
+ "modelFailures": 0,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
-   "quote": "CI – SI = P (R/100) 2 .",
-   "problem": "The formula for the difference between compound and simple interest over two years is missing the exponent; it should be squared.",
-   "correction": "CI – SI = P (R/100)^2 .",
+   "file": "sbi-clerk/course/quant/lesson-speed-distance.html",
+   "quote": "drift = –s × t_min (downstream)",
+   "problem": "With downstream positive, drift should be +s × t_min; the minus sign contradicts the stated sign convention.",
+   "correction": "drift = s × t_min (downstream)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original missing exponent; correction adds square, correct formula for 2-year CI-SI difference.",
+   "verifierReason": "Minus sign contradicts 'downstream' label; correction fixes sign.",
    "applied": false
   },
   {
-   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
-   "quote": "PV = X [1 – (1 + r) - n] / r",
-   "problem": "The exponent -n is missing on (1+r); it should be (1+r)^{-n}.",
-   "correction": "PV = X [1 – (1 + r)^{-n}] / r",
+   "file": "sbi-clerk/course/quant/lesson-speed-distance.html",
+   "quote": "If s > b, the boat cannot cancel the drift; the minimum drift is achieved by pointing straight upstream (θ = 90°), but the boat will still be carried downstream.",
+   "problem": "Pointing straight upstream gives zero across-river component, so the boat never crosses. Minimum drift while crossing occurs at sin θ = b/s.",
+   "correction": "If s > b, the boat cannot cancel the drift; the minimum drift while crossing is achieved at sin θ = b/s, giving drift = w√(s²–b²)/b.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original missing negative exponent; correction adds (1+r)^{-n}, standard PV annuity formula.",
+   "verifierReason": "Pointing straight upstream yields zero across-component; min drift while crossing at sin θ=b/s.",
    "applied": false
-  },
-  {
-   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
-   "quote": "X = P r / [1 – (1 + r) - n]",
-   "problem": "The exponent -n is missing on (1+r); it should be (1+r)^{-n}.",
-   "correction": "X = P r / [1 – (1 + r)^{-n}]",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original missing negative exponent; correction adds (1+r)^{-n}, standard loan payment formula.",
-   "applied": false
-  },
-  {
-   "file": "sbi-clerk/course/quant/lesson-simple-interest.html",
-   "quote": "because each payment has one extra period of discounting",
-   "problem": "In an annuity due, payments are made at the beginning of each period, so they have one less period of discounting compared to an ordinary annuity, not one extra.",
-   "correction": "because each payment has one less period of discounting",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Annuity due payments occur at period start, reducing discounting periods by one vs ordinary annuity. Original quote incorrectly states 'extra'.",
-   "applied": true
   }
  ]
 }
