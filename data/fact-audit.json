@@ -1,40 +1,78 @@
 {
- "generatedAt": "2026-11-24T06:38:30.804Z",
+ "generatedAt": "2026-11-24T06:47:31.349Z",
  "lessonsAudited": 3,
- "flagged": 3,
+ "flagged": 7,
  "applied": 1,
  "modelCalls": 4,
- "modelFailures": 2,
+ "modelFailures": 5,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rbi/course/quant/lesson-percentage.html",
-   "quote": "EAR = (1 + r/k) k – 1",
-   "problem": "Missing exponent in effective annual rate formula; should be (1 + r/k)^k - 1",
-   "correction": "EAR = (1 + r/k)^k – 1",
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2",
+   "problem": "The formula for the difference between compound and simple interest over two years is missing the exponent; it should be squared, not multiplied by 2.",
+   "correction": "CI – SI = P (R/100)^2",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Original missing exponent; correction gives correct CI-SI formula for 2 years."
+  },
+  {
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2 (300 + R)/100",
+   "problem": "The formula for the difference over three years is missing the exponent on (R/100); it should be squared.",
+   "correction": "CI – SI = P (R/100)^2 (300 + R)/100",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Original missing exponent; correction gives correct CI-SI formula for 3 years."
+  },
+  {
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "PV = X [1 – (1 + r) - n] / r",
+   "problem": "The present value formula for an annuity incorrectly writes the discount factor as (1 + r) - n instead of (1 + r)^{-n}.",
+   "correction": "PV = X [1 – (1 + r)^{-n}] / r",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original missing exponent; correction adds ^k, standard EAR formula.",
+   "verifierReason": "Original uses subtraction instead of negative exponent; correction uses proper discount factor.",
    "applied": false
   },
   {
-   "file": "rbi/course/quant/lesson-percentage.html",
-   "quote": "the factor for that year becomes (1 + r₁/100) t × (1 + r₂/100) 1‑t",
-   "problem": "Mid-year rate change factor incorrectly written as multiplication by t and 1-t instead of exponentiation",
-   "correction": "the factor for that year becomes (1 + r₁/100)^t × (1 + r₂/100)^(1‑t)",
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "X = P r / [1 – (1 + r) - n]",
+   "problem": "The installment formula incorrectly writes the discount factor as (1 + r) - n instead of (1 + r)^{-n}.",
+   "correction": "X = P r / [1 – (1 + r)^{-n}]",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original uses multiplication by t; correction uses exponentiation, correct for fractional periods.",
+   "verifierReason": "Original uses subtraction instead of negative exponent; correction uses proper discount factor.",
    "applied": false
   },
   {
-   "file": "rbi/course/quant/lesson-profit-loss.html",
-   "quote": "Statement III might give the marked price and discount percentage (sufficient, as SP can be found, but CP is still needed unless markup info is also given).",
-   "problem": "Statement III is incorrectly labeled as sufficient; knowing only marked price and discount gives selling price but not cost price, so profit percentage cannot be determined without additional information.",
-   "correction": "Statement III might give the marked price and discount percentage (insufficient, as SP can be found but CP is still needed unless markup info is also given).",
+   "file": "rbi/course/quant/lesson-speed-distance.html",
+   "quote": "drift = –s × t_min (downstream)",
+   "problem": "Sign error: when the boat points straight across (θ=0°), the downstream drift is +s × t_min (downstream positive), not negative.",
+   "correction": "drift = s × t_min (downstream)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original contradicts itself: says sufficient but notes CP needed; correction correctly labels insufficient.",
+   "verifierReason": "Downstream drift positive when θ=0; original has wrong sign.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/quant/lesson-speed-distance.html",
+   "quote": "minimum drift is achieved by pointing straight upstream ( θ = 90° ), but the boat will still be carried downstream",
+   "problem": "At θ=90° the boat points straight upstream, so its across-river component is zero and it never crosses the river; the minimum drift for a successful crossing when s > b occurs at an angle θ where sin θ = b/s, not at 90°.",
+   "correction": "minimum drift for a crossing when s > b is achieved at sin θ = b/s (not θ = 90°)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "At θ=90° no crossing; min drift at sin θ=b/s for s>b.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/quant/lesson-ratio-proportion.html",
+   "quote": "the harmonic mean of times gives the correct combined time only when the work quantum is identical for each worker",
+   "problem": "The harmonic mean of times is not the combined time when workers work together; combined time is the reciprocal of the sum of rates (half the harmonic mean). The condition about identical work quantum does not make it correct.",
+   "correction": "the combined time is the reciprocal of the sum of rates, not the harmonic mean of times",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original incorrectly states harmonic mean gives combined time; correction correctly gives reciprocal of sum of rates.",
    "applied": true
   }
  ]
