@@ -1,20 +1,50 @@
 {
- "generatedAt": "2026-11-24T20:03:00.172Z",
+ "generatedAt": "2026-11-24T20:13:08.916Z",
  "lessonsAudited": 1,
- "flagged": 1,
- "applied": 1,
- "modelCalls": 1,
+ "flagged": 4,
+ "applied": 4,
+ "modelCalls": 3,
  "modelFailures": 1,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/reasoning/lesson-number-series.html",
-   "quote": "if the ratios themselves grow in a regular fashion (e.g., 2, 3, 4 …), the series is likely of the form (n+1)ⁿ or similar.",
-   "problem": "The ratio pattern 2, 3, 4 … is characteristic of factorial series (n!), not of the power-based series (n+1)ⁿ. For (n+1)ⁿ the ratios are 4.5, 7.1, 9.8 …, not consecutive integers.",
-   "correction": "if the ratios themselves are consecutive integers starting from 2, the series is likely factorial (n!) not (n+1)ⁿ.",
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "add “Q is not third left of P”",
+   "problem": "The negation of \"P sits third to the left of Q\" is incorrectly stated as \"Q is not third left of P\". The correct negation is \"P does not sit third to the left of Q\" or equivalently \"Q does not sit third to the right of P\".",
+   "correction": "add “P is not third left of Q”",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original misidentifies ratio pattern 2,3,4... as (n+1)^n; it's characteristic of n!. Correction correctly identifies factorial.",
+   "verifierReason": "Original quote misstates the negation; 'Q not third left of P' means 'P not third right of Q', not the negation of 'P third left of Q'. Correction is logically precise.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "translate to |pos(C) – pos(D)| = 3 (two empties plus the two persons)",
+   "problem": "The parenthetical explanation incorrectly states that the distance 3 comes from 'two empties plus the two persons' (which would sum to 4). The correct reasoning is that two empty seats between them means a position difference of 2+1=3.",
+   "correction": "translate to |pos(C) – pos(D)| = 3 (two empty seats between them gives difference 3)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original explanation 'two empties plus the two persons' sums to 4, but position difference is 3; correction correctly states two empty seats give difference 3.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "This creates a cycle that forces X false, Y false, Z false",
+   "problem": "The conditional cycle X→Y, Y→Z, Z→¬X forces X to be false, but does not force Y and Z to be false; Y and Z can both be true (with X false) or both false, etc.",
+   "correction": "This creates a cycle that forces X false",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claims Y,Z forced false; only X forced false. Correction accurate.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "the only pair summing to 185 is 90+95",
+   "problem": "In the set {80,85,90,95,100}, both 90+95 and 85+100 sum to 185, so it is not the only pair.",
+   "correction": "the pairs summing to 185 are 90+95 and 85+100",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Set has two pairs summing to 185; correction lists both.",
    "applied": true
   }
  ]
