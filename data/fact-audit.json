@@ -1,78 +1,30 @@
 {
- "generatedAt": "2026-11-24T06:47:31.349Z",
+ "generatedAt": "2026-11-24T06:57:36.817Z",
  "lessonsAudited": 3,
- "flagged": 7,
+ "flagged": 2,
  "applied": 1,
- "modelCalls": 4,
- "modelFailures": 5,
+ "modelCalls": 5,
+ "modelFailures": 3,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "CI – SI = P (R/100) 2",
-   "problem": "The formula for the difference between compound and simple interest over two years is missing the exponent; it should be squared, not multiplied by 2.",
-   "correction": "CI – SI = P (R/100)^2",
-   "confidence": "medium",
-   "verified": true,
-   "verifierReason": "Original missing exponent; correction gives correct CI-SI formula for 2 years."
-  },
-  {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "CI – SI = P (R/100) 2 (300 + R)/100",
-   "problem": "The formula for the difference over three years is missing the exponent on (R/100); it should be squared.",
-   "correction": "CI – SI = P (R/100)^2 (300 + R)/100",
-   "confidence": "medium",
-   "verified": true,
-   "verifierReason": "Original missing exponent; correction gives correct CI-SI formula for 3 years."
-  },
-  {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "PV = X [1 – (1 + r) - n] / r",
-   "problem": "The present value formula for an annuity incorrectly writes the discount factor as (1 + r) - n instead of (1 + r)^{-n}.",
-   "correction": "PV = X [1 – (1 + r)^{-n}] / r",
+   "file": "rbi/course/reasoning/lesson-coding-decoding.html",
+   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "problem": "The example CAT→DDU does not follow a fixed shift of +1 (C→D is +1, A→D is +3, T→U is +1), contradicting the rule that each letter is shifted by a fixed number.",
+   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original uses subtraction instead of negative exponent; correction uses proper discount factor.",
+   "verifierReason": "Original CAT→DDU inconsistent with fixed +1 shift; correction CAT→DBU fixes it.",
    "applied": false
   },
   {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "X = P r / [1 – (1 + r) - n]",
-   "problem": "The installment formula incorrectly writes the discount factor as (1 + r) - n instead of (1 + r)^{-n}.",
-   "correction": "X = P r / [1 – (1 + r)^{-n}]",
+   "file": "rbi/course/quant/lesson-time-work.html",
+   "quote": "“penalty is deducted from each worker’s share in proportion to his work” means multiply each worker’s base share by (1 – penalty fraction).",
+   "problem": "The formula allocates penalty in proportion to base share, not work. If wage rates differ, base share is not proportional to work.",
+   "correction": "“penalty is deducted from each worker’s share in proportion to his work” means each worker’s penalty = (his work/total work)×total penalty; net share = base share − penalty.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original uses subtraction instead of negative exponent; correction uses proper discount factor.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/quant/lesson-speed-distance.html",
-   "quote": "drift = –s × t_min (downstream)",
-   "problem": "Sign error: when the boat points straight across (θ=0°), the downstream drift is +s × t_min (downstream positive), not negative.",
-   "correction": "drift = s × t_min (downstream)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Downstream drift positive when θ=0; original has wrong sign.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/quant/lesson-speed-distance.html",
-   "quote": "minimum drift is achieved by pointing straight upstream ( θ = 90° ), but the boat will still be carried downstream",
-   "problem": "At θ=90° the boat points straight upstream, so its across-river component is zero and it never crosses the river; the minimum drift for a successful crossing when s > b occurs at an angle θ where sin θ = b/s, not at 90°.",
-   "correction": "minimum drift for a crossing when s > b is achieved at sin θ = b/s (not θ = 90°)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "At θ=90° no crossing; min drift at sin θ=b/s for s>b.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/quant/lesson-ratio-proportion.html",
-   "quote": "the harmonic mean of times gives the correct combined time only when the work quantum is identical for each worker",
-   "problem": "The harmonic mean of times is not the combined time when workers work together; combined time is the reciprocal of the sum of rates (half the harmonic mean). The condition about identical work quantum does not make it correct.",
-   "correction": "the combined time is the reciprocal of the sum of rates, not the harmonic mean of times",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original incorrectly states harmonic mean gives combined time; correction correctly gives reciprocal of sum of rates.",
+   "verifierReason": "Original formula allocates penalty ∝ base share, not work; correction uses work proportion.",
    "applied": true
   }
  ]
