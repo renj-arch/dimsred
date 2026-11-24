@@ -6086,6 +6086,141 @@
         }
       ],
       "sol": "A conditional \"if X then Y\" yields the contrapositive \"if not Y then not X\". When Y is proven false, the contrapositive forces X to be false. If this propagation is omitted, X stays marked as active (possible) even though it must be false. This leaves spurious antecedents in the implication graph, potentially triggering incorrect consequents later and expanding the search space with invalid branches."
+    },
+    {
+      "id": 126,
+      "text": "In a temporal evolution puzzle, a clue states 'the arrangement repeats every three steps'. What does this imply for the solving process?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The puzzle has only three distinct layers that need to be solved.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The puzzle has no solution because of periodicity.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The puzzle requires exactly three time steps to complete.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The puzzle becomes static after three steps.",
+          "c": false
+        }
+      ],
+      "sol": "The clue 'the arrangement repeats every three steps' introduces a modulo‑3 periodicity. This means the configuration at step t is identical to step t+3. Therefore, only three distinct time layers (e.g., steps 1, 2, 3) need to be solved; all other steps are determined by this cycle. The solver can reduce the problem to three linked layers, propagate constraints forward and backward within this cycle, and then extend the solution to any number of steps. This avoids solving each step independently and exploits the hidden transition rule."
+    },
+    {
+      "id": 127,
+      "text": "For a conflict‑free seating assignment around a circular table with an odd number of seats, what is the chromatic number of the seat‑proximity graph for adjacency conflicts?",
+      "options": [
+        {
+          "l": "a",
+          "t": "2",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "3",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "4",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1",
+          "c": false
+        }
+      ],
+      "sol": "In graph coloring terms, the seat‑proximity graph for adjacency on a circle has vertices for seats and edges between adjacent seats. For an even cycle, the graph is bipartite and its chromatic number χ = 2 (alternating colors). For an odd cycle, bipartiteness fails and χ = 3 because three colors are needed to avoid adjacent seats sharing a color. The lesson explicitly states: 'a circle of even size also has χ = 2, but an odd circle requires χ = 3.' Hence the correct answer is 3."
+    },
+    {
+      "id": 128,
+      "text": "When a disjunctive clue in a puzzle uses wording that permits both disjuncts to be true, what error occurs if the solver treats it as an exclusive‑or?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The solver may miss valid solutions where both disjuncts hold.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The solver will always find a unique solution.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The puzzle becomes unsolvable.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The solver must add an extra constraint.",
+          "c": false
+        }
+      ],
+      "sol": "A disjunctive clue such as 'A sits next to B or C' may allow both possibilities simultaneously (A next to B and also next to C if B and C are on either side). If the solver incorrectly assumes exclusive‑or (XOR), they would forbid the case where both disjuncts are true, potentially eliminating valid arrangements. The lesson warns: 'Assuming a disjunctive clue is exclusive‑or when the wording permits both disjuncts to be true, leading to missed solutions.' Therefore, the error is missing solutions where both hold."
+    },
+    {
+      "id": 129,
+      "text": "In the integer linear programming formulation for hybrid seating‑resource puzzles, why does solving the linear relaxation often yield an integral solution for the seating variables?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Because the seating constraints form a totally unimodular matrix (assignment polytope).",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Because the resource variables are continuous.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Because the big‑M formulation forces integrality.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Because the conflict graph is bipartite.",
+          "c": false
+        }
+      ],
+      "sol": "The seating constraints (each person exactly one seat, each seat at most one person) form an assignment problem. The constraint matrix of an assignment problem is totally unimodular, meaning the linear programming relaxation (allowing variables between 0 and 1) has extreme points that are integral. Thus solving the LP relaxation yields binary values for the seating variables without needing integer programming. The lesson states: 'the linear relaxation often yields integral extreme points because the seating constraints form a totally unimodular matrix (assignment polytope).'"
+    },
+    {
+      "id": 130,
+      "text": "What is a common mistake when a clue states that a group of persons 'sit together' without specifying their internal order?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Treating the group as a rigid block with fixed internal order, over‑constraining the puzzle.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Ignoring the group constraint entirely.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Assuming the group must be split across rows.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Applying graph coloring to the group.",
+          "c": false
+        }
+      ],
+      "sol": "When a clue says a group 'sit together' it only imposes that the members occupy consecutive seats (or adjacent positions), but does not fix their internal order. A common mistake is to treat the group as a single rigid block with a predetermined internal sequence, which adds false constraints and may make the puzzle appear unsolvable or hide valid arrangements. The lesson lists this pitfall: 'Treating a hierarchical group as a rigid block when a clue only says “sit together” without fixing internal order, causing over‑constraining.'"
     }
   ],
   "reasoning/calendar-clock": [
@@ -257829,6 +257964,114 @@
         }
       ],
       "sol": "At terminal velocity the drag force balances the weight: 6πηR v_t = mg. Solving for v_t gives v_t = mg/(6πηR). This is the standard result for a sphere in the linear (Stokes) drag regime."
+    },
+    {
+      "id": 126,
+      "text": "For a bead sliding on a smooth wire described by y = f(x), which of the following can serve as a single generalized coordinate?",
+      "options": [
+        {
+          "l": "a",
+          "t": "arc length s",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "vertical coordinate y",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "angle of the wire",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "time t",
+          "c": false
+        }
+      ],
+      "sol": "A generalized coordinate must uniquely specify the configuration of the system. For a bead constrained to a given curve, the arc length s measured along the wire (or the horizontal coordinate x) uniquely determines the bead's position. The vertical coordinate y is not single‑valued if the wire folds back, the wire angle is not defined for an arbitrary shape, and time is a parameter, not a coordinate. Hence the arc length s is a valid generalized coordinate."
+    },
+    {
+      "id": 127,
+      "text": "In the linearised small‑oscillation analysis of a double pendulum with masses m1, m2 and lengths l1, l2, the normal‑mode frequencies are given by ω² = g/l1 (1 ± √(1 + m2/m1)). Which expression corresponds to the higher frequency mode?",
+      "options": [
+        {
+          "l": "a",
+          "t": "ω² = g/l1 (1 + √(1 + m2/m1))",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "ω² = g/l1 (1 - √(1 + m2/m1))",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "ω² = g/l2 (1 + √(1 + m1/m2))",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "ω² = g/l1 (1 + m2/m1)",
+          "c": false
+        }
+      ],
+      "sol": "The two normal‑mode frequencies arise from the ± sign in the formula. The higher frequency corresponds to the plus sign because √(1 + m2/m1) > 0, making (1 + √…) larger than (1 - √…). The other options either use the minus sign, interchange lengths and masses incorrectly, or omit the square‑root term. Therefore the correct expression for the higher mode is ω² = g/l1 (1 + √(1 + m2/m1))."
+    },
+    {
+      "id": 128,
+      "text": "A particle moves in a plane with polar coordinates (r, θ) where the radius r varies with time. The transverse component of acceleration contains a Coriolis term. What is the magnitude of this Coriolis term?",
+      "options": [
+        {
+          "l": "a",
+          "t": "2 ṙ θ̇",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "r θ̈",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "ṙ²",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "r θ̇²",
+          "c": false
+        }
+      ],
+      "sol": "In polar coordinates the acceleration vector is (r̈ - r θ̇²) e_r + (r θ̈ + 2 ṙ θ̇) e_θ. The term 2 ṙ θ̇ multiplies the transverse unit vector e_θ and is identified as the Coriolis acceleration. The other options represent the radial centripetal term (r θ̇²), the radial second derivative (r̈), and the angular acceleration term (r θ̈). Hence the magnitude of the Coriolis term is 2 ṙ θ̇."
+    },
+    {
+      "id": 129,
+      "text": "In the bead‑on‑a‑rotating‑hoop problem, a hoop of radius R rotates with constant angular velocity Ω about a vertical diameter. A bead of mass m slides on the hoop. The kinetic energy acquires an explicit time‑dependent term due to the rotation. Which term appears in the kinetic energy?",
+      "options": [
+        {
+          "l": "a",
+          "t": "m R² Ω θ̇ sin²θ",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "m R² Ω² sin²θ",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "m R Ω θ̇ cosθ",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "m R² Ω θ̇ cosθ",
+          "c": false
+        }
+      ],
+      "sol": "The bead's position vector in the rotating frame includes the hoop's rotation. The velocity has a contribution Ω × r, leading to a cross term in the kinetic energy proportional to Ω θ̇. Detailed calculation yields the term m R² Ω θ̇ sin²θ. The other options either have incorrect powers of Ω, wrong trigonometric factors, or missing R². Therefore the correct term is m R² Ω θ̇ sin²θ."
     }
   ],
   "mains-gs3/disaster-management": [
@@ -291060,6 +291303,141 @@
         }
       ],
       "sol": "The RBI derives REER weights from India's merchandise trade (exports plus imports) with each partner country, averaged over a three‑year period. The basket is therefore trade‑weighted, not GDP‑weighted or equally weighted, and it does not use FDI flows. The weights are updated periodically; the latest revision (effective January 2022) shifted weight from the EU toward China and the ASEAN bloc, reflecting changing trade patterns."
+    },
+    {
+      "id": 126,
+      "text": "In a Variable Rate Reverse Repo (VRRR) auction conducted by the RBI, the cut‑off rate is determined by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "The policy repo rate announced by the RBI",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A market‑determined uniform price discovered through the auction",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "A fixed rate set by the RBI for the notified tenor",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The weighted average call rate (WACR) of the previous day",
+          "c": false
+        }
+      ],
+      "sol": "The VRRR (and VRR) operations are conducted through uniform‑price auctions where banks bid the rate at which they are willing to park funds. The RBI accepts bids up to the notified amount at a single cut‑off rate that emerges from the bidding process. This cut‑off is therefore market‑determined, not fixed by the RBI or linked to the policy repo rate or the previous day's WACR."
+    },
+    {
+      "id": 127,
+      "text": "Which of the following statements about the Prompt Corrective Action (PCA) framework for scheduled commercial banks is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It applies to NBFCs and cooperative banks in addition to scheduled commercial banks",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A bank is placed under PCA only if it breaches all three trigger parameters simultaneously",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "A single breach of any one of the trigger parameters is sufficient for placement under PCA",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The framework was first introduced in 2020 as part of COVID‑19 regulatory measures",
+          "c": false
+        }
+      ],
+      "sol": "The PCA framework, revised in 2017, is a micro‑prudential tool applicable exclusively to scheduled commercial banks. It specifies trigger points for capital, asset quality and profitability. Breach of any single trigger invokes the framework; simultaneous breach of all three is not required. The framework predates 2020 and does not extend to NBFCs or cooperative banks."
+    },
+    {
+      "id": 128,
+      "text": "Under the RBI's Scale‑Based Regulation for Non‑Bank Financial Companies, entry into the Top Layer is decided by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "The asset size of the NBFC alone",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Supervisory judgment of systemic risk posed by the NBFC",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "A minimum net owned fund threshold prescribed for the layer",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The credit rating assigned by external rating agencies",
+          "c": false
+        }
+      ],
+      "sol": "The Scale‑Based Regulation classifies NBFCs into Base, Middle, Upper and Top layers. While size and other quantitative metrics determine entry into the lower layers, the Top Layer is populated based on the RBI's supervisory assessment of the systemic risk an NBFC poses, not merely on its asset size, net owned fund or external credit rating."
+    },
+    {
+      "id": 129,
+      "text": "The Price Stabilisation Fund (PSF) primarily targets which category of commodities?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Cereals and pulses",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Perishable horticulture commodities",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Industrial raw materials",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Petroleum products",
+          "c": false
+        }
+      ],
+      "sol": "The PSF was created to intervene in the market for perishable horticulture commodities such as onions, tomatoes and potatoes, where price volatility is high and buffer stock operations are impractical. In contrast, buffer stock operations under the Essential Commodities Act cover cereals and pulses. The PSF does not deal with industrial raw materials or petroleum products."
+    },
+    {
+      "id": 130,
+      "text": "As per the Fifteenth Finance Commission's horizontal devolution formula, the weight assigned to 'Income Distance' is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "15%",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "45%",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "12.5%",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "10%",
+          "c": false
+        }
+      ],
+      "sol": "The Fifteenth Finance Commission assigned the following weights in its horizontal distribution formula: Population (2011) 15%, Area 15%, Forest and Ecology 10%, Income Distance 45%, Demographic Performance 12.5%, and Tax Effort 2.5%. Income Distance, measured as the per capita GSDP distance from the highest‑income state, receives the largest weight of 45%."
     }
   ],
   "gs/geography-physical-prelims": [
@@ -293797,6 +294175,87 @@
         }
       ],
       "sol": "Article 254(2) provides that if a State law on a Concurrent subject is reserved for the President's consideration and receives his assent, it prevails in that State notwithstanding a Central law. However, this prevalence is not absolute: Parliament can subsequently enact a law overriding the State law. The doctrine of repugnancy applies only to Concurrent List conflicts (not Union List), and 'pith and substance' determines legislative competence, not repugnancy resolution. Option A is incorrect because it omits Parliament's power to override. Option B is incorrect as the State law does not become void; it prevails until overridden. Option D is incorrect because repugnancy does apply and the mechanism resolves the conflict."
+    },
+    {
+      "id": 125,
+      "text": "What is the required voting threshold for the Goods and Services Tax Council to take decisions, as per Article 279A?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Simple majority of the total membership of the Council.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Two-thirds majority of the weighted votes cast.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Three-fourths weighted majority of the votes cast, with the Centre's vote weight being one-third.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Consensus among all State Finance Ministers and the Union Finance Minister.",
+          "c": false
+        }
+      ],
+      "sol": "Article 279A stipulates that GST Council decisions require a three-fourths weighted majority of votes cast. The voting structure assigns a weight of one-third to the Centre's vote and two-thirds collectively to the States' votes. This weighted voting mechanism reflects the federal character of the GST regime. A simple majority or two-thirds majority is incorrect, and decisions are not based on consensus but on this specific weighted majority formula."
+    },
+    {
+      "id": 126,
+      "text": "Which of the following accurately defines 'strategic disinvestment' as per the current policy framework?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Sale of minority stake in a CPSE without transfer of management control.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Transfer of management control along with sale of majority stake (typically 51% or more) in a CPSE.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Complete privatization of all Central Public Sector Enterprises in non-strategic sectors.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Disinvestment proceeds utilized exclusively for capital expenditure in infrastructure.",
+          "c": false
+        }
+      ],
+      "sol": "Strategic disinvestment is specifically defined as the sale of a substantial portion of the Government's shareholding in a CPSE, typically 51% or more, accompanied by the transfer of management control to a strategic buyer. This distinguishes it from minority stake sales (where the Government retains control) or token disinvestment. The policy identifies strategic sectors where minimal Government presence is retained, and strategic disinvestment is the mode of exit in non-strategic sectors or reduction of stake in strategic ones."
+    },
+    {
+      "id": 127,
+      "text": "The Right to Information (Amendment) Act, 2019 altered the service conditions of the Chief Information Commissioner and Information Commissioners by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Increasing their fixed tenure from five years to seven years and equating salaries to Supreme Court judges.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Removing the statutory fixed tenure of five years (or age 65) and the statutory equivalence to the Election Commissioners, empowering the Central Government to prescribe terms via rules.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Mandating that appointments be made solely by a collegium comprising the Prime Minister, Leader of Opposition, and Chief Justice of India.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Abolishing the Central Information Commission and transferring its functions to the Lokpal.",
+          "c": false
+        }
+      ],
+      "sol": "The RTI Amendment Act, 2019 removed the statutory provisions that guaranteed a fixed five-year tenure (or until age 65) and status/salary equivalence to the Chief Election Commissioner/Election Commissioners for the CIC and ICs. Instead, it empowered the Central Government to notify rules determining their tenure, salaries, allowances, and other service conditions. This change raised significant concerns regarding the institutional autonomy and independence of the Information Commissions, and petitions challenging it are pending before the Supreme Court."
     }
   ],
   "ga/industrial-relations": [
