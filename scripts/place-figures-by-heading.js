@@ -46,13 +46,20 @@ function bestInsertIndex(html, fig) {
     .toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 4);
   const set = new Set(words);
   let best = null;
+  const heads = [];
   for (const m of html.matchAll(/<h([23])\b[^>]*>([\s\S]*?)<\/h\1>/gi)) {
     const text = m[2].replace(/<[^>]+>/g, ' ').toLowerCase();
     let score = 0;
     for (const w of text.split(/[^a-z0-9]+/)) if (set.has(w)) score++;
+    heads.push({ score, at: m.index + m[0].length });
     if (score >= 2 && (!best || score > best.score)) best = { score, at: m.index + m[0].length };
   }
-  return best ? best.at : null;
+  if (best) return best.at;
+  // Fallback: the closest heading (score 1) rather than leaving it at the top.
+  const one = heads.filter((h) => h.score >= 1).sort((a, b) => b.score - a.score)[0];
+  if (one) return one.at;
+  // Last resort: the second section, i.e. after the intro section.
+  return heads.length > 1 ? heads[1].at : (heads.length ? heads[0].at : null);
 }
 
 let moved = 0, kept = 0, noMatch = 0;
