@@ -1512,7 +1512,13 @@ async function main() {
   // Hubs first, then fair-share the hand and generated depth lanes. The hubs
   // are the pages readers land on, so they must not wait behind a generated
   // lesson in the interleave.
-  var handPages = DEEPEN ? collectHandPages() : [];
+  // Focus mode (EXPAND_SKIP_EXAMS set, e.g. focus=upsc) means "this exam only".
+  // The hand-built root pages (physics/chemistry/math, 204 lessons) are not part
+  // of any exam, and they used to consume more than half of every focused
+  // lane's queue -- which is why a "UPSC sprint" spent most of its model calls
+  // deepening algebraic geometry. They remain in the unfocused (focus=all)
+  // cron chain, where they belong.
+  var handPages = (DEEPEN && !SKIP_EXAMS.length) ? collectHandPages() : [];
   var hubs = handPages.filter(function (g) { return g.priority === 0; });
   var handRest = handPages.filter(function (g) { return g.priority !== 0; });
   var deeps = DEEPEN ? hubs.concat(interleave(handRest, collectDeepen())) : [];
