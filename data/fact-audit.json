@@ -1,41 +1,21 @@
 {
- "generatedAt": "2026-11-24T19:56:38.450Z",
+ "generatedAt": "2026-11-24T20:03:00.172Z",
  "lessonsAudited": 1,
- "flagged": 3,
- "applied": 0,
- "modelCalls": 3,
- "modelFailures": 0,
+ "flagged": 1,
+ "applied": 1,
+ "modelCalls": 1,
+ "modelFailures": 1,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
-   "quote": "strict signs ( or )",
-   "problem": "Parentheses are not strict inequality signs; the strict signs are > and <.",
-   "correction": "strict signs (> or <)",
+   "file": "sbi-clerk/course/reasoning/lesson-number-series.html",
+   "quote": "if the ratios themselves grow in a regular fashion (e.g., 2, 3, 4 …), the series is likely of the form (n+1)ⁿ or similar.",
+   "problem": "The ratio pattern 2, 3, 4 … is characteristic of factorial series (n!), not of the power-based series (n+1)ⁿ. For (n+1)ⁿ the ratios are 4.5, 7.1, 9.8 …, not consecutive integers.",
+   "correction": "if the ratios themselves are consecutive integers starting from 2, the series is likely factorial (n!) not (n+1)ⁿ.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Parentheses are not inequality signs; strict signs are > and <. Correction accurate.",
-   "applied": false
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
-   "quote": "a − k , a − k ≤ x ≤ a + k , x a + k , and x ≤ a − k or x ≥ a + k respectively",
-   "problem": "The first and third compound interval expressions are missing inequality operators, making them mathematically incorrect and incomplete.",
-   "correction": "a − k < x < a + k , a − k ≤ x ≤ a + k , x < a − k or x > a + k , and x ≤ a − k or x ≥ a + k respectively",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original missing operators in first/third expressions; correction supplies standard interval forms accurately.",
-   "applied": false
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-inequality.html",
-   "quote": "replace C in the third inequality with its upper bound A + B to get E ≥ 2(A + B) − D",
-   "problem": "Substituting an upper bound for C into E ≥ 2C − D does not yield a lower bound on E; because 2C−D is increasing in C, an upper bound on C gives an upper bound on 2C−D, not a lower bound on E.",
-   "correction": "Using C's upper bound gives an upper bound on 2C−D, not a lower bound on E.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original incorrectly substitutes upper bound into lower bound; correction correctly states it gives upper bound on 2C-D, not lower bound on E.",
-   "applied": false
+   "verifierReason": "Original misidentifies ratio pattern 2,3,4... as (n+1)^n; it's characteristic of n!. Correction correctly identifies factorial.",
+   "applied": true
   }
  ]
 }
