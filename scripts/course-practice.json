@@ -5951,6 +5951,141 @@
         }
       ],
       "sol": "In SAT/SMT encoding, each possible assignment becomes a Boolean variable (e.g., x_A,3 for \"A at position 3\", y_B,Doctor for \"B is Doctor\"). A conditional clue is an implication that activates only when the antecedent holds. It is encoded as the clause (¬x_A,3 ∨ y_B,Doctor), which is logically equivalent to x_A,3 → y_B,Doctor. A permanent binary constraint would force the relation even when A is not at position 3, which is incorrect. Global cardinality and parity constraints address different aspects."
+    },
+    {
+      "id": 121,
+      "text": "In a multi-stage puzzle, three conditionals form a cycle: if A then B, if B then C, and if C then A. What does this cycle force about the truth values of the antecedents?",
+      "options": [
+        {
+          "l": "a",
+          "t": "All three antecedents must be true",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "All three antecedents must be false",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Either all three are true or all three are false",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "No definite conclusion can be drawn",
+          "c": false
+        }
+      ],
+      "sol": "The three conditionals create a directed cycle in the implication graph. In Boolean logic, a cycle of implications (A→B, B→C, C→A) means A, B, and C are logically equivalent: each implies the others. Therefore they must share the same truth value. The only consistent assignments are all true or all false. Recognising this hidden equivalence lets the solver collapse the chain into a single binary choice, drastically reducing the search space."
+    },
+    {
+      "id": 122,
+      "text": "A scheduling puzzle includes the clue \"A and B cannot overlap\". Before branching on the disjunction, which propagation technique can tighten the earliest and latest start bounds of the tasks?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Forward propagation only",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Backward propagation only",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Edge-finding rules",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Unit propagation",
+          "c": false
+        }
+      ],
+      "sol": "The non-overlap clue creates a disjunctive constraint: either A finishes before B starts or B finishes before A starts. Before case splitting, the solver applies edge-finding rules, which examine the cumulative resource profile and the relative ordering of tasks to deduce tighter bounds on start times. Edge-finding can prove that one of the two orders is impossible, thereby narrowing the temporal windows without explicit branching."
+    },
+    {
+      "id": 123,
+      "text": "A double-row puzzle states \"the two rows are mirror images\". Which single anchoring constraint is sufficient to break the row-wise reflection symmetry?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Fix the rightmost person of the second row",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Fix the leftmost person of the first row",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Fix the middle person of both rows",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No anchoring is needed",
+          "c": false
+        }
+      ],
+      "sol": "A mirror-image clue introduces a reflection symmetry that swaps the two rows while reversing left-right order. This symmetry has order 2. To break it, we must fix a variable that is not mapped onto itself by the reflection. Fixing the leftmost person of the first row selects a unique representative from each orbit of the group action, eliminating the duplicate solution branches caused by the row-swap symmetry."
+    },
+    {
+      "id": 124,
+      "text": "In a hybrid seating-resource puzzle, after listing all feasible seat-person pairs from the seating sub-problem, what is the correct next step to verify resource feasibility?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Assign resources greedily to the highest-ranked persons",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Build a bipartite graph between persons and resource units and compute a maximum matching",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Ignore resource constraints and solve seating completely first",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Randomly pair persons with resources until all capacities are filled",
+          "c": false
+        }
+      ],
+      "sol": "The coupling clues link seats to resources, so resource assignment depends on which person occupies which seat. After obtaining the support matrix of feasible seat-person pairs, we construct a bipartite graph where persons are connected to resource units they are eligible for. Running a maximum-matching algorithm (e.g., Hopcroft-Karp) determines whether a perfect matching exists. If not, any seat-person pair that participates in no perfect matching is pruned, and the process iterates to a fixed point."
+    },
+    {
+      "id": 125,
+      "text": "What is the direct consequence of failing to propagate the contrapositive of a conditional clue during puzzle solving?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Antecedents that should be false remain active",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Consequents become true prematurely",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The implication graph becomes acyclic",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "All literals become unassigned",
+          "c": false
+        }
+      ],
+      "sol": "A conditional \"if X then Y\" yields the contrapositive \"if not Y then not X\". When Y is proven false, the contrapositive forces X to be false. If this propagation is omitted, X stays marked as active (possible) even though it must be false. This leaves spurious antecedents in the implication graph, potentially triggering incorrect consequents later and expanding the search space with invalid branches."
     }
   ],
   "reasoning/calendar-clock": [
@@ -105926,6 +106061,114 @@
         }
       ],
       "sol": "The lesson provides specific percentages: \"In academic prose, the passive accounts for approximately 25% of finite clauses, whereas in conversation it drops below 5%. In news reportage, the passive appears in about 15% of clauses.\" Academic prose (25%) is higher than news reportage (15%) and far higher than conversation (<5%). Fiction is not given a passive percentage, but the data clearly identifies academic prose as the register with the highest passive frequency."
+    },
+    {
+      "id": 119,
+      "text": "In indirect speech with a past reporting verb, how does the modal stack \"might have been able to\" change?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It remains \"might have been able to\".",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "It becomes \"might have had been able to\".",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "It becomes \"could have been able to\".",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It becomes \"might have been able to have\".",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that when a modal perfect or modal stack appears, the modal \"might\" has no past form, so it stays \"might\". The perfect aspect \"have been able\" already marks anteriority, so no further backshift occurs. Therefore the whole stack \"might have been able to\" remains unchanged. Options B, C, and D each introduce an illicit additional auxiliary or an incorrect modal substitution, violating the backshift rules for modal stacking described in the text."
+    },
+    {
+      "id": 120,
+      "text": "Which sentence correctly passivises an ergative verb?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The window broke by the wind.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The window was broken by the wind.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The window broke.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The window was broke by the wind.",
+          "c": false
+        }
+      ],
+      "sol": "Ergative verbs like \"break\" have both transitive and intransitive uses. Only the transitive alternant admits a passive. \"The window was broken by the wind\" is the passive of the transitive \"The wind broke the window\", with the patient promoted to subject and the agent in a by‑phrase. Option A uses the intransitive past tense \"broke\" with a by‑phrase, which is ungrammatical. Option C is the intransitive active, not a passive. Option D uses the ungrammatical form \"was broke\". Thus only option B correctly applies the passive to the transitive alternant of the ergative verb."
+    },
+    {
+      "id": 121,
+      "text": "Which indirect‑speech version correctly reports the performative verb \"order\" in standard British usage?",
+      "options": [
+        {
+          "l": "a",
+          "t": "He ordered that I leave the room.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "He ordered me to leave the room.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "He ordered me that I leave the room.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "He ordered me leaving the room.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that performative verbs have specific subcategorisation frames. \"Order\" takes a to‑infinitive complement (\"ordered me to leave\") in standard British English; a that‑clause is not standard. The performative itself is not backshifted. Option B follows the required frame. Option A uses a that‑clause, which the text marks as non‑standard. Option C mixes the frames incorrectly. Option D uses a gerund complement, which is not licensed by \"order\". Therefore option B is the only correct transformation."
+    },
+    {
+      "id": 122,
+      "text": "In the following discourse, which continuation best maintains topical cohesion? \"The committee reviewed the proposal. ______ was approved unanimously.\"",
+      "options": [
+        {
+          "l": "a",
+          "t": "They approved it unanimously.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The proposal was approved unanimously.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The committee approved it unanimously.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It approved unanimously.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explains that passive voice promotes the current topic (the proposal) to subject position, preserving cohesion. After the first sentence, the proposal is the established topic. Option B uses a passive with \"The proposal\" as subject, keeping it topical. Option A introduces a new agent topic (\"They\"), breaking continuity. Option C repeats the agent \"The committee\" as subject, shifting focus away from the proposal. Option D uses \"It\" as subject with an active verb, which is ungrammatical and does not maintain the proposal as topic. Hence option B is the discourse‑appropriate choice."
     }
   ],
   "vocabulary/vocabulary": [
@@ -228899,6 +229142,141 @@
         }
       ],
       "sol": "Photoelectron spectroscopy measures binding energies of electrons. Spin–orbit coupling splits subshells with orbital angular momentum l>0 into two components (j = l±½). s orbitals have l=0, so they show a single peak. p orbitals (l=1) split into p1/2 and p3/2, appearing as a doublet. d and f orbitals show similar but more complex splitting. Therefore spin–orbit splitting is observed for p orbitals as a doublet."
+    },
+    {
+      "id": 119,
+      "text": "For a carbon atom with the electron configuration 2p², the ground term symbol under LS coupling is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "³P₀",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "³P₁",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "³P₂",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "¹D₂",
+          "c": false
+        }
+      ],
+      "sol": "For the 2p² configuration, LS coupling yields the terms ³P, ¹D, and ¹S. Hund's first rule selects the maximum multiplicity, giving the triplet ³P (S=1). The second rule chooses the maximum L for that multiplicity, which is L=1 (P). Since the p subshell is less than half‑filled (2 electrons out of 6), Hund's third rule gives J = |L−S| = |1−1| = 0. Hence the ground term is ³P₀."
+    },
+    {
+      "id": 120,
+      "text": "In jj coupling, the correct level notation for the Tl⁺ ion (6s²6p¹) is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "(6s²)(6p₁/₂)₁/₂",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "(6s²)(6p₃/₂)₃/₂",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "(6s²)(6p₁/₂)₃/₂",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "(6s²)(6p₃/₂)₁/₂",
+          "c": false
+        }
+      ],
+      "sol": "In jj coupling each electron's orbital and spin angular momenta combine to give j = l ± ½. For the single 6p electron (l=1) the possible j values are ½ and 3/2. The 6s² core is closed and contributes zero angular momentum. For a less‑than‑half‑filled subshell the level with the smallest j lies lowest in energy, so the ground level has j = ½. The total J of the atom equals this j, giving the notation (6s²)(6p₁/₂)₁/₂."
+    },
+    {
+      "id": 121,
+      "text": "Which of the following electric dipole transitions is allowed under LS‑coupling selection rules?",
+      "options": [
+        {
+          "l": "a",
+          "t": "³P₁ → ³S₁",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "¹S₀ → ¹S₀",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "³P₀ → ³P₀",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "³P₁ → ¹D₂",
+          "c": false
+        }
+      ],
+      "sol": "LS‑coupling electric dipole rules require ΔS=0, ΔL=0,±1 (L=0↔0 forbidden), ΔJ=0,±1 (J=0↔0 forbidden), and a parity change. Option A: ³P₁ (L=1, S=1, J=1, odd parity) → ³S₁ (L=0, S=1, J=1, even parity) satisfies all conditions. Option B violates L=0↔0. Option C violates J=0↔0. Option D violates ΔS=0."
+    },
+    {
+      "id": 122,
+      "text": "The approximate quantum defect δ_f for the f orbital in alkali metals is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1.35",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "0.85",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "0.01",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.001",
+          "c": true
+        }
+      ],
+      "sol": "Quantum defects measure core penetration of the Rydberg electron. For alkali metals the defects are δ_s ≈ 1.3–1.4, δ_p ≈ 0.8–0.9, δ_d ≈ 0.01, and δ_f ≈ 0.001. The f orbital has the smallest radial extent near the nucleus, so its defect is closest to zero, about 0.001."
+    },
+    {
+      "id": 123,
+      "text": "A necessary condition for autoionization of a discrete excited state is that the state and the ionization continuum share the same:",
+      "options": [
+        {
+          "l": "a",
+          "t": "principal quantum number",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "parity and total angular momentum J",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "spin multiplicity",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "orbital angular momentum L",
+          "c": false
+        }
+      ],
+      "sol": "Autoionization occurs when a discrete state lies above the ionization threshold and can decay by ejecting an electron. The transition matrix element vanishes unless the initial discrete state and the final continuum state have identical symmetry. In atoms this means they must have the same total angular momentum J and the same parity. If J or parity differ, autoionization into that continuum is forbidden."
     }
   ],
   "mains-gs1/architecture-heritage": [
@@ -242898,6 +243276,141 @@
         }
       ],
       "sol": "For a rolling body on a moving incline the relative acceleration is s̈ = (g sinα − a_p cosα) / (1 + I/(mR²)). For a solid cylinder I = ½ mR², so 1 + I/(mR²) = 3/2. Hence s̈ = (2/3)(g sinα − a_p cosα). This matches the expression derived in the lesson for a prescribed horizontal acceleration a_p of the plane."
+    },
+    {
+      "id": 121,
+      "text": "Two blocks of masses 2 kg and 3 kg are connected by a light spring on a smooth horizontal surface. An external force of 10 N acts on the 2 kg block. The acceleration of the centre of mass of the system is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1 m/s²",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2 m/s²",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "3 m/s²",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "4 m/s²",
+          "c": false
+        }
+      ],
+      "sol": "The centre‑of‑mass acceleration equals the net external force divided by the total mass of the system. The only external horizontal force is 10 N. Total mass = 2 kg + 3 kg = 5 kg. Hence a_cm = 10 N / 5 kg = 2 m/s². Internal spring forces cancel in pairs and do not affect the COM motion."
+    },
+    {
+      "id": 122,
+      "text": "A block of mass m slides down a rough incline of length L and angle θ. The coefficient of kinetic friction varies as μ = αx, where x is the distance measured from the top. The work done by friction during the slide is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "-α mg cosθ L²/2",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "-α mg cosθ L²",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "-α mg sinθ L²/2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "-α mg sinθ L²",
+          "c": false
+        }
+      ],
+      "sol": "Friction force at position x is f = μ N = αx (mg cosθ). The work done by friction is W = -∫₀ᴸ f dx = -∫₀ᴸ αx mg cosθ dx = -α mg cosθ [x²/2]₀ᴸ = -α mg cosθ L²/2. The negative sign indicates energy loss."
+    },
+    {
+      "id": 123,
+      "text": "A particle of mass 1 kg moves with velocity 2 m/s eastward in a reference frame rotating with angular velocity 0.5 rad/s about a vertical axis. The magnitude of the Coriolis force acting on the particle is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1 N",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2 N",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "4 N",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.5 N",
+          "c": false
+        }
+      ],
+      "sol": "In a rotating frame the Coriolis force is F_c = -2m (Ω × v'). Its magnitude is 2 m Ω v' sinφ. Here Ω is vertical, v' is horizontal eastward, so φ = 90° and sinφ = 1. Substituting m = 1 kg, Ω = 0.5 rad/s, v' = 2 m/s gives F_c = 2 × 1 × 0.5 × 2 = 2 N."
+    },
+    {
+      "id": 124,
+      "text": "A car of mass m travels on a banked curve of radius r and banking angle θ. The coefficient of static friction is μ_s. For high speed the friction acts down the bank. The maximum speed without skidding is given by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "v² = rg (tanθ + μ_s)/(1 - μ_s tanθ)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "v² = rg (tanθ - μ_s)/(1 + μ_s tanθ)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "v² = rg (μ_s + tanθ)/(1 + μ_s tanθ)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "v² = rg (μ_s - tanθ)/(1 - μ_s tanθ)",
+          "c": false
+        }
+      ],
+      "sol": "Resolving forces on a banked curve with friction down the bank yields the no‑skid condition v²/r = g (tanθ + μ_s)/(1 - μ_s tanθ). Multiplying by r gives v² = rg (tanθ + μ_s)/(1 - μ_s tanθ). This corresponds to the upper sign in the formula for high speed."
+    },
+    {
+      "id": 125,
+      "text": "A sphere of mass m and radius R falls through a viscous fluid of viscosity η. At low Reynolds number the drag force follows Stokes' law F_d = 6πηR v. The terminal velocity of the sphere is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "mg/(6πηR)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "6πηR/mg",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "mg/(3πηR)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "3πηR/mg",
+          "c": false
+        }
+      ],
+      "sol": "At terminal velocity the drag force balances the weight: 6πηR v_t = mg. Solving for v_t gives v_t = mg/(6πηR). This is the standard result for a sphere in the linear (Stokes) drag regime."
     }
   ],
   "mains-gs3/disaster-management": [
@@ -249097,6 +249610,141 @@
         }
       ],
       "sol": "For a DC motor the applied voltage V equals the sum of back emf E_b (= kω) and the resistive drop I R. Electrical input power is V I = (kω + I R)I = kω I + I²R. The term kω I equals the mechanical power τ ω (since τ = k I). The remaining term I²R represents the power dissipated as heat in the armature resistance, i.e., the copper loss. This loss accounts for the difference between input electrical power and output mechanical power."
+    },
+    {
+      "id": 120,
+      "text": "A bar of length L, cross‑sectional area A and Young’s modulus E is subjected to a gradually applied force F. The strain energy stored in the bar is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "F²L/(AE)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "F²L/(2AE)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "FL/(2AE)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "F²L/(4AE)",
+          "c": false
+        }
+      ],
+      "sol": "The strain energy stored in a linearly elastic bar under a gradually applied force F equals the work done by the force. The elongation δ = FL/(AE). Since the force increases linearly from 0 to F, the average force is F/2, so work = (F/2) × δ = F²L/(2AE). This matches the expression U = ½ Fδ = F²L/(2AE)."
+    },
+    {
+      "id": 121,
+      "text": "In Lagrangian mechanics, the generalized force Q_k corresponding to a conservative force derived from a potential V(q) is given by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Q_k = ∂V/∂q_k",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Q_k = -∂V/∂q_k",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Q_k = ∂T/∂q_k",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Q_k = d/dt(∂T/∂q̇_k)",
+          "c": false
+        }
+      ],
+      "sol": "In Lagrangian mechanics, the virtual work of conservative forces is δW = -δV. For a virtual displacement δq_k, δW = Σ Q_k δq_k = - Σ (∂V/∂q_k) δq_k. Since the δq_k are independent, the generalized force is Q_k = -∂V/∂q_k. This relation ensures that the Lagrange equations reproduce the work–energy theorem for conservative systems."
+    },
+    {
+      "id": 122,
+      "text": "In an AC circuit, the apparent power S is related to the real power P and reactive power Q by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "S = P + Q",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "S = P - Q",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "S = √(P² + Q²)",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "S = P² + Q²",
+          "c": false
+        }
+      ],
+      "sol": "Apparent power S is the magnitude of the complex power S = P + jQ, where P = VI cos φ is real power and Q = VI sin φ is reactive power. The magnitude is S = √(P² + Q²). It cannot be obtained by simple arithmetic addition because P and Q are orthogonal components in the complex plane. The power factor is cos φ = P/S."
+    },
+    {
+      "id": 123,
+      "text": "Which overpotential becomes significant at high current densities due to depletion of reactants at the electrode surface?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Activation overpotential",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Ohmic overpotential",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Concentration overpotential",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Thermodynamic overpotential",
+          "c": false
+        }
+      ],
+      "sol": "Concentration overpotential arises when the rate of reactant supply to the electrode surface cannot keep up with the consumption at high current densities. This creates a concentration gradient and a corresponding potential loss described by the Nernst equation. Activation overpotential dominates at low currents, ohmic overpotential is proportional to current, but concentration overpotential becomes significant only at high currents where mass transport limits the reaction."
+    },
+    {
+      "id": 124,
+      "text": "For steady incompressible flow in a pipe, the Darcy–Weisbach formula gives the head loss h_L due to friction as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "h_L = f (L/D) v²/(2g)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "h_L = f (D/L) v²/(2g)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "h_L = f (L/D) v/(2g)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "h_L = f (L/D) v²/g",
+          "c": false
+        }
+      ],
+      "sol": "For steady, incompressible flow in a pipe, the Darcy–Weisbach equation gives the head loss due to friction as h_L = f (L/D) (v²/(2g)), where f is the Darcy friction factor, L pipe length, D hydraulic diameter, v average velocity, and g gravitational acceleration. This term appears in the extended Bernoulli equation to account for mechanical energy dissipated as heat by viscous shear."
     }
   ],
   "mains-gs3/inflation-prices": [
@@ -274860,6 +275508,141 @@
         }
       ],
       "sol": "The lesson highlights a common confusion: the Capital Conservation Buffer (CCB) is a fixed 2.5 per cent Common Equity Tier 1 (CET1) requirement applicable to all banks at all times. The Countercyclical Capital Buffer (CCyB), by contrast, is a variable buffer that the regulator (RBI) activates only when systemic risk builds up (e.g., excessive credit growth) and can be set between 0 and 2.5 per cent. Thus, the CCB is permanent and uniform, while the CCyB is discretionary and cyclical."
+    },
+    {
+      "id": 121,
+      "text": "Under the Reserve Bank of India Act, how is a tie in the Monetary Policy Committee resolved?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The Deputy Governor casts the deciding vote",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Governor has a casting vote",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The external members collectively decide",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The matter is referred to the Central Board",
+          "c": false
+        }
+      ],
+      "sol": "The MPC consists of six members. Decisions are taken by simple majority. In the event of a tie, the Governor, who is the ex‑officio chairperson, exercises a casting vote to break the deadlock. This rule is explicitly provided in the RBI Act as amended by the Finance Act, 2016. The Deputy Governor does not have a separate casting vote, nor do the external members or the Central Board intervene in a tied vote."
+    },
+    {
+      "id": 122,
+      "text": "Which statement correctly describes the forward guidance introduced by the MPC in February 2021?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It commits the Committee to a fixed numeric path for the repo rate",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It is a qualitative indication of the likely policy stance conditional on inflation outlook",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It binds future MPC meetings to the announced rate trajectory",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It replaces the publication of the Monetary Policy Report",
+          "c": false
+        }
+      ],
+      "sol": "The forward guidance adopted in February 2021 is qualitative, not a binding numeric commitment. The MPC indicates the expected direction of the policy repo rate over the next few quarters conditional on the evolving inflation outlook. It does not bind future committees, nor does it substitute the Monetary Policy Report, which continues to be published twice a year with staff projections and alternative scenarios."
+    },
+    {
+      "id": 123,
+      "text": "What is the primary purpose of the Market Stabilisation Scheme (MSS) securities issued by the RBI?",
+      "options": [
+        {
+          "l": "a",
+          "t": "To finance the Central Government's fiscal deficit",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "To absorb surplus liquidity arising from large capital inflows",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "To conduct routine day‑to‑day open market operations",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "To provide long‑term funding to commercial banks",
+          "c": false
+        }
+      ],
+      "sol": "The MSS was introduced in 2004 under the RBI Act specifically to sterilise the monetary impact of large foreign exchange purchases by the RBI. When the RBI buys foreign currency, it injects rupee liquidity; MSS securities are issued to absorb this surplus liquidity. They are distinct from government market borrowing and from routine OMOs, which are used for day‑to‑day liquidity management."
+    },
+    {
+      "id": 124,
+      "text": "Which of the following is true about the Financial Stability and Development Council (FSDC)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It is a statutory body with enforcement powers over macro‑prudential measures",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Its decisions are advisory but carry significant weight",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It is chaired by the RBI Governor",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Its sub‑committee on financial stability is headed by the Finance Secretary",
+          "c": false
+        }
+      ],
+      "sol": "The FSDC is a non‑statutory coordination body; its decisions are advisory in nature but carry considerable weight because it brings together all financial sector regulators. It is chaired by the Union Finance Minister, not the RBI Governor. The Sub‑Committee on Financial Stability, which conducts macro‑prudential surveillance, is chaired by the RBI Governor, not the Finance Secretary."
+    },
+    {
+      "id": 125,
+      "text": "In the construction of the RBI's 36‑currency Real Effective Exchange Rate (REER), which weighting scheme is used?",
+      "options": [
+        {
+          "l": "a",
+          "t": "GDP‑weighted shares of partner countries",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Trade‑weighted shares based on merchandise exports plus imports averaged over three years",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Equal weights for all 36 currencies",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Weights derived from foreign direct investment flows",
+          "c": false
+        }
+      ],
+      "sol": "The RBI derives REER weights from India's merchandise trade (exports plus imports) with each partner country, averaged over a three‑year period. The basket is therefore trade‑weighted, not GDP‑weighted or equally weighted, and it does not use FDI flows. The weights are updated periodically; the latest revision (effective January 2022) shifted weight from the EU toward China and the ASEAN bloc, reflecting changing trade patterns."
     }
   ],
   "gs/geography-physical-prelims": [
@@ -277192,6 +277975,141 @@
         }
       ],
       "sol": "The text states that the Committee on External Affairs examines treaty texts before ratification, while the Public Accounts Committee reviews financial implications. The Committee on Subordinate Legislation scrutinizes delegated legislation, and the Business Advisory Committee manages parliamentary business. Therefore, option B is correct."
+    },
+    {
+      "id": 120,
+      "text": "According to the Supreme Court's ruling in Keshav Singh v. Speaker, Legislative Assembly (1965) and Raja Ram Pal v. Hon'ble Speaker, Lok Sabha (2007), the power of a House to punish for contempt is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Absolute and not subject to any judicial review.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Subject to judicial review on grounds of mala fide, excess of jurisdiction, or violation of natural justice.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Governed by the Contempt of Courts Act, 1971.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Exercisable only with the prior consent of the President.",
+          "c": false
+        }
+      ],
+      "sol": "The Supreme Court in Keshav Singh (1965) held that the power to punish for contempt is a judicial function subject to judicial review on grounds of mala fide, excess of jurisdiction, or violation of natural justice. In Raja Ram Pal (2007), the Court clarified that while the House is the sole judge of its privileges, the judiciary can examine whether the claimed privilege exists under the Constitution and whether the procedure followed was fair. Option A is incorrect because the power is not absolute. Option C is incorrect because the Contempt of Courts Act, 1971 does not apply to parliamentary contempt. Option D is incorrect as no such presidential consent is required."
+    },
+    {
+      "id": 121,
+      "text": "Which of the following statements correctly reflects the principle laid down by the Supreme Court in S.R. Bommai v. Union of India (1994) regarding the imposition of President's Rule under Article 356?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The Governor's report recommending President's Rule is immune from judicial scrutiny.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Governor may summon or prorogue the State Legislative Assembly at his own discretion in all circumstances.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The imposition of President's Rule is subject to judicial review and the Governor's report must be based on objective material.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The Governor's discretionary powers under Article 163(1) are wide and include policy decisions.",
+          "c": false
+        }
+      ],
+      "sol": "In S.R. Bommai v. Union of India (1994), the Supreme Court held that the imposition of President's Rule under Article 356 is subject to judicial review. The Court mandated that the Governor's report recommending President's Rule must be based on objective material and not on political whim. Option A is incorrect because the report is not immune from scrutiny. Option B is incorrect because Nabam Rebia (2016) held the Governor cannot summon or prorogue the Assembly unilaterally without the Council of Ministers' aid and advice, except when the government has lost majority. Option D is incorrect because Article 163(1) limits discretionary powers to specific constitutional exceptions."
+    },
+    {
+      "id": 122,
+      "text": "With reference to the Finance Commission constituted under Article 280 of the Constitution, which of the following statements is correct?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The recommendations of the Finance Commission are binding on the President of India.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Finance Commission's recommendations are advisory in nature and the President may modify them before implementation.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The 15th Finance Commission recommended a vertical devolution of 50% of the divisible pool to States.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The Terms of Reference of the Finance Commission are determined by the Parliament.",
+          "c": false
+        }
+      ],
+      "sol": "The Finance Commission's recommendations are advisory in nature; the President is not bound by them and may modify them before implementation. This is a common misconception tested in examinations. Option A states the opposite of the correct legal position. Option C invents a specific statistic (50%) not mentioned in the provided lesson text. Option D is incorrect because the Terms of Reference are specified by the President, not Parliament."
+    },
+    {
+      "id": 123,
+      "text": "Regarding the maintainability of Public Interest Litigation (PIL) in Indian courts, which of the following propositions is accurate based on current judicial practice?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Any citizen can file a PIL on any matter and the Court is bound to entertain it.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Supreme Court requires a genuine public interest for maintaining a PIL and may impose costs for frivolous petitions.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The doctrine of locus standi has been completely abolished in Indian jurisprudence.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Public Interest Litigation can only be filed by a person who has suffered a direct legal injury.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson text explicitly warns against the misconception that every Public Interest Litigation is automatically maintainable. The Supreme Court now requires the petitioner to demonstrate a genuine public interest and has the power to impose costs on petitioners filing frivolous or vexatious PILs. This reflects the evolution of locus standi from a strict 'person aggrieved' rule to a relaxed but regulated regime. Option A is incorrect because the Court screens PILs for genuineness. Option C is incorrect because locus standi has been relaxed, not abolished. Option D describes the traditional rule of locus standi which PIL jurisprudence has departed from."
+    },
+    {
+      "id": 124,
+      "text": "Under Article 254(2) of the Constitution, if a State law on a Concurrent subject receives Presidential assent after being reserved, what is the effect of such assent?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The State law prevails over the Central law in that State and Parliament cannot override it subsequently.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The State law becomes void ab initio as the Central law occupies the field.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "The State law prevails only in that State and can be overridden by a subsequent Central law.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "The doctrine of repugnancy does not apply and both laws operate concurrently without conflict.",
+          "c": false
+        }
+      ],
+      "sol": "Article 254(2) provides that if a State law on a Concurrent subject is reserved for the President's consideration and receives his assent, it prevails in that State notwithstanding a Central law. However, this prevalence is not absolute: Parliament can subsequently enact a law overriding the State law. The doctrine of repugnancy applies only to Concurrent List conflicts (not Union List), and 'pith and substance' determines legislative competence, not repugnancy resolution. Option A is incorrect because it omits Parliament's power to override. Option B is incorrect as the State law does not become void; it prevails until overridden. Option D is incorrect because repugnancy does apply and the mechanism resolves the conflict."
     }
   ],
   "ga/industrial-relations": [
