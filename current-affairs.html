@@ -9604,6 +9604,9 @@ var fact = q.fact || q.solution || q.explanation || '';
         function _isUpscSubject(subject) {
             var s = (subject || '').trim();
             if (UPSC_SUBJECTS[s] === 1) return true;
+            // Optional subjects (Malayalam Literature, Anthropology, ...) are
+            // part of the exam even though they are not GS subjects.
+            if (/Literature$/i.test(s) || /^Optional\b/i.test(s)) return true;
             return false;
         }
         // Relevance tiers for the UPSC-only tab: core GS subjects first (the
@@ -9768,6 +9771,10 @@ var fact = q.fact || q.solution || q.explanation || '';
         // 'medium'|'low') into the data.
         function _upscRelevance(q) {
             if (!q) return 'low';
+            // An optional-subject question is exam material, not trivia; it must
+            // not be tagged "Low relevance" just because the optional is not a
+            // GS subject.
+            if (/Literature$/i.test(String(q.subject || '')) || /^Optional\b/i.test(String(q.subject || ''))) return 'medium';
             var v = ExamScope.classify(q);
             return v.tier;
         }

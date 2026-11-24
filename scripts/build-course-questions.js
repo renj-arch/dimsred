@@ -109,6 +109,15 @@ function subjectFor(rel) {
   if (/[\\/](quant|maths)[\\/]/i.test(rel)) return 'Quantitative Aptitude';
   if (/[\\/]english[\\/]/i.test(rel)) return 'English';
   if (/[\\/](gk|gs|legal)[\\/]/i.test(rel)) return 'General Awareness';
+  // Optional subjects are part of the exam; label them so they are not lumped
+  // into "General Knowledge" and judged irrelevant.
+  const opt = rel.match(/[\\/]opt-([a-z-]+)[\\/]/i);
+  if (opt) {
+    const langs = { malayalam: 1, tamil: 1, kannada: 1, telugu: 1, hindi: 1, urdu: 1, bengali: 1, sanskrit: 1, assamese: 1, gujarati: 1, marathi: 1, odia: 1, punjabi: 1, nepali: 1, sindhi: 1, konkani: 1, manipuri: 1, bodo: 1, dogri: 1, maithili: 1, santali: 1, kashmiri: 1 };
+    const name = opt[1].toLowerCase();
+    const label = name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    return langs[name] ? label + ' Literature' : label;
+  }
   return 'General Knowledge';
 }
 
