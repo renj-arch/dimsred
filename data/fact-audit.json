@@ -1,60 +1,50 @@
 {
- "generatedAt": "2026-11-24T08:00:48.927Z",
+ "generatedAt": "2026-11-24T08:07:42.564Z",
  "lessonsAudited": 2,
- "flagged": 5,
- "applied": 4,
- "modelCalls": 5,
- "modelFailures": 0,
+ "flagged": 4,
+ "applied": 2,
+ "modelCalls": 4,
+ "modelFailures": 1,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rrb-station-master/course/maths/lesson-mensuration.html",
-   "quote": "By angles, a triangle may be acute (all angles 90°).",
-   "problem": "An acute triangle has all angles less than 90°, not equal to 90°. A triangle with all angles 90° is impossible (sum would be 270°).",
-   "correction": "By angles, a triangle may be acute (all angles < 90°).",
+   "file": "rrb-station-master/course/maths/lesson-number-system.html",
+   "quote": "LCM is always larger than the largest number",
+   "problem": "LCM can be equal to the largest number (e.g., LCM(2,4)=4). The statement should say 'greater than or equal to'.",
+   "correction": "LCM is always greater than or equal to the largest number",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original wrong: acute triangle has angles <90°, not 90°. Correction accurate.",
+   "verifierReason": "Original says 'larger than', but LCM can equal max; correction '≥' is correct.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/maths/lesson-number-system.html",
+   "quote": "0 ≤ r b",
+   "problem": "The inequality is missing the '<' symbol; the remainder theorem states 0 ≤ r < b.",
+   "correction": "0 ≤ r < b",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing '<'; remainder theorem requires 0 ≤ r < b; correction fixes it.",
    "applied": false
   },
   {
-   "file": "rrb-station-master/course/maths/lesson-data-interpretation.html",
-   "quote": "The area between the two curves represents the inter‑quartile range.",
-   "problem": "The interquartile range (IQR) is the difference between the third and first quartiles (Q3−Q1), a horizontal distance on the x‑axis, not the area between the two ogive curves.",
-   "correction": "The inter‑quartile range is the horizontal distance between Q1 and Q3.",
+   "file": "rrb-station-master/course/maths/lesson-percentage.html",
+   "quote": "Equating P (1 + r/100)ⁿ = P (1 + R/100)ⁿ (where R is the simple rate per period)",
+   "problem": "The equation incorrectly uses the compound interest formula for simple interest; simple interest for n periods is P(1 + nR/100), not P(1+R/100)ⁿ.",
+   "correction": "Equating P(1+r/100)ⁿ = P(1+nR/100) gives the equivalent simple rate R per period.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "IQR is Q3-Q1, a horizontal distance; area between curves is incorrect.",
-   "applied": true
+   "verifierReason": "Original uses compound formula for simple interest; correction uses correct simple interest formula.",
+   "applied": false
   },
   {
-   "file": "rrb-station-master/course/maths/lesson-data-interpretation.html",
-   "quote": "the curve passes through the midpoint of each class interval",
-   "problem": "An ogive (cumulative frequency curve) passes through the upper class boundaries (for a less‑than ogive) or lower class boundaries (for a more‑than ogive), not the midpoints. Midpoints are used for frequency polygons.",
-   "correction": "the curve passes through the upper class boundaries (less‑than ogive)",
+   "file": "rrb-station-master/course/maths/lesson-number-system.html",
+   "quote": "N is a multiple of 9 iff its digit sum (or digital root) is 9.",
+   "problem": "The condition for divisibility by 9 is that the digit sum is a multiple of 9, not necessarily exactly 9. The digital root is 9 for non-zero multiples, but the digit sum can be 9, 18, 27, etc.",
+   "correction": "N is a multiple of 9 iff its digit sum is a multiple of 9 (or its digital root is 9).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Ogive uses class boundaries, not midpoints; correction correctly states upper boundaries for less-than ogive.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/maths/lesson-mensuration.html",
-   "quote": "the slant height is derived from the difference of half‑diagonals",
-   "problem": "Slant height of a square pyramid frustum is derived from difference of half-side lengths (apothems), not half-diagonals.",
-   "correction": "the slant height is derived from the difference of half‑side lengths",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Slant height of square pyramid frustum uses half-side lengths (apothems), not half-diagonals. Correction accurate.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/maths/lesson-mensuration.html",
-   "quote": "using the outer radius in the formula 2πR h t overestimates the volume by a factor of (R/r)",
-   "problem": "The overestimation factor is 2R/(R+r), not R/r.",
-   "correction": "using the outer radius in the formula 2πR h t overestimates the volume by a factor of 2R/(R+r)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Volume of cylindrical shell: exact πh(R²−r²); outer radius approx 2πRht gives factor 2R/(R+r), not R/r. Correction correct.",
+   "verifierReason": "Original incorrectly states digit sum must be exactly 9; correction correctly states digit sum multiple of 9 or digital root 9.",
    "applied": true
   }
  ]
