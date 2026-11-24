@@ -1,30 +1,39 @@
 {
- "generatedAt": "2026-11-24T11:38:11.714Z",
+ "generatedAt": "2026-11-24T11:47:52.304Z",
  "lessonsAudited": 1,
- "flagged": 2,
+ "flagged": 3,
  "applied": 0,
- "modelCalls": 2,
- "modelFailures": 0,
+ "modelCalls": 1,
+ "modelFailures": 1,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "sbi-clerk/course/reasoning/lesson-coding-decoding.html",
-   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
-   "problem": "The example claims CAT becomes DDU with a uniform +1 shift, but C+1=D, A+1=B, T+1=U gives DBU, not DDU. The premise is inconsistent with the stated rule.",
-   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
+   "problem": "The sun is directly overhead only at solar noon for locations between the Tropics; for most latitudes (including India) the sun is never overhead, and shadows are shortest but not zero at noon.",
+   "correction": "At solar noon in the tropics the sun can be overhead; otherwise shadows are shortest at noon.",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Original false; correction accurately states overhead only in tropics."
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "the Sun’s azimuth is 090° – 45° = 045° (North‑East), so shadows fall towards 225° (South‑West).",
+   "problem": "In the northern hemisphere at 09:00 the sun's azimuth is around 135° (South‑East), not 045°; shadows fall towards 315° (North‑West).",
+   "correction": "the Sun’s azimuth is approximately 135° (South‑East), so shadows fall towards 315° (North‑West).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original CAT→DDU contradicts +1 shift; correction CAT→DBU matches rule and DOG→EPH is correct.",
+   "verifierReason": "Original azimuth wrong; correction gives plausible 135° and opposite shadow direction.",
    "applied": false
   },
   {
-   "file": "sbi-clerk/course/reasoning/lesson-coding-decoding.html",
-   "quote": "rotation is invertible only when s and L are coprime",
-   "problem": "Rotation (cyclic shift) is always invertible; the condition for a single cycle is that s and L are coprime.",
-   "correction": "rotation is a single cycle only when s and L are coprime",
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "Distance each travelled: A = 10 km, B = 10 km.",
+   "problem": "B travels at 5√2 km/h for 2 hours, covering 10√2 km, not 10 km.",
+   "correction": "Distance each travelled: A = 10 km, B = 10√2 km.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original falsely claims invertibility requires coprimality; rotation is always invertible. Correction correctly states single-cycle condition.",
+   "verifierReason": "Original distance wrong; correction correctly uses 10√2 km for B.",
    "applied": false
   }
  ]
