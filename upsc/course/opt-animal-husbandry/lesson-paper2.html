@@ -444,6 +444,14 @@ The advanced sections above integrate clinical decision‑making, surgical princ
 </div>
 
 <h3>Veterinary Epidemiology: Quantitative Risk Assessment and Scenario Tree Modeling for Transboundary Diseases</h3>
+<!-- passage-image:09c341c75874 -->
+<figure class="passage-photo" data-image="09c341c75874">
+  <a href="https://commons.wikimedia.org/wiki/File:Panorama_von_Monaco-La_Turbie.jpg" target="_blank" rel="noopener">
+    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Panorama_von_Monaco-La_Turbie.jpg/960px-Panorama_von_Monaco-La_Turbie.jpg" alt="Monte Carlo" loading="lazy" referrerpolicy="no-referrer">
+  </a>
+  <figcaption>Monte Carlo — Tobi 87 · CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Panorama_von_Monaco-La_Turbie.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption>
+</figure>
+
 <p>Quantitative risk assessment (QRA) provides a structured framework to estimate the probability and consequence of disease introduction, spread, and establishment. The four steps — hazard identification, risk release assessment, exposure assessment, and consequence assessment — are linked through stochastic simulation (Monte Carlo) to generate probability distributions rather than point estimates. For transboundary animal diseases (TADs) such as foot‑and‑mouth disease (FMD), peste des petits ruminants (PPR), and African swine fever (ASF), scenario trees map the logical sequence of events from source country infection to entry via legal trade, illegal movement, fomites, or wildlife. Each node represents a conditional probability (e.g., probability that a consignment of cattle from an infected zone is certified disease‑free, probability that border inspection detects clinical signs). Data sources include OIE WAHIS reports, national surveillance sensitivity estimates, trade volume statistics, and expert elicitation (Cooke’s method) for poorly quantified parameters.</p>
 <h4>Model Implementation</h4>
 <p>Models are coded in R (packages “mc2d”, “riskAssessment”) or @RISK for Excel. Input distributions are typically beta for probabilities (bounded 0–1), log‑normal for quantities (e.g., viral load), and uniform for expert‑defined ranges. Correlation between nodes (e.g., herd size and within‑herd prevalence) is modelled using copulas. Sensitivity analysis (Sobol indices, tornado plots) identifies high‑impact parameters; for FMD entry via live cattle, the most influential variables are the prevalence in the exporting region, the sensitivity of pre‑export quarantine testing, and the volume of trade. Scenario analysis compares “status‑quo” (current import conditions) with “mitigation” scenarios (e.g., mandatory vaccination, extended quarantine, PCR testing at border). Output metrics include annual probability of introduction (P_int), expected number of outbreaks per decade, and economic loss distribution (direct costs + trade disruption).</p>
