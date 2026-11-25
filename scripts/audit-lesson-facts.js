@@ -272,7 +272,19 @@ async function main() {
 
   let files;
   if (has('file')) files = [path.resolve(arg('file'))];
-  else files = walk(ROOT, []).filter((f) => /\/course\//.test(f.replace(/\\/g, '/')));
+  else files = walk(ROOT, [])
+    .filter((f) => /\/course\/[^/]*\/lesson-[^/]*\.html$/i.test(f.replace(/\\/g, '/')))
+    // The audit reads prose. A hub/index page or a bare derivation sheet has no
+    // <div class="lesson-body">, so lessonParagraphs() returns [] and the lesson
+    // can never be marked audited. Those files therefore stay at "never audited"
+    // (timestamp 0) and the never-audited-first sort kept pushing them to the top
+    // of the queue on EVERY run: the lane read 20 index pages, found no
+    // paragraphs, and reported "audited 0 lesson(s)" forever while the real
+    // corpus was never reached. Keep only files that actually carry a body.
+    .filter((f) => {
+      try { return fs.readFileSync(f, 'utf8').indexOf('<div class="lesson-body"') !== -1; }
+      catch (e) { return false; }
+    });
 
   // Least-recently-audited first. Without this the lane re-read the same first
   // N files every day, so the rest of the corpus was never reached.
