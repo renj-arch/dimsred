@@ -177,6 +177,20 @@ a.back-link:hover{text-decoration:underline}
   document.getElementById('btnGotIt').addEventListener('click', function(){ rateCard(true); });
   document.getElementById('btnReset').addEventListener('click', resetDeck);
 
+  // Daily deck: 20 cards rotated from the question bank, so the page is not the
+  // same ten starter cards every visit. Falls back to the built-in deck.
+  fetch('data/flashcards-daily.json?' + Date.now()).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+    var cards = (d && d.cards) || [];
+    if (!cards.length) return;
+    deck = cards.map(function(c){ return { q: c.q, a: c.a, sol: c.sol || '', topic: c.topic || 'Revision', exam: c.exam || 'UPSC' }; });
+    state.index = 0;
+    state.learned = new Set();
+    state.total = deck.length;
+    var ctr = document.querySelector('.controls'); if (ctr) ctr.style.display = 'flex';
+    var res = document.querySelector('.btn-reset'); if (res) res.style.display = 'none';
+    renderCard();
+  }).catch(function(){});
+
   renderCard();
 })();
 </script>

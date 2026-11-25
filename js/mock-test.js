@@ -54,21 +54,33 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         var meta = d;
-        state.questions = (d.questions || d || []).map(function (q, i) {
+        var arr = Array.isArray(d) ? d : (d.questions || []);
+        state.questions = arr.map(function (q, i) {
+          var opts = (q.options || []).map(function (o) {
+            return typeof o === 'string' ? o : (o && (o.text || o.t || o.label)) || '';
+          });
+          var correct = 0;
+          if (Array.isArray(q.options)) {
+            var ci = q.options.findIndex(function (o) { return o && o.correct === true; });
+            if (ci >= 0) correct = ci;
+          }
+          if (q.correct != null) correct = q.correct;
+          else if (q.answer != null) correct = q.answer;
           return {
             index: i,
-            text: q.q || q.text,
-            options: q.options || [],
-            correct: q.correct != null ? q.correct : (q.answer != null ? q.answer : 0),
+            text: q.text || q.question || '',
+            options: opts,
+            correct: correct,
             section: q.section || '',
             solution: q.solution || q.explain || ''
           };
         });
+        state.totalQuestions = state.questions.length;
         // Determine timer minutes from meta or default 60
         var mins = 60;
         if (d.timerMinutes) mins = d.timerMinutes;
         else if (d.meta && d.meta.timerMinutes) mins = d.meta.timerMinutes;
-        else if (d.totalQuestions) mins = Math.max(30, Math.round(d.totalQuestions / 1.5));
+        else if (state.totalQuestions) mins = Math.max(5, Math.round(state.totalQuestions / 1.5));
         state.totalTime = mins * 60;
         state.timeLeft = state.totalTime;
 
@@ -78,12 +90,21 @@
             (meta.exam || '') + ' · ' + state.totalQuestions + ' Q · ' +
             mins + ' min · ' + (d.pageDesc || '');
         }
+        var mq = document.getElementById('metaQuestions'); if (mq) mq.textContent = state.totalQuestions;
+        var me = document.getElementById('metaExam'); if (me) me.textContent = (meta.exam || cfg().exam || 'Paper');
+        var mt = document.getElementById('metaTime'); if (mt) mt.textContent = mins + ' min';
+        if (els.testWrapper) els.testWrapper.style.display = 'block';
+        if (!state.questions.length) {
+          if (els.qText) els.qText.innerHTML = 'This paper has no questions. <a href="papers.html">Choose another paper →</a>';
+          return;
+        }
         renderGrid();
+        startTimer();
         showQuestion(0);
       })
       .catch(function (e) {
         console.error('Mock test: failed to load paper', e);
-        if (els.qText) els.qText.textContent = 'Could not load paper: ' + paperDataPath();
+        if (els.qText) els.qText.innerHTML = 'Could not load this paper. <a href="papers.html">Browse papers →</a>';
       });
   }
 

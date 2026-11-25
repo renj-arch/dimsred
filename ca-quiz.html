@@ -75,13 +75,44 @@ a.back-link:hover{text-decoration:underline}
   var answered = false;
 
   function loadQuiz(){
-    return fetch('data/current-affairs-quiz.json').then(function(r){return r.json();}).then(function(d){
-      questions = d.questions || [];
-      if(questions.length === 0){
+    function norm(d){
+      var raw = (d && d.questions) || [];
+      return raw.map(function(q){
+        var opts = Array.isArray(q.options) ? q.options.map(function(o){ return String(o); }) : [];
+        var correct = -1;
+        if (q.correct != null) correct = q.correct;
+        else if (q.answer != null) correct = opts.findIndex(function(o){ return o.trim().toLowerCase() === String(q.answer).trim().toLowerCase(); });
+        return {
+          date: String(q.date || q.pubDate || '').slice(0, 10),
+          question: String(q.question || q.q || ''),
+          options: opts,
+          correct: correct,
+          explanation: q.explanation || q.solution || q.fact || '',
+          topic: q.topic || q.subject || q.category || 'Current Affairs',
+          source: q.source || 'PIB'
+        };
+      }).filter(function(q){
+        return q.question.length >= 20 && q.options.length >= 3 && q.correct >= 0 &&
+          new Set(q.options.map(function(o){ return o.trim().toLowerCase(); })).size === q.options.length;
+      });
+    }
+    // data/quiz.json is refreshed by the daily PIB lane; the old
+    // current-affairs-quiz.json was a frozen 8-question file (the same Article
+    // 368 question every day). Fall back only if the fresh file is empty.
+    return fetch('data/quiz.json?' + Date.now()).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+      questions = norm(d);
+      if(!questions.length) throw 0;
+    }).catch(function(){
+      return fetch('data/current-affairs-quiz.json').then(function(r){ return r.json(); }).then(function(d){ questions = norm(d); });
+    }).then(function(){
+      if(!questions.length){
         document.getElementById('quizQuestion').textContent = 'No questions available yet.';
         return;
       }
-      questions.sort(function(){ return 0.5 - Math.random(); });
+      // Take the most recent batch, then 10 for this session: the set changes
+      // as the lane adds today's questions.
+      questions.sort(function(a,b){ return String(b.date).localeCompare(String(a.date)); });
+      questions = questions.slice(0, 40).sort(function(){ return 0.5 - Math.random(); }).slice(0, 10);
       renderQuestion();
     }).catch(function(e){
       document.getElementById('quizQuestion').textContent = 'Could not load quiz data.';

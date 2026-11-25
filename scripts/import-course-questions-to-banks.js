@@ -97,6 +97,29 @@ function optionLetter(s) {
   return m ? m[1].toUpperCase() : '';
 }
 
+// UPSC is one exam with many subjects. Keeping every authored question in a
+// single "General Studies" bucket gave the micro-test only 3 topics; map each
+// course subject to its own section instead.
+var UPSC_SECTIONS = ['General Studies', 'Polity', 'History', 'Geography', 'Economy', 'Environment & Ecology', 'Science & Technology', 'Art & Culture', 'Governance', 'International Relations', 'Society', 'Ethics', 'Current Affairs', 'CSAT', 'Optional Subjects'];
+function upscSection(subject) {
+  var s = String(subject || '').toLowerCase();
+  if (/general knowledge|general awareness|general studies|static gk/.test(s)) return 'General Studies';
+  if (/polity|constitution/.test(s)) return 'Polity';
+  if (/history/.test(s)) return 'History';
+  if (/geograph/.test(s)) return 'Geography';
+  if (/econom|business/.test(s)) return 'Economy';
+  if (/environment|ecology/.test(s)) return 'Environment & Ecology';
+  if (/science|physics|chemistry|biology|botany|zoology/.test(s)) return 'Science & Technology';
+  if (/art|culture/.test(s)) return 'Art & Culture';
+  if (/governance/.test(s)) return 'Governance';
+  if (/international|foreign/.test(s)) return 'International Relations';
+  if (/society|social/.test(s)) return 'Society';
+  if (/ethics/.test(s)) return 'Ethics';
+  if (/current affairs/.test(s)) return 'Current Affairs';
+  if (/quant|math|reason|comprehension|decision|logical/.test(s)) return 'CSAT';
+  return 'Optional Subjects';
+}
+
 function sectionFor(exam, subject, sections) {
   var aliases = SUBJECT_ALIASES[subject] || [subject];
   for (var i = 0; i < aliases.length; i++) {
@@ -164,6 +187,9 @@ function main() {
     if (!bank) { console.log(exam + ': unreadable bank, skipped'); return; }
     var sections = (bank.sections || []).map(function (s) { return s.name; });
     if (!sections.length) sections = meta.sections;
+    if (exam === 'upsc') {
+      UPSC_SECTIONS.forEach(function (s) { if (sections.indexOf(s) === -1) sections.push(s); });
+    }
     var oldCourse = [];
     var courseCursor = 0;
     if (REFRESH) {
@@ -178,7 +204,7 @@ function main() {
     questions.filter(function (q) { return String(q._exam || '').toLowerCase() === exam; }).forEach(function (q) {
       var text = String(q.q || '').replace(/\s+/g, ' ').trim();
       if (text.length < 8 || used[norm(text)]) { skipped++; return; }
-      var section = sectionFor(exam, q.subject, sections);
+      var section = exam === 'upsc' ? upscSection(q.subject) : sectionFor(exam, q.subject, sections);
       if (!section) { skipped++; return; }
       var rawOpts = Array.isArray(q.opts) ? q.opts : [];
       if (rawOpts.length < 2 || rawOpts.length > 5) { skipped++; return; }
