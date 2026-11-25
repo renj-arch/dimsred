@@ -1,10 +1,261 @@
 {
- "generatedAt": "2026-11-25T02:59:09.596Z",
- "lessonsAudited": 0,
- "flagged": 0,
- "applied": 0,
- "modelCalls": 0,
- "modelFailures": 0,
- "deadlineHit": false,
- "problems": []
+ "generatedAt": "2026-11-25T03:35:04.464Z",
+ "lessonsAudited": 13,
+ "flagged": 25,
+ "applied": 18,
+ "modelCalls": 26,
+ "modelFailures": 13,
+ "deadlineHit": true,
+ "problems": [
+  {
+   "file": "ssc-gd/course/maths/lesson-mensuration.html",
+   "quote": "By angles, a triangle may be acute (all angles 90°).",
+   "problem": "Acute triangle defined incorrectly; acute triangles have all angles less than 90°, not equal to 90°.",
+   "correction": "By angles, a triangle may be acute (all angles < 90°).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original defines acute triangle as all angles 90°, which is impossible; correction correctly states all angles < 90°.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-mensuration.html",
+   "quote": "the mid‑section area (which for a pyramid frustum equals √(A₁A₂))",
+   "problem": "The mid‑section area of a pyramid frustum is not the geometric mean of the end areas; it is (A₁ + 2√(A₁A₂) + A₂)/4.",
+   "correction": "the mid‑section area (which for a pyramid frustum is (A₁+2√(A₁A₂)+A₂)/4)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Mid-section area of pyramid frustum is (A₁+2√(A₁A₂)+A₂)/4, not √(A₁A₂). Correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-percentage.html",
+   "quote": "The overall percentage decrease is 1 − (1 − d/100)ⁿ.",
+   "problem": "The formula yields a decimal fraction, not a percentage; to express as percentage it must be multiplied by 100.",
+   "correction": "The overall percentage decrease is [1 − (1 − d/100)ⁿ] × 100.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original gives fraction, not percentage; correction multiplies by 100, yielding correct percentage.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-percentage.html",
+   "quote": "Equating P (1 + r/100)ⁿ = P (1 + R/100)ⁿ (where R is the simple rate per period)",
+   "problem": "Simple interest formula is P(1 + nR/100), not P(1+R/100)ⁿ; the equation incorrectly uses compound interest formula for simple interest.",
+   "correction": "Equating P (1 + r/100)ⁿ = P (1 + nR/100) (where R is the simple rate per period)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Simple interest amount is P(1+nR/100), not compound; correction uses correct formula.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-mensuration.html",
+   "quote": "at a rate proportional to the water height (Torricelli’s law)",
+   "problem": "Torricelli's law states that the efflux velocity is proportional to the square root of the water height, so the volumetric rate is proportional to √h, not h.",
+   "correction": "at a rate proportional to the square root of the water height (Torricelli’s law)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Torricelli's law gives velocity ∝ √h, so flow rate ∝ √h; correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-speed-distance.html",
+   "quote": "This harmonic‑mean relationship is a favourite examiner shortcut.",
+   "problem": "The formula (t_walk × t_stand) ÷ (t_walk + t_stand) equals half the harmonic mean of t_walk and t_stand, not the harmonic mean itself.",
+   "correction": "This relationship is a favourite examiner shortcut.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original formula is half the harmonic mean, not the harmonic mean; correction removes inaccurate term.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-ratio-proportion.html",
+   "quote": "The number of distinct meeting points equals the numerator of the reduced fraction (a − b)/(a + b) or (a + b)/(a − b)",
+   "problem": "The formula for the number of distinct meeting points on a circular track is incorrect. The correct number is |p−q| for same direction and p+q for opposite direction, where p:q is the reduced ratio of speeds.",
+   "correction": "The number of distinct meeting points equals |p−q| for same direction and p+q for opposite direction, where p:q is the reduced speed ratio.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original formula wrong; correction states correct formula: |p−q| same direction, p+q opposite, with reduced speed ratio p:q.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-ratio-proportion.html",
+   "quote": "The incentre divides the angle bisectors in the ratio of the adjacent sides.",
+   "problem": "The incentre divides an angle bisector in the ratio (sum of adjacent sides) : opposite side, not the ratio of the adjacent sides (which is the ratio in which the bisector divides the opposite side).",
+   "correction": "The incentre divides each angle bisector in the ratio (sum of adjacent sides) : opposite side.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original misstates ratio; correction correctly gives (sum of adjacent sides):opposite side for incentre division of angle bisector.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-time-work.html",
+   "quote": "treat the leak as an additional outlet with a rate equal to the given percentage of the tank’s capacity per unit time",
+   "problem": "A proportional leak (percentage of current water) does not equate to a constant rate based on full tank capacity; the rate varies with water level.",
+   "correction": "For a proportional leak, the rate is proportional to the instantaneous volume, requiring a differential equation or exponential decay model, not a constant rate based on full capacity.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original quote misstates proportional leak as constant rate; correction correctly notes exponential decay model.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-coding-decoding.html",
+   "quote": "If CAT → DDU",
+   "problem": "The example claims CAT codes to DDU under a fixed shift of +1, but C+1=D, A+1=B, T+1=U gives DBU, not DDU. The example contradicts the definition of a fixed shift.",
+   "correction": "If CAT → DBU",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original shows DDU; +1 shift yields DBU. Correction is accurate.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-direction-distance.html",
+   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
+   "problem": "The sun is directly overhead at noon only in the tropics (between the Tropics of Cancer and Capricorn). At other latitudes, the sun is not overhead at noon, so shadows are present (though shortest).",
+   "correction": "At noon, the sun is at its highest point but not directly overhead except in the tropics; shadows are shortest but not zero.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original is universally false; correction correctly limits overhead sun to tropics and notes shadows are shortest but not zero.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-analogy.html",
+   "quote": "the addend 6 comes from the sum of those primes",
+   "problem": "The distinct prime factors of 12 are 2 and 3; their sum is 5, not 6.",
+   "correction": "the addend 5 comes from the sum of those primes",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Distinct prime factors of 12 are 2 and 3, sum 5; original 6 is incorrect.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-analogy.html",
+   "quote": "(private → captain), the second must also jump two levels (apprentice → journeyman, not apprentice → master)",
+   "problem": "Private to Captain is a four-rank jump (Private→Corporal→Sergeant→Lieutenant→Captain), not two. Apprentice to Journeyman is one level; Apprentice to Master is two levels.",
+   "correction": "(private → sergeant), the second must also jump two levels (apprentice → master, not apprentice → journeyman)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Private→Captain is 4 ranks; Private→Sergeant is 2. Apprentice→Master is 2 levels.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-coding-decoding.html",
+   "quote": "rotation is invertible only when s and L are coprime",
+   "problem": "A cyclic permutation (rotation) is always invertible for any shift s; the condition for the permutation to be a single cycle is that s and L are coprime, not for invertibility.",
+   "correction": "rotation forms a single cycle only when s and L are coprime",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original confuses invertibility (always true for permutations) with being a single cycle (requires coprimality). Correction is mathematically precise.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-analogy.html",
+   "quote": "elementary isometries of the plane: translation, rotation, reflection, and uniform scaling",
+   "problem": "Uniform scaling is not an isometry; isometries preserve distances, but scaling changes distances.",
+   "correction": "elementary transformations of the plane: translation, rotation, reflection, and uniform scaling",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Uniform scaling is not an isometry; correction correctly rephrases as elementary transformations.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-analogy.html",
+   "quote": "The numeric palindrome 12321 yields the middle three digits 232; the pair shows 23 (dropping the central digit).",
+   "problem": "Dropping the central digit of 232 yields 22, not 23; the example 45654 → 56 also contradicts this description.",
+   "correction": "The numeric palindrome 12321 yields the middle three digits 232; the pair shows 23 (taking the first two of the middle three digits).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Dropping central digit of 232 yields 22, not 23; correction accurately states taking first two of middle three digits.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-direction-distance.html",
+   "quote": "cos(d/R) = cos(h/R)·cos(R_slant/R) + sin(h/R)·sin(R_slant/R)·cos(α)",
+   "problem": "The formula misapplies the spherical law of cosines; the correct relation for ground distance d given slant range R_slant and altitude h uses the planar law of cosines: cos(d/R) = (R² + (R+h)² - R_slant²) / (2R(R+h)).",
+   "correction": "cos(d/R) = (R² + (R+h)² - R_slant²) / (2R(R+h))",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original misapplies spherical law; planar law of cosines is correct.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-direction-distance.html",
+   "quote": "cos(d/R) = cos((R+h)/R)·cos(R_slant/R) + sin((R+h)/R)·sin(R_slant/R)",
+   "problem": "The nadir reduction incorrectly replaces h/R with (R+h)/R; the correct planar formula does not use trigonometric functions of these ratios.",
+   "correction": "cos(d/R) = (R² + (R+h)² - R_slant²) / (2R(R+h))",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original misapplies spherical law; planar law of cosines is correct.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-direction-distance.html",
+   "quote": "With R = 6371 km, h = 800 km, R_slant = 1200 km, the ground distance d ≈ 1000 km",
+   "problem": "The computed ground distance is incorrect; using the correct planar law of cosines gives d ≈ 841 km.",
+   "correction": "d ≈ 841 km",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Computed d≈1000 km is wrong; correct planar calculation gives ≈841 km.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-direction-distance.html",
+   "quote": "dS/dt = (hH / (H - h)²) * (dx/dt)",
+   "problem": "The derivative of S = hx/(H-h) with respect to time is dS/dt = (h/(H-h)) dx/dt, not the given expression.",
+   "correction": "dS/dt = (h/(H-h)) dx/dt",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Derivative of S=hx/(H-h) is h/(H-h) dx/dt, not hH/(H-h)^2 dx/dt.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-direction-distance.html",
+   "quote": "its speed is not constant but depends on the person's distance from the light source",
+   "problem": "The shadow tip's speed relative to ground is dx/dt * H/(H-h), which is constant if dx/dt is constant; it does not depend on x.",
+   "correction": "its speed is constant and equals dx/dt * H/(H-h)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Shadow tip speed relative to ground is constant H/(H-h) dx/dt, not dependent on x.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
+   "quote": "if the conflict graph contains a clique larger than χ, the puzzle is inconsistent",
+   "problem": "The condition for a homomorphism from the conflict graph to the complement of the seat graph is that the clique number of the conflict graph ≤ the independence number of the seat graph, not its chromatic number χ.",
+   "correction": "A necessary condition is that the conflict graph’s clique number ≤ the independence number of the seat graph, not its chromatic number χ.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses χ; correct necessary condition is ω(conflict) ≤ α(seat). Correction accurate.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
+   "quote": "for the exclusive‑or version",
+   "problem": "The clue “either X sits in seat 3 or Y sits in seat 5 (or both)” is an inclusive OR; the implications (¬X₃ → Y₅) and (¬Y₅ → X₃) correspond to inclusive OR, not exclusive OR.",
+   "correction": "for the inclusive‑or version (the clue includes “or both”)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Clue includes 'or both', so it's inclusive OR; correction fixes mislabeling.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-analogy.html",
+   "quote": "with 0 Multi‑Step Cryptarithmic Substitution Chains",
+   "problem": "The lattice isomorphism example is cut off and incorrectly concatenated with the next topic heading; 'with 0 Multi‑Step Cryptarithmic Substitution Chains' is not a valid completion of the poset description.",
+   "correction": "with 0 < a < 1, 0 < b < 1 (a and b incomparable)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original fragment is nonsensical in poset context; correction gives standard poset description.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-analogy.html",
+   "quote": "share the same letter‑to‑digit mapping; the third alphametic uses the same mapping but with a different arrangement of letters. For instance, pair: SEND + MORE = MONEY (classic) and CROSS + ROADS = DA",
+   "problem": "The two alphametics SEND+MORE=MONEY and CROSS+ROADS=DANGER have different solutions (different letter-to-digit mappings); they do not share a mapping as claimed.",
+   "correction": "share the same letter‑to‑digit mapping; the third alphametic uses the same mapping. For instance, a pair of alphametics constructed to share a mapping (e.g., SEND+MORE=MONEY and a variant using the sa",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "SEND+MORE=MONEY and CROSS+ROADS=DANGER have distinct mappings; correction suggests valid constructed pair.",
+   "applied": true
+  }
+ ]
 }
