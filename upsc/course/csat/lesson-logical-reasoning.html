@@ -2360,11 +2360,155 @@
 </div>
 
 <h3>Weighted Constraint Optimization in Multi‑Attribute Seating Problems</h3>
+<!-- passage-cartoon:e5062edf1261 -->
+<figure class="passage-cartoon" data-cartoon="e5062edf1261">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Seat row -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <rect x="30" y="180" width="70" height="50"/>
+    <rect x="110" y="180" width="70" height="50"/>
+    <rect x="190" y="180" width="70" height="50"/>
+    <rect x="270" y="180" width="70" height="50"/>
+    <rect x="350" y="180" width="70" height="50"/>
+    <rect x="430" y="180" width="70" height="50"/>
+  </g>
+  <!-- Persons (stick figures) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- P1 seat1 center 65 -->
+    <circle cx="65" cy="120" r="10"/>
+    <line x1="65" y1="130" x2="65" y2="170"/>
+    <line x1="50" y1="140" x2="80" y2="140"/>
+    <line x1="65" y1="170" x2="55" y2="190"/>
+    <line x1="65" y1="170" x2="75" y2="190"/>
+    <!-- P2 seat2 center 145 -->
+    <circle cx="145" cy="120" r="10"/>
+    <line x1="145" y1="130" x2="145" y2="170"/>
+    <line x1="130" y1="140" x2="160" y2="140"/>
+    <line x1="145" y1="170" x2="135" y2="190"/>
+    <line x1="145" y1="170" x2="155" y2="190"/>
+    <!-- P3 seat3 center 225 -->
+    <circle cx="225" cy="120" r="10"/>
+    <line x1="225" y1="130" x2="225" y2="170"/>
+    <line x1="210" y1="140" x2="240" y2="140"/>
+    <line x1="225" y1="170" x2="215" y2="190"/>
+    <line x1="225" y1="170" x2="235" y2="190"/>
+    <!-- P4 seat4 center 305 -->
+    <circle cx="305" cy="120" r="10"/>
+    <line x1="305" y1="130" x2="305" y2="170"/>
+    <line x1="290" y1="140" x2="320" y2="140"/>
+    <line x1="305" y1="170" x2="295" y2="190"/>
+    <line x1="305" y1="170" x2="315" y2="190"/>
+    <!-- P5 seat5 center 385 -->
+    <circle cx="385" cy="120" r="10"/>
+    <line x1="385" y1="130" x2="385" y2="170"/>
+    <line x1="370" y1="140" x2="400" y2="140"/>
+    <line x1="385" y1="170" x2="375" y2="190"/>
+    <line x1="385" y1="170" x2="395" y2="190"/>
+    <!-- P6 seat6 center 465 -->
+    <circle cx="465" cy="120" r="10"/>
+    <line x1="465" y1="130" x2="465" y2="170"/>
+    <line x1="450" y1="140" x2="480" y2="140"/>
+    <line x1="465" y1="170" x2="455" y2="190"/>
+    <line x1="465" y1="170" x2="475" y2="190"/>
+  </g>
+  <!-- Hard constraint: P1 left of P2 -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <line x1="65" y1="205" x2="145" y2="205"/>
+    <polygon points="145,205 135,200 135,210"/>
+  </g>
+  <!-- Soft constraints -->
+  <g stroke="#1f2937" stroke-width="1.5" stroke-dasharray="5,5" fill="none">
+    <!-- P4 -> seat3 weight4 -->
+    <line x1="305" y1="120" x2="225" y2="205"/>
+    <!-- P5 - P6 weight3 -->
+    <line x1="385" y1="120" x2="465" y2="120"/>
+    <!-- P2 -> seat6 weight2 -->
+    <line x1="145" y1="120" x2="465" y2="205"/>
+  </g>
+  <!-- Branch-and-bound tree -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- Root -->
+    <circle cx="490" cy="40" r="15"/>
+    <!-- Left child -->
+    <circle cx="430" cy="90" r="15"/>
+    <!-- Right child -->
+    <circle cx="550" cy="90" r="15"/>
+    <!-- Edges -->
+    <line x1="490" y1="55" x2="430" y2="75"/>
+    <line x1="490" y1="55" x2="550" y2="75"/>
+    <line x1="430" y1="105" x2="430" y2="140"/>
+    <line x1="550" y1="105" x2="550" y2="115"/>
+    <line x1="550" y1="125" x2="550" y2="140"/>
+    <!-- Scissors at (550,120) -->
+    <line x1="545" y1="115" x2="555" y2="125"/>
+    <line x1="555" y1="115" x2="545" y2="125"/>
+  </g>
+  <!-- Labels -->
+  <text x="105" y="190" font-size="12" fill="#1f2937" text-anchor="middle">Hard Constraint</text>
+  <text x="300" y="150" font-size="12" fill="#1f2937" text-anchor="middle">Soft Weight</text>
+  <text x="490" y="20" font-size="12" fill="#1f2937" text-anchor="middle">Branch‑and‑Bound</text>
+  <text x="560" y="120" font-size="12" fill="#1f2937" text-anchor="end">Prune</text>
+  <text x="430" y="160" font-size="12" fill="#1f2937" text-anchor="middle">Best Weight</text>
+  <text x="280" y="170" font-size="12" fill="#1f2937" text-anchor="middle">Seat Row</text>
+  <!-- Soft weight numbers -->
+  <text x="265" y="160" font-size="12" fill="#1f2937" text-anchor="middle">4</text>
+  <text x="425" y="110" font-size="12" fill="#1f2937" text-anchor="middle">3</text>
+  <text x="305" y="160" font-size="12" fill="#1f2937" text-anchor="middle">2</text>
+  <!-- Tree node labels -->
+  <text x="490" y="45" font-size="10" fill="#1f2937" text-anchor="middle">Start</text>
+  <text x="430" y="95" font-size="10" fill="#1f2937" text-anchor="middle">P1=1</text>
+  <text x="550" y="95" font-size="10" fill="#1f2937" text-anchor="middle">P1=2</text>
+  <text x="430" y="150" font-size="10" fill="#1f2937" text-anchor="middle">Weight=9</text>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="none" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle">Weighted Constraint Optimization in Multi‑Attribute Seating Problems</text>
+</svg></div>
+  <figcaption>Weighted Constraint Optimization in Multi‑Attribute Seating Problems</figcaption>
+</figure>
+
 <p>Classic seating puzzles ask for a feasible arrangement satisfying hard constraints (e.g., “A sits left of B”). Advanced variants introduce soft constraints with weights: “A prefers to sit near the window (weight 5)”, “B dislikes sitting next to C (weight 3)”. The task becomes finding an arrangement that maximizes total satisfied weight while respecting all hard constraints. This is a Weighted Constraint Satisfaction Problem (WCSP). The standard solving technique is branch‑and‑bound with a heuristic lower bound: compute the maximum additional weight achievable from unassigned variables assuming all their soft constraints can be satisfied, then prune branches whose upper bound falls below the best complete solution found so far.</p>
 <p>In the exam context, the number of seats rarely exceeds eight, so a manual branch‑and‑bound is feasible. Represent each seat as a variable with domain {persons}. Hard constraints are encoded as binary allowed‑pair tables. Soft constraints are unary or binary penalties. Begin by assigning the most constrained person (fewest legal seats). After each assignment, propagate hard constraints (arc consistency) and update the accumulated weight. Keep a running best‑weight solution; if the current partial weight plus the sum of all remaining maximal soft weights cannot exceed the best, backtrack immediately. This mirrors the “minimal information principle” used in data‑sufficiency but applied to optimization.</p>
 <p>A concrete illustration: six seats in a row, persons P1‑P6. Hard: P1 left of P2; P3 not at ends. Soft: P4 wants seat 3 (weight 4); P5 wants adjacency to P6 (weight 3); P2 dislikes seat 6 (weight 2). Start with P1 (domain seats 1‑5 because left of P2). Try P1=1 → P2∈{2..6}. Propagate P3∈{2..5}. Compute upper bound: remaining soft max = 4+3+2 = 9. If current weight 0 + 9 < best (initially -∞), continue. Depth‑first search quickly yields the optimal arrangement P1=1, P2=2, P3=4, P4=3, P5=5, P6=6 with total weight 4+3 = 7 (P2 at seat 6 avoided). Practising this pattern on paper builds the intuition to spot the optimal arrangement without exhaustive enumeration.</p>
 
 <h3>Probabilistic Reasoning and Bayesian Updating for Data Sufficiency</h3>
+<!-- passage-cartoon:4dce6285cab8 -->
+<figure class="passage-cartoon" data-cartoon="4dce6285cab8">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320" width="560" height="320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Node B -->
+  <circle cx="150" cy="150" r="40" stroke="#1f2937" stroke-width="3" fill="white"/>
+  <text x="150" y="155" text-anchor="middle" dominant-baseline="middle" font-size="24" fill="#1f2937">B</text>
+  <!-- Node A -->
+  <circle cx="400" cy="150" r="40" stroke="#1f2937" stroke-width="3" fill="white"/>
+  <text x="400" y="155" text-anchor="middle" dominant-baseline="middle" font-size="24" fill="#1f2937">A</text>
+  <!-- Arrow B -> A -->
+  <line x1="190" y1="150" x2="360" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="360,150 345,140 345,160" fill="#1f2937"/>
+  <!-- CPT for B -->
+  <rect x="80" y="210" width="140" height="50" stroke="#1f2937" stroke-width="2" fill="white"/>
+  <text x="150" y="235" text-anchor="middle" dominant-baseline="middle" font-size="16" fill="#1f2937">P(B)=0.5</text>
+  <!-- CPT for A -->
+  <rect x="340" y="210" width="180" height="80" stroke="#1f2937" stroke-width="2" fill="white"/>
+  <text x="430" y="235" text-anchor="middle" dominant-baseline="middle" font-size="16" fill="#1f2937">P(A|B)=0.6</text>
+  <text x="430" y="265" text-anchor="middle" dominant-baseline="middle" font-size="16" fill="#1f2937">P(A|¬B)= ?</text>
+  <!-- Magnifying glass on missing entry -->
+  <circle cx="430" cy="265" r="15" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <line x1="445" y1="280" x2="460" y2="295" stroke="#1f2937" stroke-width="2"/>
+  <!-- Labels -->
+  <text x="100" y="50" font-size="16" fill="#1f2937">Bayesian net</text>
+  <text x="100" y="80" font-size="16" fill="#1f2937">CPT incomplete</text>
+  <text x="400" y="50" text-anchor="end" font-size="16" fill="#1f2937">d‑separation</text>
+  <text x="400" y="80" text-anchor="end" font-size="16" fill="#1f2937">Missing P(A|¬B)</text>
+  <text x="280" y="120" text-anchor="middle" font-size="16" fill="#1f2937">Insufficient</text>
+  <text x="280" y="190" text-anchor="middle" font-size="16" fill="#1f2937">Checklist</text>
+  <!-- Caption strip -->
+  <line x1="0" y1="280" x2="560" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" text-anchor="middle" dominant-baseline="middle" font-size="14" fill="#1f2937">Probabilistic Reasoning and Bayesian Updating for Data Sufficiency</text>
+</svg></div>
+  <figcaption>Probabilistic Reasoning and Bayesian Updating for Data Sufficiency</figcaption>
+</figure>
+
 <p>Data‑sufficiency questions occasionally embed probabilistic statements: “The probability that event X occurs given Y is 0.7” and “The probability of Y is 0.4”. The examinee must decide whether the statements together suffice to compute a target probability such as P(X). Bayesian networks provide a compact representation: nodes are events, directed edges encode conditional dependencies, and each node stores a conditional probability table (CPT). Sufficiency reduces to checking whether the target node is d‑separated from the evidence nodes given the provided CPTs. If the graph is fully specified (all required CPTs given), the answer is “sufficient”; missing CPTs or cycles without enough parameters make it “insufficient”.</p>
 <p>Consider a typical item: Statement 1: P(A|B)=0.6. Statement 2: P(B)=0.5. Question: Is P(A) determinable? The network has B → A. Statement 1 gives the CPT for A given B; Statement 2 gives the prior for B. Together they yield P(A)=P(A|B)P(B)+P(A|¬B)P(¬B). Since P(A|¬B) is unknown, P(A) cannot be computed — insufficient. If a third statement supplied P(A|¬B)=0.2, the set would become sufficient. The examiner often hides the missing conditional in a seemingly unrelated statement, testing whether the candidate tracks the full CPT requirement.</p>
 <p>Rapid checklist: (1) Draw the directed graph implied by the statements. (2) List all CPT entries explicitly mentioned. (3) For each node, count the number of independent parameters needed (2^k for k parents). (4) If any node’s CPT is incomplete, the target probability is not uniquely determined. (5) If the graph contains a directed cycle, treat it as a Markov chain and check whether the stationary distribution can be solved from the given equations. This systematic approach converts a probabilistic data‑sufficiency item into a deterministic graph‑completeness test.</p>
@@ -2634,6 +2778,50 @@ Case 2: S<sub>B</sub>=1. Symmetric analysis yields contradiction because (2) giv
 <p>Another common pattern is the “window” constraint: “Task A must start between 2 and 5 hours after the project start”. This translates to 2 ≤ start<sub>A</sub> ≤ 5, a simple bound that tightens the feasible region. When combined with “Task B must finish before Task C starts” (end<sub>B</sub> ≤ start<sub>C</sub>) the system remains a set of linear inequalities. The candidate should recognise that the whole puzzle reduces to checking feasibility of a linear program with a few binary ordering variables; the binary variables are few enough to enumerate by hand.</p>
 
 <h3>Argumentation Frameworks: Evaluating Attack and Defense Relations</h3>
+<!-- passage-cartoon:03d17135c3a7 -->
+<figure class="passage-cartoon" data-cartoon="03d17135c3a7">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Nodes -->
+  <circle cx="80" cy="160" r="28" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="80" y="165" text-anchor="middle" font-size="20" fill="#1f2937">U</text>
+  <circle cx="260" cy="80" r="28" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="260" y="85" text-anchor="middle" font-size="20" fill="#1f2937">A</text>
+  <circle cx="440" cy="80" r="28" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="440" y="85" text-anchor="middle" font-size="20" fill="#1f2937">B</text>
+  <circle cx="340" cy="200" r="28" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="340" y="205" text-anchor="middle" font-size="20" fill="#1f2937">C</text>
+  <circle cx="500" cy="160" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="500" y="165" text-anchor="middle" font-size="16" fill="#1f2937">S</text>
+  <!-- Attack edges -->
+  <path d="M 80 160 L 260 80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="260,80 253,89 249,79" fill="#1f2937"/>
+  <path d="M 260 80 L 440 80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="440,80 430,85 430,75" fill="#1f2937"/>
+  <path d="M 440 80 L 340 200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="340,200 343,189 350,196" fill="#1f2937"/>
+  <path d="M 340 200 L 260 80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="260,80 270,86 261,91" fill="#1f2937"/>
+  <!-- Support edge -->
+  <path d="M 500 160 L 260 80" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Weight labels -->
+  <text x="150" y="130" text-anchor="middle" font-size="14" fill="#1f2937">1</text>
+  <text x="350" y="70" text-anchor="middle" font-size="14" fill="#1f2937">2</text>
+  <text x="390" y="140" text-anchor="middle" font-size="14" fill="#1f2937">3</text>
+  <text x="300" y="140" text-anchor="middle" font-size="14" fill="#1f2937">1</text>
+  <!-- Concept labels -->
+  <text x="170" y="110" text-anchor="middle" font-size="14" fill="#1f2937">Attack</text>
+  <text x="380" y="110" text-anchor="middle" font-size="14" fill="#1f2937">Support</text>
+  <text x="80" y="210" text-anchor="middle" font-size="14" fill="#1f2937">Grounded</text>
+  <text x="340" y="240" text-anchor="middle" font-size="14" fill="#1f2937">Preferred</text>
+  <text x="300" y="50" text-anchor="middle" font-size="14" fill="#1f2937">Weight</text>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#1f2937"/>
+  <text x="280" y="310" text-anchor="middle" font-size="12" fill="white">Argumentation Frameworks: Evaluating Attack and Defense Relations</text>
+</svg></div>
+  <figcaption>Argumentation Frameworks: Evaluating Attack and Defense Relations</figcaption>
+</figure>
+
 <p>Abstract argumentation frameworks (Dung, 1995) model a debate as a directed graph where nodes are arguments and edges represent attacks. An argument is “acceptable” with respect to a set S if every attacker of it is attacked by some argument in S. The fundamental semantics — grounded, preferred, stable, and complete — define different criteria for selecting sets of arguments (extensions). In CSAT logical reasoning, a puzzle may present a list of statements such as “A attacks B”, “B attacks C”, “C attacks A” and ask which arguments can be simultaneously accepted. The grounded extension is unique and can be computed by iteratively adding unattacked arguments and removing their attackers; this yields the skeptical (must‑be‑true) conclusions. Preferred extensions are maximal admissible sets; there may be several, representing credulous (possibly true) conclusions.</p>
 <p>To solve such puzzles manually, construct the attack graph, then apply the characteristic function F(S) = { a | a is defended by S }. Starting from the empty set, compute F(∅) (all unattacked arguments), then F(F(∅)), etc., until a fixed point — this is the grounded extension. For preferred extensions, enumerate all maximal conflict‑free sets that defend themselves; with ≤ 5 arguments this enumeration is trivial. A typical exam twist adds “support” edges (bipolar argumentation) where an argument can both attack and support another; the semantics then require that a supported argument is accepted only if its supporter is accepted. This adds a monotonic dependency that can be resolved by topological ordering of the support graph before applying the attack semantics.</p>
 <p>Another variant introduces “weights” on attacks (strength of attack). The weighted grounded semantics selects the extension that maximises the sum of weights of defended arguments. Because weights are small integers (1–3) and the graph is tiny, the candidate can compute the grounded extension for each possible weight threshold or simply evaluate all admissible sets and pick the one with highest total weight. Recognising that the problem reduces to a small‑scale optimisation over admissible sets avoids unnecessary formal machinery.</p>
@@ -2708,6 +2896,67 @@ Case 2: S<sub>B</sub>=1. Symmetric analysis yields contradiction because (2) giv
 <li>Ignoring the global AllDifferent or Cumulative constraints and resorting to naive permutation search, which explodes combinatorially even for six entities.</li>
 </ul>
 <h3>Recursive Constraint Networks in Multi‑Stage Seating Puzzles</h3>
+<!-- passage-cartoon:a0a83a2bcdd3 -->
+<figure class="passage-cartoon" data-cartoon="a0a83a2bcdd3">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+
+  <!-- Round table -->
+  <circle cx="280" cy="160" r="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Seats (8) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <circle cx="280" cy="40" r="6"/>   <!-- N -->
+    <circle cx="365" cy="75" r="6"/>   <!-- NE -->
+    <circle cx="400" cy="160" r="6"/>  <!-- E -->
+    <circle cx="365" cy="245" r="6"/>  <!-- SE -->
+    <circle cx="280" cy="280" r="6"/>  <!-- S -->
+    <circle cx="195" cy="245" r="6"/>  <!-- SW -->
+    <circle cx="160" cy="160" r="6"/>  <!-- W -->
+    <circle cx="195" cy="75" r="6"/>   <!-- NW -->
+  </g>
+
+  <!-- Stage 1 constraints -->
+  <!-- Opposite A-D -->
+  <line x1="280" y1="40" x2="280" y2="280" stroke="#1f2937" stroke-width="3" stroke-dasharray="8,4"/>
+  <!-- Adjacent B-C (clockwise) -->
+  <path d="M365,75 C380,100 390,130 400,160" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+
+  <!-- Stage 2 box (right side) -->
+  <rect x="420" y="40" width="120" height="160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Hyper-edge nodes -->
+  <circle cx="450" cy="80" r="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="510" cy="80" r="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="480" cy="140" r="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Hyper-edge triangle -->
+  <polygon points="450,80 510,80 480,140" stroke="#1f2937" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
+
+  <!-- Arrow from Stage 1 to Stage 2 -->
+  <path d="M400,160 C410,160 415,140 420,120" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Labels (key terms) -->
+  <text x="280" y="30" text-anchor="middle" font-size="16" fill="#1f2937">Stage 1</text>
+  <text x="480" y="30" text-anchor="middle" font-size="16" fill="#1f2937">Stage 2</text>
+  <text x="280" y="160" text-anchor="middle" font-size="14" fill="#1f2937">Domain</text>
+  <text x="280" y="190" text-anchor="middle" font-size="14" fill="#1f2937">Path-consistency</text>
+  <text x="410" y="130" text-anchor="end" font-size="14" fill="#1f2937">Macro-value</text>
+  <text x="480" y="210" text-anchor="middle" font-size="14" fill="#1f2937">Hyper-edge</text>
+  <text x="480" y="230" text-anchor="middle" font-size="14" fill="#1f2937">Backtrack</text>
+
+  <!-- Caption strip -->
+  <line x1="20" y1="295" x2="540" y2="295" stroke="#1f2937" stroke-width="2"/>
+  <text x="280" y="315" text-anchor="middle" font-size="14" fill="#1f2937">Recursive Constraint Networks in Multi‑Stage Seating Puzzles</text>
+</svg></div>
+  <figcaption>Recursive Constraint Networks in Multi‑Stage Seating Puzzles</figcaption>
+</figure>
+
 <p>In many high‑difficulty seating problems the constraints are not flat but form a hierarchy of stages. A classic pattern is a “round‑table” where the first round fixes relative positions, and a second round imposes additional conditions such as “the person sitting opposite to A must be a doctor” or “the person two seats clockwise from the engineer must be older than the person three seats anticlockwise from B”. Solving such puzzles efficiently requires modelling the problem as a <strong>recursive constraint network (RCN)</strong>. Each stage is represented as a sub‑graph whose nodes are the variables (persons, seats, attributes) and whose edges are binary constraints (adjacency, opposite, distance). The output of stage 1 becomes the domain reduction for stage 2, and so on.</p>
 <p>Key steps:</p>
 <ol>
@@ -2720,6 +2969,41 @@ Case 2: S<sub>B</sub>=1. Symmetric analysis yields contradiction because (2) giv
 <p>Illustrative example (simplified): Eight persons sit around a circular table. Stage 1 constraints: (i) A is opposite D; (ii) B sits immediately clockwise of C. After applying path‑consistency, the possible seat pairs for (A,D) reduce to {(1,5),(2,6),(3,7),(4,8)} and (B,C) to {(1,2),(2,3)…}. Stage 2 adds “the person two seats clockwise from the lawyer is a teacher”. By treating each (A,D) pair as a macro‑value, we only need to test eight configurations instead of 8! permutations. The RCN approach typically solves such puzzles in under a minute for ≤ 10 variables.</p>
 
 <h3>Quantifier Interaction in Mixed Categorical‑Conditional Syllogisms</h3>
+<!-- passage-cartoon:54bb6af7e66e -->
+<figure class="passage-cartoon" data-cartoon="54bb6af7e66e">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Boxes -->
+  <rect x="40" y="80" width="120" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="220" y="80" width="140" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="420" y="80" width="120" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Arrows between boxes -->
+  <path d="M160 110 L220 110" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M360 110 L420 110" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <!-- Token circle -->
+  <circle cx="100" cy="200" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Arrow from token to conditional gate -->
+  <path d="M100 185 L290 140" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Labels -->
+  <text x="100" y="70" text-anchor="middle" font-size="14" fill="#1f2937">All X→Y</text>
+  <text x="290" y="70" text-anchor="middle" font-size="14" fill="#1f2937">If All then All</text>
+  <text x="480" y="70" text-anchor="middle" font-size="14" fill="#1f2937">All X→Z</text>
+  <text x="100" y="230" text-anchor="middle" font-size="14" fill="#1f2937">Some A→B</text>
+  <text x="200" y="180" text-anchor="middle" font-size="13" fill="#1f2937">Activation token</text>
+  <text x="480" y="160" text-anchor="middle" font-size="13" fill="#1f2937">If All then Some → Invalid</text>
+  <!-- Caption strip -->
+  <line x1="20" y1="295" x2="540" y2="295" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="315" text-anchor="middle" font-size="12" fill="#1f2937">Quantifier Interaction in Mixed Categorical‑Conditional Syllogisms</text>
+</svg></div>
+  <figcaption>Quantifier Interaction in Mixed Categorical‑Conditional Syllogisms</figcaption>
+</figure>
+
 <p>Standard categorical syllogisms involve three terms and two premises, each quantified by “All”, “No”, or “Some”. Exam‑level questions increasingly blend these with conditional statements (“If every X is Y, then some Z are not X”). The logical interaction of quantifiers across the categorical‑conditional boundary creates subtle validity traps.</p>
 <p>Two fundamental principles govern these hybrids:</p>
 <ul>
@@ -2734,6 +3018,47 @@ Case 2: S<sub>B</sub>=1. Symmetric analysis yields contradiction because (2) giv
 <p>Practical exam strategy: identify the “quantifier backbone” – the chain of universal quantifiers that can be merged, and isolate any existential premises that act as “activation tokens” for conditionals. If a conditional’s antecedent contains a universal statement but the consequent is existential, the argument is usually invalid because the universal does not guarantee the existence required for the existential conclusion.</p>
 
 <h3>Dynamic Direction Sense with Variable Reference Frames</h3>
+<!-- passage-cartoon:0f46914266f1 -->
+<figure class="passage-cartoon" data-cartoon="0f46914266f1">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Global compass (Absolute frame) -->
+  <circle cx="100" cy="100" r="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="100" y1="50" x2="100" y2="150" stroke="#1f2937" stroke-width="2"/>
+  <line x1="50" y1="100" x2="150" y2="100" stroke="#1f2937" stroke-width="2"/>
+  <text x="100" y="40" text-anchor="middle" font-size="12" fill="#1f2937">N</text>
+  <text x="160" y="105" text-anchor="middle" font-size="12" fill="#1f2937">E</text>
+  <text x="100" y="165" text-anchor="middle" font-size="12" fill="#1f2937">S</text>
+  <text x="40" y="105" text-anchor="middle" font-size="12" fill="#1f2937">W</text>
+  <text x="100" y="190" text-anchor="middle" font-size="14" fill="#1f2937">Absolute Frame</text>
+
+  <!-- Train (Relative frame) moving East -->
+  <rect x="180" y="190" width="120" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="300" y1="205" x2="340" y2="205" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="340,205 330,200 330,210" fill="#1f2937"/>
+  <text x="240" y="180" text-anchor="middle" font-size="14" fill="#1f2937">Relative Frame</text>
+  <text x="340" y="225" text-anchor="start" font-size="14" fill="#1f2937">Train East</text>
+
+  <!-- Pedestrian path -->
+  <!-- First segment North -->
+  <line x1="350" y1="260" x2="350" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="350,160 345,170 355,170" fill="#1f2937"/>
+  <!-- Second segment North (left turn relative to train) -->
+  <line x1="350" y1="160" x2="350" y2="60" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="350,60 345,70 355,70" fill="#1f2937"/>
+  <text x="360" y="110" text-anchor="start" font-size="14" fill="#1f2937">Left→North</text>
+
+  <!-- Resultant displacement -->
+  <line x1="350" y1="260" x2="350" y2="60" stroke="#1f2937" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="360" y="260" text-anchor="start" font-size="14" fill="#1f2937">Resultant</text>
+
+  <!-- Caption strip -->
+  <rect x="0" y="300" width="560" height="2" fill="#1f2937"/>
+  <text x="280" y="295" text-anchor="middle" font-size="14" fill="#1f2937">Dynamic Direction Sense with Variable Reference Frames</text>
+</svg></div>
+  <figcaption>Dynamic Direction Sense with Variable Reference Frames</figcaption>
+</figure>
+
 <p>Traditional direction‑sense questions assume a fixed cardinal frame (North, East, South, West). Advanced items introduce a moving reference frame – for example, “A person walks 5 km north, then turns left relative to the direction of a moving train that is traveling east at 40 km/h”. Solving such problems demands a clear separation of two coordinate systems:</p>
 <ol>
 <li><strong>Absolute frame (global)</strong>: The fixed compass directions used for final answer reporting.</li>
@@ -2749,6 +3074,48 @@ Case 2: S<sub>B</sub>=1. Symmetric analysis yields contradiction because (2) giv
 <p>Illustrative case: “A hiker walks 3 km east, then turns right relative to a river flowing north‑east at 5 km/h”. The river’s unit vector is (√2/2, √2/2). Turning right means rotating this vector 90° clockwise, yielding (√2/2, ‑√2/2) – i.e., southeast. The second segment is therefore 2 km southeast (components 2·√2/2, ‑2·√2/2). Adding to the first segment gives a net displacement of (3 + √2, ‑√2) km, whose direction is arctan(‑√2 / (3 + √2)) ≈  -15° from East, i.e., 15° south of East.</p>
 
 <h3>Hybrid Analogy‑Syllogism Constructs in Data‑Sufficiency Questions</h3>
+<!-- passage-cartoon:ec091c6da5da -->
+<figure class="passage-cartoon" data-cartoon="ec091c6da5da">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Left domain boxes -->
+  <rect x="80" y="60" width="180" height="50" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <text x="170" y="95" text-anchor="middle" font-size="16" fill="#1f2937">Architect</text>
+  <rect x="80" y="130" width="180" height="50" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <text x="170" y="165" text-anchor="middle" font-size="16" fill="#1f2937">Designer</text>
+  <rect x="80" y="200" width="180" height="50" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <text x="170" y="235" text-anchor="middle" font-size="16" fill="#1f2937">Blueprint</text>
+  <!-- Vertical arrows left -->
+  <line x1="170" y1="110" x2="170" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="165,120 170,130 175,120" fill="#1f2937"/>
+  <line x1="170" y1="180" x2="170" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="165,190 170,200 175,190" fill="#1f2937"/>
+  <!-- Right domain boxes -->
+  <rect x="380" y="80" width="180" height="50" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <text x="470" y="115" text-anchor="middle" font-size="16" fill="#1f2937">Chef</text>
+  <rect x="380" y="170" width="180" height="50" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <text x="470" y="205" text-anchor="middle" font-size="16" fill="#1f2937">Recipe</text>
+  <!-- Mapping arrows -->
+  <line x1="260" y1="155" x2="380" y2="105" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="370,100 380,105 370,110" fill="#1f2937"/>
+  <line x1="260" y1="225" x2="380" y2="195" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="370,190 380,195 370,200" fill="#1f2937"/>
+  <!-- Central question mark -->
+  <text x="280" y="260" text-anchor="middle" font-size="60" fill="#1f2937">?</text>
+  <!-- Labels -->
+  <text x="80" y="30" font-size="14" fill="#1f2937">Data Sufficiency</text>
+  <text x="170" y="30" text-anchor="middle" font-size="14" fill="#1f2937">Syllogism</text>
+  <text x="300" y="100" font-size="14" fill="#1f2937">Analogy</text>
+  <text x="300" y="210" font-size="14" fill="#1f2937">Mapping</text>
+  <text x="280" y="250" text-anchor="middle" font-size="14" fill="#1f2937">Bijective?</text>
+  <text x="460" y="260" text-anchor="end" font-size="14" fill="#1f2937">Insufficient</text>
+  <!-- Caption strip -->
+  <line x1="0" y1="280" x2="560" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" text-anchor="middle" font-size="12" fill="#1f2937">Hybrid Analogy‑Syllogism Constructs in Data‑Sufficiency Questions</text>
+</svg></div>
+  <figcaption>Hybrid Analogy‑Syllogism Constructs in Data‑Sufficiency Questions</figcaption>
+</figure>
+
 <p>Data‑sufficiency (DS) items traditionally test whether the given statements are enough to answer a quantitative query. A newer twist merges an analogy with a syllogistic inference, demanding that the candidate first recognise a structural mapping before deciding sufficiency. The typical format is:</p>
 <div>
 <p>Statement 1: “All X are Y, and every Y is related to Z in the same way that A is related to B.”<br>
@@ -2782,6 +3149,69 @@ Question: Is it sufficient to conclude that Maya’s project has a recipe?</div>
 </div>
 
 <h3>Probabilistic Reasoning in Blood‑Relation Puzzles with Uncertain Gender</h3>
+<!-- passage-cartoon:a7daab577aba -->
+<figure class="passage-cartoon" data-cartoon="a7daab577aba">
+  <div class="pc-frame"><svg viewBox='0 0 560 320' xmlns='http://www.w3.org/2000/svg'>
+  <rect width='560' height='320' fill='#fbf7ec'/>
+  <!-- Family tree nodes -->
+  <circle cx='120' cy='80' r='28' fill='none' stroke='#1f2937' stroke-width='3'/>
+  <text x='120' y='85' text-anchor='middle' font-size='18' font-weight='bold' fill='#1f2937'>P</text>
+  <circle cx='280' cy='80' r='28' fill='none' stroke='#1f2937' stroke-width='3'/>
+  <text x='280' y='85' text-anchor='middle' font-size='18' font-weight='bold' fill='#1f2937'>Q</text>
+  <circle cx='440' cy='80' r='28' fill='none' stroke='#1f2937' stroke-width='3'/>
+  <text x='440' y='85' text-anchor='middle' font-size='18' font-weight='bold' fill='#1f2937'>R</text>
+  <circle cx='200' cy='180' r='28' fill='none' stroke='#1f2937' stroke-width='3'/>
+  <text x='200' y='185' text-anchor='middle' font-size='18' font-weight='bold' fill='#1f2937'>S</text>
+  <circle cx='360' cy='180' r='28' fill='none' stroke='#1f2937' stroke-width='3'/>
+  <text x='360' y='185' text-anchor='middle' font-size='18' font-weight='bold' fill='#1f2937'>T</text>
+  <!-- Tree edges -->
+  <line x1='148' y1='80' x2='172' y2='180' stroke='#1f2937' stroke-width='2'/>
+  <line x1='252' y1='80' x2='228' y2='180' stroke='#1f2937' stroke-width='2'/>
+  <line x1='308' y1='80' x2='332' y2='180' stroke='#1f2937' stroke-width='2'/>
+  <line x1='412' y1='80' x2='388' y2='180' stroke='#1f2937' stroke-width='2'/>
+  <!-- Gender uncertainty symbols (split circles) -->
+  <g font-size='10' fill='#1f2937'>
+    <text x='120' y='115' text-anchor='middle'>M/F</text>
+    <text x='280' y='115' text-anchor='middle'>M/F</text>
+    <text x='440' y='115' text-anchor='middle'>M/F</text>
+    <text x='200' y='215' text-anchor='middle'>M/F</text>
+    <text x='360' y='215' text-anchor='middle'>M/F</text>
+  </g>
+  <!-- Bayesian balance scale -->
+  <line x1='460' y1='40' x2='520' y2='40' stroke='#1f2937' stroke-width='4'/>
+  <line x1='490' y1='40' x2='490' y2='70' stroke='#1f2937' stroke-width='4'/>
+  <line x1='470' y1='70' x2='460' y2='110' stroke='#1f2937' stroke-width='3'/>
+  <line x1='510' y1='70' x2='520' y2='110' stroke='#1f2937' stroke-width='3'/>
+  <!-- Left pan: tree config 1 -->
+  <rect x='445' y='110' width='30' height='40' fill='none' stroke='#1f2937' stroke-width='2'/>
+  <text x='460' y='130' text-anchor='middle' font-size='8' fill='#1f2937'>G₁</text>
+  <text x='460' y='142' text-anchor='middle' font-size='8' fill='#1f2937'>w=0.42</text>
+  <!-- Right pan: tree config 2 (lower = heavier) -->
+  <rect x='505' y='95' width='30' height='55' fill='none' stroke='#1f2937' stroke-width='2'/>
+  <text x='520' y='115' text-anchor='middle' font-size='8' fill='#1f2937'>G₂</text>
+  <text x='520' y='127' text-anchor='middle' font-size='8' fill='#1f2937'>w=0.58</text>
+  <text x='520' y='139' text-anchor='middle' font-size='7' fill='#1f2937'>MAX</text>
+  <!-- Labels -->
+  <text x='80' y='30' text-anchor='middle' font-size='12' font-weight='bold' fill='#1f2937'>Gender Variable Gₓ</text>
+  <text x='300' y='30' text-anchor='middle' font-size='12' font-weight='bold' fill='#1f2937'>Enumerate 2ⁿ Vectors</text>
+  <text x='500' y='30' text-anchor='middle' font-size='12' font-weight='bold' fill='#1f2937'>Bayesian Weighting</text>
+  <text x='120' y='260' text-anchor='middle' font-size='11' fill='#1f2937'>Hard Constraint</text>
+  <text x='280' y='260' text-anchor='middle' font-size='11' fill='#1f2937'>Prior = 0.5</text>
+  <text x='440' y='260' text-anchor='middle' font-size='11' fill='#1f2937'>Likelihood 0.7</text>
+  <text x='200' y='260' text-anchor='middle' font-size='11' fill='#1f2937'>Posterior</text>
+  <text x='360' y='260' text-anchor='middle' font-size='11' fill='#1f2937'>Max Weight</text>
+  <!-- Constraint arrows -->
+  <path d='M120 52 Q150 40 200 52' fill='none' stroke='#1f2937' stroke-width='2' stroke-dasharray='4,2'/>
+  <text x='160' y='38' text-anchor='middle' font-size='9' fill='#1f2937'>P=M ∨ Q=F</text>
+  <path d='M360 152 Q400 140 440 152' fill='none' stroke='#1f2937' stroke-width='2' stroke-dasharray='4,2'/>
+  <text x='400' y='135' text-anchor='middle' font-size='9' fill='#1f2937'>Mother(T,Q)=0.7</text>
+  <!-- Caption strip -->
+  <rect x='0' y='285' width='560' height='35' fill='#1f2937'/>
+  <text x='280' y='307' text-anchor='middle' font-size='13' font-weight='bold' fill='#fbf7ec'>Probabilistic Reasoning in Blood‑Relation Puzzles with Uncertain Gender</text>
+</svg></div>
+  <figcaption>Probabilistic Reasoning in Blood‑Relation Puzzles with Uncertain Gender</figcaption>
+</figure>
+
 <p>Standard blood‑relation questions assume each person’s gender is known. Advanced variants introduce statements such as “Either R is male or S is female” or “The probability that T is the mother of U is 0.6”. These introduce a probabilistic layer that must be resolved before the deterministic family tree can be constructed.</p>
 <p>Approach:</p>
 <ol>
