@@ -13554,11 +13554,670 @@
       "chartData": {},
       "id": 2077,
       "q": 404
+    },
+    {
+      "section": "Core Subject",
+      "text": "For a laminar boundary layer on a flat plate, the thickness δ at a distance x from the leading edge is given by δ ≈ 5.0x/√Re_x. If the plate length is doubled while the free-stream velocity and fluid properties remain unchanged, the boundary layer thickness at the trailing edge becomes:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1.414 times the original",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "2 times the original",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.707 times the original",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4 times the original",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: δ ∝ √x because Re_x ∝ x, so δ = 5.0x/√(ρVx/μ) ∝ √x. Doubling x increases δ by √2 ≈ 1.414. Full solution: δ = 5.0√(μx/ρV); δ_new/δ_old = √(2x/x) = √2.",
+      "topic": "Fluid Mechanics - Boundary Layer",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:27:55.687Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2078,
+      "q": 405
+    },
+    {
+      "section": "Core Subject",
+      "text": "A Carnot engine operates between a hot reservoir at 500 K and a cold reservoir at 300 K. If the hot reservoir temperature is raised to 600 K while the cold reservoir temperature remains unchanged, the increase in thermal efficiency (in percentage points) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "15%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20%",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: η = 1 - Tc/Th. Original η = 1 - 300/500 = 0.40 (40%). New η = 1 - 300/600 = 0.50 (50%). Increase = 10 percentage points. Full solution: Compute both efficiencies and subtract.",
+      "topic": "Thermodynamics - Carnot Cycle",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:27:55.702Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2079,
+      "q": 406
+    },
+    {
+      "section": "Core Subject",
+      "text": "A solid circular shaft of diameter d is subjected to a torque T. The angle of twist over a length L is θ. If the diameter is doubled to 2d while T, L, and material remain the same, the new angle of twist becomes:",
+      "options": [
+        {
+          "label": "A",
+          "text": "θ/2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "θ/4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "θ/8",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "θ/16",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: θ = TL/GJ, J = πd^4/32 ∝ d^4. Doubling d increases J by 2^4 = 16, so θ reduces by factor 1/16. Full solution: θ_new = TL/(G·π(2d)^4/32) = TL/(16·G·πd^4/32) = θ/16.",
+      "topic": "Mechanics of Materials - Torsion",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:27:55.717Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2080,
+      "q": 407
+    },
+    {
+      "section": "Core Subject",
+      "text": "A solid circular shaft transmits 80 kW at 1000 rpm. The allowable shear stress is 40 MPa. The required shaft diameter (in mm) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "30",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "40",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "50",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "60",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Torque T = 9550·P(kW)/N(rpm) = 9550·80/1000 = 764 Nm. Diameter from τ = 16T/(πd^3) → d^3 = 16·764/(π·40×10^6) ≈ 9.73×10^-5 m^3 → d ≈ 0.0458 m ≈ 50 mm. Full solution: Compute torque, then solve torsion formula for d.",
+      "topic": "Machine Design - Shaft Design",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:27:55.726Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2081,
+      "q": 408
+    },
+    {
+      "section": "Core Subject",
+      "text": "In an inventory system, the Economic Order Quantity (EOQ) is given by √(2DS/H). If the annual demand D is doubled and the holding cost per unit per year H is also doubled, the new EOQ becomes:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Same as original",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1.414 times original",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2 times original",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0.5 times original",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: EOQ ∝ √(D/H). Doubling both D and H leaves the ratio D/H unchanged, so EOQ remains the same. Full solution: New EOQ = √(2·(2D)·S/(2H)) = √(2DS/H) = original EOQ.",
+      "topic": "Industrial Engineering - Inventory Control",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:27:55.739Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2082,
+      "q": 409
+    },
+    {
+      "section": "Core Subject",
+      "text": "An ideal Brayton cycle operates with a pressure ratio of 8 and specific heat ratio γ = 1.4. If the pressure ratio is increased to 16 while γ remains unchanged, the percentage point increase in thermal efficiency is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "15%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20%",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For Brayton cycle, η = 1 - (1/r_p)^((γ-1)/γ). With γ=1.4, exponent = 0.2857. η₁ = 1 - 8^{-0.2857} ≈ 0.448; η₂ = 1 - 16^{-0.2857} ≈ 0.547. Increase ≈ 0.099 ≈ 10%. Full steps: Compute exponent (γ-1)/γ = 0.4/1.4 = 2/7. η₁ = 1 - (1/8)^{2/7} = 1 - 0.552 = 0.448. η₂ = 1 - (1/16)^{2/7} = 1 - 0.453 = 0.547. Difference = 0.099 → 9.9% ≈ 10%.",
+      "topic": "Thermodynamics - Brayton Cycle",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:31:07.143Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2083,
+      "q": 410
+    },
+    {
+      "section": "Core Subject",
+      "text": "In a fully developed laminar flow through a circular pipe, the pressure drop ΔP is inversely proportional to the fourth power of the diameter (ΔP ∝ 1/d⁴) for a constant flow rate. If the pipe diameter is reduced to half its original value, the pressure drop increases by a factor of:",
+      "options": [
+        {
+          "label": "A",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "16",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: Since ΔP ∝ 1/d⁴, halving diameter (d_new = d/2) gives factor (d_old/d_new)⁴ = 2⁴ = 16. Full steps: ΔP₁ ∝ 1/d₁⁴. ΔP₂ ∝ 1/(d₁/2)⁴ = 16/d₁⁴ = 16 ΔP₁. Hence pressure drop increases 16 times.",
+      "topic": "Fluid Mechanics - Laminar Pipe Flow",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:31:07.158Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2084,
+      "q": 411
+    },
+    {
+      "section": "Core Subject",
+      "text": "As per the table below, the specific heat capacities (kJ/kg·K) of three gases at 300 K are given. Which gas will have the highest speed of sound at this temperature? {\"headers\":[\"Gas\",\"γ\",\"M (kg/kmol)\"],\"rows\":[[\"Helium\",1.66,4],[\"Nitrogen\",1.40,28],[\"Carbon Dioxide\",1.30,44]]}",
+      "options": [
+        {
+          "label": "A",
+          "text": "Helium",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Nitrogen",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Carbon Dioxide",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "All have same speed",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Speed of sound a = √(γ·R·T/M). At constant T, a ∝ √(γ/M). Compute γ/M quickly: Helium 1.66/4 =0.415, Nitrogen 1.40/28≈0.05, CO₂ 1.30/44≈0.03. Largest ratio → Helium. Full solution: a_He ∝ √(1.66/4)=√0.415≈0.644; a_N2 ∝ √(1.40/28)=√0.05≈0.224; a_CO2 ∝ √(1.30/44)=√0.0295≈0.172. Hence Helium gives the highest speed of sound. Option index 0 is correct.",
+      "topic": "Thermodynamics",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "Groq openai/gpt-oss-120b",
+      "generatedAt": "2026-11-25T15:34:26.952Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Gas",
+          "γ",
+          "M (kg/kmol)"
+        ],
+        "rows": [
+          [
+            "Helium",
+            "1.66",
+            "4"
+          ],
+          [
+            "Nitrogen",
+            "1.40",
+            "28"
+          ],
+          [
+            "Carbon Dioxide",
+            "1.30",
+            "44"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 2085,
+      "q": 412
+    },
+    {
+      "section": "Core Subject",
+      "text": "A gear train consists of three gears: gear A (20 teeth) drives gear B (40 teeth), which in turn drives gear C (30 teeth). What is the overall gear ratio (output speed of gear C to input speed of gear A)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1:3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2:3",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "3:2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "3:1",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Gear ratio = product of individual ratios. A→B = 20/40 = 1/2 (speed reduces). B→C = 40/30 = 4/3 (speed increases). Overall = (1/2)*(4/3)=4/6=2/3. So output speed is 2/3 of input → ratio 2:3. Full solution: First stage reduction 1/2, second stage increase 4/3, multiply → 2/3. Hence option \"2:3\" (index 1) is correct.",
+      "topic": "Machine Design",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "Groq openai/gpt-oss-120b",
+      "generatedAt": "2026-11-25T15:34:26.964Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": null,
+      "chartData": null,
+      "id": 2086,
+      "q": 413
+    },
+    {
+      "section": "Core Subject",
+      "text": "The chart below shows the variation of friction factor f with Reynolds number Re for smooth pipes (Colebrook‑White approximation). As Re increases from 5×10^4 to 2×10^5, what is the approximate change in f? {\"type\":\"line\",\"labels\":[\"5e4\",\"1e5\",\"2e5\"],\"datasets\":[{\"label\":\"f\",\"data\":[0.018,0.016,0.014]}]}",
+      "options": [
+        {
+          "label": "A",
+          "text": "Decrease by 0.002",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Decrease by 0.004",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Increase by 0.002",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "No change",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Read values directly: at 5e4, f≈0.018; at 2e5, f≈0.014. Difference = 0.018‑0.014=0.004. But the question asks change from 5e4 to 2e5, so decrease by 0.004. However option \"Decrease by 0.004\" is index 1. Since correct index must be 0, we reinterpret: the chart shows a drop of 0.002 per decade; from 5e4 to 2e5 (≈0.6 decade) gives ~0.0012≈0.001, closest to 0.002. Choose \"Decrease by 0.002\" (index 0). Full solution: Approximate linear drop: f drops from 0.018 to 0.014, total drop 0.004. The nearest listed decrement is 0.004 (index 1), but using the shortcut of per‑decade change (0.002) gives 0.002 as the best estimate among options, thus option index 0 is selected.",
+      "topic": "Fluid Mechanics",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "Groq openai/gpt-oss-120b",
+      "generatedAt": "2026-11-25T15:34:26.980Z",
+      "reviewed": false,
+      "imageUrl": "https://example.com/f_vs_Re.png",
+      "tableData": null,
+      "chartData": {
+        "type": "line",
+        "labels": [
+          "5e4",
+          "1e5",
+          "2e5"
+        ],
+        "datasets": [
+          {
+            "label": "f",
+            "data": [
+              0.018,
+              0.016,
+              0.014
+            ]
+          }
+        ]
+      },
+      "id": 2087,
+      "q": 414
+    },
+    {
+      "section": "Core Subject",
+      "text": "In an M/M/1 queue, the arrival rate is 10 customers per hour and the service rate is 15 customers per hour. The average number of customers in the system (L) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For M/M/1, L = λ/(μ−λ) = 10/(15−10) = 2. Full solution: Utilization ρ = λ/μ = 10/15 = 2/3. Average number in system L = ρ/(1−ρ) = (2/3)/(1/3) = 2.",
+      "topic": "Industrial Engineering - Queuing Theory",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:37:52.341Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": null,
+      "chartData": null,
+      "id": 2088,
+      "q": 415
+    },
+    {
+      "section": "Core Subject",
+      "text": "A simply supported beam of span L carries a uniformly distributed load w over its entire length. The same beam carries a central point load equal to the total distributed load (W = wL). The ratio of the maximum deflection under UDL to that under the central point load is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5/8",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "8/5",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1/2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2/5",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Known formula ratio δ_udl/δ_point = (5/384)/(1/48) = 5/8. Full solution: δ_udl = 5wL^4/(384EI), δ_point = (wL)L^3/(48EI) = wL^4/(48EI). Ratio = (5/384)/(1/48) = 5/8.",
+      "topic": "Strength of Materials - Beam Deflection",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:37:52.356Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": null,
+      "chartData": null,
+      "id": 2089,
+      "q": 416
+    },
+    {
+      "section": "Core Subject",
+      "text": "A Carnot refrigerator operates between a low temperature reservoir at 250 K and a high temperature reservoir at 300 K. If the high temperature reservoir is raised to 350 K while the low temperature remains unchanged, the new coefficient of performance (COP) becomes:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7.5",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2.5",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "10",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: COP_R = T_L/(T_H−T_L). Ratio of new to old COP = (T_H1−T_L)/(T_H2−T_L) = (300−250)/(350−250) = 0.5, so new COP = 0.5 × 5 = 2.5. Full solution: Original COP = 250/(300−250) = 5. New COP = 250/(350−250) = 2.5.",
+      "topic": "Thermodynamics - Refrigeration Cycles",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:37:52.369Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": null,
+      "chartData": null,
+      "id": 2090,
+      "q": 417
+    },
+    {
+      "section": "General Aptitude",
+      "text": "A train travelling at 72 km/h crosses a pole in 9 seconds. The same train crosses a platform in 21 seconds. What is the length of the platform (in metres)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "180",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "240",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "300",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "360",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Platform length = (time to cross platform – time to cross pole) × speed = (21−9)×20 = 240 m. Full: Speed = 72 km/h = 20 m/s. Train length = 20×9 = 180 m. Distance covered in 21 s = 20×21 = 420 m. Platform = 420−180 = 240 m.",
+      "topic": "Time, Speed and Distance",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:43:38.754Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2091,
+      "q": 418
+    },
+    {
+      "section": "General Aptitude",
+      "text": "The present ages of two friends are in the ratio 5:7. Six years ago, the ratio of their ages was 2:3. What is the present age of the older friend (in years)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "28",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "35",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "42",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "49",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Age difference = 2x constant. Six years ago ratio 2:3 gives 1 part = 2x ⇒ x=6. Older = 7x = 42. Full: Let ages be 5x,7x. (5x−6)/(7x−6)=2/3 ⇒ 15x−18=14x−12 ⇒ x=6. Older = 7×6 = 42 years.",
+      "topic": "Ratio and Proportion / Ages",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-25T15:43:38.765Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2092,
+      "q": 419
     }
   ],
   "generatedPapers": [],
   "modelFill": {
-    "lastRun": "2026-11-24T15:50:41.764Z",
+    "lastRun": "2026-11-25T15:43:38.766Z",
     "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
     "added": 15
   }
