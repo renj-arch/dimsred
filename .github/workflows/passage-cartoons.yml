@@ -1,0 +1,89 @@
+name: Passage Cartoons
+
+# One mini editorial cartoon (The Hindu style) per passage of a UPSC lesson:
+# a single-panel ink drawing that conveys the section in a nutshell.
+#
+# Each run takes the next few lessons that still have passages without a
+# cartoon, writes up to N cartoons per lesson, and publishes. Idempotent: a
+# cartoon is keyed by a hash of its passage, so a re-run never doubles one.
+#
+# The script validates the model's SVG hard (viewBox, >=3 labels, background,
+# no script/external refs), so a bad drawing costs its own slot, never the page.
+
+on:
+  schedule:
+    - cron: '19 */2 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Lessons to process this run'
+        required: false
+        default: '6'
+      max:
+        description: 'Max cartoons per lesson'
+        required: false
+        default: '6'
+      granularity:
+        description: 'h2 (major sections) or h3 (every subsection)'
+        required: false
+        default: 'h2'
+      file:
+        description: 'One lesson path (comma-separated), or blank for all'
+        required: false
+        default: ''
+
+concurrency:
+  group: passage-cartoons
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  cartoons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Draw one cartoon per passage
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI: '1'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LIMIT: ${{ github.event.inputs.limit || '6' }}
+          MAX: ${{ github.event.inputs.max || '6' }}
+          GRAN: ${{ github.event.inputs.granularity || 'h2' }}
+          FILE: ${{ github.event.inputs.file || '' }}
+        run: |
+          ARGS="--limit $LIMIT --max $MAX --granularity $GRAN --workers 3 --deadline 55"
+          if [ -n "$FILE" ]; then ARGS="--file $FILE $ARGS"; else ARGS="--all $ARGS"; fi
+          node scripts/invent-passage-cartoons.js $ARGS
+
+      - name: Publish cartoons
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/passage-cartoons.json css/style.css 2>/dev/null || true
+          git add upsc/course 2>/dev/null || true
+          bash scripts/ci-push.sh "passage-cartoons: a cartoon for each passage (run #${{ github.run_number }})"
