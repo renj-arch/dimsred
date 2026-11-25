@@ -870,6 +870,54 @@
 <div class="tip-box"><div class="tip-title">Exam‑Day Strategy</div><div class="tip-text">When a syllogistic network appears, sketch a quick Venn diagram with only the terms that actually occur in the premises and the conclusion. Shade universal negatives first, then mark particular affirmatives with an ‘×’ in any permissible region. If a conditional conclusion is asked, draw the antecedent as an extra shading/marking layer on a copy of the diagram; if the consequent’s required mark already exists, the conditional is true. This visual method is faster than algebraic manipulation and reduces careless errors.</div></div>
 
 <h3>Hybrid Puzzle Grids: Integrating Seating, Floor, and Attribute Constraints</h3>
+<!-- passage-cartoon:e4fa4a562bda -->
+<figure class="passage-cartoon" data-cartoon="e4fa4a562bda">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Caption strip -->
+  <rect x="0" y="300" width="560" height="20" fill="#e5e2da"/>
+  <text x="280" y="315" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Hybrid Puzzle Grids</text>
+  <!-- Main cartoon -->
+  <!-- Grid sketch -->
+  <rect x="80" y="40" width="400" height="200" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Column headers -->
+  <text x="150" y="60" font-family="sans-serif" font-size="14" fill="#1f2937">Person</text>
+  <text x="260" y="60" font-family="sans-serif" font-size="14" fill="#1f2937">Seat</text>
+  <text x="340" y="60" font-family="sans-serif" font-size="14" fill="#1f2937">Floor</text>
+  <text x="440" y="60" font-family="sans-serif" font-size="14" fill="#1f2937">Colour</text>
+  <!-- Rows -->
+  <line x1="80" y1="80" x2="480" y2="80" stroke="#1f2937" stroke-width="1"/>
+  <line x1="80" y1="110" x2="480" y2="110" stroke="#1f2937" stroke-width="1"/>
+  <line x1="80" y1="140" x2="480" y2="140" stroke="#1f2937" stroke-width="1"/>
+  <line x1="80" y1="170" x2="480" y2="170" stroke="#1f2937" stroke-width="1"/>
+  <line x1="80" y1="200" x2="480" y2="200" stroke="#1f2937" stroke-width="1"/>
+  <!-- Sample entries -->
+  <text x="150" y="100" font-family="sans-serif" font-size="12" fill="#1f2937">A</text>
+  <text x="260" y="100" font-family="sans-serif" font-size="12" fill="#1f2937">1</text>
+  <text x="340" y="100" font-family="sans-serif" font-size="12" fill="#1f2937">3</text>
+  <text x="440" y="100" font-family="sans-serif" font-size="12" fill="#1f2937">Red</text>
+  <text x="150" y="130" font-family="sans-serif" font-size="12" fill="#1f2937">B</text>
+  <text x="260" y="130" font-family="sans-serif" font-size="12" fill="#1f2937">2</text>
+  <text x="340" y="130" font-family="sans-serif" font-size="12" fill="#1f2937">2</text>
+  <text x="440" y="130" font-family="sans-serif" font-size="12" fill="#1f2937">Blue</text>
+  <!-- Arrow showing propagation order -->
+  <path d="M500 80 C520 70, 520 120, 500 130" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <polygon points="500,80 494,86 506,86" fill="#1f2937"/>
+  <text x="505" y="105" font-family="sans-serif" font-size="12" fill="#1f2937">unary</text>
+  <path d="M500 130 C520 140, 520 190, 500 200" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <polygon points="500,130 494,136 506,136" fill="#1f2937"/>
+  <text x="505" y="165" font-family="sans-serif" font-size="12" fill="#1f2937">binary</text>
+  <path d="M500 200 C520 210, 520 260, 500 270" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <polygon points="500,200 494,206 506,206" fill="#1f2937"/>
+  <text x="505" y="235" font-family="sans-serif" font-size="12" fill="#1f2937">global</text>
+  <!-- Labels -->
+  <text x="80" y="250" font-family="sans-serif" font-size="14" fill="#1f2937">Apply unary → AC‑3 → cardinality</text>
+  <text x="380" y="285" font-family="sans-serif" font-size="12" fill="#1f2937">cross‑category link</text>
+  <line x1="380" y1="280" x2="420" y2="260" stroke="#1f2937" stroke-width="1" stroke-dasharray="2,2"/>
+</svg></div>
+  <figcaption>Hybrid Puzzle Grids: Integrating Seating, Floor, and Attribute Constraints</figcaption>
+</figure>
+
 <p>Modern reasoning sections increasingly blend linear seating, multi‑floor building, and attribute assignment (colour, profession, vehicle) into a single puzzle. The underlying structure is a constraint‑satisfaction problem (CSP) with variables representing each person, each seat/floor position, and each attribute. Domains are finite sets (e.g., seats 1‑8, floors 1‑5, colours {Red, Blue, Green, Yellow}). Constraints fall into three families: <strong>binary relational</strong> (A sits immediately left of B, A lives two floors above B), <strong>unary attribute</strong> (A owns a Red car), and <strong>global cardinality</strong> (exactly two persons live on floor 3). Solving such hybrids efficiently requires a systematic propagation order: first apply all unary constraints to prune domains, then enforce binary relational constraints using arc consistency (AC‑3 algorithm) — repeatedly remove values from a variable’s domain that have no support in the related variable’s domain. After arc consistency stabilises, apply global cardinality constraints by counting remaining feasible assignments; if a floor’s capacity is exceeded, backtrack. A practical hand‑solved technique mimics this: draw a master grid with persons as rows and attribute categories as columns. Fill in direct clues immediately. For each relational clue, write a provisional link (e.g., “A – left – B”) and update the grid when a position becomes forced. Use “pencil marks” for multiple possibilities and eliminate them as other clues resolve. A common twist is a “cross‑category” clue such as “The person who lives on the top floor drives a Blue car”. This couples the floor variable with the colour variable, creating a new binary constraint that must be propagated across both dimensions. Ignoring cross‑category links leads to multiple apparently valid grids, whereas the correct grid is unique only after all cross‑links are honoured. Proficiency develops through practising puzzles with at least three intertwined categories and timing the propagation steps.</p>
 
 <h3>Direction Sense with Variable Speed and Non‑Orthogonal Turns</h3>
@@ -995,6 +1043,50 @@
 <p>When multiple premises contain mixed connectives, construct a truth‑table for the propositional skeleton first, then instantiate the categorical content for each satisfying row. This two‑stage method prevents the common error of mixing propositional and categorical reasoning in a single diagram. Practice with at least three premises per set builds the habit of isolating the connective layer before applying syllogistic rules.</p>
 
 <h3>Analogy Taxonomy: Semantic, Structural, and Functional Isomorphisms</h3>
+<!-- passage-cartoon:d1cba8091eff -->
+<figure class="passage-cartoon" data-cartoon="d1cba8091eff">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Column headers -->
+  <text x="100" y="30" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">Semantic</text>
+  <text x="280" y="30" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">Structural</text>
+  <text x="460" y="30" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">Functional</text>
+
+  <!-- Semantic: thermometer → temperature -->
+  <path d="M100,100 L100,180" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="100" cy="185" r="10" fill="#1f2937"/>
+  <circle cx="100" cy="220" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M100,220 L100,205" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M100,195 L100,205 M95,200 L100,205 L105,200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="100" y="250" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Instrument:Measure</text>
+
+  <!-- Structural: anagram squares -->
+  <rect x="230" y="100" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M230,100 L270,140" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="310" y="100" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M310,140 L350,100" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <path d="M270,120 Q290,100 310,120 M305,115 L310,120 L305,125" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="160" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Anagram</text>
+
+  <!-- Functional: key → lock -->
+  <!-- key -->
+  <circle cx="430" cy="110" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M430,118 L430,138" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M425,138 L435,138 M425,133 L435,133 M425,128 L435,128" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- lock -->
+  <rect x="470" y="100" width="30" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M485,100 Q485,90 470,90" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- arrow -->
+  <path d="M438,110 L470,110 M465,105 L470,110 L465,115" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="460" y="160" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Key:Lock</text>
+
+  <!-- Caption strip -->
+  <line x1="20" y1="290" x2="540" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">Analogy Taxonomy: Semantic, Structural, and Functional Isomorphisms</text>
+</svg></div>
+  <figcaption>Analogy Taxonomy: Semantic, Structural, and Functional Isomorphisms</figcaption>
+</figure>
+
 <p>Analogies in competitive reasoning are not limited to simple word pairs; they appear as triplets, quadruplets, and even matrix‑style grids where each cell must preserve a relational pattern. A robust taxonomy distinguishes three isomorphism levels. <strong>Semantic isomorphism</strong> preserves meaning relations such as synonymy, antonymy, hyponymy, or meronymy (part‑whole). Example: “thermometer : temperature :: barometer : pressure” maps instrument to measured quantity.</p>
 <p><strong>Structural isomorphism</strong> preserves the internal architecture of the terms — letter patterns, phonological structure, or morphological composition. “listen : silent :: post : stop” relies on anagram rearrangement; “unhappy : happiness :: unfair : fairness” exploits derivational morphology (prefix‑root‑suffix). Recognising structural cues requires scanning for repeated substrings, reversed order, or consistent affix changes.</p>
 <p><strong>Functional isomorphism</strong> preserves the role a term plays in a system or process. “key : lock :: password : account” maps an access credential to the secured entity; “catalyst : reaction :: enzyme : metabolism” maps an accelerator to the process it speeds. Functional analogies often appear in science‑themed sets where domain knowledge helps, but the relational skeleton remains the same across domains.</p>
@@ -1012,18 +1104,166 @@
 </div>
 
 <h3>Circular Seating with Facing Directions and Variable Gaps</h3>
+<!-- passage-cartoon:7c82960c4820 -->
+<figure class="passage-cartoon" data-cartoon="7c82960c4820">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Concentric circles -->
+  <circle cx="280" cy="150" r="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="150" r="130" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Centre-facing figures (inner circle) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- 45° -->
+    <circle cx="336.6" cy="93.4" r="8"/>
+    <line x1="336.6" y1="101.4" x2="336.6" y2="116.4"/>
+    <line x1="326.6" y1="106.4" x2="346.6" y2="106.4"/>
+    <!-- clockwise left arrow -->
+    <path d="M340 90 A10 10 0 0 1 350 100" marker-end="url(#arrow)"/>
+    <!-- 135° -->
+    <circle cx="223.4" cy="93.4" r="8"/>
+    <line x1="223.4" y1="101.4" x2="223.4" y2="116.4"/>
+    <line x1="213.4" y1="106.4" x2="233.4" y2="106.4"/>
+    <path d="M220 90 A10 10 0 0 0 210 100" marker-end="url(#arrow)"/>
+    <!-- 225° -->
+    <circle cx="223.4" cy="206.6" r="8"/>
+    <line x1="223.4" y1="214.6" x2="223.4" y2="229.6"/>
+    <line x1="213.4" y1="219.6" x2="233.4" y2="219.6"/>
+    <path d="M220 210 A10 10 0 0 1 210 220" marker-end="url(#arrow)"/>
+    <!-- 315° -->
+    <circle cx="336.6" cy="206.6" r="8"/>
+    <line x1="336.6" y1="214.6" x2="336.6" y2="229.6"/>
+    <line x1="326.6" y1="219.6" x2="346.6" y2="219.6"/>
+    <path d="M340 210 A10 10 0 0 0 350 220" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Outward-facing figures (outer circle) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- 0° -->
+    <circle cx="410" cy="150" r="8"/>
+    <line x1="410" y1="158" x2="410" y2="173"/>
+    <line x1="400" y1="163" x2="420" y2="163"/>
+    <!-- anticlockwise left arrow -->
+    <path d="M415 145 A15 15 0 0 0 400 155" marker-end="url(#arrow)"/>
+    <!-- 90° -->
+    <circle cx="280" cy="20" r="8"/>
+    <line x1="280" y1="28" x2="280" y2="43"/>
+    <line x1="270" y1="33" x2="290" y2="33"/>
+    <path d="M285 25 A15 15 0 0 1 270 35" marker-end="url(#arrow)"/>
+    <!-- 180° -->
+    <circle cx="150" cy="150" r="8"/>
+    <line x1="150" y1="158" x2="150" y2="173"/>
+    <line x1="140" y1="163" x2="160" y2="163"/>
+    <path d="M145 145 A15 15 0 0 1 160 155" marker-end="url(#arrow)"/>
+    <!-- 270° -->
+    <circle cx="280" cy="280" r="8"/>
+    <line x1="280" y1="288" x2="280" y2="303"/>
+    <line x1="270" y1="293" x2="290" y2="293"/>
+    <path d="M275 285 A15 15 0 0 0 290 295" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Variable gap illustration between two inner figures (45° and 135°) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <path d="M336.6 93.4 A80 80 0 0 0 223.4 93.4" stroke-dasharray="6,4"/>
+    <text x="280" y="70" text-anchor="middle" font-size="14" fill="#1f2937">2 or 3 seats</text>
+  </g>
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Labels -->
+  <text x="280" y="30" text-anchor="middle" font-size="16" fill="#1f2937" font-weight="bold">Centre / Outward</text>
+  <text x="460" y="150" text-anchor="start" font-size="13" fill="#1f2937">Outward</text>
+  <text x="100" y="150" text-anchor="end" font-size="13" fill="#1f2937">Outward</text>
+  <text x="280" y="20" text-anchor="middle" font-size="13" fill="#1f2937">Centre</text>
+  <text x="280" y="295" text-anchor="middle" font-size="13" fill="#1f2937">Centre</text>
+  <text x="380" y="100" text-anchor="start" font-size="12" fill="#1f2937">Left = CW</text>
+  <text x="180" y="100" text-anchor="end" font-size="12" fill="#1f2937">Left = CCW</text>
+  <text x="380" y="200" text-anchor="start" font-size="12" fill="#1f2937">Branch &amp; prune</text>
+  <text x="180" y="200" text-anchor="end" font-size="12" fill="#1f2937">Modular eq.</text>
+  <!-- Caption strip -->
+  <rect x="0" y="300" width="560" height="20" fill="#1f2937"/>
+  <text x="280" y="315" text-anchor="middle" font-size="13" fill="#fbf7ec">Circular Seating with Facing Directions and Variable Gaps</text>
+</svg></div>
+  <figcaption>Circular Seating with Facing Directions and Variable Gaps</figcaption>
+</figure>
+
 <p>Circular arrangement problems become substantially harder when persons may face either the centre or outward, and when the number of seats between two specified persons is given as a range rather than a fixed count. The facing direction flips the meaning of “immediate left” and “immediate right”: for a centre‑facing person, left is clockwise; for an outward‑facing person, left is anticlockwise. A systematic approach is to assign each seat a binary variable <strong>Fᵢ ∈ {C, O}</strong> (centre, outward) and a positional index modulo <strong>N</strong> (total seats).</p>
 <p>Clues of the type “A sits third to the left of B” translate to a modular equation: if B faces centre, position(A) ≡ position(B) − 3 (mod N); if B faces outward, position(A) ≡ position(B) + 3 (mod N). When the facing of B is unknown, the clue yields two possible equations, branching the search space. Variable‑gap clues such as “there are either two or three persons between C and D” produce a disjunction of modular constraints: |pos(C) − pos(D)| ∈ {3, 4} (mod N).</p>
 <p>To solve efficiently, first list all persons with known facing (often given directly). Propagate their left/right definitions to neighbours. Next, apply fixed‑gap clues to reduce the domain of each person’s seat index. For each variable‑gap clue, keep both possibilities as parallel branches; use a depth‑first search with backtracking, but prune aggressively by checking global constraints — e.g., no two persons can occupy the same seat, and the total number of centre‑facing persons may be fixed by a clue like “exactly four face the centre”.</p>
 <p>A practical hand‑solved technique: draw two concentric circles, inner for centre‑facing, outer for outward‑facing. Place persons on the appropriate circle as clues fix their facing. Use pencil marks for uncertain seats. When a branch leads to a contradiction (duplicate seat or violated cardinality), erase that branch and continue. This visual‑branch method mirrors the algorithmic backtracking but remains manageable for N ≤ 12.</p>
 
 <h3>Blood Relations: Multi‑Generational Trees with Adoption and Half‑Siblings</h3>
+<!-- passage-cartoon:210ec5704473 -->
+<figure class="passage-cartoon" data-cartoon="210ec5704473">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Biological parents -->
+  <circle cx="120" cy="80" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="360" cy="80" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Legal parents -->
+  <circle cx="120" cy="240" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="360" cy="240" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Child and half‑sibling -->
+  <circle cx="240" cy="160" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="440" cy="160" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Solid biological arrows -->
+  <line x1="120" y1="95" x2="240" y2="145" stroke="#1f2937" stroke-width="3"/>
+  <line x1="360" y1="95" x2="240" y2="145" stroke="#1f2937" stroke-width="3"/>
+  <line x1="120" y1="95" x2="440" y2="145" stroke="#1f2937" stroke-width="3"/>
+  <!-- Dashed legal arrows -->
+  <line x1="120" y1="225" x2="240" y2="175" stroke="#1f2937" stroke-width="3" stroke-dasharray="6,4"/>
+  <line x1="360" y1="225" x2="240" y2="175" stroke="#1f2937" stroke-width="3" stroke-dasharray="6,4"/>
+  <!-- Labels -->
+  <text x="120" y="55" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Bio Father</text>
+  <text x="360" y="55" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Bio Mother</text>
+  <text x="120" y="270" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Legal Father</text>
+  <text x="360" y="270" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Legal Mother</text>
+  <text x="240" y="190" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Child</text>
+  <text x="440" y="190" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Half‑Sibling</text>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#fbf7ec"/>
+  <text x="280" y="310" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Blood Relations: Multi‑Generational Trees with Adoption and Half‑Siblings</text>
+</svg></div>
+  <figcaption>Blood Relations: Multi‑Generational Trees with Adoption and Half‑Siblings</figcaption>
+</figure>
+
 <p>Standard blood‑relation puzzles assume biological parent‑child links and full siblings. Advanced versions introduce adoption, step‑relations, and half‑siblings, which break the simple “parent of” transitivity. An adopted child is legally a child of the adoptive parents but biologically unrelated; a half‑sibling shares exactly one biological parent. Represent each person as a node with two parental edges: <strong>bio‑father</strong>, <strong>bio‑mother</strong>, and two legal edges: <strong>legal‑father</strong>, <strong>legal‑mother</strong>. A clue such as “X is the adopted son of Y” creates a legal‑father or legal‑mother edge from Y to X without a biological edge.</p>
 <p>When a question asks “How is P related to Q?”, the answer must specify the relation type (biological, legal, step, half) if the puzzle provides enough information to distinguish. If the data are insufficient, the correct response is “cannot be determined”. A common trap is to assume that “brother” always means full brother; the presence of a half‑sibling clue forces the solver to keep both possibilities open until a later clue eliminates one.</p>
 <p>To diagram, draw a directed graph with solid arrows for biological links and dashed arrows for legal links. Label each arrow with the relation (father, mother, son, daughter). For half‑siblings, draw a shared biological parent node with two child nodes. Step‑relations appear as a legal parent linked to a child who already has a different biological parent. Propagation rules: legal parent of a legal child is a legal grandparent; biological parent of a legal child is not automatically a legal grandparent unless adoption is by both spouses.</p>
 <p>Practice with at least three generations and mixed relation types. The key discipline is to never collapse legal and biological edges unless a clue explicitly states “legally and biologically”. Maintaining the distinction throughout the diagram prevents the most frequent error: assigning a biological relationship where only a legal one exists.</p>
 
 <h3>Direction Sense: Relative Motion and Vector Addition</h3>
+<!-- passage-cartoon:16b05a040f00 -->
+<figure class="passage-cartoon" data-cartoon="16b05a040f00">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Rotating platform -->
+  <circle cx="280" cy="160" r="100" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Person on platform (at 3 o'clock) -->
+  <circle cx="380" cy="140" r="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <line x1="380" y1="150" x2="380" y2="180" stroke="#1f2937" stroke-width="2"/>
+  <line x1="360" y1="165" x2="400" y2="165" stroke="#1f2937" stroke-width="2"/>
+  <line x1="380" y1="180" x2="365" y2="200" stroke="#1f2937" stroke-width="2"/>
+  <line x1="380" y1="180" x2="395" y2="200" stroke="#1f2937" stroke-width="2"/>
+  <!-- Relative velocity arrow (radial outward) -->
+  <path d="M380,160 L460,160 L450,155 M460,160 L450,165" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Platform velocity arrow (tangential, clockwise => down at 3 o'clock) -->
+  <path d="M380,160 L380,240 L375,230 M380,240 L385,230" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Absolute velocity arrow (vector sum) -->
+  <path d="M380,160 L440,220 L430,210 M440,220 L430,230" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Labels -->
+  <text x="420" y="150" font-family="sans-serif" font-size="14" fill="#1f2937">vᵣ (relative)</text>
+  <text x="360" y="200" font-family="sans-serif" font-size="14" fill="#1f2937">ω×r (platform)</text>
+  <text x="410" y="190" font-family="sans-serif" font-size="14" fill="#1f2937">vₐ (absolute)</text>
+  <text x="250" y="100" font-family="sans-serif" font-size="14" fill="#1f2937">Vector addition</text>
+  <text x="280" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Angular velocity</text>
+  <!-- Caption strip -->
+  <line x1="20" y1="290" x2="540" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Direction Sense: Relative Motion and Vector Addition</text>
+</svg></div>
+  <figcaption>Direction Sense: Relative Motion and Vector Addition</figcaption>
+</figure>
+
 <p>Classic direction problems assume a fixed global north. Advanced variants describe movement relative to a moving reference such as “the person walks 5 m north relative to the train, which itself moves east at 10 m/s” or place the observer on a rotating platform. The solution requires vector addition of the reference frame’s motion and the person’s relative motion. Let the platform’s angular velocity be ω (rad/s) and the person’s velocity relative to the platform be **v**ᵣ. The absolute velocity **v**ₐ = **v**ᵣ + ω × **r**, where **r** is the position vector from the rotation centre. For a person walking radially outward on a clockwise‑rotating disc, the cross‑product term deflects the apparent path.</p>
 <p>When only the final bearing is asked, the magnitude of ω and the time of travel often cancel if the path is described in terms of relative angles. Example: “A man stands on a rotating platform facing the centre. He walks straight ahead 10 m relative to the platform while the platform rotates 90° clockwise. What is his final direction relative to the fixed ground?” Represent the initial facing as a unit vector **u**₀. After rotation, the platform’s axes have turned by 90°, so the man’s relative displacement vector in ground coordinates is the rotation of **u**₀ by 90°. His final bearing is therefore the initial bearing plus 90°.</p>
 <p>For problems with variable speed, express each leg as a vector **v**ᵢ = dᵢ **u**ᵢ where dᵢ may be a function of previous distances (e.g., d₂ = 2 d₁). Sum the vectors component‑wise. If the question asks only for the angle of the resultant, factor out the common distance variable and compute arctan of the ratio of summed components. This cancellation is a frequent time‑saver.</p>
@@ -1038,11 +1278,121 @@
 <li>Review each trap before the exam to avoid losing marks.</li>
 </ul>
 <h3>Conditional Reasoning: Nested Implications and Contrapositive Chains</h3>
+<!-- passage-cartoon:f43eee891b22 -->
+<figure class="passage-cartoon" data-cartoon="f43eee891b22">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Implication tree root -->
+  <circle cx="280" cy="60" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="66" text-anchor="middle" dominant-baseline="middle" font-size="20" fill="#1f2937">P</text>
+  <text x="280" y="30" text-anchor="middle" font-size="14" fill="#1f2937">Implication Tree</text>
+  <!-- Nested conditional node -->
+  <rect x="180" y="130" width="200" height="60" rx="10" ry="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="165" text-anchor="middle" dominant-baseline="middle" font-size="18" fill="#1f2937">Q→R</text>
+  <text x="280" y="105" text-anchor="middle" font-size="14" fill="#1f2937">Exportation</text>
+  <!-- Arrow root → nested -->
+  <line x1="280" y1="80" x2="280" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="275,125 280,130 285,125" fill="#1f2937"/>
+  <!-- Contrapositive node ¬R -->
+  <circle cx="280" cy="260" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="266" text-anchor="middle" dominant-baseline="middle" font-size="18" fill="#1f2937">¬R</text>
+  <text x="280" y="215" text-anchor="middle" font-size="14" fill="#1f2937">Contrapositive</text>
+  <!-- Arrow ¬R → nested -->
+  <line x1="280" y1="240" x2="280" y2="190" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="275,195 280,190 285,195" fill="#1f2937"/>
+  <!-- Hidden conjunct node Q∧¬P -->
+  <circle cx="100" cy="260" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="100" y="266" text-anchor="middle" dominant-baseline="middle" font-size="16" fill="#1f2937">Q∧¬P</text>
+  <text x="100" y="240" text-anchor="middle" font-size="14" fill="#1f2937">Hidden Conjunct</text>
+  <!-- Arrow ¬R → Q∧¬P -->
+  <line x1="260" y1="260" x2="120" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="125,255 120,260 125,265" fill="#1f2937"/>
+  <!-- Caption strip -->
+  <line x1="0" y1="300" x2="560" y2="300" stroke="#1f2937" stroke-width="2"/>
+  <text x="280" y="315" text-anchor="middle" font-size="12" fill="#1f2937">Conditional Reasoning: Nested Implications and Contrapositive Chains</text>
+</svg></div>
+  <figcaption>Conditional Reasoning: Nested Implications and Contrapositive Chains</figcaption>
+</figure>
+
 <p>Conditional reasoning extends the simple “if‑then” structure into layers where the consequent of one implication becomes the antecedent of another. A nested chain such as <strong>P → (Q → R)</strong> is logically equivalent to <strong>(P ∧ Q) → R</strong> by exportation, but tests often require tracking the contrapositive at each level. The contrapositive of <strong>P → Q</strong> is <strong>¬Q → ¬P</strong>; for a nested form the contrapositive propagates inward: <strong>¬R → ¬(Q → P)</strong> which simplifies to <strong>¬R → (Q ∧ ¬P)</strong>. Mastery of these transformations lets a candidate eliminate answer choices that only appear plausible under a surface reading.</p>
 <p>Two mechanical tools are indispensable. First, a truth‑table sketch for three variables (8 rows) confirms equivalence without memorising every derived rule. Second, a diagrammatic “implication tree” where each node is a proposition and arrows point from antecedent to consequent. When a premise states “If A then (if B then C)”, draw A → (B → C). To test a conclusion such as “If not C then not A”, trace the tree backwards: ¬C forces ¬(B → C) which forces B ∧ ¬C; this does not directly give ¬A unless B is known true. Wording such as “provided that” or “whenever” often hides the extra conjunct B. Recognising that the hidden conjunct must be affirmed before the contrapositive yields ¬A is the decisive step.</p>
 <p>Common patterns include: (i) a chain of three conditionals where the middle term is a disjunction, e.g. <strong>P → (Q ∨ R)</strong> and <strong>Q → S</strong>, <strong>R → S</strong>; the valid inference is <strong>P → S</strong> by constructive dilemma. (ii) A biconditional disguised as two conditionals with a shared term, e.g. “A only if B” and “B only if A” together give <strong>A ↔ B</strong>. (iii) A conditional with a negative antecedent, “Unless A, B” which translates to <strong>¬A → B</strong> and its contrapositive <strong>¬B → A</strong>. Practise converting each English cue into symbolic form before drawing the tree; this eliminates the linguistic ambiguity that tests exploit.</p>
 
 <h3>Logical Games: Multi‑Variable Ordering with Conditional Constraints</h3>
+<!-- passage-cartoon:b9388c97efb1 -->
+<figure class="passage-cartoon" data-cartoon="b9388c97efb1">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Grid lines -->
+  <g stroke="#1f2937" stroke-width="2">
+    <line x1="50" y1="30" x2="50" y2="230"/>
+    <line x1="150" y1="30" x2="150" y2="230"/>
+    <line x1="250" y1="30" x2="250" y2="230"/>
+    <line x1="50" y1="30" x2="250" y2="30"/>
+    <line x1="50" y1="70" x2="250" y2="70"/>
+    <line x1="50" y1="110" x2="250" y2="110"/>
+    <line x1="50" y1="150" x2="250" y2="150"/>
+    <line x1="50" y1="190" x2="250" y2="190"/>
+    <line x1="50" y1="230" x2="250" y2="230"/>
+  </g>
+  <!-- Column headers -->
+  <text x="100" y="20" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Floor</text>
+  <text x="200" y="20" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Colour</text>
+  <!-- Row labels -->
+  <text x="30" y="55" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">P</text>
+  <text x="30" y="95" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">Q</text>
+  <text x="30" y="135" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">R</text>
+  <text x="30" y="175" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">S</text>
+  <text x="30" y="215" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">T</text>
+  <!-- Absolute clue: P on floor 3 -->
+  <circle cx="100" cy="50" r="6" fill="#1f2937"/>
+  <!-- Relative: Red above Green -->
+  <text x="200" y="95" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Red</text>
+  <text x="200" y="135" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Green</text>
+  <path d="M200 100 L200 130" stroke="#1f2937" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <!-- Conditional: If S likes Yellow then T floor 5 -->
+  <text x="200" y="175" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Yellow</text>
+  <text x="100" y="215" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">5</text>
+  <path d="M200 175 Q250 190 100 215" stroke="#1f2937" stroke-width="2" stroke-dasharray="6,4" fill="none"/>
+  <text x="150" y="190" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">if</text>
+  <!-- Forced pair brace (R and T floors) -->
+  <path d="M40 110 L40 230 M40 110 L45 110 M40 230 L45 230" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="20" y="170" text-anchor="end" font-size="11" fill="#1f2937" font-family="sans-serif">Forced Pair</text>
+  <!-- Domain split tree (right side) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <circle cx="350" cy="100" r="10"/>
+    <line x1="350" y1="110" x2="300" y2="150"/>
+    <line x1="350" y1="110" x2="400" y2="150"/>
+    <circle cx="300" cy="150" r="8"/>
+    <circle cx="400" cy="150" r="8"/>
+    <line x1="300" y1="160" x2="270" y2="190"/>
+    <line x1="300" y1="160" x2="330" y2="190"/>
+    <line x1="400" y1="160" x2="370" y2="190"/>
+    <line x1="400" y1="160" x2="430" y2="190"/>
+  </g>
+  <text x="350" y="210" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">Domain Split</text>
+  <!-- Labels -->
+  <text x="80" y="15" font-size="11" fill="#1f2937" font-family="sans-serif">Master Grid</text>
+  <text x="100" y="70" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">Absolute</text>
+  <text x="200" y="115" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">Relative</text>
+  <text x="150" y="200" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">Conditional</text>
+  <text x="20" y="170" text-anchor="end" font-size="10" fill="#1f2937" font-family="sans-serif">Forced Pair</text>
+  <text x="350" y="210" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">Domain Split</text>
+  <text x="150" y="250" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">Propagation</text>
+  <text x="280" y="275" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">Unique Arrangement</text>
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="none" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Logical Games: Multi‑Variable Ordering with Conditional Constraints</text>
+</svg></div>
+  <figcaption>Logical Games: Multi‑Variable Ordering with Conditional Constraints</figcaption>
+</figure>
+
 <p>Advanced ordering games present several independent sequences — such as floors, days, and colours — that must be aligned simultaneously. Each entity carries a tuple of attributes (person, floor, colour, hobby). Constraints are of three types: absolute (e.g., “A lives on floor 3”), relative (e.g., “B is two floors above C”), and conditional (e.g., “If D likes red then E lives on an even floor”). The solution space is a Cartesian product of the individual domains; a systematic approach reduces it by constraint propagation.</p>
 <p>Begin by constructing a master grid: rows = entities, columns = attribute categories. Fill in absolute clues first. Next, encode relative clues as inequalities between row indices (e.g., floor(B) = floor(C) + 2). Conditional clues are stored as implication rules attached to the relevant cells. Propagation proceeds iteratively: whenever a cell receives a single possible value, eliminate that value from all other cells in the same column (the “unique‑value” rule) and fire any conditional rule whose antecedent becomes true. If a conditional’s antecedent becomes false, the rule is dormant; if undetermined, the rule remains pending.</p>
 <p>A powerful shortcut is the “forced‑pair” technique. When two entities share the same set of two possible floors and no other entity can occupy those floors, the pair must occupy them in some order. This creates a binary sub‑game solvable by trying both permutations; only one will satisfy all pending conditionals. Another technique is “domain splitting”: pick an entity with the smallest domain (≥2 values), branch on each value, and propagate. Because the total number of entities is typically small (≤ 8), the search tree remains shallow. Record each branch’s deductions in a separate copy of the grid; the branch that reaches a contradiction is discarded. The surviving branch yields the unique arrangement.</p>
@@ -1059,6 +1409,45 @@
 </div>
 
 <h3>Data Sufficiency: Minimal Information Principle and Decision Trees</h3>
+<!-- passage-cartoon:0bdf0f16a306 -->
+<figure class="passage-cartoon" data-cartoon="0bdf0f16a306">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Root uncertainty -->
+  <circle cx="280" cy="60" r="25" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="280" y1="85" x2="280" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <!-- Statement 1 diamond -->
+  <polygon points="280,130 250,160 280,190 310,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Branch to Sufficient leaf -->
+  <line x1="250" y1="160" x2="150" y2="250" stroke="#1f2937" stroke-width="3"/>
+  <!-- Branch to Statement 2 diamond -->
+  <line x1="310" y1="160" x2="410" y2="190" stroke="#1f2937" stroke-width="3"/>
+  <!-- Statement 2 diamond -->
+  <polygon points="410,190 380,220 410,250 440,220" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Branches from Statement 2 -->
+  <line x1="380" y1="220" x2="350" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <line x1="440" y1="220" x2="470" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <!-- Magnifying glass for extreme test -->
+  <circle cx="100" cy="80" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="85" y1="95" x2="70" y2="110" stroke="#1f2937" stroke-width="3"/>
+  <!-- Trap box for hidden degree of freedom -->
+  <rect x="420" y="50" width="120" height="40" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="30" font-size="14" fill="#1f2937" text-anchor="middle">Uncertainty</text>
+  <text x="280" y="125" font-size="14" fill="#1f2937" text-anchor="middle">Stmt 1</text>
+  <text x="150" y="250" font-size="14" fill="#1f2937" text-anchor="middle">Sufficient</text>
+  <text x="410" y="185" font-size="14" fill="#1f2937" text-anchor="middle">Stmt 2</text>
+  <text x="350" y="260" font-size="14" fill="#1f2937" text-anchor="middle">Sufficient</text>
+  <text x="470" y="260" font-size="14" fill="#1f2937" text-anchor="middle">Insufficient</text>
+  <text x="100" y="70" font-size="14" fill="#1f2937" text-anchor="middle">Extreme Test</text>
+  <text x="480" y="80" font-size="14" fill="#1f2937" text-anchor="middle">Hidden DOF</text>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle">Data Sufficiency: Minimal Information Principle and Decision Trees</text>
+</svg></div>
+  <figcaption>Data Sufficiency: Minimal Information Principle and Decision Trees</figcaption>
+</figure>
+
 <p>Data sufficiency questions ask whether the given statements, individually or together, provide enough information to answer a target question. The minimal information principle states that a statement is sufficient only if it eliminates every possible world except those that agree on the answer. To apply this, model the problem as a set of possible assignments (worlds) consistent with the premise. Each statement partitions this set; a statement is sufficient if the partition cell containing the actual world is a subset of the answer‑yes worlds or answer‑no worlds exclusively.</p>
 <p>Construct a decision tree: the root represents the initial uncertainty. Branch on Statement 1 (true/false/insufficient). If a branch yields a unique answer, mark it sufficient. Otherwise, continue branching on Statement 2 within that branch. The combined sufficiency corresponds to the leaf reached after both statements. A practical shortcut is to test extreme cases: for a numeric question, try the minimum and maximum values allowed by each statement. If both extremes give the same answer, the statement is sufficient; if they differ, it is not. For relational questions (e.g., “Is A taller than B?”), construct two concrete scenarios that satisfy the statement but give opposite answers. The existence of such a pair proves insufficiency.</p>
 <p>Typical traps: (i) a statement that appears to give a numeric value but actually leaves a hidden degree of freedom (e.g., “x + y = 10” does not fix x). (ii) Two statements that together still leave a binary ambiguity because they constrain the same variable in the same way. (iii) Over‑reliance on algebraic manipulation without checking whether the derived expression still contains an unknown. Always verify that the final expression depends solely on known constants.</p>

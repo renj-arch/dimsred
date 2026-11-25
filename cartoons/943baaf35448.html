@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Relative Motion in Two Dimensions: River Crossing, Wind Drift, and Minimum Time Paths | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Relative Motion in Two Dimensions: River Crossing, Wind Drift, and Minimum Time Paths</h1>
+<p class="meta">Quantitative Aptitude · <a href="/upsc/course/csat/lesson-quant-aptitude">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Factory left -->
+  <rect x="20" y="40" width="100" height="60" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="70" y="75" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937" text-anchor="middle">Machine A</text>
+  <text x="70" y="92" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">100 h avail</text>
+  <rect x="20" y="120" width="100" height="60" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="70" y="155" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937" text-anchor="middle">Machine B</text>
+  <text x="70" y="172" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">90 h avail</text>
+  <!-- Products -->
+  <rect x="20" y="200" width="100" height="50" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="70" y="225" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937" text-anchor="middle">Product P</text>
+  <text x="70" y="242" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">Profit ₹30</text>
+  <rect x="20" y="260" width="100" height="50" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="70" y="285" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937" text-anchor="middle">Product Q</text>
+  <text x="70" y="302" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">Profit ₹40</text>
+  <!-- Arrows from machines to products -->
+  <path d="M120 70 L150 70" stroke="#1f2937" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M120 150 L150 150" stroke="#1f2937" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M120 225 L150 225" stroke="#1f2937" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M120 285 L150 285" stroke="#1f2937" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Graph axes -->
+  <line x1="150" y1="250" x2="450" y2="250" stroke="#1f2937" stroke-width="2"/>
+  <line x1="150" y1="250" x2="150" y2="70" stroke="#1f2937" stroke-width="2"/>
+  <text x="450" y="268" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="end">x (units of P)</text>
+  <text x="135" y="60" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="end">y (units of Q)</text>
+  <!-- Grid lines -->
+  <g stroke="#1f2937" stroke-width="0.5" opacity="0.3">
+    <line x1="150" y1="250" x2="450" y2="250"/>
+    <line x1="150" y1="190" x2="450" y2="190"/>
+    <line x1="150" y1="130" x2="450" y2="130"/>
+    <line x1="150" y1="70" x2="450" y2="70"/>
+    <line x1="210" y1="70" x2="210" y2="250"/>
+    <line x1="270" y1="70" x2="270" y2="250"/>
+    <line x1="330" y1="70" x2="330" y2="250"/>
+    <line x1="390" y1="70" x2="390" y2="250"/>
+    <line x1="450" y1="70" x2="450" y2="250"/>
+  </g>
+  <!-- Axis ticks and labels -->
+  <g font-family="sans-serif" font-size="10" fill="#1f2937">
+    <text x="150" y="265" text-anchor="middle">0</text>
+    <text x="210" y="265" text-anchor="middle">10</text>
+    <text x="270" y="265" text-anchor="middle">20</text>
+    <text x="330" y="265" text-anchor="middle">30</text>
+    <text x="390" y="265" text-anchor="middle">40</text>
+    <text x="450" y="265" text-anchor="middle">50</text>
+    <text x="135" y="255" text-anchor="end">0</text>
+    <text x="135" y="195" text-anchor="end">10</text>
+    <text x="135" y="135" text-anchor="end">20</text>
+    <text x="135" y="75" text-anchor="end">30</text>
+  </g>
+  <!-- Constraint line 1: 2x + y = 100 -->
+  <path d="M360 70 L450 250" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="8 4"/>
+  <!-- Constraint line 2: x + 3y = 90 -->
+  <path d="M150 70 L450 170" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="8 4"/>
+  <!-- Feasible region polygon -->
+  <polygon points="150,250 450,250 402,154 150,70" fill="#1f2937" fill-opacity="0.1" stroke="none"/>
+  <!-- Corner points -->
+  <circle cx="150" cy="250" r="5" fill="#1f2937"/>
+  <circle cx="450" cy="250" r="5" fill="#1f2937"/>
+  <circle cx="150" cy="70" r="5" fill="#1f2937"/>
+  <circle cx="402" cy="154" r="8" fill="#1f2937" stroke="#e53e3e" stroke-width="3"/>
+  <!-- Optimal star -->
+  <polygon points="402,140 405,150 415,150 407,156 410,166 402,160 394,166 397,156 389,150 399,150" fill="#e53e3e"/>
+  <!-- Labels on graph -->
+  <text x="370" y="55" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">2x + y = 100</text>
+  <text x="470" y="165" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="start">x + 3y = 90</text>
+  <text x="150" y="275" font-family="sans-serif" font-size="10" fill="#1f2937" text-anchor="middle">(0,0)</text>
+  <text x="450" y="275" font-family="sans-serif" font-size="10" fill="#1f2937" text-anchor="middle">(50,0)</text>
+  <text x="150" y="55" font-family="sans-serif" font-size="10" fill="#1f2937" text-anchor="middle">(0,30)</text>
+  <text x="402" y="135" font-family="sans-serif" font-size="11" font-weight="bold" fill="#e53e3e" text-anchor="middle">Optimum (42,16)</text>
+  <!-- Key labels -->
+  <text x="300" y="30" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937" text-anchor="middle">Max Profit ₹1900 at (42,16)</text>
+  <text x="300" y="305" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">Feasible Region → Corner-Point Optimum</text>
+  <!-- Caption strip -->
+  <rect x="0" y="295" width="560" height="25" fill="#1f2937"/>
+  <text x="280" y="312" font-family="sans-serif" font-size="11" fill="#fbf7ec" text-anchor="middle">5. Speed Distance and Time (17)</text>
+</svg></div>
+<p class="meta">5. Speed Distance and Time (17)</p></div></body></html>
