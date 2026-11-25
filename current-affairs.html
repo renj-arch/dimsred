@@ -254,6 +254,7 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="courseToggle" checked style="accent-color:var(--emerald);width:14px;height:14px"> 📖 Course Lessons</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="genToggle" checked style="accent-color:var(--cyan);width:14px;height:14px"> ⚡ Generators</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="pibToggle" checked style="accent-color:var(--amber);width:14px;height:14px"> 📰 PIB/CA Feed</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Archive fill-blank facts (statement → answer). OFF by default: the quiz shows exam-style MCQs only. Turn on to include static facts."><input type="checkbox" id="factToggle" style="accent-color:#f59e0b;width:14px;height:14px"> 📇 Facts</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions invented from lesson paragraphs by the hosted setter, each verified against its own passage"><input type="checkbox" id="lessonInvToggle" style="accent-color:var(--cyan);width:14px;height:14px"> 🧠 From lesson text</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions written in the shapes the real UPSC paper uses — multi-statement, match-the-following, chronology, assertion-reason"><input type="checkbox" id="shapeToggle" style="accent-color:var(--amber);width:14px;height:14px"> 📐 Paper shapes</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="The micro-test banks: General Knowledge, General Studies, Mathematics, Science, English, Reasoning"><input type="checkbox" id="microToggle" style="accent-color:var(--emerald);width:14px;height:14px"> 🧩 Micro-test banks</label>
@@ -354,6 +355,14 @@
                 var wikiCat = (q._wikiCat || '').toLowerCase();
                 var subject = (q.subject || '').toLowerCase();
                 var type = (q.type || '').toLowerCase();
+                // Fact cards (archive fill-blanks, statement → answer) are hidden
+                // from the quiz by default: a study quiz should ask exam-style
+                // MCQs. They stay available via the Facts toggle, and always in
+                // the date feed / Static GK (which ARE fact-browsing modes).
+                var useFacts = (function () { var el = document.getElementById('factToggle'); return el ? !!el.checked : false; })();
+                var isFact = (!q.options || q.options.length < 2) && (q.a != null || q.answer != null) && type !== 'mcq';
+                var factMode = !!(window.state && (state.cat === 'static' || state._feedSource === 'archive'));
+                if (isFact && !useFacts && !factMode) return false;
                 // Resolve every question to exactly one source before testing the
                 // checkboxes. The old order let the Generators branch win for
                 // course questions, because they carry _wikiCat='course-lesson'
@@ -408,14 +417,14 @@
                     // to zero again: an endless "Loading..." loop. Say what
                     // happened and leave the pool alone.
                     var qt = document.getElementById('qText');
-                    if (qt) qt.innerHTML = 'No questions match the current toggles. Turn on another source (Archive / Course Lessons / Generators / Paper shapes) or switch off UPSC-only.';
+                    if (qt) qt.innerHTML = 'No questions match the current toggles. Turn on another source (Archive / Course Lessons / Generators / Paper shapes / Facts) or switch off UPSC-only.';
                     var og = document.getElementById('optGrid');
                     if (og) og.innerHTML = '';
                 }
             }
             // Attach to checkboxes
             document.addEventListener('DOMContentLoaded', function() {
-                ['archiveToggle','courseToggle','genToggle','pibToggle','lessonInvToggle','shapeToggle','microToggle','invToggle'].forEach(function(id) {
+                ['archiveToggle','courseToggle','genToggle','pibToggle','factToggle','lessonInvToggle','shapeToggle','microToggle','invToggle'].forEach(function(id) {
                     var el = document.getElementById(id);
                     if (el) el.addEventListener('change', _applyContentFilter);
                 });
@@ -9897,7 +9906,10 @@ var fact = q.fact || q.solution || q.explanation || '';
             } else if (src === 'invented') {
                 label = 'Invented (fresh)';
             }
+            var _isFact = q && (!q.options || q.options.length < 2) && (q.a != null || q.answer != null) && String(q.type || '') !== 'mcq';
+            if (_isFact) label = (label ? label + ' · ' : '') + '📇 Fact';
             el.textContent = label;
+            el.title = _isFact ? 'Static fact card (statement → answer), not an exam-style MCQ' : '';
             el.style.display = label ? 'inline-block' : 'none';
         }
         // Research Team method for any question, attached by text. Course-lesson and

@@ -154,7 +154,7 @@ jobs:
           GH_MODELS: '1'
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_OPTIONS: '--max-old-space-size=2048'
-          MAX_CONVERT: '6'
+          MAX_CONVERT: '25'
         run: node scripts/convert-quiz-proper.js
 
       # Rebuild the mega quiz bank from the current corpus (fast, no model).
