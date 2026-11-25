@@ -55,6 +55,13 @@ const ALL = has('all');
 const hash = (s) => crypto.createHash('sha1').update(String(s)).digest('hex').slice(0, 12);
 const words = (s) => String(s).replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').split(/\s+/).filter((x) => x.length > 1).length;
 const strip = (s) => String(s).replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+async function pool(items, n, fn) {
+  const out = new Array(items.length);
+  let i = 0;
+  async function worker() { while (i < items.length) { const k = i++; out[k] = await fn(items[k], k); } }
+  await Promise.all(Array.from({ length: Math.max(1, Math.min(n, items.length)) }, worker));
+  return out;
+}
 const eol = (s) => s;
 function readStore() { try { return JSON.parse(fs.readFileSync(STORE, 'utf8')); } catch (e) { return { cartoons: {} }; } }
 function saveStore(st) { fs.writeFileSync(STORE, JSON.stringify(st, null, 1) + '\n', 'utf8'); }
@@ -220,6 +227,19 @@ async function makeOne(hosted, lessonTitle, p, model) {
 }
 
 async function main() {
+  // --remaining: print how many lessons still have an un-cartooned passage.
+  // Used by the workflow to chain another run, and to stop when done.
+  if (has('remaining')) {
+    let n = 0;
+    for (const f of lessons()) {
+      let html;
+      try { html = fs.readFileSync(f, 'utf8'); } catch (e) { continue; }
+      const existing = new Set([...html.matchAll(/passage-cartoon:([a-z0-9]+)/g)].map((m) => m[1]));
+      if (passages(html).some((p) => !existing.has(hash(p.title + '|' + strip(p.text).slice(0, 400))))) n++;
+    }
+    console.log(n);
+    return;
+  }
   let hosted = null;
   if (!DRY) {
     hosted = require('./lib/hosted');
@@ -258,15 +278,15 @@ async function main() {
     // Insert from the end so earlier offsets stay valid.
     const targets = ps.map((p) => ({ p, id: hash(p.title + '|' + strip(p.text).slice(0, 400)) }))
       .filter((t) => !existing.has(t.id)).slice(0, MAX_PER_LESSON);
-    for (const t of targets) {
-      if ((Date.now() - started) / 60000 > DEADLINE_MIN) break;
-      const svg = await makeOne(hosted, lessonTitle, t.p, process.env.PASSAGE_CARTOON_MODEL || '');
-      if (!svg) { failed++; continue; }
+    const results = await pool(targets, WORKERS, (t) => makeOne(hosted, lessonTitle, t.p, process.env.PASSAGE_CARTOON_MODEL || ''));
+    results.forEach((svg, idx) => {
+      const t = targets[idx];
+      if (!svg) { failed++; return; }
       t.svg = svg;
       done++; made++;
       store.cartoons[t.id] = { file: path.relative(ROOT, file).replace(/\\/g, '/'), heading: t.p.title, words: words(t.p.text), at: new Date().toISOString() };
-      saveStore(store);
-    }
+    });
+    if (made) saveStore(store);
     // Re-apply from the end of the body backwards.
     let out = html;
     const applied = targets.filter((t) => t.svg).sort((a, b) => b.p.absAt - a.p.absAt);

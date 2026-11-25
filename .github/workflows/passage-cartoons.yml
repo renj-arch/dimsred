@@ -3,26 +3,25 @@ name: Passage Cartoons
 # One mini editorial cartoon (The Hindu style) per passage of a UPSC lesson:
 # a single-panel ink drawing that conveys the section in a nutshell.
 #
-# Each run takes the next few lessons that still have passages without a
-# cartoon, writes up to N cartoons per lesson, and publishes. Idempotent: a
-# cartoon is keyed by a hash of its passage, so a re-run never doubles one.
-#
-# The script validates the model's SVG hard (viewBox, >=3 labels, background,
-# no script/external refs), so a bad drawing costs its own slot, never the page.
+# Runs back-to-back all day: each run writes up to LIMIT lessons x MAX cartoons,
+# then re-dispatches itself while any un-cartooned passage remains (checked by
+# `--remaining`). The 30-minute cron is only a restart net if a chain dies.
+# Idempotent: a cartoon is keyed by a hash of its passage, so a re-run never
+# doubles one and finished lessons are skipped.
 
 on:
   schedule:
-    - cron: '19 */2 * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       limit:
         description: 'Lessons to process this run'
         required: false
-        default: '6'
+        default: '15'
       max:
         description: 'Max cartoons per lesson'
         required: false
-        default: '6'
+        default: '8'
       granularity:
         description: 'h2 (major sections) or h3 (every subsection)'
         required: false
@@ -38,11 +37,12 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   cartoons:
     runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -68,12 +68,12 @@ jobs:
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          LIMIT: ${{ github.event.inputs.limit || '6' }}
-          MAX: ${{ github.event.inputs.max || '6' }}
+          LIMIT: ${{ github.event.inputs.limit || '15' }}
+          MAX: ${{ github.event.inputs.max || '8' }}
           GRAN: ${{ github.event.inputs.granularity || 'h2' }}
           FILE: ${{ github.event.inputs.file || '' }}
         run: |
-          ARGS="--limit $LIMIT --max $MAX --granularity $GRAN --workers 3 --deadline 55"
+          ARGS="--limit $LIMIT --max $MAX --granularity $GRAN --workers 4 --deadline 70"
           if [ -n "$FILE" ]; then ARGS="--file $FILE $ARGS"; else ARGS="--all $ARGS"; fi
           node scripts/invent-passage-cartoons.js $ARGS
 
@@ -87,3 +87,30 @@ jobs:
           git add data/passage-cartoons.json css/style.css 2>/dev/null || true
           git add upsc/course 2>/dev/null || true
           bash scripts/ci-push.sh "passage-cartoons: a cartoon for each passage (run #${{ github.run_number }})"
+
+      # Keep the lane continuous without relying on the throttled cron: if any
+      # lesson still has an un-cartooned passage, queue the next run.
+      - name: Queue the next cartoon run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LIMIT: ${{ github.event.inputs.limit || '15' }}
+          MAX: ${{ github.event.inputs.max || '8' }}
+          GRAN: ${{ github.event.inputs.granularity || 'h2' }}
+        run: |
+          set -uo pipefail
+          REMAIN=$(node scripts/invent-passage-cartoons.js --remaining --granularity "$GRAN" | tail -1)
+          echo "lessons still missing a cartoon: ${REMAIN:-?}"
+          if [ "${REMAIN:-0}" = "0" ]; then
+            echo "::notice title=Passage cartoons complete::every UPSC passage has a cartoon"
+            exit 0
+          fi
+          for i in 1 2 3; do
+            if gh workflow run passage-cartoons.yml --ref main -f limit="$LIMIT" -f max="$MAX" -f granularity="$GRAN"; then
+              echo "Queued the next cartoon run"
+              exit 0
+            fi
+            echo "dispatch attempt $i failed, retrying..."
+            sleep $((5 + RANDOM % 10))
+          done
+          echo "::warning::could not queue the next cartoon run; the 30-minute cron will restart it"
