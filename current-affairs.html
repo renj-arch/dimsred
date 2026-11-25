@@ -8609,9 +8609,53 @@ function prevQuestion() {
         }
         
 
+        // ---- Static-archive hygiene -------------------------------------------
+        // The static archive is a huge scraped corpus (~16M items). It is NOT a
+        // clean MCQ bank: ~99.99% are fill_blank facts, and the scrape left
+        // duplicate subjects (Awards / Awards & Honours), one-item buckets
+        // (Geography: 1, Polity: 12) and junk sub-topics ("✓ 1870 Atlantic
+        // hurricane season" under Sports, "Hyaenodon" under Environment).
+        // These helpers canonicalise the category, drop scrape junk and
+        // de-duplicate, so the page shows clean, correctly-grouped items.
+        var CA_CAT_ALIAS = {
+            'Awards': 'Awards & Honours',
+            'Ethics': 'Ethics & Integrity',
+            'Defence': 'Defence & Security',
+            'Defence & Strategic Affairs': 'Defence & Security',
+            'International': 'International Relations',
+            'India & International Relations': 'International Relations',
+            'Geography': 'World Geography',
+            'Indian Economy': 'Business & Economy',
+            'Indian Economy & Development': 'Business & Economy',
+            'Economy': 'Business & Economy',
+            'Polity': 'Constitution',
+            'Agricultural Extension & Marketing': 'Agriculture & Food'
+        };
+        function _caCanonCat(name) {
+            name = String(name || '').trim();
+            if (!name) return 'General';
+            return CA_CAT_ALIAS[name] || name;
+        }
+        var _CA_JUNK = /^(what do you know about|define )\b|\*[^*]{1,48}\*|\b(undefined|null|n\/a)\b|issues a decree/i;
+        function _caCleanTopic(t) {
+            return String(t || '').replace(/^[✓✔✗×]\s*/, '').replace(/\s+/g, ' ').trim();
+        }
+        function _caProper(q) {
+            var text = String(q.question || '').trim();
+            if (!q.answer) return false;
+            if (text.length < 40 || text.length > 320) return false;
+            if (_CA_JUNK.test(text)) return false;
+            // The scrape cut most entries mid-sentence ("crucians, from the
+            // early _____"), so only ~4% even end with punctuation. Require a
+            // whole sentence: capitalised start and terminal punctuation.
+            if (!/^[A-Z0-9"'“(]/.test(text)) return false;
+            if (!/[.?!:”"]$/.test(text)) return false;
+            return true;
+        }
         function _loadArchiveFiles(files, cb) {
             var loaded = 0;
             var allQ = [];
+            var _seenQ = Object.create(null);
             var pending = files.length;
             if (pending === 0) { cb([]); return; }
             var finished = false;
@@ -8665,9 +8709,12 @@ function prevQuestion() {
                                     for (var qi = 0; qi < ss[ssk].length; qi++) {
                                         var item = [sk, ssk, ss[ssk][qi]];
                                         var q = item[2];
-                                        if (q && q.question && q.answer) {
+                                        if (q && q.question && q.answer && _caProper(q)) {
+                                            var _caKey = String(q.question).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 130);
+                                            if (_seenQ[_caKey]) continue;
+                                            _seenQ[_caKey] = 1;
 var fact = q.fact || q.solution || q.explanation || '';
-                                                allQ.push(ExamScope.annotate({q:q.question, a:q.answer, type:q.type||'', options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:item[0], subTopic:item[1], pubDate:q.pubDate||'', importance:q.importance||'', importantFor:q.importantFor||[], source:q.source||''}));
+                                                allQ.push(ExamScope.annotate({q:q.question, a:q.answer, type:q.type||'', options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:_caCanonCat(q.category || q.subject || item[0]), subTopic:_caCleanTopic(q.subSubject || item[1]), pubDate:q.pubDate||'', importance:q.importance||'', importantFor:q.importantFor||[], source:q.source||''}));
                                         }
                                     }
                                 }
@@ -8778,7 +8825,7 @@ var fact = q.fact || q.solution || q.explanation || '';
         }
         var _catalogTried = false;
         var _catalogLoaded = false;
-        var HOME_CATALOG = {"total":16090141,"subjects":{"Accounting & Auditing":35,"Agricultural Engineering":1236,"Agricultural Entomology":2595,"Agricultural Extension & Marketing":108297,"Agriculture & Food":20914,"Govt Schemes":63,"Agronomy & Crop Production":14926,"Ancient India":173309,"Animal Husbandry & Dairy":290673,"Announcements":5,"Dams & Rivers":6,"Defence":18,"General Science":184024,"Geography":1,"Indian Economy":84,"International Relations":529146,"International":3,"ISRO & Space":503,"Polity":12,"Sports":786752,"World Geography":1576456,"Applied Sciences":351335,"Art & Culture":21097,"Awards & Honours":11991,"Awards":3,"Ayurveda & Traditional Medicine":512757,"Banking & Financial System":219,"Bengali Literature":243,"Books & Authors":285109,"Buddhism & Jainism":1045,"Business & Economy":409451,"Classical & Dravidian Languages":224,"Commissions Committees & Bodies":179,"Computer & IT":519375,"Constitution":6088,"Courts Cases & Verdicts":558899,"Current Affairs":6210,"Defence & Security":181090,"Defence & Strategic Affairs":273,"Disaster Management":309373,"Education in India":9277,"Elections & Political Parties":1250,"Energy & Power":4996,"Environment & Ecology":1260465,"Engineering & Technical":253,"Ethics & Integrity":4021,"Ethics":39,"Farm Machinery":19510,"Farm Machinery & Power":3081,"Fisheries & Aquaculture":211869,"Floriculture & Landscaping":3710,"Food Processing":183064,"General":47191,"Geology & Hydrogeology":144,"Health & Medicine":277540,"Hinduism & Mythology":1306,"Horticulture - Fruit & Vegetable Production":1611,"Horticulture":3157,"Hydrology & Soil Conservation":2779,"ICT Digital & Cyber":89,"Important Days":342019,"India & International Relations":204,"Indian Archaeology & Epigraphy":372152,"Indian Architecture":328730,"Indian Art & Architecture":128,"Indian Aviation & Shipping":262038,"Indian Battles":19693,"Indian Cinema":261024,"Indian De-industrialisation":27,"Indian Demographics & Census":411610,"Indian Economy & Development":359,"Indian Festivals & Fairs":7199,"Indian Festivals & Traditions":152,"Indian Geography":4740,"Indian Handicrafts & Coins":285762,"Indian Heritage":126777,"Indian History":133,"Indian Judiciary":4133,"Indian Languages":194622,"Indian Languages - National & Regional":45,"Indian Literature & Poets":138968,"Indian Museums & Heritage Sites":6731,"Indian Music Dance & Theatre":159,"Indian Music & Fine Arts":274450,"Indian National Symbols":11360,"Indian Philosophy & Thinkers":16711,"Indian Physical Geography":274,"Indian Polity & Constitution":63,"Indian Religions":1699,"Indian Rivers & Water Resources":1703,"Indian Scientists & Nobel Laureates":404,"Indian Society":305958,"Indian States":108093,"Indian Theatre & Cinema":16078,"Indian Tribes":1795,"Indian Wildlife & National Parks":567788,"International Organizations & Summits":271,"Kannada Literature":321,"Labour Law & Industrial Relations":27069,"Languages & Linguistics":37117,"Library & Information Science":54331,"Malayalam Literature":688,"Marathi & Hindi Literature":632,"Mechanical Engineering":503,"Medieval & Modern India":9272,"Meteorology & Climate":703519,"Mining & Minerals":10914,"Nuclear Energy in India":12,"Nuclear Energy & Technology":306,"Personalities":512539,"PIB Releases":2499,"Plant Breeding & Genetics":28439,"Plant Pathology & Crop Protection":2674,"Plant Physiology & Nutrition":1680,"Polity & Governance":3047,"Public Administration & Governance":173,"Punjabi & Other Regional Literature":514,"Railways & Transport":193417,"RBI & Banking":1697,"RBI Press Releases":7,"Sanskrit & Classical Languages":234,"Science & Technology":12262,"Seed Science & Technology":192671,"Sikhism & Other Faiths":662,"Social Security":66,"Society":539,"Soil & Watershed":4396,"Space & Astronomy":312,"Spices & Plantation Crops":5739,"State GK":602,"Statistics & Mathematics":478,"Tamil Literature":113,"Tech & Science":57,"Telecom & Postal":432941,"Telugu Literature":134,"Women & Society":354267,"World Geography & Countries":855,"World History":518799,"World & Indian Physical Geography":221}};
+        var HOME_CATALOG = {"total":16090407,"subjects":{"Accounting & Auditing":35,"Agricultural Engineering":1236,"Agricultural Entomology":2595,"Agricultural Extension & Marketing":108297,"Agriculture & Food":20914,"Govt Schemes":63,"Agronomy & Crop Production":14926,"Ancient India":173304,"Animal Husbandry & Dairy":290673,"Announcements":5,"Dams & Rivers":6,"Defence":18,"General Science":184025,"Geography":1,"Indian Economy":84,"International Relations":529206,"International":3,"ISRO & Space":503,"Polity":12,"Sports":786752,"World Geography":1576463,"Applied Sciences":351349,"Art & Culture":21097,"Awards & Honours":11991,"Awards":3,"Ayurveda & Traditional Medicine":512757,"Banking & Financial System":219,"Bengali Literature":243,"Books & Authors":285109,"Buddhism & Jainism":1045,"Business & Economy":409455,"Classical & Dravidian Languages":224,"Commissions Committees & Bodies":179,"Computer & IT":519375,"Constitution":6088,"Courts Cases & Verdicts":558911,"Current Affairs":6270,"Defence & Security":181109,"Defence & Strategic Affairs":273,"Disaster Management":309383,"Education in India":9277,"Elections & Political Parties":1250,"Energy & Power":4996,"Environment & Ecology":1260468,"Engineering & Technical":253,"Ethics & Integrity":4021,"Ethics":39,"Farm Machinery":19510,"Farm Machinery & Power":3081,"Fisheries & Aquaculture":211901,"Floriculture & Landscaping":3710,"Food Processing":183064,"General":47191,"Geology & Hydrogeology":144,"Health & Medicine":277540,"Hinduism & Mythology":1306,"Horticulture - Fruit & Vegetable Production":1611,"Horticulture":3157,"Hydrology & Soil Conservation":2779,"ICT Digital & Cyber":89,"Important Days":342019,"India & International Relations":204,"Indian Archaeology & Epigraphy":372152,"Indian Architecture":328730,"Indian Art & Architecture":128,"Indian Aviation & Shipping":262038,"Indian Battles":19693,"Indian Cinema":261024,"Indian De-industrialisation":27,"Indian Demographics & Census":411629,"Indian Economy & Development":359,"Indian Festivals & Fairs":7199,"Indian Festivals & Traditions":152,"Indian Geography":4740,"Indian Handicrafts & Coins":285762,"Indian Heritage":126782,"Indian History":133,"Indian Judiciary":4133,"Indian Languages":194622,"Indian Languages - National & Regional":45,"Indian Literature & Poets":138968,"Indian Museums & Heritage Sites":6731,"Indian Music Dance & Theatre":159,"Indian Music & Fine Arts":274450,"Indian National Symbols":11360,"Indian Philosophy & Thinkers":16711,"Indian Physical Geography":274,"Indian Polity & Constitution":63,"Indian Religions":1699,"Indian Rivers & Water Resources":1703,"Indian Scientists & Nobel Laureates":404,"Indian Society":305960,"Indian States":108093,"Indian Theatre & Cinema":16078,"Indian Tribes":1795,"Indian Wildlife & National Parks":567799,"International Organizations & Summits":271,"Kannada Literature":321,"Labour Law & Industrial Relations":27069,"Languages & Linguistics":37117,"Library & Information Science":54331,"Malayalam Literature":688,"Marathi & Hindi Literature":632,"Mechanical Engineering":503,"Medieval & Modern India":9272,"Meteorology & Climate":703519,"Mining & Minerals":10914,"Nuclear Energy in India":12,"Nuclear Energy & Technology":306,"Personalities":512546,"PIB Releases":2501,"Plant Breeding & Genetics":28439,"Plant Pathology & Crop Protection":2674,"Plant Physiology & Nutrition":1680,"Polity & Governance":3047,"Public Administration & Governance":173,"Punjabi & Other Regional Literature":514,"Railways & Transport":193418,"RBI & Banking":1697,"RBI Press Releases":7,"Sanskrit & Classical Languages":234,"Science & Technology":12262,"Seed Science & Technology":192671,"Sikhism & Other Faiths":662,"Social Security":66,"Society":539,"Soil & Watershed":4396,"Space & Astronomy":312,"Spices & Plantation Crops":5739,"State GK":602,"Statistics & Mathematics":478,"Tamil Literature":113,"Tech & Science":57,"Telecom & Postal":432941,"Telugu Literature":134,"Women & Society":354267,"World Geography & Countries":855,"World History":518801,"World & Indian Physical Geography":221}};
         function initHomeCatGrid() {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
@@ -8835,6 +8882,22 @@ var fact = q.fact || q.solution || q.explanation || '';
                 grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;font-size:.75em;color:var(--text-muted);padding:18px 0">Loading topics…</div>';
                 return;
             }
+            // Merge the scrape's duplicate/one-off subjects into canonical
+            // categories, and fold buckets too small to be a study topic into
+            // General, so the grid is a clean list rather than hundreds of
+            // near-duplicates ("Awards" vs "Awards & Honours", "Geography": 1).
+            var _merged = {};
+            for (var _mk in counts) {
+                if (!Object.prototype.hasOwnProperty.call(counts, _mk)) continue;
+                var _mc = _caCanonCat(_mk);
+                _merged[_mc] = (_merged[_mc] || 0) + counts[_mk];
+            }
+            var _small = 0;
+            for (var _mk2 in _merged) {
+                if (_merged[_mk2] < 15) { _small += _merged[_mk2]; delete _merged[_mk2]; }
+            }
+            if (_small) _merged['General'] = (_merged['General'] || 0) + _small;
+            counts = _merged;
             var subjects = Object.keys(counts).sort(function(a,b){ return (counts[b]-counts[a]) || (a<b?-1:1); });
             grid.innerHTML = '';
             for (var si = 0; si < subjects.length; si++) {
@@ -9227,6 +9290,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             _lazyFiles = _applyShuffle(_lazyFiles);
             return _lazyFiles;
         }
+        var _caSeen = Object.create(null);
         // Flatten one question file into feed-shaped items. Mirrors _loadArchiveFiles'
         // mapping so displayed cards stay identical to before.
         function _lazyFlattenFile(fileRec, cb) {
@@ -9246,9 +9310,12 @@ var fact = q.fact || q.solution || q.explanation || '';
                                 if (!Array.isArray(qs)) continue;
                                 for (var qi = 0; qi < qs.length; qi++) {
                                     var q = qs[qi];
-                                    if (!q || !q.question || !q.answer) continue;
+                                    if (!q || !q.question || !q.answer || !_caProper(q)) continue;
+                                    var _caK = String(q.question).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 130);
+                                    if (_caSeen[_caK]) continue;
+                                    _caSeen[_caK] = 1;
                                     var fact = q.fact || q.solution || q.explanation || '';
-                                    out.push(ExamScope.annotate({ q: q.question, a: q.answer, type: q.type||'', options: q.options || [], solution: fact, hint: q.hint || '', fact: fact, subject: sk, subTopic: st, pubDate: q.pubDate || '', importance: q.importance || '', importantFor: q.importantFor || [], source: q.source||'' }));
+                                    out.push(ExamScope.annotate({ q: q.question, a: q.answer, type: q.type||'', options: q.options || [], solution: fact, hint: q.hint || '', fact: fact, subject: _caCanonCat(q.category || q.subject || sk), subTopic: _caCleanTopic(q.subSubject || st), pubDate: q.pubDate || '', importance: q.importance || '', importantFor: q.importantFor || [], source: q.source||'' }));
                                 }
                             }
                         }

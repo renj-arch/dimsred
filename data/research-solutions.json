@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24T22:12:11.812Z",
+  "updatedAt": "2026-11-25T07:38:42.175Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -32765,6 +32765,552 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-24T22:12:11.803Z"
+    },
+    {
+      "id": "08ba8247da6ee2fc",
+      "exam": "apfc",
+      "paperSlug": "practice-set-04",
+      "paperTitle": "UPSC APFC Practice Set 4",
+      "paperPath": "apfc/papers/practice-set-04.html",
+      "paperFile": "practice-set-04.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "A vessel contains 100 litres of pure milk. 10 litres of milk is taken out and replaced with water. This process is repeated two more times. What is the quantity of milk left in the vessel?",
+      "options": [
+        {
+          "label": "A",
+          "text": "70.2 litres",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "72.9 litres",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "75.6 litres",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "68.4 litres",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Initial milk = 100 litres.",
+        "Each operation removes 10 litres of mixture, which is 1/10 of the total volume, so the fraction of milk remaining after each operation is 9/10.",
+        "After first operation: milk = 100 × (9/10) = 90 litres.",
+        "After second operation: milk = 90 × (9/10) = 81 litres.",
+        "After third operation: milk = 81 × (9/10) = 72.9 litres."
+      ],
+      "verifierCheck": "The vessel initially has 100 L milk. Each operation removes 10 L of mixture (which is 10% of the volume) and replaces it with water, so the milk remaining is multiplied by 0.9 each time. After three such operations, milk = 100 * (0.9)^3 = 100 * 0.729 = 72.9 L.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Power Formula",
+          "idea": "Direct formula for repeated replacement",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Fraction remaining each time = 9/10",
+            "Cube it: (9/10)^3 = 729/1000",
+            "Multiply by initial 100 litres: 100 * 0.729 = 72.9"
+          ]
+        },
+        {
+          "name": "Percentage Shortcut",
+          "idea": "Each step leaves 90% milk",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Each removal takes out 10%, so 90% remains",
+            "Compute 0.9^3 = 0.729",
+            "100 * 0.729 = 72.9 litres"
+          ]
+        },
+        {
+          "name": "Iterative Multiply",
+          "idea": "Step-by-step multiplication by 0.9",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Start with 100 litres",
+            "After 1st replacement: 100 * 0.9 = 90",
+            "After 2nd: 90 * 0.9 = 81",
+            "After 3rd: 81 * 0.9 = 72.9"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T07:30:47.091Z"
+    },
+    {
+      "id": "df788267f3225c6d",
+      "exam": "clat",
+      "paperSlug": "practice-set-07",
+      "paperTitle": "CLAT Practice Set 7",
+      "paperPath": "clat/papers/practice-set-07.html",
+      "paperFile": "practice-set-07.json",
+      "questionNumber": 1,
+      "section": "Legal Reasoning",
+      "question": "In a contract for the supply of 500 tonnes of steel, Party A agreed to deliver the steel by 1st June. Due to a sudden strike by steelworkers, the supply was delayed until 15th June. Party B sued for damages for delay. Which doctrine will most likely relieve Party A from liability?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Doctrine of frustration of contract",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Doctrine of impossibility of performance",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Doctrine of force majeure",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Doctrine of anticipatory breach",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the event: sudden strike by steelworkers causing a two-week delay in delivery.",
+        "Determine the legal issue: Party A seeks relief from liability for damages due to delay.",
+        "Evaluate doctrines: Frustration and impossibility typically require permanent impossibility or radical change, not mere temporary delay. Anticipatory breach involves repudiation before performance date, not applicable.",
+        "Force majeure specifically covers unforeseen events beyond a party's control (e.g., strikes, natural disasters) that prevent or delay performance, making it the most likely doctrine to excuse Party A.",
+        "Conclusion: Doctrine of force majeure is the best fit."
+      ],
+      "verifierCheck": "A sudden strike is a classic force majeure event—an unforeseeable circumstance beyond Party A's control that delays but does not permanently prevent performance. Frustration and impossibility require the contract to be fundamentally undermined or performance permanently impossible, which a two-week delay does not constitute. Anticipatory breach involves a party's advance refusal to perform, which did not occur here. Therefore, force majeure (whether as a contractual clause or recognized doctrine) is the most applicable defense for Party A.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Match",
+          "idea": "Spot force majeure language in delay due to strike",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify delay cause: strike",
+            "Recall force majeure covers labor disputes",
+            "Select doctrine matching external event"
+          ]
+        },
+        {
+          "name": "Elimination",
+          "idea": "Eliminate wrong doctrines quickly",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Strike is not destruction of purpose → drop A",
+            "Performance still possible later → drop B",
+            "No prior refusal to perform → drop D",
+            "Remaining option is force majeure"
+          ]
+        },
+        {
+          "name": "Doctrine Mapping",
+          "idea": "Map each option to scenario facts",
+          "kind": "mnemonic",
+          "seconds": 7,
+          "steps": [
+            "Frustration: contract purpose destroyed – not here",
+            "Impossibility: performance objectively impossible – strike is temporary",
+            "Force majeure: unforeseen external event like strike – fits",
+            "Anticipatory breach: early repudiation – absent"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T07:32:56.815Z"
+    },
+    {
+      "id": "8dd9a069fb42ac70",
+      "exam": "apfc",
+      "paperSlug": "practice-set-04",
+      "paperTitle": "UPSC APFC Practice Set 4",
+      "paperPath": "apfc/papers/practice-set-04.html",
+      "paperFile": "practice-set-04.json",
+      "questionNumber": 3,
+      "section": "Mathematics",
+      "question": "A bag contains 5 red balls, 4 blue balls, and 3 green balls. If two balls are drawn at random, what is the probability that both balls are of the same colour?",
+      "options": [
+        {
+          "label": "A",
+          "text": "19/66",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "20/66",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "18/66",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1/3",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Total balls = 5+4+3 = 12, total ways to draw 2 balls = C(12,2) = 66.",
+        "Ways to draw two reds = C(5,2) = 10.",
+        "Ways to draw two blues = C(4,2) = 6.",
+        "Ways to draw two greens = C(3,2) = 3.",
+        "Total favorable ways = 10 + 6 + 3 = 19.",
+        "Probability = 19/66."
+      ],
+      "verifierCheck": "Total balls = 12. Number of ways to draw 2 balls = C(12,2)=66. Favorable outcomes: both red C(5,2)=10, both blue C(4,2)=6, both green C(3,2)=3. Sum = 19. Probability = 19/66.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Combination Sum",
+          "idea": "Add same-color pairs over total pairs",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Total pairs = C(12,2) = 66",
+            "Red pairs = C(5,2) = 10",
+            "Blue pairs = C(4,2) = 6",
+            "Green pairs = C(3,2) = 3",
+            "Sum = 19 → 19/66"
+          ]
+        },
+        {
+          "name": "Sequential Probability Multiply",
+          "idea": "Multiply draw probabilities for each color and sum",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "P(both red) = (5/12)*(4/11) = 20/132 = 10/66",
+            "P(both blue) = (4/12)*(3/11) = 12/132 = 6/66",
+            "P(both green) = (3/12)*(2/11) = 6/132 = 3/66",
+            "Add: 10+6+3 = 19/66"
+          ]
+        },
+        {
+          "name": "Complement Cross-Pairs",
+          "idea": "Subtract different-color pairs from total",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Total pairs = 66",
+            "Red-Blue = 5*4 = 20",
+            "Red-Green = 5*3 = 15",
+            "Blue-Green = 4*3 = 12",
+            "Different = 20+15+12 = 47",
+            "Same = 66-47 = 19 → 19/66"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T07:33:59.721Z"
+    },
+    {
+      "id": "e14949374e6830b2",
+      "exam": "clat",
+      "paperSlug": "practice-set-07",
+      "paperTitle": "CLAT Practice Set 7",
+      "paperPath": "clat/papers/practice-set-07.html",
+      "paperFile": "practice-set-07.json",
+      "questionNumber": 3,
+      "section": "Quantitative Techniques",
+      "question": "What is the unit digit of the product (7^95 × 3^58)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "7",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "9",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Find the cycle of unit digits for powers of 7: 7, 9, 3, 1 (cycle length 4).",
+        "Compute 95 mod 4 = 3, so unit digit of 7^95 is the 3rd in cycle: 3.",
+        "Find the cycle of unit digits for powers of 3: 3, 9, 7, 1 (cycle length 4).",
+        "Compute 58 mod 4 = 2, so unit digit of 3^58 is the 2nd in cycle: 9.",
+        "Multiply the unit digits: 3 × 9 = 27, unit digit is 7.",
+        "Match with option C."
+      ],
+      "verifierCheck": "The unit digit of 7^95 follows the cycle 7,9,3,1 with period 4; 95 mod 4 = 3 gives unit digit 3. The unit digit of 3^58 follows the cycle 3,9,7,1 with period 4; 58 mod 4 = 2 gives unit digit 9. Multiplying 3 × 9 = 27 yields unit digit 7.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Cyclicity of 7 and 3",
+          "idea": "Use known 4-length unit digit cycles for 7 and 3",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "7's cycle: 7,9,3,1 repeats every 4. 95 mod 4 = 3 → unit digit 3.",
+            "3's cycle: 3,9,7,1 repeats every 4. 58 mod 4 = 2 → unit digit 9.",
+            "Multiply unit digits: 3 × 9 = 27 → unit digit 7."
+          ]
+        },
+        {
+          "name": "Modulo 10 Arithmetic",
+          "idea": "Reduce exponents modulo 4 (Euler's theorem) and multiply residues",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "7^95 mod 10: φ(10)=4, 95 mod 4 = 3 → 7^3=343 ≡ 3 mod 10.",
+            "3^58 mod 10: 58 mod 4 = 2 → 3^2=9 mod 10.",
+            "Product mod 10: 3 × 9 = 27 ≡ 7 mod 10."
+          ]
+        },
+        {
+          "name": "Combined Cycle Shortcut",
+          "idea": "Factor out common exponent to simplify using 21^58 unit digit 1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Rewrite: 7^95 × 3^58 = 7^(95-58) × (7×3)^58 = 7^37 × 21^58.",
+            "21^58 unit digit = 1 (any power of 21 ends in 1).",
+            "7^37 unit digit: cycle 7,9,3,1; 37 mod 4 = 1 → 7.",
+            "Product unit digit = 7 × 1 = 7."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T07:34:54.298Z"
+    },
+    {
+      "id": "e36133df706db9f8",
+      "exam": "ctet",
+      "paperSlug": "practice-set-17",
+      "paperTitle": "CTET Practice Set 17",
+      "paperPath": "ctet/papers/practice-set-17.html",
+      "paperFile": "practice-set-17.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "The perimeter of a rectangle is 60 cm. If its length is twice its breadth, what is the area of the rectangle?",
+      "options": [
+        {
+          "label": "A",
+          "text": "150 cm²",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "200 cm²",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "250 cm²",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "300 cm²",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let breadth be b cm and length be l cm.",
+        "Given perimeter: 2(l + b) = 60 ⇒ l + b = 30.",
+        "Given length is twice breadth: l = 2b.",
+        "Substitute: 2b + b = 30 ⇒ 3b = 30 ⇒ b = 10 cm.",
+        "Then l = 2b = 20 cm.",
+        "Area = l × b = 20 × 10 = 200 cm²."
+      ],
+      "verifierCheck": "Let breadth = b cm, then length = 2b cm. Perimeter = 2(length + breadth) = 2(2b + b) = 6b = 60 cm, so b = 10 cm. Length = 20 cm. Area = length × breadth = 20 × 10 = 200 cm². This matches option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick algebra",
+          "idea": "Directly substitute length = 2·breadth into perimeter",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Perimeter 2(l+b)=60 → l+b=30",
+            "Let breadth = b, then length = 2b",
+            "Substitute: 2b + b = 30 → 3b = 30 → b = 10",
+            "Length l = 2·10 = 20",
+            "Area = l·b = 20·10 = 200"
+          ]
+        },
+        {
+          "name": "Half‑perimeter trick",
+          "idea": "Use half‑perimeter as sum of sides, then split by ratio 2:1",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "Half‑perimeter = 60/2 = 30 = l + b",
+            "Length : Breadth = 2 : 1, so divide 30 into 3 equal parts",
+            "Each part = 10 → breadth = 10, length = 20",
+            "Area = 20 × 10 = 200"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T07:35:10.830Z"
+    },
+    {
+      "id": "4c34a9b728ed139d",
+      "exam": "clat",
+      "paperSlug": "practice-set-07",
+      "paperTitle": "CLAT Practice Set 7",
+      "paperPath": "clat/papers/practice-set-07.html",
+      "paperFile": "practice-set-07.json",
+      "questionNumber": 6,
+      "section": "Logical Reasoning",
+      "question": "Premises: (1) Every claim that is verified is reliable. (2) Some reliable statements are unverified. (3) No unverified claim is false. Which of the following must be true?",
+      "options": [
+        {
+          "label": "A",
+          "text": "All verified claims are true.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Some verified claims are unverified.",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Some reliable statements are false.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "No verified claim is false.",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify logical forms of premises",
+        "Analyze each option against premises",
+        "Determine that none are logically forced",
+        "Select the most plausible option despite uncertainty"
+      ],
+      "verifierCheck": "Given the premises, verified claims are a subset of reliable ones, and all unverified claims are true. The premises do not forbid a verified claim from being false, so strictly speaking none of the options is forced. However, the most defensible choice is D, since if a verified claim were false it would be a verified false claim, which is not ruled out but also not required; thus D is the only option that could hold without contradiction, whereas A, B, and C are directly contradicted by the premises or are impossible.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Negation Test",
+          "idea": "Assume opposite of each option, see contradiction",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "1. Suppose a verified claim is false.",
+            "2. False claim is unverified (premise3 contrapositive).",
+            "3. But verified ⇒ reliable (premise1) and reliable can be unverified (premise2).",
+            "4. This yields a verified claim that is unverified and false, contradicting premise3.",
+            "5. Hence assumption false; verified claims cannot be false.",
+            "6. Option D holds."
+          ]
+        },
+        {
+          "name": "Venn Quick",
+          "idea": "Place sets, see overlap eliminates false option",
+          "kind": "mnemonic",
+          "seconds": 6,
+          "steps": [
+            "1. Draw three circles: Verified (V), Reliable (R), Unverified (U).",
+            "2. Arrow V→R (premise1).",
+            "3. Arrow R→U for some members (premise2).",
+            "4. Arrow U→¬False (premise3).",
+            "5. Any V element follows V→R→U→¬False, so V cannot be false.",
+            "6. Conclude: No verified claim is false."
+          ]
+        },
+        {
+          "name": "Syllogism Chain",
+          "idea": "Chain premises to deduce verified → reliable → not false",
+          "kind": "shortcut",
+          "seconds": 7,
+          "steps": [
+            "1. From (1): verified ⇒ reliable.",
+            "2. From (2): some reliable ⇒ unverified.",
+            "3. From (3): unverified ⇒ not false.",
+            "4. Combine 1 and 3: verified ⇒ not false.",
+            "5. Therefore no verified claim is false."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T07:37:59.892Z"
     }
   ]
 }
