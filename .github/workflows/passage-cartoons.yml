@@ -86,6 +86,8 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git add data/passage-cartoons.json css/style.css 2>/dev/null || true
           git add upsc/course 2>/dev/null || true
+          node scripts/build-cartoon-pages.js || true
+          git add cartoons 2>/dev/null || true
           bash scripts/ci-push.sh "passage-cartoons: a cartoon for each passage (run #${{ github.run_number }})"
 
       # Keep the lane continuous without relying on the throttled cron: if any
