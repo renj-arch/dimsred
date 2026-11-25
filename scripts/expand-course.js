@@ -398,9 +398,23 @@ function collectDeepen() {
         var files = users.map(function (u) { return u.dir + '/course/' + mk + '/lesson-' + lesson.slug + '.html'; });
         var existing = files.filter(function (f) { return fs.existsSync(path.join(ROOT, f)); });
         if (!existing.length) return;
-        // Hand-written lessons are off-limits to every machine lane. Their depth
-        // must be authored, not generated (see scripts/lib/handwritten.js).
-        if (existing.some(function (f) { return handwritten.isProtected(f); })) return;
+        // Hand-written lessons are never REGENERATED. But the thin authored
+        // Mains modules (language, interview, essay, optional-guide) can still
+        // grow safely: the deepen-page role appends sections to
+        // course-addons.json, which inject-course-addons.js inserts at deploy,
+        // so the authored prose is never touched. Only the explicitly listed
+        // thin modules qualify, and only while the page is still thin; the deep
+        // authored GS lessons and the Malayalam pages stay off-limits.
+        var THIN_HAND_MODULES = { 'mains-language': 1, 'mains-interview': 1, 'mains-optional-guide': 1, 'mains-essay': 1 };
+        var protectedThinAppend = false;
+        if (existing.some(function (f) { return handwritten.isProtected(f); })) {
+          if (!THIN_HAND_MODULES[mk]) return;
+          var pw = existing.reduce(function (m, f) {
+            try { return Math.max(m, pageWords(path.join(ROOT, f))); } catch (e) { return m; }
+          }, 0);
+          if (pw >= 8000) return;
+          protectedThinAppend = true;
+        }
         var content = String(courseData[key] || '');
         // No source + auto filler is a fill job, not a depth job.
         var allFiller = existing.every(function (f) { return isFillerPage(path.join(ROOT, f)); });
@@ -410,6 +424,7 @@ function collectDeepen() {
         // than its source carries hand-written material the generator cannot
         // reproduce.
         var handBuilt = !content || biggest > Math.max(60000, content.length * 4);
+        if (protectedThinAppend) handBuilt = true;
         // A thin/stub lesson belongs to the enrich lane, not depth — unless it
         // is hand-built, in which case enrich refuses it (the rewrite would
         // drift the JSON away from the committed page) and depth-page is the
