@@ -1453,11 +1453,83 @@
 <p>Typical traps: (i) a statement that appears to give a numeric value but actually leaves a hidden degree of freedom (e.g., “x + y = 10” does not fix x). (ii) Two statements that together still leave a binary ambiguity because they constrain the same variable in the same way. (iii) Over‑reliance on algebraic manipulation without checking whether the derived expression still contains an unknown. Always verify that the final expression depends solely on known constants.</p>
 
 <h3>Argument Mapping: Identifying Hidden Premises and Formal Fallacies</h3>
+<!-- passage-cartoon:99209849ea3c -->
+<figure class="passage-cartoon" data-cartoon="99209849ea3c">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Conclusion box -->
+  <rect x="200" y="20" width="160" height="40" rx="5" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="48" font-size="18" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Conclusion</text>
+  <!-- Premise 1 box -->
+  <rect x="60" y="120" width="140" height="40" rx="5" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="130" y="148" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Premise 1</text>
+  <!-- Premise 2 box -->
+  <rect x="360" y="120" width="140" height="40" rx="5" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="430" y="148" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Premise 2</text>
+  <!-- Arrows from premises to conclusion -->
+  <path d="M130,160 L280,20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M430,160 L280,20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="280,20 270,30 290,30" fill="#1f2937"/>
+  <!-- Hidden premise box -->
+  <rect x="200" y="200" width="160" height="40" rx="5" stroke="#1f2937" stroke-width="3" stroke-dasharray="6,4" fill="none"/>
+  <text x="280" y="228" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Hidden Premise</text>
+  <!-- Dashed line from hidden premise to conclusion -->
+  <path d="M280,240 L280,60" stroke="#1f2937" stroke-width="3" fill="none" stroke-dasharray="6,4"/>
+  <!-- Fallacy boxes -->
+  <rect x="30" y="250" width="150" height="30" rx="3" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="105" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Affirming Consequent</text>
+  <rect x="205" y="250" width="150" height="30" rx="3" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="280" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Denying Antecedent</text>
+  <rect x="380" y="250" width="150" height="30" rx="3" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="455" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Undistributed Middle</text>
+  <!-- Caption strip -->
+  <rect x="0" y="280" width="560" height="40" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Argument Mapping: Hidden Premises &amp; Formal Fallacies</text>
+</svg></div>
+  <figcaption>Argument Mapping: Identifying Hidden Premises and Formal Fallacies</figcaption>
+</figure>
+
 <p>Critical reasoning passages often hide premises necessary for the conclusion to follow. Argument mapping makes the structure visible: write the conclusion at the top, draw arrows from each explicit premise, then ask “What else must be true for this inference to be valid?” The missing links are the hidden premises. For example, “All managers are leaders. Therefore, some leaders are innovative.” The hidden premise is “Some managers are innovative.” Without it, the conclusion does not follow. Mapping also reveals formal fallacies: affirming the consequent (If P then Q; Q; therefore P), denying the antecedent (If P then Q; not P; therefore not Q), and the fallacy of the undistributed middle in categorical syllogisms.</p>
 <p>To detect the undistributed middle, translate each categorical statement into standard form (All A are B, Some A are B, No A are B, Some A are not B). Identify the middle term — the term appearing in both premises but not in the conclusion. Check whether the middle term is distributed (refers to all members of its category) in at least one premise. If not, the syllogism commits the undistributed middle fallacy. Another frequent pattern is the illicit major/minor: the major or minor term is distributed in the conclusion but not in its premise. Mark distribution with a superscript “d” on the term; the rule “no term may be distributed in the conclusion unless distributed in the premise” catches both errors instantly.</p>
 <p>Practice by rewriting every argument in the passage into a numbered list of premises and a conclusion, then apply the distribution checklist. Tests often present a “strengthen/weaken” question; the correct answer is the statement that either supplies a missing premise (strengthen) or introduces a counter‑example to a hidden premise (weaken). Recognising the hidden premise first turns these questions into a direct lookup.</p>
 
 <h3>Temporal Reasoning: Partial Order Scheduling and Critical Path Extraction</h3>
+<!-- passage-cartoon:8566950d05b4 -->
+<figure class="passage-cartoon" data-cartoon="8566950d05b4">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <circle cx="100" cy="80" r="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="100" y="85" text-anchor="middle" font-size="16" fill="#1f2937">A</text>
+  <circle cx="200" cy="160" r="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="200" y="165" text-anchor="middle" font-size="16" fill="#1f2937">B</text>
+  <circle cx="300" cy="160" r="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="300" y="165" text-anchor="middle" font-size="16" fill="#1f2937">C</text>
+  <circle cx="250" cy="240" r="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="250" y="245" text-anchor="middle" font-size="16" fill="#1f2937">D</text>
+  <circle cx="150" cy="300" r="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="150" y="305" text-anchor="middle" font-size="16" fill="#1f2937">E</text>
+  <circle cx="350" cy="300" r="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="350" y="305" text-anchor="middle" font-size="16" fill="#1f2937">F</text>
+  <line x1="100" y1="100" x2="200" y2="140" stroke="#1f2937" stroke-width="2"/>
+  <line x1="100" y1="100" x2="300" y2="140" stroke="#1f2937" stroke-width="2"/>
+  <line x1="200" y1="180" x2="250" y2="220" stroke="#1f2937" stroke-width="4"/>
+  <line x1="300" y1="180" x2="250" y2="220" stroke="#1f2937" stroke-width="2"/>
+  <line x1="250" y1="260" x2="150" y2="280" stroke="#1f2937" stroke-width="4"/>
+  <line x1="250" y1="260" x2="350" y2="280" stroke="#1f2937" stroke-width="2"/>
+  <text x="50" y="50" font-size="14" fill="#1f2937">DAG</text>
+  <text x="400" y="50" font-size="14" fill="#1f2937">Topological Sort</text>
+  <text x="200" y="120" font-size="14" fill="#1f2937">Critical Path</text>
+  <text x="250" y="190" font-size="14" fill="#1f2937">Slack=0</text>
+  <text x="80" y="70" font-size="14" fill="#1f2937">EST</text>
+  <text x="130" y="320" font-size="14" fill="#1f2937">LST</text>
+  <text x="350" y="320" font-size="14" fill="#1f2937">Resource Constraint</text>
+  <text x="200" y="140" font-size="14" fill="#1f2937">Earliest Deadline</text>
+  <line x1="10" y1="285" x2="550" y2="285" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" text-anchor="middle" font-size="14" fill="#1f2937">Temporal Reasoning: Partial Order Scheduling</text>
+</svg></div>
+  <figcaption>Temporal Reasoning: Partial Order Scheduling and Critical Path Extraction</figcaption>
+</figure>
+
 <p>Temporal reasoning problems give a set of events with precedence constraints (e.g., “A occurs before B”, “C and D cannot be simultaneous”). The goal is to determine possible orders, earliest/latest times, or whether a specific ordering is forced. Represent each event as a node in a directed acyclic graph (DAG); an edge X → Y means X must precede Y. The partial order is the transitive closure of these edges. A topological sort yields all linear extensions; the number of extensions can be large, but questions typically ask for properties common to all extensions (necessary precedences) or for the existence of an extension satisfying an extra condition.</p>
 <p>The critical path method (CPM) adapts to discrete events by assigning each event a duration (often 1 unit). The earliest start time (EST) of a node is the maximum EST of its predecessors plus their durations. The latest start time (LST) is computed backward from a designated finish node. Slack = LST − EST; <span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="In the Critical Path Method, an event with zero slack (float) lies on at least one critical path, not necessarily on every critical path. There can be multiple critical paths, and a zero-slack event belongs to one of them.">events with zero slack lie on at least one critical path</span> and their relative order is fixed. If a question asks “Which event must occur before event X?”, compute the set of ancestors of X in the DAG; any ancestor with zero slack is a necessary predecessor. Conversely, if two events are incomparable (no directed path either way), their order can be swapped in some valid schedule.</p>
 <p>Advanced variants introduce “resource constraints” (only one event per time slot) turning the problem into a scheduling puzzle. The solution then combines topological ordering with a greedy slot‑filling algorithm: at each time step, schedule any available event (all predecessors already scheduled) preferring the one with the smallest LST (earliest deadline first). This heuristic guarantees a feasible schedule if one exists for unit‑duration tasks. For exams, it suffices to simulate the first few steps manually; answer choices usually hinge on whether a particular event can be placed at a given slot.</p>
@@ -1472,6 +1544,46 @@
 <li>Confusing “unless” with “if not” and reversing the contrapositive direction.</li>
 </ul>
 <h3>Quantifier Scope and Negation in Categorical Syllogisms</h3>
+<!-- passage-cartoon:bb0b44c1f4bb -->
+<figure class="passage-cartoon" data-cartoon="bb0b44c1f4bb">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Person -->
+  <circle cx="80" cy="120" r="30" stroke="#1f2937" stroke-width="4" fill="none"/>
+  <line x1="80" y1="150" x2="80" y2="230" stroke="#1f2937" stroke-width="4"/>
+  <line x1="80" y1="170" x2="50" y2="200" stroke="#1f2937" stroke-width="4"/>
+  <line x1="80" y1="170" x2="110" y2="200" stroke="#1f2937" stroke-width="4"/>
+  <line x1="80" y1="230" x2="50" y2="280" stroke="#1f2937" stroke-width="4"/>
+  <line x1="80" y1="230" x2="110" y2="280" stroke="#1f2937" stroke-width="4"/>
+  <!-- Notebook -->
+  <rect x="200" y="80" width="140" height="180" stroke="#1f2937" stroke-width="4" fill="none"/>
+  <line x1="200" y1="120" x2="340" y2="120" stroke="#1f2937" stroke-width="2"/>
+  <line x1="200" y1="160" x2="340" y2="160" stroke="#1f2937" stroke-width="2"/>
+  <line x1="200" y1="200" x2="340" y2="200" stroke="#1f2937" stroke-width="2"/>
+  <line x1="200" y1="240" x2="340" y2="240" stroke="#1f2937" stroke-width="2"/>
+  <!-- Speech bubble -->
+  <path d="M130,100 q30,-40 80,-20" fill="none" stroke="#1f2937" stroke-width="4"/>
+  <path d="M210,80 h30 v30 h-20 l-10,-10 z" fill="#fbf7ec" stroke="#1f2937" stroke-width="2"/>
+  <text x="215" y="100" font-family="sans-serif" font-size="14" fill="#1f2937">Not all A are B</text>
+  <!-- Arrow to notebook -->
+  <line x1="250" y1="120" x2="250" y2="160" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Transformed text in notebook -->
+  <text x="210" y="115" font-family="sans-serif" font-size="14" fill="#1f2937">Some A are not B</text>
+  <text x="210" y="155" font-family="sans-serif" font-size="14" fill="#1f2937">No A are non‑B</text>
+  <text x="210" y="195" font-family="sans-serif" font-size="14" fill="#1f2937">All A are B</text>
+  <text x="210" y="235" font-family="sans-serif" font-size="14" fill="#1f2937">Some A are B</text>
+  <!-- Caption strip -->
+  <rect x="0" y="300" width="560" height="20" fill="#e5e1d9"/>
+  <text x="280" y="315" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Quantifier Scope and Negation</text>
+</svg></div>
+  <figcaption>Quantifier Scope and Negation in Categorical Syllogisms</figcaption>
+</figure>
+
 <p>Standard categorical syllogisms treat quantifiers as fixed operators — “All”, “No”, “Some”, “Some… not”. In advanced test items the scope of negation can shift across premises, producing statements such as “Not all A are B” (equivalent to “Some A are not B”) or “No A are non‑B” (equivalent to “All A are B”). Recognising these equivalences requires translating each premise into a canonical form before applying the three‑term rule. The first step is to push negation inward using the square of opposition: ¬(All A are B) ⇔ Some A are not B; ¬(No A are B) ⇔ Some A are B; ¬(Some A are B) ⇔ No A are B; ¬(Some A are not B) ⇔ All A are B. Once every premise is in one of the four standard forms, the middle term can be identified and distribution checked. A common examiner twist is to embed a double negation, e.g., “It is not the case that no managers are leaders”, which simplifies to “Some managers are leaders”. Missing this step leads to an incorrect middle term and a false conclusion about validity. Practice by rewriting every premise in a notebook using only the four canonical forms, then run the Venn‑diagram or distribution test. This habit eliminates scope‑ambiguity errors that appear in roughly one‑third of high‑difficulty syllogism sets.</p>
 <h4>Distribution Checklist with Negated Quantifiers</h4>
 <ul>
@@ -1483,6 +1595,59 @@
 <p>When a premise contains a negated quantifier, apply the equivalence table first; only then mark distribution. This two‑stage process prevents the “illicit major” fallacy that arises when a term becomes distributed only after negation is removed.</p>
 
 <h3>Graph-Theoretic Modeling of Seating and Floor Puzzles</h3>
+<!-- passage-cartoon:b2199bfef7b9 -->
+<figure class="passage-cartoon" data-cartoon="b2199bfef7b9">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <circle cx="280" cy="160" r="110" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <g stroke="#1f2937" stroke-width="2" fill="white">
+    <circle cx="380" cy="160" r="12"/>
+    <circle cx="351" cy="89" r="12"/>
+    <circle cx="280" cy="60" r="12"/>
+    <circle cx="209" cy="89" r="12"/>
+    <circle cx="180" cy="160" r="12"/>
+    <circle cx="209" cy="231" r="12"/>
+    <circle cx="280" cy="260" r="12"/>
+    <circle cx="351" cy="231" r="12"/>
+  </g>
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <line x1="280" y1="60" x2="280" y2="30"/>
+    <circle cx="280" cy="30" r="6" fill="#1f2937"/>
+  </g>
+  <g stroke="#1f2937" stroke-width="2" stroke-dasharray="5,5" fill="none">
+    <line x1="280" y1="60" x2="180" y2="160"/>
+    <line x1="351" y1="89" x2="209" y2="89"/>
+    <line x1="380" y1="160" x2="351" y2="231"/>
+  </g>
+  <g stroke="#1f2937" stroke-width="2" fill="white">
+    <circle cx="450" cy="80" r="10"/>
+    <circle cx="500" cy="80" r="10"/>
+    <circle cx="475" cy="120" r="10"/>
+    <circle cx="450" cy="120" r="10"/>
+    <circle cx="500" cy="120" r="10"/>
+    <line x1="450" y1="80" x2="500" y2="80"/>
+    <line x1="450" y1="80" x2="475" y2="120"/>
+    <line x1="500" y1="80" x2="475" y2="120"/>
+    <line x1="450" y1="120" x2="500" y2="120"/>
+    <line x1="450" y1="80" x2="450" y2="120"/>
+    <line x1="500" y1="80" x2="500" y2="120"/>
+  </g>
+  <path d="M 380 160 A 100 100 0 1 1 180 160" stroke="#1f2937" stroke-width="2" fill="none" stroke-dasharray="10,5"/>
+  <line x1="280" y1="60" x2="280" y2="160" stroke="#1f2937" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="280" y="25" font-family="sans-serif" font-size="16" fill="#1f2937" text-anchor="middle">Anchor</text>
+  <text x="380" y="155" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="end">Vertex</text>
+  <text x="380" y="175" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="end">Edge</text>
+  <text x="475" y="70" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Constraint</text>
+  <text x="280" y="190" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Symmetry</text>
+  <text x="280" y="220" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Propagation</text>
+  <text x="475" y="145" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Backtrack</text>
+  <text x="280" y="250" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Unique</text>
+  <rect x="0" y="290" width="560" height="30" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Graph-Theoretic Modeling of Seating and Floor Puzzles</text>
+</svg></div>
+  <figcaption>Graph-Theoretic Modeling of Seating and Floor Puzzles</figcaption>
+</figure>
+
 <p>Complex seating arrangements — linear, circular, rectangular, or multi‑floor — can be formalised as graph problems. Each person (or entity) is a vertex; each adjacency or relative‑position clue is an edge labelled with a constraint type (immediate left, second to the right, opposite, same floor, etc.). The puzzle then asks for a graph embedding that satisfies all labelled edges. A systematic approach begins by constructing a constraint graph: vertices for persons, edges for binary clues, and hyper‑edges for group clues (e.g., “three persons sit together”). The next step is to compute the automorphism group of the underlying geometry (the symmetry group of the table or building). For a circular table of n seats the symmetry group is the dihedral group Dₙ; for a rectangular grid it is the product of row and column permutations. Any solution can be rotated or reflected into an equivalent solution; fixing one person’s seat (or floor) breaks the symmetry and reduces the search space by a factor of |G|. After symmetry breaking, apply constraint propagation: repeatedly enforce arc consistency (AC‑3) on binary constraints, and for hyper‑edges use a backtracking search with forward checking. The search tree depth equals the number of unfixed vertices; branching factor is the number of remaining legal positions. In practice, examiners design puzzles so that after two or three propagation rounds the domains shrink to singletons, yielding a unique arrangement without exhaustive search. Mastering this model lets you spot “over‑constrained” clues that create contradictions early, a frequent trap in “which of the following cannot be true” questions.</p>
 <h4>Symmetry‑Breaking Heuristics</h4>
 <ol>
@@ -1522,6 +1687,44 @@
 <p>Use this table after the shortest‑path computation; if the path contains a “spouse” edge, always check whether the connecting parent is biological or step to choose the correct prefix.</p>
 
 <h3>Direction Sense with Rotational Transformations and Mirror Images</h3>
+<!-- passage-cartoon:23e605a3f60f -->
+<figure class="passage-cartoon" data-cartoon="23e605a3f60f">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <rect x="180" y="60" width="200" height="200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="50" text-anchor="middle" font-size="18" fill="#1f2937" font-family="sans-serif">N</text>
+  <text x="390" y="165" text-anchor="middle" font-size="18" fill="#1f2937" font-family="sans-serif">E</text>
+  <text x="280" y="275" text-anchor="middle" font-size="18" fill="#1f2937" font-family="sans-serif">S</text>
+  <text x="170" y="165" text-anchor="middle" font-size="18" fill="#1f2937" font-family="sans-serif">W</text>
+  <polygon points="280,140 270,170 290,170" fill="#1f2937"/>
+  <path d="M 300,160 Q 320,160 320,180 Q 320,200 300,200" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 260,160 Q 240,160 240,180 Q 240,200 260,200" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <rect x="180" y="60" width="200" height="200" stroke="#1f2937" stroke-width="2" stroke-dasharray="8,4" fill="none" transform="rotate(90 280 160)"/>
+  <line x1="280" y1="60" x2="280" y2="260" stroke="#1f2937" stroke-width="2" stroke-dasharray="6,4"/>
+  <rect x="420" y="60" width="80" height="80" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <line x1="460" y1="60" x2="460" y2="140" stroke="#1f2937" stroke-width="1"/>
+  <line x1="420" y1="100" x2="500" y2="100" stroke="#1f2937" stroke-width="1"/>
+  <line x1="430" y1="70" x2="450" y2="90" stroke="#1f2937" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="470" y1="70" x2="490" y2="90" stroke="#1f2937" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="430" y1="110" x2="450" y2="130" stroke="#1f2937" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="470" y1="110" x2="490" y2="130" stroke="#1f2937" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="280" y="30" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">Rotate 90° CW</text>
+  <text x="280" y="250" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">Mirror Vertical</text>
+  <text x="330" y="150" text-anchor="start" font-size="16" fill="#1f2937" font-family="sans-serif">Turn Right</text>
+  <text x="230" y="150" text-anchor="end" font-size="16" fill="#1f2937" font-family="sans-serif">Turn Left</text>
+  <text x="460" y="160" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">Net Transform</text>
+  <text x="460" y="200" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">Order Matters</text>
+  <line x1="0" y1="290" x2="560" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Direction Sense with Rotational Transformations and Mirror Images</text>
+</svg></div>
+  <figcaption>Direction Sense with Rotational Transformations and Mirror Images</figcaption>
+</figure>
+
 <p>Beyond simple cardinal turns, advanced direction‑sense items introduce rotations of the reference frame (e.g., “the map is rotated 90° clockwise”) and mirror‑image maps (e.g., “the plan is viewed from the back”). A rotation by θ degrees transforms a vector (x, y) to (x cos θ − y sin θ, x sin θ + y cos θ). For the four cardinal directions this reduces to a permutation: 90° clockwise maps North→East, East→South, South→West, West→North. A mirror across the vertical axis swaps East↔West while leaving North, South unchanged; a horizontal mirror swaps North↔South. When a puzzle states “the person turns right, then the whole map is rotated 90° anticlockwise”, apply the turn in the original frame, then apply the rotation to the resulting heading. Composition of transformations is associative, so you may combine all rotations and mirrors into a single net transformation before applying it to the initial heading. A frequent trap is to apply the map rotation before the person’s turn, which reverses the order of operations. The correct order follows the narrative sequence: each action modifies the current state. Represent the state as a pair (position vector, heading unit vector). Each clue updates either position (move forward k) or heading (turn left/right, rotate map, mirror map). After processing all clues, the final position relative to the origin gives the answer. Practising with a 2 × 2 transformation matrix (or a simple lookup table for the eight compass points) makes these problems deterministic and fast.</p>
 <h4>Transformation Lookup for Eight Compass Points</h4>
 <table>
@@ -1559,6 +1762,78 @@
 <li>Overlooking that a gender‑neutral node yields a set of possible relations; answering with a single gendered term is incorrect.</li>
 <li>Failing to compose multiple transformations into a single net operation results in an incorrect final direction.</li></ul>
 <h3>Arc Consistency and Constraint Propagation in Multi‑Variable Puzzles</h3>
+<!-- passage-cartoon:145d2d0ca53e -->
+<figure class="passage-cartoon" data-cartoon="145d2d0ca53e">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Grid lines -->
+  <g stroke="#1f2937" stroke-width="2">
+    <!-- vertical lines -->
+    <line x1="60" y1="30" x2="60" y2="280"/>
+    <line x1="170" y1="30" x2="170" y2="280"/>
+    <line x1="280" y1="30" x2="280" y2="280"/>
+    <line x1="390" y1="30" x2="390" y2="280"/>
+    <line x1="500" y1="30" x2="500" y2="280"/>
+    <!-- horizontal lines -->
+    <line x1="60" y1="30" x2="500" y2="30"/>
+    <line x1="60" y1="60" x2="500" y2="60"/>
+    <line x1="60" y1="100" x2="500" y2="100"/>
+    <line x1="60" y1="140" x2="500" y2="140"/>
+    <line x1="60" y1="180" x2="500" y2="180"/>
+    <line x1="60" y1="220" x2="500" y2="220"/>
+    <line x1="60" y1="260" x2="500" y2="260"/>
+    <line x1="60" y1="280" x2="500" y2="280"/>
+  </g>
+  <!-- Header labels -->
+  <g font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">
+    <text x="115" y="50">Var A</text>
+    <text x="225" y="50">Var B</text>
+    <text x="335" y="50">Var C</text>
+    <text x="445" y="50">Var D</text>
+  </g>
+  <!-- Crossed-out cells (diagonal lines) -->
+  <g stroke="#1f2937" stroke-width="2">
+    <!-- Var A row 2 (y 100-140) -->
+    <line x1="65" y1="105" x2="165" y2="135"/>
+    <!-- Var B row 3 (y 140-180) -->
+    <line x1="175" y1="145" x2="275" y2="175"/>
+    <!-- Var C row 4 (y 180-220) -->
+    <line x1="285" y1="185" x2="385" y2="215"/>
+    <!-- Var D row 5 (y 220-260) -->
+    <line x1="395" y1="225" x2="495" y2="255"/>
+  </g>
+  <!-- Propagation arrows -->
+  <g fill="none" stroke="#1f2937" stroke-width="2" marker-end="url(#arrowhead)">
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937"/>
+      </marker>
+    </defs>
+    <!-- Arrow A->B -->
+    <path d="M165 120 H220"/>
+    <!-- Arrow B->C -->
+    <path d="M275 160 H330"/>
+    <!-- Arrow C->D -->
+    <path d="M385 200 H440"/>
+    <!-- Loop arrow D->A (curved) -->
+    <path d="M495 240 Q540 240 540 100 Q540 40 440 40 Q340 40 340 100 Q340 160 280 160"/>
+  </g>
+  <!-- Labels near arrows -->
+  <g font-size="13" fill="#1f2937" font-family="sans-serif">
+    <text x="190" y="115" text-anchor="middle">AC‑3</text>
+    <text x="300" y="155" text-anchor="middle">Prune</text>
+    <text x="410" y="195" text-anchor="middle">Watch</text>
+    <text x="340" y="70" text-anchor="middle">Singleton</text>
+  </g>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="none" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">
+    Arc Consistency and Constraint Propagation in Multi‑Variable Puzzles
+  </text>
+</svg></div>
+  <figcaption>Arc Consistency and Constraint Propagation in Multi‑Variable Puzzles</figcaption>
+</figure>
+
 <p>Multi‑variable puzzles (floor‑based, scheduling, or attribute‑matching) can be modelled as a Constraint Satisfaction Problem (CSP) where each variable has a finite domain and each clue is a binary or n‑ary constraint. Arc consistency (AC‑3) is the standard polynomial‑time preprocessing that prunes domain values which cannot participate in any solution. For every directed arc (X → Y) the algorithm checks each value a in domain(X); if no value b in domain(Y) satisfies the constraint between X and Y, a is removed. The process repeats until a fixed point is reached. In practice, a puzzle with 8 persons, 8 floors, and 3 attributes per person yields 24 variables; applying AC‑3 before search reduces the search tree dramatically, often to a single branch.</p>
 <p>Implementation on paper uses a table of domains. Write each variable’s possible values in a column. For each clue, cross out values that violate it. Then iterate: whenever a domain shrinks, re‑examine all constraints that involve that variable. A common pattern is “A lives two floors above B” — this creates a functional constraint floor(A) = floor(B) + 2. After initial domain reduction (floors 1‑8), if B cannot be 7 or 8, those values are removed from B’s domain, which in turn removes 9 and 10 (non‑existent) from A’s domain, and so on. The iteration stops when a full pass makes no further deletions. If any domain becomes empty, the puzzle data is inconsistent; if all domains are singletons, the solution is found without backtracking.</p>
 <p>Advanced puzzles add conditional constraints: “If C is on floor 3 then D is not on floor 5”. These are encoded as a binary constraint between a Boolean indicator (C_on<sub>3</sub>) and D’s floor domain. During propagation, when C_on<sub>3</sub> becomes true, the constraint activates and prunes D’s domain. When it becomes false, the constraint is inert. This conditional activation is handled by maintaining a watch list for each literal. The technique mirrors the watched‑literal scheme in modern SAT solvers and keeps the propagation linear in the number of active constraints.</p>
