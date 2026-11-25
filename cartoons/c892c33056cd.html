@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Resolution Refutation and Clause Learning for Propositional Puzzle Solving | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Resolution Refutation and Clause Learning for Propositional Puzzle Solving</h1>
+<p class="meta">Logical Reasoning · <a href="/upsc/course/csat/lesson-logical-reasoning">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+
+  <!-- Boxes -->
+  <rect x="30" y="20" width="200" height="50" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="30" y="90" width="200" height="50" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="30" y="170" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="250" y="170" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="140" y="170" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="140" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="300" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="430" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+
+  <!-- Arrows (lines) -->
+  <line x1="130" y1="70" x2="130" y2="90" stroke="#1f2937" stroke-width="2"/>
+  <line x1="130" y1="140" x2="90" y2="170" stroke="#1f2937" stroke-width="2"/>
+  <line x1="230" y1="140" x2="250" y2="170" stroke="#1f2937" stroke-width="2"/>
+  <line x1="150" y1="190" x2="140" y2="190" stroke="#1f2937" stroke-width="2"/>
+  <line x1="250" y1="190" x2="260" y2="190" stroke="#1f2937" stroke-width="2"/>
+  <line x1="200" y1="210" x2="200" y2="240" stroke="#1f2937" stroke-width="2"/>
+  <line x1="260" y1="210" x2="300" y2="240" stroke="#1f2937" stroke-width="2"/>
+  <line x1="420" y1="260" x2="430" y2="260" stroke="#1f2937" stroke-width="2"/>
+  <line x1="430" y1="240" x2="230" y2="140" stroke="#1f2937" stroke-width="2"/>
+
+  <!-- Arrowheads -->
+  <polygon points="127,84 130,90 133,84" fill="#1f2937"/>
+  <polygon points="84,164 90,170 96,164" fill="#1f2937"/>
+  <polygon points="256,164 250,170 244,164" fill="#1f2937"/>
+  <polygon points="146,187 140,190 146,193" fill="#1f2937"/>
+  <polygon points="254,187 260,190 254,193" fill="#1f2937"/>
+  <polygon points="197,234 200,240 203,234" fill="#1f2937"/>
+  <polygon points="294,234 300,240 306,234" fill="#1f2937"/>
+  <polygon points="424,257 430,260 424,263" fill="#1f2937"/>
+  <polygon points="236,146 230,140 224,146" fill="#1f2937"/>
+
+  <!-- Labels -->
+  <text x="130" y="50" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Puzzle</text>
+  <text x="130" y="120" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">CNF</text>
+  <text x="90" y="195" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Clause p</text>
+  <text x="310" y="195" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Clause ¬p</text>
+  <text x="200" y="195" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Resolution</text>
+  <text x="200" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Empty Clause</text>
+  <text x="360" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Conflict</text>
+  <text x="490" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Learned Clause</text>
+
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Resolution Refutation and Clause Learning for Propositional Puzzle Solving</text>
+</svg></div>
+<p class="meta">Resolution Refutation and Clause Learning for Propositional Puzzle Solving</p></div></body></html>

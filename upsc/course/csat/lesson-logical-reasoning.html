@@ -3233,9 +3233,150 @@ Question: Is it sufficient to conclude that Maya’s project has a recipe?</div>
 <li>Skipping memoisation in recursive constraint networks, which leads to redundant recomputation and time‑out in multi‑stage seating puzzles.</li>
 </ul>
 <h3>Resolution Refutation and Clause Learning for Propositional Puzzle Solving</h3>
+<!-- passage-cartoon:c892c33056cd -->
+<figure class="passage-cartoon" data-cartoon="c892c33056cd">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+
+  <!-- Boxes -->
+  <rect x="30" y="20" width="200" height="50" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="30" y="90" width="200" height="50" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="30" y="170" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="250" y="170" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="140" y="170" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="140" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="300" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="430" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+
+  <!-- Arrows (lines) -->
+  <line x1="130" y1="70" x2="130" y2="90" stroke="#1f2937" stroke-width="2"/>
+  <line x1="130" y1="140" x2="90" y2="170" stroke="#1f2937" stroke-width="2"/>
+  <line x1="230" y1="140" x2="250" y2="170" stroke="#1f2937" stroke-width="2"/>
+  <line x1="150" y1="190" x2="140" y2="190" stroke="#1f2937" stroke-width="2"/>
+  <line x1="250" y1="190" x2="260" y2="190" stroke="#1f2937" stroke-width="2"/>
+  <line x1="200" y1="210" x2="200" y2="240" stroke="#1f2937" stroke-width="2"/>
+  <line x1="260" y1="210" x2="300" y2="240" stroke="#1f2937" stroke-width="2"/>
+  <line x1="420" y1="260" x2="430" y2="260" stroke="#1f2937" stroke-width="2"/>
+  <line x1="430" y1="240" x2="230" y2="140" stroke="#1f2937" stroke-width="2"/>
+
+  <!-- Arrowheads -->
+  <polygon points="127,84 130,90 133,84" fill="#1f2937"/>
+  <polygon points="84,164 90,170 96,164" fill="#1f2937"/>
+  <polygon points="256,164 250,170 244,164" fill="#1f2937"/>
+  <polygon points="146,187 140,190 146,193" fill="#1f2937"/>
+  <polygon points="254,187 260,190 254,193" fill="#1f2937"/>
+  <polygon points="197,234 200,240 203,234" fill="#1f2937"/>
+  <polygon points="294,234 300,240 306,234" fill="#1f2937"/>
+  <polygon points="424,257 430,260 424,263" fill="#1f2937"/>
+  <polygon points="236,146 230,140 224,146" fill="#1f2937"/>
+
+  <!-- Labels -->
+  <text x="130" y="50" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Puzzle</text>
+  <text x="130" y="120" font-size="16" fill="#1f2937" text-anchor="middle" font-family="sans-serif">CNF</text>
+  <text x="90" y="195" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Clause p</text>
+  <text x="310" y="195" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Clause ¬p</text>
+  <text x="200" y="195" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Resolution</text>
+  <text x="200" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Empty Clause</text>
+  <text x="360" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Conflict</text>
+  <text x="490" y="265" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Learned Clause</text>
+
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Resolution Refutation and Clause Learning for Propositional Puzzle Solving</text>
+</svg></div>
+  <figcaption>Resolution Refutation and Clause Learning for Propositional Puzzle Solving</figcaption>
+</figure>
+
 <p>Resolution is a complete inference rule for propositional logic in conjunctive normal form (CNF). A clause is a disjunction of literals; a CNF formula is a conjunction of clauses. The resolution rule derives a new clause (the resolvent) from two parent clauses that contain complementary literals <em>p</em> and <em>¬p</em>. Repeated application either produces the empty clause, signalling unsatisfiability, or saturates the clause set without contradiction, proving satisfiability. In competitive puzzles — Sudoku, seating grids, floor‑allocation — each cell or position can be encoded as a Boolean variable (e.g., <em>x<sub>i,j,k</sub></em> meaning “cell (i,j) contains digit k”). The puzzle constraints (row, column, block, adjacency) become clauses. A modern SAT solver augments plain resolution with <strong>unit propagation</strong> (assign forced literals immediately), <strong>pure literal elimination</strong> (remove literals that appear with only one polarity), and <strong>conflict‑driven clause learning (CDCL)</strong>. When a conflict is reached, the solver analyses the implication graph, learns a new clause that prevents the same conflict, and backtracks non‑chronologically. This learned clause is a logical consequence of the original formula, so the search space shrinks dramatically. For exam‑level puzzles, a manual simulation of CDCL on a small clause set (≤ 30 variables) is feasible: write the initial clauses, perform unit propagation until a decision literal is needed, choose a branching variable, continue until either a model is found or a conflict yields a learned clause. The learned clause can be added to the working set and the process repeats. Mastery of this mechanism lets a candidate recognise when a puzzle statement “either A or B but not both” translates to the pair of clauses (A ∨ B) ∧ (¬A ∨ ¬B) and how a single additional fact can trigger a cascade of unit propagations that solves the entire grid.</p>
 
 <h3>Binary Decision Diagrams for Compact Representation of Logical Conditions</h3>
+<!-- passage-cartoon:b987790f94a9 -->
+<figure class="passage-cartoon" data-cartoon="b987790f94a9">
+  <div class="pc-frame"><svg viewBox='0 0 560 320' xmlns='http://www.w3.org/2000/svg'>
+  <rect width='560' height='320' fill='#fbf7ec'/>
+  <!-- Exhaustive tree (left) -->
+  <g stroke='#1f2937' stroke-width='3' fill='none'>
+    <circle cx='100' cy='60' r='18'/>
+    <line x1='100' y1='78' x2='60' y2='130'/>
+    <line x1='100' y1='78' x2='140' y2='130'/>
+    <circle cx='60' cy='130' r='18'/>
+    <circle cx='140' cy='130' r='18'/>
+    <line x1='60' y1='148' x2='30' y2='200'/>
+    <line x1='60' y1='148' x2='90' y2='200'/>
+    <line x1='140' y1='148' x2='110' y2='200'/>
+    <line x1='140' y1='148' x2='170' y2='200'/>
+    <circle cx='30' cy='200' r='14'/>
+    <circle cx='90' cy='200' r='14'/>
+    <circle cx='110' cy='200' r='14'/>
+    <circle cx='170' cy='200' r='14'/>
+    <line x1='30' y1='214' x2='15' y2='260'/>
+    <line x1='30' y1='214' x2='45' y2='260'/>
+    <line x1='90' y1='214' x2='75' y2='260'/>
+    <line x1='90' y1='214' x2='105' y2='260'/>
+    <line x1='110' y1='214' x2='95' y2='260'/>
+    <line x1='110' y1='214' x2='125' y2='260'/>
+    <line x1='170' y1='214' x2='155' y2='260'/>
+    <line x1='170' y1='214' x2='185' y2='260'/>
+    <rect x='5' y='252' width='20' height='16' rx='2'/>
+    <rect x='37' y='252' width='20' height='16' rx='2'/>
+    <rect x='67' y='252' width='20' height='16' rx='2'/>
+    <rect x='99' y='252' width='20' height='16' rx='2'/>
+    <rect x='87' y='252' width='20' height='16' rx='2'/>
+    <rect x='119' y='252' width='20' height='16' rx='2'/>
+    <rect x='147' y='252' width='20' height='16' rx='2'/>
+    <rect x='179' y='252' width='20' height='16' rx='2'/>
+    <text x='15' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>0</text>
+    <text x='47' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>1</text>
+    <text x='77' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>0</text>
+    <text x='109' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>1</text>
+    <text x='97' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>0</text>
+    <text x='129' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>1</text>
+    <text x='157' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>0</text>
+    <text x='189' y='264' font-size='10' text-anchor='middle' fill='#1f2937'>1</text>
+    <text x='100' y='25' font-size='14' text-anchor='middle' fill='#1f2937' font-weight='bold'>2ⁿ Tree</text>
+  </g>
+  <!-- Arrow -->
+  <g stroke='#1f2937' stroke-width='4' fill='#1f2937'>
+    <line x1='220' y1='100' x2='300' y2='100'/>
+    <polygon points='300,90 320,100 300,110'/>
+  </g>
+  <!-- ROBDD (right) -->
+  <g stroke='#1f2937' stroke-width='3' fill='none'>
+    <circle cx='400' cy='60' r='22'/>
+    <text x='400' y='65' font-size='16' text-anchor='middle' fill='#1f2937' font-weight='bold'>P</text>
+    <line x1='400' y1='82' x2='400' y2='125'/>
+    <circle cx='400' cy='145' r='22'/>
+    <text x='400' y='150' font-size='16' text-anchor='middle' fill='#1f2937' font-weight='bold'>Q/R</text>
+    <line x1='378' y1='167' x2='340' y2='215'/>
+    <line x1='422' y1='167' x2='460' y2='215'/>
+    <rect x='322' y='230' width='36' height='24' rx='3'/>
+    <rect x='442' y='230' width='36' height='24' rx='3'/>
+    <text x='340' y='247' font-size='14' text-anchor='middle' fill='#1f2937' font-weight='bold'>0</text>
+    <text x='460' y='247' font-size='14' text-anchor='middle' fill='#1f2937' font-weight='bold'>1</text>
+    <!-- Merge arrows -->
+    <line x1='200' y1='130' x2='340' y2='145' stroke-dasharray='6,4' stroke-width='2'/>
+    <line x1='200' y1='130' x2='460' y2='145' stroke-dasharray='6,4' stroke-width='2'/>
+    <text x='400' y='25' font-size='14' text-anchor='middle' fill='#1f2937' font-weight='bold'>ROBDD</text>
+  </g>
+  <!-- Labels -->
+  <g font-size='13' fill='#1f2937' font-family='sans-serif'>
+    <text x='100' y='295' text-anchor='middle'>Exhaustive Case Analysis</text>
+    <text x='400' y='295' text-anchor='middle'>Compact Canonical Form</text>
+    <text x='260' y='90' text-anchor='middle' font-weight='bold'>Var Ordering</text>
+    <text x='260' y='160' text-anchor='middle' font-weight='bold'>Merge Nodes</text>
+    <text x='400' y='270' text-anchor='middle'>Terminal 0/1</text>
+    <text x='400' y='195' text-anchor='middle'>Apply Op</text>
+  </g>
+  <!-- Caption strip -->
+  <rect x='0' y='280' width='560' height='40' fill='#1f2937'/>
+  <text x='280' y='305' font-size='15' text-anchor='middle' fill='#fbf7ec' font-family='sans-serif' font-weight='bold'>
+    Binary Decision Diagrams for Compact Representation of Logical Conditions
+  </text>
+</svg></div>
+  <figcaption>Binary Decision Diagrams for Compact Representation of Logical Conditions</figcaption>
+</figure>
+
 <p>A Binary Decision Diagram (BDD) is a directed acyclic graph that represents a Boolean function. Nodes are labelled with variables; each node has two outgoing edges — <strong>high</strong> (variable = 1) and <strong>low</strong> (variable = 0). Terminal nodes are 0 (false) and 1 (true). A <strong>Reduced Ordered BDD (ROBDD)</strong> imposes a fixed variable ordering and merges isomorphic sub‑graphs while eliminating redundant tests (nodes whose high and low edges point to the same child). The ROBDD of a function is canonical for a given ordering, making equivalence checking trivial: two formulas are equivalent iff their ROBDDs are identical. In data‑sufficiency questions, a condition such as “(P ∧ Q) ∨ (¬P ∧ R) ∨ (Q ∧ ¬R)” can be compiled into an ROBDD. The size of the diagram often stays small even when the formula has many clauses, because shared sub‑structures are merged. Variable ordering critically affects size; a good heuristic places variables that appear together in constraints early. For puzzle grids, each cell’s possible values can be encoded as a set of Boolean variables; the global constraint “all rows contain each digit exactly once” becomes a conjunction of cardinality constraints, each of which compiles to a compact BDD using adder circuits. During solving, the BDD can be conjoined with new information (e.g., “cell (2,3) = 5”) by a single apply operation, yielding an updated diagram that instantly reveals forced assignments (variables whose both co‑factors are identical). Candidates who understand BDD construction can avoid exhaustive case analysis: instead of enumerating 2ⁿ assignments, they traverse the diagram once, reading off the satisfying assignments or detecting unsatisfiability when the diagram reduces to the 0‑terminal.</p>
 
 <div class="example-box">
@@ -3253,9 +3394,156 @@ Question: Is it sufficient to conclude that Maya’s project has a recipe?</div>
 <p>Classical logic is monotonic: adding premises never retracts conclusions. Many puzzle scenarios, however, involve <strong>default assumptions</strong> that hold unless contradicted — e.g., “normally a person tells the truth” or “by default a vehicle follows the shortest route”. Reiter’s <strong>default logic</strong> formalises this with rules of the form <em>α : β / γ</em> meaning “if α is believed and β is consistent, then conclude γ”. An <strong>extension</strong> is a fixed point of the operator that adds conclusions of applicable defaults. A default theory may have zero, one, or multiple extensions, reflecting ambiguity. In data‑sufficiency questions, a statement like “Unless otherwise stated, all participants are honest” introduces a default: <em>Honest(x) : ¬Dishonest(x) / Honest(x)</em>. If another statement asserts “Participant A lied”, the default for A is blocked, but defaults for others remain. The candidate must compute the set of extensions: each extension corresponds to a possible world consistent with the defaults and the explicit facts. Sufficiency of a statement is then evaluated across all extensions — if the target proposition holds in every extension, the statement is sufficient; if it fails in at least one, it is not. A practical algorithm for small theories: enumerate all subsets of defaults, test consistency with facts, and collect maximal consistent sets. Because the number of defaults in exam items is usually ≤ 4, exhaustive enumeration is trivial. Recognising the non‑monotonic layer prevents the common error of treating a default as a hard rule and over‑constraining the model.</p>
 
 <h3>Metric Temporal Constraints and Difference Bounds Matrices</h3>
+<!-- passage-cartoon:c311583667af -->
+<figure class="passage-cartoon" data-cartoon="c311583667af">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Left: Weighted Graph -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- Nodes -->
+    <circle cx="100" cy="100" r="18"/>
+    <circle cx="200" cy="100" r="18"/>
+    <circle cx="200" cy="200" r="18"/>
+    <circle cx="100" cy="200" r="18"/>
+    <!-- Node labels -->
+    <text x="100" y="105" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#1f2937">A</text>
+    <text x="200" y="105" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#1f2937">B</text>
+    <text x="200" y="205" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#1f2937">C</text>
+    <text x="100" y="205" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#1f2937">D</text>
+    <!-- Edges with arrowheads -->
+    <!-- A->B -->
+    <line x1="118" y1="100" x2="182" y2="100"/>
+    <polygon points="182,100 172,95 172,105" fill="#1f2937"/>
+    <text x="150" y="90" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">30</text>
+    <!-- B->C -->
+    <line x1="200" y1="118" x2="200" y2="182"/>
+    <polygon points="200,182 195,172 205,172" fill="#1f2937"/>
+    <text x="210" y="150" text-anchor="start" font-size="12" font-family="sans-serif" fill="#1f2937">≤15</text>
+    <!-- C->D -->
+    <line x1="182" y1="200" x2="118" y2="200"/>
+    <polygon points="118,200 128,195 128,205" fill="#1f2937"/>
+    <text x="150" y="215" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">20</text>
+    <!-- D->A -->
+    <line x1="100" y1="182" x2="100" y2="118"/>
+    <polygon points="100,118 95,128 105,128" fill="#1f2937"/>
+    <text x="85" y="150" text-anchor="end" font-size="12" font-family="sans-serif" fill="#1f2937">≤10</text>
+    <!-- A->C diagonal -->
+    <line x1="118" y1="118" x2="182" y2="182"/>
+    <polygon points="182,182 172,177 177,172" fill="#1f2937"/>
+    <text x="160" y="130" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">40</text>
+  </g>
+  <!-- Labels for left graph -->
+  <text x="150" y="40" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Difference Constraints</text>
+  <text x="150" y="260" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Weighted Graph</text>
+  <!-- Central arrow: Floyd-Warshall -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <line x1="220" y1="150" x2="300" y2="150"/>
+    <polygon points="300,150 290,145 290,155"/>
+    <text x="260" y="140" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Floyd‑Warshall</text>
+  </g>
+  <!-- Right: DBM Matrix -->
+  <g stroke="#1f2937" stroke-width="1" fill="none">
+    <!-- Grid 6x6, cell 30, top-left (300,50) -->
+    <g id="grid">
+      <!-- Vertical lines -->
+      <line x1="300" y1="50" x2="300" y2="230"/>
+      <line x1="330" y1="50" x2="330" y2="230"/>
+      <line x1="360" y1="50" x2="360" y2="230"/>
+      <line x1="390" y1="50" x2="390" y2="230"/>
+      <line x1="420" y1="50" x2="420" y2="230"/>
+      <line x1="450" y1="50" x2="450" y2="230"/>
+      <line x1="480" y1="50" x2="480" y2="230"/>
+      <!-- Horizontal lines -->
+      <line x1="300" y1="50" x2="480" y2="50"/>
+      <line x1="300" y1="80" x2="480" y2="80"/>
+      <line x1="300" y1="110" x2="480" y2="110"/>
+      <line x1="300" y1="140" x2="480" y2="140"/>
+      <line x1="300" y1="170" x2="480" y2="170"/>
+      <line x1="300" y1="200" x2="480" y2="200"/>
+      <line x1="300" y1="230" x2="480" y2="230"/>
+    </g>
+    <!-- Highlight negative diagonal cell (2,2) -->
+    <rect x="360" y="110" width="30" height="30" stroke-width="3" stroke="#1f2937" fill="none"/>
+    <text x="375" y="130" text-anchor="middle" font-size="18" font-family="sans-serif" fill="#1f2937">−</text>
+    <text x="375" y="145" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">!</text>
+    <!-- DBM label -->
+    <text x="390" y="35" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#1f2937">DBM</text>
+    <!-- Negative Cycle label -->
+    <text x="480" y="125" text-anchor="start" font-size="13" font-family="sans-serif" fill="#1f2937">Negative Cycle</text>
+    <!-- O(n²) Update label -->
+    <text x="390" y="250" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">O(n²) Update</text>
+  </g>
+  <!-- Rightmost: Query Answer / Canonical DBM -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <rect x="490" y="100" width="60" height="100" rx="5"/>
+    <text x="520" y="120" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Canonical</text>
+    <text x="520" y="135" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">DBM</text>
+    <text x="520" y="160" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#1f2937">Query:</text>
+    <text x="520" y="175" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#1f2937">x_j−x_i</text>
+    <text x="520" y="190" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#1f2937">=−DBM[j,i]</text>
+  </g>
+  <text x="520" y="215" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">Query Answer</text>
+  <!-- Caption strip -->
+  <line x1="0" y1="295" x2="560" y2="295" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Metric Temporal Constraints and Difference Bounds Matrices</text>
+</svg></div>
+  <figcaption>Metric Temporal Constraints and Difference Bounds Matrices</figcaption>
+</figure>
+
 <p>Scheduling puzzles often include precise temporal offsets: “Event B starts exactly 30 minutes after Event A ends”, “The gap between C and D is at most 15 minutes”. These are <strong>difference constraints</strong> of the form <em>x<sub>j</sub> − x<sub>i</sub> ≤ c</em> where <em>x</em> variables denote start times. The system can be represented as a weighted directed graph with an edge <em>i → j</em> of weight <em>c</em>. Consistency of the whole set is equivalent to the absence of a negative‑weight cycle. The <strong>Difference Bounds Matrix (DBM)</strong> stores the tightest known upper bound for each pair (i,j). The Floyd‑Warshall algorithm (or incremental Bellman‑Ford) computes the all‑pairs shortest paths, yielding the canonical DBM. If any diagonal entry becomes negative, the constraints are inconsistent. When a new constraint arrives (e.g., from an additional statement), the DBM can be updated in O(n²) by relaxing the affected rows and columns. For exam puzzles with ≤ 6 events, a hand‑executed DBM is feasible: initialise a 6×6 matrix with ∞, set diagonal 0, insert each constraint as an edge, run three nested loops to propagate minima, then read off the earliest/latest feasible times. The DBM also supports <strong>query answering</strong>: the minimum possible value of <em>x<sub>j</sub> − x<sub>i</sub></em> is the negative of the entry (j,i) after closure. This technique turns a seemingly combinatorial scheduling problem into a deterministic matrix computation, eliminating case‑by‑case timeline drawing.</p>
 
 <h3>Game‑Theoretic Equilibrium Analysis in Multi‑Agent Logical Games</h3>
+<!-- passage-cartoon:2a74b81ee92a -->
+<figure class="passage-cartoon" data-cartoon="2a74b81ee92a">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Agents -->
+  <circle cx="140" cy="60" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="140" y="100" text-anchor="middle" font-size="14" fill="#1f2937">Knight</text>
+  <circle cx="280" cy="60" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="100" text-anchor="middle" font-size="14" fill="#1f2937">Knave</text>
+  <circle cx="420" cy="60" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="420" y="100" text-anchor="middle" font-size="14" fill="#1f2937">Spy</text>
+  <!-- Tree root -->
+  <circle cx="280" cy="130" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="135" text-anchor="middle" font-size="12" fill="#1f2937">Prior</text>
+  <!-- Branches to statements -->
+  <line x1="280" y1="150" x2="140" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="150" x2="280" y2="200" stroke="#1f2937" stroke-width="5"/> <!-- equilibrium path -->
+  <line x1="280" y1="150" x2="420" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <!-- Statement nodes -->
+  <circle cx="140" cy="200" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="140" y="205" text-anchor="middle" font-size="11" fill="#1f2937">Announce</text>
+  <circle cx="280" cy="200" r="20" stroke="#1f2937" stroke-width="5" fill="none"/>
+  <text x="280" y="205" text-anchor="middle" font-size="11" fill="#1f2937">Announce</text>
+  <circle cx="420" cy="200" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="420" y="205" text-anchor="middle" font-size="11" fill="#1f2937">Announce</text>
+  <!-- Leaves -->
+  <line x1="140" y1="220" x2="100" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <line x1="140" y1="220" x2="180" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="220" x2="240" y2="260" stroke="#1f2937" stroke-width="5"/>
+  <line x1="280" y1="220" x2="320" y2="260" stroke="#1f2937" stroke-width="5"/>
+  <line x1="420" y1="220" x2="380" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <line x1="420" y1="220" x2="460" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="100" cy="260" r="12" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="180" cy="260" r="12" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="240" cy="260" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="320" cy="260" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="380" cy="260" r="12" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="460" cy="260" r="12" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="115" text-anchor="middle" font-size="12" fill="#1f2937">Common Knowledge</text>
+  <text x="140" y="230" text-anchor="middle" font-size="11" fill="#1f2937">Bayesian Update</text>
+  <text x="280" y="230" text-anchor="middle" font-size="11" fill="#1f2937">Equilibrium Path</text>
+  <text x="420" y="230" text-anchor="middle" font-size="11" fill="#1f2937">Backward Induction</text>
+  <text x="280" y="275" text-anchor="middle" font-size="11" fill="#1f2937">Leaf Outcomes</text>
+  <!-- Caption strip -->
+  <line x1="0" y1="280" x2="560" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" text-anchor="middle" font-size="13" fill="#1f2937">Game‑Theoretic Equilibrium Analysis in Multi‑Agent Logical Games</text>
+</svg></div>
+  <figcaption>Game‑Theoretic Equilibrium Analysis in Multi‑Agent Logical Games</figcaption>
+</figure>
+
 <p>Puzzles such as “Knights always tell the truth, Knaves always lie, Spies may do either” become <strong>games of incomplete information</strong> when agents reason about each other’s knowledge. The standard solution concept is <strong>common knowledge of rationality</strong> leading to a <strong>Nash equilibrium</strong> in the induced epistemic game. Each agent’s type (Knight, Knave, Spy) determines a strategy: a Knight’s strategy set contains only truthful statements; a Knave’s contains only false statements; a Spy’s contains both. A public announcement (e.g., “I am a Knight”) updates the common prior via Bayesian conditioning. The equilibrium is a profile of statements, one per agent, such that no agent can deviate to another allowed statement and improve the satisfaction of his objective (typically “make the listener believe I am a Knight”). Backward induction on the announcement tree yields the set of <strong>perfect Bayesian equilibria</strong>. In exam items, the tree depth is usually ≤ 3. The candidate can construct the tree: root = prior distribution over types; each node = an agent’s possible utterance; edges = listener’s updated beliefs. A leaf is reached when all agents have spoken. The equilibrium path is the one where each utterance is optimal given the continuation beliefs. If multiple equilibria exist, the puzzle often asks “What can be deduced for sure?” — the intersection of all equilibrium outcomes. Recognising the game‑theoretic layer prevents the trap of evaluating each statement in isolation; the strategic interdependence means a statement’s truth value may depend on what the speaker expects the listener to infer.</p>
 
 <ul>
