@@ -54,15 +54,31 @@ var EXAM_META = {
 var SUBJECT_ALIASES = {
   'General Knowledge': ['General Knowledge', 'General Awareness', 'General Studies', 'Current Affairs & GK'],
   'General Awareness': ['General Awareness', 'General Knowledge', 'General Studies', 'Current Affairs & GK'],
-  'Current Affairs': ['Current Affairs & GK', 'General Awareness', 'General Knowledge'],
-  'Quantitative Aptitude': ['Quantitative Aptitude', 'Mathematics'],
-  'Mathematics': ['Mathematics', 'Quantitative Aptitude'],
-  'Reasoning': ['Reasoning', 'General Intelligence & Reasoning', 'Logical Reasoning'],
+  'Current Affairs': ['Current Affairs & GK', 'Current Affairs', 'General Awareness', 'General Knowledge'],
+  'Quantitative Aptitude': ['Quantitative Aptitude', 'CSAT', 'Mathematics'],
+  'Mathematics': ['Mathematics', 'Quantitative Aptitude', 'CSAT'],
+  'Reasoning': ['Reasoning', 'CSAT', 'Logical Reasoning', 'General Intelligence & Reasoning'],
+  'Logical Reasoning': ['CSAT', 'Reasoning', 'Logical Reasoning'],
+  'Comprehension': ['CSAT'],
+  'Decision Making': ['CSAT'],
   'English': ['English Language', 'English'],
-  'Science': ['Science', 'General Knowledge'],
+  'Science': ['Science', 'General Knowledge', 'General Studies'],
   'Physics': ['Physics'],
   'Chemistry': ['Chemistry'],
-  'Biology': ['Biology']
+  'Biology': ['Biology'],
+  // UPSC GS subjects all belong to the single General Studies section.
+  'Polity': ['General Studies', 'Polity'],
+  'Constitution': ['General Studies', 'Polity'],
+  'History': ['General Studies', 'History'],
+  'Geography': ['General Studies', 'Geography'],
+  'Economy': ['General Studies', 'Economy'],
+  'Environment': ['General Studies', 'Environment & Ecology'],
+  'Ecology': ['General Studies', 'Environment & Ecology'],
+  'Art & Culture': ['General Studies', 'Art & Culture'],
+  'Governance': ['General Studies', 'Governance'],
+  'International Relations': ['General Studies', 'International Relations'],
+  'Society': ['General Studies', 'Society'],
+  'Ethics': ['General Studies', 'Ethics']
 };
 
 function norm(s) {
@@ -93,7 +109,15 @@ function sectionFor(exam, subject, sections) {
   for (var k = 0; k < sections.length; k++) {
     if (norm(sections[k]).indexOf(norm(subject)) !== -1) return sections[k];
   }
-  return '';
+  // Never drop an authored question for want of a section name. A UPSC
+  // optional or a GS subject the alias table does not name still belongs to
+  // the bank; without this fallback 3,069 of 4,627 UPSC course questions were
+  // skipped and the micro-test counts never moved.
+  if (exam === 'upsc') {
+    var gs = sections.filter(function (s) { return /general studies/i.test(s); })[0];
+    if (gs) return gs;
+  }
+  return sections.length ? sections[0] : '';
 }
 
 function makeBank(exam, meta) {
