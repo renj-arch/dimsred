@@ -258488,6 +258488,141 @@
         }
       ],
       "sol": "Immobilization introduces diffusional barriers (external mass‑transfer resistance and internal pore diffusion) that lower the substrate concentration at the enzyme surface. This manifests as an increased apparent Km (lower apparent affinity) while the maximal catalytic rate Vmax often decreases because a fraction of enzyme molecules may be conformationally restricted or inaccessible. The intrinsic catalytic constants (kcat, true Km) of the enzyme are unchanged, but the observed kinetic parameters reflect mass‑transfer limitations. Cross‑linked enzyme aggregates (CLEAs) can mitigate some losses but still show elevated apparent Km."
+    },
+    {
+      "id": 121,
+      "text": "In the crowded cellular cytoplasm (300–400 g L⁻¹ macromolecules), how does macromolecular crowding affect the apparent Km for large polymeric substrates?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Decreases apparent Km due to excluded volume effects raising effective concentration",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Increases apparent Km due to steric hindrance limiting access to the active site",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Does not change apparent Km as crowding only affects Vmax via viscosity",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Decreases apparent Km due to enhanced diffusion of large substrates",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that excluded-volume effects raise the effective concentration of reactants, often decreasing apparent Km for substrates similar in size to crowders. However, for large polymeric substrates, steric hindrance limits access to the active site, which increases the apparent Km. Viscosity increases reduce the diffusion-limited rate constant kdiff, lowering Vmax for diffusion-limited enzymes, but the specific effect on Km for large substrates is an increase due to steric exclusion."
+    },
+    {
+      "id": 122,
+      "text": "What is the primary role of Quantum Mechanics/Molecular Mechanics (QM/MM) methods in computational enzyme design?",
+      "options": [
+        {
+          "l": "a",
+          "t": "To predict the tertiary structure of enzymes from amino acid sequences",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "To calculate reaction barriers and transition-state geometries for guiding mutations",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "To measure the diffusion coefficients of enzymes in biomolecular condensates",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "To quantify the partition coefficient of enzymes between dilute and dense phases",
+          "c": false
+        }
+      ],
+      "sol": "QM/MM methods partition the active site (treated with density functional theory) from the protein matrix (treated with molecular mechanics). This enables the calculation of reaction barriers, transition-state geometries, and kinetic isotope effects. These calculations guide the selection of residues for mutation to stabilize the transition state or remodel the electrostatic pre-organization of the active site, as demonstrated by the Kemp eliminase redesign which lowered the computed barrier by 8 kcal mol⁻¹."
+    },
+    {
+      "id": 123,
+      "text": "Which statement correctly distinguishes fluxomics from metabolomics and describes the use of isotopic tracers?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Fluxomics quantifies metabolite pool sizes, while metabolomics quantifies reaction rates using 13C tracers",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "13C-isotopic tracers are used in fluxomics to quantify reaction rates through metabolic networks",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Constraint-based modeling requires no stoichiometric information about the metabolic network",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Isotopomer analysis is primarily used to determine the three-dimensional structure of enzymes",
+          "c": false
+        }
+      ],
+      "sol": "The lesson explicitly states that fluxomics quantifies rates, whereas metabolomics quantifies pool sizes. Isotopic tracers (e.g., 13C) are central to fluxomics (13C-MFA), where labeling data is fitted to estimate fluxes through the network. Constraint-based modeling (like FBA) relies on stoichiometric constraints. Isotopomer analysis distinguishes parallel pathways in flux analysis, not enzyme structure determination."
+    },
+    {
+      "id": 124,
+      "text": "Regarding the regulation of enzyme activity by reactive oxygen species (ROS), which statement is accurate?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Sulfenic acid formation on cysteine is irreversible and leads to permanent enzyme inactivation",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "S-nitrosylation of caspase-3 activates its proteolytic activity during apoptosis",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Sulfenic acid modifications are readily reduced by thioredoxin and glutaredoxin systems",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "Denitrosylation is mediated exclusively by glutathione peroxidase",
+          "c": false
+        }
+      ],
+      "sol": "The lesson notes that ROS (e.g., H2O2) oxidize cysteine to sulfenic acid (-SOH), which is readily reduced by the thioredoxin and glutaredoxin systems, making it a reversible signaling modification. Further oxidation to sulfinic/sulfonic acids is often irreversible. S-nitrosylation (addition of NO to cysteine) inhibits caspase-3, not activates it. Denitrosylation is mediated by thioredoxin and GSNOR (S-nitrosoglutathione reductase), not glutathione peroxidase."
+    },
+    {
+      "id": 125,
+      "text": "In enzyme immobilization for continuous bioprocessing, what does a Thiele modulus (ϕ) greater than 1 indicate?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The reaction rate is limited by enzyme kinetics and not by diffusion",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The observed reaction rate is limited by internal diffusion within the support matrix",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The effectiveness factor (η) is approximately equal to 1",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Covalent attachment has successfully eliminated all mass-transfer limitations",
+          "c": false
+        }
+      ],
+      "sol": "The Thiele modulus is defined as ϕ = L·√(kcat·[E]/Deff). The lesson states that when ϕ > 1, the observed rate is diffusion-limited, and the effectiveness factor η ≈ 1/ϕ. This means internal pore diffusion limits the overall rate. If ϕ < 1, kinetics limit the rate and η ≈ 1. Covalent attachment often increases apparent Km and decreases Vmax due to restricted conformational dynamics and does not eliminate diffusion limitations."
     }
   ],
   "biology/evolution": [
@@ -309047,6 +309182,141 @@
         }
       ],
       "sol": "The text explicitly states: “The AWF, notified in 2021, establishes a three-tier support architecture with national, state, and camp-level officers.” Option A matches this definition. Option B misidentifies the tiers as governmental bodies. Option C confuses athlete categories with administrative tiers. Option D describes professional roles, not the structural tiers mandated by the AWF."
+    },
+    {
+      "id": 120,
+      "text": "According to the 2022 judgment in All India Football Federation v. Union of India, what key principle was reinforced regarding the National Sports Development Code?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The NSDC provisions are non-justiciable policy guidelines.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The Ministry must follow principles of natural justice before imposing sanctions under the NSDC.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The age limit of 70 years for office-bearers is unconstitutional.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The NSDC does not apply to the Board of Control for Cricket in India.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that the 2022 judgment in All India Football Federation v. Union of India \"reinforced that the Code's provisions are justiciable and that the Ministry must follow principles of natural justice before imposing sanctions.\" Option B directly reflects this. Option A is incorrect because the provisions are justiciable. Option C is not mentioned in the judgment summary. Option D is incorrect because the 2018 Supreme Court judgment in BCCI v. State of Tamil Nadu extended NSDC principles to the BCCI."
+    },
+    {
+      "id": 121,
+      "text": "Under the Companies Act, 2013 and the 2021 CSR Rules amendment, which of the following sports-related expenditures qualifies as eligible CSR spending, provided it is not part of the company's normal business operations?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Construction of a new stadium for a professional league franchise.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Donation of sports equipment to a rural school for athletics training.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Sponsorship of a corporate employee sports tournament.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Funding the operational expenses of a company-owned professional sports team.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson's \"traps\" section explicitly states: \"Confusing CSR eligibility for 'sports equipment donation' with 'building a stadium' – only the former qualifies if not part of core business.\" While the main text mentions \"sports infrastructure, equipment, coaching, and athlete welfare\" as qualifying, the trap clarifies the specific examination rule that equipment donation qualifies whereas stadium construction does not. Options A, C, and D represent activities either excluded by the trap (stadium) or likely part of normal business operations (employee tournament, company-owned team)."
+    },
+    {
+      "id": 122,
+      "text": "A common misconception regarding India's sports diplomacy is that hosting an International Olympic Committee (IOC) Session automatically guarantees a successful Olympic bid. What does the lesson clarify as the actual requirement for an Olympic bid?",
+      "options": [
+        {
+          "l": "a",
+          "t": "A separate feasibility study and approval by the IOC Executive Board.",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "A majority vote by all National Olympic Committees.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Ratification by the Union Ministry of Youth Affairs and Sports.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Compliance with the National Sports Development Code for all participating federations.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson's \"traps\" section directly addresses this: \"Believing India's IOC Session hosting automatically guarantees an Olympic bid; the bid requires a separate feasibility study and IOC Executive Board approval.\" Option A matches this clarification exactly. Options B, C, and D are not mentioned as requirements for an Olympic bid in the provided text."
+    },
+    {
+      "id": 123,
+      "text": "What is the legal status of the National Education Policy 2020's recommendation for 60 minutes of daily physical activity for school students?",
+      "options": [
+        {
+          "l": "a",
+          "t": "It is a legally enforceable mandate under the Right to Education Act, 2009.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "It is an advisory norm, not legally enforceable under the Right to Education Act.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "It is mandatory only for schools affiliated with the Central Board of Secondary Education.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "It is enforceable through the Fit India School Rating framework.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson's \"traps\" section explicitly states: \"Overlooking that the NEP's 60-minute daily activity norm is advisory, not legally enforceable under the Right to Education Act.\" Option B reflects this fact. Option A is the misconception the trap warns against. Options C and D are not supported by the text; the Fit India School Rating evaluates schools but does not legally enforce the norm."
+    },
+    {
+      "id": 124,
+      "text": "Recent regulatory guidelines issued by the Ministry of Information and Broadcasting for the broadcasting sector mandate which of the following regarding digital advertising revenue?",
+      "options": [
+        {
+          "l": "a",
+          "t": "A fixed 30% share of digital ad revenue must be paid to IPL franchises.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "A share of digital ad revenue must be earmarked for grassroots development.",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Digital ad revenue must be split equally between television and OTT platforms.",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "All digital ad revenue must be reported to the Board of Control for Cricket in India.",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: \"Recent regulatory guidelines issued by the Ministry of Information and Broadcasting mandate transparent revenue reporting, data-privacy compliance, and a share of digital ad revenue for grassroots development.\" Option B directly matches this. Option A is incorrect because the trap notes the franchise share is renegotiated each cycle, not fixed at 30%. Option C is not mentioned in the guidelines. Option D is incorrect as the guidelines mandate reporting generally, not specifically to the BCCI."
     }
   ],
   "maths/average": [
@@ -312527,6 +312797,33 @@
         }
       ],
       "sol": "Differentiability at 0 implies continuity at 0. For Cauchy's equation, continuity at a single point forces f(x) = c x for all x, where c = f'(0). Hence f is linear with constant derivative c. Therefore f'(x) = c = f'(0) for every x."
+    },
+    {
+      "id": 109,
+      "text": "According to the Denjoy–Young–Saks theorem, which of the following configurations of the four Dini derivatives can occur at almost every point?",
+      "options": [
+        {
+          "l": "a",
+          "t": "All four Dini derivatives are +∞.",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Upper right = +∞, lower right = -∞, upper left = +∞, lower left = -∞.",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Upper right = +∞, lower left = +∞, lower right = -∞, upper left = -∞.",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "All four Dini derivatives are finite but not equal.",
+          "c": false
+        }
+      ],
+      "sol": "The Denjoy–Young–Saks theorem classifies the almost‑everywhere behaviour of the four Dini derivatives into four mutually exclusive cases. The second case is exactly: the upper right and lower left derivatives are +∞ while the lower right and upper left are −∞. This matches option C. Option A is not one of the listed cases; option B mixes upper right with upper left both +∞ and lower right with lower left both −∞, which is not a listed configuration; option D contradicts the theorem because if all four are finite they must be equal (differentiable) at almost every point."
     }
   ],
   "maths/data-interpretation": [
