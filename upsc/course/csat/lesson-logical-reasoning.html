@@ -1670,6 +1670,41 @@
 </div>
 
 <h3>Recursive Family Trees: In‑Laws, Step Relations, and Gender‑Neutral Nodes</h3>
+<!-- passage-cartoon:6f9c077a9089 -->
+<figure class="passage-cartoon" data-cartoon="6f9c077a9089">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Nodes -->
+  <circle cx="120" cy="120" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="440" cy="120" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="200" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Edges -->
+  <line x1="120" y1="120" x2="280" y2="200" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="440" y1="120" x2="280" y2="200" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="120" y1="120" x2="440" y2="120" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <!-- Labels -->
+  <text x="200" y="155" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">bio‑parent</text>
+  <text x="360" y="155" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">step‑parent</text>
+  <text x="280" y="110" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">spouse</text>
+  <text x="280" y="245" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">half‑sibling</text>
+  <text x="120" y="80" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">node</text>
+  <text x="440" y="80" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">node</text>
+  <!-- Lookup box -->
+  <rect x="460" y="200" width="80" height="60" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="500" y="235" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">lookup</text>
+  <!-- Caption strip -->
+  <line x1="0" y1="280" x2="560" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="298" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Recursive Family Trees: In‑Laws, Step Relations,</text>
+  <text x="280" y="314" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">and Gender‑Neutral Nodes</text>
+</svg></div>
+  <figcaption>Recursive Family Trees: In‑Laws, Step Relations, and Gender‑Neutral Nodes</figcaption>
+</figure>
+
 <p>Blood‑relation puzzles increasingly feature blended families: step‑parents, half‑siblings, adoptive links, and gender‑neutral “parent” nodes. A recursive definition treats every person as a node in a directed acyclic graph where edges are labelled “biological‑parent”, “adoptive‑parent”, “step‑parent”, “spouse”. The gender attribute becomes optional; a node may have a “gender” property (M, F, X) or remain unspecified. To answer “How is X related to Y?” compute the shortest labelled path between X and Y in the graph, then translate the path into a kinship term using a lookup table that respects cultural conventions (e.g., “mother’s husband” = “father” if biological, otherwise “step‑father”). When gender is unknown, the answer must be expressed as a set of possible relations (e.g., “uncle or aunt”). Examiners exploit this by giving a clue such as “P is the only child of Q’s spouse” without stating Q’s gender; the correct inference is “P is Q’s child or step‑child”. A systematic method: (1) Build the graph incrementally from each statement. (2) After each addition, run a transitive‑closure algorithm restricted to “parent‑of” and “spouse‑of” edges to derive implied relations. (3) Flag any node with multiple incoming “parent‑of” edges as a potential half‑sibling junction. (4) When a question asks for a specific relation, enumerate all minimal paths; if more than one distinct kinship term appears, the answer is “cannot be determined uniquely”. This graph‑based recursion eliminates the ad‑hoc family‑tree drawing that leads to missed step‑relations.</p>
 <h4>Path‑Translation Table (Excerpt)</h4>
 <table>
@@ -1742,6 +1777,105 @@
 <p>Chain operations by successive table lookups; the final heading row gives the answer directly.</p>
 
 <h3>Analogical Reasoning with Higher‑Order Relations and Functional Composition</h3>
+<!-- passage-cartoon:75b53a94725e -->
+<figure class="passage-cartoon" data-cartoon="75b53a94725e">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Base layer: Tool-Medium -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <!-- Hammer -->
+    <rect x="160" y="240" width="12" height="40" rx="2"/>
+    <rect x="150" y="235" width="32" height="10" rx="2"/>
+    <!-- Nail -->
+    <line x1="230" y1="235" x2="230" y2="275" stroke-width="3"/>
+    <line x1="220" y1="240" x2="240" y2="240" stroke-width="2"/>
+    <!-- Pen -->
+    <line x1="340" y1="235" x2="340" y2="275" stroke-width="3"/>
+    <path d="M335 235 L345 235 L345 230 L340 225 L335 230 Z" fill="#1f2937"/>
+    <!-- Paper -->
+    <rect x="370" y="235" width="40" height="35" rx="2"/>
+    <line x1="375" y1="250" x2="400" y2="250"/>
+    <line x1="375" y1="260" x2="395" y2="260"/>
+  </g>
+  <text x="280" y="295" font-family="sans-serif" font-size="16" fill="#1f2937" text-anchor="middle">Tool-Medium</text>
+
+  <!-- Middle layer: Inverse Operations -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Addition -->
+    <circle cx="220" cy="170" r="25"/>
+    <line x1="210" y1="170" x2="230" y2="170"/>
+    <line x1="220" y1="160" x2="220" y2="180"/>
+    <!-- Multiplication -->
+    <circle cx="300" cy="170" r="25"/>
+    <line x1="285" y1="155" x2="315" y2="185"/>
+    <line x1="285" y1="185" x2="315" y2="155"/>
+  </g>
+  <text x="260" y="210" font-family="sans-serif" font-size="16" fill="#1f2937" text-anchor="middle">Inverse Ops</text>
+
+  <!-- Top layer: Calculus Inverse -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Integral -->
+    <path d="M200 100 C190 100 180 90 180 80 C180 70 190 60 200 60 C210 60 220 70 220 80 C220 90 210 100 200 100" stroke-width="3"/>
+    <line x1="200" y1="100" x2="200" y2="130"/>
+    <!-- Derivative -->
+    <text x="300" y="115" font-family="sans-serif" font-size="28" fill="#1f2937" font-weight="bold">d/dx</text>
+  </g>
+  <text x="260" y="65" font-family="sans-serif" font-size="16" fill="#1f2937" text-anchor="middle">Calculus Inverse</text>
+
+  <!-- Vertical schema arrows -->
+  <g stroke="#1f2937" stroke-width="2" fill="none" stroke-dasharray="6 4">
+    <line x1="220" y1="235" x2="220" y2="195"/>
+    <line x1="220" y1="145" x2="220" y2="115"/>
+    <line x1="300" y1="235" x2="300" y2="195"/>
+    <line x1="300" y1="145" x2="300" y2="115"/>
+  </g>
+  <text x="190" y="160" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Schema</text>
+
+  <!-- Student with magnifying glass -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <!-- Body -->
+    <circle cx="480" cy="180" r="20"/>
+    <line x1="480" y1="200" x2="480" y2="250"/>
+    <line x1="460" y1="220" x2="450" y2="240"/>
+    <line x1="500" y1="220" x2="510" y2="240"/>
+    <line x1="480" y1="250" x2="470" y2="280"/>
+    <line x1="480" y1="250" x2="490" y2="280"/>
+    <!-- Magnifying glass -->
+    <circle cx="430" cy="160" r="18"/>
+    <line x1="418" y1="172" x2="400" y2="190" stroke-width="3"/>
+    <line x1="400" y1="190" x2="390" y2="195" stroke-width="3"/>
+  </g>
+
+  <!-- Distractor examples -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- Dimension increase (crossed) -->
+    <rect x="60" y="80" width="30" height="30"/>
+    <rect x="55" y="75" width="40" height="40" stroke-dasharray="4 2"/>
+    <line x1="55" y1="75" x2="95" y2="115" stroke="red" stroke-width="2"/>
+    <line x1="95" y1="75" x2="55" y2="115" stroke="red" stroke-width="2"/>
+    <circle cx="60" cy="140" r="15"/>
+    <circle cx="60" cy="140" r="25" stroke-dasharray="4 2"/>
+    <line x1="45" y1="125" x2="75" y2="155" stroke="red" stroke-width="2"/>
+    <line x1="75" y1="125" x2="45" y2="155" stroke="red" stroke-width="2"/>
+    <!-- Generalization (check) -->
+    <rect x="130" y="80" width="30" height="20"/>
+    <rect x="125" y="75" width="40" height="30" stroke-dasharray="4 2"/>
+    <path d="M130 95 L140 105 L155 85" stroke="green" stroke-width="2.5" fill="none"/>
+    <circle cx="145" cy="140" r="15"/>
+    <ellipse cx="145" cy="140" rx="25" ry="15" stroke-dasharray="4 2"/>
+    <path d="M135 140 L143 148 L158 132" stroke="green" stroke-width="2.5" fill="none"/>
+  </g>
+  <text x="75" y="180" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Dimension ↑</text>
+  <text x="145" y="180" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Generalization</text>
+  <text x="110" y="205" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Distractor</text>
+
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#1f2937"/>
+  <text x="280" y="310" font-family="sans-serif" font-size="15" fill="#fbf7ec" text-anchor="middle" font-weight="bold">Analogical Reasoning: Higher-Order Relations</text>
+</svg></div>
+  <figcaption>Analogical Reasoning with Higher‑Order Relations and Functional Composition</figcaption>
+</figure>
+
 <p>Classic analogies pair objects linked by a first‑order relation (e.g., “hammer : nail :: pen : paper” — tool‑to‑medium). Higher‑order analogies involve relations between relations, such as “cause‑effect” applied to “cause‑effect” (meta‑causation) or “function‑composition” where the relation itself is a function. For instance, “addition : multiplication :: integration : differentiation” maps the algebraic hierarchy (inverse operations) onto the calculus hierarchy. To solve these, identify the abstract relational schema R(A,B) in the first pair, then find a pair (C,D) such that the same schema holds at a higher level of abstraction. A systematic method: (1) Enumerate candidate schemas — “inverse”, “subset”, “precondition”, “instrument”, “scale”, “composition”. (2) Test each schema on the given pair; the one that fits uniquely is the target schema. (3) Apply the schema to the answer options; the correct option reproduces the schema at the next hierarchical level. Examiners often embed a distractor that matches a surface‑level semantic similarity but violates the structural schema. For example, “square : cube :: circle : sphere” follows the “dimension‑increase” schema, whereas “square : rectangle :: circle : ellipse” follows “generalisation”. Recognising the schema prevents falling for the semantic lure. Practice by writing the schema in symbolic form: R₁(x,y) ≡ “y is the n+1 dimensional analogue of x”. Then verify that the answer pair satisfies R₁ with n incremented. This formalisation turns analogy questions into pattern‑matching exercises with near‑zero ambiguity.</p>
 <h4>Schema Catalogue (Selected)</h4>
 <ul>
@@ -1840,6 +1974,59 @@
 <p>Symmetry breaking can be combined with arc consistency. If two persons are interchangeable (same attributes, no distinguishing clues), impose an ordering constraint such as person_id(A) < person_id(B) before propagation. This eliminates symmetric branches early. In exam conditions, perform a manual AC‑3 pass: list domains, apply each clue once, then scan for any domain that changed and re‑apply only the clues touching that variable. Two or three passes usually stabilise the grid, after which a single guess (if needed) resolves the remainder.</p>
 
 <h3>Modal Syllogisms: Extending Categorical Logic with Necessity and Possibility</h3>
+<!-- passage-cartoon:acc223251657 -->
+<figure class="passage-cartoon" data-cartoon="acc223251657">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Two-layer Venn: inner necessary, outer possible -->
+  <circle cx="280" cy="130" r="110" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="130" r="60" fill="none" stroke="#1f2937" stroke-width="3" stroke-dasharray="6 4"/>
+  <!-- Inner label -->
+  <text x="280" y="80" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#1f2937">Inner: Necessary (□)</text>
+  <!-- Outer label -->
+  <text x="280" y="255" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#1f2937">Outer: Possible (◇)</text>
+  <!-- M inside P in inner layer -->
+  <ellipse cx="280" cy="130" rx="50" ry="35" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="280" y="135" text-anchor="middle" font-size="18" font-family="sans-serif" fill="#1f2937" font-weight="bold">M</text>
+  <ellipse cx="280" cy="130" rx="95" ry="65" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="360" y="100" text-anchor="middle" font-size="18" font-family="sans-serif" fill="#1f2937" font-weight="bold">P</text>
+  <!-- X in S∩M in outer layer -->
+  <circle cx="240" cy="150" r="6" fill="#1f2937"/>
+  <text x="240" y="168" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">X</text>
+  <text x="220" y="145" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">S</text>
+  <!-- Valid inference arrow -->
+  <path d="M246 150 L300 130" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <text x="270" y="115" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">◇(Some S are P)</text>
+  <!-- Blocked necessary inference -->
+  <path d="M246 150 L300 100" stroke="#1f2937" stroke-width="2" stroke-dasharray="4 4" fill="none" marker-end="url(#arrow2)"/>
+  <defs>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1f2937" opacity="0.5"/>
+    </marker>
+  </defs>
+  <line x1="270" y1="95" x2="310" y2="110" stroke="#1f2937" stroke-width="3"/>
+  <line x1="270" y1="110" y2="95" x2="310" stroke="#1f2937" stroke-width="3"/>
+  <text x="290" y="85" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">✗ □(Some S are P)</text>
+  <!-- Premise labels -->
+  <text x="80" y="60" text-anchor="start" font-size="14" font-family="sans-serif" fill="#1f2937">□(All M are P)</text>
+  <text x="80" y="80" text-anchor="start" font-size="14" font-family="sans-serif" fill="#1f2937">◇(Some S are M)</text>
+  <!-- Trap label -->
+  <text x="420" y="60" text-anchor="end" font-size="14" font-family="sans-serif" fill="#1f2937">Trap: ◇∀ ≠ ∃</text>
+  <text x="420" y="80" text-anchor="end" font-size="14" font-family="sans-serif" fill="#1f2937">Quantifier Scope</text>
+  <!-- Distribution label -->
+  <text x="280" y="280" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Extended Distribution Rules</text>
+  <!-- Caption strip -->
+  <rect x="0" y="295" width="560" height="25" fill="#1f2937"/>
+  <text x="280" y="312" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#fbf7ec">Modal Syllogisms: Necessity &amp; Possibility</text>
+</svg></div>
+  <figcaption>Modal Syllogisms: Extending Categorical Logic with Necessity and Possibility</figcaption>
+</figure>
+
 <p>Standard categorical syllogisms operate on assertions of the form “All A are B” (universal affirmative) or “Some A are not B” (particular negative). Modal syllogisms introduce the operators □ (necessarily) and ◇ (possibly) applied to the copula, yielding premises such as “All A are necessarily B” (□(A ⊆ B)) or “Some A are possibly not B” (◇∃x (A(x) ∧ ¬B(x))). The distribution rules for terms extend: a term distributed in a necessary universal remains distributed in a possible particular, but the converse fails. The classical dictum “no conclusion follows from two negative premises” still holds, yet a necessary negative premise (□¬∃x (A(x) ∧ B(x))) combined with a possible affirmative (◇∃x (B(x) ∧ C(x))) yields a possible negative conclusion (◇¬∃x (A(x) ∧ C(x))) — a pattern absent in non‑modal logic.</p>
 <p>Validity checking uses a two‑layer Venn diagram: the inner layer represents the necessary extension (what must hold in all possible worlds), the outer layer the possible extension (what may hold in some world). Shade the inner region for necessary negatives, place an X in the outer region for possible affirmatives. A conclusion is valid iff its diagram is forced by the premises in every world consistent with the inner layer. For example, premises: □(All M are P) and ◇(Some S are M). The inner layer forces M ⊆ P. The outer layer places an X in S ∩ M. Since that X lies inside M, it also lies inside P in the inner layer, so ◇(Some S are P) follows. However, □(Some S are P) does not follow because the X might be in a world where S ∩ P is empty outside the necessary region.</p>
 <p>Examiners often embed a modal premise disguised as “It is certain that…” or “It is possible that…”. Translate these into □ or ◇ before applying the distribution checklist. A frequent trap: treating “All A are possibly B” as “Some A are B”. The former is ◇∀x (A(x) → B(x)), which does not distribute the subject; the latter is ∃x (A(x) ∧ B(x)), which does. Misreading the quantifier scope leads to illicit major or minor fallacies. Practice by rewriting each premise in the form Q₁ x (A(x) → Q₂ B(x)) where Q₁ ∈ {□, ◇, ∅} and Q₂ ∈ {□, ◇, ∅}, then apply the extended distribution table.</p>
@@ -1856,16 +2043,193 @@
 </div>
 
 <h3>Allen's Interval Algebra for Temporal Ordering Puzzles</h3>
+<!-- passage-cartoon:b291e1b0a146 -->
+<figure class="passage-cartoon" data-cartoon="b291e1b0a146">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Messy timeline top -->
+  <line x1="40" y1="60" x2="520" y2="60" stroke="#1f2937" stroke-width="3"/>
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <line x1="80" y1="40" x2="80" y2="80"/><text x="80" y="30" text-anchor="middle" font-size="14" fill="#1f2937">A</text>
+    <line x1="160" y1="40" x2="160" y2="80"/><text x="160" y="30" text-anchor="middle" font-size="14" fill="#1f2937">B</text>
+    <line x1="240" y1="40" x2="240" y2="80"/><text x="240" y="30" text-anchor="middle" font-size="14" fill="#1f2937">C</text>
+    <line x1="320" y1="40" x2="320" y2="80"/><text x="320" y="30" text-anchor="middle" font-size="14" fill="#1f2937">D</text>
+    <line x1="400" y1="40" x2="400" y2="80"/><text x="400" y="30" text-anchor="middle" font-size="14" fill="#1f2937">E</text>
+  </g>
+  <!-- Chaotic relation arcs -->
+  <path d="M80 60 Q120 20 160 60" stroke="#1f2937" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+  <path d="M160 60 Q200 90 240 60" stroke="#1f2937" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+  <path d="M240 60 Q280 20 320 60" stroke="#1f2937" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+  <path d="M320 60 Q360 90 400 60" stroke="#1f2937" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+  <path d="M80 60 Q200 10 320 60" stroke="#1f2937" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
+  <text x="120" y="15" font-size="10" fill="#1f2937" text-anchor="middle">o</text>
+  <text x="200" y="95" font-size="10" fill="#1f2937" text-anchor="middle">m</text>
+  <text x="280" y="15" font-size="10" fill="#1f2937" text-anchor="middle">s</text>
+  <text x="360" y="95" font-size="10" fill="#1f2937" text-anchor="middle">f</text>
+  <text x="200" y="5" font-size="10" fill="#1f2937" text-anchor="middle">d</text>
+  <!-- PC-2 Magnifying glass -->
+  <g transform="translate(280,140)">
+    <circle r="70" stroke="#1f2937" stroke-width="4" fill="none"/>
+    <line x1="70" y1="70" x2="110" y2="110" stroke="#1f2937" stroke-width="4" stroke-linecap="round"/>
+    <text x="0" y="5" text-anchor="middle" font-size="18" font-weight="bold" fill="#1f2937">PC‑2</text>
+    <!-- Clean timeline inside lens -->
+    <line x1="-50" y1="0" x2="50" y2="0" stroke="#1f2937" stroke-width="3"/>
+    <line x1="-40" y1="-15" x2="-40" y2="15" stroke="#1f2937" stroke-width="2"/>
+    <line x1="0" y1="-15" x2="0" y2="15" stroke="#1f2937" stroke-width="2"/>
+    <line x1="40" y1="-15" x2="40" y2="15" stroke="#1f2937" stroke-width="2"/>
+    <text x="-40" y="-22" text-anchor="middle" font-size="12" fill="#1f2937">A</text>
+    <text x="0" y="-22" text-anchor="middle" font-size="12" fill="#1f2937">B</text>
+    <text x="40" y="-22" text-anchor="middle" font-size="12" fill="#1f2937">C</text>
+    <path d="M-40 0 Q-20 -15 0 0" stroke="#1f2937" stroke-width="2" fill="none"/>
+    <path d="M0 0 Q20 -15 40 0" stroke="#1f2937" stroke-width="2" fill="none"/>
+    <text x="-20" y="-20" font-size="9" fill="#1f2937" text-anchor="middle">b</text>
+    <text x="20" y="-20" font-size="9" fill="#1f2937" text-anchor="middle">b</text>
+  </g>
+  <!-- Three meta-relation buckets -->
+  <g font-size="13" fill="#1f2937" text-anchor="middle">
+    <rect x="60" y="230" width="120" height="50" stroke="#1f2937" stroke-width="2" fill="none" rx="5"/>
+    <text x="120" y="255" font-weight="bold">PRE</text>
+    <text x="120" y="272" font-size="10">{b,m,o,s,d,f}</text>
+    <rect x="220" y="230" width="120" height="50" stroke="#1f2937" stroke-width="2" fill="none" rx="5"/>
+    <text x="280" y="255" font-weight="bold">POST</text>
+    <text x="280" y="272" font-size="10">{bi,mi,oi,si,fi,di}</text>
+    <rect x="380" y="230" width="120" height="50" stroke="#1f2937" stroke-width="2" fill="none" rx="5"/>
+    <text x="440" y="255" font-weight="bold">OVER</text>
+    <text x="440" y="272" font-size="10">{eq,o,oi,s,si,f,fi,d,di}</text>
+  </g>
+  <!-- Warning sign -->
+  <polygon points="280,15 310,65 250,65" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="280" y="50" text-anchor="middle" font-size="11" font-weight="bold" fill="#1f2937">Meets ≠ Overlaps</text>
+  <!-- Caption strip -->
+  <rect x="0" y="295" width="560" height="25" fill="#1f2937"/>
+  <text x="280" y="312" text-anchor="middle" font-size="13" font-weight="bold" fill="#fbf7ec">Allen's Interval Algebra</text>
+</svg></div>
+  <figcaption>Allen's Interval Algebra for Temporal Ordering Puzzles</figcaption>
+</figure>
+
 <p>Temporal puzzles often present events with relations such as “A occurs before B”, “C overlaps D”, or “E finishes when F starts”. Allen’s interval algebra defines 13 base relations between two intervals: before (b), after (bi), meets (m), met‑by (mi), overlaps (o), overlapped‑by (oi), starts (s), started‑by (si), finishes (f), finished‑by (fi), during (d), contains (di), equals (eq). Any qualitative temporal constraint is a disjunction of these base relations. The composition table (13 × 13) gives the strongest relation implied by chaining two constraints. For example, (A before B) ∘ (B meets C) = (A before C). Path consistency (PC‑2) enforces that for every triple (X, Y, Z), the relation between X and Z is a subset of the composition of X‑Y and Y‑Z. Running PC‑2 on the constraint network detects inconsistencies and often reduces each relation to a single base relation, yielding a unique timeline.</p>
 <p>In exam puzzles, intervals are usually events with unknown start/end points but known ordering clues. Encode each clue as a set of base relations. “A starts before B ends” translates to {b, m, o, s, d, f, eq} (all relations where A’s start < B’s end). “C ends exactly when D starts” is {m}. Build a 13‑bit mask for each pair. Apply the composition table iteratively: for each triple, intersect the current mask of X‑Z with the union of compositions of X‑Y and Y‑Z masks. Repeat until no mask changes. If any mask becomes empty, the data is contradictory. If all masks become singletons, the total order is determined. When multiple base relations remain, the puzzle asks for “which of the following must be true?” — test each candidate by temporarily adding its negation and checking for inconsistency.</p>
 <p>A practical shortcut: many puzzles only need the three coarse relations “before”, “after”, “overlap‑or‑meet”. Collapse the 13 relations into three meta‑relations: PRE = {b, m, o, s, d, f}, POST = inverses, OVER = {eq, o, oi, s, si, f, fi, d, di}. Composition of meta‑relations is smaller and often sufficient. However, beware of clues that distinguish “meets” from “overlaps” — they require the full algebra. Practice with a printed 13 × 13 composition table (available in standard logic textbooks) to internalise the most common compositions: b∘b=b, b∘m=b, m∘b=b, o∘o={o, d, s, f, eq}, etc.</p>
 
 <h3>Euler Diagrams for Four‑Set Syllogistic Validation</h3>
+<!-- passage-cartoon:5d381bcddaf4 -->
+<figure class="passage-cartoon" data-cartoon="5d381bcddaf4">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Set B (large) -->
+  <ellipse cx="280" cy="150" rx="130" ry="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Set A inside B -->
+  <ellipse cx="280" cy="150" rx="60" ry="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Set C overlapping B right -->
+  <ellipse cx="420" cy="150" rx="80" ry="50" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Set D overlapping B bottom -->
+  <ellipse cx="280" cy="250" rx="100" ry="60" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Tick for Some A are B (inside A) -->
+  <path d="M250,155 l8,8 16,-16" fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Tick for Some B are C (overlap B&C) -->
+  <path d="M350,150 l8,8 16,-16" fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Ambiguous tick marker -->
+  <text x="300" y="140" font-size="20" fill="#1f2937" text-anchor="middle">?</text>
+  <!-- Labels -->
+  <text x="280" y="155" font-size="16" fill="#1f2937" text-anchor="middle">A</text>
+  <text x="180" y="100" font-size="16" fill="#1f2937" text-anchor="middle">B</text>
+  <text x="470" y="130" font-size="16" fill="#1f2937" text-anchor="middle">C</text>
+  <text x="350" y="290" font-size="16" fill="#1f2937" text-anchor="middle">D</text>
+  <text x="280" y="90" font-size="14" fill="#1f2937" text-anchor="middle">All A⊂B</text>
+  <text x="300" y="180" font-size="14" fill="#1f2937" text-anchor="middle">Tick?</text>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-size="14" fill="#1f2937" text-anchor="middle">Euler Diagrams for Four‑Set Syllogistic Validation</text>
+</svg></div>
+  <figcaption>Euler Diagrams for Four‑Set Syllogistic Validation</figcaption>
+</figure>
+
 <p>Classical Venn diagrams for three terms use eight regions; four terms require 16 regions, which become unwieldy on paper. Euler diagrams represent only the non‑empty intersections asserted by the premises, using overlapping closed curves that may be nested or disjoint. For four categories A, B, C, D, draw curves incrementally: start with A, add B overlapping as required, then C, then D. Each premise “All A are B” forces curve A entirely inside B. “Some A are not B” forces a region of A outside B (place a tick). “No A are B” forces A and B disjoint. “Some A are B” forces an overlap region (place a tick). After all premises are drawn, a conclusion is valid iff its diagram is already satisfied in every model consistent with the drawn curves. Because Euler diagrams omit empty regions, they avoid the combinatorial explosion of Venn shading.</p>
 <p>Procedure: (1) List premises. (2) Draw the minimal Euler diagram satisfying all universal premises (inclusions and disjointness). (3) For each particular premise, place a tick in a region that satisfies it; if multiple regions possible, the tick is ambiguous — mark all candidate regions with a question mark. (4) To test a conclusion, check whether its required region (inclusion, disjointness, or tick) is forced in every completion of the ambiguous ticks. If yes, conclusion follows; if a completion exists that violates it, conclusion does not follow. This method mirrors the model‑theoretic semantics of syllogistic logic but is far faster for four or five terms.</p>
 <p>Common examiner twist: a premise “Some A are B” and “Some B are C” does not guarantee “Some A are C”. In Euler diagrams, the tick for A∩B and the tick for B∩C may lie in disjoint parts of B. The diagram shows two separate ticks inside B, with no overlap between A and C. Only if a universal premise forces B ⊆ A or B ⊆ C does the conclusion become valid. Another twist: “All A are B” and “All C are D” with no relation between the pairs — the diagram consists of two independent nested pairs; any cross‑conclusion is invalid. Practice drawing Euler diagrams for 4‑term premises within 60 seconds; use distinct colours or line styles for each curve to avoid confusion.</p>
 
 <h3>Concentric Circular Seating with Variable Facing and Radial Constraints</h3>
+<!-- passage-cartoon:a16544e3dd9f -->
+<figure class="passage-cartoon" data-cartoon="a16544e3dd9f">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Outer circle -->
+  <circle cx="280" cy="150" r="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Inner circle -->
+  <circle cx="280" cy="150" r="70" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Outer seats (8) -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <circle cx="400" cy="150" r="6"/><!-- 0° -->
+    <circle cx="365" cy="235" r="6"/><!-- 45° -->
+    <circle cx="280" cy="270" r="6"/><!-- 90° -->
+    <circle cx="195" cy="235" r="6"/><!-- 135° -->
+    <circle cx="160" cy="150" r="6"/><!-- 180° -->
+    <circle cx="195" cy="65" r="6"/><!-- 225° -->
+    <circle cx="280" cy="30" r="6"/><!-- 270° -->
+    <circle cx="365" cy="65" r="6"/><!-- 315° -->
+  </g>
+  <!-- Inner seats (6) -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <circle cx="350" cy="150" r="5"/><!-- 0° -->
+    <circle cx="315" cy="210" r="5"/><!-- 60° -->
+    <circle cx="245" cy="210" r="5"/><!-- 120° -->
+    <circle cx="210" cy="150" r="5"/><!-- 180° -->
+    <circle cx="245" cy="90" r="5"/><!-- 240° -->
+    <circle cx="315" cy="90" r="5"/><!-- 300° -->
+  </g>
+  <!-- Radial alignment lines (outer 0 & 4, inner 0 & 3) -->
+  <g stroke="#1f2937" stroke-width="2" stroke-dasharray="6,4">
+    <line x1="280" y1="150" x2="400" y2="150"/><!-- outer 0 -->
+    <line x1="280" y1="150" x2="160" y2="150"/><!-- outer 4 -->
+    <line x1="280" y1="150" x2="350" y2="150"/><!-- inner 0 -->
+    <line x1="280" y1="150" x2="210" y2="150"/><!-- inner 3 -->
+  </g>
+  <!-- Person P on outer seat 0 -->
+  <g transform="translate(400,150)">
+    <circle cx="0" cy="-18" r="8" stroke="#1f2937" stroke-width="2" fill="none"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-8" y1="10" x2="-8" y2="25" stroke="#1f2937" stroke-width="2"/>
+    <line x1="8" y1="10" x2="8" y2="25" stroke="#1f2937" stroke-width="2"/>
+  </g>
+  <!-- Person Q on inner seat 0 -->
+  <g transform="translate(350,150)">
+    <circle cx="0" cy="-18" r="8" stroke="#1f2937" stroke-width="2" fill="none"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-8" y1="10" x2="-8" y2="25" stroke="#1f2937" stroke-width="2"/>
+    <line x1="8" y1="10" x2="8" y2="25" stroke="#1f2937" stroke-width="2"/>
+  </g>
+  <!-- Facing arrows -->
+  <g stroke="#1f2937" stroke-width="3" fill="#1f2937">
+    <!-- P faces centre (left) -->
+    <line x1="380" y1="150" x2="300" y2="150"/>
+    <polygon points="300,150 310,140 310,160"/>
+    <!-- Q faces outward (right) -->
+    <line x1="370" y1="150" x2="450" y2="150"/>
+    <polygon points="450,150 440,140 440,160"/>
+  </g>
+  <!-- Line of sight double arrow -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <line x1="350" y1="150" x2="400" y2="150"/>
+    <polygon points="350,150 360,140 360,160"/>
+    <polygon points="400,150 390,140 390,160"/>
+  </g>
+  <!-- Labels -->
+  <text x="420" y="140" font-size="14" fill="#1f2937" font-family="sans-serif">Outer Circle</text>
+  <text x="360" y="130" font-size="14" fill="#1f2937" font-family="sans-serif">Inner Circle</text>
+  <text x="280" y="100" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Radial Alignment</text>
+  <text x="380" y="120" font-size="14" fill="#1f2937" font-family="sans-serif">Facing Center</text>
+  <text x="370" y="170" font-size="14" fill="#1f2937" font-family="sans-serif">Facing Outward</text>
+  <text x="375" y="190" font-size="14" fill="#1f2937" font-family="sans-serif">Sees</text>
+  <text x="280" y="260" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Modulo Eq</text>
+  <!-- Caption strip -->
+  <rect x="0" y="280" width="560" height="40" fill="#e8e0d0"/>
+  <text x="280" y="305" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Concentric Circular Seating with Variable Facing and Radial Constraints</text>
+</svg></div>
+  <figcaption>Concentric Circular Seating with Variable Facing and Radial Constraints</figcaption>
+</figure>
+
 <p>Concentric circular arrangements place persons on two or more circles sharing a centre. Each circle has its own clockwise order, and persons may face inward, outward, or tangentially. Radial constraints link positions across circles: “The person on the inner circle directly opposite the person on the outer circle” means they share the same radial line. “X sits two seats clockwise from Y on the same circle” is a standard offset. “X faces the centre and Y faces outward” determines whether they can see each other across the radius. The state can be represented as a tuple (circle_id, index, facing) for each person. The total number of seats is the sum of seats on all circles; indices are modulo the circle size.</p>
 <p>Solving strategy: (1) Fix an arbitrary reference point on the outermost circle (e.g., seat 0). Because only relative positions matter, this breaks rotational symmetry. (2) Translate each clue into equations modulo the appropriate circle size. For radial opposition: if inner circle has n seats and outer has m seats, “directly opposite” means the angular coordinate matches: (2π·i/n) = (2π·j/m) mod 2π ⇒ i·m ≡ j·n (mod lcm(n,m)). This congruence reduces to a linear Diophantine condition. (3) Facing direction adds a binary variable per person. “A sees B” means either both face inward and are radially aligned, or both face outward and are radially aligned, or one faces tangentially toward the other’s circle. Encode as logical constraints on the facing variables. (4) Apply arc consistency on the combined domain (seat index × facing). Because circle sizes are small (≤12), a manual table of possible (index, facing) pairs per person works. Iterate: when a person’s seat is fixed, propagate radial constraints to the opposite circle; when facing is fixed, propagate visibility constraints.</p>
 <p>Example: Outer circle 8 seats, inner circle 6 seats. Clue: “P on outer faces centre. Q on inner faces outward. P sees Q.” Radial alignment requires outer_index·6 ≡ inner_index·8 (mod 24). Simplify: 6·outer ≡ 8·inner (mod 24) ⇒ 3·outer ≡ 4·inner (mod 12). Enumerate outer 0‑7, inner 0‑5 satisfying this. Then facing: P faces centre, Q faces outward → they see each other only if radially aligned (already enforced). If a clue said “P does not see Q”, then either they are not radially aligned or at least one faces tangentially. This eliminates aligned pairs unless facing variables differ. After all clues, the remaining assignments give the unique arrangement. Practice with a printed congruence table for common circle‑size pairs (6‑8, 8‑10, 5‑12) to speed up the modular arithmetic.</p>
@@ -1881,11 +2245,105 @@
 </ul>
 <p>These advanced techniques extend the core logical reasoning toolkit and appear in the most challenging items of the examination.</p>
 <h3>Higher‑Order Quantifier Alternation and Skolemization in Syllogistic Extensions</h3>
+<!-- passage-cartoon:88a3294af7ff -->
+<figure class="passage-cartoon" data-cartoon="88a3294af7ff">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Premise 1 box -->
+  <rect x="50" y="30" width="200" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Premise 2 box -->
+  <rect x="310" y="30" width="200" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Arrows down from premises -->
+  <line x1="150" y1="90" x2="150" y2="120" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="410" y1="90" x2="410" y2="120" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <!-- Skolem function box -->
+  <rect x="100" y="120" width="100" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Constant box -->
+  <rect x="380" y="120" width="80" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Dependency arrow from constant to universal -->
+  <line x1="420" y1="120" x2="420" y2="90" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2"/>
+  <!-- Clash zigzag -->
+  <polyline points="200,140 240,120 280,140 320,120 360,140" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Clash X mark -->
+  <line x1="270" y1="110" x2="290" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <line x1="290" y1="110" x2="270" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="150" y="25" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">∀m∃e</text>
+  <text x="410" y="25" text-anchor="middle" font-size="16" fill="#1f2937" font-family="sans-serif">∃e∀m</text>
+  <text x="150" y="145" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Skolem f(m)</text>
+  <text x="420" y="145" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Constant c</text>
+  <text x="280" y="100" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Dependency clash</text>
+  <text x="280" y="180" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Unsatisfiable</text>
+  <!-- Caption strip -->
+  <rect x="0" y="295" width="560" height="25" fill="#fbf7ec"/>
+  <text x="280" y="312" text-anchor="middle" font-size="10" fill="#1f2937" font-family="sans-serif">Higher‑Order Quantifier Alternation and Skolemization in Syllogistic Extensions</text>
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+</svg></div>
+  <figcaption>Higher‑Order Quantifier Alternation and Skolemization in Syllogistic Extensions</figcaption>
+</figure>
+
 <p>Standard categorical syllogisms restrict quantifiers to the outermost level, yielding a single block of universal or existential quantifiers. In many advanced items the premises embed quantifiers inside conditionals or conjunctions, producing alternating quantifier prefixes such as ∀x∃y∀z P(x,y,z). The logical strength of such formulas depends critically on the order of quantifiers; swapping a universal with an existential changes the set of models. Skolemization eliminates existential quantifiers by introducing Skolem functions that depend on preceding universal variables. For a premise “Every student admires some teacher”, the Skolem form becomes ∀x Admires(x, f(x)) where f maps each student to a teacher they admire. When multiple premises share variables, the Skolem functions must be coordinated to preserve dependencies across the whole knowledge base.</p>
 <p>In practice, the examiner may present a set of statements like “All managers supervise some employee” and “Some employee reports to every manager”. Translating both into prenex normal form reveals a quantifier alternation ∀m∃e Supervises(m,e) ∧ ∃e∀m Reports(e,m). Skolemizing the first yields a function f(m); the second yields a constant c for the existential employee, but the universal manager inside the second clause forces c to be a function of m, contradicting the constant assumption. The inconsistency shows the two premises cannot hold simultaneously. Recognising such clashes without constructing full models is a decisive speed advantage.</p>
 <p>A reliable workflow: (1) rewrite each premise in prenex form, (2) rename bound variables to avoid capture, (3) apply Skolemization left‑to‑right, (4) check for functional clashes — two Skolem terms that must be equal but have different dependency sets. If a clash appears, the premise set is unsatisfiable; otherwise, the Skolemized universal formula can be tested with a finite domain search or a SAT solver. This method scales to four‑ or five‑term syllogistic networks where Venn diagrams become unwieldy.</p>
 
 <h3>Dynamic Epistemic Logic for Public Announcement Puzzles</h3>
+<!-- passage-cartoon:de0b73e0f2d5 -->
+<figure class="passage-cartoon" data-cartoon="de0b73e0f2d5">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Caption strip -->
+  <rect x="0" y="288" width="560" height="32" fill="#e5e7eb"/>
+  <text x="280" y="310" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Dynamic Epistemic Logic for Public Announcement Puzzles</text>
+  <!-- Three agents -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- Priya -->
+    <circle cx="140" cy="120" r="30"/>
+    <line x1="140" y1="150" x2="140" y2="200"/>
+    <line x1="120" y1="170" x2="160" y2="170"/>
+    <text x="140" y="115" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Priya</text>
+    <!-- Ravi -->
+    <circle cx="280" cy="120" r="30"/>
+    <line x1="280" y1="150" x2="280" y2="200"/>
+    <line x1="260" y1="170" x2="300" y2="170"/>
+    <text x="280" y="115" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Ravi</text>
+    <!-- Sita -->
+    <circle cx="420" cy="120" r="30"/>
+    <line x1="420" y1="150" x2="420" y2="200"/>
+    <line x1="400" y1="170" x2="440" y2="170"/>
+    <text x="420" y="115" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Sita</text>
+  </g>
+  <!-- Cards as colored squares above heads -->
+  <rect x="125" y="70" width="30" height="30" fill="#ff6666"/>
+  <rect x="265" y="70" width="30" height="30" fill="#66ff66"/>
+  <rect x="405" y="70" width="30" height="30" fill="#6666ff"/>
+  <text x="140" y="90" font-family="sans-serif" font-size="10" fill="#1f2937" text-anchor="middle">?</text>
+  <text x="280" y="90" font-family="sans-serif" font-size="10" fill="#1f2937" text-anchor="middle">?</text>
+  <text x="420" y="90" font-family="sans-serif" font-size="10" fill="#1f2937" text-anchor="middle">?</text>
+  <!-- Announcement arrows -->
+  <g stroke="#1f2937" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="140" y1="120" x2="140" y2="100"/>
+    <line x1="280" y1="120" x2="280" y2="100"/>
+  </g>
+  <!-- Arrowhead definition -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Labels -->
+  <text x="140" y="140" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Priya: “I don’t know…”</text>
+  <text x="280" y="140" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Ravi: “Now I know”</text>
+  <text x="280" y="230" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Model restriction</text>
+  <text x="140" y="260" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Worlds eliminated</text>
+</svg></div>
+  <figcaption>Dynamic Epistemic Logic for Public Announcement Puzzles</figcaption>
+</figure>
+
 <p>Public announcement puzzles describe a sequence of statements that change the knowledge of agents. The underlying formalism is Dynamic Epistemic Logic (DEL), where each announcement is modeled as a model‑restriction operator [!φ] that deletes worlds where φ is false. After an announcement, the accessibility relations for each agent are updated by intersecting with the new model. A typical puzzle: “Alice says ‘I do not know whether Bob knows the colour of my card’. Bob then says ‘Now I know the colour’.” The initial epistemic model contains all possible card distributions; Alice’s announcement eliminates worlds where she would know Bob’s knowledge status. Bob’s subsequent announcement further restricts the model to worlds where his knowledge predicate becomes true.</p>
 <p>Solving such puzzles manually requires a systematic tableau. Start with the set of all possible assignments (the “initial model”). For each public announcement, compute the set of worlds satisfying the announced formula and discard the rest. Then recompute each agent’s epistemic equivalence classes: two worlds are equivalent for agent a iff a cannot distinguish them given the remaining worlds. The next announcement is evaluated in this updated model. The process repeats until a unique world remains or the required answer (e.g., “What is the colour of Alice’s card?”) is determined in all surviving worlds.</p>
 <p>Key shortcuts: (i) Represent each world as a tuple of propositional atoms; (ii) Use a bitset for each agent’s indistinguishability relation; (iii) When an announcement is a simple factual statement, the model restriction is a single filter pass; (iv) When the announcement is a higher‑order knowledge claim (“Agent a knows that φ”), evaluate φ in each world, then keep only worlds where all a‑equivalent worlds satisfy φ. Practising this algorithm on a 3‑agent, 4‑card scenario fits comfortably within the two‑minute limit per item.</p>
