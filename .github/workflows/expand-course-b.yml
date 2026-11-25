@@ -177,7 +177,7 @@ jobs:
           RESTORED=0
           while read -r f; do
             [ -f "$f" ] || continue
-            DEL=$(git diff --numstat -- "$f" | awk '{print $2}' | head -1)
+            DEL=$(git diff -- "$f" | node scripts/count-loss-lines.js)
             if [ -n "$DEL" ] && [ "$DEL" -gt 200 ]; then
               echo "::warning::regen would drop $DEL line(s) from $f -- restored, committed content kept"
               git checkout -- "$f"

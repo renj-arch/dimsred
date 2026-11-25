@@ -417,9 +417,16 @@ function collectDeepen() {
         if (content && content.length < THIN && !handBuilt) return;
         var st = depthState.keys[key] || {};
         var passes = parseInt(st.passes || 0, 10) || 0;
-        if (passes >= DEPTH_PASS_MAX) return;
         var words = existing.reduce(function (m, f) { return Math.max(m, pageWords(path.join(ROOT, f))); }, 0);
         var target = handBuilt ? DEPTH_TARGET_WORDS_BUILT : DEPTH_TARGET_WORDS;
+        // The pass cap is a runaway guard, NOT a convergence test. It used to
+        // stop a lesson the moment it hit 60 passes even when the page was
+        // still far below target -- and because a blocked regeneration kept
+        // pageWords frozen while the source grew, lessons like csat/comprehension
+        // sat at 2,922 words behind 105k words of source, permanently excluded.
+        // Only a lesson that has BOTH capped out and reached its target is done;
+        // a capped-but-thin page stays eligible so it can finally converge.
+        if (passes >= DEPTH_PASS_MAX && words >= target) return;
         // The word target is a FLOOR for prioritisation, not a ceiling. A lesson
         // that has reached it still returns for a REFRESH pass once it has aged,
         // so new syllabus points, judgments, data and current developments keep
