@@ -361,7 +361,7 @@
                 // the date feed / Static GK (which ARE fact-browsing modes).
                 var useFacts = (function () { var el = document.getElementById('factToggle'); return el ? !!el.checked : false; })();
                 var isFact = (!q.options || q.options.length < 2) && (q.a != null || q.answer != null) && type !== 'mcq';
-                var factMode = !!(window.state && (state.cat === 'static' || state._feedSource === 'archive'));
+                var factMode = (typeof state !== 'undefined' && state) ? !!(state.cat === 'static' || state._feedSource === 'archive') : false;
                 if (isFact && !useFacts && !factMode) return false;
                 // Resolve every question to exactly one source before testing the
                 // checkboxes. The old order let the Generators branch win for
