@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-26T18:25:26.331Z",
+ "updatedAt": "2026-11-26T19:03:46.769Z",
  "corrections": [
   {
    "file": "clat/course/english/lesson-grammar.html",
@@ -1788,13 +1788,6 @@
   },
   {
    "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
-   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
-   "correction": "At solar noon, the sun is at its highest altitude; shadows are shortest but not zero except in the tropics.",
-   "problem": "The sun is directly overhead only in the tropics; at most latitudes solar noon sun is not overhead and shadows exist (though shortest).",
-   "appliedAt": "2026-11-24T19:44:01.293Z"
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
    "quote": "At any other time, the azimuth can be approximated by the hour angle: each hour before/after noon shifts the azimuth by 15°.",
    "correction": "The Sun's hour angle changes by 15° per hour, but azimuth shift varies with latitude and declination.",
    "problem": "The Sun's azimuth does not shift uniformly by 15° per hour; this is only true at the equator. Azimuth shift varies with latitude and declination.",
@@ -1848,13 +1841,6 @@
    "correction": "This creates a cycle that forces X false",
    "problem": "The conditional cycle X→Y, Y→Z, Z→¬X forces X to be false, but does not force Y and Z to be false; Y and Z can both be true (with X false) or both false, etc.",
    "appliedAt": "2026-11-24T20:13:08.406Z"
-  },
-  {
-   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
-   "quote": "the only pair summing to 185 is 90+95",
-   "correction": "the pairs summing to 185 are 90+95 and 85+100",
-   "problem": "In the set {80,85,90,95,100}, both 90+95 and 85+100 sum to 185, so it is not the only pair.",
-   "appliedAt": "2026-11-24T20:13:08.915Z"
   },
   {
    "file": "sbi-clerk/course/reasoning/lesson-syllogism.html",
@@ -5600,6 +5586,62 @@
    "correction": "In 2011 the Government introduced the Nuclear Safety Regulatory Authority (NSRA) Bill",
    "problem": "The NSRA Bill was introduced in 2011, not 2021.",
    "appliedAt": "2026-11-26T18:25:26.331Z"
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-ratio-proportion.html",
+   "quote": "This is impossible with only these three numbers, indicating that the given mean cannot be achieved with all three components present in positive quantities.",
+   "correction": "This is possible; e.g., quantities 1:2:2 yield mean 42, so a mixture exists with all three positive.",
+   "problem": "The claim is false; a mixture with costs 30, 40, 50 and mean 42 is possible with all positive quantities, e.g., ratio 1:2:2.",
+   "appliedAt": "2026-11-26T18:34:51.222Z"
+  },
+  {
+   "file": "sbi-clerk/course/quant/lesson-ratio-proportion.html",
+   "quote": "find the least common multiple of the absolute deviations, (5) assign provisional quantities as LCM/|deviation| for each component",
+   "correction": "solve ΣQᵢ(Cᵢ−M)=0 for the ratios, or use alligation alternate by pairing costs appropriately",
+   "problem": "The LCM method does not satisfy the weighted average condition; it yields incorrect provisional quantities.",
+   "appliedAt": "2026-11-26T18:34:51.521Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
+   "correction": "At noon, the sun is at its highest point; shadows are shortest but not absent.",
+   "problem": "The sun is directly overhead at noon only in the tropics on certain days; at most latitudes the sun is not overhead and shadows are present (though shortest).",
+   "appliedAt": "2026-11-26T18:45:25.890Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-number-series.html",
+   "quote": "the second differences are not perfectly linear",
+   "correction": "the second differences remain perfectly linear",
+   "problem": "Adding a linear perturbation (e.g., +n) to a cubic polynomial does not make the second differences non-linear; they remain an arithmetic progression (perfectly linear).",
+   "appliedAt": "2026-11-26T18:52:51.001Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-number-series.html",
+   "quote": "if the ratios themselves grow in a regular fashion (e.g., 2, 3, 4 …), the series is likely of the form (n+1)ⁿ or similar",
+   "correction": "if the ratios themselves are consecutive integers (e.g., 2, 3, 4 …), the series is likely factorial or a multiple thereof",
+   "problem": "Ratios of 2, 3, 4, … indicate factorial growth (n! or a multiple), not the series (n+1)ⁿ. The series (n+1)ⁿ produces ratios that are not consecutive integers.",
+   "appliedAt": "2026-11-26T18:52:51.644Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "|pos(C) – pos(D)| = 3 (two empties plus the two persons)",
+   "correction": "|pos(C) – pos(D)| = 3 (two empty seats between them)",
+   "problem": "The parenthetical explanation incorrectly states that the index difference 3 equals 'two empties plus the two persons' (which would be 4 seats). The difference of 3 corresponds to two empty seats between them (e.g., positions 1 and 4 have seats 2,3 empty).",
+   "appliedAt": "2026-11-26T18:56:57.384Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "This creates a cycle that forces X false, Y false, Z false.",
+   "correction": "This creates a cycle that forces X false; Y and Z are not forced false.",
+   "problem": "The conditional cycle X→Y, Y→Z, Z→¬X forces X to be false, but Y and Z can be true (e.g., X=false, Y=true, Z=true satisfies all).",
+   "appliedAt": "2026-11-26T19:03:46.464Z"
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "the only pair summing to 185 is 90+95",
+   "correction": "the pairs summing to 185 are 90+95 and 85+100",
+   "problem": "From the set {80,85,90,95,100}, both 90+95 and 85+100 sum to 185.",
+   "appliedAt": "2026-11-26T19:03:46.769Z"
   }
  ]
 }
