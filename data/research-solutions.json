@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-25T07:38:42.175Z",
+  "updatedAt": "2026-11-25T21:17:51.870Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -33311,6 +33311,187 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-25T07:37:59.892Z"
+    },
+    {
+      "id": "6d7ad3725833ff8e",
+      "exam": "cgl",
+      "paperSlug": "practice-set-23",
+      "paperTitle": "CGL Practice Set 23",
+      "paperPath": "cgl/papers/practice-set-23.html",
+      "paperFile": "practice-set-23.json",
+      "questionNumber": 1,
+      "section": "Quantitative Aptitude",
+      "question": "A 100 litre mixture contains milk and water in the ratio 7:3. How many litres of water must be added to make the ratio 7:5?",
+      "options": [
+        {
+          "label": "A",
+          "text": "10",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "15",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "25",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Initial mixture: 100 litres, milk:water = 7:3 → milk = 70 L, water = 30 L.",
+        "Let x litres of water be added. New water = 30 + x, milk unchanged = 70 L.",
+        "New ratio milk:water = 7:5 → 70/(30+x) = 7/5.",
+        "Cross-multiply: 350 = 210 + 7x → 7x = 140 → x = 20.",
+        "Thus 20 litres of water must be added."
+      ],
+      "verifierCheck": "Initially, 100 L with a 7:3 ratio gives 70 L milk and 30 L water. Adding x litres of water makes the water amount 30 + x while milk remains 70 L. For the new ratio 7:5, we need 70/(30+x)=7/5. Solving 70·5 = 7·(30+x) gives 350 = 210 + 7x, so 7x = 140 and x = 20 L. Hence 20 L of water must be added, which corresponds to option D.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Part Difference",
+          "idea": "Scale from constant milk parts",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Initial 10 parts = 100 L → 1 part = 10 L",
+            "Milk constant at 7 parts = 70 L",
+            "Water parts rise from 3 to 5 → add 2 parts = 20 L"
+          ]
+        },
+        {
+          "name": "Constant Milk",
+          "idea": "Milk unchanged, equate parts",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Milk = 7/10 × 100 = 70 L",
+            "New ratio 7:5 → 7 parts = 70 L → 1 part = 10 L",
+            "Final water = 5 parts = 50 L, initial water = 30 L, add 20 L"
+          ]
+        },
+        {
+          "name": "Quick Equation",
+          "idea": "Direct proportion with milk fixed",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Set 70/(30+x) = 7/5",
+            "Cross-multiply: 350 = 210 + 7x",
+            "Solve: 7x = 140 → x = 20"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T21:16:24.601Z"
+    },
+    {
+      "id": "8baabf00937b1615",
+      "exam": "upsc",
+      "paperSlug": "practice-set-18",
+      "paperTitle": "UPSC Civil Services Practice Set 18",
+      "paperPath": "upsc/papers/practice-set-18.html",
+      "paperFile": "practice-set-18.json",
+      "questionNumber": 1,
+      "section": "CSAT",
+      "question": "As per the table below showing annual sales (in ₹ crores) of two companies, in which year did Company B record the highest percentage increase in sales compared to the previous year? Year | Company A | Company B 2019 | 120 | 80 2020 | 150 | 100 2021 | 180 | 130",
+      "options": [
+        {
+          "label": "A",
+          "text": "2019",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2020",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2021",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Cannot be determined",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Extract Company B sales: 2019=80, 2020=100, 2021=130",
+        "Calculate percentage increase 2019 to 2020: (100-80)/80 = 25%",
+        "Calculate percentage increase 2020 to 2021: (130-100)/100 = 30%",
+        "Compare: 30% > 25%",
+        "Highest increase occurred in 2021"
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Cross-Multiply Fractions",
+          "idea": "Compare fractions without division by cross-multiplication",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Increases: 2020=20, 2021=30; Bases: 2020=80, 2021=100",
+            "Compare 20/80 vs 30/100: cross-multiply 20×100=2000, 30×80=2400",
+            "2400 > 2000 ⇒ 30/100 > 20/80",
+            "Thus 2021 has higher % increase"
+          ]
+        },
+        {
+          "name": "Eliminate & Estimate",
+          "idea": "Discard 2019 (no prior year), then estimate % quickly",
+          "kind": "estimate",
+          "seconds": 8,
+          "steps": [
+            "2019 has no previous year → ignore",
+            "2020: increase 20 on base 80 ≈ 25%",
+            "2021: increase 30 on base 100 = 30%",
+            "30% > 25% → 2021 is answer"
+          ]
+        },
+        {
+          "name": "Direct % Calculation",
+          "idea": "Compute each year's % increase directly",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "List Company B sales: 2019=80, 2020=100, 2021=130",
+            "2020 increase = (100-80)/80 = 20/80 = 25%",
+            "2021 increase = (130-100)/100 = 30/100 = 30%",
+            "Compare: 30% > 25%, so highest in 2021"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-25T21:17:24.258Z"
     }
   ]
 }

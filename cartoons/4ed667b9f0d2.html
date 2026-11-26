@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Digital Root and Casting Out Nines in Number System | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Digital Root and Casting Out Nines in Number System</h1>
+<p class="meta">Quantitative Aptitude · <a href="/upsc/course/csat/lesson-quant-aptitude">Read the lesson →</a></p>
+<div class="hero"><svg viewBox='0 0 560 320' xmlns='http://www.w3.org/2000/svg'>
+  <rect width='560' height='320' fill='#fbf7ec'/>
+  <!-- Background grid subtle -->
+  <g stroke='#e8e0d0' stroke-width='0.5'>
+    <line x1='0' y1='80' x2='560' y2='80'/>
+    <line x1='0' y1='240' x2='560' y2='240'/>
+    <line x1='280' y1='80' x2='280' y2='240'/>
+  </g>
+  <!-- Top: Bells ringing together -->
+  <g transform='translate(280,40)' stroke='#1f2937' stroke-width='2.5' fill='none'>
+    <circle cx='-100' cy='0' r='18'/>
+    <line x1='-100' y1='-18' x2='-100' y2='-35' stroke-width='2'/>
+    <circle cx='-100' cy='-35' r='4' fill='#1f2937'/>
+    <text x='-100' y='-42' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>2/3</text>
+    <circle cx='0' cy='0' r='18'/>
+    <line x1='0' y1='-18' x2='0' y2='-35' stroke-width='2'/>
+    <circle cx='0' cy='-35' r='4' fill='#1f2937'/>
+    <text x='0' y='-42' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>3/4</text>
+    <circle cx='100' cy='0' r='18'/>
+    <line x1='100' y1='-18' x2='100' y2='-35' stroke-width='2'/>
+    <circle cx='100' cy='-35' r='4' fill='#1f2937'/>
+    <text x='100' y='-42' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>5/6</text>
+    <!-- Sound waves -->
+    <g stroke='#1f2937' stroke-width='1.5' opacity='0.7'>
+      <path d='M-118 -10 Q-130 -15 -118 -20' fill='none'/>
+      <path d='M-82 -10 Q-70 -15 -82 -20' fill='none'/>
+      <path d='M-18 -10 Q-30 -15 -18 -20' fill='none'/>
+      <path d='M18 -10 Q30 -15 18 -20' fill='none'/>
+      <path d='M82 -10 Q70 -15 82 -20' fill='none'/>
+      <path d='M118 -10 Q130 -15 118 -20' fill='none'/>
+    </g>
+    <text x='0' y='35' text-anchor='middle' font-size='14' font-weight='bold' font-family='sans-serif' fill='#1f2937'>LCM = 30 min</text>
+  </g>
+  <!-- Left: Decimal Trap (Wrong Way) -->
+  <g transform='translate(60,110)' stroke='#1f2937' stroke-width='2' fill='none'>
+    <rect x='-80' y='-10' width='160' height='110' rx='8' stroke-dasharray='8,4'/>
+    <text x='0' y='-30' text-anchor='middle' font-size='13' font-weight='bold' font-family='sans-serif' fill='#1f2937'>DECIMAL TRAP</text>
+    <text x='0' y='-10' text-anchor='middle' font-size='12' font-family='sans-serif' fill='#1f2937'>0.6, 0.15, 0.2</text>
+    <path d='M-60 10 L60 10' stroke='#c00' stroke-width='2.5'/>
+    <path d='M-60 10 L-50 0 M-60 10 L-50 20' stroke='#c00' stroke-width='2.5'/>
+    <text x='0' y='35' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#c00'>Shift decimal → big integers</text>
+    <text x='0' y='55' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#c00'>LCM(60,15,20) = 60 ❌</text>
+    <text x='0' y='75' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#c00'>Wrong scaling!</text>
+  </g>
+  <!-- Center: Formula Machine -->
+  <g transform='translate(280,140)' stroke='#1f2937' stroke-width='3' fill='none'>
+    <!-- Input hopper -->
+    <path d='M-70 -60 L-30 -60 L-40 -30 L-60 -30 Z' fill='#f0ebe0'/>
+    <text x='-50' y='-42' text-anchor='middle' font-size='10' font-family='sans-serif' fill='#1f2937'>3/4</text>
+    <text x='-50' y='-30' text-anchor='middle' font-size='10' font-family='sans-serif' fill='#1f2937'>5/6</text>
+    <text x='-50' y='-18' text-anchor='middle' font-size='10' font-family='sans-serif' fill='#1f2937'>7/8</text>
+    <path d='M-50 -30 L-50 0' stroke-width='2'/>
+    <!-- Machine body -->
+    <rect x='-70' y='0' width='140' height='70' rx='6' fill='#f0ebe0'/>
+    <!-- Formula display -->
+    <text x='0' y='22' text-anchor='middle' font-size='13' font-weight='bold' font-family='monospace' fill='#1f2937'>LCM = LCM(num) / HCF(den)</text>
+    <text x='0' y='42' text-anchor='middle' font-size='13' font-weight='bold' font-family='monospace' fill='#1f2937'>HCF = HCF(num) / LCM(den)</text>
+    <text x='0' y='62' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>num: 3,5,7 → LCM=105</text>
+    <text x='0' y='75' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>den: 4,6,8 → HCF=2</text>
+    <!-- Output chute -->
+    <path d='M-30 70 L-30 100 L30 100 L30 70' fill='#f0ebe0'/>
+    <text x='0' y='95' text-anchor='middle' font-size='14' font-weight='bold' font-family='sans-serif' fill='#1f2937'>105/2 = 52.5</text>
+    <path d='M0 100 L0 115' stroke-width='2'/>
+    <circle cx='0' cy='125' r='12' fill='#1f2937'/>
+    <text x='0' y='130' text-anchor='middle' font-size='10' font-weight='bold' font-family='sans-serif' fill='#fbf7ec'>✓</text>
+  </g>
+  <!-- Right: Integer handling -->
+  <g transform='translate(480,110)' stroke='#1f2937' stroke-width='2' fill='none'>
+    <rect x='-80' y='-10' width='160' height='110' rx='8'/>
+    <text x='0' y='-30' text-anchor='middle' font-size='13' font-weight='bold' font-family='sans-serif' fill='#1f2937'>INTEGERS AS FRACTIONS</text>
+    <text x='0' y='-8' text-anchor='middle' font-size='12' font-family='sans-serif' fill='#1f2937'>4, 3/2, 5/3</text>
+    <path d='M-60 15 L60 15' stroke-width='1'/>
+    <text x='0' y='38' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>4 = 4/1</text>
+    <text x='0' y='53' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>num: 4,3,5 → LCM=60</text>
+    <text x='0' y='68' text-anchor='middle' font-size='11' font-family='sans-serif' fill='#1f2937'>den: 1,2,3 → HCF=1</text>
+    <text x='0' y='88' text-anchor='middle' font-size='13' font-weight='bold' font-family='sans-serif' fill='#1f2937'>LCM = 60/1 = 60 ✓</text>
+  </g>
+  <!-- Bottom caption strip -->
+  <rect x='0' y='260' width='560' height='60' fill='#1f2937'/>
+  <text x='280' y='295' text-anchor='middle' font-size='16' font-weight='bold' font-family='sans-serif' fill='#fbf7ec'>5. Speed Distance and Time (10)</text>
+  <text x='280' y='313' text-anchor='middle' font-size='12' font-family='sans-serif' fill='#d4c9b8'>LCM/HCF of Fractions &amp; Decimals — Shortcut Formula</text>
+</svg></div>
+<p class="meta">5. Speed Distance and Time (10)</p></div></body></html>

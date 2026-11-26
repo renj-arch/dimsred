@@ -54,15 +54,31 @@ var EXAM_META = {
 var SUBJECT_ALIASES = {
   'General Knowledge': ['General Knowledge', 'General Awareness', 'General Studies', 'Current Affairs & GK'],
   'General Awareness': ['General Awareness', 'General Knowledge', 'General Studies', 'Current Affairs & GK'],
-  'Current Affairs': ['Current Affairs & GK', 'General Awareness', 'General Knowledge'],
-  'Quantitative Aptitude': ['Quantitative Aptitude', 'Mathematics'],
-  'Mathematics': ['Mathematics', 'Quantitative Aptitude'],
-  'Reasoning': ['Reasoning', 'General Intelligence & Reasoning', 'Logical Reasoning'],
+  'Current Affairs': ['Current Affairs & GK', 'Current Affairs', 'General Awareness', 'General Knowledge'],
+  'Quantitative Aptitude': ['Quantitative Aptitude', 'CSAT', 'Mathematics'],
+  'Mathematics': ['Mathematics', 'Quantitative Aptitude', 'CSAT'],
+  'Reasoning': ['Reasoning', 'CSAT', 'Logical Reasoning', 'General Intelligence & Reasoning'],
+  'Logical Reasoning': ['CSAT', 'Reasoning', 'Logical Reasoning'],
+  'Comprehension': ['CSAT'],
+  'Decision Making': ['CSAT'],
   'English': ['English Language', 'English'],
-  'Science': ['Science', 'General Knowledge'],
+  'Science': ['Science', 'General Knowledge', 'General Studies'],
   'Physics': ['Physics'],
   'Chemistry': ['Chemistry'],
-  'Biology': ['Biology']
+  'Biology': ['Biology'],
+  // UPSC GS subjects all belong to the single General Studies section.
+  'Polity': ['General Studies', 'Polity'],
+  'Constitution': ['General Studies', 'Polity'],
+  'History': ['General Studies', 'History'],
+  'Geography': ['General Studies', 'Geography'],
+  'Economy': ['General Studies', 'Economy'],
+  'Environment': ['General Studies', 'Environment & Ecology'],
+  'Ecology': ['General Studies', 'Environment & Ecology'],
+  'Art & Culture': ['General Studies', 'Art & Culture'],
+  'Governance': ['General Studies', 'Governance'],
+  'International Relations': ['General Studies', 'International Relations'],
+  'Society': ['General Studies', 'Society'],
+  'Ethics': ['General Studies', 'Ethics']
 };
 
 function norm(s) {
@@ -81,6 +97,29 @@ function optionLetter(s) {
   return m ? m[1].toUpperCase() : '';
 }
 
+// UPSC is one exam with many subjects. Keeping every authored question in a
+// single "General Studies" bucket gave the micro-test only 3 topics; map each
+// course subject to its own section instead.
+var UPSC_SECTIONS = ['General Studies', 'Polity', 'History', 'Geography', 'Economy', 'Environment & Ecology', 'Science & Technology', 'Art & Culture', 'Governance', 'International Relations', 'Society', 'Ethics', 'Current Affairs', 'CSAT', 'Optional Subjects'];
+function upscSection(subject) {
+  var s = String(subject || '').toLowerCase();
+  if (/general knowledge|general awareness|general studies|static gk/.test(s)) return 'General Studies';
+  if (/polity|constitution/.test(s)) return 'Polity';
+  if (/history/.test(s)) return 'History';
+  if (/geograph/.test(s)) return 'Geography';
+  if (/econom|business/.test(s)) return 'Economy';
+  if (/environment|ecology/.test(s)) return 'Environment & Ecology';
+  if (/science|physics|chemistry|biology|botany|zoology/.test(s)) return 'Science & Technology';
+  if (/art|culture/.test(s)) return 'Art & Culture';
+  if (/governance/.test(s)) return 'Governance';
+  if (/international|foreign/.test(s)) return 'International Relations';
+  if (/society|social/.test(s)) return 'Society';
+  if (/ethics/.test(s)) return 'Ethics';
+  if (/current affairs/.test(s)) return 'Current Affairs';
+  if (/quant|math|reason|comprehension|decision|logical/.test(s)) return 'CSAT';
+  return 'Optional Subjects';
+}
+
 function sectionFor(exam, subject, sections) {
   var aliases = SUBJECT_ALIASES[subject] || [subject];
   for (var i = 0; i < aliases.length; i++) {
@@ -93,7 +132,15 @@ function sectionFor(exam, subject, sections) {
   for (var k = 0; k < sections.length; k++) {
     if (norm(sections[k]).indexOf(norm(subject)) !== -1) return sections[k];
   }
-  return '';
+  // Never drop an authored question for want of a section name. A UPSC
+  // optional or a GS subject the alias table does not name still belongs to
+  // the bank; without this fallback 3,069 of 4,627 UPSC course questions were
+  // skipped and the micro-test counts never moved.
+  if (exam === 'upsc') {
+    var gs = sections.filter(function (s) { return /general studies/i.test(s); })[0];
+    if (gs) return gs;
+  }
+  return sections.length ? sections[0] : '';
 }
 
 function makeBank(exam, meta) {
@@ -140,6 +187,9 @@ function main() {
     if (!bank) { console.log(exam + ': unreadable bank, skipped'); return; }
     var sections = (bank.sections || []).map(function (s) { return s.name; });
     if (!sections.length) sections = meta.sections;
+    if (exam === 'upsc') {
+      UPSC_SECTIONS.forEach(function (s) { if (sections.indexOf(s) === -1) sections.push(s); });
+    }
     var oldCourse = [];
     var courseCursor = 0;
     if (REFRESH) {
@@ -154,7 +204,7 @@ function main() {
     questions.filter(function (q) { return String(q._exam || '').toLowerCase() === exam; }).forEach(function (q) {
       var text = String(q.q || '').replace(/\s+/g, ' ').trim();
       if (text.length < 8 || used[norm(text)]) { skipped++; return; }
-      var section = sectionFor(exam, q.subject, sections);
+      var section = exam === 'upsc' ? upscSection(q.subject) : sectionFor(exam, q.subject, sections);
       if (!section) { skipped++; return; }
       var rawOpts = Array.isArray(q.opts) ? q.opts : [];
       if (rawOpts.length < 2 || rawOpts.length > 5) { skipped++; return; }

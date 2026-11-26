@@ -7,7 +7,10 @@ name: Full-Length Paper (model lane)
 # committed so the next run can finish the job.
 on:
   schedule:
-    - cron: '0 12 * * *'
+    # Four slots a day: the rotation below advances by four each day, so all 22
+    # real papers cycle in ~5.5 days instead of ~22. A paper that comes up
+    # "short" is finished on a later slot.
+    - cron: '0 3,9,15,21 * * *'
   workflow_dispatch:
     inputs:
       exam:
@@ -25,7 +28,7 @@ on:
       budget:
         description: 'Maximum questions the model may add in this run'
         required: false
-        default: '60'
+        default: '100'
 
 concurrency:
   # Serialize paper builds: every run rebuilds shared PDF/HTML artifacts, so
@@ -73,7 +76,7 @@ jobs:
             # and JEE Paper 2B are the Paper 2 additions; descriptive/mixed
             # papers (UPSC Mains, RBI Phase II, JEE Paper 2A) stay out.
             PAPERS=(cgl:tier1 cgl:tier2 rbi:phase1 ibps-po:prelims sbi-clerk:prelims ssc-gd:cbt ctet:paper1 ctet:paper2 jee:paper1 jee:paper2b neet:paper1 gate:paper1 agniveer:cee upsc:gs1 upsc:csat nda:maths nda:gat cds:english cds:gk cds:maths clat:paper1 apfc:rt)
-            IDX=$(( 10#$(date +%j) % ${#PAPERS[@]} ))
+            IDX=$(( (10#$(date +%j) * 4 + 10#$(date +%H) / 6) % ${#PAPERS[@]} ))
             PAIR=${PAPERS[$IDX]}
             echo "exam=${PAIR%%:*}" >> $GITHUB_OUTPUT
             echo "paper=${PAIR##*:}" >> $GITHUB_OUTPUT

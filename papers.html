@@ -275,6 +275,11 @@ function selectYear(y) {
   renderPaperGrid();
 }
 
+function mockTestHref(p) {
+  var slug = String((p && (p.sourceFile || p.slug)) || '').replace(/\.json$/i, '') || (p && p.id) || '';
+  return 'mock-test.html?exam=' + encodeURIComponent((p && p.examKey) || '') + '&paper=' + encodeURIComponent(slug);
+}
+
 function renderPaperGrid() {
   var papers = getPapersForFilter();
   var grid = document.getElementById('paperGrid');
@@ -293,10 +298,11 @@ function renderPaperGrid() {
       '<div class="paper-title">' + p.year + ' ' + p.type + (p.subject ? ' — ' + p.subject : '') + '</div>' +
       '<div class="paper-meta">' + qCount + ' questions' + (p.cutoff ? ' · Cutoff: ' + p.cutoff : '') +
       paperBadge(p) + '</div>';
-    card.onclick = function(e) { if (e.target.tagName === 'A') return; openPaper(p.id); };
-    // Mock test link
+    card.onclick = function(e) { if (e.target.tagName === 'A') return; location.href = mockTestHref(p); };
+    // Mock test link — the file on disk is named by sourceFile, not by the
+    // paper id, so the link must use sourceFile or the test loads 0 questions.
     var mtLink = document.createElement('a');
-    mtLink.href = 'mock-test.html?exam=' + encodeURIComponent(p.examKey) + '&paper=' + encodeURIComponent(p.id);
+    mtLink.href = mockTestHref(p);
     mtLink.className = 'mock-btn';
     mtLink.style.cssText = 'margin-top:10px;display:inline-block;background:var(--accent);color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;text-align:center;width:100%';
     mtLink.textContent = '▶ Take as Mock Test';

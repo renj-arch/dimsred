@@ -250,10 +250,11 @@
 
             <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);margin-bottom:6px" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" checked style="accent-color:var(--purple);width:14px;height:14px"> 📚 Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.75em">loaded</span></label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="The static archive is a scraped index with unreliable categories; its cards are shown as facts, never as MCQs."><input type="checkbox" id="archiveToggle" checked style="accent-color:var(--purple);width:14px;height:14px"> 📚 Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.75em">loaded</span></label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="courseToggle" checked style="accent-color:var(--emerald);width:14px;height:14px"> 📖 Course Lessons</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="genToggle" checked style="accent-color:var(--cyan);width:14px;height:14px"> ⚡ Generators</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="pibToggle" checked style="accent-color:var(--amber);width:14px;height:14px"> 📰 PIB/CA Feed</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Archive fill-blank facts (statement → answer). OFF by default: the quiz shows exam-style MCQs only. Turn on to include static facts."><input type="checkbox" id="factToggle" style="accent-color:#f59e0b;width:14px;height:14px"> 📇 Facts</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions invented from lesson paragraphs by the hosted setter, each verified against its own passage"><input type="checkbox" id="lessonInvToggle" style="accent-color:var(--cyan);width:14px;height:14px"> 🧠 From lesson text</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="Questions written in the shapes the real UPSC paper uses — multi-statement, match-the-following, chronology, assertion-reason"><input type="checkbox" id="shapeToggle" style="accent-color:var(--amber);width:14px;height:14px"> 📐 Paper shapes</label>
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none" title="The micro-test banks: General Knowledge, General Studies, Mathematics, Science, English, Reasoning"><input type="checkbox" id="microToggle" style="accent-color:var(--emerald);width:14px;height:14px"> 🧩 Micro-test banks</label>
@@ -354,6 +355,14 @@
                 var wikiCat = (q._wikiCat || '').toLowerCase();
                 var subject = (q.subject || '').toLowerCase();
                 var type = (q.type || '').toLowerCase();
+                // Fact cards (archive fill-blanks, statement → answer) are hidden
+                // from the quiz by default: a study quiz should ask exam-style
+                // MCQs. They stay available via the Facts toggle, and always in
+                // the date feed / Static GK (which ARE fact-browsing modes).
+                var useFacts = (function () { var el = document.getElementById('factToggle'); return el ? !!el.checked : false; })();
+                var isFact = (!q.options || q.options.length < 2) && (q.a != null || q.answer != null) && type !== 'mcq';
+                var factMode = (typeof state !== 'undefined' && state) ? !!(state.cat === 'static' || state._feedSource === 'archive') : false;
+                if (isFact && !useFacts && !factMode) return false;
                 // Resolve every question to exactly one source before testing the
                 // checkboxes. The old order let the Generators branch win for
                 // course questions, because they carry _wikiCat='course-lesson'
@@ -408,14 +417,14 @@
                     // to zero again: an endless "Loading..." loop. Say what
                     // happened and leave the pool alone.
                     var qt = document.getElementById('qText');
-                    if (qt) qt.innerHTML = 'No questions match the current toggles. Turn on another source (Archive / Course Lessons / Generators / Paper shapes) or switch off UPSC-only.';
+                    if (qt) qt.innerHTML = 'No questions match the current toggles. Turn on another source (Archive / Course Lessons / Generators / Paper shapes / Facts) or switch off UPSC-only.';
                     var og = document.getElementById('optGrid');
                     if (og) og.innerHTML = '';
                 }
             }
             // Attach to checkboxes
             document.addEventListener('DOMContentLoaded', function() {
-                ['archiveToggle','courseToggle','genToggle','pibToggle','lessonInvToggle','shapeToggle','microToggle','invToggle'].forEach(function(id) {
+                ['archiveToggle','courseToggle','genToggle','pibToggle','factToggle','lessonInvToggle','shapeToggle','microToggle','invToggle'].forEach(function(id) {
                     var el = document.getElementById(id);
                     if (el) el.addEventListener('change', _applyContentFilter);
                 });
@@ -8640,16 +8649,53 @@ function prevQuestion() {
         function _caCleanTopic(t) {
             return String(t || '').replace(/^[✓✔✗×]\s*/, '').replace(/\s+/g, ' ').trim();
         }
+        // The archive's own category metadata is unreliable: food-processing-8.json
+        // is a Wikipedia dump whose sub-topics are article titles (Mike Wallace,
+        // Mr Inbetween, Milk) all stamped "Food Processing". So derive the shown
+        // category from the text itself, and fall back to the metadata only when
+        // no known topic keyword is present.
+        var _CA_KEYWORDS = [
+            [/constitution|parliament|article \d|\bamendment\b|supreme court|high court|judiciar|president|governor|election commission|rajya sabha|lok sabha|fundamental right/i, 'Constitution & Polity'],
+            [/\bgdp\b|inflation|\brbi\b|budget|fiscal|monetary|\bbank\b|\btax\b|\bgst\b|export|import|\btrade\b|economy/i, 'Economy'],
+            [/geograph|\briver\b|mountain|climate|monsoon|\bsoil\b|latitude|glacier|census|population|peninsula/i, 'Geography'],
+            [/history|dynasty|empire|mughal|maurya|british|freedom struggle|\bgandhi\b|\bnehru\b|\b1947\b|\b1857\b|colonial/i, 'History'],
+            [/environment|biodiversity|wildlife|species|forest|pollution|climate change|carbon|ecosystem|\biucn\b|wetland/i, 'Environment & Ecology'],
+            [/physics|chemistry|biology|\batom\b|molecule|\bdna\b|\bcell\b|electricity|space|\bisro\b|satellite|\bnasa\b|technology/i, 'Science & Technology'],
+            [/award|\bprize\b|medal|nobel|padma|bharat ratna|oscar/i, 'Awards & Honours'],
+            [/sport|olympic|cricket|football|hockey|tennis|tournament|championship/i, 'Sports'],
+            [/film|movie|cinema|\bactor\b|actress|television|\bseries\b|season|episode|director|comedy|drama/i, 'Cinema & Entertainment'],
+            [/\bbook\b|author|novel|poet|literature|writer/i, 'Books & Authors'],
+            [/defence|\barmy\b|\bnavy\b|air force|missile|military|border|\bwar\b|battle|regiment/i, 'Defence & Security'],
+            [/health|disease|vaccine|medicine|hospital|virus|\bwho\b|cancer|surgery/i, 'Health & Medicine'],
+            [/scheme|yojana|mission|programme|\bpolicy\b|subsidy/i, 'Govt Schemes'],
+            [/\bart\b|culture|temple|painting|\bdance\b|music|heritage|architecture|sculpture/i, 'Art & Culture'],
+            [/international|united nations|treaty|summit|foreign|bilateral|\bg20\b|\bbrics\b|diplomat/i, 'International Relations']
+        ];
+        function _caTextCat(text) {
+            for (var i = 0; i < _CA_KEYWORDS.length; i++) {
+                if (_CA_KEYWORDS[i][0].test(text)) return _CA_KEYWORDS[i][1];
+            }
+            return '';
+        }
+        function _caCategoryFor(q, fallback) {
+            var text = String(q.question || '') + ' ' + String(q.subSubject || q.subtopic || '');
+            return _caTextCat(text) || _caCanonCat(q.category || q.subject || fallback);
+        }
         function _caProper(q) {
             var text = String(q.question || '').trim();
             if (!q.answer) return false;
             if (text.length < 40 || text.length > 320) return false;
             if (_CA_JUNK.test(text)) return false;
-            // The scrape cut most entries mid-sentence ("crucians, from the
-            // early _____"), so only ~4% even end with punctuation. Require a
-            // whole sentence: capitalised start and terminal punctuation.
+            // The scrape cut most entries mid-sentence, so only ~4% even end
+            // with punctuation. Require a real sentence end (. ? !), optionally
+            // followed by a closing quote/bracket: this drops the quote
+            // fragments ("… a hit gone way wrong\"").
             if (!/^[A-Z0-9"'“(]/.test(text)) return false;
-            if (!/[.?!:”"]$/.test(text)) return false;
+            if (!/[.?!][)"'”’\]]?$/.test(text)) return false;
+            // A blank glued to a hyphen or a word ("… surreal, _____-ish") is a
+            // mid-sentence fragment, not a study fill-in.
+            if (/[-–—]_____|_____[-–—]/.test(text)) return false;
+            if (/_____\w|\w_____/.test(text)) return false;
             return true;
         }
         function _loadArchiveFiles(files, cb) {
@@ -8714,7 +8760,7 @@ function prevQuestion() {
                                             if (_seenQ[_caKey]) continue;
                                             _seenQ[_caKey] = 1;
 var fact = q.fact || q.solution || q.explanation || '';
-                                                allQ.push(ExamScope.annotate({q:q.question, a:q.answer, type:q.type||'', options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:_caCanonCat(q.category || q.subject || item[0]), subTopic:_caCleanTopic(q.subSubject || item[1]), pubDate:q.pubDate||'', importance:q.importance||'', importantFor:q.importantFor||[], source:q.source||''}));
+                                                allQ.push(ExamScope.annotate({q:q.question, a:q.answer, type:q.type||'', options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:_caCategoryFor(q, item[0]), subTopic:_caCleanTopic(q.subSubject || item[1]), pubDate:q.pubDate||'', importance:q.importance||'', importantFor:q.importantFor||[], source:q.source||''}));
                                         }
                                     }
                                 }
@@ -8825,7 +8871,7 @@ var fact = q.fact || q.solution || q.explanation || '';
         }
         var _catalogTried = false;
         var _catalogLoaded = false;
-        var HOME_CATALOG = {"total":16090407,"subjects":{"Accounting & Auditing":35,"Agricultural Engineering":1236,"Agricultural Entomology":2595,"Agricultural Extension & Marketing":108297,"Agriculture & Food":20914,"Govt Schemes":63,"Agronomy & Crop Production":14926,"Ancient India":173304,"Animal Husbandry & Dairy":290673,"Announcements":5,"Dams & Rivers":6,"Defence":18,"General Science":184025,"Geography":1,"Indian Economy":84,"International Relations":529206,"International":3,"ISRO & Space":503,"Polity":12,"Sports":786752,"World Geography":1576463,"Applied Sciences":351349,"Art & Culture":21097,"Awards & Honours":11991,"Awards":3,"Ayurveda & Traditional Medicine":512757,"Banking & Financial System":219,"Bengali Literature":243,"Books & Authors":285109,"Buddhism & Jainism":1045,"Business & Economy":409455,"Classical & Dravidian Languages":224,"Commissions Committees & Bodies":179,"Computer & IT":519375,"Constitution":6088,"Courts Cases & Verdicts":558911,"Current Affairs":6270,"Defence & Security":181109,"Defence & Strategic Affairs":273,"Disaster Management":309383,"Education in India":9277,"Elections & Political Parties":1250,"Energy & Power":4996,"Environment & Ecology":1260468,"Engineering & Technical":253,"Ethics & Integrity":4021,"Ethics":39,"Farm Machinery":19510,"Farm Machinery & Power":3081,"Fisheries & Aquaculture":211901,"Floriculture & Landscaping":3710,"Food Processing":183064,"General":47191,"Geology & Hydrogeology":144,"Health & Medicine":277540,"Hinduism & Mythology":1306,"Horticulture - Fruit & Vegetable Production":1611,"Horticulture":3157,"Hydrology & Soil Conservation":2779,"ICT Digital & Cyber":89,"Important Days":342019,"India & International Relations":204,"Indian Archaeology & Epigraphy":372152,"Indian Architecture":328730,"Indian Art & Architecture":128,"Indian Aviation & Shipping":262038,"Indian Battles":19693,"Indian Cinema":261024,"Indian De-industrialisation":27,"Indian Demographics & Census":411629,"Indian Economy & Development":359,"Indian Festivals & Fairs":7199,"Indian Festivals & Traditions":152,"Indian Geography":4740,"Indian Handicrafts & Coins":285762,"Indian Heritage":126782,"Indian History":133,"Indian Judiciary":4133,"Indian Languages":194622,"Indian Languages - National & Regional":45,"Indian Literature & Poets":138968,"Indian Museums & Heritage Sites":6731,"Indian Music Dance & Theatre":159,"Indian Music & Fine Arts":274450,"Indian National Symbols":11360,"Indian Philosophy & Thinkers":16711,"Indian Physical Geography":274,"Indian Polity & Constitution":63,"Indian Religions":1699,"Indian Rivers & Water Resources":1703,"Indian Scientists & Nobel Laureates":404,"Indian Society":305960,"Indian States":108093,"Indian Theatre & Cinema":16078,"Indian Tribes":1795,"Indian Wildlife & National Parks":567799,"International Organizations & Summits":271,"Kannada Literature":321,"Labour Law & Industrial Relations":27069,"Languages & Linguistics":37117,"Library & Information Science":54331,"Malayalam Literature":688,"Marathi & Hindi Literature":632,"Mechanical Engineering":503,"Medieval & Modern India":9272,"Meteorology & Climate":703519,"Mining & Minerals":10914,"Nuclear Energy in India":12,"Nuclear Energy & Technology":306,"Personalities":512546,"PIB Releases":2501,"Plant Breeding & Genetics":28439,"Plant Pathology & Crop Protection":2674,"Plant Physiology & Nutrition":1680,"Polity & Governance":3047,"Public Administration & Governance":173,"Punjabi & Other Regional Literature":514,"Railways & Transport":193418,"RBI & Banking":1697,"RBI Press Releases":7,"Sanskrit & Classical Languages":234,"Science & Technology":12262,"Seed Science & Technology":192671,"Sikhism & Other Faiths":662,"Social Security":66,"Society":539,"Soil & Watershed":4396,"Space & Astronomy":312,"Spices & Plantation Crops":5739,"State GK":602,"Statistics & Mathematics":478,"Tamil Literature":113,"Tech & Science":57,"Telecom & Postal":432941,"Telugu Literature":134,"Women & Society":354267,"World Geography & Countries":855,"World History":518801,"World & Indian Physical Geography":221}};
+        var HOME_CATALOG = {"total":16090830,"subjects":{"Accounting & Auditing":35,"Agricultural Engineering":1236,"Agricultural Entomology":2595,"Agricultural Extension & Marketing":108297,"Agriculture & Food":20914,"Govt Schemes":63,"Agronomy & Crop Production":14926,"Ancient India":173314,"Animal Husbandry & Dairy":290673,"Announcements":5,"Dams & Rivers":6,"Defence":18,"General Science":184043,"Geography":1,"Indian Economy":84,"International Relations":529432,"International":3,"ISRO & Space":503,"Polity":12,"Sports":786752,"World Geography":1576465,"Applied Sciences":351375,"Art & Culture":21097,"Awards & Honours":11991,"Awards":3,"Ayurveda & Traditional Medicine":512757,"Banking & Financial System":219,"Bengali Literature":243,"Books & Authors":285109,"Buddhism & Jainism":1045,"Business & Economy":409391,"Classical & Dravidian Languages":224,"Commissions Committees & Bodies":179,"Computer & IT":519375,"Constitution":6088,"Courts Cases & Verdicts":558933,"Current Affairs":6225,"Defence & Security":181121,"Defence & Strategic Affairs":273,"Disaster Management":309416,"Education in India":9277,"Elections & Political Parties":1250,"Energy & Power":4996,"Environment & Ecology":1260471,"Engineering & Technical":253,"Ethics & Integrity":4021,"Ethics":39,"Farm Machinery":19510,"Farm Machinery & Power":3081,"Fisheries & Aquaculture":211999,"Floriculture & Landscaping":3710,"Food Processing":183064,"General":47191,"Geology & Hydrogeology":144,"Health & Medicine":277540,"Hinduism & Mythology":1306,"Horticulture - Fruit & Vegetable Production":1611,"Horticulture":3157,"Hydrology & Soil Conservation":2779,"ICT Digital & Cyber":89,"Important Days":342019,"India & International Relations":204,"Indian Archaeology & Epigraphy":372152,"Indian Architecture":328730,"Indian Art & Architecture":128,"Indian Aviation & Shipping":262038,"Indian Battles":19693,"Indian Cinema":261024,"Indian De-industrialisation":27,"Indian Demographics & Census":411638,"Indian Economy & Development":359,"Indian Festivals & Fairs":7199,"Indian Festivals & Traditions":152,"Indian Geography":4740,"Indian Handicrafts & Coins":285762,"Indian Heritage":126791,"Indian History":133,"Indian Judiciary":4133,"Indian Languages":194622,"Indian Languages - National & Regional":45,"Indian Literature & Poets":138968,"Indian Museums & Heritage Sites":6731,"Indian Music Dance & Theatre":159,"Indian Music & Fine Arts":274450,"Indian National Symbols":11360,"Indian Philosophy & Thinkers":16711,"Indian Physical Geography":274,"Indian Polity & Constitution":63,"Indian Religions":1699,"Indian Rivers & Water Resources":1703,"Indian Scientists & Nobel Laureates":404,"Indian Society":305964,"Indian States":108093,"Indian Theatre & Cinema":16078,"Indian Tribes":1795,"Indian Wildlife & National Parks":567815,"International Organizations & Summits":271,"Kannada Literature":321,"Labour Law & Industrial Relations":27069,"Languages & Linguistics":37117,"Library & Information Science":54331,"Malayalam Literature":688,"Marathi & Hindi Literature":632,"Mechanical Engineering":503,"Medieval & Modern India":9272,"Meteorology & Climate":703519,"Mining & Minerals":10914,"Nuclear Energy in India":12,"Nuclear Energy & Technology":306,"Personalities":512541,"PIB Releases":2503,"Plant Breeding & Genetics":28439,"Plant Pathology & Crop Protection":2674,"Plant Physiology & Nutrition":1680,"Polity & Governance":3047,"Public Administration & Governance":173,"Punjabi & Other Regional Literature":514,"Railways & Transport":193418,"RBI & Banking":1697,"RBI Press Releases":7,"Sanskrit & Classical Languages":234,"Science & Technology":12263,"Seed Science & Technology":192671,"Sikhism & Other Faiths":662,"Social Security":66,"Society":539,"Soil & Watershed":4396,"Space & Astronomy":312,"Spices & Plantation Crops":5739,"State GK":602,"Statistics & Mathematics":478,"Tamil Literature":113,"Tech & Science":57,"Telecom & Postal":432941,"Telugu Literature":134,"Women & Society":354267,"World Geography & Countries":855,"World History":518847,"World & Indian Physical Geography":221}};
         function initHomeCatGrid() {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
@@ -9315,7 +9361,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                                     if (_caSeen[_caK]) continue;
                                     _caSeen[_caK] = 1;
                                     var fact = q.fact || q.solution || q.explanation || '';
-                                    out.push(ExamScope.annotate({ q: q.question, a: q.answer, type: q.type||'', options: q.options || [], solution: fact, hint: q.hint || '', fact: fact, subject: _caCanonCat(q.category || q.subject || sk), subTopic: _caCleanTopic(q.subSubject || st), pubDate: q.pubDate || '', importance: q.importance || '', importantFor: q.importantFor || [], source: q.source||'' }));
+                                    out.push(ExamScope.annotate({ q: q.question, a: q.answer, type: q.type||'', options: q.options || [], solution: fact, hint: q.hint || '', fact: fact, subject: _caCategoryFor(q, sk), subTopic: _caCleanTopic(q.subSubject || st), pubDate: q.pubDate || '', importance: q.importance || '', importantFor: q.importantFor || [], source: q.source||'' }));
                                 }
                             }
                         }
@@ -9897,7 +9943,10 @@ var fact = q.fact || q.solution || q.explanation || '';
             } else if (src === 'invented') {
                 label = 'Invented (fresh)';
             }
+            var _isFact = q && (!q.options || q.options.length < 2) && (q.a != null || q.answer != null) && String(q.type || '') !== 'mcq';
+            if (_isFact) label = (label ? label + ' · ' : '') + '📇 Fact';
             el.textContent = label;
+            el.title = _isFact ? 'Static fact card (statement → answer), not an exam-style MCQ' : '';
             el.style.display = label ? 'inline-block' : 'none';
         }
         // Research Team method for any question, attached by text. Course-lesson and

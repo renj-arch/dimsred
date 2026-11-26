@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Circular Seating with Facing Directions and Variable Gaps | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Circular Seating with Facing Directions and Variable Gaps</h1>
+<p class="meta">Logical Reasoning · <a href="/upsc/course/csat/lesson-logical-reasoning">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Concentric circles -->
+  <circle cx="280" cy="150" r="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="150" r="130" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Centre-facing figures (inner circle) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- 45° -->
+    <circle cx="336.6" cy="93.4" r="8"/>
+    <line x1="336.6" y1="101.4" x2="336.6" y2="116.4"/>
+    <line x1="326.6" y1="106.4" x2="346.6" y2="106.4"/>
+    <!-- clockwise left arrow -->
+    <path d="M340 90 A10 10 0 0 1 350 100" marker-end="url(#arrow)"/>
+    <!-- 135° -->
+    <circle cx="223.4" cy="93.4" r="8"/>
+    <line x1="223.4" y1="101.4" x2="223.4" y2="116.4"/>
+    <line x1="213.4" y1="106.4" x2="233.4" y2="106.4"/>
+    <path d="M220 90 A10 10 0 0 0 210 100" marker-end="url(#arrow)"/>
+    <!-- 225° -->
+    <circle cx="223.4" cy="206.6" r="8"/>
+    <line x1="223.4" y1="214.6" x2="223.4" y2="229.6"/>
+    <line x1="213.4" y1="219.6" x2="233.4" y2="219.6"/>
+    <path d="M220 210 A10 10 0 0 1 210 220" marker-end="url(#arrow)"/>
+    <!-- 315° -->
+    <circle cx="336.6" cy="206.6" r="8"/>
+    <line x1="336.6" y1="214.6" x2="336.6" y2="229.6"/>
+    <line x1="326.6" y1="219.6" x2="346.6" y2="219.6"/>
+    <path d="M340 210 A10 10 0 0 0 350 220" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Outward-facing figures (outer circle) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- 0° -->
+    <circle cx="410" cy="150" r="8"/>
+    <line x1="410" y1="158" x2="410" y2="173"/>
+    <line x1="400" y1="163" x2="420" y2="163"/>
+    <!-- anticlockwise left arrow -->
+    <path d="M415 145 A15 15 0 0 0 400 155" marker-end="url(#arrow)"/>
+    <!-- 90° -->
+    <circle cx="280" cy="20" r="8"/>
+    <line x1="280" y1="28" x2="280" y2="43"/>
+    <line x1="270" y1="33" x2="290" y2="33"/>
+    <path d="M285 25 A15 15 0 0 1 270 35" marker-end="url(#arrow)"/>
+    <!-- 180° -->
+    <circle cx="150" cy="150" r="8"/>
+    <line x1="150" y1="158" x2="150" y2="173"/>
+    <line x1="140" y1="163" x2="160" y2="163"/>
+    <path d="M145 145 A15 15 0 0 1 160 155" marker-end="url(#arrow)"/>
+    <!-- 270° -->
+    <circle cx="280" cy="280" r="8"/>
+    <line x1="280" y1="288" x2="280" y2="303"/>
+    <line x1="270" y1="293" x2="290" y2="293"/>
+    <path d="M275 285 A15 15 0 0 0 290 295" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Variable gap illustration between two inner figures (45° and 135°) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <path d="M336.6 93.4 A80 80 0 0 0 223.4 93.4" stroke-dasharray="6,4"/>
+    <text x="280" y="70" text-anchor="middle" font-size="14" fill="#1f2937">2 or 3 seats</text>
+  </g>
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Labels -->
+  <text x="280" y="30" text-anchor="middle" font-size="16" fill="#1f2937" font-weight="bold">Centre / Outward</text>
+  <text x="460" y="150" text-anchor="start" font-size="13" fill="#1f2937">Outward</text>
+  <text x="100" y="150" text-anchor="end" font-size="13" fill="#1f2937">Outward</text>
+  <text x="280" y="20" text-anchor="middle" font-size="13" fill="#1f2937">Centre</text>
+  <text x="280" y="295" text-anchor="middle" font-size="13" fill="#1f2937">Centre</text>
+  <text x="380" y="100" text-anchor="start" font-size="12" fill="#1f2937">Left = CW</text>
+  <text x="180" y="100" text-anchor="end" font-size="12" fill="#1f2937">Left = CCW</text>
+  <text x="380" y="200" text-anchor="start" font-size="12" fill="#1f2937">Branch &amp; prune</text>
+  <text x="180" y="200" text-anchor="end" font-size="12" fill="#1f2937">Modular eq.</text>
+  <!-- Caption strip -->
+  <rect x="0" y="300" width="560" height="20" fill="#1f2937"/>
+  <text x="280" y="315" text-anchor="middle" font-size="13" fill="#fbf7ec">Circular Seating with Facing Directions and Variable Gaps</text>
+</svg></div>
+<p class="meta">Circular Seating with Facing Directions and Variable Gaps</p></div></body></html>
