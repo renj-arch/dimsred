@@ -264154,6 +264154,141 @@
         }
       ],
       "sol": "The characteristic equation roots are s = −α ± √(α² − ω₀²). When α < ω₀, the discriminant is negative, giving complex conjugate poles −α ± jωd with ωd = √(ω₀² − α²). The time‑domain response is a damped sinusoid e^(−αt) sin(ωd t + φ) (or cosine with phase). Overdamped (α > ω₀) yields two real exponentials; critically damped (α = ω₀) yields a term t e^(−αt). A pure sinusoid would require α = 0 (no resistance). Thus option B describes the underdamped case correctly."
+    },
+    {
+      "id": 125,
+      "text": "The quantised Hall resistance in the quantum Hall effect is given by R_H = h/(νe²). If the filling factor ν = 2, what is the Hall resistance in terms of the von Klitzing constant R_K?",
+      "options": [
+        {
+          "l": "a",
+          "t": "R_K/2",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "R_K/4",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "2R_K",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "R_K",
+          "c": false
+        }
+      ],
+      "sol": "The von Klitzing constant is defined as R_K = h/e² ≈ 25812.807 Ω. The quantised Hall resistance is R_H = h/(νe²) = R_K/ν. For filling factor ν = 2, R_H = R_K/2. This corresponds to the plateau where two edge channels conduct, each contributing conductance e²/h, giving total conductance 2e²/h and resistance h/(2e²) = R_K/2."
+    },
+    {
+      "id": 126,
+      "text": "A Josephson junction array voltage standard uses 10,000 junctions biased on the first Shapiro step (n=1) with a microwave frequency of 70 GHz. Given K_J = 2e/h ≈ 483597.848 GHz/V, what is the total output voltage?",
+      "options": [
+        {
+          "l": "a",
+          "t": "1.447 V",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "1.448 V",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1.449 V",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1.450 V",
+          "c": false
+        }
+      ],
+      "sol": "The voltage per junction is V_j = nf/K_J. For n=1, f=70 GHz, K_J≈483597.848 GHz/V: V_j = 70/483597.848 ≈ 0.00014474 V. For 10,000 junctions in series, total voltage V = 10000 × 0.00014474 ≈ 1.4474 V, which rounds to 1.447 V. The array sums individual quantised step voltages to generate a precise DC voltage traceable to frequency and fundamental constants."
+    },
+    {
+      "id": 127,
+      "text": "In a four-wire Kelvin measurement of a 1 mΩ resistor, why is a driven guard ring essential?",
+      "options": [
+        {
+          "l": "a",
+          "t": "To eliminate thermoelectric EMFs at the contacts",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "To prevent leakage current through insulation from shunting the measurement",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "To increase the test current for better signal-to-noise ratio",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "To compensate for the temperature coefficient of the resistor",
+          "c": false
+        }
+      ],
+      "sol": "When measuring resistances below 1 mΩ, leakage currents through insulation resistance can become comparable to the measured current, creating a parallel path that shunts the unknown resistor and causes significant error. A driven guard ring maintains the guard conductor at the same potential as the measurement node, eliminating voltage difference across the insulation and thus preventing leakage current from flowing into the measurement circuit. This is distinct from thermoelectric EMF cancellation (achieved by current reversal) or temperature compensation."
+    },
+    {
+      "id": 128,
+      "text": "Which voltage reference type is most suitable for a calibration laboratory requiring 0.5 ppm/year long-term drift performance?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Low-power bandgap reference",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Buried-zener reference in a temperature-controlled oven",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Sealed Weston cell in a thermostatted enclosure",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Standard CMOS bandgap without curvature correction",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states: \"For calibration laboratories, a buried-zener module in a temperature-controlled oven (0.01 °C stability) provides 0.5 ppm/year drift.\" Bandgap references (even with curvature correction) typically achieve 10-50 ppm/°C residual TC and are suited for on-board ADC references (0.05% accuracy). Weston cells offer ~1 ppm stability over months for field deployment but require hermetic sealing and ±0.01°C control. Buried zeners in ovens provide the best long-term stability for lab standards."
+    },
+    {
+      "id": 129,
+      "text": "A 2 A time-delay fuse feeds a branch protected by a 1 A fast-acting fuse. For proper coordination during a 5 A fault, what must be true about their I-t curves?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The 1 A fuse must melt before the 2 A fuse reaches its minimum melting current",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "The 2 A fuse must clear the fault before the 1 A fuse operates",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Both fuses must operate simultaneously to share the fault current",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The 1 A fuse must have a higher I²t rating than the 2 A fuse",
+          "c": false
+        }
+      ],
+      "sol": "Coordination requires the downstream device (1 A fast-acting fuse) to clear the fault before the upstream device (2 A time-delay fuse) reaches its melting point. The lesson states: \"a 2 A time-delay fuse feeding a 1 A fast-acting fuse ensures the downstream fuse clears a 5 A fault before the upstream fuse reaches its melting point.\" This is achieved by sufficient separation of I-t curves (typically factor of 2 in current at a given time). The downstream fuse must have faster response (lower I²t) for the fault current level."
     }
   ],
   "physics/thermal-physics": [
