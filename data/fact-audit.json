@@ -1,41 +1,321 @@
 {
- "generatedAt": "2026-11-26T15:47:52.915Z",
- "lessonsAudited": 11,
- "flagged": 3,
- "applied": 2,
- "modelCalls": 17,
- "modelFailures": 16,
+ "generatedAt": "2026-11-26T16:28:17.486Z",
+ "lessonsAudited": 13,
+ "flagged": 31,
+ "applied": 15,
+ "modelCalls": 27,
+ "modelFailures": 21,
  "deadlineHit": true,
  "problems": [
   {
-   "file": "neet/course/physics/lesson-work-energy-power.html",
-   "quote": "Positive root x = [6.406 + √(6.406² + 4·250·9.61)] / (2·250) ≈ 0.203 m.",
-   "problem": "The quadratic solution yields approximately 0.209 m, not 0.203 m.",
-   "correction": "Positive root x = [6.406 + √(6.406² + 4·250·9.61)] / (2·250) ≈ 0.209 m.",
+   "file": "rbi/course/quant/lesson-speed-distance.html",
+   "quote": "the number of steps equals the length divided by the step height",
+   "problem": "The number of steps on an escalator is the length divided by the step pitch (or step depth), not the step height (vertical rise). Step height does not determine the number of steps from the length.",
+   "correction": "the number of steps equals the length divided by the step pitch",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original approx 0.203 m is incorrect; correct value is ~0.209 m.",
+   "verifierReason": "Original misidentifies step height; correction uses step pitch which determines step count.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/quant/lesson-speed-distance.html",
+   "quote": "If s > b, the boat cannot cancel the drift; the minimum drift is achieved by pointing straight upstream (θ = 90°), but the boat will still be carried downstream.",
+   "problem": "At θ = 90° the boat points straight upstream, giving zero across-river component, so it never crosses the river. The minimum drift for a successful crossing when s > b occurs at an angle θ where sin θ = b/s.",
+   "correction": "If s > b, the boat cannot cancel the drift; the minimum drift for a crossing occurs at sin θ = b/s, not at θ = 90°.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original angle 90° gives no crossing; correct minimum drift angle satisfies sinθ = b/s.",
    "applied": false
   },
   {
-   "file": "rbi/course/ga/lesson-banking-awareness.html",
-   "quote": "cooling‑off period of at least three days",
-   "problem": "The RBI mandates a cooling‑off period of 48 hours (two days), not three days.",
-   "correction": "cooling‑off period of at least 48 hours",
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2",
+   "problem": "The formula for the difference between compound and simple interest over two years is missing the exponent; it should be squared.",
+   "correction": "CI – SI = P (R/100)^2",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "RBI’s Digital Lending Guidelines mandate a 48‑hour cooling‑off period, not three days.",
+   "verifierReason": "Original missing exponent; correct formula is P(R/100)^2.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2 (300 + R)/100",
+   "problem": "The formula for the difference over three years is missing the exponent on (R/100); it should be squared.",
+   "correction": "CI – SI = P (R/100)^2 (300 + R)/100",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing exponent on (R/100); correct formula uses (R/100)^2.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "PV = X [1 – (1 + r) - n] / r",
+   "problem": "The present value formula for an annuity uses subtraction instead of exponentiation; the term should be (1+r)^{-n}.",
+   "correction": "PV = X [1 – (1 + r)^{-n}] / r",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses subtraction (1+r)-n instead of exponent (1+r)^{-n}.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "X = P r / [1 – (1 + r) - n]",
+   "problem": "The formula for the installment amount uses subtraction instead of exponentiation; the term should be (1+r)^{-n}.",
+   "correction": "X = P r / [1 – (1 + r)^{-n}]",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses subtraction (1+r)-n instead of exponent (1+r)^{-n}.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "CI – SI = P (R/100) 2",
+   "problem": "The referenced two-year difference formula is missing the exponent; it should be squared.",
+   "correction": "CI – SI = P (R/100)^2",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Same as (1); original missing exponent.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/quant/lesson-simple-interest.html",
+   "quote": "because each payment has one extra period of discounting",
+   "problem": "Annuity due payments are made at the beginning of each period, so they have one less period of discounting (or one extra period of compounding) compared to an ordinary annuity. The given reason is factually reversed.",
+   "correction": "because each payment is made one period earlier (one less period of discounting)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Annuity due payments occur at period start (t=0), so each payment is discounted for one fewer period than ordinary annuity (t=1). Original quote incorrectly states 'extra period of discounting'.",
    "applied": true
   },
   {
-   "file": "rbi/course/quant/lesson-percentage.html",
-   "quote": "it is higher in early years",
-   "problem": "The WDV rate d is constant each year; it is the depreciation amount that is higher in early years, not the rate.",
-   "correction": "depreciation is higher early",
+   "file": "rbi/course/quant/lesson-ratio-proportion.html",
+   "quote": "the total negative deviation (–12 –2 = –14) must be offset by the positive deviation (+8). This is impossible with only these three numbers",
+   "problem": "The sum of deviations must be zero only when weighted by quantities; the example incorrectly claims impossibility because unweighted deviations don't sum to zero.",
+   "correction": "The weighted sum of deviations must be zero; positive quantities can satisfy 12Q₁ + 2Q₂ = 8Q₃, so a mixture is possible.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "In WDV method, depreciation rate is constant; depreciation amount is higher in early years. Correction fixes subject from rate to amount.",
+   "verifierReason": "Original incorrectly assumes unweighted deviations must sum to zero; weighted sum can be zero with positive quantities.",
    "applied": true
+  },
+  {
+   "file": "rbi/course/quant/lesson-ratio-proportion.html",
+   "quote": "find the least common multiple of the absolute deviations, (5) assign provisional quantities as LCM/|deviation| for each component",
+   "problem": "This algorithm does not yield the correct mean; provisional quantities assigned as LCM/|deviation| do not satisfy the weighted average equation.",
+   "correction": "The alligation alternate method for three components requires pairing each cheaper with a dearer component and solving the weighted average equation, not using LCM of absolute deviations.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "LCM method fails to satisfy weighted average; correct alligation alternate pairs cheaper with dearer.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "Q is not third left of P",
+   "problem": "The negation of \"P sits third to the left of Q\" is \"P does not sit third to the left of Q\" (equivalently \"Q does not sit third to the right of P\"), not \"Q is not third left of P\".",
+   "correction": "Q is not third right of P",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Negation of 'P third left of Q' is 'Q not third right of P', not 'Q not third left of P'.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "A clue such as “A sits third to the left of B” is interpreted differently depending on whether A faces the centre (left is clockwise) or outward (left is anticlockwise).",
+   "problem": "In circular seating puzzles, directional phrases like “third to the left of B” are resolved from the reference person B’s facing direction, not from A’s facing direction. The paragraph incorrectly states that the interpretation depends on A’s facing.",
+   "correction": "A clue such as “A sits third to the left of B” is interpreted differently depending on whether B faces the centre (left is clockwise) or outward (left is anticlockwise).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Standard puzzle convention: 'left of B' is resolved from B's perspective, not A's. Correction fixes the reference person correctly.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-inequality.html",
+   "quote": "D − A",
+   "problem": "The example list of inequalities includes \"D − A\" which is an expression, not an inequality (missing relational operator and constant).",
+   "correction": "D − A < 5 (or similar complete inequality)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Expression lacks relational operator; not an inequality.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-inequality.html",
+   "quote": "replace C in the third inequality with its upper bound A + B to get E ≥ 2(A + B) − D",
+   "problem": "Invalid deduction: from E ≥ 2C − D and C < A + B (upper bound), one cannot conclude E ≥ 2(A + B) − D; using an upper bound of C in a lower-bound inequality for E yields no valid lower bound for E.",
+   "correction": "replace C with its lower bound (if known) to derive a lower bound for E",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Substituting upper bound in lower-bound inequality invalid; need lower bound.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-inequality.html",
+   "quote": "if 0 a b /(1‑ a )",
+   "problem": "Garbled/incomplete sentence; likely intended to describe convergence condition for 0 < a < 1 but is missing symbols and text.",
+   "correction": "if 0 < a < 1 the sequence converges to b/(1−a)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Fragment missing inequality signs and convergence statement; correction completes it correctly.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-inequality.html",
+   "quote": "the cycle can be consistent if the margins are treated as lower bounds on differences",
+   "problem": "With positive margins (e.g., ≥2, ≥3, ≥1), the cycle is mathematically impossible because summing the inequalities yields 0 ≥ sum of margins > 0, a contradiction. The text claims consistency is possible but then demonstrates the opposite.",
+   "correction": "the cycle cannot be consistent with positive margins as lower bounds",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Positive lower‑bound margins cannot satisfy a cyclic sum of differences; the cycle is inconsistent.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "This creates a cycle that forces X false, Y false, Z false.",
+   "problem": "The conditional cycle X→Y, Y→Z, Z→¬X forces X to be false, but does not force Y and Z to be false; they can be true.",
+   "correction": "This creates a cycle that forces X false; Y and Z may be true or false.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original incorrectly forces Y,Z false; cycle only forces X false, Y,Z free (with Y→Z). Correction accurate.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "the only pair summing to 185 is 90+95",
+   "problem": "In the set {80,85,90,95,100}, both 90+95 and 85+100 sum to 185, so the pair is not unique.",
+   "correction": "the pairs summing to 185 are 90+95 and 85+100",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Set {80,85,90,95,100} has two pairs summing to 185: 85+100 and 90+95. Original claims uniqueness, correction lists both.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-general-science.html",
+   "quote": "The periodic law, first recognised by Dmitri Mendeleev, states that the properties of elements are a periodic function of their atomic numbers.",
+   "problem": "Mendeleev's periodic law was based on atomic weights; the atomic-number formulation was established later by Henry Moseley.",
+   "correction": "The periodic law, first recognised by Mendeleev and refined by Moseley, states that element properties are a periodic function of atomic numbers.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Mendeleev's periodic law based on atomic weights; Moseley refined to atomic numbers. Correction correct.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
+   "quote": "Indian Railways' participation in UIC working groups influences the adoption of ETCS Level 2 specifications in the Kavach deployment roadmap",
+   "problem": "Kavach is an indigenous Automatic Train Protection system; ETCS Level 2 is being adopted for high-speed rail corridors, not for Kavach.",
+   "correction": "Indian Railways' participation in UIC working groups influences the adoption of ETCS Level 2 specifications in high-speed rail projects.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Kavach is indigenous ATP based on ETCS L1; ETCS L2 adoption is for high-speed rail corridors, not Kavach. Correction accurately reflects this.",
+   "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
+   "quote": "the Railway Safety Commission's statutory rules",
+   "problem": "The statutory safety authority is the Commissioner of Railway Safety, not a 'Railway Safety Commission'.",
+   "correction": "the Commissioner of Railway Safety's statutory rules",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Statutory safety authority is Commissioner of Railway Safety (CRS), not 'Railway Safety Commission'. Correction is accurate.",
+   "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
+   "quote": "the Railway Safety Commission's 2022 amendment",
+   "problem": "The statutory safety authority is the Commissioner of Railway Safety, not a 'Railway Safety Commission'.",
+   "correction": "the Commissioner of Railway Safety's 2022 amendment",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Same as (4); 'Railway Safety Commission' does not exist. Correction to Commissioner of Railway Safety is accurate.",
+   "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
+   "quote": "The 2021 amendment introduced provisions for “Railway Land Development Authority” empowerment",
+   "problem": "Railway Land Development Authority (RLDA) was established by the Railways (Amendment) Act, 2005, not by a 2021 amendment.",
+   "correction": "The 2005 amendment introduced provisions for “Railway Land Development Authority” empowerment",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "RLDA created by Railways (Amendment) Act 2005; 2021 amendment unrelated.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
+   "quote": "the Ministry of External Affairs’ “MEA Weekly”",
+   "problem": "The Ministry of External Affairs does not publish a periodical titled “MEA Weekly”; its regular public outputs are press releases and weekly media briefings.",
+   "correction": "MEA press releases",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "MEA has no 'MEA Weekly'; regular outputs are press releases and weekly briefings.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-computer-awareness.html",
+   "quote": "command substitution (`(…)`)",
+   "problem": "Command substitution in bash uses `$(...)` or backticks, not parentheses alone. Parentheses `(...)` create a subshell but do not perform command substitution.",
+   "correction": "command substitution (`$(...)`)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Parentheses `(...)` create a subshell; command substitution requires `$(...)` or backticks. Correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-general-science.html",
+   "quote": "Q K → reverse reaction proceeds",
+   "problem": "Missing relational operator; should be Q > K for reverse reaction (and forward condition Q < K is omitted).",
+   "correction": "Q > K → reverse reaction proceeds",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original 'Q K' lacks a relational operator; 'Q > K' correctly indicates reverse reaction direction per Le Chatelier's principle.",
+   "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-general-science.html",
+   "quote": "fold change = 2 –ΔΔC t",
+   "problem": "Incorrect formula notation; should be 2 raised to the power of -ΔΔCt.",
+   "correction": "fold change = 2^(-ΔΔCt)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original '2 –ΔΔC t' implies subtraction; correct qPCR fold-change formula is 2 raised to power -ΔΔCt (Livak method).",
+   "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-computer-awareness.html",
+   "quote": "Admission control (RSVP, DiffServ) reserves resources before flow establishment",
+   "problem": "DiffServ does not reserve resources per flow; it provides per-hop QoS without admission control",
+   "correction": "Admission control (RSVP) reserves resources before flow establishment; DiffServ provides per-hop QoS",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "RSVP does per-flow admission control; DiffServ is class-based per-hop QoS without flow reservation. Correction accurately separates them.",
+   "applied": false
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-computer-awareness.html",
+   "quote": "Both implement end‑to‑end checksums (typically Fletcher‑4 or SHA‑256) for every block",
+   "problem": "Btrfs typically uses crc32c, not Fletcher‑4 or SHA‑256",
+   "correction": "Both implement end‑to‑end checksums (ZFS: Fletcher‑4/SHA‑256; Btrfs: crc32c) for every block",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "ZFS uses Fletcher-4/SHA-256; Btrfs defaults to crc32c. Original incorrectly attributed Fletcher-4/SHA-256 to both.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-computer-awareness.html",
+   "quote": "OpenFlow (first standardized by the Open Networking Foundation in 2009)",
+   "problem": "OpenFlow was first standardized in 2009 by the OpenFlow consortium; the Open Networking Foundation was founded in 2011",
+   "correction": "OpenFlow (first standardized in 2009 by the OpenFlow consortium)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "OpenFlow 1.0 standardized by OpenFlow Consortium in 2009; ONF founded 2011. Original misattributed to ONF.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/general-awareness/lesson-general-science.html",
+   "quote": "Thin‑film technologies (CdTe, CIGS, amorphous Si) offer lower cost and flexibility but lower efficiency (10–13 %).",
+   "problem": "The efficiency range 10–13% is incorrect for CdTe and CIGS; CdTe modules achieve ~18–19%, CIGS ~15–17%, while amorphous Si is ~6–8%.",
+   "correction": "Thin‑film technologies (CdTe, CIGS, amorphous Si) offer lower cost and flexibility but efficiencies vary widely (6–19 %).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original 10–13% range is outdated: CdTe modules ~18–19%, CIGS ~15–17%, a-Si ~6–8%. Corrected 6–19% accurately spans commercial efficiencies.",
+   "applied": false
   }
  ]
 }
