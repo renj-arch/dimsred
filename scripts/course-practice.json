@@ -316239,6 +316239,87 @@
         }
       ],
       "sol": "Sample proportion p̂ = 230/400 = 0.575. Standard error = √[p̂(1−p̂)/n] = √[0.575×0.425/400] ≈ 0.0247. Margin of error = 1.96 × 0.0247 ≈ 0.0485. Confidence interval = 0.575 ± 0.0485 = (0.5265, 0.6235), which rounds to (0.527, 0.623)."
+    },
+    {
+      "id": 111,
+      "text": "The average number of customers arriving at a service counter is 6 per hour. The inter‑arrival time follows an exponential distribution. What is the probability that the waiting time until the next customer exceeds 15 minutes?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0.223",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "0.368",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "0.135",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.500",
+          "c": false
+        }
+      ],
+      "sol": "The arrival rate λ = 6 per hour. The waiting time T (in hours) is exponential with mean 1/λ = 1/6 hour = 10 minutes. For an exponential distribution, P(T > t) = e^(−λt). Here t = 15 minutes = 0.25 hour. So P(T > 0.25) = e^(−6 × 0.25) = e^(−1.5) ≈ 0.2231. The other options correspond to e^(−1) ≈ 0.368, e^(−2) ≈ 0.135, and 0.5 (the median). Thus the correct probability is 0.223."
+    },
+    {
+      "id": 112,
+      "text": "Component lifetimes are exponentially distributed with mean 1000 hours. A random sample of 36 components is taken. Using the Central Limit Theorem, what is the approximate probability that the sample mean lifetime exceeds 1050 hours?",
+      "options": [
+        {
+          "l": "a",
+          "t": "0.382",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "0.618",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "0.500",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "0.274",
+          "c": false
+        }
+      ],
+      "sol": "For an exponential distribution with mean μ = 1000, the variance is μ² = 1,000,000. The sample mean of n = 36 components is approximately normal with mean 1000 and standard error σ/√n = 1000/√36 = 1000/6 ≈ 166.67. The z‑score for 1050 is (1050 − 1000) / 166.67 = 50 / 166.67 ≈ 0.30. The upper‑tail probability P(Z > 0.30) = 1 − Φ(0.30) ≈ 1 − 0.6179 = 0.3821. The other options are the lower tail (0.618), the median (0.500), and a value for z ≈ 0.60 (0.274). Hence the required probability is 0.382."
+    },
+    {
+      "id": 113,
+      "text": "A study measures the effect of a training program on 8 employees. The differences (after − before) in performance scores are: 5, −2, 8, 3, −1, 6, 4, −3. Using the Wilcoxon signed‑rank test, what is the value of the test statistic W⁺ (sum of positive signed ranks)?",
+      "options": [
+        {
+          "l": "a",
+          "t": "29.5",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "25.5",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "31.0",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "27.0",
+          "c": false
+        }
+      ],
+      "sol": "First, discard zero differences (none). Take absolute values: 5, 2, 8, 3, 1, 6, 4, 3. Rank them from smallest to largest, assigning average ranks for ties: 1→1, 2→2, 3→3.5 (two 3s), 4→5, 5→6, 6→7, 8→8. Attach the original signs: +5 (rank 6), −2 (rank 2), +8 (rank 8), +3 (rank 3.5), −1 (rank 1), +6 (rank 7), +4 (rank 5), −3 (rank 3.5). Sum the ranks with positive signs: 6 + 8 + 3.5 + 7 + 5 = 29.5. Thus W⁺ = 29.5. The other options result from incorrect ranking (e.g., ignoring ties gives 31.0), omitting a positive difference (25.5), or mis‑assigning signs (27.0)."
     }
   ],
   "gs/science-tech-prelims": [
