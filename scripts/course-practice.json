@@ -152235,6 +152235,141 @@
         }
       ],
       "sol": "The saturated model contains a three‑factor interaction term with (I-1)(J-1)(K-1) free parameters (due to identifiability constraints). Removing this term reduces the parameter count by exactly that amount. Hence the difference in the number of free parameters between the saturated and the no‑three‑factor‑interaction model is (I-1)(J-1)(K-1), which is the degrees of freedom for the G² test. The other options correspond to total cells minus one, main‑effect parameters, or two‑factor interaction parameters."
+    },
+    {
+      "id": 124,
+      "text": "Which entropy condition characterises a Donsker class of functions in empirical process theory?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Polynomial growth of uniform covering numbers",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Finiteness of the bracketing integral",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Pointwise convergence of the empirical process",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Zero VC dimension",
+          "c": false
+        }
+      ],
+      "sol": "A class ℱ is Donsker if the bracketing integral ∫₀¹ √log N[ ](ε,ℱ,L₂(P)) dε is finite. This condition ensures asymptotic equicontinuity and a Gaussian limit in ℓ∞(ℱ). Polynomial covering numbers give VC‑type classes, which are sufficient but not necessary. Pointwise convergence alone does not guarantee the uniform CLT. Zero VC dimension is unrelated to the Donsker property."
+    },
+    {
+      "id": 125,
+      "text": "In the de‑biased Lasso, the matrix Θ is constructed to approximate which quantity?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The covariance matrix of X",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The precision matrix of X",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The design matrix X",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The penalty matrix",
+          "c": false
+        }
+      ],
+      "sol": "The de‑biased (desparsified) Lasso uses Θ ≈ (XᵀX/n)⁻¹, i.e. an estimator of the precision matrix. With this approximation, √n(β̂_db_j − β₀_j) converges to N(0,σ²Θ_jj). The covariance matrix is the inverse of the precision matrix, while the design matrix and penalty matrix play different roles in the original Lasso optimisation."
+    },
+    {
+      "id": 126,
+      "text": "For a valid back‑door adjustment set in a directed acyclic graph, which condition must be satisfied?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The set contains all ancestors of the treatment",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The set contains no descendants of the treatment",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The set includes all mediators between treatment and outcome",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The set excludes all confounders",
+          "c": false
+        }
+      ],
+      "sol": "The back‑door criterion requires that the adjustment set blocks every back‑door path from treatment to outcome and contains no descendant of the treatment. Including a descendant would open a collider path and bias the effect estimate. Ancestors, mediators, or confounders may be included or excluded depending on the graph structure, but the prohibition on descendants is mandatory."
+    },
+    {
+      "id": 127,
+      "text": "Which alpha‑spending function yields conservative early boundaries in a group sequential design?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Pocock",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "O’Brien‑Fleming",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Constant",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Linear",
+          "c": false
+        }
+      ],
+      "sol": "The O’Brien‑Fleming alpha‑spending function allocates very little type‑I error at early looks, producing high critical boundaries early and lower ones later. This makes early stopping for efficacy difficult, hence conservative early. The Pocock function spends alpha uniformly across looks, giving constant boundaries. Constant and linear spending are not standard names for these classic designs."
+    },
+    {
+      "id": 128,
+      "text": "Under a Dirichlet process prior with concentration parameter α, the prior expected number of clusters among n observations is approximately:",
+      "options": [
+        {
+          "l": "a",
+          "t": "α n",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "α log n",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "n/α",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "log n / α",
+          "c": false
+        }
+      ],
+      "sol": "For a Dirichlet process DP(α,G₀), the Chinese restaurant process predictive rule gives E[K_n] = α ∑_{i=1}^{n} 1/(α+i−1) ≈ α log n for large n. The concentration parameter α controls the rate of new cluster creation; larger α yields more clusters, but growth is logarithmic, not linear or inverse."
     }
   ],
   "opt-statistics/paper1": [
