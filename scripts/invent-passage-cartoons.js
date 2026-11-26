@@ -191,6 +191,16 @@ function validSvg(svg) {
   if (/<image\b/i.test(svg)) return 'external image';
   if (svg.length > 45000) return 'too large';
   if (!/<rect/i.test(svg)) return 'no background';
+  // A label outside the canvas is clipped, which is what the repair pass had
+  // to fix 700 times. Refuse it at generation instead.
+  var vbm = /viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/i.exec(svg);
+  var W = vbm ? +vbm[1] : 560, H = vbm ? +vbm[2] : 320;
+  var oob = false;
+  var tre = /<text\b[^>]*\bx="(-?[\d.]+)"[^>]*\by="(-?[\d.]+)"/g, tm;
+  while ((tm = tre.exec(svg))) {
+    if (+tm[1] < 6 || +tm[1] > W - 6 || +tm[2] < 12 || +tm[2] > H - 4) { oob = true; break; }
+  }
+  if (oob) return 'label outside canvas';
   return '';
 }
 
