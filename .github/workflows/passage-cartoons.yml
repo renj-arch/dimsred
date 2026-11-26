@@ -21,11 +21,11 @@ on:
       max:
         description: 'Max cartoons per lesson'
         required: false
-        default: '8'
+        default: '10'
       granularity:
         description: 'h2 (major sections) or h3 (every subsection)'
         required: false
-        default: 'h2'
+        default: 'h3'
       file:
         description: 'One lesson path (comma-separated), or blank for all'
         required: false
@@ -69,8 +69,8 @@ jobs:
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           LIMIT: ${{ github.event.inputs.limit || '15' }}
-          MAX: ${{ github.event.inputs.max || '8' }}
-          GRAN: ${{ github.event.inputs.granularity || 'h2' }}
+          MAX: ${{ github.event.inputs.max || '10' }}
+          GRAN: ${{ github.event.inputs.granularity || 'h3' }}
           FILE: ${{ github.event.inputs.file || '' }}
         run: |
           ARGS="--limit $LIMIT --max $MAX --granularity $GRAN --workers 4 --deadline 70"
@@ -97,8 +97,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIMIT: ${{ github.event.inputs.limit || '15' }}
-          MAX: ${{ github.event.inputs.max || '8' }}
-          GRAN: ${{ github.event.inputs.granularity || 'h2' }}
+          MAX: ${{ github.event.inputs.max || '10' }}
+          GRAN: ${{ github.event.inputs.granularity || 'h3' }}
         run: |
           set -uo pipefail
           REMAIN=$(node scripts/invent-passage-cartoons.js --remaining --granularity "$GRAN" | tail -1)
