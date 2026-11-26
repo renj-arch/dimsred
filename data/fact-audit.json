@@ -1,248 +1,40 @@
 {
- "generatedAt": "2026-11-26T15:09:59.438Z",
+ "generatedAt": "2026-11-26T15:47:52.915Z",
  "lessonsAudited": 11,
- "flagged": 24,
- "applied": 4,
- "modelCalls": 21,
- "modelFailures": 23,
+ "flagged": 3,
+ "applied": 2,
+ "modelCalls": 17,
+ "modelFailures": 16,
  "deadlineHit": true,
  "problems": [
   {
-   "file": "neet/course/physics/lesson-semiconductors.html",
-   "quote": "insulators ( 3 eV)",
-   "problem": "Typical band gap for insulators is >4 eV (e.g., diamond 5.5 eV, SiO2 ~9 eV); 3 eV is more characteristic of wide-bandgap semiconductors.",
-   "correction": "insulators (>4 eV)",
+   "file": "neet/course/physics/lesson-work-energy-power.html",
+   "quote": "Positive root x = [6.406 + √(6.406² + 4·250·9.61)] / (2·250) ≈ 0.203 m.",
+   "problem": "The quadratic solution yields approximately 0.209 m, not 0.203 m.",
+   "correction": "Positive root x = [6.406 + √(6.406² + 4·250·9.61)] / (2·250) ≈ 0.209 m.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "3 eV is typical for wide-bandgap semiconductors (GaN, SiC), not insulators; standard texts classify insulators as >4–5 eV.",
+   "verifierReason": "Original approx 0.203 m is incorrect; correct value is ~0.209 m.",
    "applied": false
   },
   {
-   "file": "neet/course/physics/lesson-units-and-motion.html",
-   "quote": "The kilogram, uniquely among the base units, was redefined in 2019",
-   "problem": "The kilogram was not the only base unit redefined in 2019; the ampere, kelvin, and mole were also redefined that year.",
-   "correction": "The kilogram, the only base unit defined by a physical artefact, was redefined in 2019",
+   "file": "rbi/course/ga/lesson-banking-awareness.html",
+   "quote": "cooling‑off period of at least three days",
+   "problem": "The RBI mandates a cooling‑off period of 48 hours (two days), not three days.",
+   "correction": "cooling‑off period of at least 48 hours",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original falsely claims kilogram was only base unit redefined in 2019; four were redefined. Correction correctly notes kilogram was only artefact-defined base unit.",
+   "verifierReason": "RBI’s Digital Lending Guidelines mandate a 48‑hour cooling‑off period, not three days.",
    "applied": true
   },
   {
-   "file": "neet/course/physics/lesson-units-and-motion.html",
-   "quote": "at² carries dimensions of length · time⁻¹, not velocity",
-   "problem": "The term at² has dimensions of length (L), not length·time⁻¹ (L/T).",
-   "correction": "at² carries dimensions of length, not velocity",
+   "file": "rbi/course/quant/lesson-percentage.html",
+   "quote": "it is higher in early years",
+   "problem": "The WDV rate d is constant each year; it is the depreciation amount that is higher in early years, not the rate.",
+   "correction": "depreciation is higher early",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "at² = acceleration × time² = (L/T²)×T² = L, not L/T. Correction states dimensions of length, not velocity, which is correct.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-thermal-physics.html",
-   "quote": "the heat lost by the hotter body equals the heat gained by the colder body, provided no phase change occurs",
-   "problem": "Conservation of energy holds even during phase changes; the condition 'provided no phase change occurs' incorrectly implies the principle fails if phase changes occur.",
-   "correction": "the heat lost by the hotter body equals the heat gained by the colder body",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "The principle of calorimetry (heat lost = heat gained) holds for isolated systems regardless of phase changes; the condition incorrectly restricts the principle.",
-   "applied": true
-  },
-  {
-   "file": "neet/course/physics/lesson-properties-of-matter.html",
-   "quote": "n 1 shear‑thickening",
-   "problem": "Missing inequality sign; should be 'n > 1' for shear-thickening.",
-   "correction": "n > 1 shear‑thickening",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Power-law index n>1 defines shear-thickening; original missing '>' sign.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-properties-of-matter.html",
-   "quote": "Λ = (δ*²/η) (dp/dx) reaching a critical value Λ_sep ≈ −0.09 (Thwaites method)",
-   "problem": "Thwaites method uses λ = (θ²/ν) (dU/dx) with λ_sep ≈ -0.09, not Λ with δ* and dp/dx.",
-   "correction": "λ = (θ²/ν) (dU/dx) reaching a critical value λ_sep ≈ −0.09 (Thwaites method)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Thwaites parameter is λ=(θ²/ν)(dU/dx) with λ_sep≈-0.09; Λ with δ* and dp/dx is different.",
-   "applied": true
-  },
-  {
-   "file": "neet/course/physics/lesson-properties-of-matter.html",
-   "quote": "subsonic (M 1), and hypersonic (M ≫ 1)",
-   "problem": "Missing inequality for subsonic (should be M < 1) and missing supersonic regime (M > 1).",
-   "correction": "subsonic (M < 1), supersonic (M > 1), and hypersonic (M ≫ 1)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Subsonic requires M<1; supersonic (M>1) regime missing between subsonic and hypersonic.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-properties-of-matter.html",
-   "quote": "the Scruton number Sc = 2 m* ζ (ζ = damping ratio) predicts the peak amplitude",
-   "problem": "Scruton number uses mass ratio m* = m/(ρ_f D^2) (mass per unit length), not the density ratio ρ_f/ρ_s defined earlier as m*.",
-   "correction": "the Scruton number Sc = 2 m ζ / (ρ_f D^2) predicts the peak amplitude",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Scruton number Sc=2mζ/(ρ_f D^2) uses mass per unit length; correction replaces erroneous density ratio m*",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "Subsonic: v s s > v (M > 1)",
-   "problem": "Subsonic means source speed less than wave speed (M < 1), not greater.",
-   "correction": "Subsonic: v_s < v (M < 1)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original states subsonic as M>1, but subsonic means M<1. Correction correct.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "The sign determines direction: for +x direction, + for x direction.",
-   "problem": "The sign convention for a wave traveling in +x direction is ωt - kx (minus sign before kx), not plus.",
-   "correction": "For +x direction, use ωt - kx; for -x direction, use ωt + kx.",
-   "confidence": "medium",
-   "verified": true,
-   "verifierReason": "Original sign convention ambiguous/incorrect; correction gives standard ωt−kx for +x direction."
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "If beat frequency increases after loading, unknown known.",
-   "problem": "Loading decreases frequency; if beat frequency increases after loading the unknown fork, the unknown frequency is lower than the known frequency (unknown < known). The phrase 'unknown known' is ambiguous and likely incorrect.",
-   "correction": "If beat frequency increases after loading, unknown < known.",
-   "confidence": "medium",
-   "verified": true,
-   "verifierReason": "Loading decreases frequency; if beats increase, unknown frequency is lower than known. Correction accurate."
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "Use v = ( RT/M) for gases.",
-   "problem": "The speed of sound in gases is v = sqrt(γRT/M), not RT/M. Missing adiabatic index γ and square root.",
-   "correction": "Use v = sqrt(γRT/M) for gases.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Speed of sound in gas requires sqrt(γRT/M); original missing sqrt and γ.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "Remember v T (at constant composition).",
-   "problem": "Speed of sound in gases is proportional to the square root of absolute temperature, not directly proportional.",
-   "correction": "Remember v ∝ sqrt(T) (at constant composition).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "v ∝ sqrt(T) for gases, not direct proportion. Correction correct.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "v t = v 0 (1 + t/273) v 0 + 0.6t.",
-   "problem": "The formula v_t = v_0 (1 + t/273) is incorrect; the correct dependence is v_t = v_0 sqrt(1 + t/273) ≈ v_0 (1 + t/546). The linear approximation v_0 + 0.6t is acceptable.",
-   "correction": "v_t = v_0 sqrt(1 + t/273) ≈ v_0 + 0.6t.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Exact formula v_t = v_0 sqrt(1+t/273); linear approx v_0+0.6t is valid. Original linear formula wrong.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "for deep water (depth > /2), v = (g /2 )",
-   "problem": "The formula for deep water wave speed is v = sqrt(gλ/2π) (or v = sqrt(g/k)), not (gλ/2π). Missing square root and λ symbol.",
-   "correction": "for deep water (depth > λ/2), v = sqrt(gλ/2π)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Deep water wave speed v = sqrt(gλ/2π); original missing sqrt and λ. Correction correct.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-waves.html",
-   "quote": "for shallow water (depth << ), v = (gh)",
-   "problem": "The formula for shallow water wave speed is v = sqrt(gh), not gh. Missing square root.",
-   "correction": "for shallow water (depth << λ), v = sqrt(gh)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Shallow water wave speed v = sqrt(gh); original missing sqrt. Correction correct.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/english/lesson-fillers-cloze.html",
-   "quote": "The pronoun 'it' in the second sentence refers back to the rate cut",
-   "problem": "The example second sentence is '______ is expected to boost lending.' which contains a blank, not the pronoun 'it'. The explanation incorrectly describes the example.",
-   "correction": "The blank in the second sentence must be a noun phrase referring back to the rate cut; the example contains no pronoun 'it'.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original statement misidentifies a pronoun; correction accurately notes the blank must be a noun phrase.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/english/lesson-fillers-cloze.html",
-   "quote": "'tighten the repo rate' is a fixed phrase in policy discourse",
-   "problem": "In central banking terminology, 'tighten' collocates with 'monetary policy' or 'stance', not with 'repo rate'. The standard verb for increasing the repo rate is 'raise' or 'increase'.",
-   "correction": "'raise the repo rate' is the standard collocation; 'tighten' collocates with 'monetary policy' or 'stance'.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "‘Tighten the repo rate’ is not standard; ‘raise/increase the repo rate’ is the correct collocation.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-thermodynamics.html",
-   "quote": "if &Delta;G 0, the process is spontaneous; if &Delta;G = 0, the system is at equilibrium; if &Delta;G 0, the process is non-spontaneous",
-   "problem": "Missing inequality signs: first condition should be ΔG < 0, third should be ΔG > 0",
-   "correction": "if ΔG < 0, the process is spontaneous; if ΔG = 0, the system is at equilibrium; if ΔG > 0, the process is non-spontaneous",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original missing inequality signs; correction matches standard ΔG criteria for spontaneity/equilibrium.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-thermodynamics.html",
-   "quote": "For an irreversible (spontaneous) process, &Delta;S universe 0",
-   "problem": "Missing '>' sign; should be ΔS_universe > 0",
-   "correction": "For an irreversible (spontaneous) process, ΔS_universe > 0",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original missing '>'; second law requires ΔS_universe > 0 for irreversible spontaneous processes.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-thermodynamics.html",
-   "quote": "Carnot efficiency: max = 1 T 2 /T 1 (both temperatures in Kelvin)",
-   "problem": "Missing minus sign in efficiency formula; should be 1 - T2/T1",
-   "correction": "Carnot efficiency: max = 1 - T2/T1 (both temperatures in Kelvin)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original missing minus sign; Carnot efficiency is 1 - Tc/Th.",
-   "applied": false
-  },
-  {
-   "file": "neet/course/physics/lesson-thermodynamics.html",
-   "quote": "Coefficient of Performance (COP) = Q 2 /W = Q 2 /(Q 1 Q 2 ). For a Carnot refrigerator: COP = T 2 /(T 1 T 2 )",
-   "problem": "Missing minus signs in denominators; should be Q1 - Q2 and T1 - T2",
-   "correction": "Coefficient of Performance (COP) = Q2/W = Q2/(Q1 - Q2). For a Carnot refrigerator: COP = T2/(T1 - T2)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original missing minus in denominators; COP for refrigerator is Qc/(Qh-Qc) = Tc/(Th-Tc).",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/english/lesson-grammar.html",
-   "quote": "Raising can also be object‑to‑subject (e.g., I believe him to be honest)",
-   "problem": "Misclassifies the ECM verb 'believe' as a raising verb and describes object-to-subject raising, which is not a standard raising construction.",
-   "correction": "Raising is subject-to-subject; 'I believe him to be honest' illustrates ECM, not raising.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misclassifies ECM verb 'believe' as raising; correction accurately distinguishes subject-to-subject raising from ECM.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/english/lesson-reading-comprehension.html",
-   "quote": "The inference is valid because it is a direct logical consequence of the stated conditional relationship.",
-   "problem": "The example commits the fallacy of denying the antecedent: from 'If A then B' and 'not A', one cannot validly infer 'not B'. The inference is not logically necessary.",
-   "correction": "The inference is not logically valid; denying the antecedent does not guarantee the consequent is false.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original claims validity for denying the antecedent, a formal fallacy. Correction correctly identifies invalidity.",
+   "verifierReason": "In WDV method, depreciation rate is constant; depreciation amount is higher in early years. Correction fixes subject from rate to amount.",
    "applied": true
   }
  ]
