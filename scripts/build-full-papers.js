@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const researchStore = require('./lib/research-store');
 const qd = require('./lib/question-dedupe');
+const pq = require('./lib/paper-quality');
 
 const ROOT = path.resolve(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'papers-data');
@@ -234,6 +235,19 @@ function run() {
       console.error('::warning::' + msg + ' - pre-existing paper, left for the cleanup pass');
     }
     const dir = path.join(ROOT, data.folder, 'mock-tests');
+    // Invalid options (empty / duplicate / placeholder "A) A ... D) D") must
+    // never reach a page. A freshly assembled paper is refused; a pre-existing
+    // one is reported and left to the repair pass.
+    const badOpts = (data.questions || []).filter(function (q) { return pq.badQuestion(q); });
+    if (badOpts.length) {
+      const msg = f + ' carries ' + badOpts.length + ' question(s) with invalid options';
+      if (onlySlug) {
+        console.error('::error::' + msg + ' - refusing to publish it in this state');
+        process.exitCode = 1;
+        return;
+      }
+      console.error('::warning::' + msg + ' - pre-existing paper, left for the repair pass');
+    }
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, data.slug + '.html'), build(data), 'utf-8');
     const state = updateIndex(data);
