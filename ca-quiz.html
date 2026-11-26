@@ -92,8 +92,17 @@ a.back-link:hover{text-decoration:underline}
           source: q.source || 'PIB'
         };
       }).filter(function(q){
-        return q.question.length >= 20 && q.options.length >= 3 && q.correct >= 0 &&
-          new Set(q.options.map(function(o){ return o.trim().toLowerCase(); })).size === q.options.length;
+        if (q.question.length < 25) return false;
+        if (/\.\.\.\s*$/.test(q.question)) return false;
+        if (q.options.length < 3 || q.correct < 0) return false;
+        // Reject options that differ only by punctuation/ordinal suffix, and
+        // number-only options (date/number fill-blanks like the "Money Market
+        // Operations as on November _____ 2026" item: 19 / 20 / 19, / 19th).
+        var keys = q.options.map(function(o){ return String(o).trim().toLowerCase().replace(/\b(st|nd|rd|th)\b/g, '').replace(/[^a-z0-9]/g, ''); });
+        if (new Set(keys).size !== keys.length) return false;
+        if (keys.every(function(k){ return /^\d{1,6}$/.test(k); })) return false;
+        if (/_____/.test(q.question) && keys.every(function(k){ return /^\d{1,6}$/.test(k); })) return false;
+        return true;
       });
     }
     // data/quiz.json is refreshed by the daily PIB lane; the old
