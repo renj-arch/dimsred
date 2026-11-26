@@ -14,6 +14,8 @@
   function paperDataPath() {
     return 'papers-data/' + cfg().paper + '.json';
   }
+  // ?answers=1 turns the test into a study mode that reveals every answer.
+  var ANSWERS_MODE = /(?:^|[?&])answers=1/.test(String(location.search || ''));
 
   var state = {
     questions: [],
@@ -37,6 +39,7 @@
     nextBtn: document.getElementById('nextBtn'),
     prevBtn: document.getElementById('prevBtn'),
     submitBtn: document.getElementById('submitBtn'),
+    revealBtn: document.getElementById('revealBtn'),
     resultPanel: document.getElementById('resultPanel'),
     scoreDisplay: document.getElementById('scoreDisplay'),
     percentileDisplay: document.getElementById('percentileDisplay'),
@@ -157,11 +160,36 @@
         els.options.appendChild(label);
       });
     }
+    var _sb = document.getElementById('solutionBox'); if (_sb && _sb.parentNode) _sb.parentNode.removeChild(_sb);
     if (els.markBtn) {
       els.markBtn.textContent = state.marked[i] ? 'Unmark' : 'Mark';
     }
     updateChipStates();
+    if (ANSWERS_MODE) revealAnswer();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function revealAnswer() {
+    if (!state.questions.length) return;
+    var q = state.questions[state.current];
+    if (!q) return;
+    if (els.options) {
+      var labels = els.options.querySelectorAll('label');
+      for (var j = 0; j < labels.length; j++) {
+        if (j === q.correct) {
+          labels[j].style.borderColor = '#34d399';
+          labels[j].style.background = 'rgba(52,211,153,.12)';
+        }
+      }
+    }
+    var sol = document.getElementById('solutionBox');
+    if (!sol) {
+      sol = document.createElement('div');
+      sol.id = 'solutionBox';
+      sol.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);font-size:.9em;color:#a1a1aa;line-height:1.6;text-align:left';
+      if (els.options && els.options.parentNode) els.options.parentNode.insertBefore(sol, els.options.nextSibling);
+    }
+    sol.innerHTML = '<strong style="color:#34d399">Answer: ' + String.fromCharCode(65 + q.correct) + ') ' + (q.options[q.correct] || '') + '</strong>' + (q.solution ? '<br>' + q.solution : '');
   }
 
   function selectOption(qIndex, optIndex) {
@@ -288,6 +316,7 @@
     if (els.nextBtn) els.nextBtn.onclick = next;
     if (els.prevBtn) els.prevBtn.onclick = prev;
     if (els.submitBtn) els.submitBtn.onclick = submitTest;
+    if (els.revealBtn) els.revealBtn.onclick = revealAnswer;
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { wire(); loadPaper(); });
