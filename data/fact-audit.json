@@ -1,91 +1,358 @@
 {
- "generatedAt": "2026-11-26T17:09:28.735Z",
- "lessonsAudited": 6,
- "flagged": 8,
- "applied": 6,
- "modelCalls": 7,
- "modelFailures": 23,
+ "generatedAt": "2026-11-26T18:28:30.519Z",
+ "lessonsAudited": 15,
+ "flagged": 35,
+ "applied": 13,
+ "modelCalls": 29,
+ "modelFailures": 21,
  "deadlineHit": true,
  "problems": [
   {
-   "file": "rrb-station-master/course/general-awareness/lesson-geography.html",
-   "quote": "Son valley (Singrauli, Korba)",
-   "problem": "Korba coalfield is in the Mahanadi basin, not the Son valley",
-   "correction": "Son valley (Singrauli) and Mahanadi basin (Korba)",
-   "confidence": "high",
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
+   "problem": "The sun is directly overhead at noon only at the subsolar point (between the Tropics); at most latitudes the sun is not overhead and shadows exist, though shortest.",
+   "correction": "At noon, the sun is at its highest altitude; shadows are shortest but not necessarily absent.",
+   "confidence": "medium",
    "verified": true,
-   "verifierReason": "Korba coalfield is in Mahanadi basin, not Son valley; correction accurately separates them.",
-   "applied": true
+   "verifierReason": "Original statement false; correction accurately describes sun's altitude and shadows"
   },
   {
-   "file": "rrb-station-master/course/general-awareness/lesson-geography.html",
-   "quote": "roughly three-quarters of installed capacity",
-   "problem": "Coal accounts for about 50% of India's installed electricity capacity, not three-quarters",
-   "correction": "about half of installed capacity",
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "For a morning problem at 09:00 local solar time, the Sun’s azimuth is 090° – 45° = 045° (North‑East), so shadows fall towards 225° (South‑West).",
+   "problem": "At 09:00 local solar time in the northern hemisphere, the Sun's azimuth is approximately 135° (South‑East), not 045°; the calculation incorrectly uses 090° as the noon azimuth instead of 180°.",
+   "correction": "For a morning problem at 09:00 local solar time, the Sun’s azimuth is approximately 135° (South‑East), so shadows fall towards 315° (North‑West).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Coal's share of India's installed capacity is ~50%, not 75%; 'about half' is correct.",
+   "verifierReason": "Original azimuth calculation incorrect; correction gives realistic azimuth and shadow direction",
    "applied": false
   },
   {
-   "file": "rrb-station-master/course/general-awareness/lesson-indian-economy.html",
-   "quote": "RBI’s 2023 “Concept Note on CBDC”",
-   "problem": "The Concept Note was released in October 2022, not 2023",
-   "correction": "RBI’s October 2022 “Concept Note on CBDC”",
+   "file": "rrb-station-master/course/reasoning/lesson-direction-distance.html",
+   "quote": "Distance each travelled: A = 10 km, B = 10 km.",
+   "problem": "B's speed is 5√2 km/h, so in 2 hours B travels 10√2 km, not 10 km.",
+   "correction": "Distance each travelled: A = 10 km, B = 10√2 km.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Concept Note released Oct 2022, not 2023; correction accurate.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/maths/lesson-average.html",
-   "quote": "the distances from the mean are inversely proportional to the quantities",
-   "problem": "This property holds only for two components; for three or more components, distances from the mean are not simply inversely proportional to quantities.",
-   "correction": "the distances from the mean are inversely proportional to the quantities only for two components",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Alligation rule: inverse proportion of distances to quantities holds only for two components; original statement lacks this qualification.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/maths/lesson-average.html",
-   "quote": "the average rate of return over multiple periods with varying principal amounts is the weighted arithmetic mean of the period rates",
-   "problem": "For multiple periods with varying principal, the correct average is the internal rate of return (dollar-weighted) or time-weighted geometric mean, not the weighted arithmetic mean.",
-   "correction": "the average rate of return over multiple periods with varying principal amounts is the internal rate of return",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Weighted arithmetic mean is incorrect for multi-period returns with varying principal; internal rate of return (dollar-weighted) is the correct average.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-indian-polity.html",
-   "quote": "Articles 239B‑239E empower the President to make regulations for the peace, progress and good government of UTs without legislatures.",
-   "problem": "Wrong article numbers; the President's power to make regulations for UTs without legislatures is under Article 240, not Articles 239B‑239E.",
-   "correction": "Article 240 empowers the President to make regulations for the peace, progress and good government of UTs without legislatures.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Article 240, not 239B-239E, grants President regulation-making power for UTs without legislatures.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-indian-polity.html",
-   "quote": "The Supreme Court in K. S. Puttaswamy v. Union of India (2017) recognised that effective decentralisation is integral to the federal structure.",
-   "problem": "K.S. Puttaswamy (2017) is the right to privacy judgment; it did not deal with decentralisation or federal structure.",
-   "correction": "The Supreme Court has recognised that effective decentralisation is integral to the federal structure.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Puttaswamy (2017) is privacy judgment; decentralisation-federalism link recognised in other cases (e.g., Krishnamurthy).",
+   "verifierReason": "Distance for B should be 10√2 km given speed 5√2 km/h for 2 h",
    "applied": false
   },
   {
-   "file": "rrb-station-master/course/general-awareness/lesson-indian-polity.html",
-   "quote": "the 2019 reference on the constitutionality of the Citizenship (Amendment) Act, 2019 (the Court refused to entertain the reference as the matter was sub‑judice).",
-   "problem": "There was no presidential reference under Article 143 on the CAA in 2019; the matter was directly challenged in the Supreme Court.",
-   "correction": "No presidential reference on the CAA was made in 2019.",
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "the pair becomes uniquely (18, 30) or (30, 18), making the sum determinable",
+   "problem": "The example incorrectly states that consecutive multiples of 6 with gcd 6 and lcm 180 are (18,30) or (30,18). Actually 18 and 30 have lcm 90, not 180. The correct pair is (30,36) or (36,30).",
+   "correction": "the pair becomes uniquely (30, 36) or (36, 30), making the sum determinable",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "No Article 143 reference on CAA in 2019; challenges were direct writ petitions.",
+   "verifierReason": "18 and 30 are not consecutive multiples of 6; their LCM is 90, not 180. Correct pair is 30 and 36.",
    "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "two statements providing two distinct terms (e.g., a₂ = 7, a₃ = 15) create a system that uniquely determines r, d, and a₁",
+   "problem": "Two terms a₂ and a₃ give only two equations for three unknowns (r, d, a₁), so they do not uniquely determine all three; a third condition (e.g., a₁) is needed.",
+   "correction": "two statements providing two distinct terms (e.g., a₂ = 7, a₃ = 15) are insufficient to uniquely determine r, d, and a₁; a third condition is needed",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Two equations cannot uniquely determine three unknowns (r, d, a₁); a third condition is necessary.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-non-verbal.html",
+   "quote": "the order reversal only occurs when the mirror is on the left",
+   "problem": "Order reversal (left-to-right sequence flip) occurs for both left-side and right-side vertical mirrors. The statement falsely limits it to left-side mirrors only.",
+   "correction": "order reversal occurs for both left and right mirrors",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Vertical mirror reverses left-right order on both sides; correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "add “Q is not third left of P”",
+   "problem": "The negation of the clue \"P sits third to the left of Q\" is incorrectly given as \"Q is not third left of P\". The correct negation is \"P does not sit third to the left of Q\".",
+   "correction": "add “P does not sit third to the left of Q”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "The negation of 'P sits third to the left of Q' is 'P does not sit third to the left of Q', not 'Q is not third left of P' (which negates the converse).",
+   "applied": true
+  },
+  {
+   "file": "rrb-station-master/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "This creates a quadratic relation p_B – p_A = 2k",
+   "problem": "The equation p_B – p_A = 2k is linear in k, not quadratic.",
+   "correction": "This creates a linear relation p_B – p_A = 2k",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Equation p_B - p_A = 2k is degree 1 in k, making it linear, not quadratic.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-fillers-cloze.html",
+   "quote": "The pronoun 'it' in the second sentence refers back to the rate cut",
+   "problem": "The example sentence shows a blank ('______ is expected to boost lending'), not the pronoun 'it'. The explanation refers to a pronoun that does not appear in the given example.",
+   "correction": "The blank in the second sentence must be a noun phrase denoting the rate cut (e.g., 'The move', 'This decision') because a following pronoun like 'it' would refer back to it.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original quote references pronoun 'it' not present in example; correction correctly states blank requires noun phrase for anaphoric reference.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-fillers-cloze.html",
+   "quote": "'tighten the repo rate' is a fixed phrase in policy discourse",
+   "problem": "Central banks 'raise' or 'increase' the repo rate; they 'tighten monetary policy'. 'Tighten the repo rate' is not a standard collocation in policy discourse.",
+   "correction": "'raise the repo rate' is a fixed phrase in policy discourse",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Central banks 'raise' repo rate, not 'tighten' it; 'tighten' applies to policy. Correction uses standard collocation.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "In formal writing, each and every are preferred over each and every as a redundant pair.",
+   "problem": "The sentence is self-contradictory and states the opposite of the correct rule; it claims the redundant phrase 'each and every' is preferred over itself.",
+   "correction": "In formal writing, 'each' or 'every' is preferred over the redundant phrase 'each and every'.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original quote is a meaningless self-comparison; correction accurately reflects standard usage guidance against the redundant pair.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "Raising can also be object-to-subject (e.g., I believe him to be honest), where the embedded subject him receives accusative case from the matrix verb believe",
+   "problem": "The verb 'believe' is an ECM verb, not a raising verb; the example illustrates ECM, not raising.",
+   "correction": "ECM verbs like believe allow object-to-subject structures (e.g., I believe him to be honest), where the embedded subject him receives accusative case from the matrix verb",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original mislabels ECM as raising; correction correctly identifies believe as ECM verb with object-to-subject structure.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "He is believed to be honest (raising)",
+   "problem": "'Believe' is an ECM verb; its passive is ECM, not raising. Raising verbs (e.g., seem) do not passivize.",
+   "correction": "He is believed to be honest (ECM)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Passive of ECM verb believe is not a raising construction; correction accurately reclassifies as ECM.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "*He was persuaded to leave (control — ungrammatical because the controller is the object)",
+   "problem": "The passive of object control verbs like 'persuade' is grammatical (He was persuaded to leave); the ungrammatical case is subject control (e.g., *He was promised to leave).",
+   "correction": "*He was promised to leave (control — ungrammatical because the controller is the subject)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "He was persuaded to leave is grammatical (object control passive); *He was promised to leave is the ungrammatical subject-control passive.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "Data Protection Bill (under consideration)",
+   "problem": "The bill was enacted as the Digital Personal Data Protection Act in August 2023; it is no longer under consideration.",
+   "correction": "Data Protection Act (enacted 2023)",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Bill was enacted as Digital Personal Data Protection Act, 2023; not under consideration."
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "historic gold medal in men’s hockey at the 2020 Tokyo Olympics",
+   "problem": "India won bronze, not gold, in men's hockey at Tokyo 2020; the last hockey gold was in 1980.",
+   "correction": "historic bronze medal in men’s hockey at the 2020 Tokyo Olympics",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "India won bronze, not gold, in men's hockey at Tokyo 2020.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "record‑breaking haul of 28 medals at the 2022 Commonwealth Games",
+   "problem": "India won 61 medals at the 2022 Commonwealth Games, not 28.",
+   "correction": "record‑breaking haul of 61 medals at the 2022 Commonwealth Games",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "India secured 61 medals at the 2022 Commonwealth Games.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "literature (e.g., Mahasweta Devi)",
+   "problem": "Mahasweta Devi never received the Bharat Ratna; she received the Jnanpith Award and Padma Vibhushan.",
+   "correction": "literature (e.g., —)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Mahasweta Devi never received Bharat Ratna; correction removes the claim.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "the 2023 Nobel Prize in Physics was shared by Pierre Agostini, Ferenc Krausz, and Anne L’Huillier",
+   "problem": "These laureates are not Indian; the paragraph claims Indian scientists have been honoured.",
+   "correction": "the 2019 Nobel Prize in Economics was awarded to Abhijit Banerjee",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Abhijit Banerjee (Indian) won the 2019 Nobel Prize in Economics.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "including a historic gold in men’s hockey",
+   "problem": "India's historic gold at Tokyo 2020 was in javelin throw (Neeraj Chopra), not men's hockey.",
+   "correction": "including a historic gold in javelin throw",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "India’s historic gold at Tokyo 2020 was in javelin (Neeraj Chopra).",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "Virat Kohli became the fastest player to reach 8,000 ODI runs in 2021",
+   "problem": "Kohli reached 8,000 ODI runs in 2017, not 2021.",
+   "correction": "Virat Kohli became the fastest player to reach 8,000 ODI runs in 2017",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Kohli reached 8,000 ODI runs in 2017, the fastest at that time.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "swimmer Swati Mohan set a national record in the 200 m butterfly at the 2022 Asian Games",
+   "problem": "No Indian swimmer named Swati Mohan competed at the 2022 Asian Games; the name appears invented.",
+   "correction": "swimmer Sajan Prakash holds the national record in 200 m butterfly",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Swati Mohan does not exist; Sajan Prakash holds the Indian record in 200 m butterfly.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "the order is generally numeral → ordinal → quantifier",
+   "problem": "The correct order of postdeterminers is ordinal before numeral (e.g., 'first three', not 'three first').",
+   "correction": "the order is generally ordinal → numeral → quantifier",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Standard English postdeterminer order is ordinal before cardinal (e.g., 'first three'), not numeral→ordinal.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "the three first chapters (central the + postdeterminers three first )",
+   "problem": "The grammatical order is 'the first three chapters'; ordinal precedes cardinal.",
+   "correction": "the first three chapters (central the + postdeterminers first three)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "'The three first chapters' is ungrammatical; correct order is 'the first three chapters' (ordinal before cardinal).",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "In relative clauses introduced by that , the preposition cannot be stranded",
+   "problem": "Preposition stranding is grammatical with 'that' (e.g., 'The house that I live in'); only pied-piping is blocked.",
+   "correction": "In relative clauses introduced by that, the preposition can be stranded but cannot be pied-piped",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Preposition stranding is grammatical with 'that' ('the house that I live in'); pied-piping is blocked (*'the house in that I live').",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "A phrasal verb consists of a lexical verb plus a particle (e.g., give up) or a preposition (e.g., look after)",
+   "problem": "\"look after\" is a prepositional verb, not a phrasal verb; phrasal verbs are verb+particle only.",
+   "correction": "A phrasal verb consists of a lexical verb plus a particle (e.g., give up); a prepositional verb uses a preposition (e.g., look after)",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Standard linguistic distinction: phrasal verbs take particles (give up), prepositional verbs take prepositions (look after)."
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "but *The child was looked after is standard",
+   "problem": "The asterisk marks the sentence as ungrammatical, but \"The child was looked after\" is grammatical and standard.",
+   "correction": "but The child was looked after is standard",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Asterisk conventionally marks ungrammaticality; the sentence is grammatical so asterisk is erroneous.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "* every book that you read is acceptable, but * every book which you read is often flagged",
+   "problem": "The first asterisk incorrectly marks the grammatical sentence \"every book that you read\" as ungrammatical.",
+   "correction": "every book that you read is acceptable, but *every book which you read is often flagged",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "First clause is grammatical; asterisk wrong. Second clause flags prescriptive preference for 'that' over 'which' in restrictive relatives.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "Who₁ did you ask [whether ___₁ left]? where the matrix who binds the trace in the embedded subject position. This is not extraction from the island but binding across it, and it is grammatical.",
+   "problem": "The sentence \"Who did you ask whether left?\" is ungrammatical in standard English; wh-island extraction is blocked, and binding across a wh-island does not rescue it.",
+   "correction": "The sentence is ungrammatical; wh-island extraction is blocked, and binding across a wh-island does not rescue it.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Wh-island constraint blocks extraction; 'Who did you ask whether left?' is ungrammatical in standard English.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "where the relative clause is a complement, not an adjunct, and extraction becomes permissible.",
+   "problem": "Relative clauses are adjuncts (modifiers), not complements.",
+   "correction": "Relative clauses are adjuncts; the repair does not involve a complement.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Relative clauses are standardly analyzed as adjuncts/modifiers, not complements selected by the head noun.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/english/lesson-grammar.html",
+   "quote": "whereas resultatives cannot (* The wall was painted red is acceptable as a passive of a resultative",
+   "problem": "Resultatives can be predicated of the derived subject in passive (e.g., \"The wall was painted red\" is grammatical).",
+   "correction": "Resultatives can appear in passive with the resultative phrase predicated of the derived subject.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "'The wall was painted red' is a well-formed passive of the resultative 'paint the wall red'; resultatives permit passivization.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "envisaged under the National Perspective Plan (NPP) of 1980, proposes thirty‑seven links",
+   "problem": "The National Perspective Plan of 1980 proposed 30 links (16 peninsular, 14 Himalayan); the 37‑link figure comes from a 2002 revision.",
+   "correction": "envisaged under the National Perspective Plan (NPP) and its 2002 revision, proposes thirty‑seven links",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original NPP (1980) had 30 links; 37 links came from 2002 revision. Correction accurately reflects this.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "In 2023 the Union Cabinet approved the construction of ten indigenous Pressurised Heavy Water Reactors (PHWRs) of 700 MWe each",
+   "problem": "The Union Cabinet approved ten 700 MWe PHWRs in 2017, not 2023.",
+   "correction": "In 2017 the Union Cabinet approved the construction of ten indigenous Pressurised Heavy Water Reactors (PHWRs) of 700 MWe each",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Union Cabinet approved 10×700 MWe PHWRs on 17 May 2017, not 2023. Correction fixes the year correctly.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "In 2021 the Government introduced the Nuclear Safety Regulatory Authority (NSRA) Bill",
+   "problem": "The NSRA Bill was introduced in 2011, not 2021.",
+   "correction": "In 2011 the Government introduced the Nuclear Safety Regulatory Authority (NSRA) Bill",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "NSRA Bill was introduced in Lok Sabha on 7 September 2011 (Bill No. 97 of 2011), not 2021. Correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "sbi-clerk/course/ga/lesson-current-affairs.html",
+   "quote": "The IAEA's IRRS mission in 2022 commended India's safety culture but recommended strengthening the legal independence of the regulator",
+   "problem": "No IRRS mission to India took place in 2022; the last full IRRS mission was in 2015 with a follow-up in 2018.",
+   "correction": "The IAEA's IRRS mission in 2015 commended India's safety culture but recommended strengthening the legal independence of the regulator",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "No IRRS mission in 2022; last full mission 2015, follow-up 2018.",
+   "applied": false
   }
  ]
 }
