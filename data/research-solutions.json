@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-26T07:28:20.295Z",
+  "updatedAt": "2026-11-26T21:08:32.215Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -33765,6 +33765,104 @@
       "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-26T07:25:28.841Z"
+    },
+    {
+      "id": "9e0aab99093da4e9",
+      "exam": "ibps-po",
+      "paperSlug": "full-2026-11-26-ibps-po-prelims",
+      "paperTitle": "IBPS PO — Prelims (Full Paper)",
+      "paperPath": "ibps-po/mock-tests/full-2026-11-26-ibps-po-prelims.html",
+      "paperFile": "full-2026-11-26-ibps-po-prelims.json",
+      "questionNumber": 39,
+      "section": "Quantitative Aptitude",
+      "question": "Rajesh invests ₹25,000 in Scheme A offering 20% p.a. compounded annually. After 2 years, he withdraws 25% of the accumulated amount and invests it in Scheme B offering 20% p.a. compounded semi‑annually for 1 year. The balance stays in Scheme A for another year at the same rate. What is the total amount Rajesh has at the end of 3 years from the initial investment?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹43,290",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "₹43,200",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "₹43,272",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹37,890",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate amount after 2 years in Scheme A: 25000 * (1.2)^2 = 36000",
+        "Withdraw 25% (9000) to Scheme B, leaving 27000 in Scheme A",
+        "Scheme A for 1 more year: 27000 * 1.2 = 32400",
+        "Scheme B for 1 year at 20% p.a. compounded semi-annually: 9000 * (1.1)^2 = 10890",
+        "Total amount = 32400 + 10890 = 43290"
+      ],
+      "verifierCheck": "Initial ₹25,000 grows in Scheme A for 2 years: 25000×1.20² = ₹36,000. 25% withdrawn = ₹9,000; remaining ₹27,000 stays in A. The ₹9,000 goes to Scheme B at 20% p.a. compounded semi‑annually: semi‑annual rate 10%, two periods → 9000×1.10² = ₹10,890. The ₹27,000 in A grows another year at 20%: 27,000×1.20 = ₹32,400. Total after 3 years = 32,400 + 10,890 = ₹43,290, matching option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Unit Scaling",
+          "idea": "Scale down to 1000 units for mental arithmetic",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Work in '000s: Principal = 25",
+            "After 2 years at 20%: 25 × 1.44 = 36",
+            "Withdraw 25%: 9 to Scheme B, 27 stays in A",
+            "Scheme A year 3: 27 × 1.2 = 32.4",
+            "Scheme B: 9 × (1.1)² = 9 × 1.21 = 10.89",
+            "Total = 32.4 + 10.89 = 43.29 → ₹43,290 → Option A"
+          ]
+        },
+        {
+          "name": "Factor Split",
+          "idea": "Compute growth factors separately then combine",
+          "kind": "shortcut",
+          "seconds": 12,
+          "steps": [
+            "Scheme A 3-year factor: (1.2)³ = 1.728",
+            "Scheme B 1-year semi-annual factor: (1.1)² = 1.21",
+            "Amount after 2 years in A: 25000 × 1.44 = 36000",
+            "25% withdrawn: 36000 × 0.25 = 9000 to B; 75% = 27000 stays in A",
+            "Final A: 27000 × 1.2 = 32400; Final B: 9000 × 1.21 = 10890",
+            "Total = 32400 + 10890 = 43290 → Option A"
+          ]
+        },
+        {
+          "name": "Fraction Chain",
+          "idea": "Use fractions to eliminate decimals and simplify multiplication",
+          "kind": "shortcut",
+          "seconds": 15,
+          "steps": [
+            "Convert 20% = 1/5 → annual factor 6/5",
+            "After 2 years: 25000 × (6/5)² = 25000 × 36/25 = 36000",
+            "Withdraw 25% = 1/4 → 9000 to Scheme B, 27000 stays in A",
+            "Scheme A year 3: 27000 × 6/5 = 32400",
+            "Scheme B: 20% semi-annual = 10% = 1/10 → factor (11/10)² = 121/100. 9000 × 121/100 = 10890",
+            "Sum = 32400 + 10890 = 43290 → Option A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-26T21:08:10.942Z"
     }
   ]
 }

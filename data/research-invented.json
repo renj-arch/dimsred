@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-26T07:53:33.606Z",
+ "updatedAt": "2026-11-26T21:34:02.608Z",
  "note": "Original alternative methods for invented questions. Each is checked against the key by an independent call.",
  "methods": {
   "choose the most appropriate sentence that improves the one given below original the stock market crash was a real eye waterer for the traders a the stock market": {
@@ -1212,6 +1212,35 @@
    "answer": "K",
    "verified": true,
    "generatedAt": "2026-11-26T07:51:49.072Z",
+   "model": "hosted"
+  },
+  "complete the sentence with the most appropriate idiom that matches the irony of the situation described the new regulation was hailed as a breakthrough but for ": {
+   "name": "Irony Contrast Elimination",
+   "seconds": 10,
+   "shortcut": "Praised breakthrough harms vendors → curse in disguise",
+   "steps": [
+    "Spot the positive label “breakthrough” vs. negative impact on vendors",
+    "Select idiom meaning something seeming good but actually harmful",
+    "Eliminate A (solution), B (mixed), D (costly win) → only C fits"
+   ],
+   "answer": "C) Curse in disguise",
+   "verified": true,
+   "generatedAt": "2026-11-26T21:24:13.383Z",
+   "model": "hosted"
+  },
+  "in a certain village every single resident who owns a goat also owns a sheep furthermore there is at least one person in the village who owns a goat which of th": {
+   "name": "Intersection Existence Reasoning",
+   "seconds": 10,
+   "shortcut": "If ∃G and G⊆S, then ∃(G∧S).",
+   "steps": [
+    "Translate: \"Every goat‑owner also owns a sheep\" as set inclusion G ⊆ S.",
+    "Given: there exists at least one goat‑owner, i.e., G is non‑empty.",
+    "From G ⊆ S and G ≠ ∅, conclude that the intersection G ∩ S is non‑empty.",
+    "Thus at least one person owns both a goat and a sheep, which matches option 2."
+   ],
+   "answer": "At least one person in the village owns both a goat and a sheep.",
+   "verified": true,
+   "generatedAt": "2026-11-26T21:31:21.653Z",
    "model": "hosted"
   }
  }
