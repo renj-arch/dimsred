@@ -26,6 +26,12 @@
   } catch (e) {}
   function _qaKey(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 160); }
   function researchFor(t) { return RESEARCH[_qaKey(t)] || null; }
+  var EXPLAIN = {};
+  try {
+    fetch('data/question-explain.json').then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { EXPLAIN = (j && j.items) || {}; }).catch(function () {});
+  } catch (e) {}
+  function explainFor(t) { return EXPLAIN[_qaKey(t)] || null; }
   function quickTrick(t) {
     var s = String(t || '').toLowerCase();
     if (/average|mean/.test(s)) return 'The average must lie between the smallest and largest value, pulled toward the biggest group — reject any option outside that band.';
@@ -221,6 +227,20 @@
     var _shownTrick = (_res && _res.shortcut) ? _res.shortcut : _trick;
     if (_shownTrick) _html += '<div style="margin-top:8px;color:#f59e0b"><strong>⚡ Quick trick:</strong> ' + _shownTrick + '</div>';
     if (_res) _html += '<div style="margin-top:8px;color:#c4b5fd"><strong>🧪 Research Team — ' + (_res.name || 'method') + (_res.seconds ? ' (' + _res.seconds + 's)' : '') + ':</strong><ol style="margin:4px 0 0 18px">' + (_res.steps || []).map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></div>';
+    var _ex = explainFor(q.text);
+    if (_ex) {
+      var _cl = String.fromCharCode(65 + q.correct);
+      var _exHtml = '<div style="margin-top:8px;color:#93c5fd"><strong>Why ' + _cl + ' is right:</strong> ' + (_ex.whyCorrect || '') + '</div>';
+      var _w = '';
+      q.options.forEach(function (o, j) {
+        if (j === q.correct) return;
+        var L = String.fromCharCode(65 + j);
+        var why = (_ex.wrong || {})[L];
+        if (why) _w += '<li><strong>' + L + ') ' + o + '</strong> — ' + why + '</li>';
+      });
+      if (_w) _exHtml += '<div style="margin-top:4px;color:#fca5a5"><strong>Why the others are wrong:</strong><ul style="margin:4px 0 0 18px">' + _w + '</ul></div>';
+      _html += _exHtml;
+    }
     sol.innerHTML = _html;
   }
 
@@ -327,6 +347,11 @@
       var userLetter = state.answers[i] != null ? optLetters[state.answers[i]] : '--';
       var correctLetter = optLetters[q.correct];
       var _revRes = researchFor(q.text), _revTrick = ((_revRes && _revRes.shortcut) ? _revRes.shortcut : quickTrick(q.text));
+      var _revEx = explainFor(q.text);
+      var _revWrong = '';
+      if (_revEx) {
+        q.options.forEach(function (o, j) { if (j === q.correct) return; var L = String.fromCharCode(65 + j); var w = (_revEx.wrong || {})[L]; if (w) _revWrong += '<li><strong>' + L + ') ' + o + '</strong> — ' + w + '</li>'; });
+      }
       item.innerHTML =
         '<div class="review-q">Q' + (i + 1) + '. ' + q.text + '</div>' +
         '<div class="review-ans">Your answer: <strong>' + userLetter + '</strong> ' +
@@ -334,7 +359,9 @@
         '<div class="review-correct">Correct: <strong>' + correctLetter + '</strong> ' + q.options[q.correct] + '</div>' +
         (q.solution ? '<div class="review-sol">Solution: ' + q.solution + '</div>' : '') +
         (_revTrick ? '<div class="review-sol" style="color:#f59e0b">⚡ ' + _revTrick + '</div>' : '') +
-        (_revRes ? '<div class="review-sol" style="color:#c4b5fd">🧪 ' + (_revRes.name || 'Research method') + ': ' + (_revRes.steps || []).join(' → ') + '</div>' : '');
+        (_revRes ? '<div class="review-sol" style="color:#c4b5fd">🧪 ' + (_revRes.name || 'Research method') + ': ' + (_revRes.steps || []).join(' → ') + '</div>' : '') +
+        (_revEx ? '<div class="review-sol" style="color:#93c5fd"><strong>Why ' + correctLetter + ' is right:</strong> ' + (_revEx.whyCorrect || '') + '</div>' : '') +
+        (_revWrong ? '<div class="review-sol" style="color:#fca5a5"><strong>Why the others are wrong:</strong><ul style="margin:4px 0 0 18px">' + _revWrong + '</ul></div>' : '');
       els.reviewList.appendChild(item);
     });
   }
