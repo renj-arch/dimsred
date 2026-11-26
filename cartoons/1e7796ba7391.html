@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: 8.2 LWE — Operational Case Studies: Successes, Failures, and Lessons | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>8.2 LWE — Operational Case Studies: Successes, Failures, and Lessons</h1>
+<p class="meta">Internal Security &amp; Cyber Security · <a href="/upsc/course/mains-gs3/lesson-internal-security">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Accord Architecture Steps -->
+  <rect x="40" y="220" width="110" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="170" y="180" width="110" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="300" y="140" width="110" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="430" y="100" width="110" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Crack on Implementation -->
+  <path d="M430 100 L540 130" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="5,3"/>
+  <!-- Stair connectors -->
+  <path d="M150 235 L170 210" stroke="#1f2937" stroke-width="2"/>
+  <path d="M280 195 L300 170" stroke="#1f2937" stroke-width="2"/>
+  <path d="M410 155 L430 130" stroke="#1f2937" stroke-width="2"/>
+  <!-- Figures on steps -->
+  <!-- NSCN-IM on Agreement -->
+  <circle cx="330" cy="120" r="10" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M330 130 L330 155" stroke="#1f2937" stroke-width="2"/>
+  <path d="M330 140 L310 150" stroke="#1f2937" stroke-width="2"/>
+  <path d="M330 140 L350 150" stroke="#1f2937" stroke-width="2"/>
+  <path d="M330 155 L315 170" stroke="#1f2937" stroke-width="2"/>
+  <path d="M330 155 L345 170" stroke="#1f2937" stroke-width="2"/>
+  <!-- Flag/Constitution sign -->
+  <path d="M350 125 L350 105 L380 110 L350 115 Z" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Bodo on Implementation -->
+  <circle cx="460" cy="80" r="10" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M460 90 L460 115" stroke="#1f2937" stroke-width="2"/>
+  <path d="M460 100 L440 110" stroke="#1f2937" stroke-width="2"/>
+  <path d="M460 100 L480 110" stroke="#1f2937" stroke-width="2"/>
+  <path d="M460 115 L445 130" stroke="#1f2937" stroke-width="2"/>
+  <path d="M460 115 L475 130" stroke="#1f2937" stroke-width="2"/>
+  <!-- Karbi/Dimasa/Kuki overlapping on Implementation (two figures) -->
+  <circle cx="490" cy="80" r="10" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M490 90 L490 115" stroke="#1f2937" stroke-width="2"/>
+  <path d="M490 100 L470 110" stroke="#1f2937" stroke-width="2"/>
+  <path d="M490 100 L510 110" stroke="#1f2937" stroke-width="2"/>
+  <path d="M490 115 L475 130" stroke="#1f2937" stroke-width="2"/>
+  <path d="M490 115 L505 130" stroke="#1f2937" stroke-width="2"/>
+  <!-- Tripura stable (small flag) -->
+  <path d="M520 105 L520 85 L540 90 L520 95 Z" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- ULFA-pro on Agreement moving right -->
+  <circle cx="380" cy="120" r="10" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M380 130 L380 155" stroke="#1f2937" stroke-width="2"/>
+  <path d="M380 140 L360 150" stroke="#1f2937" stroke-width="2"/>
+  <path d="M380 140 L400 150" stroke="#1f2937" stroke-width="2"/>
+  <path d="M380 155 L365 170" stroke="#1f2937" stroke-width="2"/>
+  <path d="M380 155 L395 170" stroke="#1f2937" stroke-width="2"/>
+  <!-- Hardliner ULFA-I / NSCN-IM from Myanmar/China (top right) -->
+  <ellipse cx="520" cy="40" rx="35" ry="20" fill="none" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,4"/>
+  <text x="520" y="45" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">MYANMAR/CHINA</text>
+  <path d="M500 60 L460 100" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M540 60 L490 100" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <!-- Parallel taxation figure (NSCN) left side -->
+  <circle cx="80" cy="180" r="10" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M80 190 L80 215" stroke="#1f2937" stroke-width="2"/>
+  <path d="M80 200 L60 210" stroke="#1f2937" stroke-width="2"/>
+  <path d="M80 200 L100 210" stroke="#1f2937" stroke-width="2"/>
+  <path d="M80 215 L65 230" stroke="#1f2937" stroke-width="2"/>
+  <path d="M80 215 L95 230" stroke="#1f2937" stroke-width="2"/>
+  <rect x="65" y="165" width="30" height="15" fill="none" stroke="#1f2937" stroke-width="1.5"/>
+  <!-- State shield: Territorial Integrity (bottom center) -->
+  <path d="M280 260 L250 290 L310 290 Z" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="240" y="250" width="80" height="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Labels -->
+  <text x="95" y="215" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif" font-weight="bold">ACCORD ARCHITECTURE</text>
+  <text x="330" y="95" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">NSCN-IM FLAG/CONSTITUTION</text>
+  <text x="330" y="80" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">GREATER NAGALIM</text>
+  <text x="460" y="60" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">BTR BOUNDARY DISPUTES</text>
+  <text x="490" y="60" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">OVERLAPPING CLAIMS</text>
+  <text x="520" y="80" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">ULFA-I (MYANMAR)</text>
+  <text x="80" y="160" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">PARALLEL TAXATION</text>
+  <text x="280" y="245" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif" font-weight="bold">TERRITORIAL INTEGRITY</text>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="#1f2937"/>
+  <text x="280" y="310" text-anchor="middle" font-size="13" fill="#fbf7ec" font-family="sans-serif" font-weight="bold">8.3 NORTHEAST INSURGENCY — ACCORD ARCHITECTURE &amp; FAULTLINES</text>
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+</svg></div>
+<p class="meta">8. Left-Wing Extremism &amp;amp; North-East Insurgency — Advanced Deep Dive: Strategic Doctrine, Operational Case Studies, and Resolution Architecture (2)</p></div></body></html>
