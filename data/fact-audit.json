@@ -1,199 +1,168 @@
 {
- "generatedAt": "2026-11-26T21:58:10.880Z",
- "lessonsAudited": 18,
- "flagged": 19,
- "applied": 8,
- "modelCalls": 20,
- "modelFailures": 65,
- "deadlineHit": false,
+ "generatedAt": "2026-11-26T23:29:31.438Z",
+ "lessonsAudited": 11,
+ "flagged": 16,
+ "applied": 7,
+ "modelCalls": 18,
+ "modelFailures": 106,
+ "deadlineHit": true,
  "problems": [
   {
-   "file": "ssc-gd/course/reasoning/lesson-coding-decoding.html",
-   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
-   "problem": "The example CAT→DDU does not follow a +1 shift; CAT with +1 shift would be DBU, not DDU.",
-   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "file": "upsc/course/gs/lesson-environment-prelims.html",
+   "quote": "Section 35 allows the central government to notify national parks",
+   "problem": "Section 35 of the Wildlife Protection Act empowers the State Government, not the central government, to declare national parks.",
+   "correction": "Section 35 allows the state government to notify national parks",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original CAT→DDU contradicts +1 shift; correction CAT→DBU matches rule.",
+   "verifierReason": "Section 35 WPA 1972 empowers State Government, not Central, to declare national parks.",
    "applied": false
   },
   {
-   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
-   "quote": "opposite the centre of the circle",
-   "problem": "In circular seating puzzles, \"opposite\" describes a relation between two persons (diametrically opposite seats), not between a person and the centre. The centre is a point, not a seat; a person faces the centre or sits opposite another person.",
-   "correction": "faces the centre of the circle",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "In circular seating, 'opposite' relates two seats; a person faces the centre, not opposite it.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
-   "quote": "compute the rank of the constraint matrix over GF(2) for binary clues",
-   "problem": "Logical puzzle clues (e.g., positional, sequencing) are not linear equations over GF(2); rank computation over GF(2) applies to linear algebraic systems, not general constraint satisfaction problems like seating arrangements.",
-   "correction": "assess clue independence through logical analysis",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "General logical clues are not linear over GF(2); rank computation applies to linear systems, not CSPs.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/maths/lesson-simple-interest.html",
-   "quote": "for a premium bond YTM coupon rate",
-   "problem": "Missing inequality; for a premium bond, YTM is less than the coupon rate.",
-   "correction": "for a premium bond YTM < coupon rate",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks inequality; premium bond YTM < coupon rate is correct.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/maths/lesson-simple-interest.html",
-   "quote": "When the perpetuity grows at rate g (with g ), the formula is PV = R/(i – g) × (1+i)⁻ᵈ",
-   "problem": "Condition on growth rate g is incomplete; the formula requires g < i.",
-   "correction": "When the perpetuity grows at rate g (with g < i), the formula is PV = R/(i – g) × (1+i)⁻ᵈ",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original condition on g incomplete; growing perpetuity requires g < i for convergence.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/maths/lesson-simple-interest.html",
-   "quote": "the formula only holds for g , otherwise the present value diverges",
-   "problem": "Condition on g is incomplete; should be g < i.",
-   "correction": "the formula only holds for g < i, otherwise the present value diverges",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original condition on g incomplete; formula valid only when g < i, else PV diverges.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
-   "quote": "solvable in O(V · E) with the Hopcroft‑Karp algorithm",
-   "problem": "Hopcroft‑Karp algorithm runs in O(E √V) time, not O(V·E).",
-   "correction": "solvable in O(E √V) with the Hopcroft‑Karp algorithm",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Hopcroft-Karp is O(E√V); O(VE) is slower Ford-Fulkerson bound.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/reasoning/lesson-series.html",
-   "quote": "Recognising a recursive pattern requires computing successive differences and checking whether the differences themselves follow a known series.",
-   "problem": "The method of successive differences is used to identify polynomial sequences (quadratic, cubic, etc.), not recursive sequences. Recursive patterns like Fibonacci or linear recurrences are identified by the relationship between a term and its predecessors, not by difference tables.",
-   "correction": "Recognising a recursive pattern involves identifying the relationship between a term and its predecessors, such as T_n = a·T_{n-1} + b·T_{n-2}.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original confuses polynomial identification (finite differences) with recursive pattern recognition (recurrence relations). Correction correctly defines recursive patterns.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/gs/lesson-art-culture-prelims.html",
-   "quote": "which inscribed Koodiyattam in 2001 and the “Traditional brass and copper craft of utensil making” in 2023",
-   "problem": "Koodiyattam was proclaimed a Masterpiece in 2001 but inscribed on the Representative List in 2008; the brass and copper craft was inscribed in 2014, not 2023.",
-   "correction": "which inscribed Koodiyattam in 2008 and the “Traditional brass and copper craft of utensil making” in 2014",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Koodiyattam proclaimed 2001, inscribed 2008; Thatheras craft inscribed 2014 per UNESCO.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/gs/lesson-art-culture-prelims.html",
-   "quote": "the Vijayanagara Empire nurtured the devotional compositions of the Trinity — Tyagaraja, Muthuswami Dikshitar and Syama Sastri — that codified the Carnatic kriti structure",
-   "problem": "The Trinity (Tyagaraja, Dikshitar, Syama Sastri) lived in the 18th–19th centuries, long after the Vijayanagara Empire (ended 1646). They were patronised by the Maratha court of Thanjavur.",
-   "correction": "the Maratha court of Thanjavur nurtured the devotional compositions of the Trinity — Tyagaraja, Muthuswami Dikshitar and Syama Sastri — that codified the Carnatic kriti structure",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Trinity (18th-19th c.) post-date Vijayanagara (ended 1646); patronised by Thanjavur Marathas.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/gs/lesson-art-culture-prelims.html",
-   "quote": "Indian architects such as Le Corbusier (Chandigarh Capitol Complex), Louis Kahn (Indian Institute of Management Ahmedabad) and Charles Correa (Jawahar Kala Kendra, Jaipur)",
-   "problem": "Le Corbusier was Swiss-French and Louis Kahn was American; they are not Indian architects.",
-   "correction": "architects such as Le Corbusier (Chandigarh Capitol Complex), Louis Kahn (Indian Institute of Management Ahmedabad) and Charles Correa (Jawahar Kala Kendra, Jaipur)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Le Corbusier (Swiss-French) and Kahn (American) not Indian; Correa is Indian.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/csat/lesson-logical-reasoning.html",
-   "quote": "if B faces centre, position(A) ≡ position(B) − 3 (mod N); if B faces outward, position(A) ≡ position(B) + 3 (mod N)",
-   "problem": "Signs for left/right based on facing are reversed: for centre-facing, left is clockwise so position(A) = position(B) + 3; for outward-facing, left is anticlockwise so position(A) = position(B) - 3.",
-   "correction": "if B faces centre, position(A) ≡ position(B) + 3 (mod N); if B faces outward, position(A) ≡ position(B) − 3 (mod N)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original sign reversal is incorrect; correction swaps signs correctly.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/csat/lesson-logical-reasoning.html",
-   "quote": "the man’s relative displacement vector in ground coordinates is the rotation of u0 by 90°. His final bearing is therefore the initial bearing plus 90°.",
-   "problem": "The relative displacement vector during simultaneous radial walk and 90° platform rotation is not simply the initial radial vector rotated by 90°; that would only be true if rotation preceded the walk. The net displacement direction is not initial bearing + 90° (e.g., 45° for constant speeds).",
-   "correction": "the man’s final facing direction is initial bearing plus 90°; his displacement vector requires vector integration over the rotation.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original displacement claim is false; correction clarifies facing vs displacement.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/csat/lesson-logical-reasoning.html",
-   "quote": "Cardinal direction calculi (e.g., the 9‑intersection model or the more expressive OPRA m )",
-   "problem": "The 9-intersection model (Egenhofer) is a topological calculus for region relations, not a cardinal direction calculus; it does not partition the plane into directional sectors.",
-   "correction": "Cardinal direction calculi (e.g., the cone-based calculus or the more expressive OPRA_m)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "9‑intersection is a topological calculus, not a cardinal direction one; cone‑based or OPRA_m are appropriate examples.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/csat/lesson-logical-reasoning.html",
-   "quote": "Case 2: S_B =1. Symmetric analysis yields contradiction because (2) gives no constraint but (1) and (3) force two spies.",
-   "problem": "Case 2 (S_B=1) does not yield a contradiction; a consistent assignment exists: A=knave, B=spy, C=knave.",
-   "correction": "Case 2: S_B =1 yields a consistent assignment (A=knave, B=spy, C=knave).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Case 2 (S_B=1) is consistent with assignment A=knave, B=spy, C=knave; no contradiction arises.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/csat/lesson-logical-reasoning.html",
-   "quote": "Hence unique solution: A is spy, B is knave, C is knave.",
-   "problem": "The puzzle has three consistent solutions (A=spy/B=knave/C=knave; A=knave/B=spy/C=knave; A=knave/B=knight/C=spy), not a unique one.",
-   "correction": "Hence there are three solutions, not a unique one.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "The puzzle admits three distinct consistent assignments, not a unique solution.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/csat/lesson-logical-reasoning.html",
-   "quote": "The second segment is therefore 2 km southeast (components 2·√2/2, ‑2·√2/2). Adding to the first segment gives a net displacement of (3 + √2, ‑√2) km, whose direction is arctan(‑√2 / (3 + √2)) ≈ -15° ",
-   "problem": "The problem statement does not give a distance for the second segment; 2 km is invented. Also the computed angle is approximately -17.7°, not -15°.",
-   "correction": "The second segment length is not specified; if it were 2 km, the direction would be arctan(-√2/(3+√2)) ≈ -17.7° from East.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original invents 2 km distance and miscalculates angle as -15°; correct angle is -17.7°.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/csat/lesson-logical-reasoning.html",
-   "quote": "Consequently, S is the father of P, making S the paternal grandfather of Q.",
-   "problem": "The given statements do not establish that P is a parent of Q, so S cannot be concluded as Q's paternal grandfather.",
-   "correction": "The statements are insufficient to determine S's relationship to Q; additional information about P and Q's relationship is needed.",
+   "file": "upsc/course/gs/lesson-environment-prelims.html",
+   "quote": "nitrogen in temperate lakes or phosphorus in tropical soils",
+   "problem": "The classic limiting nutrient in temperate lakes is phosphorus, not nitrogen; in tropical soils phosphorus is also often limiting.",
+   "correction": "phosphorus in temperate lakes or phosphorus in tropical soils",
    "confidence": "medium",
    "verified": true,
-   "verifierReason": "Original assumes P is parent of Q without basis; correction correctly states insufficiency."
+   "verifierReason": "Temperate lakes are classically P-limited; tropical soils are also often P-limited."
   },
   {
-   "file": "upsc/course/gs/lesson-economy-prelims.html",
-   "quote": "cut‑off rates ranging from 3.35 % to 4.00 % as the policy repo rate moved from 4.00 % to 6.50 %",
-   "problem": "VRRR cut‑off rates in FY 2022‑23 rose broadly in line with the policy repo rate, reaching over 6 % by the end of the fiscal year; they were not confined to a 3.35‑4.00 % range.",
-   "correction": "cut‑off rates rising from around 3.99 % to over 6.25 % as the policy repo rate moved from 4.00 % to 6.50 %",
+   "file": "upsc/course/gs/lesson-environment-prelims.html",
+   "quote": "General Standards for Discharge of Environmental Pollutants (1993)",
+   "problem": "The General Standards for Discharge of Environmental Pollutants were notified under the Environment (Protection) Rules in 1986, not 1993.",
+   "correction": "General Standards for Discharge of Environmental Pollutants (1986)",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "General Standards for Discharge notified under Environment (Protection) Rules, 1986 (Schedule VI)."
+  },
+  {
+   "file": "upsc/course/gs/lesson-environment-prelims.html",
+   "quote": "BC of 0.5 gha per capita",
+   "problem": "The Global Footprint Network 2022 edition reports India's biocapacity at 0.4 gha per capita, not 0.5 gha.",
+   "correction": "BC of 0.4 gha per capita",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original quote confuses fixed reverse repo rate (3.35%) with VRRR cut-offs; VRRR started ~3.99% (Apr 2022) and rose to ~6.25%+ (Mar 2023) tracking repo rate 4.00%→6.50%.",
+   "verifierReason": "GFN 2022 edition (data year 2018) reports India biocapacity 0.4 gha/capita.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-geography-india-prelims.html",
+   "quote": "tall grasslands (phumdis)",
+   "problem": "Phumdis are floating islands in Loktak Lake (Manipur), not grasslands in the Terai‑Duars region.",
+   "correction": "tall grasslands",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Phumdis are floating islands in Loktak Lake, not tall grasslands; correction removes erroneous parenthetical.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-geography-physical-prelims.html",
+   "quote": "vertical extent ranges from centimetres in coarse gravel to metres in fine sand",
+   "problem": "The vertical extent of the hyporheic zone is reversed: it extends metres in coarse gravel due to high permeability, and only centimetres in fine sand due to low permeability.",
+   "correction": "vertical extent ranges from metres in coarse gravel to centimetres in fine sand",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Hyporheic zone depth increases with sediment permeability; coarse gravel allows metre-scale exchange, fine sand limits to centimetres.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-indian-geography.html",
+   "quote": "India is the world's largest producer and exporter of mica , accounting for about 60% of global production.",
+   "problem": "India is not the world's largest producer of mica; China is. The 60% global production share is incorrect.",
+   "correction": "India is a major producer and exporter of mica, but China is the largest producer.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "China surpassed India as largest mica producer; 60% share is outdated",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/gs/lesson-indian-geography.html",
+   "quote": "producing about 830 million tonnes/yr (2023-24)",
+   "problem": "India's coal production in 2023-24 was about 997 million tonnes, not 830 million tonnes.",
+   "correction": "producing about 997 million tonnes/yr (2023-24)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Official coal production for 2023-24 was 997.82 MT per Ministry of Coal",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-indian-geography.html",
+   "quote": "India has four SPR facilities with a total capacity of 5.33 million tonnes",
+   "problem": "India has three operational SPR facilities totaling 5.33 MT; Chandikhol (0.75 MT) is a fourth under construction and not included in the 5.33 MT total.",
+   "correction": "India has three operational SPR facilities with a total capacity of 5.33 million tonnes",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Three operational SPRs total 5.33 MT; Chandikhol is under construction",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/gs/lesson-indian-geography.html",
+   "quote": "India has about 500,000 tonnes of monazite (the primary thorium-bearing mineral), the largest in the world, constituting about 25% of global thorium reserves.",
+   "problem": "The 500,000 tonnes figure refers to thorium content, not monazite; India has about 12 million tonnes of monazite reserves.",
+   "correction": "India has about 500,000 tonnes of thorium (contained in about 12 million tonnes of monazite), the largest in the world, constituting about 25% of global thorium reserves.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "500,000 tonnes is thorium content; monazite reserves are ~12 MT",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/gs/lesson-indian-geography.html",
+   "quote": "with a production of about 120 million tonnes (crude steel) in 2023-24.",
+   "problem": "India's crude steel production in 2023-24 was about 144 million tonnes, not 120 million tonnes.",
+   "correction": "with a production of about 144 million tonnes (crude steel) in 2023-24.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Crude steel production in FY 2023-24 was 144 MT per Ministry of Steel",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/gs/lesson-modern-india-prelims.html",
+   "quote": "policy errors — such as the mismanagement of the Bengal famine of 1770 — were not addressed by the Act by collective deliberation",
+   "problem": "The Bengal famine of 1770 occurred before the Regulating Act of 1773; the Act could not have addressed it. The example is anachronistic.",
+   "correction": "policy errors were not addressed by the Act through collective deliberation",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Famine (1770) predates Regulating Act (1773); example is anachronistic. Correction removes error safely.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/gs/lesson-modern-india-prelims.html",
+   "quote": "approximately 296 members (later 299 after the accession of princely states)",
+   "problem": "The Constituent Assembly had 389 seats (296 from British India, 93 from princely states); final membership was 299 after partition and accession, not an increase from 296.",
+   "correction": "389 members (296 from British India, 93 from princely states), later 299 after partition and accession",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original misstates initial strength as 296; sanctioned strength was 389. Correction accurately reflects composition and final count.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-modern-india-prelims.html",
+   "quote": "empowering the new dominions to accede or remain independent",
+   "problem": "The Indian Independence Act empowered princely states, not the new dominions, to accede to a dominion or remain independent.",
+   "correction": "empowering the princely states to accede to a dominion or remain independent",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Indian Independence Act 1947 lapsed paramountcy, empowering princely states—not dominions—to accede or stay independent.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-indian-history.html",
+   "quote": "well irrigation (including step-wells)",
+   "problem": "Step-wells (vav/baoli) are not attested in the Gupta period; they appear in western India from the 6th century CE onwards (early medieval).",
+   "correction": "well irrigation",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Stepwells unattested in Gupta era; earliest structural stepwells date to 7th century CE (Maitraka period).",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-indian-history.html",
+   "quote": "west-coast ports: Tamralipti (Bengal described by Faxian as 'a great emporium on the seacoast')",
+   "problem": "Tamralipti is located in Bengal on the east coast (Bay of Bengal), not on the west coast. The Kshatrapa conquest gave the Guptas control over west-coast ports like Bharuch, but Tamralipti was already part of the Gupta empire in the east.",
+   "correction": "east-coast port Tamralipti (Bengal, described by Faxian as 'a great emporium on the seacoast') and west-coast ports such as Bharuch (Barygaza), Kalyan, Cambay, Sopara",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Tamralipti (Tamluk) is on Bay of Bengal (east coast), not west coast; quote misplaces it geographically.",
    "applied": false
   }
  ]
