@@ -94244,6 +94244,33 @@
         }
       ],
       "sol": "For maximum volume with fixed surface area, h = 2r. Surface area S = 2πr(r+h) = 2πr(3r) = 6πr² = 150π ⇒ r² = 25 ⇒ r = 5 cm, h = 10 cm. Volume = πr²h = π×25×10 = 250π = 250×(22/7) = 5500/7 ≈ 785.7 cm³."
+    },
+    {
+      "id": 109,
+      "text": "A right circular cylinder of maximum possible volume is inscribed in a sphere of radius 9 cm. What is the volume of this cylinder? (Use π = 22/7, √3 ≈ 1.732)",
+      "options": [
+        {
+          "l": "a",
+          "t": "1763 cm³",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "1765 cm³",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "1760 cm³",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1770 cm³",
+          "c": false
+        }
+      ],
+      "sol": "For a cylinder inscribed in a sphere, maximum volume = (4π/3√3)R³. With R = 9 cm, R³ = 729. Volume = (4×22/7)/(3×1.732) × 729 = (88/7)/(5.196) × 729 ≈ 12.571/5.196 × 729 ≈ 2.419 × 729 ≈ 1763 cm³."
     }
   ],
   "gk/indian-geography": [
@@ -121157,6 +121184,141 @@
         }
       ],
       "sol": "The given schema combines two conditionals with a disjunction of their antecedents to infer the disjunction of their consequents. This is precisely the constructive dilemma: from (p→q) and (r→s) together with (p ∨ r) we may validly conclude (q ∨ s). Modus ponens requires a single conditional and its antecedent; disjunctive syllogism needs a disjunction and the negation of one disjunct; hypothetical syllogism chains conditionals. Only constructive dilemma matches the pattern."
+    },
+    {
+      "id": 124,
+      "text": "Under the Boolean (modern) interpretation of categorical propositions, the immediate inference \"All S are P, therefore Some S are P\" is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Valid because the universal affirms the existence of S",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Invalid because universals lack existential import",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Valid only when the subject class S is known to be non‑empty",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Valid only when the predicate class P is known to be non‑empty",
+          "c": false
+        }
+      ],
+      "sol": "In Boolean logic universal affirmatives (A) are treated as conditionals that are vacuously true when the subject class is empty; they do not assert that any S exists. The particular affirmative (I) does assert existence. Therefore the subalternation A → I fails in the Boolean system unless an extra premise guarantees that S is non‑empty. The Aristotelian reading would allow the inference, but the question explicitly asks for the Boolean interpretation. Hence the inference is invalid."
+    },
+    {
+      "id": 125,
+      "text": "A sorites chain contains an intermediate conclusion that is particular (I or O). According to the lesson, what is the effect of collapsing the entire chain into a single standard‑form syllogism?",
+      "options": [
+        {
+          "l": "a",
+          "t": "The collapse preserves all existential commitments of the original chain",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "The collapse loses the existential commitment carried by the particular intermediate conclusion",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "The collapse automatically distributes the middle term in the final syllogism",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "The collapse converts the final conclusion into a universal proposition",
+          "c": false
+        }
+      ],
+      "sol": "The lesson states that a sorites can be reduced to a single syllogism only when every intermediate conclusion is universal (A or E). If any intermediate conclusion is particular (I or O), the chain cannot be collapsed without loss of information because the particular conclusion carries an existential commitment that would be dropped in a single universal syllogism. Therefore collapsing such a chain loses the existential commitment of the particular step."
+    },
+    {
+      "id": 126,
+      "text": "Given the inclusive disjunction \"Either P or Q\" (P ∨ Q), which of the following immediate inferences is logically valid?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Affirm P, therefore not Q",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Affirm not P, therefore Q",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Deny P, therefore not Q",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Deny Q, therefore not P",
+          "c": false
+        }
+      ],
+      "sol": "For an inclusive disjunction P ∨ Q, the only valid immediate inferences are the denial of one disjunct to affirm the other: ¬P → Q and ¬Q → P. Affirming a disjunct does not allow us to deny the other, because both may be true simultaneously. Thus \"Affirm not P, therefore Q\" (i.e., ¬P → Q) is the valid inference listed."
+    },
+    {
+      "id": 127,
+      "text": "The sentence \"For every student there exists a book that the student has read\" is correctly formalised using nested quantifiers as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "∃y ∀x Read(x,y)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "∀x ∃y Read(x,y)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "∀x ∀y Read(x,y)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "∃x ∃y Read(x,y)",
+          "c": false
+        }
+      ],
+      "sol": "The natural language order \"for every student … there exists a book\" indicates a universal quantifier over students followed by an existential quantifier over books, with the existential possibly depending on the student. This corresponds to ∀x ∃y Read(x,y). The alternative ∃y ∀x would mean a single book read by all students, which is a stronger claim not expressed by the sentence."
+    },
+    {
+      "id": 128,
+      "text": "How should the statement \"Only graduates are eligible\" be translated into a standard categorical (A) proposition?",
+      "options": [
+        {
+          "l": "a",
+          "t": "All graduates are eligible",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "All eligible persons are graduates",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Some graduates are eligible",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "No graduates are eligible",
+          "c": false
+        }
+      ],
+      "sol": "The lesson gives the algorithm: identify the term immediately after \"only\" (here \"graduates\") and make it the predicate of an A proposition with the remaining noun phrase (\"eligible persons\") as subject. Thus \"Only graduates are eligible\" becomes \"All eligible persons are graduates.\" The common error is to reverse the terms, yielding \"All graduates are eligible,\" which is the converse and not logically equivalent."
     }
   ],
   "quant/numerical-ability": [
