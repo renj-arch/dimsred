@@ -1,656 +1,642 @@
 {
-  "folder": "nda",
-  "slug": "practice-set-13",
-  "title": "NDA Practice Set 13",
-  "pageTitle": "NDA Practice Set 13 — Solved Paper",
-  "pageDesc": "Free NDA practice paper set 13 with detailed solutions. Pattern: Mathematics.",
-  "meta": "15 Q · 19 min · 38 marks · Mathematics pattern",
-  "timerMinutes": 19,
-  "totalMarks": 38,
-  "createdDate": "2026-11-24",
-  "blueprint": {
-    "paper": "maths",
-    "name": "Mathematics",
-    "total": 120,
-    "marks": 300,
-    "duration": 150,
-    "negative": 0.333333,
-    "source": "NDA Paper I Mathematics: 120 questions, 300 marks, 150 minutes; negative 1/3.",
-    "provisional": false,
-    "sections": [
-      {
-        "name": "Mathematics",
-        "count": 15,
-        "bank": [
-          "Mathematics"
-        ]
-      }
-    ]
-  },
+ "folder": "nda",
+ "slug": "practice-set-13",
+ "title": "NDA Practice Set 13",
+ "pageTitle": "NDA Practice Set 13 — Solved Paper",
+ "pageDesc": "Free NDA practice paper set 13 with detailed solutions. Pattern: Mathematics.",
+ "meta": "15 Q · 19 min · 38 marks · Mathematics pattern",
+ "timerMinutes": 19,
+ "totalMarks": 15,
+ "createdDate": "2026-11-24",
+ "blueprint": {
+  "paper": "maths",
+  "name": "Mathematics",
+  "total": 120,
+  "marks": 300,
+  "duration": 150,
+  "negative": 0.333333,
+  "source": "NDA Paper I Mathematics: 120 questions, 300 marks, 150 minutes; negative 1/3.",
+  "provisional": false,
   "sections": [
-    {
-      "name": "Mathematics",
-      "color": "#a855f7"
-    }
-  ],
-  "questions": [
-    {
-      "section": "Mathematics",
-      "text": "A fair coin is tossed 4 times. The probability of getting at least one head is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "1/16",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "7/8",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "3/4",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "15/16",
-          "correct": true
-        }
-      ],
-      "solution": "Shortcut: Use complement rule: P(at least one head) = 1 - P(no heads) = 1 - (1/2)^4 = 1 - 1/16 = 15/16. Full solution: Total outcomes = 2^4 = 16. Only one outcome (TTTT) has no heads. So favorable = 15, probability = 15/16.",
-      "topic": "Probability",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:56:36.903Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": []
-      },
-      "chartData": null,
-      "id": 722,
-      "q": 1
-    },
-    {
-      "section": "Mathematics",
-      "text": "The distance between the parallel planes 2x - 3y + 6z = 5 and 4x - 6y + 12z = 15 is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "5/7",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "1/7",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "5/14",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "10/7",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Make coefficients of x, y, z identical. Divide 2nd plane by 2: 2x - 3y + 6z = 7.5. Distance formula for parallel planes Ax+By+Cz=d₁ and Ax+By+Cz=d₂ is |d₁-d₂|/√(A²+B²+C²). Here |7.5 - 5| / √(4+9+36) = 2.5 / 7 = 5/14. Step-by-step: The planes are parallel because their normal vectors (2, -3, 6) and (4, -6, 12) are proportional. Rewrite 2nd plane as 2x - 3y + 6z = 15/2 = 7.5. The distance between planes Ax+By+Cz = d₁ and Ax+By+Cz = d₂ is |d₁ - d₂| / √(A²+B²+C²). Substituting A=2, B=-3, C=6, d₁=5, d₂=7.5: Distance = |5 - 7.5| / √(4+9+36) = 2.5 / √49 = 2.5 / 7 = 5/14.",
-      "topic": "3D Geometry - Planes",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:57:51.891Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 725,
-      "q": 2
-    },
-    {
-      "section": "Mathematics",
-      "text": "If f(x) = x³ + 2x² - 5x + 7, what is f'(1)?",
-      "options": [
-        {
-          "label": "A",
-          "text": "0",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "1",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "3",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "2",
-          "correct": true
-        }
-      ],
-      "solution": "Shortcut: Derivative of xⁿ is n xⁿ⁻¹; f'(x) = 3x² + 4x - 5 → f'(1) = 3 + 4 - 5 = 2. Full: differentiate termwise to get 3x²+4x-5, then substitute x=1 to obtain 2.",
-      "topic": "Calculus - Derivatives",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-18T22:56:39.834Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 471,
-      "q": 3
-    },
-    {
-      "section": "Mathematics",
-      "text": "What is the unit digit of (7^95 + 3^58)?",
-      "options": [
-        {
-          "label": "A",
-          "text": "0",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "2",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "4",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "6",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Use cyclicity of unit digits. 7^95: cycle 7,9,3,1 (length 4); 95 mod 4 = 3 → unit digit 3. 3^58: cycle 3,9,7,1; 58 mod 4 = 2 → unit digit 9. Sum = 12 → unit digit 2. Full solution: Compute cycles as above, add unit digits, result 2.",
-      "topic": "Number Systems - Unit Digit",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:59:20.494Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "bar",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 726,
-      "q": 4
-    },
-    {
-      "section": "Mathematics",
-      "text": "A number is divisible by 9 if the sum of its digits is divisible by 9. Using this rule, which of the following numbers is NOT divisible by 9?",
-      "options": [
-        {
-          "label": "A",
-          "text": "5,832",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "7,245",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "9,018",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "6,321",
-          "correct": true
-        }
-      ],
-      "solution": "Shortcut: Add digits. 5+8+3+2=18 → divisible. 7+2+4+5=18 → divisible. 9+0+1+8=18 → divisible. 6+3+2+1=12 → not divisible by 9. Hence option D is correct. Full calculation confirms.",
-      "topic": "Number Theory – Divisibility",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-20T22:37:06.960Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": null,
-      "chartData": null,
-      "id": 625,
-      "q": 5
-    },
-    {
-      "section": "Mathematics",
-      "text": "The value of the definite integral ∫₀^(π/2) sin³x / (sin³x + cos³x) dx is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "π/4",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "π/2",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "π/8",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "0",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Use King's Property: ∫₀ᵃ f(x) dx = ∫₀ᵃ f(a-x) dx. Let I = ∫₀^(π/2) sin³x/(sin³x+cos³x) dx. Replace x by π/2 - x: I = ∫₀^(π/2) cos³x/(cos³x+sin³x) dx. Add both: 2I = ∫₀^(π/2) (sin³x+cos³x)/(sin³x+cos³x) dx = ∫₀^(π/2) 1 dx = π/2. Hence I = π/4. Step-by-step: Let I = ∫₀^(π/2) sin³x/(sin³x+cos³x) dx. Applying property ∫₀ᵃ f(x)dx = ∫₀ᵃ f(a-x)dx, we get I = ∫₀^(π/2) sin³(π/2-x)/[sin³(π/2-x)+cos³(π/2-x)] dx = ∫₀^(π/2) cos³x/(cos³x+sin³x) dx. Adding the two expressions for I: 2I = ∫₀^(π/2) (sin³x+cos³x)/(sin³x+cos³x) dx = ∫₀^(π/2) dx = [x]₀^(π/2) = π/2. Therefore, I = π/4.",
-      "topic": "Definite Integration",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:57:48.645Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 724,
-      "q": 6
-    },
-    {
-      "section": "Mathematics",
-      "text": "The term independent of x in the expansion of (x² + 1/x)⁹ is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "126",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "36",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "84",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "252",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: General term Tᵣ₊₁ = ⁹Cᵣ (x²)⁹⁻ʳ (1/x)ʳ = ⁹Cᵣ x¹⁸⁻³ʳ. For constant term, power of x = 0 ⇒ 18 - 3r = 0 ⇒ r = 6. Coefficient = ⁹C₆ = ⁹C₃ = (9×8×7)/(3×2×1) = 84. Step-by-step: The general term in binomial expansion (a+b)ⁿ is Tᵣ₊₁ = ⁿCᵣ aⁿ⁻ʳ bʳ. Here a = x², b = 1/x, n = 9. Tᵣ₊₁ = ⁹Cᵣ (x²)⁹⁻ʳ (x⁻¹)ʳ = ⁹Cᵣ x¹⁸⁻²ʳ⁻ʳ = ⁹Cᵣ x¹⁸⁻³ʳ. For term independent of x, exponent must be zero: 18 - 3r = 0 ⇒ r = 6. The coefficient is ⁹C₆ = ⁹C₃ = 84.",
-      "topic": "Binomial Theorem",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:57:40.781Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 723,
-      "q": 7
-    },
-    {
-      "section": "Mathematics",
-      "text": "The value of tan 15° + cot 15° is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "2",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "2√3",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "4",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "4/√3",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: tanθ + cotθ = 2/sin2θ. For θ=15°, sin30°=1/2 → 2/(1/2)=4. Full solution: tan15° = 2-√3, cot15° = 2+√3, sum = 4.",
-      "topic": "Trigonometry - Trigonometric Identities",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:59:47.747Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "bar",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 728,
-      "q": 8
-    },
-    {
-      "section": "Mathematics",
-      "text": "If the roots of the quadratic equation x² - 6x + k = 0 are real and distinct, what is the range of possible integer values for k?",
-      "options": [
-        {
-          "label": "A",
-          "text": "k ≥ 9",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "k < 9",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "k ≤ 9",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "k > 9",
-          "correct": false
-        }
-      ],
-      "solution": "For roots to be real and distinct, the discriminant D = b² - 4ac must be strictly greater than zero. Here, a=1, b=-6, c=k, so 36 - 4k > 0 implies 4k < 36 or k < 9. Options A and C suggest k can be 9 (which yields equal roots), while D suggests k must be greater than 9 (yielding imaginary roots).",
-      "topic": "Quadratic Equations",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-08T17:27:41.258Z",
-      "reviewed": false,
-      "id": 312,
-      "q": 9
-    },
-    {
-      "section": "Mathematics",
-      "text": "The sum of the series 1/(1×2) + 1/(2×3) + 1/(3×4) + ... + 1/(99×100) is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "1/100",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "99/100",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "100/99",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "1",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Each term 1/(n(n+1)) = 1/n - 1/(n+1), so the series telescopes to 1 - 1/100 = 99/100. Full solution: S = Σ_{n=1}^{99} (1/n - 1/(n+1)) = (1 - 1/2) + (1/2 - 1/3) + ... + (1/99 - 1/100) = 1 - 1/100 = 99/100.",
-      "topic": "Series and Sequences - Telescoping Series",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T03:02:14.119Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 731,
-      "q": 10
-    },
-    {
-      "section": "Mathematics",
-      "text": "The minimum value of the function f(x) = 4x² + 1/x² for x > 0 is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "4",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "3",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "2",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "5",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Apply AM ≥ GM on the two positive terms 4x² and 1/x². AM = (4x² + 1/x²)/2 ≥ √(4x² × 1/x²) = √4 = 2. Thus minimum value = 2 × 2 = 4. Equality holds when 4x² = 1/x² → x⁴ = 1/4. Full: f'(x) = 8x - 2/x³ = 0 → 8x⁴ = 2 → x⁴ = 1/4 → x² = 1/2 (since x>0). f_min = 4(1/2) + 1/(1/2) = 2 + 2 = 4.",
-      "topic": "Application of Derivatives",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:55:26.692Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 720,
-      "q": 11
-    },
-    {
-      "section": "Mathematics",
-      "text": "The area of the triangle with vertices (0,0), (4,0), (0,3) is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "5",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "6",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "7.5",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "12",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: The triangle is right-angled at the origin with legs 4 and 3; area = ½ × 4 × 3 = 6. Full: Using the coordinate area formula ½ |x₁(y₂-y₃)+x₂(y₃-y₁)+x₃(y₁-y₂)| = ½ |0(0-3)+4(3-0)+0(0-0)| = 6.",
-      "topic": "Coordinate Geometry",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-20T22:38:26.137Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 628,
-      "q": 12
-    },
-    {
-      "section": "Mathematics",
-      "text": "The minimum value of 3x + 12/x for x > 0 is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "12",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "6",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "18",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "24",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: By AM-GM, 3x + 12/x ≥ 2√(3x·12/x) = 2√36 = 12, with equality when 3x = 12/x ⇒ x = 2. Full solution: Let f(x)=3x+12/x. Derivative f'(x)=3-12/x^2=0 ⇒ x^2=4 ⇒ x=2. f(2)=6+6=12. Since f''>0, it's a minimum.",
-      "topic": "Algebra (AM-GM Inequality)",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:56:32.554Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 721,
-      "q": 13
-    },
-    {
-      "section": "Mathematics",
-      "text": "The equation of the line passing through the intersection of lines 2x + 3y - 5 = 0 and x - 2y + 3 = 0 and parallel to the line 4x + 5y - 6 = 0 is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "28x - 35y = 59",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "35x + 28y = 59",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "28x + 35y = 59",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "28x + 35y = 51",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Required line is parallel to 4x+5y-6=0, so its form is 4x+5y+k=0. Find intersection of given lines: solving 2x+3y=5 and x-2y=-3 gives x=1/7, y=11/7. Substitute: 4(1/7) + 5(11/7) + k = 0 → 59/7 + k = 0 → k = -59/7. Equation: 4x+5y-59/7=0 → 28x+35y=59. Full: Family of lines: (2x+3y-5) + λ(x-2y+3)=0. Slope = -(2+λ)/(3-2λ). Equate to slope of given line (-4/5) → λ=2/13. Substitute λ to get 28x+35y=59.",
-      "topic": "Straight Lines",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:55:22.974Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 719,
-      "q": 14
-    },
-    {
-      "section": "Mathematics",
-      "text": "If α and β are the roots of x² - 5x + 6 = 0, then α³ + β³ equals:",
-      "options": [
-        {
-          "label": "A",
-          "text": "30",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "35",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "40",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "45",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Use identity α³+β³ = (α+β)³ - 3αβ(α+β). Here α+β=5, αβ=6 → 125 - 90 = 35. Full solution: Find roots 2 and 3, cube and sum: 8+27=35.",
-      "topic": "Algebra - Sum of Cubes of Roots",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-24T02:59:40.658Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "bar",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 727,
-      "q": 15
-    }
+   {
+    "name": "Mathematics",
+    "count": 15,
+    "bank": [
+     "Mathematics"
+    ]
+   }
   ]
+ },
+ "sections": [
+  {
+   "name": "Mathematics",
+   "color": "#a855f7"
+  }
+ ],
+ "questions": [
+  {
+   "section": "Mathematics",
+   "text": "A fair coin is tossed 4 times. The probability of getting at least one head is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "1/16",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "7/8",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "3/4",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "15/16",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Use complement rule: P(at least one head) = 1 - P(no heads) = 1 - (1/2)^4 = 1 - 1/16 = 15/16. Full solution: Total outcomes = 2^4 = 16. Only one outcome (TTTT) has no heads. So favorable = 15, probability = 15/16.",
+   "topic": "Probability",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:56:36.903Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": []
+   },
+   "chartData": null,
+   "id": 722,
+   "q": 1
+  },
+  {
+   "section": "Mathematics",
+   "text": "The distance between the parallel planes 2x - 3y + 6z = 5 and 4x - 6y + 12z = 15 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "5/7",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "1/7",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "5/14",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "10/7",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Make coefficients of x, y, z identical. Divide 2nd plane by 2: 2x - 3y + 6z = 7.5. Distance formula for parallel planes Ax+By+Cz=d₁ and Ax+By+Cz=d₂ is |d₁-d₂|/√(A²+B²+C²). Here |7.5 - 5| / √(4+9+36) = 2.5 / 7 = 5/14. Step-by-step: The planes are parallel because their normal vectors (2, -3, 6) and (4, -6, 12) are proportional. Rewrite 2nd plane as 2x - 3y + 6z = 15/2 = 7.5. The distance between planes Ax+By+Cz = d₁ and Ax+By+Cz = d₂ is |d₁ - d₂| / √(A²+B²+C²). Substituting A=2, B=-3, C=6, d₁=5, d₂=7.5: Distance = |5 - 7.5| / √(4+9+36) = 2.5 / √49 = 2.5 / 7 = 5/14.",
+   "topic": "3D Geometry - Planes",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:57:51.891Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 725,
+   "q": 2
+  },
+  {
+   "section": "Mathematics",
+   "text": "If f(x) = x³ + 2x² - 5x + 7, what is f'(1)?",
+   "options": [
+    {
+     "label": "A",
+     "text": "0",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "1",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "3",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "2",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Derivative of xⁿ is n xⁿ⁻¹; f'(x) = 3x² + 4x - 5 → f'(1) = 3 + 4 - 5 = 2. Full: differentiate termwise to get 3x²+4x-5, then substitute x=1 to obtain 2.",
+   "topic": "Calculus - Derivatives",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-18T22:56:39.834Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 471,
+   "q": 3
+  },
+  {
+   "section": "Mathematics",
+   "text": "What is the unit digit of (7^95 + 3^58)?",
+   "options": [
+    {
+     "label": "A",
+     "text": "0",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "2",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "4",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "6",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use cyclicity of unit digits. 7^95: cycle 7,9,3,1 (length 4); 95 mod 4 = 3 → unit digit 3. 3^58: cycle 3,9,7,1; 58 mod 4 = 2 → unit digit 9. Sum = 12 → unit digit 2. Full solution: Compute cycles as above, add unit digits, result 2.",
+   "topic": "Number Systems - Unit Digit",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:59:20.494Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 726,
+   "q": 4
+  },
+  {
+   "section": "Mathematics",
+   "text": "A number is divisible by 9 if the sum of its digits is divisible by 9. Using this rule, which of the following numbers is NOT divisible by 9?",
+   "options": [
+    {
+     "label": "A",
+     "text": "5,832",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "7,245",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "9,018",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "6,321",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Add digits. 5+8+3+2=18 → divisible. 7+2+4+5=18 → divisible. 9+0+1+8=18 → divisible. 6+3+2+1=12 → not divisible by 9. Hence option D is correct. Full calculation confirms.",
+   "topic": "Number Theory – Divisibility",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-20T22:37:06.960Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": null,
+   "chartData": null,
+   "id": 625,
+   "q": 5
+  },
+  {
+   "section": "Mathematics",
+   "text": "The value of the definite integral ∫₀^(π/2) sin³x / (sin³x + cos³x) dx is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "π/4",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "π/2",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "π/8",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "0",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use King's Property: ∫₀ᵃ f(x) dx = ∫₀ᵃ f(a-x) dx. Let I = ∫₀^(π/2) sin³x/(sin³x+cos³x) dx. Replace x by π/2 - x: I = ∫₀^(π/2) cos³x/(cos³x+sin³x) dx. Add both: 2I = ∫₀^(π/2) (sin³x+cos³x)/(sin³x+cos³x) dx = ∫₀^(π/2) 1 dx = π/2. Hence I = π/4. Step-by-step: Let I = ∫₀^(π/2) sin³x/(sin³x+cos³x) dx. Applying property ∫₀ᵃ f(x)dx = ∫₀ᵃ f(a-x)dx, we get I = ∫₀^(π/2) sin³(π/2-x)/[sin³(π/2-x)+cos³(π/2-x)] dx = ∫₀^(π/2) cos³x/(cos³x+sin³x) dx. Adding the two expressions for I: 2I = ∫₀^(π/2) (sin³x+cos³x)/(sin³x+cos³x) dx = ∫₀^(π/2) dx = [x]₀^(π/2) = π/2. Therefore, I = π/4.",
+   "topic": "Definite Integration",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:57:48.645Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 724,
+   "q": 6
+  },
+  {
+   "section": "Mathematics",
+   "text": "The term independent of x in the expansion of (x² + 1/x)⁹ is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "126",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "36",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "84",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "252",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: General term Tᵣ₊₁ = ⁹Cᵣ (x²)⁹⁻ʳ (1/x)ʳ = ⁹Cᵣ x¹⁸⁻³ʳ. For constant term, power of x = 0 ⇒ 18 - 3r = 0 ⇒ r = 6. Coefficient = ⁹C₆ = ⁹C₃ = (9×8×7)/(3×2×1) = 84. Step-by-step: The general term in binomial expansion (a+b)ⁿ is Tᵣ₊₁ = ⁿCᵣ aⁿ⁻ʳ bʳ. Here a = x², b = 1/x, n = 9. Tᵣ₊₁ = ⁹Cᵣ (x²)⁹⁻ʳ (x⁻¹)ʳ = ⁹Cᵣ x¹⁸⁻²ʳ⁻ʳ = ⁹Cᵣ x¹⁸⁻³ʳ. For term independent of x, exponent must be zero: 18 - 3r = 0 ⇒ r = 6. The coefficient is ⁹C₆ = ⁹C₃ = 84.",
+   "topic": "Binomial Theorem",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:57:40.781Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 723,
+   "q": 7
+  },
+  {
+   "section": "Mathematics",
+   "text": "The value of tan 15° + cot 15° is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "2",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "2√3",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "4",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "4/√3",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: tanθ + cotθ = 2/sin2θ. For θ=15°, sin30°=1/2 → 2/(1/2)=4. Full solution: tan15° = 2-√3, cot15° = 2+√3, sum = 4.",
+   "topic": "Trigonometry - Trigonometric Identities",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:59:47.747Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 728,
+   "q": 8
+  },
+  {
+   "id": 312,
+   "q": 9,
+   "section": "Mathematics",
+   "text": "A shopkeeper sells a cricket bat with a marked price of ₹5,000. He offers two alternatives: Scheme A: 15% discount followed by a further 10% discount on the reduced price. Scheme B: A single flat discount of x%. To make the final selling price identical in both schemes, what is the value of x?",
+   "options": [
+    {
+     "label": "A",
+     "text": "25%",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "23.5%",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "22.5%",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "24%",
+     "correct": false
+    }
+   ],
+   "solution": "Discount A = 15%. Remaining = 85%.\nDiscount B = 10%. Remaining = 90%.\nCombined Remaining = 85% x 90% = 0.85 x 0.90 = 0.765.\nTotal Discount = 1 - 0.765 = 0.235.\nx = 23.5%."
+  },
+  {
+   "section": "Mathematics",
+   "text": "The sum of the series 1/(1×2) + 1/(2×3) + 1/(3×4) + ... + 1/(99×100) is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "1/100",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "99/100",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "100/99",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "1",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Each term 1/(n(n+1)) = 1/n - 1/(n+1), so the series telescopes to 1 - 1/100 = 99/100. Full solution: S = Σ_{n=1}^{99} (1/n - 1/(n+1)) = (1 - 1/2) + (1/2 - 1/3) + ... + (1/99 - 1/100) = 1 - 1/100 = 99/100.",
+   "topic": "Series and Sequences - Telescoping Series",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T03:02:14.119Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 731,
+   "q": 10
+  },
+  {
+   "section": "Mathematics",
+   "text": "The minimum value of the function f(x) = 4x² + 1/x² for x > 0 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "4",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "3",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "2",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "5",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Apply AM ≥ GM on the two positive terms 4x² and 1/x². AM = (4x² + 1/x²)/2 ≥ √(4x² × 1/x²) = √4 = 2. Thus minimum value = 2 × 2 = 4. Equality holds when 4x² = 1/x² → x⁴ = 1/4. Full: f'(x) = 8x - 2/x³ = 0 → 8x⁴ = 2 → x⁴ = 1/4 → x² = 1/2 (since x>0). f_min = 4(1/2) + 1/(1/2) = 2 + 2 = 4.",
+   "topic": "Application of Derivatives",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:55:26.692Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 720,
+   "q": 11
+  },
+  {
+   "section": "Mathematics",
+   "text": "The area of the triangle with vertices (0,0), (4,0), (0,3) is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "5",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "6",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "7.5",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "12",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: The triangle is right-angled at the origin with legs 4 and 3; area = ½ × 4 × 3 = 6. Full: Using the coordinate area formula ½ |x₁(y₂-y₃)+x₂(y₃-y₁)+x₃(y₁-y₂)| = ½ |0(0-3)+4(3-0)+0(0-0)| = 6.",
+   "topic": "Coordinate Geometry",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-20T22:38:26.137Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 628,
+   "q": 12
+  },
+  {
+   "section": "Mathematics",
+   "text": "The minimum value of 3x + 12/x for x > 0 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "12",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "6",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "18",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "24",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: By AM-GM, 3x + 12/x ≥ 2√(3x·12/x) = 2√36 = 12, with equality when 3x = 12/x ⇒ x = 2. Full solution: Let f(x)=3x+12/x. Derivative f'(x)=3-12/x^2=0 ⇒ x^2=4 ⇒ x=2. f(2)=6+6=12. Since f''>0, it's a minimum.",
+   "topic": "Algebra (AM-GM Inequality)",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:56:32.554Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 721,
+   "q": 13
+  },
+  {
+   "id": 719,
+   "q": 14,
+   "section": "Mathematics",
+   "text": "A bank offers a special 'Festival Savings Scheme' where the interest rate for the first year is 5% per annum on the principal. However, the interest earned in the first year is added to the principal at the end of the year. If a customer deposits ₹10,000 and closes the account after exactly one year, what is the total amount received?",
+   "options": [
+    {
+     "label": "A",
+     "text": "₹10,500",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "₹10,525",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "₹10,600",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "₹10,400",
+     "correct": false
+    }
+   ],
+   "solution": "Simple Interest = (P * R * T) / 100.\nSubstituting values: P = 10000, R = 5%, T = 1 year.\nSI = (10000 * 5 * 1) / 100.\nSI = 500.\nTotal Amount = Principal + Interest = 10000 + 500 = 10500."
+  },
+  {
+   "section": "Mathematics",
+   "text": "If α and β are the roots of x² - 5x + 6 = 0, then α³ + β³ equals:",
+   "options": [
+    {
+     "label": "A",
+     "text": "30",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "35",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "40",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "45",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use identity α³+β³ = (α+β)³ - 3αβ(α+β). Here α+β=5, αβ=6 → 125 - 90 = 35. Full solution: Find roots 2 and 3, cube and sum: 8+27=35.",
+   "topic": "Algebra - Sum of Cubes of Roots",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:59:40.658Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 727,
+   "q": 15
+  }
+ ],
+ "totalQuestions": 15
 }
