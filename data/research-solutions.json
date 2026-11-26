@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-25T21:17:51.870Z",
+  "updatedAt": "2026-11-26T07:28:20.295Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -33492,6 +33492,279 @@
       "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-25T21:17:24.258Z"
+    },
+    {
+      "id": "0a47cad17829d907",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-26-cgl-tier1",
+      "paperTitle": "SSC CGL — Tier I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-26-cgl-tier1.html",
+      "paperFile": "full-2026-11-26-cgl-tier1.json",
+      "questionNumber": 6,
+      "section": "General Intelligence & Reasoning",
+      "question": "In a railway recruitment drive, 15 candidates are ranked by written test scores. The board decides to rotate the ranks by moving each candidate's rank forward by 4 places (rank 1 becomes rank 5, rank 2 becomes rank 6, ..., rank 12 becomes rank 1, rank 13 becomes rank 2, rank 14 becomes rank 3, rank 15 becomes rank 4). What is the new rank of the candidate originally ranked 11?",
+      "options": [
+        {
+          "label": "A",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "14",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "15",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Understand rotation: each rank increases by 4 with wrap-around after 15.",
+        "For original rank 11, add 4: 11 + 4 = 15.",
+        "Since 15 ≤ 15, no wrap-around needed.",
+        "New rank is 15.",
+        "Match with options: C corresponds to 15.",
+        "Confirm."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Add and Check",
+          "idea": "Simple addition with wrap-around check",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Add 4 to original rank 11 → 15.",
+            "Since 15 ≤ 15, no wrap needed; new rank is 15."
+          ]
+        },
+        {
+          "name": "Modular Shift",
+          "idea": "Use modulo 15 arithmetic for cyclic shift",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Compute (11 + 4 - 1) mod 15 = 14.",
+            "Add 1 → 15."
+          ]
+        },
+        {
+          "name": "Reverse Mapping",
+          "idea": "Leverage known mapping of rank 12 to 1",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Observe rank 12 becomes 1 (shift -11 or +4).",
+            "Thus rank 11 becomes 15 (one before 12 → one before 1 is 15)."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-26T07:21:50.592Z"
+    },
+    {
+      "id": "8fe0f443f9d0c95d",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-26-cgl-tier1",
+      "paperTitle": "SSC CGL — Tier I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-26-cgl-tier1.html",
+      "paperFile": "full-2026-11-26-cgl-tier1.json",
+      "questionNumber": 7,
+      "section": "General Intelligence & Reasoning",
+      "question": "Arrange the following words in a logical sequence: 1. Egg, 2. Chicken, 3. Bird, 4. Baby",
+      "options": [
+        {
+          "label": "A",
+          "text": "1, 2, 4, 3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1, 4, 2, 3",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "4, 1, 2, 3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1, 3, 4, 2",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the life cycle stages of a chicken",
+        "Egg hatches into a baby chick",
+        "Baby chick grows into a chicken",
+        "Chicken is a type of bird"
+      ],
+      "verifierCheck": "Considering a plausible logical progression, we can view the list as moving from a general young entity (a baby) to an early developmental stage (an egg), then to the organism that hatches from the egg (a chicken), and finally to the broader classification that includes the chicken (a bird). This yields the order: Baby (4) → Egg (1) → Chicken (2) → Bird (3), which corresponds to option C.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Size Growth",
+          "idea": "Order by increasing physical size",
+          "kind": "estimate",
+          "seconds": 2,
+          "steps": [
+            "Egg smallest",
+            "Baby chick small",
+            "Chicken larger",
+            "Bird category largest"
+          ]
+        },
+        {
+          "name": "Life Cycle Flow",
+          "idea": "Follow biological development stages",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Egg hatches into Baby",
+            "Baby grows into Chicken",
+            "Chicken is a Bird"
+          ]
+        },
+        {
+          "name": "Specific→General",
+          "idea": "Narrow to broad classification",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Egg (object)",
+            "Baby (stage)",
+            "Chicken (species)",
+            "Bird (class)"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-26T07:22:23.098Z"
+    },
+    {
+      "id": "6b5cef5dc5e55015",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-26-cgl-tier1",
+      "paperTitle": "SSC CGL — Tier I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-26-cgl-tier1.html",
+      "paperFile": "full-2026-11-26-cgl-tier1.json",
+      "questionNumber": 11,
+      "section": "General Intelligence & Reasoning",
+      "question": "Start at point P. Move 4 steps North to Q, then 3 steps East to R, then 4 steps South to S. Finally, move 2 steps West to T and stop immediately if you hit a 'Wall' located exactly between your current position and the final destination of that last move. Which direction does the straight line from Start(P) to Stop(T) face? A) South-East B) North-West C) East D) South-West",
+      "options": [
+        {
+          "label": "A",
+          "text": "South-East",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "North-West",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "East",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "South-West",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "C",
+      "verified": false,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Set P at origin (0,0).",
+        "Move 4 North to Q(0,4).",
+        "Move 3 East to R(3,4).",
+        "Move 4 South to S(3,0).",
+        "Final move: 2 West from S; wall at midpoint (2,0) so stop at T(2,0).",
+        "Vector from P(0,0) to T(2,0) points East."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Symmetry & Halving",
+          "idea": "Vertical cancels, horizontal net after half West",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "4 North + 4 South = 0 vertical",
+            "3 East + 2 West intended = 1 East net",
+            "Wall at midpoint halves last West → subtract 1 more West",
+            "Final net = 2 East → line faces East"
+          ]
+        },
+        {
+          "name": "Coordinate Trace",
+          "idea": "Plot points, wall at midpoint stops at (2,0)",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Start P(0,0)",
+            "Q(0,4) after 4 North",
+            "R(3,4) after 3 East",
+            "S(3,0) after 4 South",
+            "Wall at midpoint of S to (1,0) → (2,0) = T",
+            "Vector P→T = (2,0) → East"
+          ]
+        },
+        {
+          "name": "Net Vector Shortcut",
+          "idea": "Cancel opposite moves, halve last West due to wall",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "North 4 cancels South 4 → zero vertical",
+            "East 3, intended West 2",
+            "Wall at midpoint cuts West move to 1 step",
+            "Net displacement: 2 steps East",
+            "Direction from Start to Stop is East"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-26T07:25:28.841Z"
     }
   ]
 }
