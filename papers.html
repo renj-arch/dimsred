@@ -307,6 +307,11 @@ function renderPaperGrid() {
     mtLink.style.cssText = 'margin-top:10px;display:inline-block;background:var(--accent);color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;text-align:center;width:100%';
     mtLink.textContent = '▶ Take as Mock Test';
     card.appendChild(mtLink);
+    var ansLink = document.createElement('a');
+    ansLink.href = mockTestHref(p) + '&answers=1';
+    ansLink.style.cssText = 'margin-top:6px;display:inline-block;background:transparent;color:var(--accent);border:1px solid var(--accent);padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;text-align:center;width:100%';
+    ansLink.textContent = '👁 Study with answers';
+    card.appendChild(ansLink);
     grid.appendChild(card);
   });
 }
