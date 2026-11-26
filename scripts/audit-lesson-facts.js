@@ -81,13 +81,24 @@ function walk(dir, out) {
 // Prose only: the body paragraphs, not the contents list, nav, practice block or
 // figure labels. Those carry no claims a reader can be misled by.
 function lessonParagraphs(html) {
+  let body;
   const start = html.indexOf('<div class="lesson-body"');
-  if (start === -1) return [];
-  let body = html.slice(start);
-  const endMarkers = ['id="practice-qs"', '<!-- lesson-nav -->', 'class="lesson-nav"'];
-  for (const m of endMarkers) {
-    const i = body.indexOf(m);
-    if (i > 0) body = body.slice(0, i);
+  if (start !== -1) {
+    body = html.slice(start);
+    const endMarkers = ['id="practice-qs"', '<!-- lesson-nav -->', 'class="lesson-nav"'];
+    for (const m of endMarkers) {
+      const i = body.indexOf(m);
+      if (i > 0) body = body.slice(0, i);
+    }
+  } else {
+    // Root content pages (legal.html, divinity.html, ...) have no lesson-body;
+    // read their prose, minus nav/footer/scripts.
+    body = html
+      .replace(/<nav[\s\S]*?<\/nav>/gi, ' ')
+      .replace(/<footer[\s\S]*?<\/footer>/gi, ' ')
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<svg[\s\S]*?<\/svg>/gi, ' ');
   }
   body = body.replace(/<div class="lesson-toc"[\s\S]*?<\/div>\s*<\/div>/g, '');
   body = body.replace(/<svg[\s\S]*?<\/svg>/g, ' ');
@@ -300,19 +311,20 @@ async function main() {
 
   let files;
   if (has('file')) files = [path.resolve(arg('file'))];
-  else files = walk(ROOT, [])
-    .filter((f) => /\/course\/[^/]*\/lesson-[^/]*\.html$/i.test(f.replace(/\\/g, '/')))
-    // The audit reads prose. A hub/index page or a bare derivation sheet has no
-    // <div class="lesson-body">, so lessonParagraphs() returns [] and the lesson
-    // can never be marked audited. Those files therefore stay at "never audited"
-    // (timestamp 0) and the never-audited-first sort kept pushing them to the top
-    // of the queue on EVERY run: the lane read 20 index pages, found no
-    // paragraphs, and reported "audited 0 lesson(s)" forever while the real
-    // corpus was never reached. Keep only files that actually carry a body.
-    .filter((f) => {
-      try { return fs.readFileSync(f, 'utf8').indexOf('<div class="lesson-body"') !== -1; }
-      catch (e) { return false; }
-    });
+  else {
+    const lessonFiles = walk(ROOT, [])
+      .filter((f) => /\/course\/[^/]*\/lesson-[^/]*\.html$/i.test(f.replace(/\\/g, '/')))
+      .filter((f) => {
+        try { return fs.readFileSync(f, 'utf8').indexOf('<div class="lesson-body"') !== -1; }
+        catch (e) { return false; }
+      });
+    const ROOT_CONTENT = ['legal.html', 'divinity.html', 'science.html', 'polytechnic.html', 'ssc-je.html'];
+    const rootFiles = ROOT_CONTENT
+      .map((f) => path.join(ROOT, f))
+      .filter((f) => fs.existsSync(f))
+      .filter((f) => /<p[\s>]/i.test(fs.readFileSync(f, 'utf8')));
+    files = lessonFiles.concat(rootFiles);
+  }
 
   // Least-recently-audited first. Without this the lane re-read the same first
   // N files every day, so the rest of the corpus was never reached.

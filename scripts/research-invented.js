@@ -59,8 +59,9 @@ function extractJson(text) {
 
 const SYSTEM = 'You are a methods researcher for an Indian exam site. Given an MCQ, its options and the correct answer, ' +
   'write an ORIGINAL alternative method that reaches the correct answer by a different route from the standard solution. ' +
+  'Also give a "shortcut": one line (<=120 chars) of the fastest estimation or elimination a topper uses to predict the answer. ' +
   'It must be verifiable in 2-4 short steps. Reply JSON only: ' +
-  '{"name":"3-5 words naming the method","seconds":10,"steps":["step 1","step 2","step 3"]}.';
+  '{"name":"3-5 words naming the method","seconds":10,"shortcut":"<=120 chars","steps":["step 1","step 2","step 3"]}.';
 const VERIFY = 'You are an independent verifier. Given the question, the options, the correct answer and a proposed method, ' +
   'does the method actually reach the correct answer, with no wrong step? Reply JSON only: {"ok":true|false,"reason":"<=160 chars"}';
 
@@ -79,7 +80,24 @@ const VERIFY = 'You are an independent verifier. Given the question, the options
     section: q._exam || 'course',
     topic: q.subject || '',
     difficulty: ''
-  })));
+  }))).concat((function () {
+    // The exam question banks back the mock tests and papers; include them so
+    // the Research Team and the quick trick appear where students sit papers.
+    const out = [];
+    try {
+      const dir = path.join(ROOT, 'question-bank');
+      for (const f of fs.readdirSync(dir)) {
+        if (!/\.json$/.test(f) || /-meta\.json$/.test(f)) continue;
+        const b = load(path.join(dir, f), { questions: [] });
+        for (const q of (b.questions || [])) {
+          const correct = (q.options || []).filter((o) => o && o.correct === true)[0];
+          if (!correct || !q.text) continue;
+          out.push({ stem: q.text, answer: correct.text, options: (q.options || []).map((o) => o.text), section: f.replace(/\.json$/, ''), topic: q.section || '', difficulty: '' });
+        }
+      }
+    } catch (e) { /* no bank checkout */ }
+    return out;
+  })());
   const seen = new Set();
   return all.filter((q) => {
     if (!q || !q.stem || !q.answer) return false;
@@ -114,6 +132,7 @@ const VERIFY = 'You are an independent verifier. Given the question, the options
     store.methods[keyOf(q.stem)] = {
       name: clean(m.name).slice(0, 80),
       seconds: parseInt(m.seconds, 10) || 10,
+      shortcut: clean(m.shortcut || '').slice(0, 140),
       steps,
       answer: String(q.answer),
       verified: true,
