@@ -1,0 +1,636 @@
+{
+  "folder": "nda",
+  "slug": "practice-set-15",
+  "title": "NDA Practice Set 15",
+  "pageTitle": "NDA Practice Set 15 — Solved Paper",
+  "pageDesc": "Free NDA practice paper set 15 with detailed solutions. Pattern: Mathematics.",
+  "meta": "15 Q · 19 min · 38 marks · Mathematics pattern",
+  "timerMinutes": 19,
+  "totalMarks": 38,
+  "createdDate": "2026-11-26",
+  "blueprint": {
+    "paper": "maths",
+    "name": "Mathematics",
+    "total": 120,
+    "marks": 300,
+    "duration": 150,
+    "negative": 0.333333,
+    "source": "NDA Paper I Mathematics: 120 questions, 300 marks, 150 minutes; negative 1/3.",
+    "provisional": false,
+    "sections": [
+      {
+        "name": "Mathematics",
+        "count": 15,
+        "bank": [
+          "Mathematics"
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "name": "Mathematics",
+      "color": "#a855f7"
+    }
+  ],
+  "questions": [
+    {
+      "section": "Mathematics",
+      "text": "The value of the definite integral <span class=\"math\">∫₀^π/2 \\frac{\\sin x}{\\sin x + \\cos x} dx</span> is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "π/2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "π/4",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "π",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "π/8",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use King's Property <span class=\"math\">I = ∫_a^b f(x)dx = ∫_a^b f(a+b-x)dx</span>. Here <span class=\"math\">f(π/2 - x) = \\cos x/(\\sin x + \\cos x)</span>. Add original <span class=\"math\">I</span> and transformed <span class=\"math\">I</span>: <span class=\"math\">2I = ∫_0^{\\pi/2} 1 dx = π/2 ⇒ I = π/4</span>. Full Solution: Let <span class=\"math\">I = ∫_0^{\\pi/2} \\frac{\\sin x}{\\sin x + \\cos x} dx</span>. Applying the property, <span class=\"math\">I = ∫_0^{\\pi/2} \\frac{\\sin(\\pi/2-x)}{\\sin(\\pi/2-x)+\\cos(\\pi/2-x)} dx = ∫_0^{\\pi/2} \\frac{\\cos x}{\\cos x + \\sin x} dx</span>. Adding the two expressions for <span class=\"math\">I</span>: <span class=\"math\">2I = ∫_0^{\\pi/2} \\frac{\\sin x + \\cos x}{\\sin x + \\cos x} dx = ∫_0^{\\pi/2} 1 dx = [x]_0^{\\pi/2} = \\pi/2</span>. Therefore, <span class=\"math\">I = \\pi/4</span>.",
+      "topic": "Definite Integrals",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-26T00:15:45.354Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 839,
+      "q": 1
+    },
+    {
+      "section": "Mathematics",
+      "text": "lim_{x→0} (sin5x)/x equals:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "25",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: Standard limit lim_{x→0} sin(kx)/x = k. Here k = 5, so the limit is 5. Full solution: rewrite as 5·(sin5x)/(5x) and use lim_{u→0} sin u / u = 1.",
+      "topic": "Calculus - Limits",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-26T00:12:49.710Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 829,
+      "q": 2
+    },
+    {
+      "section": "Mathematics",
+      "text": "What is the value of i^2023 + i^2024 + i^2025 + i^2026?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "-1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "i",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Powers of i repeat every 4 (i, -1, -i, 1); the sum of any four consecutive powers is 0. Since 2023 ≡ 3 (mod 4), the four terms are i^3, i^0, i^1, i^2 = -i, 1, i, -1 which add to 0. Full solution: reduce each exponent modulo 4, substitute the corresponding values, and sum them.",
+      "topic": "Complex Numbers",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "Groq openai/gpt-oss-120b",
+      "generatedAt": "2026-11-26T00:12:43.419Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 826,
+      "q": 3
+    },
+    {
+      "section": "Mathematics",
+      "text": "lim_{x→0} (e^x - 1 - x)/x^2 equals:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1/2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "∞",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use Maclaurin series e^x = 1 + x + x^2/2 + x^3/6 + …; then numerator ≈ x^2/2, so limit = 1/2. Full: e^x = 1 + x + x^2/2 + o(x^2). Substituting, (e^x - 1 - x)/x^2 = (x^2/2 + o(x^2))/x^2 → 1/2 as x→0.",
+      "topic": "Calculus",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+      "generatedAt": "2026-11-26T00:13:13.467Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 831,
+      "q": 4
+    },
+    {
+      "section": "Mathematics",
+      "text": "From the top of a tower 50 m high, the angles of depression of two cars on the same side of the tower are 30° and 45°. The distance between the two cars is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "50(√3 + 1) m",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "50(√3 - 1) m",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "50√3 m",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "100 m",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Distance from tower base = Height × cot(angle). For 45°: d₁ = 50 × 1 = 50 m. For 30°: d₂ = 50 × √3 m. Distance between cars = d₂ - d₁ = 50(√3 - 1) m. Full: In right triangles, tan 45° = 50/x → x = 50. tan 30° = 50/y → y = 50√3. Required distance = y - x = 50√3 - 50 = 50(√3 - 1) m.",
+      "topic": "Heights and Distances",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-24T02:55:15.547Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 718,
+      "q": 5
+    },
+    {
+      "section": "Mathematics",
+      "text": "The value of tan 15° is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "2 - √3",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "2 + √3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "√3 - 2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1/√3",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use tan(45°−30°) = (tan45−tan30)/(1+tan45 tan30) = (1−1/√3)/(1+1/√3) = (√3−1)/(√3+1) = 2−√3. Full: tan15 = tan(45-30) = (1-1/√3)/(1+1/√3) = multiply numerator and denominator by √3: (√3-1)/(√3+1) = ((√3-1)^2)/(3-1) = (4-2√3)/2 = 2-√3.",
+      "topic": "Trigonometry",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-26T00:13:11.568Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 830,
+      "q": 6
+    },
+    {
+      "section": "Mathematics",
+      "text": "The value of the definite integral ∫₀^{π/2} sin² x dx is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "π/2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "π/8",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "π/6",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "π/4",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: Use symmetry ∫₀^{π/2} sin²x dx = ∫₀^{π/2} cos²x dx. Adding gives ∫₀^{π/2} 1 dx = π/2, so each integral = π/4. Full solution: Integrate sin²x = (1-cos2x)/2 from 0 to π/2 → [x/2 - sin2x/4]₀^{π/2} = π/4.",
+      "topic": "Calculus - Definite Integration",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-24T02:59:54.057Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "bar",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 730,
+      "q": 7
+    },
+    {
+      "section": "Mathematics",
+      "text": "The magnitude of the projection of vector a = 2i + 3j + 6k on vector b = i + 2j + 2k is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "20/9",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10/3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20/3",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: Projection magnitude = (a·b)/|b|. a·b = 2*1+3*2+6*2 = 20. |b| = √(1+4+4)=3. So projection = 20/3. Full: Compute dot product = 20, magnitude of b = 3, then projection = 20/3.",
+      "topic": "Vectors",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+      "generatedAt": "2026-11-26T00:13:17.753Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 833,
+      "q": 8
+    },
+    {
+      "section": "Mathematics",
+      "text": "The distance between the parallel lines 3x + 4y + 5 = 0 and 3x + 4y - 10 = 0 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "6",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Distance between parallel lines ax+by+c1=0 and ax+by+c2=0 is |c1-c2|/√(a²+b²). Here |5-(-10)|/5 = 15/5 = 3. Full solution: Apply formula directly.",
+      "topic": "Coordinate Geometry - Distance Between Parallel Lines",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-24T02:59:51.076Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "bar",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 729,
+      "q": 9
+    },
+    {
+      "section": "Mathematics",
+      "text": "If α and β are the roots of the quadratic equation 2x² - 3x + 4 = 0, then the equation whose roots are α² and β² is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "4x² + 7x + 16 = 0",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "4x² - 7x + 16 = 0",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "4x² + 7x - 16 = 0",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4x² - 7x - 16 = 0",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For roots α, β of ax²+bx+c=0, the equation with roots α², β² is a²x² - (b²-2ac)x + c² = 0. Here a=2, b=-3, c=4 → 4x² - (9-16)x + 16 = 4x² + 7x + 16 = 0. Full: α+β = 3/2, αβ = 2. New sum = (α+β)² - 2αβ = 9/4 - 4 = -7/4. New product = (αβ)² = 4. Equation: x² - (-7/4)x + 4 = 0 → 4x² + 7x + 16 = 0.",
+      "topic": "Quadratic Equations",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-24T02:55:06.755Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 717,
+      "q": 10
+    },
+    {
+      "section": "Mathematics",
+      "text": "Two fair dice are rolled. The probability that the sum of the numbers is 9 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/6",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1/9",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "1/12",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1/18",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Total outcomes = 36. Favorable pairs for sum 9: (3,6),(4,5),(5,4),(6,3) → 4 outcomes. Probability = 4/36 = 1/9. Full: List all 36 equally likely outcomes, count those with sum 9, divide by 36.",
+      "topic": "Probability",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+      "generatedAt": "2026-11-26T00:13:19.158Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 834,
+      "q": 11
+    },
+    {
+      "section": "Mathematics",
+      "text": "If A = [[2,1,1],[1,2,1],[1,1,2]], what is det(A)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "8",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For a 3×3 matrix with diagonal a and off-diagonal b, det = (a-b)^2 (a+2b). Here a=2, b=1 → (1)^2 × 4 = 4. Full solution: apply the formula or perform row operations to obtain an upper‑triangular matrix and multiply the diagonal entries.",
+      "topic": "Matrices and Determinants",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+      "generatedAt": "2026-11-26T00:12:47.002Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 827,
+      "q": 12
+    },
+    {
+      "section": "Mathematics",
+      "text": "The modulus of (1 + i)^8 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "8",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "32",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "16",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "64",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: |1+i| = √2, so |(1+i)^8| = (√2)^8 = 2^4 = 16. Full solution: Compute modulus of base: √(1^2+1^2)=√2; raise to power 8: (√2)^8 = (2^{1/2})^8 = 2^4 = 16.",
+      "topic": "Complex Numbers",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "Groq openai/gpt-oss-120b",
+      "generatedAt": "2026-11-26T00:15:11.919Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 836,
+      "q": 13
+    },
+    {
+      "section": "Mathematics",
+      "text": "The value of sin15° cos15° is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "√3/4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1/4",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "√3/2",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use sin2θ = 2 sinθ cosθ ⇒ sinθ cosθ = (1/2) sin2θ. For θ=15°, sin30° = 1/2, so the product = (1/2)×(1/2) = 1/4. Full solution: compute sin15° and cos15° via half‑angle formulas or known exact values and multiply.",
+      "topic": "Trigonometry",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+      "generatedAt": "2026-11-26T00:12:48.652Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 828,
+      "q": 14
+    },
+    {
+      "section": "Mathematics",
+      "text": "The value of lim_{x→0} (1 - cos x)/x^2 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1/2",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use the standard limit (1 - cos x) ~ x^2/2 as x→0, so the ratio tends to 1/2. Full solution: Apply the series expansion cos x = 1 - x^2/2 + x^4/24 - …; then (1 - cos x)/x^2 = (x^2/2 - x^4/24 + …)/x^2 → 1/2.",
+      "topic": "Limits",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-26T00:15:11.318Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 835,
+      "q": 15
+    }
+  ]
+}
