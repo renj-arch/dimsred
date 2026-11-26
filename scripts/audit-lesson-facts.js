@@ -162,9 +162,28 @@ const VERIFY_SYSTEM = 'You are an independent fact-checker for an Indian civil-s
   'is accurate and would not itself introduce an error. If the original is right, if the correction is ' +
   'incomplete or misleading, or if the matter is debatable, answer "agree": false. ' +
   'Be strict: a missed error is cheaper than a false correction printed on the site. ' +
-  'Answer with JSON only: {"verdicts":[{"n":<number>,"agree":true|false,"reason":"<=160 chars"}]}';
+  'Answer with JSON only: {"verdicts":[{"n":<number>,"agree":true|false,"reason":"<=160 chars","source":"url or official document (required when the only change is a date/year)"}]}';
 
-async function verifyProblems(problems) {
+// Manually verified facts that the model must never "correct" again.
+var OVERRIDES = (function () {
+  try {
+    var j = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'fact-overrides.json'), 'utf8'));
+    return Array.isArray(j.protected) ? j.protected : [];
+  } catch (e) { return []; }
+})();
+function isProtected(rel, quote) {
+  return OVERRIDES.some(function (o) {
+    return o && o.match && ((!o.file || o.file === rel) && String(quote).indexOf(o.match) !== -1);
+  });
+}
+function onlyYearDiff(a, b) {
+  var ya = a.match(/\b(19|20)\d{2}\b/g) || [];
+  var yb = b.match(/\b(19|20)\d{2}\b/g) || [];
+  if (!ya.length || !yb.length || ya.join(',') === yb.join(',')) return false;
+  return a.replace(/\b(19|20)\d{2}\b/g, 'Y') === b.replace(/\b(19|20)\d{2}\b/g, 'Y');
+}
+
+async function verifyProblems(problems, rel) {
   if (!problems.length) return [];
   const list = problems.map(function (p, i) {
     return '(' + (i + 1) + ') QUOTE: ' + String(p.quote || '') +
@@ -190,8 +209,17 @@ async function verifyProblems(problems) {
       if (v) console.log('  [disputed] "' + String(p.quote || '').slice(0, 70) + '" - ' + String(v.reason || 'not confirmed'));
       return false;
     }
+    if (isProtected(rel, String(p.quote || ''))) {
+      console.log('  [protected] "' + String(p.quote || '').slice(0, 70) + '" - a verified fact, not corrected');
+      return false;
+    }
+    if (onlyYearDiff(String(p.quote || ''), String(p.correction || '')) && !v.source) {
+      console.log('  [year change needs a source] "' + String(p.quote || '').slice(0, 70) + '"');
+      return false;
+    }
     p.verified = true;
     p.verifierReason = String(v.reason || '').slice(0, 200);
+    if (v.source) p.source = String(v.source).slice(0, 200);
     return true;
   });
 }
@@ -351,7 +379,7 @@ async function main() {
         continue;
       }
       // Nothing is published or applied on one model's word alone.
-      problems = await verifyProblems(problems);
+      problems = await verifyProblems(problems, rel);
       for (const p of problems) {
         if (!p || !p.quote) continue;
         flagged++;
