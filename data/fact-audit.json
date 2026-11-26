@@ -1,190 +1,200 @@
 {
- "generatedAt": "2026-11-26T21:22:46.531Z",
- "lessonsAudited": 15,
- "flagged": 18,
- "applied": 10,
- "modelCalls": 23,
- "modelFailures": 68,
- "deadlineHit": true,
+ "generatedAt": "2026-11-26T21:58:10.880Z",
+ "lessonsAudited": 18,
+ "flagged": 19,
+ "applied": 8,
+ "modelCalls": 20,
+ "modelFailures": 65,
+ "deadlineHit": false,
  "problems": [
   {
-   "file": "ssc-gd/course/english/lesson-grammar.html",
-   "quote": "Raising can also be object-to-subject (e.g., I believe him to be honest )",
-   "problem": "believe is an ECM verb, not a raising verb; raising verbs do not assign accusative case to an object.",
-   "correction": "ECM verbs like believe assign accusative case to the embedded subject (e.g., I believe him to be honest).",
+   "file": "ssc-gd/course/reasoning/lesson-coding-decoding.html",
+   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "problem": "The example CAT→DDU does not follow a +1 shift; CAT with +1 shift would be DBU, not DDU.",
+   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original mislabels ECM verb 'believe' as raising; correction correctly identifies ECM case assignment.",
+   "verifierReason": "Original CAT→DDU contradicts +1 shift; correction CAT→DBU matches rule.",
    "applied": false
   },
   {
-   "file": "ssc-gd/course/english/lesson-grammar.html",
-   "quote": "He is believed to be honest (raising)",
-   "problem": "believe is an ECM verb; its passive is not an instance of a raising verb.",
-   "correction": "He is believed to be honest (ECM passive)",
+   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
+   "quote": "opposite the centre of the circle",
+   "problem": "In circular seating puzzles, \"opposite\" describes a relation between two persons (diametrically opposite seats), not between a person and the centre. The centre is a point, not a seat; a person faces the centre or sits opposite another person.",
+   "correction": "faces the centre of the circle",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "In circular seating, 'opposite' relates two seats; a person faces the centre, not opposite it.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
+   "quote": "compute the rank of the constraint matrix over GF(2) for binary clues",
+   "problem": "Logical puzzle clues (e.g., positional, sequencing) are not linear equations over GF(2); rank computation over GF(2) applies to linear algebraic systems, not general constraint satisfaction problems like seating arrangements.",
+   "correction": "assess clue independence through logical analysis",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "General logical clues are not linear over GF(2); rank computation applies to linear systems, not CSPs.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-simple-interest.html",
+   "quote": "for a premium bond YTM coupon rate",
+   "problem": "Missing inequality; for a premium bond, YTM is less than the coupon rate.",
+   "correction": "for a premium bond YTM < coupon rate",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original lacks inequality; premium bond YTM < coupon rate is correct.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-simple-interest.html",
+   "quote": "When the perpetuity grows at rate g (with g ), the formula is PV = R/(i – g) × (1+i)⁻ᵈ",
+   "problem": "Condition on growth rate g is incomplete; the formula requires g < i.",
+   "correction": "When the perpetuity grows at rate g (with g < i), the formula is PV = R/(i – g) × (1+i)⁻ᵈ",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original condition on g incomplete; growing perpetuity requires g < i for convergence.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-simple-interest.html",
+   "quote": "the formula only holds for g , otherwise the present value diverges",
+   "problem": "Condition on g is incomplete; should be g < i.",
+   "correction": "the formula only holds for g < i, otherwise the present value diverges",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original condition on g incomplete; formula valid only when g < i, else PV diverges.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-puzzles.html",
+   "quote": "solvable in O(V · E) with the Hopcroft‑Karp algorithm",
+   "problem": "Hopcroft‑Karp algorithm runs in O(E √V) time, not O(V·E).",
+   "correction": "solvable in O(E √V) with the Hopcroft‑Karp algorithm",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Hopcroft-Karp is O(E√V); O(VE) is slower Ford-Fulkerson bound.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/reasoning/lesson-series.html",
+   "quote": "Recognising a recursive pattern requires computing successive differences and checking whether the differences themselves follow a known series.",
+   "problem": "The method of successive differences is used to identify polynomial sequences (quadratic, cubic, etc.), not recursive sequences. Recursive patterns like Fibonacci or linear recurrences are identified by the relationship between a term and its predecessors, not by difference tables.",
+   "correction": "Recognising a recursive pattern involves identifying the relationship between a term and its predecessors, such as T_n = a·T_{n-1} + b·T_{n-2}.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original confuses polynomial identification (finite differences) with recursive pattern recognition (recurrence relations). Correction correctly defines recursive patterns.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-art-culture-prelims.html",
+   "quote": "which inscribed Koodiyattam in 2001 and the “Traditional brass and copper craft of utensil making” in 2023",
+   "problem": "Koodiyattam was proclaimed a Masterpiece in 2001 but inscribed on the Representative List in 2008; the brass and copper craft was inscribed in 2014, not 2023.",
+   "correction": "which inscribed Koodiyattam in 2008 and the “Traditional brass and copper craft of utensil making” in 2014",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Koodiyattam proclaimed 2001, inscribed 2008; Thatheras craft inscribed 2014 per UNESCO.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-art-culture-prelims.html",
+   "quote": "the Vijayanagara Empire nurtured the devotional compositions of the Trinity — Tyagaraja, Muthuswami Dikshitar and Syama Sastri — that codified the Carnatic kriti structure",
+   "problem": "The Trinity (Tyagaraja, Dikshitar, Syama Sastri) lived in the 18th–19th centuries, long after the Vijayanagara Empire (ended 1646). They were patronised by the Maratha court of Thanjavur.",
+   "correction": "the Maratha court of Thanjavur nurtured the devotional compositions of the Trinity — Tyagaraja, Muthuswami Dikshitar and Syama Sastri — that codified the Carnatic kriti structure",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Trinity (18th-19th c.) post-date Vijayanagara (ended 1646); patronised by Thanjavur Marathas.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/gs/lesson-art-culture-prelims.html",
+   "quote": "Indian architects such as Le Corbusier (Chandigarh Capitol Complex), Louis Kahn (Indian Institute of Management Ahmedabad) and Charles Correa (Jawahar Kala Kendra, Jaipur)",
+   "problem": "Le Corbusier was Swiss-French and Louis Kahn was American; they are not Indian architects.",
+   "correction": "architects such as Le Corbusier (Chandigarh Capitol Complex), Louis Kahn (Indian Institute of Management Ahmedabad) and Charles Correa (Jawahar Kala Kendra, Jaipur)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Le Corbusier (Swiss-French) and Kahn (American) not Indian; Correa is Indian.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/csat/lesson-logical-reasoning.html",
+   "quote": "if B faces centre, position(A) ≡ position(B) − 3 (mod N); if B faces outward, position(A) ≡ position(B) + 3 (mod N)",
+   "problem": "Signs for left/right based on facing are reversed: for centre-facing, left is clockwise so position(A) = position(B) + 3; for outward-facing, left is anticlockwise so position(A) = position(B) - 3.",
+   "correction": "if B faces centre, position(A) ≡ position(B) + 3 (mod N); if B faces outward, position(A) ≡ position(B) − 3 (mod N)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original sign reversal is incorrect; correction swaps signs correctly.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/csat/lesson-logical-reasoning.html",
+   "quote": "the man’s relative displacement vector in ground coordinates is the rotation of u0 by 90°. His final bearing is therefore the initial bearing plus 90°.",
+   "problem": "The relative displacement vector during simultaneous radial walk and 90° platform rotation is not simply the initial radial vector rotated by 90°; that would only be true if rotation preceded the walk. The net displacement direction is not initial bearing + 90° (e.g., 45° for constant speeds).",
+   "correction": "the man’s final facing direction is initial bearing plus 90°; his displacement vector requires vector integration over the rotation.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original displacement claim is false; correction clarifies facing vs displacement.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/csat/lesson-logical-reasoning.html",
+   "quote": "Cardinal direction calculi (e.g., the 9‑intersection model or the more expressive OPRA m )",
+   "problem": "The 9-intersection model (Egenhofer) is a topological calculus for region relations, not a cardinal direction calculus; it does not partition the plane into directional sectors.",
+   "correction": "Cardinal direction calculi (e.g., the cone-based calculus or the more expressive OPRA_m)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "9‑intersection is a topological calculus, not a cardinal direction one; cone‑based or OPRA_m are appropriate examples.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/csat/lesson-logical-reasoning.html",
+   "quote": "Case 2: S_B =1. Symmetric analysis yields contradiction because (2) gives no constraint but (1) and (3) force two spies.",
+   "problem": "Case 2 (S_B=1) does not yield a contradiction; a consistent assignment exists: A=knave, B=spy, C=knave.",
+   "correction": "Case 2: S_B =1 yields a consistent assignment (A=knave, B=spy, C=knave).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Case 2 (S_B=1) is consistent with assignment A=knave, B=spy, C=knave; no contradiction arises.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/csat/lesson-logical-reasoning.html",
+   "quote": "Hence unique solution: A is spy, B is knave, C is knave.",
+   "problem": "The puzzle has three consistent solutions (A=spy/B=knave/C=knave; A=knave/B=spy/C=knave; A=knave/B=knight/C=spy), not a unique one.",
+   "correction": "Hence there are three solutions, not a unique one.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "The puzzle admits three distinct consistent assignments, not a unique solution.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/csat/lesson-logical-reasoning.html",
+   "quote": "The second segment is therefore 2 km southeast (components 2·√2/2, ‑2·√2/2). Adding to the first segment gives a net displacement of (3 + √2, ‑√2) km, whose direction is arctan(‑√2 / (3 + √2)) ≈ -15° ",
+   "problem": "The problem statement does not give a distance for the second segment; 2 km is invented. Also the computed angle is approximately -17.7°, not -15°.",
+   "correction": "The second segment length is not specified; if it were 2 km, the direction would be arctan(-√2/(3+√2)) ≈ -17.7° from East.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original invents 2 km distance and miscalculates angle as -15°; correct angle is -17.7°.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/csat/lesson-logical-reasoning.html",
+   "quote": "Consequently, S is the father of P, making S the paternal grandfather of Q.",
+   "problem": "The given statements do not establish that P is a parent of Q, so S cannot be concluded as Q's paternal grandfather.",
+   "correction": "The statements are insufficient to determine S's relationship to Q; additional information about P and Q's relationship is needed.",
    "confidence": "medium",
    "verified": true,
-   "verifierReason": "Passive of ECM verb 'believe' is not a raising verb; 'ECM passive' is the precise term."
+   "verifierReason": "Original assumes P is parent of Q without basis; correction correctly states insufficiency."
   },
   {
-   "file": "ssc-gd/course/gk/lesson-general-science.html",
-   "quote": "7 = neutral (pure water at 25°C), 7 acidic, 7 basic (alkaline)",
-   "problem": "The pH scale description incorrectly states that 7 is acidic and 7 is basic; it should indicate that values below 7 are acidic and above 7 are basic.",
-   "correction": "7 = neutral (pure water at 25°C), <7 acidic, >7 basic (alkaline)",
+   "file": "upsc/course/gs/lesson-economy-prelims.html",
+   "quote": "cut‑off rates ranging from 3.35 % to 4.00 % as the policy repo rate moved from 4.00 % to 6.50 %",
+   "problem": "VRRR cut‑off rates in FY 2022‑23 rose broadly in line with the policy repo rate, reaching over 6 % by the end of the fiscal year; they were not confined to a 3.35‑4.00 % range.",
+   "correction": "cut‑off rates rising from around 3.99 % to over 6.25 % as the policy repo rate moved from 4.00 % to 6.50 %",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original incorrectly repeats 7 for acidic and basic; correction accurately states <7 acidic, >7 basic.",
+   "verifierReason": "Original quote confuses fixed reverse repo rate (3.35%) with VRRR cut-offs; VRRR started ~3.99% (Apr 2022) and rose to ~6.25%+ (Mar 2023) tracking repo rate 4.00%→6.50%.",
    "applied": false
-  },
-  {
-   "file": "ssc-gd/course/english/lesson-grammar.html",
-   "quote": "*The child was looked after is standard",
-   "problem": "Asterisk marks the sentence as ungrammatical, but the text claims it is standard; the sentence is grammatical.",
-   "correction": "The child was looked after is standard",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Asterisk wrongly marks grammatical passive as ungrammatical; removal yields correct standard sentence.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/english/lesson-grammar.html",
-   "quote": "* every book that you read is acceptable",
-   "problem": "Asterisk incorrectly marks a grammatical sentence as ungrammatical.",
-   "correction": "every book that you read is acceptable",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Asterisk wrongly marks grammatical relative clause as ungrammatical; removal yields correct sentence.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-general-science.html",
-   "quote": "supplying about 15% of global vaccine doses",
-   "problem": "India's share of global vaccine doses is approximately 60%, not 15%.",
-   "correction": "supplying about 60% of global vaccine doses",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "India supplies ~60% of global vaccine doses by volume (PIB, WHO), 15% is incorrect.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-general-science.html",
-   "quote": "accounting for roughly 15% of global vaccine output",
-   "problem": "India accounts for roughly 60% of global vaccine output by volume, not 15%.",
-   "correction": "accounting for roughly 60% of global vaccine output",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "India accounts for ~60% of global vaccine output by volume; 15% figure is wrong.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-indian-geography.html",
-   "quote": "The highest peak in India is Kanchenjunga (8,598 m), located in Sikkim.",
-   "problem": "Kanchenjunga's elevation is 8,586 m, not 8,598 m.",
-   "correction": "The highest peak in India is Kanchenjunga (8,586 m), located in Sikkim.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Kanchenjunga's accepted elevation is 8,586 m; 8,598 m is incorrect.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-indian-polity.html",
-   "quote": "Budget could be discussed and voted on (certain items non-votable).",
-   "problem": "The 1909 Act allowed discussion of the budget but not voting; voting on budget was introduced by the 1919 Act.",
-   "correction": "Budget could be discussed but not voted on.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "1909 Act allowed budget discussion only; voting introduced in 1919.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-indian-polity.html",
-   "quote": "Reserve Bank of India — established under this act.",
-   "problem": "The Reserve Bank of India was established by the Reserve Bank of India Act, 1934, not by the Government of India Act 1935.",
-   "correction": "Reserve Bank of India established under Reserve Bank of India Act, 1934.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "RBI established by RBI Act 1934, not GOI Act 1935.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-indian-polity.html",
-   "quote": "First British proposal for Indian constituent assembly after WWII.",
-   "problem": "The August Offer 1940 was the first British proposal for a constituent assembly after the war; the Cripps Mission (1942) was not the first.",
-   "correction": "Proposed constituent assembly after war (but August Offer 1940 was first).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "August Offer 1940 first proposed post-war constituent assembly; Cripps Mission 1942 later.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-indian-geography.html",
-   "quote": "GLIMS integrated with ISRO ’s Resourcesat‑2A and Cartosat‑3 provides near‑real‑time lake‑area alerts.",
-   "problem": "GLIMS is a global glacier database, not an operational near-real-time alert system integrated with ISRO satellites.",
-   "correction": "ISRO's glacial lake monitoring system using Resourcesat-2A and Cartosat-3 provides near-real-time lake-area alerts.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "GLIMS is a global glacier inventory database, not an operational alert system. ISRO operates its own glacial lake monitoring using Resourcesat-2A and Cartosat-3.",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/maths/lesson-mensuration.html",
-   "quote": "The frustum volume is (1/3)πH(R² + Rr + r²)",
-   "problem": "Uses original cone height H instead of frustum height (H−h)",
-   "correction": "The frustum volume is (1/3)π(H−h)(R² + Rr + r²)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original uses cone height; correction uses frustum height (H−h) which is correct",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/maths/lesson-mensuration.html",
-   "quote": "for cone in sphere, height : diameter = 4 : 3",
-   "problem": "Incorrect optimal ratio; correct ratio is 1 : √2",
-   "correction": "for cone in sphere, height : diameter = 1 : √2",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original ratio wrong; optimal cone in sphere has height:diameter = 1:√2",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/maths/lesson-percentage.html",
-   "quote": "Equating P (1 + r/100)ⁿ = P (1 + R/100)ⁿ (where R is the simple rate per period)",
-   "problem": "Simple interest uses formula P(1 + nR/100), not P(1+R/100)^n; the equation incorrectly models simple interest as compound interest.",
-   "correction": "Equating P(1+r/100)^n = P(1+nR/100) (where R is the simple rate per period)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original uses compound formula P(1+R/100)^n for simple interest; correction correctly uses simple interest formula P(1+nR/100).",
-   "applied": false
-  },
-  {
-   "file": "ssc-gd/course/maths/lesson-speed-distance.html",
-   "quote": "the person’s walking speed relative to ground is v_p",
-   "problem": "v_p is defined as walking speed relative to ground, but the formulas L ÷ (v_p + v_b) and L ÷ (v_p − v_b) treat v_p as walking speed relative to the belt (or on a stationary escalator).",
-   "correction": "the person’s walking speed relative to the belt is v_p",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original defines v_p as ground speed but formulas treat it as belt-relative; correction fixes definition.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-indian-history.html",
-   "quote": "EAST: Magadha, Anga, Vrijji, Malla, Shakya",
-   "problem": "Shakya is not one of the 16 Mahajanapadas; the list includes 17 names instead of 16.",
-   "correction": "EAST: Magadha, Anga, Vrijji, Malla",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Shakya (Sakya) was a gana-sangha, not listed among the 16 Mahajanapadas in canonical texts (Anguttara Nikaya, Bhagavati Sutra). The four eastern Mahajanapadas are Magadha, Anga, Vajji, Malla.",
-   "applied": true
-  },
-  {
-   "file": "ssc-gd/course/gk/lesson-indian-polity.html",
-   "quote": "now has approximately 470 Articles and 12 Schedules",
-   "problem": "The Constitution of India currently has 448 Articles, not approximately 470.",
-   "correction": "now has 448 Articles and 12 Schedules",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "The Constitution has 448 articles after recent amendments; 12 schedules are correct.",
-   "applied": true
   }
  ]
 }
