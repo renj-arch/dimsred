@@ -3391,6 +3391,44 @@ Question: Is it sufficient to conclude that Maya’s project has a recipe?</div>
 </div>
 
 <h3>Non‑Monotonic Reasoning with Default Logic in Data Sufficiency</h3>
+<!-- passage-cartoon:ae4a184af624 -->
+<figure class="passage-cartoon" data-cartoon="ae4a184af624">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Tree trunk -->
+  <line x1="300" y1="250" x2="300" y2="150" stroke="#1f2937" stroke-width="4"/>
+  <!-- Left branch -->
+  <line x1="300" y1="150" x2="200" y2="80" stroke="#1f2937" stroke-width="3"/>
+  <!-- Right branch -->
+  <line x1="300" y1="150" x2="400" y2="80" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left world circle -->
+  <circle cx="200" cy="80" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Right world circle -->
+  <circle cx="400" cy="80" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Cross on left world (fact blocks) -->
+  <line x1="180" y1="60" x2="220" y2="100" stroke="#1f2937" stroke-width="2"/>
+  <line x1="180" y1="100" x2="220" y2="60" stroke="#1f2937" stroke-width="2"/>
+  <!-- Candidate stick figure -->
+  <circle cx="80" cy="230" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="80" y1="245" x2="80" y2="280" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="255" x2="50" y2="265" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="255" x2="110" y2="265" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="280" x2="50" y2="310" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="280" x2="110" y2="310" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="310" y="180" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Default</text>
+  <text x="200" y="50" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Fact</text>
+  <text x="230" y="100" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Extension</text>
+  <text x="400" y="50" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">World</text>
+  <text x="80" y="300" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Sufficient?</text>
+  <text x="280" y="30" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Non‑Monotonic</text>
+  <!-- Caption strip -->
+  <line x1="0" y1="290" x2="560" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Non‑Monotonic Reasoning with Default Logic in Data Sufficiency</text>
+</svg></div>
+  <figcaption>Non‑Monotonic Reasoning with Default Logic in Data Sufficiency</figcaption>
+</figure>
+
 <p>Classical logic is monotonic: adding premises never retracts conclusions. Many puzzle scenarios, however, involve <strong>default assumptions</strong> that hold unless contradicted — e.g., “normally a person tells the truth” or “by default a vehicle follows the shortest route”. Reiter’s <strong>default logic</strong> formalises this with rules of the form <em>α : β / γ</em> meaning “if α is believed and β is consistent, then conclude γ”. An <strong>extension</strong> is a fixed point of the operator that adds conclusions of applicable defaults. A default theory may have zero, one, or multiple extensions, reflecting ambiguity. In data‑sufficiency questions, a statement like “Unless otherwise stated, all participants are honest” introduces a default: <em>Honest(x) : ¬Dishonest(x) / Honest(x)</em>. If another statement asserts “Participant A lied”, the default for A is blocked, but defaults for others remain. The candidate must compute the set of extensions: each extension corresponds to a possible world consistent with the defaults and the explicit facts. Sufficiency of a statement is then evaluated across all extensions — if the target proposition holds in every extension, the statement is sufficient; if it fails in at least one, it is not. A practical algorithm for small theories: enumerate all subsets of defaults, test consistency with facts, and collect maximal consistent sets. Because the number of defaults in exam items is usually ≤ 4, exhaustive enumeration is trivial. Recognising the non‑monotonic layer prevents the common error of treating a default as a hard rule and over‑constraining the model.</p>
 
 <h3>Metric Temporal Constraints and Difference Bounds Matrices</h3>
