@@ -1,13 +1,6 @@
 {
- "updatedAt": "2026-11-26T05:33:22.098Z",
+ "updatedAt": "2026-11-26T06:10:56.092Z",
  "corrections": [
-  {
-   "file": "cgl/course/reasoning/lesson-venn-diagram.html",
-   "quote": "If two numbers appear on the same die in different views, they are adjacent (not opposite).",
-   "correction": "If two numbers appear in the same view, they are adjacent (not opposite).",
-   "problem": "This statement is false. Two numbers appearing in different views of a die can be opposite faces (e.g., 1 on top in view 1 and 6 on top in view 2). The correct rule is that numbers appearing in the *same* view are adjacent.",
-   "appliedAt": "2026-11-21T03:37:51.514Z"
-  },
   {
    "file": "clat/course/english/lesson-grammar.html",
    "quote": "reversing them changes the logical relation and is considered ungrammatical in standard usage",
@@ -4522,6 +4515,104 @@
    "correction": "The sum of a rational and an irrational is always irrational; the product of a non-zero rational and an irrational is always irrational.",
    "problem": "The statement is false for product when the rational number is zero (0 × irrational = 0, which is rational).",
    "appliedAt": "2026-11-26T05:33:22.098Z"
+  },
+  {
+   "file": "cgl/course/quant/lesson-ratio-proportion.html",
+   "quote": "(Cheaper quantity) : (Dearer quantity) = (Mean price - Cheaper price) : (Dearer price - Mean price)",
+   "correction": "(Cheaper quantity) : (Dearer quantity) = (Dearer price - Mean price) : (Mean price - Cheaper price)",
+   "problem": "The alligation formula is reversed. The correct ratio is (Cheaper quantity) : (Dearer quantity) = (Dearer price - Mean price) : (Mean price - Cheaper price).",
+   "appliedAt": "2026-11-26T05:47:36.382Z"
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-series.html",
+   "quote": "Recognising a recursive pattern requires computing successive differences and checking whether the differences themselves follow a known series.",
+   "correction": "Recognising a recursive pattern involves checking if terms satisfy a recurrence relation like T_n = a·T_{n-1} + b·T_{n-2}.",
+   "problem": "The method of finite differences (successive differences) is used to identify polynomial sequences, not general recursive sequences. Recursive patterns are recognised by testing recurrence relations, not by difference tables.",
+   "appliedAt": "2026-11-26T05:53:37.114Z"
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-direction-distance.html",
+   "quote": "At noon, the sun is directly overhead, so there is no shadow.",
+   "correction": "At noon, the sun is at its highest altitude; shadows are shortest but not zero unless the sun is overhead.",
+   "problem": "The sun is directly overhead at noon only at the tropics on solstices or equator on equinoxes; at most latitudes the sun is not overhead, so shadows exist (though shortest).",
+   "appliedAt": "2026-11-26T05:54:15.140Z"
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-puzzles.html",
+   "quote": "if the seat graph’s chromatic number χ is greater than Δ, a proper assignment is guaranteed by Brooks’ theorem",
+   "correction": "Brooks' theorem gives χ ≤ Δ for the conflict graph (except complete graphs/odd cycles); it does not guarantee assignments via χ > Δ.",
+   "problem": "Brooks' theorem states that for any connected graph, the chromatic number χ ≤ Δ (with exceptions for complete graphs and odd cycles where χ = Δ+1). The condition χ > Δ contradicts the theorem and does not guarantee a proper assignment; moreover, the theorem applies to a single graph, not a compariso",
+   "appliedAt": "2026-11-26T05:58:05.028Z"
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-puzzles.html",
+   "quote": "for the exclusive‑or version",
+   "correction": "for the inclusive‑or version",
+   "problem": "The implications (¬X₃ → Y₅) and (¬Y₅ → X₃) encode the inclusive disjunction (X₃ ∨ Y₅), not exclusive OR. Exclusive OR would additionally require (X₃ → ¬Y₅) and (Y₅ → ¬X₃).",
+   "appliedAt": "2026-11-26T05:58:05.704Z"
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-puzzles.html",
+   "quote": "forces both disjuncts to be true",
+   "correction": "forces at least the second disjunct to be true",
+   "problem": "The clues “either A left of B or C right of D” (inclusive OR) and “if A left of B then C right of D” do not force both disjuncts true. They force that C right of D must be true (if A left of B is true, implication gives C right of D; if A left of B is false, the disjunction requires C right of D).",
+   "appliedAt": "2026-11-26T05:58:06.377Z"
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-venn-diagram.html",
+   "quote": "If two numbers appear on the same die in different views, they are adjacent (not opposite).",
+   "correction": "If two numbers appear in the same view, they are adjacent (not opposite).",
+   "problem": "Opposite faces can appear in different views of the same die; only in a single view are all visible faces mutually adjacent.",
+   "appliedAt": "2026-11-26T05:58:23.774Z"
+  },
+  {
+   "file": "apfc/course/ga/lesson-general-knowledge.html",
+   "quote": "The Forty‑second Amendment added several new directives, including the duty to protect monuments and to promote scientific temper",
+   "correction": "The Forty‑second Amendment added new directives like environmental protection and introduced fundamental duties including scientific temper.",
+   "problem": "The 42nd Amendment did not add a directive to protect monuments (Article 49 already existed) and the promotion of scientific temper is a fundamental duty (Article 51A), not a directive principle.",
+   "appliedAt": "2026-11-26T05:58:51.135Z"
+  },
+  {
+   "file": "clat/course/english/lesson-reading-comprehension.html",
+   "quote": "The inference is valid because it is a direct logical consequence of the stated conditional relationship.",
+   "correction": "The inference is invalid; it commits the fallacy of denying the antecedent.",
+   "problem": "The example commits the formal fallacy of denying the antecedent. From 'All cities with integrated feeder services report higher ridership' (If P then Q) and 'City X has no integrated feeder services' (Not P), one cannot validly infer 'City X is unlikely to achieve higher ridership' (Not Q).",
+   "appliedAt": "2026-11-26T05:59:30.522Z"
+  },
+  {
+   "file": "apfc/course/ga/lesson-general-knowledge.html",
+   "quote": "including the Vice‑Chairperson (a Cabinet Minister)",
+   "correction": "including the Vice‑Chairperson (accorded Cabinet Minister rank)",
+   "problem": "The Vice-Chairperson of NDMA is not a Cabinet Minister; they are a member accorded the rank of a Cabinet Minister.",
+   "appliedAt": "2026-11-26T06:10:53.358Z"
+  },
+  {
+   "file": "apfc/course/ga/lesson-general-knowledge.html",
+   "quote": "updated every five years",
+   "correction": "updated annually",
+   "problem": "The Act mandates annual review and update of disaster management plans, not every five years.",
+   "appliedAt": "2026-11-26T06:10:54.068Z"
+  },
+  {
+   "file": "apfc/course/ga/lesson-general-knowledge.html",
+   "quote": "The NDMA activates the National Crisis Management Committee (NCMC) for inter‑ministerial coordination",
+   "correction": "The Cabinet Secretary activates the National Crisis Management Committee (NCMC) for inter‑ministerial coordination",
+   "problem": "The NCMC is headed by the Cabinet Secretary and activated by the Cabinet Secretariat, not by NDMA.",
+   "appliedAt": "2026-11-26T06:10:54.716Z"
+  },
+  {
+   "file": "apfc/course/ga/lesson-general-knowledge.html",
+   "quote": "the SDMA activates the State Crisis Management Group",
+   "correction": "the State Crisis Management Group, headed by the Chief Secretary, coordinates state-level response",
+   "problem": "The State Crisis Management Group is a standing body headed by the Chief Secretary, not activated by SDMA.",
+   "appliedAt": "2026-11-26T06:10:55.387Z"
+  },
+  {
+   "file": "apfc/course/ga/lesson-general-knowledge.html",
+   "quote": "the 2021 amendment introducing mitigation funds",
+   "correction": "the 2019 amendment introducing mitigation funds",
+   "problem": "The amendment introducing mitigation funds was in 2019, not 2021.",
+   "appliedAt": "2026-11-26T06:10:56.092Z"
   }
  ]
 }
