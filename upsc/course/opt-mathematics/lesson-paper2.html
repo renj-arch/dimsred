@@ -223,6 +223,14 @@ This theorem is the justification for using the Normal distribution to approxima
 </div>
 
 <h3>Numerical Solution of Ordinary Differential Equations: Runge–Kutta Methods and Stability Regions</h3>
+<!-- passage-image:ff6635e062cd -->
+<figure class="passage-photo" data-image="ff6635e062cd">
+  <a href="https://commons.wikimedia.org/wiki/File:Kutta,_Gonikoppal,_Mysore.jpg" target="_blank" rel="noopener">
+    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Kutta%2C_Gonikoppal%2C_Mysore.jpg/960px-Kutta%2C_Gonikoppal%2C_Mysore.jpg" alt="Kutta" loading="lazy" referrerpolicy="no-referrer">
+  </a>
+  <figcaption>Kutta — Prof tpms · CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Kutta,_Gonikoppal,_Mysore.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption>
+</figure>
+
 <p>Runge–Kutta (RK) methods are one‑step schemes for y' = f(t,y). An s‑stage explicit RK method computes slopes kᵢ = f(tₙ + cᵢh, yₙ + h Σ aᵢⱼ kⱼ) and updates yₙ₊₁ = yₙ + h Σ bᵢ kᵢ. Coefficients are chosen to achieve order p. The classic RK4 uses four stages with c = (0, ½, ½, 1), a₂₁=½, a₃₂=½, a₄₃=1, and b = (1/6, 1/3, 1/3, 1/6). Its local truncation error is O(h⁵), global error O(h⁴). Embedded RK pairs (e.g., Fehlberg 4(5), Dormand–Prince 5(4)) yield two estimates of different orders from the same stages, enabling adaptive step‑size control: if the error estimate exceeds tolerance, the step is rejected and h reduced; otherwise h may increase.</p>
 <p>Stability analysis uses the test equation y' = λy (Re(λ) < 0). The numerical solution satisfies yₙ₊₁ = R(z) yₙ with z = λh; R(z) is the stability function (polynomial for explicit RK, rational for implicit). The region of absolute stability is {z ∈ ℂ : |R(z)| ≤ 1}. For explicit RK4 this region is bounded; the method is not A‑stable. A‑stability requires the region to contain the entire left half‑plane; only implicit methods (e.g., Gauss–Legendre RK of order 2s) achieve this. L‑stability further requires R(z) → 0 as z → −∞, strongly damping stiff components. For stiff problems, implicit RK or BDF are preferred despite higher per‑step cost because they allow much larger steps.</p>
 <p>Practical implementation: (1) Choose an embedded pair (e.g., Dormand–Prince 5(4)). (2) Set initial h, tolerances atol, rtol. (3) Compute two solutions, estimate error e = |y⁽⁵⁾ − y⁽⁴⁾|. (4) If e ≤ atol + rtol·|y|, accept step and update h ← h × min(5, max(0.2, 0.9 (tol/e)¹ᐟ⁵)). (5) Else reject step and reduce h. (6) Monitor stiffness: if h becomes extremely small, switch to an implicit solver.</p>
