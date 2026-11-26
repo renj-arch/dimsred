@@ -120451,6 +120451,33 @@
         }
       ],
       "sol": "The options form a morphological cluster: all derive from the root \"decid-\" but belong to different parts of speech (noun, adjective, verb, adverb). The syntactic frame \"a ___ choice\" requires an adjective between the determiner \"a\" and the noun \"choice.\" Only \"decisive\" is an adjective; \"decision\" is a noun, \"decide\" a verb, \"decidedly\" an adverb. Recognising the morphological cluster allows rapid elimination of the three non‑adjectives, leaving \"decisive\" as the sole grammatically and semantically appropriate choice."
+    },
+    {
+      "id": 1290,
+      "text": "The candidate almost secured the nomination, but the party leader ______.",
+      "options": [
+        {
+          "l": "a",
+          "t": "endorsed",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "vetoed",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "supported",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "ratified",
+          "c": false
+        }
+      ],
+      "sol": "The sentence uses \"almost\" (scalar trigger) and \"but\" (adversative coordinator) creating a scalar implicature that the expected outcome (securing nomination) did not occur due to the leader's action. The blank requires a verb with negative polarity that prevents the positive event. \"Endorsed\", \"supported\", and \"ratified\" are positive actions compatible with securing the nomination, violating the implicature. \"Vetoed\" denotes an authoritative rejection that blocks the outcome, satisfying the pragmatic constraint imposed by \"almost... but\". Syntactic and cohesive checks admit all options, but pragmatic inference eliminates three."
     }
   ],
   "reasoning/arguments": [
@@ -169950,6 +169977,114 @@
         }
       ],
       "sol": "Unlike conventional second-order phase transitions where the correlation length diverges as a power law ξ ∼ |t|^(-ν), the KT transition exhibits an essential singularity: ξ ∼ exp(b/√(T - T_KT)) for T > T_KT. This reflects the unbinding of vortex-antivortex pairs. The exponent ν is effectively infinite, and the transition is driven by topological defects rather than symmetry breaking, placing it outside the standard Landau-Ginzburg-Wilson paradigm."
+    },
+    {
+      "id": 127,
+      "text": "Which expression represents the conserved probability current in the Dirac theory?",
+      "options": [
+        {
+          "l": "a",
+          "t": "ψ† ψ",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "ψ̄ γ^μ ψ",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "ψ̄ ψ",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "ψ† γ^0 ψ",
+          "c": false
+        }
+      ],
+      "sol": "The Dirac equation yields a conserved four‑current j^μ = ψ̄ γ^μ ψ, where ψ̄ = ψ† γ^0. Taking the divergence and using the Dirac equation together with its adjoint gives ∂_μ j^μ = 0, proving probability conservation. The other options are either the probability density (ψ† ψ) or scalar bilinears that are not conserved currents."
+    },
+    {
+      "id": 128,
+      "text": "The Feynman propagator for a real scalar field φ(x) is defined as which vacuum expectation value?",
+      "options": [
+        {
+          "l": "a",
+          "t": "⟨0|φ(x) φ(y)|0⟩",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "⟨0|T φ(x) φ(y)|0⟩",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "⟨0|φ(x) φ†(y)|0⟩",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "⟨0|[φ(x), φ(y)]|0⟩",
+          "c": false
+        }
+      ],
+      "sol": "In canonical quantisation the Feynman propagator is the time‑ordered two‑point function Δ_F(x−y) = ⟨0|T φ(x) φ(y)|0⟩. The time‑ordering operator T ensures the correct causal structure and leads to the iε prescription in momentum space. The other choices correspond to the Wightman function, the Hermitian conjugate (irrelevant for a real field), and the commutator, none of which give the Feynman propagator."
+    },
+    {
+      "id": 129,
+      "text": "The exact critical exponent β for the two‑dimensional Ising model obtained from Onsager’s solution is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1/2",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "1/8",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "1/4",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1/3",
+          "c": false
+        }
+      ],
+      "sol": "Onsager’s exact solution of the 2D Ising model gives the critical exponents α = 0 (logarithmic), β = 1/8, γ = 7/4, ν = 1. The exponent β describes the vanishing of the spontaneous magnetisation near T_c as M ∼ (T_c − T)^β. Mean‑field theory incorrectly predicts β = 1/2, while the exact value 1/8 is a hallmark of the 2D Ising universality class."
+    },
+    {
+      "id": 130,
+      "text": "The local truncation error of the classical fourth‑order Runge‑Kutta method scales with the step size h as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "O(h^3)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "O(h^4)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "O(h^5)",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "O(h^6)",
+          "c": false
+        }
+      ],
+      "sol": "For the standard RK4 scheme y_{n+1} = y_n + (k_1 + 2k_2 + 2k_3 + k_4)/6, the local truncation error (the error made in a single step assuming exact previous value) is proportional to h^5. Consequently the global error after many steps scales as O(h^4). This high order makes RK4 a workhorse for non‑stiff ordinary differential equations in physics simulations."
     }
   ],
   "opt-geology/overview": [
