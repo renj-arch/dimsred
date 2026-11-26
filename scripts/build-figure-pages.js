@@ -263,7 +263,7 @@ function main() {
     var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
       + '<meta name="viewport" content="width=device-width,initial-scale=1">'
       + '<meta name="description" content="UPSC figures, page ' + (pi + 1) + ' of ' + pages.length + ' — curated diagrams, maps and charts for general studies revision on vlymbooq.">'
-      + '<title>UPSC Figures page ' + (pi + 1) + '</title><style>' + css + '</style></head><body><div class="wrap">'
+      + '<title>UPSC Figures page ' + (pi + 1) + '</title><style>' + css + '</style></head><body><div style="background:#111113;border-bottom:1px solid rgba(255,255,255,.14);padding:10px 16px;font-size:.9em"><a href="/cartoons/" style="color:#34d399;font-weight:700;text-decoration:none">🖼️ Passage cartoons — a one-panel summary for each UPSC passage →</a></div><div class="wrap">'
       + '<h1>UPSC Figures &#8212; page ' + (pi + 1) + ' of ' + pages.length + '</h1>'
       + '<p class="meta">' + keys.length + ' figures &#183; distinct images from Wikimedia Commons &#183; filtered for topic relevance and country</p>'
       + '<div class="grid">' + cards + '</div>' + nav + '</div></body></html>';
