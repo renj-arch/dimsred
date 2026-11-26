@@ -1,736 +1,728 @@
 {
-  "folder": "gate",
-  "slug": "practice-set-13",
-  "title": "GATE Practice Set 13",
-  "pageTitle": "GATE Practice Set 13 — Solved Paper",
-  "pageDesc": "Free GATE practice paper set 13 with detailed solutions. Pattern: Paper.",
-  "meta": "15 Q · 42 min · 23 marks · Paper pattern",
-  "timerMinutes": 42,
-  "totalMarks": 23,
-  "createdDate": "2026-11-15",
-  "blueprint": {
-    "paper": "paper1",
-    "name": "Paper",
-    "total": 65,
-    "marks": 100,
-    "duration": 180,
-    "negative": 0.33,
-    "source": "GATE: 65 questions, 100 marks, 180 minutes; General Aptitude 10 questions (15 marks), core 55 questions (85 marks).",
-    "provisional": false,
-    "sections": [
-      {
-        "name": "Core Subject",
-        "count": 13,
-        "bank": [
-          "Core Subject",
-          "Engineering Mathematics",
-          "Structural",
-          "Geotechnical",
-          "Water",
-          "Data Structures & Algorithms",
-          "Computer Organization & OS",
-          "Theory of Computation",
-          "DS & Algorithms",
-          "CO & OS",
-          "Networks",
-          "Analog",
-          "Digital",
-          "Thermodynamics",
-          "Strength of Materials",
-          "Production"
-        ]
-      },
-      {
-        "name": "General Aptitude",
-        "count": 2,
-        "bank": [
-          "General Aptitude"
-        ]
-      }
-    ]
-  },
+ "folder": "gate",
+ "slug": "practice-set-13",
+ "title": "GATE Practice Set 13",
+ "pageTitle": "GATE Practice Set 13 — Solved Paper",
+ "pageDesc": "Free GATE practice paper set 13 with detailed solutions. Pattern: Paper.",
+ "meta": "15 Q · 42 min · 23 marks · Paper pattern",
+ "timerMinutes": 42,
+ "totalMarks": 15,
+ "createdDate": "2026-11-15",
+ "blueprint": {
+  "paper": "paper1",
+  "name": "Paper",
+  "total": 65,
+  "marks": 100,
+  "duration": 180,
+  "negative": 0.33,
+  "source": "GATE: 65 questions, 100 marks, 180 minutes; General Aptitude 10 questions (15 marks), core 55 questions (85 marks).",
+  "provisional": false,
   "sections": [
-    {
-      "name": "Core Subject",
-      "color": "#6366f1"
-    },
-    {
-      "name": "General Aptitude",
-      "color": "#a855f7"
-    }
-  ],
-  "questions": [
-    {
-      "section": "Core Subject",
-      "text": "If x(t) is a real-valued signal with Fourier Transform X(ω), which of the following properties is always satisfied?",
-      "options": [
-        {
-          "label": "A",
-          "text": "X(ω) is purely real",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "X(ω) = X*(−ω)",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "X(ω) = −X*(−ω)",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "X(ω) is purely imaginary",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: For any real-valued time-domain signal, its Fourier Transform exhibits conjugate symmetry: X(ω) = X*(−ω). This single property eliminates options A, C, and D immediately. Full solution: By definition, X(ω) = ∫ x(t)e^(−jωt) dt. Since x(t) is real, x(t) = x*(t). Compute X*(−ω) = [∫ x(t)e^(jωt) dt]* = ∫ x*(t)e^(−jωt) dt = ∫ x(t)e^(−jωt) dt = X(ω). Therefore X(ω) = X*(−ω) holds for all real x(t).",
-      "topic": "Signals and Systems - Fourier Transform Properties",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-14T22:02:11.019Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 1938,
-      "q": 1
-    },
-    {
-      "section": "Core Subject",
-      "text": "A 3×3 real matrix has eigenvalues 2, 3, and 5. What is the determinant of the inverse of this matrix?",
-      "options": [
-        {
-          "label": "A",
-          "text": "1/30",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "30",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "1/10",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "10",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Determinant of a matrix equals the product of its eigenvalues (2×3×5=30). Determinant of the inverse is the reciprocal of the determinant (1/30). Full Solution: Let λ₁, λ₂, λ₃ be the eigenvalues. det(A) = λ₁λ₂λ₃ = 30. Eigenvalues of A⁻¹ are 1/λ₁, 1/λ₂, 1/λ₃. det(A⁻¹) = (1/λ₁)(1/λ₂)(1/λ₃) = 1/(λ₁λ₂λ₃) = 1/30.",
-      "topic": "Engineering Mathematics - Linear Algebra",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-14T22:23:44.484Z",
-      "reviewed": false,
-      "imageUrl": "https://example.com/placeholder.png",
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "bar",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1946,
-      "q": 2
-    },
-    {
-      "section": "Core Subject",
-      "text": "A 5‑digit number is formed using the digits 1, 2, 3, 4, 5 without repetition. What is the probability that the number is divisible by 5?",
-      "options": [
-        {
-          "label": "A",
-          "text": "1/5",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "1/4",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "1/2",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "2/5",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: For divisibility by 5, the last digit must be 0 or 5. Since only 5 is available, the last place is fixed as 5. The remaining 4 positions can be filled in 4! = 24 ways. Total possible numbers = 5! = 120. Probability = 24/120 = 1/5. Full solution: Count favourable outcomes (24) and total outcomes (120), simplify to 1/5.",
-      "topic": "Probability - Permutations",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "Groq openai/gpt-oss-120b",
-      "generatedAt": "2026-11-15T12:24:46.881Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 1965,
-      "q": 3
-    },
-    {
-      "section": "Core Subject",
-      "text": "In a turning operation using a carbide tool, the tool life is 60 minutes at a cutting speed of 60 m/min. If the Taylor's tool life exponent (n) is 0.5, what is the cutting speed (in m/min) required to achieve a tool life of 15 minutes?",
-      "options": [
-        {
-          "label": "A",
-          "text": "120",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "90",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "100",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "80",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Taylor's equation VT^n = C. Tool life decreases from 60 to 15 min (factor of 1/4). Since n=0.5, speed must increase by factor (4)^0.5 = 2. New speed = 60 × 2 = 120 m/min. Step-by-step: V1×T1^n = V2×T2^n → 60 × (60)^0.5 = V2 × (15)^0.5 → V2 = 60 × √(60/15) = 60 × √4 = 60 × 2 = 120 m/min.",
-      "topic": "Manufacturing Engineering - Machining",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:26:31.587Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1966,
-      "q": 4
-    },
-    {
-      "section": "Core Subject",
-      "text": "In an epicyclic gear train, the sun gear has 20 teeth, the planet gear has 30 teeth, and the ring gear has 80 teeth. The sun gear is the input rotating at 1000 rpm clockwise. The ring gear is fixed. What is the speed of the carrier (arm) in rpm?",
-      "options": [
-        {
-          "label": "A",
-          "text": "250",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "300",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "350",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "200",
-          "correct": true
-        }
-      ],
-      "solution": "Shortcut: For Sun input, Ring fixed, Arm output: N_arm/N_sun = T_sun/(T_sun + T_ring) = 20/(20+80) = 1/5. N_arm = 1000/5 = 200 rpm. Step-by-step (Tabular Method): Arm fixed, Sun +1 rev → Ring = -T_sun/T_ring = -20/80 = -1/4 rev. Add 'x' to all. Ring fixed: x - 1/4 = 0 → x = 1/4. Sun speed = x + 1 = 5/4 units = 1000 rpm. Arm speed = x = 1/4 units = (1/4)/(5/4) × 1000 = 200 rpm.",
-      "topic": "Theory of Machines - Gear Trains",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:26:31.614Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1969,
-      "q": 5
-    },
-    {
-      "section": "General Aptitude",
-      "text": "Two pipes A and B can fill a tank in 12 hours and 15 hours respectively. A third pipe C can empty the full tank in 20 hours. If all three pipes are opened simultaneously when the tank is empty, in how many hours will the tank be filled?",
-      "options": [
-        {
-          "label": "A",
-          "text": "8 hours",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "10 hours",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "12 hours",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "15 hours",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut (LCM Method): Take LCM of 12, 15, 20 = 60 units (tank capacity). Efficiency of A = 60/12 = 5 units/hr; B = 60/15 = 4 units/hr; C = -60/20 = -3 units/hr. Net efficiency = 5 + 4 - 3 = 6 units/hr. Time = 60/6 = 10 hours. Full Solution: Part filled by A in 1 hr = 1/12. Part filled by B in 1 hr = 1/15. Part emptied by C in 1 hr = 1/20. Net part filled in 1 hr = 1/12 + 1/15 - 1/20 = (5+4-3)/60 = 6/60 = 1/10. Time required = 1 / (1/10) = 10 hours.",
-      "topic": "Pipes and Cisterns",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:27:22.077Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 1970,
-      "q": 6
-    },
-    {
-      "section": "General Aptitude",
-      "text": "What is the unit digit of (13^44 + 15^27)?",
-      "options": [
-        {
-          "label": "A",
-          "text": "0",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "2",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "4",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "6",
-          "correct": true
-        }
-      ],
-      "solution": "Shortcut: The unit digit of any power of 15 is always 5. For 13^44, the unit digit follows the cycle of 3: 3, 9, 7, 1. Since 44 mod 4 = 0, the unit digit is 1. Adding the unit digits: 1 + 5 = 6. Full solution: 15^27 ends with 5. 13^44 = (13^4)^11, and 13^4 ends with 1, so 13^44 ends with 1. Sum of unit digits = 1 + 5 = 6.",
-      "topic": "Number System - Unit Digit",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-14T22:26:59.763Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 1957,
-      "q": 7
-    },
-    {
-      "section": "Core Subject",
-      "text": "A simply supported beam of span 6 m carries a uniformly distributed load of 10 kN/m. The maximum bending moment (in kNm) in the beam is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "45",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "60",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "75",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "90",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: For a simply supported beam with UDL, maximum bending moment = wL²/8 = 10×6²/8 = 45 kNm. Full solution: The reactions at each support are wL/2 = 30 kN. The bending moment at distance x from left support is M = 30x - 10x²/2. Setting dM/dx = 0 gives x = 3 m (midspan). Substituting x = 3 gives Mmax = 30×3 - 5×9 = 90 - 45 = 45 kNm.",
-      "topic": "Strength of Materials - Bending Moment",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:28:23.212Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "bar",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1972,
-      "q": 8
-    },
-    {
-      "section": "Core Subject",
-      "text": "A table shows the number of books sold by four authors in a month: | Author | Books Sold | |--------|------------| | X | 120 | | Y | 150 | | Z | 90 | | W | 140 | If each author receives a royalty of $2 per book, which author earns the second highest royalty?",
-      "options": [
-        {
-          "label": "A",
-          "text": "Author X",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "Author Y",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "Author Z",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "Author W",
-          "correct": true
-        }
-      ],
-      "solution": "Shortcut: Identify the second largest number by quick comparison. The sales figures are 120, 150, 90, 140. The largest is 150 (Y); the next largest is 140 (W). Hence W gets the second highest royalty. Full solution: Royalties = 2 × books sold. X: $240, Y: $300, Z: $180, W: $280. The second highest amount is $280, belonging to Author W.",
-      "topic": "Data Interpretation - Tables",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "Groq openai/gpt-oss-120b",
-      "generatedAt": "2026-11-15T12:24:46.858Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [
-          "Author",
-          "Books Sold"
-        ],
-        "rows": [
-          [
-            "X",
-            "120"
-          ],
-          [
-            "Y",
-            "150"
-          ],
-          [
-            "Z",
-            "90"
-          ],
-          [
-            "W",
-            "140"
-          ]
-        ]
-      },
-      "chartData": {},
-      "id": 1962,
-      "q": 9
-    },
-    {
-      "section": "Core Subject",
-      "text": "The characteristic equation of a closed-loop control system is s³ + 4s² + 5s + K = 0. The range of K for the system to be stable is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "0 < K < 20",
-          "correct": true
-        },
-        {
-          "label": "B",
-          "text": "0 < K < 10",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "K > 20",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "K < 0",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: For a 3rd-order characteristic equation s³ + a₁s² + a₂s + a₃ = 0, Routh-Hurwitz stability requires all coefficients > 0 and a₁a₂ > a₃. Here a₁=4, a₂=5, a₃=K → 4×5 > K ⇒ K < 20, and K > 0. Thus 0 < K < 20. Full solution: Construct Routh array: s³: 1 5 s²: 4 K s¹: (20−K)/4 0 s⁰: K For stability, all first-column elements must be positive: 1 > 0, 4 > 0, (20−K)/4 > 0 ⇒ K < 20, and K > 0. Hence 0 < K < 20.",
-      "topic": "Control Systems - Stability Analysis",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "qwen3.5:9b",
-      "generatedAt": "2026-11-14T22:02:11.014Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {},
-      "chartData": {},
-      "id": 1937,
-      "q": 10
-    },
-    {
-      "section": "Core Subject",
-      "text": "One kg of air (ideal gas, c_p = 1.005 kJ/kg·K, R = 0.287 kJ/kg·K) undergoes a reversible process from State 1 (300 K, 100 kPa) to State 2 (600 K, 200 kPa). The change in specific entropy (in kJ/kg·K) is approximately:",
-      "options": [
-        {
-          "label": "A",
-          "text": "0.35",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "0.50",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "0.69",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "0.72",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: For an ideal gas, Δs = c_p ln(T_2/T_1) - R ln(P_2/P_1). Here T_2/T_1 = 2 and P_2/P_1 = 2. So Δs = (c_p - R) ln 2 = c_v ln 2. c_v = 1.005 - 0.287 = 0.718 kJ/kg·K. Δs = 0.718 × 0.693 ≈ 0.50 kJ/kg·K. Full Solution: The entropy change for an ideal gas is given by s_2 - s_1 = c_p ln(T_2/T_1) - R ln(P_2/P_1). Substituting the given values: T_2/T_1 = 600/300 = 2, P_2/P_1 = 200/100 = 2. Thus, Δs = 1.005 ln(2) - 0.287 ln(2) = (1.005 - 0.287) ln(2) = 0.718 × 0.6931 = 0.4976 ≈ 0.50 kJ/kg·K.",
-      "topic": "Thermodynamics - Entropy Change",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:22:54.467Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1959,
-      "q": 11
-    },
-    {
-      "section": "Core Subject",
-      "text": "A thin cylindrical pressure vessel with closed ends is subjected to internal pressure p. The ratio of the circumferential (hoop) stress to the longitudinal (axial) stress developed in the vessel wall is:",
-      "options": [
-        {
-          "label": "A",
-          "text": "0.5",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "1.0",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "4.0",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "2.0",
-          "correct": true
-        }
-      ],
-      "solution": "Shortcut: For a thin cylinder, Hoop Stress σ_h = pd/2t and Longitudinal Stress σ_l = pd/4t. The ratio σ_h / σ_l = (pd/2t) / (pd/4t) = 2. This is a standard result: Hoop stress is always twice the longitudinal stress. Full Solution: Consider a thin cylinder of internal diameter d and wall thickness t under internal pressure p. Circumferential stress is found by balancing force on a longitudinal section: σ_h × 2t × L = p × d × L ⇒ σ_h = pd/2t. Longitudinal stress is found by balancing force on a transverse section: σ_l × πdt = p × πd^2/4 ⇒ σ_l = pd/4t. Ratio = σ_h / σ_l = (pd/2t) / (pd/4t) = 2.",
-      "topic": "Strength of Materials - Thin Pressure Vessels",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:22:54.482Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1961,
-      "q": 12
-    },
-    {
-      "section": "Core Subject",
-      "text": "A company has an annual demand of 10,000 units, ordering cost of Rs. 100/order, and holding cost of Rs. 2/unit/year. If the annual demand doubles and the ordering cost reduces to half, what is the ratio of the new Economic Order Quantity (EOQ) to the original EOQ?",
-      "options": [
-        {
-          "label": "A",
-          "text": "0.707",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "1.0",
-          "correct": true
-        },
-        {
-          "label": "C",
-          "text": "1.414",
-          "correct": false
-        },
-        {
-          "label": "D",
-          "text": "2.0",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: EOQ ∝ √(D×K). New Demand D' = 2D, New Ordering Cost K' = 0.5K. Product D'K' = (2D)×(0.5K) = DK. Since product unchanged, EOQ remains same. Ratio = 1. Step-by-step: EOQ = √(2DK/h). New EOQ = √(2 × 2D × 0.5K / h) = √(2DK/h) = Original EOQ. Ratio = 1.",
-      "topic": "Industrial Engineering - Inventory Control",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:26:31.596Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1967,
-      "q": 13
-    },
-    {
-      "section": "Core Subject",
-      "text": "A line graph shows the monthly rainfall (mm) in City A for six months: Jan 80, Feb 95, Mar 110, Apr 130, May 125, Jun 115. Which month experienced the greatest increase in rainfall compared to the preceding month?",
-      "options": [
-        {
-          "label": "A",
-          "text": "February",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "March",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "April",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "May",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Compute successive differences quickly and spot the maximum. Differences: Feb‑Jan = 15, Mar‑Feb = 15, Apr‑Mar = 20, May‑Apr = -5, Jun‑May = -10. The largest positive jump is 20 mm in April. Full solution: List values, subtract, identify 20 mm as the maximum increase, corresponding to April.",
-      "topic": "Data Interpretation - Line Graph",
-      "difficulty": "easy",
-      "source": "model",
-      "model": "Groq openai/gpt-oss-120b",
-      "generatedAt": "2026-11-15T12:24:46.875Z",
-      "reviewed": false,
-      "imageUrl": "https://example.com/linegraph_rainfall.png",
-      "tableData": {},
-      "chartData": {
-        "type": "line",
-        "labels": [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun"
-        ],
-        "datasets": [
-          {
-            "label": "Rainfall (mm)",
-            "data": [
-              80,
-              95,
-              110,
-              130,
-              125,
-              115
-            ]
-          }
-        ]
-      },
-      "id": 1964,
-      "q": 14
-    },
-    {
-      "section": "Core Subject",
-      "text": "A ball bearing operates at a radial load of 5 kN and has a rated life (L10) of 10,000 hours. If the load is increased to 10 kN, what is the new rated life (in hours)? Assume load-life exponent p = 3 for ball bearings.",
-      "options": [
-        {
-          "label": "A",
-          "text": "5000",
-          "correct": false
-        },
-        {
-          "label": "B",
-          "text": "2500",
-          "correct": false
-        },
-        {
-          "label": "C",
-          "text": "1250",
-          "correct": true
-        },
-        {
-          "label": "D",
-          "text": "625",
-          "correct": false
-        }
-      ],
-      "solution": "Shortcut: Bearing life L ∝ (1/P)^p. Load doubles (×2), so life reduces by 2^3 = 8 times. New life = 10,000 / 8 = 1,250 hours. Step-by-step: L10 = (C/P)^p. L2/L1 = (P1/P2)^p = (5/10)^3 = (1/2)^3 = 1/8. L2 = 10,000 × (1/8) = 1,250 hours.",
-      "topic": "Machine Design - Rolling Contact Bearings",
-      "difficulty": "medium",
-      "source": "model",
-      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-      "generatedAt": "2026-11-15T12:26:31.605Z",
-      "reviewed": false,
-      "imageUrl": null,
-      "tableData": {
-        "headers": [],
-        "rows": []
-      },
-      "chartData": {
-        "type": "",
-        "labels": [],
-        "datasets": []
-      },
-      "id": 1968,
-      "q": 15
-    }
+   {
+    "name": "Core Subject",
+    "count": 13,
+    "bank": [
+     "Core Subject",
+     "Engineering Mathematics",
+     "Structural",
+     "Geotechnical",
+     "Water",
+     "Data Structures & Algorithms",
+     "Computer Organization & OS",
+     "Theory of Computation",
+     "DS & Algorithms",
+     "CO & OS",
+     "Networks",
+     "Analog",
+     "Digital",
+     "Thermodynamics",
+     "Strength of Materials",
+     "Production"
+    ]
+   },
+   {
+    "name": "General Aptitude",
+    "count": 2,
+    "bank": [
+     "General Aptitude"
+    ]
+   }
   ]
+ },
+ "sections": [
+  {
+   "name": "Core Subject",
+   "color": "#6366f1"
+  },
+  {
+   "name": "General Aptitude",
+   "color": "#a855f7"
+  }
+ ],
+ "questions": [
+  {
+   "id": 1938,
+   "q": 1,
+   "section": "Core Subject",
+   "text": "The optimum depth of a canal is when:",
+   "options": [
+    {
+     "label": "A",
+     "text": "Width is minimum",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "Hydraulic radius is maximum",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "Wetted perimeter is maximum",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "Velocity is minimum",
+     "correct": false
+    }
+   ],
+   "solution": "Most economical section: max hydraulic radius → min wetted perimeter."
+  },
+  {
+   "section": "Core Subject",
+   "text": "A 3×3 real matrix has eigenvalues 2, 3, and 5. What is the determinant of the inverse of this matrix?",
+   "options": [
+    {
+     "label": "A",
+     "text": "1/30",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "30",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "1/10",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "10",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Determinant of a matrix equals the product of its eigenvalues (2×3×5=30). Determinant of the inverse is the reciprocal of the determinant (1/30). Full Solution: Let λ₁, λ₂, λ₃ be the eigenvalues. det(A) = λ₁λ₂λ₃ = 30. Eigenvalues of A⁻¹ are 1/λ₁, 1/λ₂, 1/λ₃. det(A⁻¹) = (1/λ₁)(1/λ₂)(1/λ₃) = 1/(λ₁λ₂λ₃) = 1/30.",
+   "topic": "Engineering Mathematics - Linear Algebra",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "qwen3.5:9b",
+   "generatedAt": "2026-11-14T22:23:44.484Z",
+   "reviewed": false,
+   "imageUrl": "https://example.com/placeholder.png",
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1946,
+   "q": 2
+  },
+  {
+   "section": "Core Subject",
+   "text": "A 5‑digit number is formed using the digits 1, 2, 3, 4, 5 without repetition. What is the probability that the number is divisible by 5?",
+   "options": [
+    {
+     "label": "A",
+     "text": "1/5",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "1/4",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "1/2",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "2/5",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: For divisibility by 5, the last digit must be 0 or 5. Since only 5 is available, the last place is fixed as 5. The remaining 4 positions can be filled in 4! = 24 ways. Total possible numbers = 5! = 120. Probability = 24/120 = 1/5. Full solution: Count favourable outcomes (24) and total outcomes (120), simplify to 1/5.",
+   "topic": "Probability - Permutations",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "Groq openai/gpt-oss-120b",
+   "generatedAt": "2026-11-15T12:24:46.881Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 1965,
+   "q": 3
+  },
+  {
+   "section": "Core Subject",
+   "text": "In a turning operation using a carbide tool, the tool life is 60 minutes at a cutting speed of 60 m/min. If the Taylor's tool life exponent (n) is 0.5, what is the cutting speed (in m/min) required to achieve a tool life of 15 minutes?",
+   "options": [
+    {
+     "label": "A",
+     "text": "120",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "90",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "100",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "80",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Taylor's equation VT^n = C. Tool life decreases from 60 to 15 min (factor of 1/4). Since n=0.5, speed must increase by factor (4)^0.5 = 2. New speed = 60 × 2 = 120 m/min. Step-by-step: V1×T1^n = V2×T2^n → 60 × (60)^0.5 = V2 × (15)^0.5 → V2 = 60 × √(60/15) = 60 × √4 = 60 × 2 = 120 m/min.",
+   "topic": "Manufacturing Engineering - Machining",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:26:31.587Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1966,
+   "q": 4
+  },
+  {
+   "section": "Core Subject",
+   "text": "In an epicyclic gear train, the sun gear has 20 teeth, the planet gear has 30 teeth, and the ring gear has 80 teeth. The sun gear is the input rotating at 1000 rpm clockwise. The ring gear is fixed. What is the speed of the carrier (arm) in rpm?",
+   "options": [
+    {
+     "label": "A",
+     "text": "250",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "300",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "350",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "200",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: For Sun input, Ring fixed, Arm output: N_arm/N_sun = T_sun/(T_sun + T_ring) = 20/(20+80) = 1/5. N_arm = 1000/5 = 200 rpm. Step-by-step (Tabular Method): Arm fixed, Sun +1 rev → Ring = -T_sun/T_ring = -20/80 = -1/4 rev. Add 'x' to all. Ring fixed: x - 1/4 = 0 → x = 1/4. Sun speed = x + 1 = 5/4 units = 1000 rpm. Arm speed = x = 1/4 units = (1/4)/(5/4) × 1000 = 200 rpm.",
+   "topic": "Theory of Machines - Gear Trains",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:26:31.614Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1969,
+   "q": 5
+  },
+  {
+   "section": "General Aptitude",
+   "text": "Two pipes A and B can fill a tank in 12 hours and 15 hours respectively. A third pipe C can empty the full tank in 20 hours. If all three pipes are opened simultaneously when the tank is empty, in how many hours will the tank be filled?",
+   "options": [
+    {
+     "label": "A",
+     "text": "8 hours",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "10 hours",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "12 hours",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "15 hours",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut (LCM Method): Take LCM of 12, 15, 20 = 60 units (tank capacity). Efficiency of A = 60/12 = 5 units/hr; B = 60/15 = 4 units/hr; C = -60/20 = -3 units/hr. Net efficiency = 5 + 4 - 3 = 6 units/hr. Time = 60/6 = 10 hours. Full Solution: Part filled by A in 1 hr = 1/12. Part filled by B in 1 hr = 1/15. Part emptied by C in 1 hr = 1/20. Net part filled in 1 hr = 1/12 + 1/15 - 1/20 = (5+4-3)/60 = 6/60 = 1/10. Time required = 1 / (1/10) = 10 hours.",
+   "topic": "Pipes and Cisterns",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:27:22.077Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 1970,
+   "q": 6
+  },
+  {
+   "section": "General Aptitude",
+   "text": "What is the unit digit of (13^44 + 15^27)?",
+   "options": [
+    {
+     "label": "A",
+     "text": "0",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "2",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "4",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "6",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: The unit digit of any power of 15 is always 5. For 13^44, the unit digit follows the cycle of 3: 3, 9, 7, 1. Since 44 mod 4 = 0, the unit digit is 1. Adding the unit digits: 1 + 5 = 6. Full solution: 15^27 ends with 5. 13^44 = (13^4)^11, and 13^4 ends with 1, so 13^44 ends with 1. Sum of unit digits = 1 + 5 = 6.",
+   "topic": "Number System - Unit Digit",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "qwen3.5:9b",
+   "generatedAt": "2026-11-14T22:26:59.763Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 1957,
+   "q": 7
+  },
+  {
+   "section": "Core Subject",
+   "text": "A simply supported beam of span 6 m carries a uniformly distributed load of 10 kN/m. The maximum bending moment (in kNm) in the beam is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "45",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "60",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "75",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "90",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: For a simply supported beam with UDL, maximum bending moment = wL²/8 = 10×6²/8 = 45 kNm. Full solution: The reactions at each support are wL/2 = 30 kN. The bending moment at distance x from left support is M = 30x - 10x²/2. Setting dM/dx = 0 gives x = 3 m (midspan). Substituting x = 3 gives Mmax = 30×3 - 5×9 = 90 - 45 = 45 kNm.",
+   "topic": "Strength of Materials - Bending Moment",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:28:23.212Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1972,
+   "q": 8
+  },
+  {
+   "section": "Core Subject",
+   "text": "A table shows the number of books sold by four authors in a month: | Author | Books Sold | |--------|------------| | X | 120 | | Y | 150 | | Z | 90 | | W | 140 | If each author receives a royalty of $2 per book, which author earns the second highest royalty?",
+   "options": [
+    {
+     "label": "A",
+     "text": "Author X",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "Author Y",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "Author Z",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "Author W",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Identify the second largest number by quick comparison. The sales figures are 120, 150, 90, 140. The largest is 150 (Y); the next largest is 140 (W). Hence W gets the second highest royalty. Full solution: Royalties = 2 × books sold. X: $240, Y: $300, Z: $180, W: $280. The second highest amount is $280, belonging to Author W.",
+   "topic": "Data Interpretation - Tables",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "Groq openai/gpt-oss-120b",
+   "generatedAt": "2026-11-15T12:24:46.858Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [
+     "Author",
+     "Books Sold"
+    ],
+    "rows": [
+     [
+      "X",
+      "120"
+     ],
+     [
+      "Y",
+      "150"
+     ],
+     [
+      "Z",
+      "90"
+     ],
+     [
+      "W",
+      "140"
+     ]
+    ]
+   },
+   "chartData": {},
+   "id": 1962,
+   "q": 9
+  },
+  {
+   "section": "Core Subject",
+   "text": "The characteristic equation of a closed-loop control system is s³ + 4s² + 5s + K = 0. The range of K for the system to be stable is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "0 < K < 20",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "0 < K < 10",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "K > 20",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "K < 0",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: For a 3rd-order characteristic equation s³ + a₁s² + a₂s + a₃ = 0, Routh-Hurwitz stability requires all coefficients > 0 and a₁a₂ > a₃. Here a₁=4, a₂=5, a₃=K → 4×5 > K ⇒ K < 20, and K > 0. Thus 0 < K < 20. Full solution: Construct Routh array: s³: 1 5 s²: 4 K s¹: (20−K)/4 0 s⁰: K For stability, all first-column elements must be positive: 1 > 0, 4 > 0, (20−K)/4 > 0 ⇒ K < 20, and K > 0. Hence 0 < K < 20.",
+   "topic": "Control Systems - Stability Analysis",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "qwen3.5:9b",
+   "generatedAt": "2026-11-14T22:02:11.014Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 1937,
+   "q": 10
+  },
+  {
+   "section": "Core Subject",
+   "text": "One kg of air (ideal gas, c_p = 1.005 kJ/kg·K, R = 0.287 kJ/kg·K) undergoes a reversible process from State 1 (300 K, 100 kPa) to State 2 (600 K, 200 kPa). The change in specific entropy (in kJ/kg·K) is approximately:",
+   "options": [
+    {
+     "label": "A",
+     "text": "0.35",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "0.50",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "0.69",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "0.72",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: For an ideal gas, Δs = c_p ln(T_2/T_1) - R ln(P_2/P_1). Here T_2/T_1 = 2 and P_2/P_1 = 2. So Δs = (c_p - R) ln 2 = c_v ln 2. c_v = 1.005 - 0.287 = 0.718 kJ/kg·K. Δs = 0.718 × 0.693 ≈ 0.50 kJ/kg·K. Full Solution: The entropy change for an ideal gas is given by s_2 - s_1 = c_p ln(T_2/T_1) - R ln(P_2/P_1). Substituting the given values: T_2/T_1 = 600/300 = 2, P_2/P_1 = 200/100 = 2. Thus, Δs = 1.005 ln(2) - 0.287 ln(2) = (1.005 - 0.287) ln(2) = 0.718 × 0.6931 = 0.4976 ≈ 0.50 kJ/kg·K.",
+   "topic": "Thermodynamics - Entropy Change",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:22:54.467Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1959,
+   "q": 11
+  },
+  {
+   "section": "Core Subject",
+   "text": "A thin cylindrical pressure vessel with closed ends is subjected to internal pressure p. The ratio of the circumferential (hoop) stress to the longitudinal (axial) stress developed in the vessel wall is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "0.5",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "1.0",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "4.0",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "2.0",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: For a thin cylinder, Hoop Stress σ_h = pd/2t and Longitudinal Stress σ_l = pd/4t. The ratio σ_h / σ_l = (pd/2t) / (pd/4t) = 2. This is a standard result: Hoop stress is always twice the longitudinal stress. Full Solution: Consider a thin cylinder of internal diameter d and wall thickness t under internal pressure p. Circumferential stress is found by balancing force on a longitudinal section: σ_h × 2t × L = p × d × L ⇒ σ_h = pd/2t. Longitudinal stress is found by balancing force on a transverse section: σ_l × πdt = p × πd^2/4 ⇒ σ_l = pd/4t. Ratio = σ_h / σ_l = (pd/2t) / (pd/4t) = 2.",
+   "topic": "Strength of Materials - Thin Pressure Vessels",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:22:54.482Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1961,
+   "q": 12
+  },
+  {
+   "section": "Core Subject",
+   "text": "A company has an annual demand of 10,000 units, ordering cost of Rs. 100/order, and holding cost of Rs. 2/unit/year. If the annual demand doubles and the ordering cost reduces to half, what is the ratio of the new Economic Order Quantity (EOQ) to the original EOQ?",
+   "options": [
+    {
+     "label": "A",
+     "text": "0.707",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "1.0",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "1.414",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "2.0",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: EOQ ∝ √(D×K). New Demand D' = 2D, New Ordering Cost K' = 0.5K. Product D'K' = (2D)×(0.5K) = DK. Since product unchanged, EOQ remains same. Ratio = 1. Step-by-step: EOQ = √(2DK/h). New EOQ = √(2 × 2D × 0.5K / h) = √(2DK/h) = Original EOQ. Ratio = 1.",
+   "topic": "Industrial Engineering - Inventory Control",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:26:31.596Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1967,
+   "q": 13
+  },
+  {
+   "section": "Core Subject",
+   "text": "A line graph shows the monthly rainfall (mm) in City A for six months: Jan 80, Feb 95, Mar 110, Apr 130, May 125, Jun 115. Which month experienced the greatest increase in rainfall compared to the preceding month?",
+   "options": [
+    {
+     "label": "A",
+     "text": "February",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "March",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "April",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "May",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Compute successive differences quickly and spot the maximum. Differences: Feb‑Jan = 15, Mar‑Feb = 15, Apr‑Mar = 20, May‑Apr = -5, Jun‑May = -10. The largest positive jump is 20 mm in April. Full solution: List values, subtract, identify 20 mm as the maximum increase, corresponding to April.",
+   "topic": "Data Interpretation - Line Graph",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "Groq openai/gpt-oss-120b",
+   "generatedAt": "2026-11-15T12:24:46.875Z",
+   "reviewed": false,
+   "imageUrl": "https://example.com/linegraph_rainfall.png",
+   "tableData": {},
+   "chartData": {
+    "type": "line",
+    "labels": [
+     "Jan",
+     "Feb",
+     "Mar",
+     "Apr",
+     "May",
+     "Jun"
+    ],
+    "datasets": [
+     {
+      "label": "Rainfall (mm)",
+      "data": [
+       80,
+       95,
+       110,
+       130,
+       125,
+       115
+      ]
+     }
+    ]
+   },
+   "id": 1964,
+   "q": 14
+  },
+  {
+   "section": "Core Subject",
+   "text": "A ball bearing operates at a radial load of 5 kN and has a rated life (L10) of 10,000 hours. If the load is increased to 10 kN, what is the new rated life (in hours)? Assume load-life exponent p = 3 for ball bearings.",
+   "options": [
+    {
+     "label": "A",
+     "text": "5000",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "2500",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "1250",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "625",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Bearing life L ∝ (1/P)^p. Load doubles (×2), so life reduces by 2^3 = 8 times. New life = 10,000 / 8 = 1,250 hours. Step-by-step: L10 = (C/P)^p. L2/L1 = (P1/P2)^p = (5/10)^3 = (1/2)^3 = 1/8. L2 = 10,000 × (1/8) = 1,250 hours.",
+   "topic": "Machine Design - Rolling Contact Bearings",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-15T12:26:31.605Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 1968,
+   "q": 15
+  }
+ ],
+ "totalQuestions": 15
 }
