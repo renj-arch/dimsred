@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Use of Drones, GIS and AI in Damage Assessment and Recovery Planning | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Use of Drones, GIS and AI in Damage Assessment and Recovery Planning</h1>
+<p class="meta">Disaster Management: Hazard, Vulnerability and Response · <a href="/upsc/course/mains-gs3/lesson-disaster-management">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Background maze walls made of law books -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <!-- Outer frame -->
+    <rect x="20" y="20" width="520" height="250" rx="4"/>
+    <!-- Vertical book spines as maze barriers -->
+    <line x1="120" y1="40" x2="120" y2="250"/>
+    <line x1="220" y1="40" x2="220" y2="200"/>
+    <line x1="320" y1="90" x2="320" y2="270"/>
+    <line x1="420" y1="40" x2="420" y2="230"/>
+    <!-- Horizontal barriers -->
+    <line x1="40" y1="100" x2="110" y2="100"/>
+    <line x1="130" y1="160" x2="210" y2="160"/>
+    <line x1="230" y1="80" x2="310" y2="80"/>
+    <line x1="330" y1="140" x2="410" y2="140"/>
+    <line x1="430" y1="200" x2="510" y2="200"/>
+    <!-- Gavel break-throughs (court interventions) -->
+    <g transform="translate(120,100)">
+      <line x1="-15" y1="0" x2="15" y2="0" stroke="#1f2937" stroke-width="3" stroke-dasharray="6,4"/>
+      <polygon points="-18,-6 -18,6 0,0" fill="#1f2937"/>
+      <rect x="0" y="-4" width="18" height="8" fill="#1f2937"/>
+    </g>
+    <g transform="translate(320,140)">
+      <line x1="-15" y1="0" x2="15" y2="0" stroke="#1f2937" stroke-width="3" stroke-dasharray="6,4"/>
+      <polygon points="-18,-6 -18,6 0,0" fill="#1f2937"/>
+      <rect x="0" y="-4" width="18" height="8" fill="#1f2937"/>
+    </g>
+  </g>
+  <!-- Displaced family at entrance -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <circle cx="50" cy="150" r="12"/><!-- head -->
+    <line x1="50" y1="162" x2="50" y2="190"/><!-- body -->
+    <line x1="50" y1="175" x2="35" y2="195"/><!-- arm -->
+    <line x1="50" y1="175" x2="65" y2="195"/><!-- arm -->
+    <line x1="50" y1="190" x2="40" y2="215"/><!-- leg -->
+    <line x1="50" y1="190" x2="60" y2="215"/><!-- leg -->
+    <!-- second figure -->
+    <circle cx="75" cy="155" r="9"/>
+    <line x1="75" y1="164" x2="75" y2="185"/>
+    <line x1="75" y1="170" x2="65" y2="185"/>
+    <line x1="75" y1="170" x2="85" y2="185"/>
+    <line x1="75" y1="185" x2="70" y2="205"/>
+    <line x1="75" y1="185" x2="80" y2="205"/>
+    <!-- bundle -->
+    <polyline points="50,175 40,185 45,180 38,190" fill="none"/>
+  </g>
+  <!-- Path arrows through maze -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <path d="M50 150 C 80 150, 100 120, 115 100" marker-end="url(#arrow)"/>
+    <path d="M125 100 C 160 100, 190 130, 215 160" marker-end="url(#arrow)"/>
+    <path d="M225 160 C 260 160, 290 100, 315 85" marker-end="url(#arrow)"/>
+    <path d="M325 85 C 360 85, 390 150, 415 140" marker-end="url(#arrow)"/>
+    <path d="M425 140 C 460 140, 490 190, 510 200" marker-end="url(#arrow)"/>
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 Z"/>
+      </marker>
+    </defs>
+  </g>
+  <!-- Entitlement boxes at exit -->
+  <g stroke="#1f2937" stroke-width="2" fill="#fbf7ec">
+    <rect x="470" y="170" width="60" height="35" rx="2"/>
+    <text x="500" y="192" font-size="9" text-anchor="middle" fill="#1f2937" font-family="sans-serif">₹1L NDRF</text>
+    <rect x="470" y="210" width="60" height="35" rx="2"/>
+    <text x="500" y="232" font-size="9" text-anchor="middle" fill="#1f2937" font-family="sans-serif">₹5L PMAY-G</text>
+  </g>
+  <!-- Displacement Register book -->
+  <g transform="translate(350,50)" stroke="#1f2937" stroke-width="2" fill="#fbf7ec">
+    <rect x="0" y="0" width="70" height="50" rx="2"/>
+    <line x1="35" y1="0" x2="35" y2="50" stroke-dasharray="3,2"/>
+    <text x="35" y="18" font-size="8" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Displacement</text>
+    <text x="35" y="28" font-size="8" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Register</text>
+    <text x="35" y="40" font-size="7" text-anchor="middle" fill="#1f2937" font-family="sans-serif">linked to NPR</text>
+  </g>
+  <!-- State DRF flags (6 filled, rest empty) -->
+  <g stroke="#1f2937" stroke-width="1.5">
+    <g transform="translate(40,20)">
+      <line x1="0" y1="0" x2="0" y2="-30"/>
+      <polygon points="0,-30 20,-30 20,-22 0,-22" fill="#1f2937"/>
+    </g>
+    <g transform="translate(70,20)">
+      <line x1="0" y1="0" x2="0" y2="-30"/>
+      <polygon points="0,-30 20,-30 20,-22 0,-22" fill="#1f2937"/>
+    </g>
+    <g transform="translate(100,20)">
+      <line x1="0" y1="0" x2="0" y2="-30"/>
+      <polygon points="0,-30 20,-30 20,-22 0,-22" fill="#1f2937"/>
+    </g>
+    <g transform="translate(130,20)">
+      <line x1="0" y1="0" x2="0" y2="-30"/>
+      <polygon points="0,-30 20,-30 20,-22 0,-22" fill="#1f2937"/>
+    </g>
+    <g transform="translate(160,20)">
+      <line x1="0" y1="0" x2="0" y2="-30"/>
+      <polygon points="0,-30 20,-30 20,-22 0,-22" fill="#1f2937"/>
+    </g>
+    <g transform="translate(190,20)">
+      <line x1="0" y1="0" x2="0" y2="-30"/>
+      <polygon points="0,-30 20,-30 20,-22 0,-22" fill="#1f2937"/>
+    </g>
+    <!-- empty poles -->
+    <g transform="translate(220,20)"><line x1="0" y1="0" x2="0" y2="-30"/></g>
+    <g transform="translate(250,20)"><line x1="0" y1="0" x2="0" y2="-30"/></g>
+    <g transform="translate(280,20)"><line x1="0" y1="0" x2="0" y2="-30"/></g>
+    <g transform="translate(310,20)"><line x1="0" y1="0" x2="0" y2="-30"/></g>
+  </g>
+  <!-- Labels on book spines -->
+  <g font-size="8" fill="#1f2937" font-family="sans-serif" text-anchor="middle">
+    <text x="70" y="70" transform="rotate(-90,70,70)">DMA 2005</text>
+    <text x="170" y="70" transform="rotate(-90,170,70)">NPDM 2009</text>
+    <text x="270" y="110" transform="rotate(-90,270,110)">NDMP 2019</text>
+    <text x="370" y="70" transform="rotate(-90,370,70)">LARR 2013</text>
+    <text x="470" y="70" transform="rotate(-90,470,70)">NDMA Guidelines</text>
+  </g>
+  <!-- Timeline labels on path -->
+  <g font-size="7" fill="#1f2937" font-family="sans-serif">
+    <text x="90" y="115" text-anchor="middle">30 Days ID</text>
+    <text x="180" y="175" text-anchor="middle">180 Days R&amp;R</text>
+    <text x="300" y="70" text-anchor="middle">Article 21</text>
+    <text x="390" y="155" text-anchor="middle">PDNA / SIA</text>
+  </g>
+  <!-- Caption strip -->
+  <rect x="0" y="280" width="560" height="40" fill="#1f2937"/>
+  <text x="280" y="305" font-size="13" text-anchor="middle" fill="#fbf7ec" font-family="sans-serif" font-weight="bold">
+    Disaster Management: Response, Recovery &amp; Lessons
+  </text>
+</svg></div>
+<p class="meta">5. Response, Recovery and Lessons from Recent Events (10)</p></div></body></html>

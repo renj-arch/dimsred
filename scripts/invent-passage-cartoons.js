@@ -148,9 +148,15 @@ function prompt(title, text, lessonTitle) {
     'Return ONLY an <svg> element. No markdown, no prose, no code fence.',
     "Use viewBox='0 0 560 320'. Fill a background <rect> #fbf7ec.",
     'Black ink line art (#1f2937): simple human figures, objects, buildings, maps, arrows. Build ONE central visual metaphor for the passage.',
-    'Add 4 to 8 SHORT labels as <text> elements (each <= 22 characters) using the passage\'s own key terms. Put a thin caption strip at the bottom with the section title.',
+    'LAYOUT — this is a printed panel, so composition matters:',
+    '  * One central image, with up to four supporting images in a rough grid (left/right/top/bottom).',
+    '  * Keep a 14px margin from every edge; no shape or label may touch the border.',
+    '  * Put each label in its own empty region. NEVER place two <text> labels closer than 20px horizontally and 16px vertically.',
+    '  * Labels sit above or beside their shape, never on top of another label; the bottom strip is only for the section title.',
+    '  * Font-size 12-16. At most 6 labels, each <= 5 words (<= 24 characters). At most 18 shapes. Strokes 2.5-4.',
+    'Add the labels using the passage\'s own key terms. Put a thin caption strip at the bottom with the section title.',
     'Keep every element inside 0..560 x 0..320. No external images, no <script>, no <style>, no gradients, no photographs.',
-    'Be legible at 300px wide: large shapes, few words, thick strokes.',
+    'Be legible at 300px wide. If a label cannot fit without overlap, drop it — a clean panel with four labels beats a crowded one.',
     '',
     'LESSON: ' + lessonTitle,
     'PASSAGE SECTION: ' + title,
@@ -184,8 +190,9 @@ function sanitise(svg) {
 function validSvg(svg) {
   if (!svg) return 'no svg';
   if (!/<svg[^>]*viewBox=/i.test(svg)) return 'no viewBox';
-  const labels = (svg.match(/<text|<tspan/gi) || []).length;
-  if (labels < 3) return 'too few labels';
+  var labelCount = (svg.match(/<text|<tspan/gi) || []).length;
+  if (labelCount < 3) return 'too few labels';
+  if (labelCount > 9) return 'too many labels';
   if (/<script/i.test(svg)) return 'script';
   if (/(?:xlink:)?href\s*=\s*["']https?:/i.test(svg)) return 'external ref';
   if (/<image\b/i.test(svg)) return 'external image';
@@ -201,6 +208,15 @@ function validSvg(svg) {
     if (+tm[1] < 6 || +tm[1] > W - 6 || +tm[2] < 12 || +tm[2] > H - 4) { oob = true; break; }
   }
   if (oob) return 'label outside canvas';
+  // Reject labels that sit on top of each other (the Bhakti cartoon failure).
+  var pts = [];
+  var tre2 = /<text\b[^>]*\bx="(-?[\d.]+)"[^>]*\by="(-?[\d.]+)"/g, t2;
+  while ((t2 = tre2.exec(svg))) pts.push([+t2[1], +t2[2]]);
+  for (var a = 0; a < pts.length; a++) {
+    for (var b = a + 1; b < pts.length; b++) {
+      if (Math.abs(pts[a][0] - pts[b][0]) < 20 && Math.abs(pts[a][1] - pts[b][1]) < 16) return 'overlapping labels';
+    }
+  }
   return '';
 }
 
