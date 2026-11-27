@@ -1,30 +1,40 @@
 {
- "generatedAt": "2026-11-27T17:51:25.768Z",
- "lessonsAudited": 18,
- "flagged": 2,
+ "generatedAt": "2026-11-27T18:29:50.714Z",
+ "lessonsAudited": 11,
+ "flagged": 3,
  "applied": 0,
- "modelCalls": 4,
- "modelFailures": 41,
- "deadlineHit": false,
+ "modelCalls": 7,
+ "modelFailures": 20,
+ "deadlineHit": true,
  "problems": [
   {
-   "file": "ctet/course/maths/lesson-geometry.html",
-   "quote": "acute 90°",
-   "problem": "Acute angle is less than 90°; 90° is a right angle.",
-   "correction": "acute <90°",
+   "file": "english/course/grammar/lesson-active-passive.html",
+   "quote": "have the roof repaired readily yields The roof was had repaired — a marginal but attested form in formal registers",
+   "problem": "The passive form 'The roof was had repaired' is not attested in standard English; causative 'have' does not passivize this way.",
+   "correction": "have the roof repaired does not yield a passive '*The roof was had repaired'; the simple passive 'The roof was repaired' is used instead",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Acute angle is defined as <90°, 90° is right angle; correction matches definition.",
+   "verifierReason": "Causative 'have' cannot passivize to 'was had repaired'; only simple passive 'was repaired' exists.",
    "applied": false
   },
   {
-   "file": "ctet/course/maths/lesson-geometry.html",
-   "quote": "acute (all 90°)",
-   "problem": "Acute triangle has all angles less than 90°, not all 90°.",
-   "correction": "acute (all <90°)",
+   "file": "english/course/grammar/lesson-active-passive.html",
+   "quote": "the preferred passive is The car was got fixed (with get as a passive auxiliary) or, more commonly, The car was had fixed (formal)",
+   "problem": "Neither 'The car was got fixed' nor 'The car was had fixed' are standard passive forms; the get-passive is 'The car got fixed' and causative 'have' has no such passive.",
+   "correction": "the get-passive is 'The car got fixed'; causative 'have' does not form a passive with 'was had fixed'",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Acute triangle has all interior angles <90°; correction accurately reflects definition.",
+   "verifierReason": "Get-passive is 'got fixed', not 'was got fixed'; causative 'have' has no 'was had fixed' passive.",
+   "applied": false
+  },
+  {
+   "file": "english/course/grammar/lesson-active-passive.html",
+   "quote": "When the causative get is passivised, the to-infinitive is retained: The mechanic was got to fix the car (awkward) versus The car got fixed (the get-passive)",
+   "problem": "'The mechanic was got to fix the car' is not a grammatical passive of 'get someone to do something'; the construction does not exist.",
+   "correction": "The passive of 'get someone to do something' is not formed with 'was got to'; instead, 'The mechanic was asked to fix the car' or similar is used",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "'Get someone to do' does not passivize to 'was got to do'; alternative passives use 'asked/told'.",
    "applied": false
   }
  ]
