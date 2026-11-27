@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-27T11:02:47.911Z",
+ "updatedAt": "2026-11-27T12:13:45.839Z",
  "corrections": [
   {
    "file": "clat/course/english/lesson-grammar.html",
@@ -7021,6 +7021,111 @@
    "correction": "including a historic bronze in men’s hockey",
    "problem": "India's hockey gold at Tokyo 2020 is incorrect; it was bronze.",
    "appliedAt": "2026-11-27T11:02:47.911Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-profit-loss.html",
+   "quote": "Rearranging yields gross sales = (remittance + commission + expenses – advance) ÷ (1 – commission rate) when commission is a percentage of gross sales.",
+   "correction": "Rearranging yields gross sales = (remittance + expenses – advance) ÷ (1 – commission rate) when commission is a percentage of gross sales.",
+   "problem": "The formula incorrectly includes commission in the numerator; commission is a percentage of gross sales and is unknown, making the formula circular.",
+   "appliedAt": "2026-11-27T11:24:58.653Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-profit-loss.html",
+   "quote": "which is simply (new price – cost) × (new quantity – old quantity) – (old price – cost) × (old quantity – new quantity).",
+   "correction": "which is simply (new price – cost) × new quantity – (old price – cost) × old quantity.",
+   "problem": "The formula does not correctly compute marginal profit; it omits the term (new price - old price) × old quantity.",
+   "appliedAt": "2026-11-27T11:24:59.441Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-percentage.html",
+   "quote": "Under SLM, a fixed percentage of the original cost is depreciated each year. If cost = C, useful life = n years, residual value = R, annual depreciation = (C – R) / n. The percentage rate = (1/n) × 10",
+   "correction": "Under SLM, a fixed amount is depreciated each year. Annual depreciation = (C – R) / n. The depreciation rate on the depreciable amount is (1/n) × 100%.",
+   "problem": "SLM charges a fixed amount each year, not a fixed percentage of original cost (unless residual value is zero). The percentage rate is (1/n)×100% applied to the depreciable amount (C-R), not multiplied by (C-R).",
+   "appliedAt": "2026-11-27T11:25:08.371Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-time-work.html",
+   "quote": "The time to fill (or empty) the tank is the reciprocal of the net rate, provided the net rate is positive for filling and negative for emptying.",
+   "correction": "The time to fill or empty is the reciprocal of the absolute value of the net rate.",
+   "problem": "The reciprocal of a negative net rate is negative, but time cannot be negative; the time to empty is the reciprocal of the absolute value of the net rate.",
+   "appliedAt": "2026-11-27T11:28:41.013Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-time-work.html",
+   "quote": "The required time is then the capacity divided by the net hourly contribution.",
+   "correction": "The required time is the capacity divided by the absolute net hourly contribution.",
+   "problem": "If the net hourly contribution is negative, this yields negative time; time should be capacity divided by the absolute value of the net hourly contribution.",
+   "appliedAt": "2026-11-27T11:28:41.775Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "the pair becomes uniquely (18, 30) or (30, 18)",
+   "correction": "the pair becomes uniquely (30, 36) or (36, 30)",
+   "problem": "The example claims that with gcd=6, lcm=180, and 'consecutive multiples of 6', the pair is (18,30). But gcd(18,30)=6 and lcm(18,30)=90, not 180. The correct pair is (30,36) or (36,30).",
+   "appliedAt": "2026-11-27T11:37:00.915Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "two statements providing two distinct terms (e.g., a₂ = 7, a₃ = 15) create a system that uniquely determines r, d, and a₁",
+   "correction": "three statements providing three distinct terms (e.g., a₁ = 3, a₂ = 7, a₃ = 15) create a system that uniquely determines r, d, and a₁",
+   "problem": "A first-order linear recurrence aₙ₊₁ = r aₙ + d has three unknowns (a₁, r, d). Two terms (a₂, a₃) give only two equations, which is insufficient to uniquely determine all three unknowns. Three terms (or a₁ plus two terms) are needed.",
+   "appliedAt": "2026-11-27T11:37:01.368Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "add “Q is not third left of P”",
+   "correction": "add “P does not sit third to the left of Q”",
+   "problem": "The negation of the first disjunct 'P sits third to the left of Q' is incorrectly given as 'Q is not third left of P'; the correct negation is 'P does not sit third to the left of Q' (equivalently, 'Q is not third to the right of P').",
+   "appliedAt": "2026-11-27T12:00:27.961Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-syllogism.html",
+   "quote": "UG may only be applied when the arbitrary individual was introduced without any assumptions that restrict its class membership",
+   "correction": "UG may only be applied when the arbitrary individual appears in no undischarged assumptions",
+   "problem": "Misstates the eigenvariable condition for Universal Generalisation. In natural deduction, UG discharges an assumption (e.g., \"assume s ∈ S\"); the requirement is that the arbitrary individual not appear in any *undischarged* assumptions, not that it was introduced without any class-membership assumpt",
+   "appliedAt": "2026-11-27T12:02:32.918Z"
+  },
+  {
+   "file": "jee/course/chemistry/lesson-atomic-structure.html",
+   "quote": "They arise naturally from the mathematical solutions of the Schrödinger wave equation",
+   "correction": "The first three arise from the Schrödinger equation; spin was introduced separately.",
+   "problem": "The spin quantum number (ms) does not arise from the Schrödinger equation; it was introduced empirically and later derived from the Dirac equation. Only the first three quantum numbers (n, l, ml) arise from the Schrödinger equation.",
+   "appliedAt": "2026-11-27T12:04:24.862Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "This creates a cycle that forces X false, Y false, Z false.",
+   "correction": "This creates a cycle that forces X false; Y and Z may be true or false.",
+   "problem": "The conditional cycle X→Y, Y→Z, Z→¬X forces X to be false, but Y and Z can both be true (e.g., X=false, Y=true, Z=true satisfies all implications).",
+   "appliedAt": "2026-11-27T12:08:27.161Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "the only pair summing to 185 is 90+95",
+   "correction": "the pairs summing to 185 are 90+95 and 85+100",
+   "problem": "From the set {80,85,90,95,100}, both 90+95 and 85+100 sum to 185, so 90+95 is not the only pair.",
+   "appliedAt": "2026-11-27T12:08:27.655Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "G immediately clockwise of H on circle: H at seat2, G at seat3 ✔.",
+   "correction": "G at seat4, not immediately clockwise of H",
+   "problem": "The circle arrangement given in the same paragraph lists seats as: 1:E, 2:H, 3:B, 4:G, 5:F, 6:C, 7:A, 8:D. Thus H is at seat2, but G is at seat4, not seat3. The verification claim is false.",
+   "appliedAt": "2026-11-27T12:10:22.895Z"
+  },
+  {
+   "file": "jee/course/chemistry/lesson-basic-concepts.html",
+   "quote": "M = (m × ρ × 1000) / (1 + m × Mₛ / 1000)",
+   "correction": "M = (m × ρ × 1000) / (1000 + m × Mₛ)",
+   "problem": "The formula is dimensionally wrong for ρ in g mL⁻¹; the correct denominator is (1000 + m × Mₛ).",
+   "appliedAt": "2026-11-27T12:10:50.983Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-ratio-proportion.html",
+   "quote": "mixture replacement problems often exhibit inverse variation between the quantity removed and the concentration that remains",
+   "correction": "mixture replacement problems show a linear decrease in concentration as the quantity removed increases",
+   "problem": "The relationship between quantity removed and concentration remaining is linear (concentration = 1 - r/V), not inverse variation (which would require the product to be constant).",
+   "appliedAt": "2026-11-27T12:13:45.839Z"
   }
  ]
 }
