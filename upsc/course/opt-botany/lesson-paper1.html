@@ -714,6 +714,91 @@
 <div><table><caption>Key Enzymes and Transporters in N and S Assimilation</caption><thead><tr><th>Pathway</th><th>Step</th><th>Enzyme / Transporter</th><th>Cellular Compartment</th></tr></thead><tbody><tr><td>Nitrate assimilation</td><td>Uptake</td><td>NRT1.1 (CHL1), NRT2.1</td><td>Plasma membrane</td></tr><tr><td></td><td>Reduction to nitrite</td><td>Nitrate reductase (NR)</td><td>Cytosol</td></tr><tr><td></td><td>Reduction to NH₄⁺</td><td>Nitrite reductase (NiR)</td><td>Plastid</td></tr><tr><td>Ammonium assimilation</td><td>GS/GOGAT cycle</td><td>GS1 (cytosol), GS2 (plastid); Fd‑GOGAT, NADH‑GOGAT</td><td>Cytosol / Plastid</td></tr><tr><td>Sulfate assimilation</td><td>Uptake</td><td>SULTR1;1, SULTR1;2</td><td>Plasma membrane</td></tr><tr><td></td><td>Activation to APS</td><td>ATP sulfurylase</td><td>Plastid</td></tr><tr><td></td><td>Reduction to sulfite</td><td>APS reductase</td><td>Plastid</td></tr><tr><td></td><td>Reduction to sulfide</td><td>Sulfite reductase (SiR)</td><td>Plastid</td></tr><tr><td></td><td>Cysteine synthesis</td><td>O‑acetylserine(thiol)lyase (OASTL)</td><td>Plastid / Cytosol / Mitochondria</td></tr></tbody></table></div>
 
 <h3>Abiotic Stress Signaling: ROS, Calcium, and MAPK Cascades</h3>
+<!-- passage-cartoon:22c9734c67bf -->
+<figure class="passage-cartoon" data-cartoon="22c9734c67bf">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  
+  <!-- Stress icons (supporting images) -->
+  <!-- Salt stress (top-left) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <rect x="50" y="50" width="12" height="12"/>
+    <rect x="70" y="55" width="10" height="10"/>
+    <rect x="55" y="70" width="8" height="8"/>
+  </g>
+  <!-- Drought stress (top-right) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <circle cx="510" cy="50" r="14"/>
+    <line x1="510" y1="30" x2="510" y2="20"/>
+    <line x1="510" y1="70" x2="510" y2="80"/>
+    <line x1="490" y1="50" x2="480" y2="50"/>
+    <line x1="530" y1="50" x2="540" y2="50"/>
+    <line x1="496" y1="36" x2="488" y2="30"/>
+    <line x1="524" y1="64" x2="532" y2="70"/>
+  </g>
+  <!-- Cold stress (bottom-left) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <line x1="50" y1="250" x2="50" y2="270"/>
+    <line x1="40" y1="260" x2="60" y2="260"/>
+    <line x1="44" y1="254" x2="56" y2="266"/>
+    <line x1="44" y1="266" x2="56" y2="254"/>
+  </g>
+  <!-- Heat stress (bottom-right) -->
+  <path d="M510 250 Q500 230 510 210 Q520 230 510 250" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M510 250 Q505 235 510 220 Q515 235 510 250" stroke="#1f2937" stroke-width="2" fill="none" opacity="0.6"/>
+  
+  <!-- Central plant root -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Main root -->
+    <line x1="280" y1="200" x2="280" y2="120"/>
+    <!-- Left branch -->
+    <line x1="280" y1="160" x2="240" y2="160"/>
+    <!-- Right branch -->
+    <line x1="280" y1="160" x2="320" y2="160"/>
+    <!-- Root hairs -->
+    <line x1="270" y1="190" x2="260" y2="195"/>
+    <line x1="290" y1="190" x2="300" y2="195"/>
+  </g>
+  
+  <!-- ROS burst pathway (left) -->
+  <polyline points="240,160 200,140 180,110 140,90 100,80" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- ROS label -->
+  <text x="100" y="50" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">ROS burst</text>
+  
+  <!-- Ca²⁺ wave pathway (center) -->
+  <path d="M280,120 Q280,100 280,80 Q280,60 280,40" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Ca²⁺ label -->
+  <text x="280" y="20" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Ca²⁺ wave</text>
+  
+  <!-- MAPK cascade pathway (right) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <!-- MAPKKK -->
+    <rect x="330" y="130" width="50" height="25" rx="3"/>
+    <!-- MAPKK -->
+    <rect x="375" y="90" width="50" height="25" rx="3"/>
+    <!-- MAPK -->
+    <rect x="420" y="50" width="50" height="25" rx="3"/>
+    <!-- Arrows -->
+    <line x1="380" y1="130" x2="375" y2="115"/>
+    <line x1="425" y1="90" x2="420" y2="75"/>
+    <!-- Arrowheads -->
+    <polygon points="375,115 370,122 380,122" fill="#1f2937"/>
+    <polygon points="420,75 415,82 425,82" fill="#1f2937"/>
+  </g>
+  <!-- MAPK label -->
+  <text x="460" y="40" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">MAPK cascade</text>
+  
+  <!-- SOS pathway label (bottom center) -->
+  <text x="280" y="220" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">SOS pathway</text>
+  
+  <!-- Bottom caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937" opacity="0.1"/>
+  <text x="280" y="300" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Abiotic Stress Signaling: ROS, Calcium, and MAPK Cascades</text>
+</svg></div>
+  <figcaption>Abiotic Stress Signaling: ROS, Calcium, and MAPK Cascades</figcaption>
+</figure>
+
 <p>Environmental stresses (salinity, drought, extreme temperature, heavy metals) trigger rapid ROS production — superoxide (O₂⁻·), H₂O₂, hydroxyl radical (·OH) — mainly in chloroplasts, mitochondria, peroxisomes, and apoplast. ROS act as secondary messengers; their spatiotemporal signatures are decoded by antioxidant systems (SOD, CAT, APX, GR) and redox‑sensitive proteins. Concurrently, a transient cytosolic Ca²⁺ elevation (“calcium signature”) arises via plasma‑membrane channels (CNGCs, GLRs) and internal release from vacuole/ER (TPC1, IP₃‑gated channels). Ca²⁺ sensors include calmodulin (CaM), calcineurin B‑like proteins (CBLs), and Ca²⁺‑dependent protein kinases (CDPKs). CBLs interact with CBL‑interacting protein kinases (CIPKs) forming the CBL‑CIPK network, regulating transporters like SOS1 (Na⁺/H⁺ antiporter) and AKT1 (K⁺ channel).</p>
 <p>MAPK cascades amplify signals downstream of ROS and Ca²⁺. A typical module comprises a MAPKKK (e.g., MEKK1), MAPKK (e.g., MKK2), and MAPK (e.g., MPK4/MPK6). In salt stress, the SOS pathway exemplifies this: SOS3 (CBL) binds Ca²⁺, recruits SOS2 (CIPK), and the complex phosphorylates/activates SOS1 at the plasma membrane, extruding Na⁺. In drought, ABA‑activated SnRK2 kinases phosphorylate AREB/ABF transcription factors, inducing RD29A, RD29B, and LEA genes. Cold stress activates the ICE1‑CBF/DREB1 regulon; ICE1 is stabilized by SUMOylation and activates CBF promoters. MAPKs also phosphorylate transcription factors (e.g., WRKY33) and metabolic enzymes, linking perception to gene expression and metabolic reprogramming.</p>
 <div><table><caption>Core Components of Major Abiotic Stress Signaling Pathways</caption><thead><tr><th>Stress</th><th>Primary Sensor</th><th>Second Messenger</th><th>Key Kinase Cascade</th><th>Major Output</th></tr></thead><tbody><tr><td>Salt</td><td>SOS3 (CBL)</td><td>Ca²⁺</td><td>SOS2 (CIPK) → SOS1</td><td>Na⁺ efflux, K⁺ retention</td></tr><tr><td>Drought</td><td>PYR/PYL/RCAR (ABA receptor)</td><td>ABA, ROS</td><td>SnRK2 → AREB/ABF</td><td>Stomatal closure, LEA expression</td></tr><tr><td>Cold</td><td>Membrane rigidification</td><td>Ca²⁺, ROS</td><td>ICE1 → CBF/DREB1</td><td>COR gene activation</td></tr><tr><td>Heat</td><td>HSP90/ROF1</td><td>Ca²⁺, ROS</td><td>HSFA1 → HSPs</td><td>Protein refolding, thermotolerance</td></tr></tbody></table></div>
@@ -723,12 +808,84 @@
 <div class="tip-box"><div class="tip-title">Exam‑Day Strategy</div><div class="tip-text">When a question asks for a signaling cascade, draw a stepwise diagram with component names and indicate the type of regulation (phosphorylation, protein‑protein interaction, transcriptional activation). Label the second messengers (Ca²⁺, ROS, ABA) explicitly; examiners award marks for correct placement of each messenger in the pathway.</div></div>
 
 <h3>Meristem Identity Genes and Floral Organ Specification</h3>
+<!-- passage-cartoon:ad5ebae128ca -->
+<figure class="passage-cartoon" data-cartoon="ad5ebae128ca">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central flower: four whorls -->
+  <circle cx="280" cy="160" r="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="4" fill="#1f2937"/>
+  <!-- Top-left: SAM feedback loop -->
+  <circle cx="100" cy="80" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 80 80 Q 100 60 120 80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-right: FT florigen -->
+  <ellipse cx="460" cy="80" rx="15" ry="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 460 80 L 280 160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-left: ABCDE quartets -->
+  <circle cx="80" cy="220" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="120" cy="220" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="80" cy="260" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="120" cy="260" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-right: miRNA hairpin -->
+  <path d="M 460 240 Q 470 220 480 240 Q 470 260 460 240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip -->
+  <rect x="14" y="280" width="532" height="20" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="100" y="55" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">WUS‑CLV loop</text>
+  <text x="460" y="55" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">FT florigen</text>
+  <text x="100" y="270" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">ABCDE quartets</text>
+  <text x="460" y="270" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">miR172/156</text>
+  <text x="280" y="295" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Meristem Identity Genes &amp; Floral Organ Specification</text>
+</svg></div>
+  <figcaption>Meristem Identity Genes and Floral Organ Specification</figcaption>
+</figure>
+
 <p>The shoot apical meristem (SAM) maintains pluripotent stem cells via a feedback loop: WUSCHEL (WUS) in the organizing centre and the CLAVATA (CLV3/CLV1‑CLV2) peptide‑receptor system restricting the WUS domain. Photoperiod and vernalization pathways converge on FLOWERING LOCUS T (FT), a mobile florigen, triggering reproductive transition. FT interacts with FD in the SAM to activate floral identity genes LEAFY (LFY) and APETALA1 (AP1). LFY and AP1 specify the floral meristem and repress TFL1, which maintains inflorescence indeterminacy.</p>
 <p>Floral organ identity follows the ABCDE model, refined as a quartet model of MADS‑box complexes. Class A (AP1, AP2) specifies sepals; A+B (AP3, PI) specifies petals; B+C (AG) specifies stamens; C alone specifies carpels; D (STK, SHP) with C specifies ovules; E (SEP1‑4) proteins act as “glue” for tetrameric complexes in all organs. The quartet model predicts each whorl is defined by a distinct MADS‑box tetramer (e.g., AP1‑SEP3‑AP3‑PI for petals). SEP mutations convert all floral organs to leaf‑like structures, confirming their central role.</p>
 <p>Regulatory layers include miRNA control: miR172 targets AP2‑like genes to promote flowering and organ identity; miR156/SPL regulates juvenile‑to‑adult transition. In rice, orthologs OsMADS14/15 (AP1), OsMADS16 (SEP), and OsMADS3 (AG) function similarly, but B‑class genes (e.g., OsMADS2, OsMADS4) show subfunctionalization. Understanding these networks enables flower architecture manipulation for hybrid seed production and ornamental breeding.</p>
 <div><table><caption>ABCDE Model Gene Classes and Organ Identity in Arabidopsis</caption><thead><tr><th>Class</th><th>Representative Genes</th><th>Organ(s) Specified</th><th>Complex Composition (Quartet)</th></tr></thead><tbody><tr><td>A</td><td>AP1, AP2</td><td>Sepals</td><td>AP1‑SEP‑AP1‑SEP</td></tr><tr><td>A + B</td><td>AP1, AP3, PI</td><td>Petals</td><td>AP1‑SEP‑AP3‑PI</td></tr><tr><td>B + C</td><td>AP3, PI, AG</td><td>Stamens</td><td>AP3‑PI‑AG‑SEP</td></tr><tr><td>C</td><td>AG</td><td>Carpels</td><td>AG‑SEP‑AG‑SEP</td></tr><tr><td>D</td><td>STK, SHP1/2</td><td>Ovules</td><td>AG‑STK‑SEP‑SEP</td></tr><tr><td>E</td><td>SEP1‑4</td><td>All (co‑factor)</td><td>Component of every quartet</td></tr></tbody></table></div>
 
 <h3>Chemotaxonomy and Numerical Taxonomy in Angiosperm Classification</h3>
+<!-- passage-cartoon:fbfef738c28e -->
+<figure class="passage-cartoon" data-cartoon="fbfef738c28e">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central phylogenetic tree -->
+  <path d="M280 200 L280 120 M280 140 L180 140 M180 140 L150 110 M180 140 L210 110 M280 140 L380 140 M380 140 L350 110 M380 140 L410 110" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Leaf (Plant Families) -->
+  <path d="M100 80 Q90 70 80 80 Q90 90 100 80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- HPLC-DAD-MS -->
+  <rect x="440" y="60" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- DNA Phylogeny (double helix) -->
+  <path d="M100 260 Q110 250 100 240 Q110 230 100 220 Q110 210 100 200 M110 260 Q100 250 110 240 Q100 230 110 220 Q100 210 110 200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- UPGMA Clustering dendrogram -->
+  <path d="M460 260 L460 240 M460 240 L440 220 M460 240 L480 220" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Arrows connecting to central tree -->
+  <line x1="100" y1="80" x2="280" y2="140" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="460" y1="80" x2="280" y2="140" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="100" y1="260" x2="280" y2="180" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="460" y1="260" x2="280" y2="180" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <!-- Labels -->
+  <text x="100" y="50" font-size="14" fill="#1f2937" text-anchor="middle">Plant Families</text>
+  <text x="460" y="50" font-size="14" fill="#1f2937" text-anchor="middle">HPLC‑DAD‑MS</text>
+  <text x="100" y="230" font-size="14" fill="#1f2937" text-anchor="middle">DNA Phylogeny</text>
+  <text x="460" y="230" font-size="14" fill="#1f2937" text-anchor="middle">UPGMA Clustering</text>
+  <text x="280" y="100" font-size="14" fill="#1f2937" text-anchor="middle">Chemotaxonomy</text>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <text x="280" y="300" font-size="12" fill="#fbf7ec" text-anchor="middle">Chemotaxonomy and Numerical Taxonomy in Angiosperm Classification</text>
+</svg></div>
+  <figcaption>Chemotaxonomy and Numerical Taxonomy in Angiosperm Classification</figcaption>
+</figure>
+
 <p>Chemotaxonomy uses secondary metabolite distributions — alkaloids, flavonoids, terpenoids, phenolics, glucosinolates — as phylogenetic markers. These compounds are often lineage‑specific because their biosynthetic pathways involve enzyme families diversifying via gene duplication and neofunctionalization. For example, pyrrolizidine alkaloids characterize many Boraginaceae and Asteraceae (Senecioneae), while betalains replace anthocyanins in Caryophyllales (except Caryophyllaceae). Flavonoid profiles (e.g., flavone C‑glycosides in Poaceae, anthocyanidin 3‑O‑glycosides in Lamiaceae) resolved by HPLC‑DAD‑MS build chemical distance matrices.</p>
 <p>Numerical taxonomy converts chemical data into similarity coefficients (Jaccard, Dice, Euclidean) and clusters taxa via UPGMA, neighbor‑joining, or Ward’s method. PCA and NMDS visualize chemical space. Combined with DNA data (total evidence), chemotaxonomic characters often resolve recent radiations where molecular markers show incomplete lineage sorting. In Lamiaceae, rosmarinic acid and diterpene profiles support Nepetoideae monophyly. In Solanaceae, steroidal alkaloid distributions (solasodine, tomatidine) support the Solanoideae/Cestroideae split.</p>
 <p>Limitations include convergent metabolite evolution (e.g., caffeine in Coffea, Camellia, Paullinia) and environmental plasticity. Chemotaxonomic conclusions must be tested against robust molecular phylogenies. Modern workflows integrate untargeted metabolomics (LC‑HRMS) with phylogenomics, identifying biosynthetic gene clusters underlying chemotaxonomic markers.</p>
@@ -755,6 +912,49 @@
 <div><table><caption>Common Species‑Delimitation Methods and Their Assumptions</caption><thead><tr><th>Method</th><th>Data Input</th><th>Core Assumption</th><th>Typical Pitfall</th></tr></thead><tbody><tr><td>GMYC</td><td>Ultrametric single‑locus tree</td><td>Shift from inter‑ to intra‑specific branching rates</td><td>Over‑splits structured populations</td></tr><tr><td>PTP</td><td>Non‑ultrametric gene tree</td><td>Substitution rate shift at species boundaries</td><td>Sensitive to uneven sampling</td></tr><tr><td>BPP</td><td>Multi‑locus alignments</td><td>Multispecies coalescent, no gene flow after divergence</td><td>Prior sensitivity; computationally intensive</td></tr><tr><td>STACEY (BEAST2)</td><td>Multi‑locus alignments</td><td>Birth‑death‑collapse model, allows gene flow</td><td>Long MCMC runs; model complexity</td></tr><tr><td>DELINEATE</td><td>SNPs + guide tree</td><td>Population‑level clustering with fixed guide</td><td>Requires a reliable guide tree</td></tr></tbody></table></div>
 
 <h3>Plant Metabolomics: Metabolic Profiling and Pathway Engineering</h3>
+<!-- passage-cartoon:e3a718f0d5b8 -->
+<figure class="passage-cartoon" data-cartoon="e3a718f0d5b8">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central leaf -->
+  <path d="M180,150 Q160,120 140,150 Q160,180 180,150" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Mass-spec probe -->
+  <line x1="180" y1="150" x2="220" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <rect x="220" y="145" width="10" height="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Pathway boxes -->
+  <rect x="260" y="110" width="50" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="340" y="110" width="50" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="420" y="110" width="50" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Connectors between pathway boxes -->
+  <line x1="310" y1="135" x2="340" y2="135" stroke="#1f2937" stroke-width="3"/>
+  <line x1="390" y1="135" x2="420" y2="135" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left instrument (LC-HRMS) -->
+  <rect x="60" y="130" width="60" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Right instrument (GC-MS) -->
+  <rect x="440" y="130" width="60" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- PCA scatter -->
+  <circle cx="260" cy="80" r="5" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="80" r="5" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="300" cy="80" r="5" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <ellipse cx="280" cy="80" rx="30" ry="15" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- CRISPR scissors -->
+  <line x1="260" y1="220" x2="300" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <line x1="260" y1="260" x2="300" y2="220" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption line -->
+  <line x1="14" y1="280" x2="546" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="90" y="115" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">LC‑HRMS</text>
+  <text x="470" y="115" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">GC‑MS</text>
+  <text x="280" y="55" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">PCA/OPLS‑DA</text>
+  <text x="365" y="95" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">13C flux</text>
+  <text x="365" y="170" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">Pathway</text>
+  <text x="280" y="265" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">CRISPR</text>
+  <!-- Section title -->
+  <text x="280" y="300" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">Plant Metabolomics: Metabolic Profiling and Pathway Engineering</text>
+</svg></div>
+  <figcaption>Plant Metabolomics: Metabolic Profiling and Pathway Engineering</figcaption>
+</figure>
+
 <!-- passage-image:407c2f563bbd -->
 <figure class="passage-photo" data-image="407c2f563bbd">
   <a href="https://commons.wikimedia.org/wiki/File:Wpdms_usgs_photo_golden_gate.jpg" target="_blank" rel="noopener">
@@ -785,6 +985,30 @@
 <div><table><caption>Major Hormone Crosstalk Nodes in Arabidopsis</caption><thead><tr><th>Node</th><th>Interacting Hormones</th><th>Molecular Mechanism</th><th>Developmental Output</th></tr></thead><tbody><tr><td>ARF‑DELLA</td><td>Auxin ↔ GA</td><td>DELLA binds ARF6/8, blocking auxin‑induced transcription</td><td>Hypocotyl elongation, fruit set</td></tr><tr><td>BES1‑ARF</td><td>BR ↔ Auxin</td><td>BES1 co‑binds auxin‑responsive promoters with ARF5/MP</td><td>Vascular patterning, root growth</td></tr><tr><td>JAZ‑DELLA</td><td>JA ↔ GA</td><td>JAZ recruits DELLA to MYC2, repressing JA responses</td><td>Defense‑growth trade‑off</td></tr><tr><td>SMXL‑ARF</td><td>SL ↔ Auxin</td><td>SMXL6/7/8 interact with ARF7/19 to suppress lateral root formation</td><td>Root architecture under phosphate starvation</td></tr><tr><td>ABI‑SnRK2‑PIN</td><td>ABA ↔ Auxin transport</td><td>SnRK2 phosphorylates PIN1, reducing auxin efflux</td><td>Drought‑induced root growth reorientation</td></tr></tbody></table></div>
 
 <h3>Plant Cell Biology: Organelle Biogenesis, Protein Targeting, and Quality Control</h3>
+<!-- passage-cartoon:9e42295064ec -->
+<figure class="passage-cartoon" data-cartoon="9e42295064ec">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="50" y="40" width="460" height="240" rx="10" ry="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="120" cy="120" r="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="80" y="180" width="120" height="60" rx="5" ry="5" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="300" y="100" width="40" height="10" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="300" y="115" width="40" height="10" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="300" y="130" width="40" height="10" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <ellipse cx="460" cy="250" rx="70" ry="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <ellipse cx="460" cy="80" rx="50" ry="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <ellipse cx="460" cy="170" rx="40" ry="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="14" y="300" width="532" height="4" fill="#1f2937"/>
+  <text x="280" y="295" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Plant Cell Biology</text>
+  <text x="140" y="160" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">ER</text>
+  <text x="320" y="90" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Golgi</text>
+  <text x="460" y="60" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Plastid</text>
+  <text x="460" y="130" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Mitochondria</text>
+  <text x="140" y="250" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">ERAD</text>
+</svg></div>
+  <figcaption>Plant Cell Biology: Organelle Biogenesis, Protein Targeting, and Quality Control</figcaption>
+</figure>
+
 <p>Plant cells maintain a complex endomembrane system and semi‑autonomous organelles (plastids, mitochondria) that require coordinated biogenesis, protein import, and quality‑control mechanisms. The secretory pathway routes nascent polypeptides from the endoplasmic reticulum (ER) through the Golgi apparatus to the plasma membrane, vacuole, or apoplast. Co‑translational insertion into the ER is mediated by the Sec61 translocon; signal peptides are cleaved by signal peptidase. N‑linked glycosylation begins in the ER (Glc₃Man₉GlcNAc₂) and is trimmed by glucosidases I/II, enabling calnexin/calreticulin‑dependent folding surveillance. Misfolded proteins are retro‑translocated to the cytosol for ER‑associated degradation (ERAD) via the Hrd1/Doa10 ubiquitin ligases and the p97/CDC48 ATPase. The Golgi modifies glycans (mannose trimming, complex‑type addition) and sorts cargo via coat protein complexes (COPI, COPII, clathrin). Vacuolar sorting receptors (VSRs) recognize NPIR motifs on soluble vacuolar proteins, directing them to the prevacuolar compartment (PVC) and then to the lytic vacuole. Plastid protein import uses the TOC/TIC translocons at the outer/inner envelope membranes. Precursor proteins carry N‑terminal transit peptides recognized by Toc159/Toc34 receptors; translocation is driven by stromal Hsp93 (ClpC) and Tic110/Tic40. The stromal processing peptidase (SPP) cleaves transit peptides. Mitochondrial import follows a parallel pathway: presequences are recognized by Tom20/Tom22 (outer membrane) and Tim23/Tim17 (inner membrane), with the presequence translocase‑associated motor (PAM) providing ATP‑dependent pulling. Quality control inside organelles relies on proteases: Clp, FtsH, and Lon in plastids; Lon, ClpXP, and m‑AAA/i‑AAA proteases in mitochondria. The unfolded protein response (UPR) in the ER (bZIP60 splicing by IRE1) and in plastids (GUN1‑mediated retrograde signaling) adjust nuclear gene expression to restore proteostasis. Autophagy (ATG8‑decorated autophagosomes) selectively removes damaged organelles (chlorophagy, mitophagy) and protein aggregates. Cryo‑EM structures of the TOC/TIC supercomplex (at ~3.2 Å resolution) reveal how transit peptides thread through a continuous channel, while the ERAD‑L (luminal) and ERAD‑M (membrane) branches are distinguished by the lectin OS9 and the membrane‑embedded Hrd1 complex, respectively.</p>
 <h4>Key Quality‑Control Pathways and Mutant Phenotypes</h4>
 <ul>
