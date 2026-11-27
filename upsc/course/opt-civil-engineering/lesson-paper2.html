@@ -1208,16 +1208,144 @@ The advanced sections above provide the depth and exam‑oriented nuance require
 </div>
 
 <h3>Advanced Foundation Design: Pile Group Behavior and Lateral Load Analysis</h3>
+<!-- passage-cartoon:9cefc8b45d79 -->
+<figure class="passage-cartoon" data-cartoon="9cefc8b45d79">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central pile group (2x2) -->
+  <circle cx="240" cy="140" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="320" cy="140" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="240" cy="200" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="320" cy="200" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Lateral load arrow -->
+  <path d="M100,140 L225,140 M225,140 L220,135 M225,140 L220,145" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Central p-y curve -->
+  <path d="M240,125 Q260,140 240,155 Q220,170 240,185" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Left single pile -->
+  <circle cx="80" cy="160" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Left p-y curve -->
+  <path d="M80,145 Q100,160 80,175 Q60,190 80,205" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Right pile cap -->
+  <rect x="460" y="145" width="60" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Strut-and-tie -->
+  <path d="M460,175 L490,145 L520,175" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top equivalent raft -->
+  <rect x="220" y="40" width="120" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- 2V:1H spread lines -->
+  <line x1="220" y1="80" x2="200" y2="120" stroke="#1f2937" stroke-width="3"/>
+  <line x1="340" y1="80" x2="360" y2="120" stroke="#1f2937" stroke-width="3"/>
+  <!-- Bottom spacing diagram -->
+  <circle cx="240" cy="280" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="320" cy="280" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M250,280 L310,280 M250,280 L255,275 M250,280 L255,285 M310,280 L305,275 M310,280 L305,285" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="110" font-size="14" fill="#1f2937" text-anchor="middle">Group Efficiency</text>
+  <text x="350" y="150" font-size="14" fill="#1f2937" text-anchor="middle">p-y Curves</text>
+  <text x="280" y="220" font-size="14" fill="#1f2937" text-anchor="middle">p-Multiplier</text>
+  <text x="490" y="130" font-size="14" fill="#1f2937" text-anchor="middle">Strut-and-Tie</text>
+  <text x="280" y="30" font-size="14" fill="#1f2937" text-anchor="middle">Equivalent Raft</text>
+  <!-- Bottom caption strip -->
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle">Advanced Foundation Design: Pile Group Behavior and Lateral Load Analysis</text>
+</svg></div>
+  <figcaption>Advanced Foundation Design: Pile Group Behavior and Lateral Load Analysis</figcaption>
+</figure>
+
 <p>Design of pile groups under combined axial and lateral loading demands consideration of group efficiency, pile‑soil‑pile interaction, and the distribution of loads among individual piles. For axial capacity, the group efficiency η_g for friction piles in clay is often estimated by the Converse‑Labarre formula η_g = 1 − (θ/90) [(n−1)m + (m−1)n] / (mn), where θ = arctan(d/s) in degrees, d is pile diameter, s is center‑to‑center spacing, m and n are the number of rows and columns. For a 3 × 4 group with d = 0.5 m, s = 1.5 m, θ ≈ 18.4°, η_g ≈ 0.78. In sand, the efficiency may exceed 1.0 due to densification; a conservative approach caps η_g at 1.0. The ultimate group capacity Q_ug = η_g Σ Q_u,single for friction piles, while for end‑bearing piles on rock the group capacity equals the sum of individual capacities (η_g = 1.0). Settlement of the group is evaluated using the equivalent raft method at a depth of 2/3 L below the pile cap, where L is pile length; the stress distribution follows a 2V:1H spread. The elastic settlement s = (q B (1−ν²) I_f) / E_s, where q is the average pressure on the equivalent raft, B its width, ν Poisson’s ratio of soil, E_s the modulus, and I_f the influence factor (≈ 1.0 for flexible raft).</p>
 <p>Lateral load analysis uses the p‑y curve method (API RP 2A, Matlock for soft clay, Reese for sand). The soil reaction p (kN/m) versus pile deflection y (m) is defined by a series of curves along the pile length. For a free‑head pile, the boundary conditions at the pile head are shear V and moment M; for a fixed‑head pile, rotation θ = 0. The differential equation EI d⁴y/dz⁴ + p(y) = 0 is solved by finite‑difference or finite‑element programs (e.g., LPILE, GROUP). In a group, the p‑y curves of trailing piles are reduced by a p‑multiplier f_m that depends on the pile spacing ratio s/d and the position in the group (leading row f_m = 1.0, second row ≈ 0.7, third row ≈ 0.5 for s/d = 3). A typical exam question provides a 4‑pile square group (s/d = 3) in stiff clay (c_u = 100 kPa, ε₅₀ = 0.005) subjected to a horizontal load H = 500 kN and moment M = 200 kN·m at the cap. Candidates must compute the p‑y curves for a single pile, apply p‑multipliers, and determine the maximum pile head deflection and bending moment. The group effect often increases the leading pile moment by 20–30 % compared to an isolated pile.</p>
 <p>Pile cap design follows the strut‑and‑tie model per IS 2911 or ACI 318. The cap is modeled as a deep beam with compressive struts from column to piles and tension ties between piles. The required tie reinforcement A_st = T / (0.87 f_y), where T is the tie force from the truss analysis. Shear in the cap is checked using the enhanced shear strength v_c = 0.6 √f_ck (1 + 0.2 d/a_v) for a_v/d ≤ 2.5. A common trap is to design the cap for punching shear only, ignoring the strut‑and‑tie tension ties that develop when the column load is eccentric. Another trap is to assume equal load distribution among piles under lateral loading; the actual distribution is highly non‑uniform and must be obtained from the group analysis. Examiners may ask to sketch the strut‑and‑tie layout for a 3‑pile cap with an eccentric column load and to compute the tie force in the outermost pile.</p>
 
 <h3>Water Quality Modeling for River and Lake Systems</h3>
+<!-- passage-cartoon:b384f989143a -->
+<figure class="passage-cartoon" data-cartoon="b384f989143a">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- River channel -->
+  <path d="M14 160 Q100 140 200 160 Q300 180 360 160" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- DO sag curve above river -->
+  <path d="M14 140 Q100 100 200 140 Q300 120 360 140" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="6,4"/>
+  <!-- Lake body -->
+  <rect x="360" y="100" width="186" height="120" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Algae hatch lines in lake -->
+  <g stroke="#1f2937" stroke-width="1.5">
+    <line x1="370" y1="110" x2="530" y2="110"/>
+    <line x1="370" y1="130" x2="530" y2="130"/>
+    <line x1="370" y1="150" x2="530" y2="150"/>
+    <line x1="370" y1="170" x2="530" y2="170"/>
+    <line x1="370" y1="190" x2="530" y2="190"/>
+    <line x1="370" y1="210" x2="530" y2="210"/>
+  </g>
+  <!-- Wastewater outfall pipe -->
+  <path d="M100 160 L100 200" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="100" cy="200" r="8" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Thermometer top-left -->
+  <rect x="60" y="30" width="12" height="60" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="66" cy="90" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="66" y1="50" x2="66" y2="80" stroke="#1f2937" stroke-width="4" stroke-linecap="round"/>
+  <text x="66" y="24" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Temp. Correction</text>
+  <!-- Arrhenius arrow near thermometer -->
+  <path d="M80 50 L95 40" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arr)"/>
+  <!-- Sediment flux at lake bottom -->
+  <path d="M420 210 L420 240" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <path d="M480 210 L480 240" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <text x="450" y="255" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Sediment Flux</text>
+  <!-- Calibration knobs bottom-left -->
+  <g stroke="#1f2937" stroke-width="2.5">
+    <circle cx="80" cy="280" r="12" fill="none"/>
+    <line x1="80" y1="268" x2="80" y2="252" stroke-linecap="round"/>
+    <circle cx="130" cy="280" r="12" fill="none"/>
+    <line x1="130" y1="268" x2="130" y2="252" stroke-linecap="round"/>
+    <circle cx="180" cy="280" r="12" fill="none"/>
+    <line x1="180" y1="268" x2="180" y2="252" stroke-linecap="round"/>
+    <circle cx="230" cy="280" r="12" fill="none"/>
+    <line x1="230" y1="268" x2="230" y2="252" stroke-linecap="round"/>
+  </g>
+  <text x="155" y="300" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Calibration Hell</text>
+  <!-- Labels for central metaphor -->
+  <text x="180" y="85" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">DO Sag Curve</text>
+  <text x="453" y="85" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Vollenweider Model</text>
+  <text x="100" y="215" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Outfall Load</text>
+  <!-- Section title strip -->
+  <rect x="14" y="290" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="308" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#fbf7ec">Water Quality Modeling for River and Lake Systems</text>
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L6,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+</svg></div>
+  <figcaption>Water Quality Modeling for River and Lake Systems</figcaption>
+</figure>
+
 <p>River water quality modeling extends the advection‑dispersion framework to include biochemical reactions described by the Streeter‑Phelps dissolved oxygen (DO) sag equation and its modern extensions (QUAL2K, WASP). The classic DO balance for a steady, one‑dimensional reach is dD/dx = (k_d L_a)/U − (k_a D)/U, where D = DO_sat − DO is the deficit, L_a the ultimate BOD remaining, k_d the deoxygenation rate (day⁻¹), k_a the reaeration rate (day⁻¹), and U the average velocity (m/day). The analytical solution yields the critical deficit D_c = (k_d L<sub>0</sub> / (k_a − k_d)) (e^(−k_d t_c) − e^(−k_a t_c)) at travel time t_c = (1/(k_a − k_d)) ln[(k_a/k_d)(1 − D<sub>0</sub>(k_a − k_d)/(k_d L<sub>0</sub>))]. Typical values for Indian rivers: k_d = 0.2–0.4 day⁻¹ (20 °C), k_a = 0.5–2.0 day⁻¹ (depends on depth, velocity via O’Connor‑Dobbins or Churchill formulas). The model is calibrated by adjusting k_d and k_a to match observed DO profiles downstream of a wastewater outfall. A frequent exam twist is to ask for the impact of a temperature rise of 5 °C on k_d and k_a using the Arrhenius correction θ^(T−20) with θ = 1.047 for k_d and 1.024 for k_a.</p>
 <p>Lake eutrophication modeling uses the Vollenweider phosphorus loading model: P_lake = (L_P / (z ρ)) × (1 / (1 + √(τ_w))) where L_P is the annual phosphorus load (g/m²/yr), z the mean depth (m), ρ the retention coefficient (≈ 0.5–0.8), and τ_w the hydraulic residence time (yr). The steady‑state chlorophyll‑a concentration is then estimated from empirical relationships Chl‑a = α P_lake^β (α ≈ 0.5, β ≈ 1.0). For a lake with z = 8 m, τ_w = 0.5 yr, L_P = 1.2 g/m²/yr, ρ = 0.6, P_lake ≈ 0.025 mg/L, giving Chl‑a ≈ 0.012 mg/L (oligotrophic). If L_P doubles, Chl‑a roughly doubles, pushing the lake toward mesotrophic status. The model assumes complete mixing; stratified lakes require a two‑layer (epilimnion/hypolimnion) model with internal loading from sediment release under anoxic conditions, quantified by the sediment phosphorus flux J_P = k_sed (C_sed − C_water) where k_sed is a mass‑transfer coefficient.</p>
 <p>Advanced models (e.g., CE‑QUAL‑W2, EFDC) couple hydrodynamics (2‑D or 3‑D flow) with water quality kinetics (nitrogen cycle, phosphorus cycle, phytoplankton groups, zooplankton, detritus). The state variables are solved on a staggered grid using implicit time stepping. Calibration involves dozens of kinetic parameters (maximum growth rates, half‑saturation constants, respiration rates). Sensitivity analysis (e.g., Morris screening) identifies the most influential parameters — typically the phytoplankton maximum growth rate μ_max and the light extinction coefficient K_e. In examinations, candidates may be asked to write the mass‑balance equation for total phosphorus in a control volume including external loading, sedimentation, and sediment release, and to discuss how a reduction in external load by 30 % would affect the steady‑state concentration given a sediment release fraction of 0.4. The answer must show the algebraic derivation and comment on the time lag due to internal loading.</p>
 
 <h3>Construction Contract Administration and Dispute Resolution Mechanisms</h3>
+<!-- passage-cartoon:c578ac1e2276 -->
+<figure class="passage-cartoon" data-cartoon="c578ac1e2276">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="220" y="120" width="120" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="50" y="150" width="100" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="410" y="150" width="120" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="60" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="220" y="210" width="120" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="14" y="276" width="532" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="280" y1="160" x2="100" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="160" x2="470" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="160" x2="280" y2="60" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="160" x2="280" y2="230" stroke="#1f2937" stroke-width="3"/>
+  <text x="280" y="20" text-anchor="middle" font-size="14" fill="#1f2937">DAB</text>
+  <text x="280" y="110" text-anchor="middle" font-size="14" fill="#1f2937">FIDIC Red Book</text>
+  <text x="100" y="140" text-anchor="middle" font-size="14" fill="#1f2937">EOT Notice</text>
+  <text x="470" y="140" text-anchor="middle" font-size="14" fill="#1f2937">Variation Order</text>
+  <text x="280" y="200" text-anchor="middle" font-size="14" fill="#1f2937">Arbitration</text>
+  <text x="280" y="295" text-anchor="middle" font-size="12" fill="#1f2937">Construction Contract Administration and Dispute Resolution Mechanisms</text>
+</svg></div>
+  <figcaption>Construction Contract Administration and Dispute Resolution Mechanisms</figcaption>
+</figure>
+
 <p>Effective contract administration in civil engineering projects hinges on a clear understanding of the contractual framework — typically FIDIC Red Book (construction), Yellow Book (design‑build), or Silver Book (EPC/turnkey) — and the Indian Contract Act, 1872, as amended. The Engineer’s role under FIDIC includes issuing instructions, determining extensions of time (EOT), and certifying payments. Clause 8.4 (EOT) requires the Contractor to give notice within 28 days of the delay event; failure to notify bars the claim. The Engineer must respond within 42 days. A common exam scenario presents a delay due to unforeseen ground conditions (Clause 4.12) and asks whether the Contractor is entitled to both time and cost. The answer: yes, if the conditions were not reasonably foreseeable from the geotechnical baseline report, and the Contractor gave timely notice. The Engineer’s determination is subject to the Dispute Adjudication Board (DAB) under Clause 20.4.</p>
 <p>Dispute resolution follows a tiered process: (1) amicable settlement (Clause 20.1), (2) referral to DAB (Clause 20.4), (3) arbitration (Clause 20.6) under the Arbitration and Conciliation Act, 1996 (as amended 2015, 2019). The DAB comprises one or three members appointed at contract inception; its decision is binding unless a party gives a Notice of Dissatisfaction within 28 days, after which the matter proceeds to arbitration. The 2015 amendment introduced a fast‑track arbitration procedure (Section 29B) with a six‑month timeline, and the 2019 amendment established the Arbitration Council of India for grading arbitral institutions. In exam answers, candidates should distinguish between a DAB decision (interim binding) and an arbitral award (final and enforceable as a court decree). The concept of “deemed adjudication” under the 2019 amendment — where failure to constitute a DAB within 28 days allows either party to refer directly to arbitration — is a frequent test point.</p>
 <p>Variation management under Clause 13 requires the Engineer to issue a Variation Order (VO) with a valuation method: (a) rates in the Bill of Quantities, (b) similar work rates, (c) new rates derived from cost plus reasonable profit. The Contractor must submit a quotation within 28 days; if the Engineer and Contractor disagree, the Engineer determines the rate. A typical trap is to assume the Contractor can claim overheads and profit on all variations; FIDIC limits profit to 5 % of the direct cost for new rates. Claims for disruption (loss of productivity) are distinct from delay claims and require demonstration of a causal link between the Employer’s breach (e.g., late access, design changes) and the measured productivity loss, often using the Measured Mile analysis. Examiners may provide daily output records before and after a disruptive event and ask to compute the productivity loss percentage and the associated cost claim. The answer must reference the Hudson formula or the Emden formula for head office overhead recovery, and note that Indian courts generally require contemporaneous records to substantiate disruption claims.</p>
