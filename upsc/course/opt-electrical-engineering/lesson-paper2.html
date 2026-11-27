@@ -181,6 +181,35 @@
 <div class="tip-box"><div class="tip-title">Exam-day strategy</div><div class="tip-text">When solving numerical problems on choppers, always state your assumption regarding continuous vs. discontinuous conduction mode first. If the problem does not specify, assume Continuous Conduction Mode (CCM) for standard textbook answers, but mention DCM if the load is purely resistive and frequency is low. Always draw the voltage waveform across the switch and the diode to justify your calculation of average voltage.</div></div>
 
 <h3>Communication Systems: Modulation Indices and Bandwidth</h3>
+<!-- passage-cartoon:76aab29a8d4b -->
+<figure class="passage-cartoon" data-cartoon="76aab29a8d4b">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central carrier wave -->
+  <path d="M 100,160 C 120,120 140,120 160,160 C 180,200 200,200 220,160 C 240,120 260,120 280,160 C 300,200 320,200 340,160 C 360,120 380,120 400,160 C 420,200 440,200 460,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-left bandwidth icon -->
+  <path d="M 100,80 H 180" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 100,70 V 90" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 180,70 V 90" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-right Carson's rule triangle -->
+  <path d="M 460,80 L 540,80 L 460,120 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-left noise zigzag -->
+  <path d="M 100,240 L 110,220 L 120,240 L 130,220 L 140,240 L 150,220 L 160,240 L 170,220 L 180,240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-right Shannon curve -->
+  <path d="M 460,240 Q 500,200 540,200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption line -->
+  <path d="M 14,300 H 546" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="120" text-anchor="middle" font-size="14" fill="#1f2937">Modulation Types</text>
+  <text x="100" y="60" font-size="14" fill="#1f2937">AM Bandwidth 2fm</text>
+  <text x="460" y="60" font-size="14" fill="#1f2937">FM Carson's Rule</text>
+  <text x="100" y="270" font-size="14" fill="#1f2937">Noise &amp; SNR</text>
+  <text x="460" y="270" font-size="14" fill="#1f2937">Shannon Capacity</text>
+  <text x="280" y="295" text-anchor="middle" font-size="13" fill="#1f2937">Communication Systems: Modulation Indices and Bandwidth</text>
+</svg></div>
+  <figcaption>Communication Systems: Modulation Indices and Bandwidth</figcaption>
+</figure>
+
 <p>The communication systems syllabus focuses on the transmission of information over a channel. The core concept is <strong>Modulation</strong>: varying a carrier parameter (amplitude, frequency, or phase) in accordance with the message signal. Amplitude Modulation (AM) varies the envelope amplitude; Frequency Modulation (FM) varies instantaneous frequency; Phase Modulation (PM) varies instantaneous phase.</p>
 <p>A critical distinction lies in <strong>Analog vs. Digital</strong> modulation. Analog systems (AM, FM, PM) are susceptible to noise accumulation. Digital systems (ASK, FSK, PSK, QAM) offer better noise immunity but require higher bandwidth and complex coding. The <strong>Bandwidth</strong> requirement is a frequent calculation point. For AM, BW = 2f_m (twice the highest modulating frequency). For FM, Carson's rule applies: BW ≈ 2(Δ f + f_m), where Δ f is the peak frequency deviation. This explains why FM radio occupies more spectrum than AM but offers superior audio quality and noise rejection.</p>
 <p>The <strong>Noise</strong> aspect is vital. Thermal noise (Johnson-Nyquist noise) is inherent in all resistive components. Shot noise arises from discrete charge carriers. The signal-to-noise ratio (SNR) determines the fidelity of transmission. In FM, the "capture effect" and "threshold effect" are unique phenomena where a stronger signal suppresses a weaker one on the same frequency, or where SNR degrades rapidly below a certain threshold level.</p>
@@ -203,6 +232,38 @@
 <p>In examinations, a typical twist is to provide a transfer function with a hidden pole‑zero cancellation and ask whether the resulting state‑space model is controllable. The correct approach: construct a minimal realization (e.g., via controllable canonical form after cancelling common factors) and then test rank. Another common trap is to assume that a diagonalizable <strong>A</strong> guarantees controllability; the input matrix <strong>B</strong> must have non‑zero entries in every modal direction. Always verify the rank of 𝒞 explicitly.</p>
 
 <h3>Digital Control Implementation and Quantization Effects</h3>
+<!-- passage-cartoon:a0ae9d5bcc00 -->
+<figure class="passage-cartoon" data-cartoon="a0ae9d5bcc00">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central Digital Controller -->
+  <rect x="220" y="130" width="120" height="60" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Sampling Period Wave (top-left) -->
+  <polyline points="80,100 100,80 120,100 140,80 160,100" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Quantization Step Staircase (top-right) -->
+  <polyline points="400,100 420,100 420,80 440,80 440,60 460,60 460,40 480,40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Unit Circle with Poles (bottom-left) -->
+  <circle cx="120" cy="240" r="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="100" cy="240" r="5" fill="#1f2937"/>
+  <circle cx="140" cy="240" r="5" fill="#1f2937"/>
+  <!-- Biquad Cascade (bottom-right) -->
+  <rect x="400" y="220" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="470" y="220" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="460" y1="235" x2="470" y2="235" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption Strip -->
+  <line x1="20" y1="280" x2="540" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="30" y="30" font-size="14" fill="#1f2937" font-family="sans-serif">Sampling Period</text>
+  <text x="460" y="50" font-size="14" fill="#1f2937" font-family="sans-serif">Quantization Step</text>
+  <text x="30" y="250" font-size="14" fill="#1f2937" font-family="sans-serif">Pole Sensitivity</text>
+  <text x="460" y="270" font-size="14" fill="#1f2937" font-family="sans-serif">Biquad Cascade</text>
+  <text x="280" y="100" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Limit Cycle</text>
+  <text x="280" y="295" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Digital Control Implementation and Quantization Effects</text>
+</svg></div>
+  <figcaption>Digital Control Implementation and Quantization Effects</figcaption>
+</figure>
+
 <p>Digital controllers operate on sampled‑data signals with a zero‑order hold (ZOH) equivalent discrete‑time model <strong>x[k+1] = A_d x[k] + B_d u[k]</strong>, where <strong>A_d = e<sup>A T_s</sup></strong> and <strong>B_d = ∫₀<sup>T_s</sup> e<sup>A τ</sup> dτ B</strong>. The sampling period <strong>T_s</strong> must satisfy the Nyquist criterion relative to the closed‑loop bandwidth; a common rule of thumb is <strong>T_s ≤ 0.1 / ω_c</strong> where <strong>ω_c</strong> is the desired crossover frequency. Faster sampling reduces discretization error but increases computational load and quantization noise.</p>
 <p>Quantization arises from finite word‑length arithmetic in the processor. Fixed‑point representation introduces a quantization step <strong>Δ = 2<sup>–(b–1)</sup></strong> for a b‑bit signed integer (assuming full‑scale ±1). The quantization error is often modeled as an additive white noise source with variance <strong>σ_q² = Δ² / 12</strong>. In a feedback loop, this noise is shaped by the closed‑loop transfer function; high‑gain loops amplify low‑frequency quantization noise, potentially causing limit cycles — sustained oscillations of small amplitude even with zero reference. Dithering (adding a small pseudo‑random signal) or using a higher‑precision accumulator for the integrator term mitigates limit cycles.</p>
 <p>Coefficient quantization affects pole locations. A pole at <strong>z = r e<sup>jθ</sup></strong> implemented with quantized coefficients may shift outside the unit circle, causing instability. Sensitivity analysis uses the derivative <strong>∂z/∂a_i</strong> where <strong>a_i</strong> are denominator coefficients. Poles near the unit circle or with high multiplicity are most sensitive. A robust design practice is to keep closed‑loop poles well inside the unit circle (e.g., |z| ≤ 0.8) and to verify stability after coefficient rounding using the Jury test or root locus on the quantized polynomial.</p>
