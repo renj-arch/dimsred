@@ -1,378 +1,209 @@
 {
- "generatedAt": "2026-11-27T10:44:51.329Z",
+ "generatedAt": "2026-11-27T11:11:12.023Z",
  "lessonsAudited": 18,
- "flagged": 37,
- "applied": 8,
- "modelCalls": 39,
- "modelFailures": 7,
+ "flagged": 20,
+ "applied": 9,
+ "modelCalls": 21,
+ "modelFailures": 34,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "english/course/grammar/lesson-articles-prepositions.html",
-   "quote": "He looked the document up — wrong; correct He looked up the document",
-   "problem": "The phrasal verb 'look up' allows the particle after the object; 'He looked the document up' is grammatical, not wrong.",
-   "correction": "He looked the document up — correct; He looked up the document — also correct",
+   "file": "english/course/writing/lesson-essay-writing.html",
+   "quote": "According to the NFHS‑5 (2019‑21), 68 % of women aged 15‑49 own a mobile phone",
+   "problem": "NFHS-5 (2019-21) reports that 54% of women aged 15-49 own a mobile phone; the 68% figure corresponds to men or urban women, not all women.",
+   "correction": "According to the NFHS‑5 (2019‑21), 54 % of women aged 15‑49 own a mobile phone",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original incorrectly labels 'He looked the document up' as wrong; both word orders are grammatical with noun objects.",
+   "verifierReason": "NFHS-5 national report shows 54% of women (15-49) own a mobile phone; 68% matches men's ownership or urban women only.",
    "applied": false
   },
   {
-   "file": "english/course/grammar/lesson-articles-prepositions.html",
-   "quote": "She not only sang but also danced (both non‑finite)",
-   "problem": "The verbs 'sang' and 'danced' are finite past tense forms, not non-finite.",
-   "correction": "She not only sang but also danced (both finite)",
+   "file": "gate/course/maths/lesson-differential-equations.html",
+   "quote": "Dividing by y₁ and integrating gives v′ = C exp(‑∫2y₁′/y₁ dx) = C/y₁². A second independent solution is y₂ = y₁∫(dx/y₁²).",
+   "problem": "The reduction of order formula for y″ + P(x)y′ + Q(x)y = 0 is missing the factor exp(-∫ P dx). The correct formula is v′ = C exp(-∫ P dx) / y₁², and y₂ = y₁ ∫ (exp(-∫ P dx) / y₁²) dx.",
+   "correction": "Dividing by y₁ and integrating gives v′ = C exp(-∫ P dx) / y₁². A second independent solution is y₂ = y₁ ∫ (exp(-∫ P dx) / y₁²) dx.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original misidentifies past tense 'sang/danced' as non-finite; they are finite verbs.",
+   "verifierReason": "Original misses exp(-∫P dx) factor in reduction of order for y''+Py'+Qy=0.",
    "applied": true
   },
   {
-   "file": "english/course/grammar/lesson-sentence-improvement.html",
-   "quote": "splits an inseparable phrasal verb (e.g., \"look the information up\" instead of \"look up the information\")",
-   "problem": "\"Look up\" is a separable phrasal verb, not inseparable; splitting it with a noun object (\"look the information up\") is grammatical. Inseparable phrasal verbs (e.g., \"look after\") cannot be split.",
-   "correction": "splits an inseparable phrasal verb (e.g., \"look the children after\" instead of \"look after the children\")",
+   "file": "gate/course/maths/lesson-differential-equations.html",
+   "quote": "Bₙ = (2/(c nπ/L))∫₀ᴸ g(x) sin(nπx/L) dx",
+   "problem": "The coefficient Bₙ for the wave equation is incorrect; it should be (2/(c nπ)) ∫ g sin, not (2L/(c nπ)) ∫ g sin.",
+   "correction": "Bₙ = (2/(c nπ))∫₀ᴸ g(x) sin(nπx/L) dx",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original mislabels 'look up' as inseparable; it's separable. Correction uses 'look after', a true inseparable verb.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-improvement.html",
-   "quote": "Determiners such as \"each\", \"every\", \"any\", \"no\" require singular count nouns",
-   "problem": "\"Any\" and \"no\" do not require singular count nouns; they combine with plural count nouns (\"any students\", \"no errors\") and uncountable nouns (\"any water\", \"no time\"). Only \"each\" and \"every\" strictly require singular count nouns.",
-   "correction": "Determiners such as \"each\" and \"every\" require singular count nouns, whereas \"any\" and \"no\" combine with singular, plural, or uncountable nouns",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original incorrectly groups 'any'/'no' with 'each'/'every'; 'any'/'no' allow plural/uncountable nouns.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "or Only Mary arrived (where Only Mary is the remnant of Only Mary arrived)",
-   "problem": "The example 'Only Mary arrived' is not an instance of stripping; it is a full clause, and the parenthetical explanation is circular.",
-   "correction": "or Mary likes coffee; only John (where only John is the remnant)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original example is circular and not stripping; correction gives standard stripping example.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "the elided VP is smart can be interpreted either as Bill thinks Bill is smart",
-   "problem": "The elided VP is not 'smart'; it is 'thinks he is smart'.",
-   "correction": "the elided VP 'thinks he is smart' can be interpreted either as Bill thinks Bill is smart",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Elided VP in VP-ellipsis is the full VP 'thinks he is smart', not just 'smart'.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-correction.html",
-   "quote": "when a relative pronoun is omitted in a restrictive clause",
-   "problem": "Omission of the relative pronoun in restrictive clauses is grammatically correct when the pronoun functions as object (e.g., 'the book I read'), not an error.",
-   "correction": "when a relative pronoun is omitted in a restrictive clause where it serves as subject",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Omission is only ungrammatical when the relative pronoun is the subject; object omission is standard. Correction accurately restricts the error condition.",
+   "verifierReason": "Wave equation coefficient B_n should have 2/(c nπ), not 2L/(c nπ).",
    "applied": true
   },
   {
-   "file": "english/course/grammar/lesson-sentence-improvement.html",
-   "quote": "Omitting \"if\" in formal conditional sentences (Type 2 and 3) leads to inversion with \"should,\" \"were,\" and \"had.\"",
-   "problem": "\"Should\" is used for inverted Type 1 conditionals, not Type 2 or 3. Type 2 uses \"were\"; Type 3 uses \"had\".",
-   "correction": "Omitting \"if\" in formal conditional sentences (Type 1, 2, and 3) leads to inversion with \"should,\" \"were,\" and \"had.\"",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original incorrectly assigns 'should' to Type 2/3; correction properly includes Type 1 for 'should' and maps 'were'/'had' to Type 2/3.",
-   "applied": true
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-improvement.html",
-   "quote": "Because he was tired, he left early, and she did too is ungrammatical",
-   "problem": "The sentence is grammatical; it uses VP-ellipsis (do-support) in a coordinate clause, not gapping, and the subordinate 'because' clause does not block coordination.",
-   "correction": "Because he was tired, he left early, and she did too is grammatical (VP-ellipsis in a coordinate clause).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Sentence coordinates two main clauses; VP-ellipsis 'did too' licensed by 'left early'. 'Because' clause is adjunct, not barrier.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "The official responsible for the delay (present participle, active sense)",
-   "problem": "The word 'responsible' is an adjective, not a present participle; the reduced relative derives from 'who is responsible', not a present participle.",
-   "correction": "The official responsible for the delay (participial adjective, active sense)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "'Responsible' is a participial adjective, not a present participle; correction is accurate.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "(* Dr Rao, chairing the committee, resigned is a supplementive, not a reduced relative)",
-   "problem": "The asterisk marks the grammatical sentence 'Dr Rao, chairing the committee, resigned' as ungrammatical; the sentence is a well-formed supplementive.",
-   "correction": "Dr Rao, chairing the committee, resigned is a supplementive, not a reduced relative",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Asterisk wrongly marks grammatical supplementive as ungrammatical; correction removes asterisk.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "(* That he lied is clear vs It is clear he lied )",
-   "problem": "The asterisk incorrectly marks 'That he lied is clear' as ungrammatical; it is grammatical. The intended contrast is between sentence-initial clauses with and without 'that'.",
-   "correction": "(* He lied is clear vs That he lied is clear )",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "'That he lied is clear' is grammatical; contrast should be with ungrammatical 'He lied is clear'.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "Middle voice appears with ergative verbs where the subject bears the theme role and no agent is implied: The book sells well , This fabric washes easily .",
-   "problem": "The verbs 'sell' and 'wash' in these examples are transitive verbs in middle construction, not ergative verbs; ergative verbs participate in causative alternation (e.g., break, melt).",
-   "correction": "Middle voice appears with transitive verbs in middle construction where the subject bears the theme role and no agent is implied: The book sells well , This fabric washes easily .",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "'Sell/wash' are transitive verbs in middle construction, not ergative verbs; correction is precise.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-improvement.html",
-   "quote": "the logical subject he originates as the subject of knows and raises to become the subject of seems",
-   "problem": "In 'It seems that he knows the answer', the subject of 'seems' is the expletive 'it'; 'he' does not raise to matrix subject. The raising construction is 'He seems to know the answer'.",
-   "correction": "In 'He seems to know the answer', the logical subject 'he' raises to become the subject of 'seems'",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original quote says 'subject of knows' (finite verb) but claims raising occurs; raising only happens with non-finite 'know' in 'He seems to know'. Correction accurately describes Subject-to-Subject Ra",
-   "applied": false
-  },
-  {
-   "file": "english/course/vocabulary/lesson-one-word-substitutions.html",
-   "quote": "a person who studies insects\", -ology words are the candidates and entomology is the answer",
-   "problem": "Entomology is the study of insects, not the person. The person is an entomologist.",
-   "correction": "a person who studies insects\", -ologist words are the candidates and entomologist is the answer",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Entomology is the field of study; the person is an entomologist. Correction fixes suffix and answer.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-active-passive.html",
-   "quote": "modal need used as a main verb in the negative ('You need not worry')",
-   "problem": "In 'You need not worry', 'need' is a modal auxiliary, not a main verb; the example also lacks the preposition 'about' required for the passive 'It need not be worried about'.",
-   "correction": "modal auxiliary need in the negative ('You need not worry about it')",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original mislabels modal 'need' as main verb; correction correctly identifies it as modal auxiliary. Example change acceptable.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-active-passive.html",
-   "quote": "the lower passive He is expected to be finished the report (the latter is marginal",
-   "problem": "The sentence 'He is expected to be finished the report' is ungrammatical, not marginal; the correct lower passive is 'The report is expected to be finished by him'.",
-   "correction": "the lower passive The report is expected to be finished by him (the former is ungrammatical)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original cites ungrammatical sentence as marginal; correction provides grammatical lower passive construction.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-subject-verb-agreement.html",
-   "quote": "Conditional sentences with would, could, should, or might also employ invariant modals, so number agreement is irrelevant in the conditional clause.",
-   "problem": "The conditional clause (if-clause) does not contain modals; modals appear in the main clause. Number agreement in the conditional clause is irrelevant because the subjunctive uses invariant 'were', not because of modals.",
-   "correction": "Conditional sentences use invariant modals in the main clause; the conditional clause uses invariant were, so number agreement is irrelevant there.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misattributes cause: modals are in main clause, not conditional clause. Correction correctly locates modals and identifies invariant 'were' in if-clause.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-correction.html",
-   "quote": "A sentence such as * John likes and Mary dislikes the movie is acceptable because likes and dislikes both select a direct object.",
-   "problem": "The asterisk conventionally marks an ungrammatical sentence, but the text states the sentence is acceptable.",
-   "correction": "A sentence such as John likes and Mary dislikes the movie is acceptable because likes and dislikes both select a direct object.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Asterisk marks ungrammaticality; sentence described as acceptable, so asterisk is error.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-correction.html",
-   "quote": "A frequent trap inserts a bare infinitive after the auxiliary in the ellipsis site: * John will attend the meeting, and Mary will attend too (redundant but not an error) versus * John will attend the ",
-   "problem": "The first example is marked with an asterisk (indicating ungrammaticality) but described as \"redundant but not an error\".",
-   "correction": "A frequent trap inserts a bare infinitive after the auxiliary in the ellipsis site: John will attend the meeting, and Mary will attend too (redundant but not an error) versus * John will attend the me",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "First example marked * but called 'not an error'; asterisk misuse.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-correction.html",
-   "quote": "* The professor taught the students with the new textbook is ambiguous; if the context indicates the textbook belongs to the professor, the PP attaches to professor",
-   "problem": "The asterisk marks the sentence as ungrammatical, but the text says it is ambiguous (grammatical).",
-   "correction": "The professor taught the students with the new textbook is ambiguous; if the context indicates the textbook belongs to the professor, the PP attaches to professor",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Sentence is grammatical but marked *; asterisk indicates ungrammaticality.",
-   "applied": false
-  },
-  {
-   "file": "gate/course/aptitude/lesson-logical-reasoning.html",
-   "quote": "“B is immediately above C” means row(B) = row(C) − 1 in a bottom‑to‑top numbering",
-   "problem": "In bottom-to-top numbering, higher floors have larger row numbers; 'above' means row(B) = row(C) + 1, not −1.",
-   "correction": "“B is immediately above C” means row(B) = row(C) + 1 in a bottom‑to‑top numbering",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "In bottom-to-top numbering, higher floors have larger row numbers; 'above' means row(B) = row(C) + 1.",
-   "applied": false
-  },
-  {
-   "file": "english/course/writing/lesson-precis-writing.html",
-   "quote": "Justice Nariman argues that the legislature, not the court, should define the scope of ‘carnal intercourse’",
-   "problem": "Justice Nariman did not dissent in Navtej Singh Johar v. Union of India (2018); he wrote a concurring opinion. The decision was unanimous (5-0) with no dissenting opinion.",
-   "correction": "Justice Malhotra argues that the legislature, not the court, should define the scope of ‘carnal intercourse’",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misattributes legislative-deference argument to Nariman; Malhotra's concurring opinion took that position.",
-   "applied": true
-  },
-  {
-   "file": "english/course/grammar/lesson-active-passive.html",
-   "quote": "have in the causative sense (have the roof repaired) readily yields The roof was had repaired — a marginal but attested form in formal registers.",
-   "problem": "The passive form 'The roof was had repaired' is ungrammatical in standard English; causative 'have' does not passivize this way.",
-   "correction": "have in the causative sense (have the roof repaired) does not passivize; the simple passive 'The roof was repaired' is used instead.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Causative 'have' cannot passivize to 'was had repaired'; standard passive is 'was repaired'.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-active-passive.html",
-   "quote": "the preferred passive is The car was got fixed (with get as a passive auxiliary) or, more commonly, The car was had fixed (formal).",
-   "problem": "Both 'The car was got fixed' and 'The car was had fixed' are ungrammatical; the get-passive is 'The car got fixed' and causative 'have' does not form a passive with 'was had fixed'.",
-   "correction": "the get-passive is 'The car got fixed'; causative 'have' does not passivize to '*was had fixed'.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "'Was got fixed' and 'was had fixed' are ungrammatical; get-passive is 'got fixed'.",
-   "applied": false
-  },
-  {
-   "file": "gate/course/aptitude/lesson-logical-reasoning.html",
-   "quote": "“wife of my brother’s son” is a daughter‑in‑law, not a niece",
-   "problem": "Wife of brother's son is niece-in-law, not daughter-in-law; daughter-in-law is wife of one's son.",
-   "correction": "“wife of my brother’s son” is a niece‑in‑law, not a daughter‑in‑law",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Brother's son is nephew; his wife is niece-in-law, not daughter-in-law.",
-   "applied": true
-  },
-  {
-   "file": "gate/course/aptitude/lesson-logical-reasoning.html",
-   "quote": "“son” = (+1, male, none)",
-   "problem": "Sign error: with up=parent (+1), son is child so Δgen = -1.",
-   "correction": "“son” = (−1, male, none)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "With up=+1 convention, son is child at -1 generation; correction fixes sign.",
-   "applied": true
-  },
-  {
-   "file": "english/course/writing/lesson-letter-writing.html",
-   "quote": "omitting the limitation period does not automatically invalidate a legal notice",
-   "problem": "The term 'limitation period' refers to the statutory time limit for filing a lawsuit under the Limitation Act, 1963. A legal notice includes a compliance deadline (usually 15‑30 days) for the addressee to respond, not a limitation period. Using 'limitation period' here is legally incorrect.",
-   "correction": "omitting the compliance deadline does not automatically invalidate a legal notice",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original misuses 'limitation period' (statutory suit-filing deadline under Limitation Act, 1963) for a legal notice's compliance deadline. Correction uses correct term and states valid law: missing de",
-   "applied": true
-  },
-  {
-   "file": "english/course/vocabulary/lesson-phrasal-verbs.html",
-   "quote": "* The children were looked after is marginal and often judged ungrammatical in formal registers",
-   "problem": "The passive of the prepositional verb 'look after' is fully grammatical in standard English (e.g., 'The children were looked after by their aunt'), not marginal or ungrammatical.",
-   "correction": "The children were looked after is fully acceptable in standard English",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Passive of 'look after' is fully grammatical; CGEL and standard grammars accept it.",
-   "applied": false
-  },
-  {
-   "file": "english/course/vocabulary/lesson-phrasal-verbs.html",
-   "quote": "the prefix a- (from on) and for- began to detach and appear after the verb, creating verb‑particle constructions such as rise up and give up",
-   "problem": "The Old English prefix a- (as in ārīsan) derives from Proto-Germanic *uz-, not from 'on'; the prefix for- (as in forgiefan 'forgive') did not detach to form 'give up' — 'give up' comes from 'give' + 'up'.",
-   "correction": "The prefix a- is not from on, and for- did not detach to form give up; these phrasal verbs came from verb + adverb combinations",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Prefix a- derives from *uz-, not 'on'; for- didn't detach to form 'give up'; phrasal verbs are verb+adverb.",
-   "applied": false
-  },
-  {
-   "file": "english/course/vocabulary/lesson-phrasal-verbs.html",
-   "quote": "The Great Vowel Shift and the reduction of inflectional morphology accelerated this reanalysis, because the particle could no longer be bound as a prefix",
-   "problem": "The Great Vowel Shift (c. 1400–1700) affected vowel phonology, not prefix binding; the loss of prefix binding resulted from the reduction of inflectional morphology in Middle English (11th–14th centuries).",
-   "correction": "The reduction of inflectional morphology in Middle English accelerated the reanalysis, as particles could no longer be bound as prefixes",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Great Vowel Shift is phonological, not morphological; prefix binding lost due to Middle English inflectional reduction.",
-   "applied": false
-  },
-  {
-   "file": "english/course/vocabulary/lesson-phrasal-verbs.html",
-   "quote": "* The client was called on (ungrammatical in standard English because call on is prepositional)",
-   "problem": "The passive 'The client was called on' is grammatical in standard English; prepositional verbs like 'call on' can be passivized.",
-   "correction": "The client was called on is grammatical in standard English",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Prepositional verbs like 'call on' can be passivized; 'The client was called on' is standard.",
-   "applied": false
-  },
-  {
-   "file": "english/course/writing/lesson-letter-writing.html",
-   "quote": "attach a note “Personal data redacted under Section 43A IT Act”",
-   "problem": "Section 43A of the IT Act provides for compensation for failure to protect data, not a redaction mandate. Redaction of personal data in government documents is typically justified under the RTI Act (Section 8(1)(j)) or the IT Rules.",
-   "correction": "attach a note “Personal data redacted under RTI Act Section 8(1)(j)”",
+   "file": "gate/course/aptitude/lesson-verbal-ability.html",
+   "quote": "utterly exhausted (not *completely exhausted)",
+   "problem": "\"completely exhausted\" is a perfectly acceptable collocation; the asterisk incorrectly marks it as unacceptable.",
+   "correction": "utterly exhausted (not *highly exhausted)",
    "confidence": "medium",
    "verified": true,
-   "verifierReason": "Section 43A IT Act provides compensation for data breaches, not redaction authority; RTI Act s.8(1)(j) is a correct basis for redacting personal data in govt documents."
+   "verifierReason": "'Completely exhausted' is standard English; asterisk marking it as unacceptable is wrong. 'Highly exhausted' is genuinely infelicitous."
   },
   {
-   "file": "english/course/writing/lesson-letter-writing.html",
-   "quote": "cites the statutory or administrative authority that mandates consultation (for example, Section 7 of the General Financial Rules for financial proposals)",
-   "problem": "GFR Rule 7 deals with general principles of financial propriety, not consultation requirements. Consultation for financial proposals is mandated under GFR Rule 10 (consultation with Financial Advisers) or Rule 11 (consultation with other departments).",
-   "correction": "cites the statutory or administrative authority that mandates consultation (for example, Rule 10 of the General Financial Rules for financial proposals)",
-   "confidence": "medium",
-   "verified": true,
-   "verifierReason": "GFR Rule 7 states general financial propriety principles; consultation with Financial Advisers is mandated by GFR Rule 10."
-  },
-  {
-   "file": "english/course/writing/lesson-letter-writing.html",
-   "quote": "Cross‑border data requests (e.g., under the Budapest Convention on Cybercrime or a bilateral MLAT)",
-   "problem": "India is not a signatory to the Budapest Convention on Cybercrime; therefore it cannot serve as a legal basis for India's cross-border data requests. Requests rely on bilateral MLATs or other mechanisms.",
-   "correction": "Cross‑border data requests (e.g., under a bilateral MLAT or other international agreement)",
+   "file": "gate/course/aptitude/lesson-verbal-ability.html",
+   "quote": "Not all students passed (∀x ¬Pass(x) → none passed)",
+   "problem": "\"Not all students passed\" means ¬∀x Pass(x) (some did not pass), not ∀x ¬Pass(x) (none passed). The logical formula and gloss are incorrect.",
+   "correction": "Not all students passed (¬∀x Pass(x) → some did not pass)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "India has not signed/ratified the Budapest Convention on Cybercrime; cross-border data requests rely on MLATs and other agreements.",
-   "applied": true
-  },
-  {
-   "file": "english/course/writing/lesson-letter-writing.html",
-   "quote": "The Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011 (Rule 8) and the forthcoming Digital Personal Data Protection Act, 2023",
-   "problem": "The IT Rules 2011 Rule 8 does not contain a 72‑hour breach notification requirement; only the DPDP Act imposes this obligation.",
-   "correction": "The Digital Personal Data Protection Act, 2023 mandates that data fiduciaries notify the Data Protection Board of India and affected data principals within 72 hours of a personal data breach.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "IT Rules 2011 Rule 8 has no 72-hr breach notice; DPDP Act 2023 does. Correction accurately reflects only DPDP Act mandate.",
+   "verifierReason": "'Not all passed' translates to ¬∀x Pass(x) (some failed), not ∀x ¬Pass(x) (none passed). Correction fixes logical form and gloss.",
    "applied": false
   },
   {
-   "file": "english/course/writing/lesson-letter-writing.html",
-   "quote": "Administrative Reforms Directive, 2023",
-   "problem": "No such directive exists; grievance redressal committees are constituted under guidelines issued by the Department of Administrative Reforms and Public Grievances (DARPG), not a specific 'Administrative Reforms Directive, 2023'.",
-   "correction": "DARPG grievance redressal guidelines",
+   "file": "ibps-po/course/english/lesson-grammar.html",
+   "quote": "Raising can also be object‑to‑subject (e.g., I believe him to be honest )",
+   "problem": "The verb \"believe\" is an ECM verb, not a raising verb; the example illustrates ECM, not object-to-subject raising.",
+   "correction": "Raising can also be object‑to‑subject (e.g., He is believed to be honest )",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original mislabels ECM as raising; passive example correctly shows object-to-subject raising.",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/english/lesson-grammar.html",
+   "quote": "*He was persuaded to leave (control — ungrammatical because the controller is the object)",
+   "problem": "The passive \"He was persuaded to leave\" is grammatical; object control verbs passivize normally with the controller becoming the matrix subject.",
+   "correction": "He was persuaded to leave (control — grammatical; the controller becomes the matrix subject)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Passive of object control verbs is grammatical; controller becomes matrix subject.",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/english/lesson-reading-comprehension.html",
+   "quote": "one can infer that City X is unlikely to achieve the higher ridership levels reported elsewhere. The inference is valid because it is a direct logical consequence",
+   "problem": "The example commits the fallacy of denying the antecedent: from 'all cities with integrated feeder services report higher ridership' (if A then B) and 'City X has no integrated feeder services' (not A), one cannot validly infer that City X is unlikely to achieve higher ridership (not B). The inferen",
+   "correction": "The inference is not logically valid; it commits the fallacy of denying the antecedent.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claims invalid inference is valid; correction correctly identifies fallacy of denying the antecedent.",
+   "applied": true
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-data-interpretation.html",
+   "quote": "Questions may ask for the year with the highest growth rate; this is found by computing the slope for each adjacent pair and selecting the maximum.",
+   "problem": "Growth rate is percentage change ((new−old)/old)×100, not the slope (absolute change per period). The slope (v₂−v₁)/(t₂−t₁) is average periodic change, not growth rate.",
+   "correction": "Questions may ask for the year with the highest growth rate; this is found by computing the percentage change for each adjacent pair and selecting the maximum.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Growth rate is standardly defined as percentage change, not absolute slope. Correction accurately fixes this definition error.",
+   "applied": true
+  },
+  {
+   "file": "gate/course/aptitude/lesson-numerical-ability.html",
+   "quote": "Because φ(10)=4, any base coprime to 10 repeats every 4.",
+   "problem": "The period of the last digit for bases coprime to 10 divides 4, but is not always 4 (e.g., base 9 has period 2, base 1 has period 1).",
+   "correction": "Because φ(10)=4, any base coprime to 10 has a period dividing 4.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Euler's theorem gives a^4≡1 mod 10, so order divides 4; base 9 has order 2, base 1 has order 1.",
+   "applied": true
+  },
+  {
+   "file": "gate/course/aptitude/lesson-numerical-ability.html",
+   "quote": "the selling price (SP) is the base for discount %",
+   "problem": "Discount percentage is calculated on the marked price (MP), not on the selling price (SP).",
+   "correction": "the marked price (MP) is the base for discount %",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Discount % = (Discount/MP)×100; SP = MP - Discount. Standard commerce definition.",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "historic gold medal in men’s hockey at the 2020 Tokyo Olympics",
+   "problem": "India won bronze, not gold, in men's hockey at Tokyo 2020.",
+   "correction": "historic bronze medal in men’s hockey at the 2020 Tokyo Olympics",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "India won bronze, not gold, in men's hockey at Tokyo 2020.",
+   "applied": true
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "record‑breaking haul of 28 medals at the 2022 Commonwealth Games",
+   "problem": "India won 61 medals at the 2022 Commonwealth Games, not 28.",
+   "correction": "record‑breaking haul of 61 medals at the 2022 Commonwealth Games",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "India won 61 medals at 2022 Commonwealth Games, not 28.",
+   "applied": true
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "literature (e.g., Mahasweta Devi)",
+   "problem": "Mahasweta Devi never received the Bharat Ratna.",
+   "correction": "literature (e.g., no exclusive literature recipient)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Mahasweta Devi never received Bharat Ratna; no pure literature recipient exists.",
+   "applied": true
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "For instance, the 2023 Nobel Prize in Physics was shared by Pierre Agostini, Ferenc Krausz, and Anne L’Huillier for their work on attosecond pulse generation.",
+   "problem": "The laureates are not Indian; the example does not support the claim about Indian scientists.",
+   "correction": "For instance, the 2023 Nobel Prize in Physics was awarded to non‑Indians Pierre Agostini, Ferenc Krausz, and Anne L’Huillier for attosecond pulse generation.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "2023 Physics Nobel laureates are non-Indians; correction accurately reflects this.",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "including a historic gold in men’s hockey",
+   "problem": "India's hockey gold at Tokyo 2020 is incorrect; it was bronze.",
+   "correction": "including a historic bronze in men’s hockey",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "India's hockey medal at Tokyo 2020 was bronze, not gold.",
+   "applied": true
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "Virat Kohli became the fastest player to reach 8,000 ODI runs in 2021",
+   "problem": "Kohli reached 8,000 ODI runs in 2019, not 2021.",
+   "correction": "Virat Kohli became the fastest player to reach 8,000 ODI runs in 2019",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Kohli reached 8,000 ODI runs in 2019, not 2021.",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "swimmer Swati Mohan set a national record in the 200 m butterfly at the 2022 Asian Games",
+   "problem": "Swati Mohan is not an Indian swimmer; no such record at the 2022 Asian Games.",
+   "correction": "swimmer Sajan Prakash set a national record in the 200 m butterfly at the 2022 Asian Games",
    "confidence": "medium",
    "verified": true,
-   "verifierReason": "No such directive exists; grievance redressal committees are constituted under DARPG guidelines (e.g., OM 30/1/2020-DARPG). Correction accurately identifies source."
+   "verifierReason": "Swati Mohan is not an Indian swimmer; Sajan Prakash set the national record."
+  },
+  {
+   "file": "gate/course/maths/lesson-numerical-methods.html",
+   "quote": "the diagonal entries are 2/h² + q(x i ) and the off‑diagonals are −1/h² ∓ p(x i )/(2h)",
+   "problem": "The finite-difference matrix entries have incorrect signs for the discretization of u'' + p u' + q u = f. The correct diagonal entries are -2/h² + q(x_i) and off-diagonals are 1/h² ∓ p(x_i)/(2h).",
+   "correction": "the diagonal entries are −2/h² + q(x i ) and the off‑diagonals are 1/h² ∓ p(x i )/(2h)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original signs are opposite; standard central FD gives diagonal -2/h^2+q and off‑diagonals 1/h^2∓p/(2h).",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "India's civil nuclear facilities placed under IAEA safeguards increased from 22 to 26 in 2023",
+   "problem": "The figures 22 and 26 refer to reactors, not facilities. A facility (site) can host multiple reactors; India has far fewer than 22 safeguarded facilities.",
+   "correction": "India's civil nuclear reactors placed under IAEA safeguards increased from 22 to 26 in 2023",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses 'facilities' but figures 22→26 count reactor units, not sites. Correction accurately changes term to 'reactors'.",
+   "applied": false
   }
  ]
 }
