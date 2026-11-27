@@ -1,110 +1,30 @@
 {
- "generatedAt": "2026-11-27T05:12:10.450Z",
+ "generatedAt": "2026-11-27T05:21:05.857Z",
  "lessonsAudited": 18,
- "flagged": 10,
- "applied": 6,
- "modelCalls": 11,
- "modelFailures": 52,
+ "flagged": 2,
+ "applied": 1,
+ "modelCalls": 6,
+ "modelFailures": 98,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "agniveer/course/reasoning/lesson-syllogism.html",
-   "quote": "“All A are B” + “Some B are C” → “Some A are C” (definite)",
-   "problem": "The middle term B is undistributed in both premises (predicate of A is undistributed, subject of I is undistributed), so no valid conclusion follows; “Some A are C” is not definite.",
-   "correction": "“All A are B” + “Some B are C” yields no definite conclusion.",
+   "file": "cds/course/maths/lesson-number-system.html",
+   "quote": "LCM is always larger than the largest number",
+   "problem": "LCM can be equal to the largest number (e.g., LCM(2,4)=4). The correct statement is that LCM is greater than or equal to the largest number.",
+   "correction": "LCM is always greater than or equal to the largest number",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Middle term B undistributed in both premises; no valid conclusion follows.",
+   "verifierReason": "Original statement is false; LCM can equal the largest number. Correction is accurate.",
    "applied": true
   },
   {
-   "file": "agniveer/course/reasoning/lesson-syllogism.html",
-   "quote": "A complementary pair in syllogism consists of two conclusions that cannot both be false at the same time.",
-   "problem": "This definition describes sub-contraries, not the complementary (contradictory) pairs used in either-or questions; the contrary pair (A vs E) can both be false, so it does not fit the definition.",
-   "correction": "A complementary pair in syllogism consists of two contradictory conclusions (A vs O or E vs I) that cannot both be true and cannot both be false.",
+   "file": "cds/course/maths/lesson-number-system.html",
+   "quote": "0 ≤ r b",
+   "problem": "The remainder theorem states 0 ≤ r < b; the text has a typo missing the '<' symbol.",
+   "correction": "0 ≤ r < b",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Complementary pairs are contradictories (A/O, E/I), not sub-contraries; correction is accurate.",
-   "applied": true
-  },
-  {
-   "file": "agniveer/course/reasoning/lesson-syllogism.html",
-   "quote": "the middle term C is distributed in the universal",
-   "problem": "In “All A are C”, the predicate C is undistributed; only the subject of a universal affirmative is distributed. Thus the middle term is not distributed and no conclusion follows.",
-   "correction": "the middle term C is undistributed in “All A are C”, so no definite conclusion follows.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "In 'All A are C', predicate C is undistributed; middle term undistributed yields no conclusion.",
-   "applied": true
-  },
-  {
-   "file": "agniveer/course/reasoning/lesson-syllogism.html",
-   "quote": "“No A are D” cannot be derived because the middle term C is not distributed in “All C are D”",
-   "problem": "In “All C are D”, the subject C is distributed; the middle term is distributed, so “No A are D” can be derived (valid Cesare mood).",
-   "correction": "“No A are D” can be derived because the middle term C is distributed in “All C are D”.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "In 'All C are D', subject C is distributed; Cesare mood validly yields 'No A are D'.",
-   "applied": true
-  },
-  {
-   "file": "agniveer/course/reasoning/lesson-syllogism.html",
-   "quote": "The valid conclusion is “Some A are not C” (O)",
-   "problem": "The premises are two negatives (E and O), which commit the fallacy of exclusive premises; no conclusion follows.",
-   "correction": "No valid conclusion follows because two negative premises yield no conclusion.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Two negative premises (E and O) commit fallacy of exclusive premises; no conclusion follows.",
-   "applied": true
-  },
-  {
-   "file": "agniveer/course/science/lesson-biology-basics.html",
-   "quote": "Hanahan and Weinberg’s seminal reviews (2000, 2011) defined eight core hallmarks of cancer",
-   "problem": "The 2000 review defined six hallmarks; eight were defined in the 2011 review.",
-   "correction": "Hanahan and Weinberg’s 2011 review defined eight core hallmarks of cancer (expanding from six in 2000)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "2000 review defined 6 hallmarks; 2011 review expanded to 8. Quote incorrectly attributes 8 to both.",
-   "applied": true
-  },
-  {
-   "file": "agniveer/course/science/lesson-biology-basics.html",
-   "quote": "microtubule-destabilising agents (vinca alkaloids, taxanes)",
-   "problem": "Taxanes are microtubule-stabilising agents, not destabilising.",
-   "correction": "microtubule-targeting agents (vinca alkaloids, taxanes)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Taxanes stabilize microtubules; vinca alkaloids destabilize. 'Microtubule-targeting agents' is the correct umbrella term.",
-   "applied": false
-  },
-  {
-   "file": "agniveer/course/science/lesson-chemistry-basics.html",
-   "quote": "if Q K it proceeds in reverse",
-   "problem": "Missing comparison operator; the reaction proceeds in reverse when Q > K, not when Q < K.",
-   "correction": "if Q > K it proceeds in reverse",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original quote missing operator; reaction proceeds reverse only when Q > K. Correction is chemically accurate.",
-   "applied": false
-  },
-  {
-   "file": "apfc/course/reasoning/lesson-mental-ability.html",
-   "quote": "when the relation itself changes at each step, e.g., 'Square : Cube :: Circle : Sphere :: Triangle : ?'",
-   "problem": "The example provided does not illustrate a changing relation; the text explicitly states the relation repeats ('the second step repeats the same dimensional lift'), making it a constant relation example.",
-   "correction": "when the relation remains constant across steps, e.g., 'Square : Cube :: Circle : Sphere :: Triangle : ?'",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Example shows constant 2D-to-3D relation, not changing relations.",
-   "applied": false
-  },
-  {
-   "file": "apfc/course/reasoning/lesson-mental-ability.html",
-   "quote": "(initial bearing of object in fixed frame) − (observer's heading change) = bearing in observer's frame",
-   "problem": "The formula omits the observer's initial heading. Correct relation: bearing in observer frame = (bearing of object in fixed frame) − (observer's current heading) = (initial bearing in observer frame) − (heading change).",
-   "correction": "(initial bearing in observer frame) − (observer's heading change) = bearing in observer's frame",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original formula uses fixed-frame bearing instead of observer-frame bearing; correction matches standard relative bearing kinematics.",
+   "verifierReason": "Original omitted '<' sign; correct inequality is 0 ≤ r < b.",
    "applied": false
   }
  ]
