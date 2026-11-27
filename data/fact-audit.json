@@ -1,41 +1,151 @@
 {
- "generatedAt": "2026-11-27T07:48:11.044Z",
- "lessonsAudited": 18,
- "flagged": 3,
- "applied": 1,
- "modelCalls": 9,
- "modelFailures": 61,
- "deadlineHit": false,
+ "generatedAt": "2026-11-27T08:20:58.003Z",
+ "lessonsAudited": 11,
+ "flagged": 14,
+ "applied": 9,
+ "modelCalls": 17,
+ "modelFailures": 22,
+ "deadlineHit": true,
  "problems": [
   {
-   "file": "upsc/course/opt-marathi/lesson-paper2.html",
-   "quote": "1995 novel Cuckold",
-   "problem": "Wrong publication year for Kiran Nagarkar's Cuckold; it was published in 1997, not 1995.",
-   "correction": "1997 novel Cuckold",
+   "file": "upsc/course/opt-medical-science/lesson-overview.html",
+   "quote": "recognizing advance directives",
+   "problem": "Aruna Shanbaug vs Union of India (2011) permitted passive euthanasia but did not recognize advance directives; advance directives were legally recognized later in Common Cause vs Union of India (2018).",
+   "correction": "permitting passive euthanasia under strict guidelines",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Cuckold first published by Penguin India in 1997; won Sahitya Akademi Award 2000.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-mechanical-engineering/lesson-paper2.html",
-   "quote": "which might require post-processing heat treatment (Thermal processing) not needed in traditional casting",
-   "problem": "Investment casting of turbine blades (e.g., Ni-based superalloys) requires extensive heat treatment (solutionizing, aging, HIP) for microstructure control; it is false that traditional casting avoids heat treatment.",
-   "correction": "which might require post-processing heat treatment (Thermal processing) similar to or more extensive than traditional casting",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original falsely claims traditional casting avoids heat treatment; Ni-based superalloys require extensive heat treatment regardless of casting method.",
+   "verifierReason": "Aruna Shanbaug (2011) allowed passive euthanasia only; advance directives were first recognised in Common Cause (2018).",
    "applied": true
   },
   {
-   "file": "upsc/course/opt-mechanical-engineering/lesson-paper2.html",
-   "quote": "σ_θ(r) = E α / (1 − ν) · [ (1/r²) ∫₀ʳ T(ρ) ρ dρ + ν ∫ʳᴿ T(ρ) ρ dρ / (R² − r²) ]",
-   "problem": "Formula uses solid-cylinder limits (0, R) and an erroneous term ν∫ʳᴿ/(R²−r²) for a hollow heat-exchanger tube; correct hollow-cylinder formulation uses inner/outer radii r_i, r_o and denominator (r_o²−r_i²).",
-   "correction": "σ_θ(r) = Eα/(1−ν)[(1/r²)∫_{r_i}^r Tρ dρ + (1/(r_o²−r_i²))∫_{r_i}^{r_o} Tρ dρ (1+r_i²/r²) − T(r)]",
+   "file": "upsc/course/opt-medical-science/lesson-paper1.html",
+   "quote": "the “common deletion” of 4.9 kb",
+   "problem": "The common mtDNA deletion is 4977 bp (≈5 kb), not 4.9 kb.",
+   "correction": "the “common deletion” of 5 kb",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original uses solid-cylinder limits and incorrect ν term; proposed correction matches standard hollow-cylinder thermal stress formula (Timoshenko & Goodier).",
+   "verifierReason": "4977 bp = 4.977 kb, rounds to 5 kb; 4.9 kb is incorrect rounding.",
    "applied": false
+  },
+  {
+   "file": "upsc/course/opt-odia/lesson-overview.html",
+   "quote": "the tribal‑forest narrative, exemplified by Gopinath Mohanty's Paraja , which foregrounds the Dongria Kondh's relationship with the Niyamgiri hills",
+   "problem": "Paraja depicts the Paraja tribe of Koraput, not the Dongria Kondh of Niyamgiri.",
+   "correction": "the tribal‑forest narrative, exemplified by Gopinath Mohanty's Paraja, which foregrounds the Paraja tribe's relationship with the Koraput forests",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Paraja depicts Paraja tribe in Koraput, not Dongria Kondh in Niyamgiri.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-odia/lesson-overview.html",
+   "quote": "Its mandate includes conferring the annual Sahitya Akademi Award for Odia",
+   "problem": "The Sahitya Akademi Award for Odia is conferred by the national Sahitya Akademi, not the state Odisha Sahitya Akademi.",
+   "correction": "Its mandate includes conferring the annual Odisha Sahitya Akademi Award",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Sahitya Akademi Award for Odia is national; state academy confers Odisha Sahitya Akademi Award.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-philosophy/lesson-overview.html",
+   "quote": "Hume solved the problem of causality",
+   "problem": "Hume did not solve the problem of causality; he formulated the skeptical problem of induction/causation.",
+   "correction": "Hume formulated the problem of causality",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Hume raised, not solved, the problem of causation/induction.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-philosophy/lesson-overview.html",
+   "quote": "naturalism (Moore’s open‑question argument)",
+   "problem": "Moore's open-question argument is a critique of ethical naturalism, not a version of naturalism; Moore is a non-naturalist.",
+   "correction": "non‑naturalism (Moore’s open‑question argument)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Moore's open-question argument attacks naturalism; Moore is a non-naturalist.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-philosophy/lesson-overview.html",
+   "quote": "Gauḍapāda’s Kārikā Bhāṣya",
+   "problem": "Gaudapada authored the Māṇḍūkya Kārikā, not a commentary on the Sāṅkhya Kārikā; the standard commentary on Sāṅkhya Kārikā is by Vācaspati Miśra.",
+   "correction": "Vācaspati Miśra’s Sāṅkhya Tattva Kaumudī",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Gauḍapāda wrote Māṇḍūkya Kārikā; Vācaspati Miśra wrote Sāṅkhya Tattva Kaumudī on Sāṅkhya Kārikā.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-nepali/lesson-overview.html",
+   "quote": "recognised as a scheduled language of India (1992)",
+   "problem": "Maithili was added to the Eighth Schedule of the Indian Constitution in 2003 (92nd Amendment Act), not 1992.",
+   "correction": "recognised as a scheduled language of India (2003)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "92nd Amendment Act 2003 added Maithili to Eighth Schedule; 1992 is incorrect.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-nepali/lesson-overview.html",
+   "quote": "Janakpur Literary Festival (first mid‑1990s)",
+   "problem": "The Janakpur Literary Festival was first held in 2004, not the mid‑1990s.",
+   "correction": "Janakpur Literary Festival (first 2004)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Janakpur Literary Festival began in 2004; mid-1990s claim is false.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-nepali/lesson-overview.html",
+   "quote": "The 1959 Constitution declared Nepali the official language, prompting the 1957 formation of the Royal Nepal Academy",
+   "problem": "Chronological impossibility: the Royal Nepal Academy was formed in 1957, two years before the 1959 Constitution.",
+   "correction": "The Royal Nepal Academy was formed in 1957; the 1959 Constitution declared Nepali the official language",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Royal Nepal Academy founded 1957; 1959 Constitution declared Nepali official language; original reverses chronology.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-philosophy/lesson-overview.html",
+   "quote": "Anti‑realism takes several forms: instrumentalism (theories are merely predictive tools), constructive empiricism (van Fraassen's view that science aims at empirical adequacy), and structural realism ",
+   "problem": "Structural realism is not a form of anti-realism; it is a realist (or intermediate) position that preserves structural content across theory change.",
+   "correction": "Anti‑realism takes several forms: instrumentalism (theories are merely predictive tools) and constructive empiricism (van Fraassen's view that science aims at empirical adequacy); structural realism (",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Structural realism (Worrall, Ladyman) is standardly classified as realism, not anti-realism. Correction accurately reflects taxonomy.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-philosophy/lesson-paper2.html",
+   "quote": "between contingent and a posteriori truths",
+   "problem": "Kripke's distinction is between necessary a posteriori and contingent a priori, not between contingent and a posteriori truths.",
+   "correction": "between contingent a priori and necessary a posteriori truths",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original misstates Kripke's distinction; correction accurately names the two cross-cutting categories.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-philosophy/lesson-paper1.html",
+   "quote": "He adopts Heidegger’s distinction between being‑in‑itself (en‑soi) and being‑for‑itself (pour‑soi)",
+   "problem": "The terms \"en-soi\" (being-in-itself) and \"pour-soi\" (being-for-itself) are Sartre's own terminology, not Heidegger's. Heidegger's Being and Time distinguishes present-at-hand (Vorhandenheit) and ready-to-hand (Zuhandenheit), not being-in-itself/for-itself.",
+   "correction": "He develops his own distinction between being‑in‑itself (en‑soi) and being‑for‑itself (pour‑soi), influenced by Heidegger",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "The terms en-soi/pour-soi are Sartre's (Being and Nothingness), not Heidegger's (Being and Time uses Vorhandenheit/Zuhandenheit). Correction accurately attributes the distinction to Sartre with Heideg",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-philosophy/lesson-paper1.html",
+   "quote": "determinists (Winner) claim technology shapes society inevitably",
+   "problem": "Langdon Winner is a critic of technological determinism, not a proponent; he argues technologies embody political forms but rejects inevitable determinism.",
+   "correction": "determinists (e.g., early Ellul) claim technology shapes society inevitably",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Winner is a critic of determinism; Ellul is a canonical hard determinist.",
+   "applied": true
   }
  ]
 }
