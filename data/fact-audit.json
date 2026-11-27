@@ -1,111 +1,41 @@
 {
- "generatedAt": "2026-11-27T22:16:19.228Z",
+ "generatedAt": "2026-11-27T22:21:38.175Z",
  "lessonsAudited": 18,
- "flagged": 10,
- "applied": 7,
- "modelCalls": 14,
- "modelFailures": 59,
+ "flagged": 3,
+ "applied": 1,
+ "modelCalls": 10,
+ "modelFailures": 50,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rbi/course/reasoning/lesson-coding-decoding.html",
-   "quote": "If CAT → DDU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
-   "problem": "The example claims CAT → DDU with each letter shifted +1, but C+1=D, A+1=B, T+1=U gives DBU, not DDU. The example contradicts the stated rule.",
-   "correction": "If CAT → DBU, then how is DOG coded? (Each letter +1: D→E, O→P, G→H → EPH)",
+   "file": "rrb-station-master/course/maths/lesson-mensuration.html",
+   "quote": "acute (all angles 90°)",
+   "problem": "An acute triangle has all angles less than 90°, not equal to 90°. A triangle with all angles 90° is impossible (sum would be 270°).",
+   "correction": "acute (all angles < 90°)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original quote has internal contradiction: CAT+1=DBU not DDU. Correction fixes example to match stated rule.",
+   "verifierReason": "Original definition is incorrect; acute triangles have all angles <90°. Correction is accurate.",
    "applied": false
   },
   {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "Together they intersect at 99 only",
-   "problem": "The two-digit number 99 has digit sum 18, not 9; no two-digit multiple of 11 has digit sum 9, so the statements have no intersection.",
-   "correction": "Together they have no common candidate, so the combination is insufficient.",
+   "file": "rrb-station-master/course/maths/lesson-number-system.html",
+   "quote": "LCM is always larger than the largest number",
+   "problem": "LCM can be equal to the largest number (e.g., LCM of 2 and 4 is 4). The statement should say 'greater than or equal to'.",
+   "correction": "LCM is always greater than or equal to the largest number",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "99 digit sum 18; no 2-digit multiple of 11 has digit sum 9, so intersection empty. Correction accurate.",
+   "verifierReason": "LCM of 2 and 4 is 4, equal to largest; 'larger than' is false.",
    "applied": true
   },
   {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "|x – 3| 0?",
-   "problem": "The inequality is missing a relational operator; the subsequent interval {–1,0,1,2,3,4,5,6,7} corresponds to |x–3| ≤ 4.",
-   "correction": "|x – 3| ≤ 4",
+   "file": "rrb-station-master/course/maths/lesson-number-system.html",
+   "quote": "0 ≤ r b",
+   "problem": "The remainder theorem requires 0 ≤ r < b (strictly less than divisor). The text omits the '<' symbol.",
+   "correction": "0 ≤ r < b",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original missing operator; given integer set matches |x-3|≤4. Correction supplies correct inequality.",
+   "verifierReason": "Division algorithm requires 0 ≤ r < b; original missing '<'.",
    "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "The correct translation is x 3.",
-   "problem": "The solution to x² > 9 is x < –3 or x > 3; the text omits the ‘or x < –3’ part and the inequality symbols.",
-   "correction": "The correct translation is x < –3 or x > 3.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original omits inequality symbols and x<-3 part. Correction gives full solution x<-3 or x>3.",
-   "applied": false
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
-   "quote": "Public Financial Management Bill",
-   "problem": "No such bill was passed in 2025; the annual financial legislation is the Finance Bill.",
-   "correction": "the Finance Bill",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original wrong; Finance Bill is correct annual financial legislation.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
-   "quote": "COP30) in 2025 produced a decision on the operationalisation of the loss‑and‑damage fund",
-   "problem": "The loss-and-damage fund was operationalised at COP28 (2023) and COP29 (2024), not COP30.",
-   "correction": "COP28 in 2023 operationalised the loss‑and‑damage fund",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Loss-and-damage fund operationalized at COP28 (2023), not COP30.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
-   "quote": "In 2025, a new Chairman assumed office",
-   "problem": "Jaya Varma Sinha has been Chairman since September 2023 and continues in office.",
-   "correction": "Jaya Varma Sinha continues as Chairman since September 2023",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Jaya Varma Sinha continues as Railway Board Chairperson since Sep 2023.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-current-affairs.html",
-   "quote": "Mumbai‑Ahmedabad High Speed Rail project received the International Federation of Consulting Engineers (FIDIC) Project of the Year award in 2025",
-   "problem": "The project has not won the FIDIC Project of the Year award; it won an Award of Merit in 2022.",
-   "correction": "The project won a FIDIC Award of Merit in 2022, not Project of the Year",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Project won FIDIC Award of Merit 2022, not Project of the Year.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-computer-awareness.html",
-   "quote": "command substitution (`(…)`)",
-   "problem": "Command substitution in bash uses $(...) or backticks, not parentheses alone.",
-   "correction": "command substitution (`$(...)`)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Bash uses $(...) or backticks for command substitution; plain parentheses are for subshells.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-computer-awareness.html",
-   "quote": "Exit codes (`?`)",
-   "problem": "The variable for the last exit code in bash is $?, not ?.",
-   "correction": "Exit codes (`$?`)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "The special parameter $? holds the exit status of the last command; ? alone is not valid.",
-   "applied": true
   }
  ]
 }
