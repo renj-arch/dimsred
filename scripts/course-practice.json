@@ -324785,6 +324785,87 @@
         }
       ],
       "sol": "The Denjoy–Young–Saks theorem classifies the almost‑everywhere behaviour of the four Dini derivatives into four mutually exclusive cases. The second case is exactly: the upper right and lower left derivatives are +∞ while the lower right and upper left are −∞. This matches option C. Option A is not one of the listed cases; option B mixes upper right with upper left both +∞ and lower right with lower left both −∞, which is not a listed configuration; option D contradicts the theorem because if all four are finite they must be equal (differentiable) at almost every point."
+    },
+    {
+      "id": 110,
+      "text": "The infinite product ∏_{n=2}^{∞} (n^3 - 1)/(n^3 + 1) converges to:",
+      "options": [
+        {
+          "l": "a",
+          "t": "1/2",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "2/3",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "3/4",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "1",
+          "c": false
+        }
+      ],
+      "sol": "Factor each term: (n^3-1)/(n^3+1) = (n-1)(n^2+n+1)/[(n+1)(n^2-n+1)]. Write n^2+n+1 = (n+1)^2 - (n+1) + 1. The product telescopes: ∏_{n=2}^{N} (n-1)/(n+1) × (n^2+n+1)/(n^2-n+1) = (1·2)/(N·(N+1)) × (N^2+N+1)/3. As N→∞, the first factor → 0? Wait, careful: (n-1)/(n+1) product gives 2/(N(N+1)). The second factor gives (N^2+N+1)/3. Multiplying gives 2(N^2+N+1)/(3N(N+1)) → 2/3. Hence the product converges to 2/3."
+    },
+    {
+      "id": 111,
+      "text": "If f is twice differentiable, then lim_{x→0} (f(x) - 2f(0) + f(-x))/x^2 equals:",
+      "options": [
+        {
+          "l": "a",
+          "t": "f'(0)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "f''(0)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "f''(0)/2",
+          "c": true
+        },
+        {
+          "l": "d",
+          "t": "2f''(0)",
+          "c": false
+        }
+      ],
+      "sol": "The expression is the second divided difference of f at points -x, 0, x. By the generalized Mean Value Theorem for divided differences, f[-x, 0, x] = f''(ξ)/2 for some ξ between -x and x. As x→0, ξ→0, so the limit equals f''(0)/2. Alternatively, apply L'Hôpital's rule twice: numerator → 0, denominator → 0; first derivative gives (f'(x) - f'(-x))/(2x) → f''(0)/2."
+    },
+    {
+      "id": 112,
+      "text": "The parametric curve x = t^3, y = t^2 has a singular point at t = 0. The nature of this singularity is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "cusp of order 2",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "cusp of order 3",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "node",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "tacnode",
+          "c": false
+        }
+      ],
+      "sol": "At t=0, dx/dt = 3t^2 = 0 and dy/dt = 2t = 0, so it is a singular point. The first non-zero derivatives are d^2x/dt^2 = 6t (order 2) and d^3y/dt^3 = 0? Actually d^2y/dt^2 = 2 (order 2). The lowest order non-zero derivatives are of order 2 for y and order 3 for x? Wait: x = t^3, so first non-zero derivative of x is third order; y = t^2, first non-zero derivative is second order. The curve satisfies y^3 = x^2, which is a cusp of order 2 (semicubical parabola). Hence it is a cusp of order 2."
     }
   ],
   "maths/data-interpretation": [
