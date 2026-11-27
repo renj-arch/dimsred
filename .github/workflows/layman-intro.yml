@@ -6,13 +6,13 @@ name: Layman Intro
 
 on:
   schedule:
-    - cron: '43 */3 * * *'
+    - cron: '43 */2 * * *'
   workflow_dispatch:
     inputs:
       limit:
         description: 'Lessons to add an intro to this run'
         required: false
-        default: '8'
+        default: '20'
 
 concurrency:
   group: layman-intro
@@ -50,7 +50,7 @@ jobs:
           GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          LIMIT: ${{ github.event.inputs.limit || '8' }}
+          LIMIT: ${{ github.event.inputs.limit || '20' }}
         run: node scripts/add-layman-intro.js --limit "$LIMIT"
 
       - name: Publish the intros
