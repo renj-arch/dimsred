@@ -1,20 +1,89 @@
 {
- "generatedAt": "2026-11-27T21:19:44.664Z",
+ "generatedAt": "2026-11-27T21:51:16.778Z",
  "lessonsAudited": 18,
- "flagged": 1,
- "applied": 1,
- "modelCalls": 5,
- "modelFailures": 102,
+ "flagged": 8,
+ "applied": 6,
+ "modelCalls": 12,
+ "modelFailures": 46,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "neet/course/biology/lesson-genetics-inheritance.html",
-   "quote": "mediated by elongation factors Tu/EF‑1α and G/GTP",
-   "problem": "G/GTP is not an elongation factor; the translocation factor is EF-G (prokaryotes) or EF-2 (eukaryotes).",
-   "correction": "mediated by elongation factors Tu/EF-1α and EF-G/EF-2",
+   "file": "neet/course/physics/lesson-magnetism-and-emi.html",
+   "quote": "substances are grouped into diamagnetic (χ 0, small), and ferromagnetic (χ ≫ 1, strongly temperature‑dependent).",
+   "problem": "The classification omits paramagnetic materials and misstates diamagnetic susceptibility as χ 0 (should be χ < 0).",
+   "correction": "substances are grouped into diamagnetic (χ < 0, small), paramagnetic (χ > 0, small), and ferromagnetic (χ ≫ 1, strongly temperature‑dependent).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original 'G/GTP' is not a factor name; correction correctly identifies translocation factors EF-G/EF-2.",
+   "verifierReason": "Original misstates diamagnetic sign (χ<0) and omits paramagnets; correction fixes both accurately.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-optics.html",
+   "quote": "original object wave (real image) and its conjugate (virtual image)",
+   "problem": "The real and virtual images are swapped; the original object wave reconstructs as a virtual image, while its conjugate gives a real image.",
+   "correction": "original object wave (virtual image) and its conjugate (real image)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "In holography, the original object wave reconstructs as a virtual image; its conjugate gives a real image. The quote swaps them.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-optics.html",
+   "quote": "diffraction efficiency for a sinusoidal amplitude grating is η = (π Δn d / λ)² for phase holograms",
+   "problem": "The formula η = (π Δn d / λ)² applies to a sinusoidal phase grating (phase hologram), not an amplitude grating.",
+   "correction": "diffraction efficiency for a sinusoidal phase grating (phase hologram) is η = (π Δn d / λ)²",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "The formula η=(πΔnd/λ)² is for a thin sinusoidal phase grating (Raman-Nath), not an amplitude grating.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-laws-of-motion.html",
+   "quote": "Galileo’s experiments with inclined planes demonstrated that a sphere rolling on a frictionless horizontal surface would continue indefinitely",
+   "problem": "Galileo did not experimentally demonstrate motion on a frictionless horizontal surface; he used inclined planes to study acceleration and inferred the behaviour on a horizontal plane through reasoning.",
+   "correction": "Galileo’s experiments with inclined planes led him to conclude that a sphere on a frictionless horizontal surface would continue indefinitely",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Original misstates Galileo's experiment; correction accurately reflects his inference."
+  },
+  {
+   "file": "neet/course/physics/lesson-laws-of-motion.html",
+   "quote": "the block exerts a downward force on the table (its weight transmitted through contact) and the table exerts an upward normal force on the block; these two forces are an action‑reaction pair",
+   "problem": "The downward force the block exerts on the table is a contact force, not its weight. Weight is the gravitational force exerted by Earth on the block. The action-reaction pair is the contact force of block on table and the contact force of table on block.",
+   "correction": "the block exerts a downward contact force on the table and the table exerts an upward normal force on the block; these two forces are an action‑reaction pair",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original conflates weight with contact force; correction correctly identifies action-reaction pair.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-units-and-motion.html",
+   "quote": "such as a rocket losing mass at a constant rate while thrust remains constant",
+   "problem": "A rocket with constant thrust and linearly decreasing mass has acceleration a = F/(m₀−αt), which is hyperbolic, not linear in time. The polynomial structure described applies to linearly changing acceleration, not this example.",
+   "correction": "such as a particle under a linearly increasing force",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Rocket with constant thrust and linear mass loss gives hyperbolic acceleration, not polynomial; particle under linearly increasing force gives linear acceleration.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-units-and-motion.html",
+   "quote": "When the data points are not equally spaced in time, the denominator ∑(tᵢ − t̄)² becomes smaller, increasing the slope uncertainty",
+   "problem": "Non-uniform spacing does not necessarily reduce the sum of squares; it can increase or decrease it depending on the distribution. The claim is false as a general statement.",
+   "correction": "Clustering data points reduces ∑(tᵢ − t̄)², increasing slope uncertainty",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Non-uniform spacing doesn't always reduce Sxx; clustering does. Correction accurately states clustering reduces Sxx, increasing slope uncertainty.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-units-and-motion.html",
+   "quote": "forgetting to propagate the uncertainty of the length measurement through the square of the period",
+   "problem": "The length measurement uncertainty is propagated through the linear term L, not through T². The period measurement uncertainty is propagated through the square of the period.",
+   "correction": "forgetting to propagate the uncertainty of the period measurement through the square of the period",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original quote misattributes T² propagation to length uncertainty; correction correctly identifies period uncertainty as the term propagated through T².",
    "applied": true
   }
  ]
