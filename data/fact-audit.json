@@ -1,30 +1,60 @@
 {
- "generatedAt": "2026-11-27T17:51:25.768Z",
+ "generatedAt": "2026-11-27T19:10:59.706Z",
  "lessonsAudited": 18,
- "flagged": 2,
- "applied": 0,
- "modelCalls": 4,
- "modelFailures": 41,
+ "flagged": 5,
+ "applied": 1,
+ "modelCalls": 10,
+ "modelFailures": 43,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "ctet/course/maths/lesson-geometry.html",
-   "quote": "acute 90°",
-   "problem": "Acute angle is less than 90°; 90° is a right angle.",
-   "correction": "acute <90°",
+   "file": "ibps-po/course/ga/lesson-static-gk.html",
+   "quote": "BRICS (Shanghai)",
+   "problem": "BRICS is an informal grouping with no permanent headquarters or secretariat; the New Development Bank (NDB) is headquartered in Shanghai, but BRICS itself has no fixed HQ.",
+   "correction": "BRICS (no permanent HQ)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Acute angle is defined as <90°, 90° is right angle; correction matches definition.",
+   "verifierReason": "Original incorrectly assigns Shanghai as BRICS HQ; Shanghai hosts NDB, not BRICS secretariat. Correction accurately states no permanent HQ.",
+   "applied": true
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "the Data Protection Bill (under consideration)",
+   "problem": "The Data Protection Bill was enacted as the Digital Personal Data Protection Act in August 2023, so it is no longer under consideration.",
+   "correction": "the Digital Personal Data Protection Act, 2023",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Bill was enacted as Digital Personal Data Protection Act, 2023; original claim outdated.",
    "applied": false
   },
   {
-   "file": "ctet/course/maths/lesson-geometry.html",
-   "quote": "acute (all 90°)",
-   "problem": "Acute triangle has all angles less than 90°, not all 90°.",
-   "correction": "acute (all <90°)",
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "For instance, the 2023 Nobel Prize in Physics was shared by Pierre Agostini, Ferenc Krausz, and Anne L’Huillier for their work on attosecond pulse generation.",
+   "problem": "The laureates are not Indian, contradicting the claim that Indian scientists have been honoured with global awards.",
+   "correction": "For instance, the 2019 Nobel Prize in Economics was awarded to Indian‑origin Abhijit Banerjee for poverty research.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Acute triangle has all interior angles <90°; correction accurately reflects definition.",
+   "verifierReason": "2023 Physics laureates are not Indian; correction cites Indian‑origin Nobel laureate Abhijit Banerjee (2019 Economics).",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/ga/lesson-current-affairs.html",
+   "quote": "cricketer Virat Kohli became the fastest player to reach 8,000 ODI runs in 2021",
+   "problem": "Kohli achieved this milestone in 2017, not 2021.",
+   "correction": "cricketer Virat Kohli became the fastest player to reach 8,000 ODI runs in 2017",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Kohli became fastest to 8,000 ODI runs in 2017, not 2021.",
+   "applied": false
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-coding-decoding.html",
+   "quote": "CAT → DDU",
+   "problem": "The example claims CAT becomes DDU with a +1 shift, but C+1=D, A+1=B, T+1=U gives DBU.",
+   "correction": "CAT → DBU",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claims CAT→DDU with +1 shift; correct Caesar shift yields DBU (C→D, A→B, T→U).",
    "applied": false
   }
  ]
