@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-26T21:08:32.215Z",
+  "updatedAt": "2026-11-27T20:53:48.406Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -33863,6 +33863,196 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-26T21:08:10.942Z"
+    },
+    {
+      "id": "e642ce43295b8232",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-27-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-27-ctet-paper2.html",
+      "paperFile": "full-2026-11-27-ctet-paper2.json",
+      "questionNumber": 31,
+      "section": "Mathematics",
+      "question": "Rajesh invests ₹25,000 in Scheme A offering 20% p.a. compounded annually. After 2 years, he withdraws 25% of the accumulated amount and invests it in Scheme B offering 20% p.a. compounded semi‑annually for 1 year. The balance stays in Scheme A for another year at the same rate. What is the total amount Rajesh has at the end of 3 years from the initial investment?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹43,290",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "₹43,200",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "₹43,272",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹37,890",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate amount in Scheme A after 2 years: 25000 * (1.2)^2 = 36000.",
+        "Withdraw 25% (9000) for Scheme B; balance 27000 stays in Scheme A.",
+        "Scheme A for 1 more year: 27000 * 1.2 = 32400.",
+        "Scheme B: 9000 at 20% p.a. compounded semi-annually for 1 year => 9000 * (1.1)^2 = 10890.",
+        "Total amount = 32400 + 10890 = 43290.",
+        "Option A matches ₹43,290."
+      ],
+      "verifierCheck": "Initial amount ₹25,000 at 20% annually for 2 years becomes ₹25,000 × 1.2² = ₹36,000. Withdraw 25% = ₹9,000 to Scheme B; balance ₹27,000 stays in Scheme A. After 1 more year, Scheme A: ₹27,000 × 1.2 = ₹32,400. Scheme B: ₹9,000 at 20% semi-annually for 1 year = ₹9,000 × (1.1)² = ₹10,890. Total = ₹32,400 + ₹10,890 = ₹43,290.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Difference Shortcut",
+          "idea": "Compare to all-in-A then add extra gain from B",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Full 3-yr amount in A: 25000 × 1.2³ = 43200",
+            "Withdrawn after 2 yr: 25000 × 1.2² × 0.25 = 9000",
+            "Extra gain in B vs A for year 3: 9000 × (1.1² − 1.2) = 9000 × 0.01 = 90",
+            "Total = 43200 + 90 = 43290"
+          ]
+        },
+        {
+          "name": "Fraction Power",
+          "idea": "Use fractions 6/5 and 11/10 for exact mental multiplication",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "After 2 yr: 25000 × (6/5)² = 25000 × 36/25 = 36000",
+            "Withdraw 25%: 36000/4 = 9000 to B; balance 27000 in A",
+            "Scheme A year 3: 27000 × 6/5 = 32400",
+            "Scheme B 1 yr semi-annual: 9000 × (11/10)² = 9000 × 121/100 = 10890",
+            "Total = 32400 + 10890 = 43290"
+          ]
+        },
+        {
+          "name": "Stepwise Mental Math",
+          "idea": "Memorize key multipliers: 1.2²=1.44, 1.2³=1.728, 1.1²=1.21",
+          "kind": "mnemonic",
+          "seconds": 15,
+          "steps": [
+            "Amount after 2 yr: 25000 × 1.44 = 36000",
+            "Withdraw 25%: 36000 × 0.25 = 9000 → B; 27000 stays in A",
+            "A after 3rd yr: 27000 × 1.2 = 32400",
+            "B after 1 yr: 9000 × 1.21 = 10890",
+            "Sum = 32400 + 10890 = 43290"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-27T20:50:45.452Z"
+    },
+    {
+      "id": "b05e703b911f475a",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-27-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-27-ctet-paper2.html",
+      "paperFile": "full-2026-11-27-ctet-paper2.json",
+      "questionNumber": 32,
+      "section": "Mathematics",
+      "question": "A and B together can complete a task in 10 days. They work together for 4 days, after which A leaves. B finishes the remaining work in 12 days. If A's efficiency were 25% higher, how many days would A alone take to complete the entire task?",
+      "options": [
+        {
+          "label": "A",
+          "text": "16 days",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "18 days",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20 days",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "24 days",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let A's work rate be a and B's be b. Together a+b = 1/10.",
+        "In 4 days they complete 4/10 = 2/5 of the task, leaving 3/5.",
+        "B finishes the remaining 3/5 in 12 days, so 12b = 3/5 => b = 1/20.",
+        "Then a = 1/10 - 1/20 = 1/20.",
+        "With 25% higher efficiency, A's new rate = 1.25 * 1/20 = 1/16.",
+        "Time for A alone = 1 / (1/16) = 16 days."
+      ],
+      "verifierCheck": "Let A's rate be a and B's rate be b (task/day). Together they complete in 10 days: a+b=1/10. They work 4 days together, completing 4/10=2/5 of the task. Remaining work = 3/5. B finishes this in 12 days: 12b=3/5 => b=1/20. Then a=1/10-1/20=1/20. A's current time alone = 20 days. With 25% higher efficiency, new rate = 1.25*(1/20)=1/16. Time = 1/(1/16)=16 days.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ratio Invariance",
+          "idea": "Find individual times via work ratios",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "B's 12 days for 3/5 work => B alone = 12 * 5/3 = 20 days.",
+            "A+B = 10 days => 1/A + 1/20 = 1/10 => 1/A = 1/20 => A = 20 days.",
+            "25% more efficient => time = 20 / 1.25 = 16 days."
+          ]
+        },
+        {
+          "name": "Fraction Shortcut",
+          "idea": "Direct fraction arithmetic for rates",
+          "kind": "shortcut",
+          "seconds": 8,
+          "steps": [
+            "Together rate = 1/10 task/day.",
+            "Work done in 4 days = 4/10 = 2/5. Left = 3/5.",
+            "B's rate = (3/5)/12 = 1/20.",
+            "A's rate = 1/10 - 1/20 = 1/20.",
+            "25% higher => 1/20 * 5/4 = 1/16 => 16 days."
+          ]
+        },
+        {
+          "name": "LCM Work Units",
+          "idea": "Use total work = LCM to avoid fractions",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Let total work = 60 units (LCM of 10,12,20).",
+            "A+B together: 60/10 = 6 units/day.",
+            "In 4 days they do 24 units. Remaining = 36 units.",
+            "B does 36 units in 12 days => B rate = 3 units/day.",
+            "A rate = 6-3 = 3 units/day => A alone = 60/3 = 20 days.",
+            "25% higher efficiency => 3*1.25 = 3.75 units/day => time = 60/3.75 = 16 days."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-27T20:51:20.247Z"
     }
   ]
 }
