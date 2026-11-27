@@ -14745,7 +14745,7 @@
       "id": 2110,
       "q": 437,
       "section": "General Aptitude",
-      "text": "The order of the Ded²y/dx² + 3(dy/dx)² + y = 0 is:",
+      "text": "The order of the DE d²y/dx² + 3(dy/dx)² + y = 0 is:",
       "options": [
         {
           "label": "A",
@@ -15360,12 +15360,479 @@
       "solution": "Correct answer: 0.5.",
       "source": "course",
       "lesson": "gate/course/maths/lesson-probability-statistics.html"
+    },
+    {
+      "section": "Core Subject",
+      "text": "In a machining operation, the tool life is 60 minutes at a cutting speed of 100 m/min. If the Taylor's exponent n = 0.5, what is the tool life (in minutes) at a cutting speed of 200 m/min?",
+      "options": [
+        {
+          "label": "A",
+          "text": "15",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "30",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "45",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "60",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Taylor's tool life equation V·T^n = constant. Since n = 0.5, T ∝ 1/V^2. Doubling V reduces T by factor 4: 60/4 = 15 min. Full solution: C = 100 × 60^0.5 = 100 × 7.746 = 774.6. At V=200, T = (C/200)^(1/0.5) = (3.873)^2 = 15 min.",
+      "topic": "Machining Processes - Tool Life",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:08:10.796Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Parameter",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Cutting speed V1 (m/min)",
+            "100"
+          ],
+          [
+            "Tool life T1 (min)",
+            "60"
+          ],
+          [
+            "Taylor exponent n",
+            "0.5"
+          ],
+          [
+            "New cutting speed V2 (m/min)",
+            "200"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 2130,
+      "q": 457
+    },
+    {
+      "section": "Core Subject",
+      "text": "A steam turbine operates with an isentropic efficiency of 80%. The actual work output is 800 kJ/kg. What is the isentropic work output (in kJ/kg)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "640",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "800",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1000",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "1200",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Isentropic efficiency η = Actual work / Isentropic work. So Isentropic work = Actual work / η = 800 / 0.8 = 1000 kJ/kg. Multiplying by 1.25 is faster than dividing by 0.8. Full solution: η = 0.8 = 800 / W_s => W_s = 800 / 0.8 = 1000 kJ/kg.",
+      "topic": "Thermodynamics - Turbine Efficiency",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:08:10.807Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Parameter",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Isentropic efficiency",
+            "80%"
+          ],
+          [
+            "Actual work output (kJ/kg)",
+            "800"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 2131,
+      "q": 458
+    },
+    {
+      "section": "Core Subject",
+      "text": "For a fully developed laminar flow in a smooth pipe, the friction factor f = 64/Re. If the Reynolds number is doubled while the flow remains laminar, the friction factor becomes:",
+      "options": [
+        {
+          "label": "A",
+          "text": "half",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "double",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "one-fourth",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "unchanged",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: f ∝ 1/Re. Doubling Re halves f. No calculation needed. Full solution: f1 = 64/Re1. f2 = 64/(2Re1) = (1/2) f1. Thus friction factor becomes half.",
+      "topic": "Fluid Mechanics - Laminar Pipe Flow",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:08:10.817Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Parameter",
+          "Expression"
+        ],
+        "rows": [
+          [
+            "Friction factor f",
+            "64/Re"
+          ],
+          [
+            "Reynolds number change",
+            "Doubled"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 2132,
+      "q": 459
+    },
+    {
+      "section": "Core Subject",
+      "text": "The critical radius of insulation for a cylindrical pipe is given by r_c = k/h, where k is thermal conductivity of insulation and h is convective heat transfer coefficient. If k = 0.2 W/m·K and h = 10 W/m²·K, the critical radius (in mm) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "20",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "200",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2000",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: r_c = k/h = 0.2/10 = 0.02 m = 20 mm. Unit conversion: multiply meters by 1000 to get mm. Full solution: r_c = 0.2 / 10 = 0.02 m. 0.02 m × 1000 = 20 mm.",
+      "topic": "Heat Transfer - Critical Insulation Radius",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:08:10.829Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Parameter",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Thermal conductivity k (W/m·K)",
+            "0.2"
+          ],
+          [
+            "Convective coefficient h (W/m²·K)",
+            "10"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 2133,
+      "q": 460
+    },
+    {
+      "section": "Core Subject",
+      "text": "A company has fixed costs of ₹2,00,000 per month, variable cost of ₹50 per unit, and selling price of ₹80 per unit. The break-even quantity (in units) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5000",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "6667",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "10000",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20000",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Contribution margin per unit = Selling price - Variable cost = 80 - 50 = ₹30. Break-even quantity = Fixed cost / Contribution margin = 2,00,000 / 30 ≈ 6666.67 ≈ 6667 units. Option elimination: 2,00,000/30 is between 6000 and 7000, only 6667 fits. Full solution: BEQ = FC / (P - VC) = 200000 / (80 - 50) = 200000 / 30 = 6666.67 ≈ 6667.",
+      "topic": "Industrial Engineering - Break-even Analysis",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:08:10.838Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Parameter",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Fixed cost (₹/month)",
+            "200000"
+          ],
+          [
+            "Variable cost (₹/unit)",
+            "50"
+          ],
+          [
+            "Selling price (₹/unit)",
+            "80"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 2134,
+      "q": 461
+    },
+    {
+      "section": "General Aptitude",
+      "text": "What is the unit digit of 7^2023?",
+      "options": [
+        {
+          "label": "A",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "9",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "1",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: The unit digit of powers of 7 follows a cycle of 4: 7, 9, 3, 1. Since 2023 mod 4 = 3, the unit digit is the 3rd in the cycle, which is 3. Full solution: 7^1=7, 7^2=49, 7^3=343, 7^4=2401; the pattern repeats every 4. 2023 = 4×505 + 3, so unit digit of 7^2023 equals unit digit of 7^3 = 3.",
+      "topic": "Number System - Unit Digit",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:09:58.784Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2135,
+      "q": 462
+    },
+    {
+      "section": "General Aptitude",
+      "text": "In a certain code language, 'TABLE' is written as 'UBCMF'. How is 'CHAIR' written in that code?",
+      "options": [
+        {
+          "label": "A",
+          "text": "DIBJS",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "DIBJT",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "DIBJR",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "DIBJU",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Each letter in the code is shifted forward by one position in the alphabet (Caesar cipher +1). Applying this to CHAIR gives C→D, H→I, A→B, I→J, R→S → DIBJS. Full solution: Comparing TABLE and UBCMF shows T→U, A→B, B→C, L→M, E→F, confirming a uniform +1 shift. Using the same rule on CHAIR yields DIBJS.",
+      "topic": "Logical Reasoning - Coding Decoding",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:09:58.791Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2136,
+      "q": 463
+    },
+    {
+      "section": "Core Subject",
+      "text": "An ideal air-standard Otto cycle operates with a compression ratio of 8. If the compression ratio is increased to 10 while the specific heat ratio γ remains constant at 1.4, the percentage point increase in thermal efficiency is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3.5%",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "4.5%",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5.5%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "6.5%",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Thermal efficiency η = 1 - 1/r^(γ-1). For r=8, 8^0.4 ≈ 2.30 → η₁ ≈ 56.5%. For r=10, 10^0.4 ≈ 2.51 → η₂ ≈ 60.2%. Increase ≈ 3.7% ≈ 3.5%. Full: η₁ = 1 - 1/8^0.4 = 0.5647. η₂ = 1 - 1/10^0.4 = 0.6019. Δη = 0.0372 → 3.72 percentage points.",
+      "topic": "Thermodynamics - Gas Power Cycles",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:15:35.877Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2137,
+      "q": 464
+    },
+    {
+      "section": "Core Subject",
+      "text": "In a counterflow heat exchanger, the hot fluid enters at 100°C and exits at 60°C. The cold fluid enters at 20°C and exits at 60°C. Assuming no heat losses, the effectiveness of the heat exchanger is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.40",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0.50",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "0.60",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0.75",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Since ΔT_hot = ΔT_cold = 40°C, heat capacity rates are equal (C_min = C_max). Effectiveness ε = (T_h,in - T_h,out) / (T_h,in - T_c,in) = (100-60)/(100-20) = 40/80 = 0.5. Full: Q_actual = C_h(40) = C_c(40). Q_max = C_min(100-20) = 80C. ε = 40C/80C = 0.5.",
+      "topic": "Heat Transfer - Heat Exchangers",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:15:35.887Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2138,
+      "q": 465
+    },
+    {
+      "section": "Core Subject",
+      "text": "A centrifugal pump running at 1500 rpm delivers 0.1 m³/s against a head of 30 m. If the speed is increased to 1800 rpm, the new discharge (m³/s) and head (m) respectively, assuming affinity laws hold, are:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.10, 30.0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0.12, 36.0",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.12, 43.2",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "0.144, 43.2",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Affinity laws: Q ∝ N, H ∝ N². Speed ratio = 1800/1500 = 1.2. Q₂ = 0.1 × 1.2 = 0.12 m³/s. H₂ = 30 × (1.2)² = 30 × 1.44 = 43.2 m. Full: Q₂/Q₁ = N₂/N₁ → Q₂ = 0.1(1800/1500) = 0.12. H₂/H₁ = (N₂/N₁)² → H₂ = 30(1.2)² = 43.2.",
+      "topic": "Fluid Mechanics - Turbomachinery",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-27T15:15:35.898Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2139,
+      "q": 466
     }
   ],
   "generatedPapers": [],
   "modelFill": {
-    "lastRun": "2026-11-25T15:43:38.766Z",
+    "lastRun": "2026-11-27T15:21:05.180Z",
     "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
-    "added": 15
+    "added": 10
   }
 }
