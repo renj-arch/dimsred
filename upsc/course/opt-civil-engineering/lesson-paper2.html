@@ -345,6 +345,53 @@ Corrected H = 150.22 + 0.026 = 150.246 m ≈ 150.25 m.</div>
 <p>Membrane bioreactors (MBR) replace secondary clarifiers with submerged or side‑stream ultrafiltration membranes (pore size 0.04–0.1 µm). The membrane tank operates at a higher MLSS (8000–12000 mg/L) because solids are retained completely, allowing a smaller reactor volume for the same SRT. Permeate flux is typically 15–25 L/m²·h; fouling control relies on coarse‑bubble aeration (0.5–1.0 m³/m²·h) and periodic chemical cleaning (NaOCl 200 mg/L, citric acid 2 %). The key design equations are the critical flux concept J_crit = k · (ΔP/μ) and the fouling rate dR_f/dt = α · J · C_s, where R_f is fouling resistance, α a fouling coefficient, J the flux and C_s the suspended solids concentration. Energy consumption is dominated by aeration (both biological and membrane scouring) and can reach 0.8–1.2 kWh/m³ of treated water. When comparing BNR‑MBR hybrids, the anaerobic zone can be omitted if the membrane provides sufficient phosphorus removal via chemical precipitation, but this reduces the carbon available for denitrification and may require external carbon dosing.</p>
 
 <h3>Slope Stability Analysis: Limit Equilibrium Methods and Finite Element Modeling</h3>
+<!-- passage-cartoon:076debbfebf3 -->
+<figure class="passage-cartoon" data-cartoon="076debbfebf3">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+
+  <!-- Central Scale -->
+  <rect x="230" y="250" width="100" height="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="275" y="150" width="10" height="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="180" y1="150" x2="380" y2="150" stroke="#1f2937" stroke-width="3"/>
+
+  <!-- Left Pan -->
+  <path d="M180,150 L180,170 M160,170 h40 v20 h-40 z" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Right Pan -->
+  <path d="M380,150 L380,170 M360,170 h40 v20 h-40 z" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Left Weight (three slices) -->
+  <path d="M160,200 h40 v15 h-40 z M160,217 h40 v15 h-40 z M160,234 h40 v15 h-40 z" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Right Weight (mesh rectangle with diagonals) -->
+  <path d="M360,200 h40 v45 h-40 z M360,200 L380,222.5 M400,200 L380,222.5 M360,245 L380,222.5 M400,245 L380,222.5" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Supporting Icons -->
+  <!-- Top-Left: Bishop's Mitre -->
+  <path d="M50,80 L70,50 L90,80 z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-Right: FEM Software -->
+  <path d="M490,50 h40 v40 h-40 z M510,50 v40 M490,70 h40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-Left: Janbu Book -->
+  <path d="M50,240 h40 v30 h-40 z M70,240 v30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-Right: Strength Reduction Gauge -->
+  <path d="M510,240 a20,20 0 1,1 0.1,0 M510,240 L510,220 L520,215" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Labels -->
+  <text x="180" y="190" font-size="14" fill="#1f2937" text-anchor="middle">Limit Equilibrium</text>
+  <text x="380" y="190" font-size="14" fill="#1f2937" text-anchor="middle">Finite Element</text>
+  <text x="280" y="140" font-size="14" fill="#1f2937" text-anchor="middle">Factor of Safety</text>
+  <text x="70" y="100" font-size="14" fill="#1f2937" text-anchor="middle">Bishop Method</text>
+  <text x="510" y="230" font-size="14" fill="#1f2937" text-anchor="middle">Strength Reduction</text>
+
+  <!-- Caption Strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <text x="280" y="302" font-size="12" fill="#fbf7ec" text-anchor="middle">Slope Stability Analysis: Limit Equilibrium Methods and Finite Element Modeling</text>
+</svg></div>
+  <figcaption>Slope Stability Analysis: Limit Equilibrium Methods and Finite Element Modeling</figcaption>
+</figure>
+
 <p>Limit equilibrium methods (LEM) remain the workhorse for routine slope stability checks. The ordinary method of slices (Fellenius) assumes zero inter‑slice forces, giving a conservative factor of safety (FS). Bishop’s simplified method satisfies vertical force equilibrium for each slice and assumes horizontal inter‑slice forces are negligible; it requires an iterative solution because FS appears on both sides of the moment equilibrium equation. Janbu’s simplified method extends Bishop to non‑circular slip surfaces by enforcing horizontal force equilibrium, while Janbu’s generalized procedure of slices (GPS) also satisfies moment equilibrium. Spencer’s method and the Morgenstern‑Price method enforce both force and moment equilibrium with a user‑defined inter‑slice force function, providing the most rigorous LEM solutions. All LEMs require discretisation of the potential failure mass into vertical slices (typically 10–30 slices) and input of soil parameters: unit weight γ, cohesion c′, friction angle φ′, and pore‑water pressure distribution (often expressed as ru = u/(γ · z)). The factor of safety is defined as the ratio of available shear strength to mobilised shear stress along the slip surface.</p>
 <p>Finite element modeling (FEM) offers a continuum alternative that captures stress‑strain behaviour, progressive failure and deformation. In a typical 2‑D plane‑strain analysis the soil is represented by an elastoplastic constitutive model such as Mohr‑Coulomb, Hardening Soil or Soft Soil Creep. The strength reduction technique (SRM) reduces c′ and tan φ′ simultaneously by a factor λ until the model fails to converge; the critical λ equals the FS. FEM requires a mesh fine enough to localise the shear band (element size ≤ H/20, where H is slope height) and appropriate boundary conditions (fixed base, roller sides). Pore‑water pressures can be coupled through a steady‑state seepage analysis or a transient consolidation analysis. Software packages such as PLAXIS, GeoStudio (SLOPE/W, SEEP/W) and FLAC are widely used. FEM results are often compared with LEM to validate the assumed slip surface; discrepancies larger than 10 % usually indicate an inadequate LEM discretisation or an inappropriate inter‑slice force assumption.</p>
 
@@ -439,6 +486,36 @@ Corrected H = 150.22 + 0.026 = 150.246 m ≈ 150.25 m.</div>
 <p>Earned Value Management (EVM) integrates scope, schedule and cost. Planned Value (PV) is the budgeted cost of work scheduled; Earned Value (EV) is the budgeted cost of work performed; Actual Cost (AC) is the actual cost incurred. Schedule Variance (SV) = EV − PV; Cost Variance (CV) = EV − AC. Schedule Performance Index (SPI) = EV/PV; Cost Performance Index (CPI) = EV/AC. Forecasting uses Estimate at Completion (EAC) = BAC/CPI (assuming current cost efficiency continues) or EAC = AC + (BAC − EV) (assuming remaining work at budgeted rate). To‑Complete Performance Index (TCPI) = (BAC − EV)/(BAC − AC) indicates the cost efficiency required to meet the budget. In practice, CPM provides the schedule baseline (PV curve) while EVM tracks performance against that baseline. Integration is achieved by mapping each work package in the Work Breakdown Structure (WBS) to a CPM activity, ensuring that EV is earned only when the corresponding activity reaches its planned percent complete.</p>
 
 <h3>Pavement Design: Mechanistic‑Empirical Approach for Flexible and Rigid Pavements</h3>
+<!-- passage-cartoon:add276702619 -->
+<figure class="passage-cartoon" data-cartoon="add276702619">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central pavement cross-section -->
+  <rect x="130" y="100" width="300" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="130" y="130" width="300" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="130" y="170" width="300" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-left: Empirical nomograph -->
+  <line x1="50" y1="50" x2="50" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <line x1="50" y1="150" x2="170" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <path d="M50,150 Q110,50 170,50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="50" y="40" font-size="12" fill="#1f2937" font-family="sans-serif">Empirical SN</text>
+  <!-- Top-right: MEPDG computer screen -->
+  <rect x="390" y="50" width="120" height="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="400" y1="80" x2="500" y2="80" stroke="#1f2937" stroke-width="2"/>
+  <line x1="400" y1="110" x2="500" y2="110" stroke="#1f2937" stroke-width="2"/>
+  <text x="390" y="40" font-size="12" fill="#1f2937" font-family="sans-serif">MEPDG Model</text>
+  <!-- Bottom-left: Fatigue cracking -->
+  <path d="M80,250 L100,240 L120,250 L140,240 L160,250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="80" y="280" font-size="12" fill="#1f2937" font-family="sans-serif">Fatigue Cracking</text>
+  <!-- Bottom-right: Rutting -->
+  <path d="M400,250 L420,260 L440,250 L460,260 L480,250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="400" y="280" font-size="12" fill="#1f2937" font-family="sans-serif">Rutting</text>
+  <!-- Section title -->
+  <text x="280" y="300" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Pavement Design: Mechanistic‑Empirical Approach</text>
+</svg></div>
+  <figcaption>Pavement Design: Mechanistic‑Empirical Approach for Flexible and Rigid Pavements</figcaption>
+</figure>
+
 <p>The AASHTO 1993 guide uses an empirical structural number (SN) equation for flexible pavements: SN = a₁ D₁ + a₂ D₂ m₂ + a₃ D₃ m₃, where a_i are layer coefficients, D_i thicknesses (inches) and m_i drainage coefficients. Traffic is expressed as 18‑kip equivalent single axle loads (ESAL) over the design life. The design nomograph relates SN, ESAL, reliability (R), overall standard deviation (S₀), serviceability loss (ΔPSI) and resilient modulus of subgrade (M_R). For rigid pavements the slab thickness D is obtained from the Westergaard stress equation combined with a fatigue damage model: log₁₀(N) = Z_R · S₀ + 7.35 · log₁₀(D + 1) − 0.06 + log₁₀(ΔPSI/(4.5 − 1.5)) / (1 + 1.624 × 10⁷/(D + 1)⁸·⁴⁶) + (4.22 − 0.32 · p_t) · log₁₀(S_c · C_d · D⁰·⁷⁵ / 215.63 · J), where N is allowable load repetitions, Z_R the standard normal deviate for reliability, p_t the terminal serviceability, S_c the modulus of rupture, C_d the drainage coefficient, J the load transfer coefficient.</p>
 <p>The Mechanistic‑Empirical Pavement Design Guide (MEPDG, AASHTOWare Pavement ME) replaces empirical correlations with layered elastic or finite‑element structural response models. Inputs include dynamic modulus (E*) master curves for asphalt layers (temperature‑frequency dependent), resilient modulus for unbound layers, concrete modulus of elasticity and coefficient of thermal expansion for rigid slabs, and traffic spectra (axle load distribution, axle configuration, traffic growth). The software computes critical responses: tensile strain at the bottom of the asphalt layer (ε_t), compressive strain at the top of the subgrade (ε_c), and maximum principal stress in the concrete slab (σ_max). Transfer functions calibrated from long‑term pavement performance (LTPP) data convert these responses to distress predictions: fatigue cracking (N_f = k₁ · ε_t^−k₂), rutting (RD = k₃ · ε_c^k₄), and faulting (FAULT = k₅ · σ_max^k₆). Calibration factors (k₁‑k₆) are adjusted for local conditions. The design process iterates layer thicknesses and material properties until predicted distresses at the design reliability (typically 90 %) are below threshold values (e.g., fatigue cracking < 10 % lane area, rutting < 12 mm). Sensitivity analysis identifies the most influential inputs, guiding material specification and construction quality control.</p>
 
@@ -452,12 +529,79 @@ Corrected H = 150.22 + 0.026 = 150.246 m ≈ 150.25 m.</div>
 <li>Trap 7: Forgetting to convert traffic loads to equivalent single axle loads (ESAL) before entering the pavement design equation.</li>
 </ul>
 <h3>Ground Improvement Techniques for Soft Soils: Grouting, Soil Nailing, and Geosynthetic Reinforcement</h3>
+<!-- passage-cartoon:1c9dc742f521 -->
+<figure class="passage-cartoon" data-cartoon="1c9dc742f521">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="130" y="60" width="300" height="200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M130,240 Q200,230 280,240 Q360,250 430,240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="200" y="30" width="160" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="80" y1="100" x2="80" y2="220" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="80" cy="220" r="4" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="80" cy="210" r="3" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="480" y1="120" x2="460" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <line x1="470" y1="120" x2="490" y2="120" stroke="#1f2937" stroke-width="3"/>
+  <line x1="230" y1="20" x2="330" y2="20" stroke="#1f2937" stroke-width="3"/>
+  <line x1="230" y1="30" x2="330" y2="30" stroke="#1f2937" stroke-width="3"/>
+  <line x1="250" y1="20" x2="250" y2="30" stroke="#1f2937" stroke-width="3"/>
+  <line x1="310" y1="20" x2="310" y2="30" stroke="#1f2937" stroke-width="3"/>
+  <path d="M270,280 L290,280 L280,300 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="2.5"/>
+  <text x="30" y="150" font-size="14" fill="#1f2937" font-family="sans-serif">Permeation Grouting</text>
+  <text x="460" y="150" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="end">Soil Nailing</text>
+  <text x="280" y="14" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Geosynthetic</text>
+  <text x="100" y="250" font-size="14" fill="#1f2937" font-family="sans-serif">Soft Soil</text>
+  <text x="280" y="50" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Foundation</text>
+  <text x="280" y="305" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Ground Improvement</text>
+</svg></div>
+  <figcaption>Ground Improvement Techniques for Soft Soils: Grouting, Soil Nailing, and Geosynthetic Reinforcement</figcaption>
+</figure>
+
 <p>Soft cohesive deposits and loose granular fills often require ground improvement before they can support structural loads. Three widely adopted techniques — permeation grouting, soil nailing, and geosynthetic reinforcement — address different failure mechanisms and construction constraints. Permeation grouting injects a low‑viscosity cementitious or chemical grout into the pore space of granular soils, reducing permeability and increasing shear strength. The grout mix design follows the water‑cement ratio (w/c) and additive dosage to achieve a target unconfined compressive strength (UCS) of 1–5 MPa for sand and 0.5–2 MPa for silty sand. Injection pressure is limited to 0.5–1.0 MPa above the in‑situ vertical stress to avoid hydraulic fracturing. Verification uses post‑grouting cone penetration tests (CPT) and cross‑hole sonic logging to confirm radius of influence.</p>
 <p>Soil nailing stabilises excavations and slopes by installing closely spaced, passive steel bars (nails) into the ground and applying a facing system. Design follows the limit equilibrium method where each nail contributes a tensile force T = A_s f_y / γ_m, with A_s the bar area, f_y the yield stress, and γ_m the material partial factor (typically 1.15). Nail spacing (S_h, S_v) is governed by the pull‑out resistance q_u = α c_u + β σ'_v tan φ', where α and β are empirical coefficients, c_u the undrained cohesion, σ'_v the effective vertical stress, and φ' the effective friction angle. A minimum factor of safety of 1.5 against pull‑out and 1.3 against nail tensile failure is required. Construction monitoring includes nail head displacement and facing deflection measured by inclinometers.</p>
 <p>Geosynthetic reinforcement uses high‑tenacity polymer grids or strips to create a mechanically stabilised earth (MSE) mass. The design tensile strength T_ult is reduced by reduction factors for installation damage (RF_ID), creep (RF_CR), and durability (RF_D) to obtain the allowable design strength T_allow = T_ult / (RF_ID × RF_CR × RF_D). The required reinforcement length L_e beyond the failure plane satisfies L_e ≥ (T_allow × FS) / (σ_v × tan φ), where FS is the global factor of safety (typically 1.5). Connection strength between facing units and reinforcement is verified by pull‑out tests. Quality control includes roll‑width verification, seam overlap checks, and post‑construction settlement monitoring.</p>
 <p>Selection among these methods depends on soil type, depth of improvement, access constraints, and cost. Grouting is preferred for deep, localized treatment beneath existing foundations. Soil nailing excels in temporary or permanent cut slopes where a facing can be erected. Geosynthetic reinforcement is economical for large‑area embankments over soft subgrades. In practice, a combination — such as grouting the foundation zone beneath an MSE wall — often yields the most robust solution.</p>
 
 <h3>Water Supply Engineering: Hydraulic Modeling of Distribution Networks and Leakage Control</h3>
+<!-- passage-cartoon:a267c68f4a54 -->
+<figure class="passage-cartoon" data-cartoon="a267c68f4a54">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Main pipe -->
+  <path d="M100,160 L460,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Nodes -->
+  <circle cx="180" cy="160" r="8" fill="#1f2937"/>
+  <circle cx="280" cy="160" r="8" fill="#1f2937"/>
+  <circle cx="380" cy="160" r="8" fill="#1f2937"/>
+  <!-- Service lines -->
+  <path d="M180,160 L180,240 M280,160 L280,240 M380,160 L380,240" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Leak droplets -->
+  <circle cx="290" cy="140" r="3" fill="#1f2937"/>
+  <circle cx="310" cy="135" r="3" fill="#1f2937"/>
+  <!-- PRV -->
+  <path d="M340,150 L350,160 L340,170 L330,160 Z" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Pressure gauge -->
+  <circle cx="180" cy="160" r="12" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <line x1="180" y1="160" x2="188" y2="152" stroke="#1f2937" stroke-width="2"/>
+  <!-- Moon (night flow) -->
+  <circle cx="480" cy="50" r="15" fill="#1f2937"/>
+  <!-- Clipboard -->
+  <path d="M40,30 L80,30 L80,80 L40,80 Z M50,30 L70,30" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Scale -->
+  <path d="M480,260 L480,240 M460,240 L500,240 M460,240 L460,270 M500,240 L500,270" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Labels -->
+  <text x="60" y="20" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Hydraulic Calibration</text>
+  <text x="480" y="20" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Minimum Night Flow</text>
+  <text x="340" y="130" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Pressure Management</text>
+  <text x="300" y="110" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Leak Detection</text>
+  <text x="480" y="240" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Economic Leakage Level</text>
+  <!-- Caption strip -->
+  <line x1="14" y1="295" x2="546" y2="295" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Water Supply Engineering: Hydraulic Modeling &amp; Leakage Control</text>
+</svg></div>
+  <figcaption>Water Supply Engineering: Hydraulic Modeling of Distribution Networks and Leakage Control</figcaption>
+</figure>
+
 <p>Reliable water supply demands accurate hydraulic simulation of pipe networks and proactive leakage management. The governing equations are the continuity equation at each node (ΣQ_in − ΣQ_out = D_n) and the energy equation for each pipe (h_f = K Q^n), where K incorporates pipe length, diameter, roughness (Hazen‑Williams C or Darcy‑Weisbach f), and n = 1.852 for Hazen‑Williams or 2 for Darcy‑Weisbach. Steady‑state analysis solves the non‑linear system using the Hardy‑Cross method or the more robust Newton‑Raphson algorithm implemented in EPANET. Extended‑period simulation (EPS) adds time‑varying demand patterns, pump schedules, and tank operating rules to capture diurnal pressure fluctuations.</p>
 <p>Model calibration follows a systematic approach: (1) skeletonise the network to retain hydraulic significance; (2) assign initial pipe roughness values from material and age tables; (3) compare simulated pressures and flows with field measurements from pressure loggers and flow meters; (4) adjust roughness and demand multipliers within realistic bounds until the sum of squared errors falls below a prescribed threshold (typically 5 % of measured values). Sensitivity analysis identifies pipes whose roughness most influences nodal pressures, guiding targeted field verification.</p>
 <p>Leakage quantification uses the International Water Association (IWA) water balance: System Input Volume = Authorized Consumption + Apparent Losses + Real Losses. Real losses are estimated by the minimum night flow (MNF) method: Q_leak = MNF − Q_legitimate_night, where Q_legitimate_night is derived from known night‑time consumption patterns. Pressure‑leakage relationship follows the FAVAD (Fixed and Variable Area Discharge) concept: Q_leak = C P^N, with C the leakage coefficient and N the pressure exponent (typically 1.0–1.5). Pressure management via district metered areas (DMAs) and pressure reducing valves (PRVs) reduces average zone pressure, yielding leakage reductions of 20–40 % in many utilities.</p>
@@ -475,6 +619,39 @@ Corrected H = 150.22 + 0.026 = 150.246 m ≈ 150.25 m.</div>
 </div>
 
 <h3>Traffic Signal Optimization and Adaptive Control Systems</h3>
+<!-- passage-cartoon:a2525f42ad03 -->
+<figure class="passage-cartoon" data-cartoon="a2525f42ad03">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Traffic light pole -->
+  <line x1="280" y1="80" x2="280" y2="240" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <!-- Three signal lights -->
+  <circle cx="280" cy="100" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="220" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Brain cloud above light -->
+  <path d="M240,50 Q240,30 260,30 Q280,30 280,50 Q300,50 300,70 Q280,90 260,90 Q240,90 240,70 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Detector loop left -->
+  <rect x="60" y="200" width="100" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Progression arrow -->
+  <path d="M60,260 L500,260 M490,255 L500,260 L490,265" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- SCOOT/SCATS boxes top right -->
+  <rect x="400" y="40" width="120" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="400" y="90" width="120" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Connected vehicle car bottom right -->
+  <path d="M450,250 L470,250 L480,240 L480,230 L460,230 L460,240 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Labels -->
+  <text x="150" y="70" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Webster Cycle</text>
+  <text x="280" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Adaptive Timing</text>
+  <text x="60" y="180" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="start">Actuated Control</text>
+  <text x="400" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="start">SCOOT/SCATS</text>
+  <text x="450" y="230" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Connected Vehicles</text>
+  <!-- Bottom caption strip -->
+  <text x="280" y="300" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Traffic Signal Optimization and Adaptive Control Systems</text>
+</svg></div>
+  <figcaption>Traffic Signal Optimization and Adaptive Control Systems</figcaption>
+</figure>
+
 <p>Efficient urban mobility relies on signal timing that minimizes delay, stops, and emissions while maintaining safety. The classic Webster’s method determines the optimal cycle length C_o = (1.5 L + 5) / (1 − Y), where L is total lost time per cycle (sum of intergreen periods) and Y = Σ(y_i) is the sum of critical lane flow ratios (y_i = q_i / s_i). Green splits are allocated proportionally: g_i = (y_i / Y) × (C_o − L). This fixed‑time plan performs well under stable demand but degrades when flows fluctuate.</p>
 <p>Actuated control extends fixed‑time by using detector inputs (inductive loops, video, radar) to extend or gap‑out phases based on real‑time vehicle presence. Parameters include minimum green (G_min), maximum green (G_max), vehicle extension (or passage time), and gap reduction. Coordinated actuated systems maintain a common cycle length across adjacent intersections while allowing local phase variations within a defined window. Offset optimisation uses the time‑space diagram to align green bands for the dominant progression direction, minimizing stops on arterial corridors.</p>
 <p>Adaptive signal control systems (ASCS) such as SCOOT, SCATS, and RHODES continuously adjust cycle length, splits, and offsets using online traffic data. SCOOT (Split Cycle Offset Optimisation Technique) models each link as a queue and predicts future flows using a cyclic flow profile; it optimises a performance index (PI) combining delay and stops. SCATS (Sydney Coordinated Adaptive Traffic System) operates hierarchically: regional computers set cycle lengths, while local controllers adjust splits based on degree of saturation (DS) measured at stop‑line detectors. RHODES employs a dynamic programming approach with a rolling horizon, explicitly accounting for stochastic demand.</p>
