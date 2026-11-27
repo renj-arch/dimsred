@@ -1,41 +1,141 @@
 {
- "generatedAt": "2026-11-27T22:21:38.175Z",
+ "generatedAt": "2026-11-27T22:56:20.269Z",
  "lessonsAudited": 18,
- "flagged": 3,
- "applied": 1,
- "modelCalls": 10,
- "modelFailures": 50,
+ "flagged": 13,
+ "applied": 4,
+ "modelCalls": 23,
+ "modelFailures": 35,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "rrb-station-master/course/maths/lesson-mensuration.html",
-   "quote": "acute (all angles 90°)",
-   "problem": "An acute triangle has all angles less than 90°, not equal to 90°. A triangle with all angles 90° is impossible (sum would be 270°).",
-   "correction": "acute (all angles < 90°)",
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "Sun’s azimuth is 090° – 45° = 045° (North‑East), so shadows fall towards 225° (South‑West).",
+   "problem": "At 09:00 local solar time in the northern hemisphere, the Sun’s azimuth is not 045°; a simple linear model (15° per hour from 6 AM East) gives 090° + 45° = 135° (South‑East), so shadows point towards 315° (North‑West).",
+   "correction": "Sun’s azimuth is 090° + 45° = 135° (South‑East), so shadows fall towards 315° (North‑West).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original definition is incorrect; acute triangles have all angles <90°. Correction is accurate.",
+   "verifierReason": "At 09:00 LST, sun azimuth = 90°+45°=135° (SE), not 45° (NE). Correction correct.",
    "applied": false
   },
   {
-   "file": "rrb-station-master/course/maths/lesson-number-system.html",
-   "quote": "LCM is always larger than the largest number",
-   "problem": "LCM can be equal to the largest number (e.g., LCM of 2 and 4 is 4). The statement should say 'greater than or equal to'.",
-   "correction": "LCM is always greater than or equal to the largest number",
+   "file": "sbi-clerk/course/reasoning/lesson-direction-distance.html",
+   "quote": "At 10:00 am the Sun’s azimuth ≈ 060° (East‑North‑East). Shadow direction = 240° (West‑South‑West).",
+   "problem": "At 10:00 am in the northern hemisphere, the Sun’s azimuth is not 060°; a simple linear model gives 090° + 60° = 150° (South‑South‑East), so shadows point towards 330° (North‑North‑West).",
+   "correction": "At 10:00 am the Sun’s azimuth ≈ 150° (South‑South‑East). Shadow direction = 330° (North‑North‑West).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "LCM of 2 and 4 is 4, equal to largest; 'larger than' is false.",
+   "verifierReason": "At 10:00 LST, sun azimuth = 90°+60°=150° (SSE), not 60° (ENE). Correction correct.",
+   "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "A clue such as “A sits third to the left of B” is interpreted differently depending on whether A faces the centre (left is clockwise) or outward (left is anticlockwise).",
+   "problem": "The facing direction that determines “left/right” in a circular arrangement is that of the reference person (B), not the subject (A). The text incorrectly assigns the perspective to A.",
+   "correction": "A clue such as “A sits third to the left of B” is interpreted differently depending on whether B faces the centre (left is clockwise) or outward (left is anticlockwise).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Left/right in circular seating is from reference person B's perspective, not A's.",
    "applied": true
   },
   {
-   "file": "rrb-station-master/course/maths/lesson-number-system.html",
-   "quote": "0 ≤ r b",
-   "problem": "The remainder theorem requires 0 ≤ r < b (strictly less than divisor). The text omits the '<' symbol.",
-   "correction": "0 ≤ r < b",
+   "file": "sbi-clerk/course/reasoning/lesson-puzzles-seating.html",
+   "quote": "A vacancy variable V f ∈ {0,1} indicates whether floor f is occupied.",
+   "problem": "The text defines V_f as indicating occupancy, but immediately uses V_max = 1 to mean the topmost floor is vacant, contradicting the definition.",
+   "correction": "A vacancy variable V f ∈ {0,1} indicates whether floor f is vacant (1) or occupied (0).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Division algorithm requires 0 ≤ r < b; original missing '<'.",
+   "verifierReason": "A 'vacancy variable' should indicate vacancy, not occupancy; correction aligns name and mapping.",
    "applied": false
+  },
+  {
+   "file": "sbi-clerk/course/reasoning/lesson-syllogism.html",
+   "quote": "because EG requires an existential premise to introduce a constant",
+   "problem": "Existential Generalization (EG) does not require an existential premise; it infers an existential statement from a constant. The constant must be introduced by Existential Instantiation (EI), which does require an existential premise.",
+   "correction": "because EI requires an existential premise to introduce a constant",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "EG does not need an existential premise; EI does. Correction accurately states the rule.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/gk/lesson-general-science.html",
+   "quote": "always 1",
+   "problem": "Carnot efficiency is always less than 1, not equal to 1.",
+   "correction": "always < 1",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Carnot efficiency = 1 - Tc/Th < 1 for all finite temperatures.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/english/lesson-grammar.html",
+   "quote": "In formal writing, each and every are preferred over each and every as a redundant pair.",
+   "problem": "The sentence is self-contradictory and garbled; it claims the phrase 'each and every' is preferred over itself. The intended rule is that the redundant pair 'each and every' should be avoided in favor of using 'each' or 'every' singly.",
+   "correction": "In formal writing, 'each' or 'every' is preferred over the redundant pair 'each and every'.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original self-contradictory; correction correctly advises avoiding redundant 'each and every'.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/english/lesson-grammar.html",
+   "quote": "Not only did he arrive late, but also he forgot the files is parallel because both clauses are inverted",
+   "problem": "Only the first clause ('Not only did he arrive late') is inverted; the second clause ('but also he forgot the files') follows normal subject-verb order and is not inverted. The claim that both clauses are inverted is factually incorrect.",
+   "correction": "Not only did he arrive late, but he also forgot the files is parallel because the first clause is inverted and the second clause follows normal order.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original wrongly states both clauses inverted; correction accurately describes inversion and gives idiomatic example.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/gk/lesson-general-science.html",
+   "quote": "7 = neutral (pure water at 25°C), 7 acidic, 7 basic (alkaline)",
+   "problem": "pH scale description incorrectly states that 7 is acidic and 7 is basic; it should be <7 acidic, >7 basic.",
+   "correction": "7 = neutral (pure water at 25°C); <7 acidic, >7 basic (alkaline)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original quote erroneously labels pH 7 as both acidic and basic; correction correctly defines neutral at 7, acidic <7, basic >7.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/english/lesson-grammar.html",
+   "quote": "Reduction is impossible when the relative clause contains a modal or a perfect tense ( *The files which have been sent cannot become *The files sent without ambiguity).",
+   "problem": "Perfect tense passive relative clauses can be reduced to past participle phrases (e.g., 'The files which have been sent' → 'The files sent').",
+   "correction": "Reduction is impossible when the relative clause contains a modal; perfect tense passives can be reduced (e.g., 'The files which have been sent' → 'The files sent').",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Perfect passive relatives (have been sent) reduce to past participle phrases (sent) per standard grammar; only modals block this reduction.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/gk/lesson-general-science.html",
+   "quote": "Pseudomonas species degrade hydrocarbons — used in Exxon Valdez, Deepwater Horizon",
+   "problem": "Pseudomonas species were not deliberately applied in the Exxon Valdez or Deepwater Horizon oil spills; bioremediation relied on nutrient stimulation of indigenous microbes.",
+   "correction": "Pseudomonas species degrade hydrocarbons — researched for oil spill cleanup",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claim of actual use in spills is false; correction accurately reflects research use.",
+   "applied": false
+  },
+  {
+   "file": "ssc-gd/course/gk/lesson-general-science.html",
+   "quote": "India's biotechnology sector valued at ~$80 billion (2025)",
+   "problem": "The $80 billion valuation corresponds to 2022; the 2025 projection is approximately $150 billion.",
+   "correction": "India's biotechnology sector valued at ~$80 billion (2022)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "2022 valuation ~80 bn is correct; 2025 projection is higher, so correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "ssc-gd/course/maths/lesson-number-system.html",
+   "quote": "The exponent φ(n) is the order of the multiplicative group modulo n.",
+   "problem": "φ(n) is the order (size) of the multiplicative group modulo n, not its exponent. The exponent of the group is the Carmichael function λ(n).",
+   "correction": "The order of the multiplicative group modulo n is φ(n).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "φ(n) is the order of (ℤ/nℤ)×; the exponent is Carmichael's λ(n). Quote mislabels φ(n) as exponent.",
+   "applied": true
   }
  ]
 }

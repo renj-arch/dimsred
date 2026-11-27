@@ -704,6 +704,45 @@
 <p>Convergence difficulties arise from ill‑conditioned Jacobians, heavily loaded lines, poor initial guesses (flat start), and the presence of transformer tap‑changing or phase‑shifting devices that introduce discrete control variables. Practical remedies include: (i) using a continuation power‑flow (parameter‑embedding) to trace the solution path from a lightly loaded base case; (ii) applying optimal ordering (e.g., minimum degree) before sparse LU factorisation to limit fill‑in; (iii) scaling the mismatch vector to avoid overflow in poorly conditioned buses; and (iv) limiting the maximum voltage‑angle step (e.g., <strong>|Δδ| ≤ 0.5 rad</strong>) to prevent divergence. Examiners often ask for the expression of the Jacobian element <strong>∂P<sub>i</sub>/∂δ<sub>k</sub></strong> and the condition under which the FDLF approximation is justified.</p>
 
 <h3>Traveling Wave Phenomena and Surge Protection in Transmission Lines</h3>
+<!-- passage-cartoon:924e4aa5757b -->
+<figure class="passage-cartoon" data-cartoon="924e4aa5757b">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Transmission tower -->
+  <line x1="260" y1="200" x2="260" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <line x1="300" y1="200" x2="300" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <line x1="240" y1="100" x2="320" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <!-- Transmission lines -->
+  <line x1="240" y1="100" x2="50" y2="100" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="320" y1="100" x2="510" y2="100" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Lightning strike -->
+  <polyline points="280,30 270,50 290,50 275,70 295,70 280,100" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Traveling wave -->
+  <path d="M 80,100 Q 100,80 120,100 Q 140,120 160,100 Q 180,80 200,100" fill="none" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2"/>
+  <!-- Substation building -->
+  <rect x="480" y="60" width="60" height="80" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Surge arrester -->
+  <rect x="500" y="90" width="20" height="30" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <polyline points="500,105 520,105 510,95 520,105 510,115" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Reflection arrow -->
+  <line x1="480" y1="100" x2="440" y2="100" stroke="#1f2937" stroke-width="2"/>
+  <path d="M 440,100 L 450,95 L 450,105 Z" fill="#1f2937"/>
+  <!-- Fault location marker -->
+  <circle cx="150" cy="100" r="5" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Labels -->
+  <text x="120" y="70" font-size="14" fill="#1f2937" font-family="sans-serif">Traveling Wave</text>
+  <text x="260" y="40" font-size="14" fill="#1f2937" font-family="sans-serif">Lightning Surge</text>
+  <text x="500" y="70" font-size="14" fill="#1f2937" font-family="sans-serif">Surge Arrester</text>
+  <text x="430" y="80" font-size="14" fill="#1f2937" font-family="sans-serif">Reflection Coeff.</text>
+  <text x="150" y="120" font-size="14" fill="#1f2937" font-family="sans-serif">Fault Location</text>
+  <text x="400" y="70" font-size="14" fill="#1f2937" font-family="sans-serif">Ferranti Rise</text>
+  <!-- Caption strip -->
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Traveling Wave Phenomena and Surge Protection in Transmission Lines</text>
+</svg></div>
+  <figcaption>Traveling Wave Phenomena and Surge Protection in Transmission Lines</figcaption>
+</figure>
+
 <p>When a sudden voltage or current change (lightning stroke, switching operation, fault inception) occurs on a transmission line, the disturbance propagates as a traveling wave governed by the telegrapher’s equations. For a lossless line the wave velocity is <strong>v = 1/√(LC)</strong> and the surge impedance is <strong>Z<sub>c</sub> = √(L/C)</strong>. A forward‑traveling voltage wave <strong>V⁺(x‑vt)</strong> and current wave <strong>I⁺ = V⁺/Z<sub>c</sub></strong> meet a discontinuity (line termination, tower, substation) where part is reflected and part transmitted. The reflection coefficient for voltage at a termination of impedance <strong>Z<sub>t</sub></strong> is <strong>Γ = (Z<sub>t</sub> – Z<sub>c</sub>)/(Z<sub>t</sub> + Z<sub>c</sub>)</strong>. An open‑circuit (Z<sub>t</sub> → ∞) yields Γ = +1 (voltage doubles), while a short‑circuit (Z<sub>t</sub> = 0) gives Γ = –1 (voltage cancels).</p>
 <p>Lightning‑induced surges are modelled as a double‑exponential current source <strong>i(t) = I₀(e<sup>–αt</sup> – e<sup>–βt</sup>)</strong> injected at the strike point. The resulting voltage across the line insulation is the convolution of the source with the line’s impulse response. Protection coordination uses surge arresters (metal‑oxide varistors) whose V‑I characteristic follows <strong>V = k·I<sup>α</sup></strong> (α ≈ 0.02–0.05). The arrester is placed at the substation entrance; its protective level must be below the basic insulation level (BIL) of the equipment. The energy absorbed during a surge is <strong>W = ∫ v(t)i(t) dt</strong> and must not exceed the arrester’s rated energy capability.</p>
 <p>Switching surges, especially during line energisation or reclosing, produce lower‑frequency (tens of kHz) overvoltages that can resonate with shunt reactors and transformer magnetising inductance. The Ferranti effect on long, lightly loaded lines raises the receiving‑end voltage to <strong>V<sub>r</sub> = V<sub>s</sub>/cos(βl)</strong>, where <strong>β = ω√(LC)</strong>. Mitigation includes controlled closing (point‑on‑wave switching), pre‑insertion resistors, and shunt reactors sized to limit the voltage rise to ≤ 1.05 p.u. Traveling‑wave‑based fault location uses the arrival time of the first wavefront at both ends: <strong>d = v·(t₁ – t₂)/2</strong>. Modern digital relays sample at ≥ 1 MHz to resolve the wavefront within a few metres.</p>
@@ -858,6 +897,54 @@
 </ul>
 <p>These advanced topics complete the core analytical toolkit required for Paper I and illustrate the depth of understanding examiners expect.</p>
 <h3>Symmetrical Components and Unbalanced Fault Analysis</h3>
+<!-- passage-cartoon:f2bef4250de4 -->
+<figure class="passage-cartoon" data-cartoon="f2bef4250de4">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central Analyzer -->
+  <rect x="200" y="100" width="160" height="120" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Input Unbalanced Phasors (single path with three wavy lines) -->
+  <path d="M14,130 C50,120 80,140 110,130 C140,120 170,140 200,130
+           M14,160 C50,150 80,170 110,160 C140,150 170,170 200,160
+           M14,190 C50,180 80,200 110,190 C140,180 170,200 200,190"
+        fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Output Sequence Networks (single path with three lines) -->
+  <path d="M360,100 L546,100
+           M360,160 L546,160
+           M360,220 L546,220"
+        fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- SLG Fault: Series Connection (top-left) -->
+  <path d="M60,70 h20 v20 h-20 v-20 z
+           M80,80 h20
+           M100,70 h20 v20 h-20 v-20 z
+           M120,80 h20
+           M140,70 h20 v20 h-20 v-20 z"
+        fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- LL Fault: Parallel Connection (top-right) -->
+  <path d="M400,70 h20 v20 h-20 v-20 z
+           M440,70 h20 v20 h-20 v-20 z
+           M400,80 L400,60
+           M460,80 L460,60
+           M400,90 L460,90"
+        fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Grounding Reactor (bottom-left) -->
+  <path d="M80,240 L90,230 L100,240 L110,230 L120,240 L130,230 L140,240"
+        fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Fault Point Symbol (center-right of analyzer) -->
+  <circle cx="360" cy="160" r="6" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="20" y="160" font-size="14" fill="#1f2937" font-family="sans-serif">Unbalanced Phasors</text>
+  <text x="380" y="90" font-size="14" fill="#1f2937" font-family="sans-serif">Positive Sequence</text>
+  <text x="380" y="150" font-size="14" fill="#1f2937" font-family="sans-serif">Negative Sequence</text>
+  <text x="380" y="210" font-size="14" fill="#1f2937" font-family="sans-serif">Zero Sequence</text>
+  <text x="60" y="50" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">SLG: Series</text>
+  <text x="60" y="230" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Grounding Reactor</text>
+  <!-- Section Title Strip -->
+  <text x="280" y="305" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Symmetrical Components &amp; Fault Analysis</text>
+</svg></div>
+  <figcaption>Symmetrical Components and Unbalanced Fault Analysis</figcaption>
+</figure>
+
 <p>The method of symmetrical components decomposes any set of three unbalanced phasors into three balanced sequence sets: positive, negative, and zero sequence. For a three‑phase system with phase voltages <strong>V<sub>a</sub></strong>, <strong>V<sub>b</sub></strong>, <strong>V<sub>c</sub></strong>, the transformation matrix <strong>[A]</strong> with elements 1, a, a² (where a = e<sup>j120°</sup>) yields sequence voltages <strong>V<sub>0</sub></strong>, <strong>V<sub>1</sub></strong>, <strong>V<sub>2</sub></strong>. The inverse transformation reconstructs phase quantities. This decomposition is linear, so network impedances can be represented by separate sequence networks that are only coupled at the fault point.</p>
 <p>For a single line‑to‑ground (SLG) fault on phase a with fault impedance <strong>Z<sub>f</sub></strong>, the sequence networks are connected in series: <strong>V<sub>1</sub> = I<sub>1</sub>(Z<sub>1</sub>+Z<sub>2</sub>+Z<sub>0</sub>+3Z<sub>f</sub>)</strong>. The fault current <strong>I<sub>f</sub> = 3I<sub>1</sub></strong>. For a line‑to‑line (LL) fault between phases b and c, only positive and negative sequences appear, connected in parallel: <strong>I<sub>1</sub> = -I<sub>2</sub> = V<sub>prefault</sub> / (Z<sub>1</sub>+Z<sub>2</sub>+Z<sub>f</sub>)</strong>. <span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="Incorrect sequence network connection for DLG fault; the three sequence networks are connected in parallel, not zero-sequence in parallel with a series combination of positive and negative.">A double line‑to‑ground (DLG) fault connects all three sequence networks in parallel.</span></p>
 <p>Zero‑sequence impedance depends on grounding arrangement. A solidly grounded neutral yields low <strong>Z<sub>0</sub></strong> (typically 0.1–0.3 pu), while an ungrounded or high‑impedance grounded system presents a very high <strong>Z<sub>0</sub></strong>, limiting SLG fault current but causing transient overvoltages. The neutral grounding reactor or resistor is sized to keep the SLG fault current within the capability of the protection scheme (often 25–60 % of three‑phase fault current).</p>
@@ -925,6 +1012,50 @@
 </div>
 
 <h3>Thermal Modeling and Insulation Life Estimation in Electrical Machines</h3>
+<!-- passage-cartoon:bfcac7689688 -->
+<figure class="passage-cartoon" data-cartoon="bfcac7689688">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central stator cross-section -->
+  <rect x="260" y="140" width="40" height="40" stroke="#1f2937" fill="none" stroke-width="3"/>
+  <rect x="255" y="135" width="50" height="50" stroke="#1f2937" fill="none" stroke-width="2.5"/>
+  <rect x="245" y="125" width="70" height="70" stroke="#1f2937" fill="none" stroke-width="2.5"/>
+  <path d="M245,145h70 M245,160h70 M245,175h70" stroke="#1f2937" stroke-width="1.5" fill="none"/>
+  <rect x="230" y="110" width="100" height="100" stroke="#1f2937" fill="none" stroke-width="3"/>
+  <path d="M230,160L210,160 M330,160L350,160" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f2937"/></marker></defs>
+  <!-- Thermometer -->
+  <rect x="355" y="110" width="10" height="100" stroke="#1f2937" fill="none" stroke-width="2.5"/>
+  <circle cx="360" cy="215" r="8" stroke="#1f2937" fill="none" stroke-width="2.5"/>
+  <rect x="357" y="140" width="6" height="70" fill="#1f2937"/>
+  <!-- Hourglass life meter -->
+  <path d="M350,230 L370,230 L365,250 L355,250 Z M355,250 L365,250 L360,270 L350,270 Z" stroke="#1f2937" fill="none" stroke-width="2.5"/>
+  <path d="M352,232 L368,232 L364,248 L356,248 Z" fill="#1f2937"/>
+  <!-- Top-left: IEC class ladder -->
+  <path d="M60,50h80 M60,65h80 M60,80h80 M60,95h80" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Top-right: Arrhenius curve sketch -->
+  <path d="M420,90 C420,90 440,70 460,60 C480,50 500,45 500,45" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M420,40v60 M420,90h80" stroke="#1f2937" stroke-width="1.5" fill="none"/>
+  <!-- Bottom-left: RC network -->
+  <path d="M60,260 L70,260 M70,250 L70,270 M70,260 L80,260 M80,255 L80,265 M80,260 L90,260 M90,250 L90,270 M90,260 L100,260 M100,255 L100,265 M100,260 L110,260 M110,250 L110,270 M110,260 L120,260 M120,255 L120,265 M120,260 L130,260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Bottom-right: FOTS sensor -->
+  <path d="M430,260 Q440,255 450,260 Q460,265 470,260 Q480,255 490,260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="490" cy="260" r="5" fill="#1f2937"/>
+  <rect x="425" y="250" width="75" height="20" stroke="#1f2937" fill="none" stroke-width="2"/>
+  <!-- Caption strip -->
+  <line x1="14" y1="295" x2="546" y2="295" stroke="#1f2937" stroke-width="1.5"/>
+  <!-- Labels -->
+  <text x="260" y="130" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Copper Loss</text>
+  <text x="80" y="130" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">R_th–C_th Network</text>
+  <text x="130" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Class F 155°C</text>
+  <text x="400" y="110" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Hotspot +12°C</text>
+  <text x="360" y="260" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">10°C Rise = ½ Life</text>
+  <text x="280" y="240" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">FOTS Monitor</text>
+  <text x="280" y="310" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Thermal Modeling &amp; Insulation Life</text>
+</svg></div>
+  <figcaption>Thermal Modeling and Insulation Life Estimation in Electrical Machines</figcaption>
+</figure>
+
 <p>The thermal performance of rotating machines and transformers determines both continuous rating and insulation lifetime. The fundamental thermal model is a lumped‑parameter network of thermal resistances <strong>R<sub>th</sub></strong> (K/W) and thermal capacitances <strong>C<sub>th</sub></strong> (J/K). For a stator winding the heat flow path is: copper loss → slot insulation → stator core → frame → cooling medium. The steady‑state temperature rise <strong>Δθ = P<sub>loss</sub>·R<sub>th,total</sub></strong>. Transient temperature follows <strong>θ(t) = θ<sub>final</sub> + (θ<sub>initial</sub> – θ<sub>final</sub>) e<sup>–t/τ</sup></strong> with thermal time constant <strong>τ = R<sub>th</sub>·C<sub>th</sub></strong>. Large machines have multiple time constants (e.g., winding τ ≈ 30–60 min, core τ ≈ 2–4 h).</p>
 <p>Insulation ageing follows the Arrhenius law: <strong>L = L<sub>0</sub>·exp(E<sub>a</sub>/(k·θ))</strong>, where <strong>L</strong> is life at absolute temperature <strong>θ</strong> (K), <strong>E<sub>a</sub></strong> activation energy (≈ 1.1 eV for Class F epoxy‑mica), <strong>k</strong> Boltzmann constant. The IEC 60085 thermal classification assigns a maximum hotspot temperature: Class A 105 °C, Class B 130 °C, Class F 155 °C, Class H 180 °C. A common rule of thumb: every 10 °C rise above the class limit halves the insulation life. For a Class F machine designed for 20 000 h at 155 °C, operating at 165 °C reduces expected life to ≈ 10 000 h.</p>
 <p>Hotspot temperature is higher than the average winding temperature by a gradient <strong>Δθ<sub>hs</sub></strong> that depends on conductor geometry, cooling duct arrangement, and impregnation quality. For form‑wound high‑voltage stator bars, <strong>Δθ<sub>hs</sub></strong> can be 10–15 °C. The total hotspot temperature <strong>θ<sub>hs</sub> = θ<sub>ambient</sub> + Δθ<sub>avg</sub> + Δθ<sub>hs</sub></strong>. Standards (IEC 60034‑1, IEEE 112) require temperature‑rise tests at rated load until thermal equilibrium, with embedded resistance temperature detectors (RTDs) or thermocouples at critical locations.</p>
@@ -938,6 +1069,46 @@
 <p>Ancillary services ensure reliability: frequency regulation (primary, secondary, tertiary), spinning reserve, non‑spinning reserve, voltage support (reactive power capability), and black‑start capability. In many markets these services are co‑optimized with energy in a single market clearing (e.g., PJM, ERCOT). The opportunity cost of providing reserves is captured by the shadow price of the reserve constraint in the UC/ED formulation. Examiners often test the ability to write the KKT conditions for a simple ED with losses, or to explain how a binding transmission constraint splits the system into separate price zones.</p>
 
 <h3>Smart Grid Communication Architectures and IEC 61850 Based Automation</h3>
+<!-- passage-cartoon:f0d0168232a8 -->
+<figure class="passage-cartoon" data-cartoon="f0d0168232a8">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central substation -->
+  <rect x="200" y="100" width="160" height="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="200,100 280,60 360,100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Left merging unit -->
+  <rect x="80" y="150" width="60" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Right IED -->
+  <rect x="420" y="150" width="60" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Top station controller -->
+  <rect x="260" y="30" width="80" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Bottom corporate network -->
+  <rect x="260" y="260" width="80" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- GOOSE arrow -->
+  <line x1="200" y1="160" x2="140" y2="170" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="140,170 150,160 150,180" fill="#1f2937"/>
+  <!-- SMV arrow -->
+  <line x1="360" y1="160" x2="420" y2="170" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="420,170 410,160 410,180" fill="#1f2937"/>
+  <!-- PTP arrow -->
+  <line x1="280" y1="100" x2="300" y2="70" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="300,70 290,80 310,80" fill="#1f2937"/>
+  <!-- PRP/HSR arrow -->
+  <line x1="280" y1="220" x2="300" y2="260" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="300,260 290,250 310,250" fill="#1f2937"/>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="292" width="532" height="14" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="90" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Logical Node</text>
+  <text x="280" y="50" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">PTP Clock</text>
+  <text x="120" y="150" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">GOOSE</text>
+  <text x="440" y="150" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">SMV</text>
+  <text x="280" y="250" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">PRP/HSR</text>
+  <text x="280" y="300" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Smart Grid Communication Architectures and IEC 61850 Based Automation</text>
+</svg></div>
+  <figcaption>Smart Grid Communication Architectures and IEC 61850 Based Automation</figcaption>
+</figure>
+
 <p>The modern substation automation system (SAS) relies on the IEC 61850 standard, which defines an object‑oriented data model, communication services, and configuration language (SCL). The core data model organizes information into Logical Devices (LD), Logical Nodes (LN), Data Objects (DO), and Data Attributes (DA). For example, a circuit breaker is represented by LN <strong>XCBR</strong> with DOs <strong>Pos</strong> (position), <strong>OpCnt</strong> (operation counter), and <strong>Beh</strong> (behaviour). Each DO contains DAs such as <strong>stVal</strong> (status value), <strong>q</strong> (quality), and <strong>t</strong> (timestamp).</p>
 <p>Communication services include Generic Object Oriented Substation Event (GOOSE) for fast peer‑to‑peer signalling (typical latency < 4 ms), Sampled Measured Values (SMV) for streaming digitized analogue data (e.g., 80 samples/cycle per phase), and Manufacturing Message Specification (MMS) for client‑server access to the data model. GOOSE uses multicast Ethernet with a dedicated EtherType (0x88B8) and publishes dataset changes; subscribers filter by APPID. SMV (IEC 61850‑9‑2) transports time‑synchronised current/voltage samples over Ethernet, enabling merging units to replace conventional CT/VT secondary wiring.</p>
 <p>Time synchronisation is critical: IEC 61850 mandates ≤ 1 µs accuracy for SMV and ≤ 4 ms for GOOSE. This is achieved by IEEE 1588 Precision Time Protocol (PTP) with hardware timestamping (PTP‑aware switches) or by IRIG‑B. The substation communication network follows a hierarchical topology: process bus (station bus) at 100 Mbps/1 Gbps connecting merging units, IEDs, and the station controller; a separate corporate network for SCADA/EMS. Redundancy is provided by Parallel Redundancy Protocol (PRP) or High‑availability Seamless Redundancy (HSR) which duplicate frames over two independent LANs, guaranteeing zero recovery time.</p>
@@ -959,6 +1130,34 @@
 <p>Practical issues include parameter errors (line impedances, transformer tap positions), pseudo‑measurements (load forecasts with large variances), and communication latency. Parameter error modeling augments the state vector with uncertain parameters and applies equality constraints via Lagrange multipliers. Pseudo‑measurements are assigned low weights to avoid biasing the estimate. The computational burden for large systems (≥10 000 buses) is mitigated by sparse matrix techniques (LU factorization with minimum degree ordering) and parallel processing across areas.</p>
 
 <h3>Synchronous Generator Excitation System Modeling and Control</h3>
+<!-- passage-cartoon:b7eb8415de20 -->
+<figure class="passage-cartoon" data-cartoon="b7eb8415de20">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <circle cx="280" cy="160" r="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M220,160 H340 M280,100 V220" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="80" y="60" width="80" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="400" y="60" width="80" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="80" y="220" width="80" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="400" y="220" width="80" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="160" y1="80" x2="220" y2="160" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="400" y1="80" x2="340" y2="160" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="120" y1="220" x2="220" y2="220" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="440" y1="220" x2="340" y2="220" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="220,160 210,155 218,149" fill="#1f2937"/>
+  <polygon points="340,160 350,155 342,149" fill="#1f2937"/>
+  <polygon points="220,220 210,215 210,225" fill="#1f2937"/>
+  <polygon points="340,220 350,215 350,225" fill="#1f2937"/>
+  <text x="120" y="50" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">AVR</text>
+  <text x="440" y="50" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Exciter</text>
+  <text x="120" y="210" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">PSS</text>
+  <text x="440" y="210" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Limiters</text>
+  <text x="280" y="80" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Generator</text>
+  <text x="280" y="300" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Synchronous Generator Excitation System Modeling and Control</text>
+</svg></div>
+  <figcaption>Synchronous Generator Excitation System Modeling and Control</figcaption>
+</figure>
+
 <p>The excitation system regulates the field voltage E_fd of a synchronous generator to maintain terminal voltage V_t within prescribed limits and to enhance transient stability. IEEE Std 421.5 defines standard models (Type DC1A, AC1A, ST1A, etc.) that capture the major components: automatic voltage regulator (AVR), exciter, power system stabilizer (PSS), and limiter circuits. The AVR compares V_t with a reference V_ref and processes the error through a PID or lead‑lag compensator; its output drives the exciter, which may be a rotating DC exciter (DC1A), a static thyristor bridge fed from an auxiliary transformer (AC1A), or a brushless excitation system with a rotating rectifier (ST1A).</p>
 <p>The exciter transfer function is typically represented as a first‑order lag: G_ex(s) = K_ex / (1 + s T_ex). The AVR includes a lead‑lag block G_AVR(s) = K_A (1 + s T_A) / (1 + s T_B) and a low‑pass filter for noise attenuation. The PSS adds a supplementary signal ΔV_PSS = K_PSS (s T_w / (1 + s T_w)) ( (1 + s T<sub>1</sub>) / (1 + s T<sub>2</sub>) ) ( (1 + s T<sub>3</sub>) / (1 + s T<sub>4</sub>) ) Δω, where Δω is the speed deviation. Proper tuning of the PSS time constants (T<sub>1</sub>‑T<sub>4</sub>) aligns the compensating torque with the electromechanical mode (0.2‑2 Hz) to damp oscillations.</p>
 <p>Limiters protect the machine: over‑excitation limiter (OEL) reduces E_fd when field current exceeds thermal limits; under‑excitation limiter (UEL) prevents loss of synchronism by enforcing a minimum reactive capability curve (V‑Q diagram). The OEL typically uses a definite‑time or inverse‑time characteristic; the UEL is often implemented as a look‑up table of V_t versus Q. Both limiters feed back into the AVR summing junction, and their interaction with the PSS must be coordinated to avoid limit cycling.</p>

@@ -987,6 +987,38 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <p>Flicker is assessed using the short‑term flicker severity P_st (10 min) and long‑term P_lt (2 h) per IEC 61000‑4‑15. The flicker emission limit for a single customer at the point of common coupling (PCC) is P_st ≤ 1.0. Mitigation includes static var compensators (SVC) or STATCOMs with fast voltage regulation (response < 1 cycle) and, for arc furnaces, series reactors to limit the rate of change of current. In exam questions, candidates may be asked to design a 5th‑harmonic passive filter for a 10 MVA industrial load with 15 % 5th‑harmonic current, compute the required capacitor and reactor values, and verify that the filter does not create parallel resonance with the system impedance at the 7th harmonic.</p>
 
 <h3>High Voltage Insulation Coordination and Surge Protection</h3>
+<!-- passage-cartoon:9e126486e503 -->
+<figure class="passage-cartoon" data-cartoon="9e126486e503">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Transformer -->
+  <rect x="200" y="120" width="160" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="240" y1="120" x2="240" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <line x1="320" y1="120" x2="320" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <!-- Shield wire -->
+  <line x1="150" y1="80" x2="410" y2="80" stroke="#1f2937" stroke-width="3"/>
+  <!-- Lightning bolt -->
+  <polyline points="280,30 260,60 290,60 270,90 300,90 280,100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Surge arrester -->
+  <rect x="380" y="130" width="40" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="380" y1="190" x2="420" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <!-- Protective margin bar -->
+  <line x1="200" y1="220" x2="360" y2="220" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="215" x2="280" y2="225" stroke="#1f2937" stroke-width="3"/>
+  <!-- Arrow from arrester to transformer -->
+  <line x1="380" y1="160" x2="360" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="280" y="70" text-anchor="middle" font-size="14" fill="#1f2937">Shielding Angle</text>
+  <text x="280" y="110" text-anchor="middle" font-size="14" fill="#1f2937">Insulation Coordination</text>
+  <text x="400" y="120" text-anchor="middle" font-size="14" fill="#1f2937">Surge Arrester</text>
+  <text x="280" y="210" text-anchor="middle" font-size="14" fill="#1f2937">Protective Margin</text>
+  <text x="400" y="200" text-anchor="middle" font-size="14" fill="#1f2937">TOV Capability</text>
+  <!-- Caption strip -->
+  <text x="280" y="300" text-anchor="middle" font-size="12" fill="#1f2937">High Voltage Insulation Coordination and Surge Protection</text>
+</svg></div>
+  <figcaption>High Voltage Insulation Coordination and Surge Protection</figcaption>
+</figure>
+
 <p>Insulation coordination ensures that the withstand voltage of equipment exceeds the expected over‑voltages with an appropriate safety margin. The statistical approach uses the 2 % probability of exceedance for switching over‑voltages (V<sub>2%</sub>) and the 0.1 % probability for lightning over‑voltages (V<sub>0.1%</sub>). The protective margin is defined as M = (V<sub>withstand</sub> − V<sub>protective</sub>) / V<sub>protective</sub> × 100 %. For a 400 kV system, the standard lightning impulse withstand voltage (LIWV) is 1425 kV (peak) and the switching impulse withstand voltage (SIWV) is 1050 kV. Surge arresters are selected so that their protective level V<sub>pl</sub> (residual voltage at nominal discharge current) is below the equipment withstand voltage minus the margin.</p>
 <p>Metal‑oxide (ZnO) surge arresters exhibit a highly non‑linear V‑I characteristic: V = K I^α with α ≈ 0.02‑0.05. The energy absorption capability is expressed in kJ/kV of rated voltage. For a 400 kV system, a typical station‑class arrester has a rated voltage U_r = 336 kV (rms), a maximum continuous operating voltage U_c = 272 kV, and a protective level V<sub>pl</sub> ≤ 1100 kV at 10 kA. The arrester must also withstand the temporary over‑voltage (TOV) during single‑line‑to‑ground faults; the TOV capability curve specifies the maximum duration (e.g., 1.2 pu for 10 s, 1.4 pu for 0.1 s).</p>
 <p>Shielding wires and grounding design limit the lightning‑induced over‑voltage on phase conductors. The shielding angle θ_s (typically 20°‑30°) and the tower footing resistance R_f (target ≤ 10 Ω) determine the back‑flashover rate. The electro‑geometric model (EGM) computes the striking distance D_s = 10 I<sup>0.65</sup> (I in kA, D_s in metres) and the probability of a stroke terminating on the phase versus the shield wire. In examinations, candidates may be required to calculate the required arrester rating for a 220 kV substation given a maximum switching over‑voltage of 1.8 pu, select a suitable arrester from a manufacturer’s catalogue, and verify the protective margin against the transformer LIWV of 950 kV.</p>
@@ -1260,6 +1292,26 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 </div>
 
 <h3>Smart Grid Communication Protocols and Cybersecurity</h3>
+<!-- passage-cartoon:e17a652165a6 -->
+<figure class="passage-cartoon" data-cartoon="e17a652165a6">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="200" y="60" width="160" height="200" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <path d="M200,100 H360 M200,140 H360 M200,180 H360 M200,220 H360" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M50,50 h80 v50 h-80 z M90,60 l-10,20 l5,0 l-10,20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M50,200 h80 v30 h-80 z M50,250 h80 v30 h-80 z M90,230 v20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M430,230 A40,40 0 0 1 510,230 M430,230 l0,-10 M470,190 l0,10 M510,230 l0,-10 M470,230 l0,-40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <text x="280" y="302" fill="#fbf7ec" font-size="12" text-anchor="middle" font-family="sans-serif">Smart Grid Communication Protocols and Cybersecurity</text>
+  <text x="30" y="120" fill="#1f2937" font-size="13" font-family="sans-serif">IEC 61850 Stack</text>
+  <text x="380" y="160" fill="#1f2937" font-size="13" font-family="sans-serif">SCADA &amp; DER</text>
+  <text x="280" y="40" fill="#1f2937" font-size="13" font-family="sans-serif">IEC 62351 Security</text>
+  <text x="430" y="80" fill="#1f2937" font-size="13" font-family="sans-serif">PMU Streaming</text>
+  <text x="460" y="250" fill="#1f2937" font-size="13" font-family="sans-serif">Latency Budget</text>
+</svg></div>
+  <figcaption>Smart Grid Communication Protocols and Cybersecurity</figcaption>
+</figure>
+
 <p>The modern smart grid relies on a layered communication architecture defined by IEC 61850 for substation automation, IEC 60870‑5‑104 for SCADA telecontrol, and IEEE 2030.5 (SEP 2.0) for demand‑response and distributed energy resource (DER) management. IEC 61850 uses Manufacturing Message Specification (MMS) over TCP/IP for client‑server services and Generic Object Oriented Substation Event (GOOSE) for fast peer‑to‑peer protection signalling (≤ 4 ms). Sampled Value (SV) streams transport digitised CT/PT data at 4 kHz or 80 samples/cycle for process‑bus applications. The protocol stack maps logical nodes (LN) such as PTOC (overcurrent protection) and MMXU (measurement) to data objects with standardized Common Data Classes (CDC). Cybersecurity is addressed by IEC 62351, which mandates TLS 1.2 for MMS, DTLS for GOOSE/SV, and role‑based access control (RBAC) with X.509 certificates. A typical deployment uses a Public Key Infrastructure (PKI) where each Intelligent Electronic Device (IED) holds a device certificate signed by the utility Certificate Authority (CA). Key management follows the IEC 62351‑9 certificate lifecycle: enrollment, renewal, revocation via CRL/OCSP. For wide‑area monitoring, IEEE C37.118.2 defines the synchrophasor data format (PMU streaming) over UDP with a configurable data rate (30–60 fps). The communication latency budget for wide‑area damping control is ≤ 100 ms round‑trip; therefore, network engineering must guarantee jitter < 10 ms and packet loss < 0.1 %. Intrusion detection systems (IDS) for the substation LAN employ specification‑based rules (e.g., unexpected GOOSE publisher MAC, MMS service outside allowed LN) and anomaly‑based machine‑learning models trained on normal traffic baselines. A defense‑in‑depth strategy includes: (1) physical port security (IEEE 802.1X), (2) VLAN segmentation (control, monitoring, corporate), (3) unidirectional security gateways (data diodes) for historian replication, (4) secure firmware update with signed images and secure boot. The NIST IR 7628 guideline maps these controls to the smart‑grid logical interfaces (e.g., Interface 3 – Substation to Control Center). Regular penetration testing and tabletop exercises validate incident‑response playbooks for scenarios such as GOOSE spoofing or malicious set‑point changes to inverter reactive power.</p>
 
 <h3>Electric Vehicle Grid Integration and Charging Infrastructure</h3>
@@ -1322,6 +1374,42 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <p>Electric vehicle (EV) charging loads are classified by power level: Level 1 (1.4–1.9 kW, 120 V AC), Level 2 (3.7–22 kW, 240/400 V AC), and DC fast charging (50–350 kW, 400–800 V DC). The aggregate impact on distribution networks is assessed through stochastic charging models that consider arrival time, state‑of‑charge (SOC) distribution, and driver behaviour. A common Monte‑Carlo framework samples daily mileage from a log‑normal distribution (μ = 40 km, σ = 15 km), converts to energy demand using vehicle efficiency (0.15 kWh/km), and assigns charging start times based on a time‑of‑use price signal. Voltage deviation ΔV at a feeder node is approximated by ΔV ≈ (P<sub>EV</sub>R + Q<sub>EV</sub>X) / V<sub>nom</sub>, where R and X are the cumulative feeder resistance and reactance. For a 10 kV feeder with R = 0.5 Ω, X = 0.8 Ω, a cluster of 50 kW EV chargers (PF = 0.95) causes ΔV ≈ (50 000×0.5 + 16 400×0.8)/10 000 ≈ 3.8 % voltage rise – exceeding the ±2.5 % statutory limit. Mitigation strategies include: (1) smart charging algorithms that shift load to off‑peak (valley‑filling) using model‑predictive control (MPC) with a 15‑minute resolution; (2) vehicle‑to‑grid (V2G) where the EV battery provides ancillary services (frequency regulation, voltage support) under ISO 15118‑20 communication; (3) on‑site stationary storage (BESS) co‑located with DC fast chargers to shave peak demand; (4) phase‑balancing of single‑phase Level 2 chargers across the three phases to reduce neutral current and voltage unbalance factor (VUF). The IEC 61851‑1 standard defines the control pilot (CP) duty‑cycle signalling for maximum current: 10 % duty = 6 A, 50 % = 32 A, 96 % = 80 A. For DC charging, IEC 61851‑23/24 and CHAdeMO/CCS‑2 protocols manage the handshake, insulation monitoring, and dynamic current limit based on battery temperature. Grid codes increasingly require EV chargers to provide reactive power capability (Q = ±0.33 P<sub>rated</sub>) and ride‑through during voltage dips (LVRT) down to 0.2 p.u. for 150 ms. Planning studies use the probabilistic load flow (PLF) with EV penetration scenarios up to 30 % of residential customers, evaluating transformer loss‑of‑life using the IEEE C57.91 hot‑spot temperature model.</p>
 
 <h3>Power System Reliability Assessment Using Monte Carlo Simulation</h3>
+<!-- passage-cartoon:5e58748ef058 -->
+<figure class="passage-cartoon" data-cartoon="5e58748ef058">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central Monte Carlo wheel -->
+  <circle cx="280" cy="160" r="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="280" y1="80" x2="280" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <line x1="200" y1="160" x2="360" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="280,70 270,90 290,90" fill="#1f2937"/>
+  <text x="280" y="50" text-anchor="middle" font-size="14" fill="#1f2937">Monte Carlo</text>
+  <!-- Top-left: SAIDI gauge -->
+  <rect x="50" y="50" width="100" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="100" y1="90" x2="100" y2="70" stroke="#1f2937" stroke-width="3"/>
+  <text x="100" y="40" text-anchor="middle" font-size="14" fill="#1f2937">SAIDI</text>
+  <!-- Top-right: Variance Reduction toolbox -->
+  <rect x="410" y="50" width="100" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="420" y="60" width="20" height="20" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="450" y="60" width="20" height="20" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="480" y="60" width="20" height="20" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="460" y="40" text-anchor="middle" font-size="14" fill="#1f2937">Variance Reduction</text>
+  <!-- Bottom-left: Parallel Compute cluster -->
+  <rect x="50" y="210" width="100" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="60" y="220" width="30" height="40" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="100" y="220" width="30" height="40" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="100" y="200" text-anchor="middle" font-size="14" fill="#1f2937">Parallel Compute</text>
+  <!-- Bottom-right: Birnbaum Importance magnifying glass -->
+  <circle cx="500" cy="240" r="25" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="520" y1="260" x2="540" y2="280" stroke="#1f2937" stroke-width="3"/>
+  <text x="500" y="200" text-anchor="middle" font-size="14" fill="#1f2937">Birnbaum Importance</text>
+  <!-- Caption strip -->
+  <rect x="14" y="286" width="532" height="20" fill="#1f2937" opacity="0.1"/>
+  <text x="280" y="300" text-anchor="middle" font-size="12" fill="#1f2937">Power System Reliability Assessment Using Monte Carlo Simulation</text>
+</svg></div>
+  <figcaption>Power System Reliability Assessment Using Monte Carlo Simulation</figcaption>
+</figure>
+
 <p>Reliability indices such as SAIDI (System Average Interruption Duration Index), SAIFI (System Average Interruption Frequency Index), and CAIDI (Customer Average Interruption Duration Index) are computed from component failure/repair statistics. In a Monte Carlo simulation (MCS), each component (line, transformer, generator, breaker) is modelled by a two‑state continuous‑time Markov process with failure rate λ (failures/year) and repair rate μ (repairs/year). The mean time to failure (MTTF) = 1/λ, mean time to repair (MTTR) = 1/μ. For a 100‑bus test system, typical λ values: overhead line 0.2 f/yr·km, underground cable 0.05 f/yr·km, transformer 0.01 f/yr, circuit breaker 0.02 f/yr. The simulation proceeds by generating a chronological sequence of state transitions for all components over a simulated period (e.g., 10⁶ years). At each event, a load‑flow or DC‑OPF determines which loads are curtailed. The load point reliability indices are accumulated: LOLP (Loss‑of‑Load Probability) = Σ (load curtailed × duration) / (total load × total time). Variance reduction techniques accelerate convergence: (1) antithetic variates – pair each random stream with its complement; (2) importance sampling – bias sampling toward rare high‑impact contingencies (e.g., double‑circuit outage) and weight results by likelihood ratio; (3) stratified sampling – divide the state space by number of simultaneous outages. The required number of simulation years N to achieve a coefficient of variation (COV) ≤ 5 % for SAIDI is estimated by N ≈ (σ/μ)² / COV², where σ/μ is the relative standard deviation observed in a pilot run (typically 0.3–0.5). For a pilot COV of 0.4, N ≈ (0.4)² / 0.05² = 64 years of simulated time per replication; with 1000 replications the total simulated years = 64 000. Parallel execution on a compute cluster reduces wall‑clock time. Results are presented as probability density functions (PDF) of SAIDI, enabling risk‑based investment decisions (e.g., adding a tie‑line reduces the 95‑th percentile SAIDI from 120 min to 85 min). Sensitivity analysis identifies critical components by computing the Birnbaum importance measure I<sub>B</sub> = ∂SAIDI/∂λ<sub>i</sub>.</p>
 
 <ul>
@@ -1368,6 +1456,56 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <p>In the Indian grid context, the integration of large‑scale solar parks in Rajasthan and Gujarat has shifted the voltage stability envelope: midday light‑load conditions create high voltage at the receiving end, while evening ramp‑up coincides with reduced reactive support from solar inverters operating at unity power factor. Grid codes now mandate that inverter‑based resources provide dynamic reactive current injection (e.g., 0.2 p.u. per 0.1 p.u. voltage dip) and participate in voltage ride‑through. Studies on the 765 kV corridor linking the western region to the northern load centres show that a 5 % increase in shunt reactor switching flexibility can raise the voltage collapse margin by 150 MW.</p>
 
 <h3>Power System Restoration and Black Start Strategies</h3>
+<!-- passage-cartoon:9461add4606f -->
+<figure class="passage-cartoon" data-cartoon="9461add4606f">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central restoration column -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <rect x="260" y="180" width="40" height="50" rx="2"/> <!-- Layer 1 base -->
+    <rect x="260" y="130" width="40" height="50" rx="2"/> <!-- Layer 2 middle -->
+    <rect x="260" y="80" width="40" height="50" rx="2"/>  <!-- Layer 3 top -->
+    <line x1="280" y1="180" x2="280" y2="130" stroke-dasharray="4,4"/>
+    <line x1="280" y1="130" x2="280" y2="80" stroke-dasharray="4,4"/>
+  </g>
+  <!-- Group A: Black-start units (top-left) -->
+  <g transform="translate(80,100)" stroke="#1f2937" stroke-width="2.5" fill="none">
+    <path d="M-40,0 L-20,-20 L0,0 L-20,20 Z"/> <!-- hydro turbine -->
+    <circle cx="0" cy="0" r="12"/> <!-- gas turbine -->
+    <path d="M40,-15 L40,15 M35,0 L55,0 M35,-10 L55,-10 M35,10 L55,10"/> <!-- diesel gen -->
+  </g>
+  <text x="120" y="70" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Black‑Start Units</text>
+  <!-- Group B: Cranking path (top-right) -->
+  <g transform="translate(440,100)" stroke="#1f2937" stroke-width="2.5" fill="none">
+    <path d="M-60,0 L-30,-15 L0,0 L30,-15 L60,0"/> <!-- transmission line -->
+    <rect x="-65" y="-10" width="10" height="20"/> <!-- breaker left -->
+    <rect x="55" y="-10" width="10" height="20"/>  <!-- breaker right -->
+  </g>
+  <text x="440" y="70" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Cranking Path</text>
+  <!-- Group C: Sync gauge (bottom-left) -->
+  <g transform="translate(120,260)" stroke="#1f2937" stroke-width="2.5" fill="none">
+    <circle cx="0" cy="0" r="25"/>
+    <line x1="0" y1="0" x2="0" y2="-20" stroke-width="3"/> <!-- needle -->
+  </g>
+  <text x="120" y="230" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Layer 2: Sync</text>
+  <!-- Group D: Load pickup (bottom-right) -->
+  <g transform="translate(440,260)" stroke="#1f2937" stroke-width="2.5" fill="none">
+    <path d="M-40,-10 L-40,10 L-20,10 L-20,-5 L-30,-5 L-30,-10 Z"/> <!-- hospital cross -->
+    <rect x="0" y="-10" width="20" height="20"/> <!-- factory -->
+    <path d="M40,10 L40,-10 L60,-10 L60,10 Z M50,-10 L50,-20"/> <!-- house -->
+  </g>
+  <text x="440" y="230" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Layer 3: Loads</text>
+  <!-- Central layer labels -->
+  <text x="280" y="215" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Layer 1: Skeleton</text>
+  <text x="280" y="165" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Layer 2: Sync</text>
+  <text x="280" y="115" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Layer 3: Loads</text>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <text x="280" y="301" font-family="sans-serif" font-size="13" fill="#fbf7ec" text-anchor="middle">Power System Restoration and Black Start Strategies</text>
+</svg></div>
+  <figcaption>Power System Restoration and Black Start Strategies</figcaption>
+</figure>
+
 <p>Restoration after a total or partial blackout is a multi‑stage process that must respect generator cranking capability, transmission path energisation limits, and load‑pickup sequencing. The <strong>black‑start plan</strong> identifies a set of designated black‑start units (typically hydro turbines with fast start‑up, gas turbines with auxiliary power, or dedicated diesel generators) that can energise a <em>cranking path</em> — a minimal network connecting the black‑start unit to a non‑black‑start unit and subsequently to critical loads. The plan is validated through time‑domain simulation of the restoration sequence, modelling generator governor and exciter response, transformer inrush currents, and the dynamic behaviour of induction‑motor‑dominated loads.</p>
 <p>A practical restoration algorithm proceeds in three layers. <strong>Layer 1</strong> establishes a <em>skeleton network</em> by closing breakers along the cranking path while keeping all non‑essential loads disconnected. Voltage and frequency are monitored; the black‑start unit’s governor is placed in isochronous mode to maintain frequency within ±0.5 Hz. <strong>Layer 2</strong> brings online additional generation (e.g., combined‑cycle plants) by synchronising them to the skeleton network using synchro‑check relays. Each synchronisation step requires the voltage magnitude, phase angle, and frequency difference to be within prescribed windows (typically ΔV ≤ 5 %, Δθ ≤ 10°, Δf ≤ 0.1 Hz). <strong>Layer 3</strong> performs <em>load restoration</em> in priority order: essential services (hospitals, water supply), then industrial blocks, finally residential feeders. Load pickup is staggered to avoid exceeding the spinning reserve of the online generators; a common rule is to limit each step to 10‑15 % of the available generation capacity.</p>
 <p>Modern restoration tools incorporate <strong>decision‑support systems</strong> that use real‑time SCADA/WAMS data to suggest the next feasible switching operation, evaluate the impact on transient stability, and compute the remaining restoration time. The IEEE Std 1547‑2018 amendment for inverter‑based resources also defines <em>grid‑forming</em> capability, allowing solar‑plus‑storage plants to act as black‑start sources by providing voltage and frequency references without an external grid. Pilot projects in the southern region have demonstrated that a 50 MW battery energy storage system with grid‑forming control can energise a 220 kV substation and support the start‑up of a 200 MW gas turbine within 8 minutes, reducing the overall restoration time by 30 % compared with conventional diesel‑only black‑start.</p>
@@ -1430,6 +1568,40 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <p>Recent advances integrate <strong>adaptive (multi‑stage) decision making</strong>, where investment decisions can be revised at intermediate years as uncertainty resolves. This leads to a multi‑stage stochastic program solved by decomposition algorithms such as Benders or progressive hedging. In the Indian context, the National Electricity Plan uses a scenario‑based TEP with three demand growth trajectories (low, medium, high) and four renewable penetration pathways. The 2022‑2032 plan identified 12 GW of additional 765 kV corridors and 8 GW of HVDC links as robust across all scenarios, while the 400 kV reinforcement in the north‑eastern region was only justified under the high‑renewable scenario. Sensitivity analysis on the discount rate (6‑9 %) shows that the optimal corridor set is stable for discount rates up to 8 %; beyond that, the model defers capital‑intensive HVDC projects in favour of cheaper AC upgrades.</p>
 
 <h3>Cyber‑Physical Security of Power Grids</h3>
+<!-- passage-cartoon:00b2f2ac3af5 -->
+<figure class="passage-cartoon" data-cartoon="00b2f2ac3af5">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Substation -->
+  <rect x="240" y="120" width="80" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- IT cloud -->
+  <ellipse cx="150" cy="80" rx="40" ry="25" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- OT gear -->
+  <circle cx="410" cy="240" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Attacker head -->
+  <circle cx="80" cy="190" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Attacker body -->
+  <path d="M80,198 L80,230 M60,210 L100,210 M80,230 L60,260 M80,230 L100,260" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Firewall -->
+  <rect x="260" y="80" width="40" height="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Segmentation line -->
+  <line x1="280" y1="30" x2="280" y2="290" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="6,4"/>
+  <!-- Attack vectors -->
+  <line x1="80" y1="190" x2="150" y2="80" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="80" y1="190" x2="410" y2="240" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Labels -->
+  <text x="280" y="100" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">IT/OT Convergence</text>
+  <text x="310" y="140" font-size="14" font-family="sans-serif" fill="#1f2937">IEC 62351</text>
+  <text x="80" y="170" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Industroyer Threat</text>
+  <text x="350" y="260" font-size="14" font-family="sans-serif" fill="#1f2937">Defense-in-Depth</text>
+  <text x="280" y="278" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">CSMS Mandate</text>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="20" fill="#1f2937"/>
+  <text x="280" y="304" font-size="14" font-family="sans-serif" fill="#fbf7ec" text-anchor="middle">Cyber‑Physical Security of Power Grids</text>
+</svg></div>
+  <figcaption>Cyber‑Physical Security of Power Grids</figcaption>
+</figure>
+
 <p>The convergence of information technology (IT) and operational technology (OT) in modern substations creates a cyber‑physical attack surface that can compromise both data integrity and physical equipment. The reference architecture follows the IEC 62351 series, which secures communication protocols (IEC 61850 GOOSE, MMS, Sampled Values) through TLS‑based authentication, role‑based access control, and message integrity codes. However, legacy devices often lack firmware update mechanisms, leaving them vulnerable to known exploits such as the <em>Industroyer</em> malware that targets IEC 60870‑5‑104.</p>
 <p>Threat modelling for power grids adopts the <strong>MITRE ATT&CK for ICS</strong> framework, mapping adversary tactics (initial access, execution, persistence, impact) to specific grid assets. A high‑impact scenario is the manipulation of <strong>protective relay settings</strong> via compromised engineering workstations, causing intentional mis‑coordination and cascading tripping. Another vector is the injection of false data into the state estimator (false data injection attack, FDI) that bypasses bad‑data detection by exploiting the sparsity of the measurement Jacobian. Countermeasures include <em>physics‑aware anomaly detection</em> (e.g., checking Kirchhoff’s laws on PMU streams), <em>moving target defence</em> (periodic randomisation of communication paths), and <em>hardware‑rooted trust</em> (TPM‑based secure boot for RTUs).</p>
 <p>Regulatory guidance in many jurisdictions now mandates a <strong>Cyber Security Management System (CSMS)</strong> aligned with IEC 62443, requiring asset inventory, zone‑and‑conduit segmentation, patch management, and incident response drills. The 2021 Colonial Pipeline ransomware event, though not a grid asset, accelerated the adoption of <em>IT/OT air‑gap verification</em> and <em>supply‑chain risk assessment</em> for critical components such as transformer monitoring sensors and phasor measurement units. In practice, a defence‑in‑depth posture combines network segmentation (DMZ between corporate and control networks), application whitelisting on historian servers, and continuous monitoring of IEC 61850 GOOSE traffic for replay or timing anomalies.</p>
