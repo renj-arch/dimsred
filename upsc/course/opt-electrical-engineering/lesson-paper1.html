@@ -521,6 +521,40 @@
 <p>In multi‑machine stability simulations, each generator is represented by its transient reactance <strong>X<sub>d</sub>′</strong> behind an internal voltage <strong>E<sub>q</sub>′</strong> that is assumed constant during the study period (classical model). The AVR is omitted for first‑swing studies; its inclusion requires the full flux‑decay model with <strong>X<sub>d</sub>″</strong>, <strong>X<sub>d</sub>′</strong>, and <strong>X<sub>d</sub></strong> plus the exciter dynamics. Understanding which model to apply for a given time frame is a decisive skill.</p>
 
 <h3>Power System Protection: Distance Relaying Principles, Zones, and Coordination</h3>
+<!-- passage-cartoon:817387a530e1 -->
+<figure class="passage-cartoon" data-cartoon="817387a530e1">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Relay box -->
+  <rect x="50" y="140" width="80" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Measuring tape -->
+  <line x1="130" y1="170" x2="500" y2="170" stroke="#1f2937" stroke-width="3"/>
+  <!-- Zone ticks -->
+  <line x1="200" y1="165" x2="200" y2="175" stroke="#1f2937" stroke-width="3"/>
+  <line x1="320" y1="165" x2="320" y2="175" stroke="#1f2937" stroke-width="3"/>
+  <line x1="440" y1="165" x2="440" y2="175" stroke="#1f2937" stroke-width="3"/>
+  <!-- Mho circle -->
+  <circle cx="150" cy="100" r="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Blinder vertical line -->
+  <line x1="150" y1="220" x2="150" y2="280" stroke="#1f2937" stroke-width="3"/>
+  <!-- Communication relays -->
+  <rect x="400" y="250" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="480" y="250" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Lightning bolt -->
+  <path d="M440 250 L440 265 L460 250 L440 280" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip -->
+  <rect x="14" y="286" width="532" height="20" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <!-- Labels -->
+  <text x="200" y="150" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Zone 1 Instant</text>
+  <text x="320" y="150" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Zone 2 Delayed</text>
+  <text x="440" y="150" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Zone 3 Backup</text>
+  <text x="150" y="40" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Mho Circle</text>
+  <text x="150" y="210" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Blinder</text>
+  <text x="280" y="300" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Power System Protection: Distance Relaying</text>
+</svg></div>
+  <figcaption>Power System Protection: Distance Relaying Principles, Zones, and Coordination</figcaption>
+</figure>
+
 <p>Distance relays measure the impedance <strong>Z = V/I</strong> at the relay location and compare it with a set reach impedance. Because the line impedance is proportional to length, the relay can determine the electrical distance to a fault. The basic characteristic is a circle (or quadrilateral) on the R‑X plane centered at the origin for a simple impedance relay, or offset for a mho relay. The mho characteristic is inherently directional: its circle passes through the origin, so it only operates for faults in the forward direction (positive real impedance). This self‑directional property eliminates the need for a separate directional element.</p>
 <p>Protection schemes employ three zones. Zone 1 is set to 80–85 % of the protected line impedance and operates instantaneously (no intentional time delay). The underreach avoids overreach due to errors in CT/VT ratios, line parameter uncertainty, and fault resistance. Zone 2 covers the remaining 15–20 % of the line plus 120–150 % of the next line section, with a typical time delay of 0.3–0.5 s to coordinate with the downstream Zone 1. Zone 3 provides backup for the remote bus and adjacent lines, set to 120–150 % of the total impedance up to the farthest bus, with a longer delay (0.6–1.0 s). The coordination time interval (CTI) between zones must exceed the circuit‑breaker operating time plus relay reset time plus a safety margin (usually 0.2–0.3 s).</p>
 <p>Fault resistance (arc resistance) shifts the measured impedance along the real axis, potentially causing underreach for mho relays. Quadrilateral (polygon) characteristics mitigate this by providing a wide resistive reach independent of the reactive reach. Modern numerical relays implement load‑encroachment blinder characteristics to prevent mal‑operation during heavy load conditions where the load impedance falls inside the mho circle. The blinder is a vertical line on the R‑X plane that blocks operation for impedances with a phase angle less than a set value (typically 30°).</p>
@@ -652,16 +686,129 @@
 </div>
 
 <h3>Power Quality: Harmonic Distortion, Flicker, and Mitigation Techniques</h3>
+<!-- passage-cartoon:95cbef5764cd -->
+<figure class="passage-cartoon" data-cartoon="95cbef5764cd">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central PCC circle -->
+  <circle cx="280" cy="150" r="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Distorted sine wave -->
+  <path d="M 100 150 C 160 100 220 200 280 150 C 340 100 400 200 460 150" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Passive filter -->
+  <rect x="60" y="180" width="80" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 70 210 Q 80 200 90 210 Q 100 220 110 210 Q 120 200 130 210" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="100" y1="190" x2="100" y2="230" stroke="#1f2937" stroke-width="3"/>
+  <line x1="110" y1="190" x2="110" y2="230" stroke="#1f2937" stroke-width="3"/>
+  <!-- Active filter -->
+  <rect x="420" y="180" width="80" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 460 190 L 440 230 L 480 230 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Flicker lamp -->
+  <circle cx="280" cy="50" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 275 50 Q 277 48 280 50 Q 283 52 285 50" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- SVC/STATCOM -->
+  <rect x="240" y="240" width="80" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Labels -->
+  <text x="100" y="80" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">THD ≤5%</text>
+  <text x="460" y="80" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Pst ≤1.0</text>
+  <text x="30" y="200" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="start">Passive Filter</text>
+  <text x="500" y="200" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="end">Active Filter</text>
+  <text x="280" y="230" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">SVC/STATCOM</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="280" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="295" font-size="12" fill="#fbf7ec" font-family="sans-serif" text-anchor="middle">Power Quality: Harmonic Distortion, Flicker, Mitigation</text>
+</svg></div>
+  <figcaption>Power Quality: Harmonic Distortion, Flicker, and Mitigation Techniques</figcaption>
+</figure>
+
 <p>Power quality (PQ) standards (IEEE 519, IEC 61000‑4‑30) quantify voltage and current deviations that affect sensitive equipment. Total Harmonic Distortion (THD) for voltage is defined as <strong>THD<sub>V</sub> = √(∑<sub>h=2</sub>^∞ V<sub>h</sub>²) / V₁</strong>, where <strong>V<sub>h</sub></strong> is the RMS value of the h‑th harmonic. IEEE 519‑2022 recommends <strong>THD<sub>V</sub> ≤ 5 %</strong> at the point of common coupling (PCC) for systems ≤ 69 kV, with individual harmonic limits decreasing with harmonic order (e.g., 3 % for 3rd, 1.5 % for 5th). Current distortion limits depend on the short‑circuit ratio (I<sub>SC</sub>/I<sub>L</sub>) at the PCC.</p>
 <p>Flicker is the perception of light‑intensity fluctuation caused by rapid voltage magnitude changes. The short‑term flicker severity <strong>P<sub>st</sub></strong> (10‑min observation) and long‑term <strong>P<sub>lt</sub></strong> (2‑h) are computed per IEC 61000‑4‑15 using a statistical model of a 60 W incandescent lamp. A typical planning limit is <strong>P<sub>st</sub> ≤ 1.0</strong>. Major flicker sources are arc furnaces, rolling mills, and large motor starts. Mitigation includes static VAR compensators (SVC) or static synchronous compensators (STATCOM) that inject reactive power to stabilise the PCC voltage, and series dynamic voltage restorers (DVR) for deep sags.</p>
 <p>Harmonic mitigation strategies are classified as passive, active, and hybrid. Passive filters (single‑tuned, double‑tuned, high‑pass C‑type) provide low‑impedance paths for targeted harmonics (typically 5th, 7th, 11th, 13th) and also supply reactive power. Their design must avoid parallel resonance with system inductance; the filter tuning frequency is set slightly below the harmonic (e.g., 4.7 × fundamental for the 5th) to account for component tolerances. Active power filters (APF) based on voltage‑source converters inject compensating currents <strong>i<sub>comp</sub> = i<sub>load</sub> – i<sub>fund</sub></strong> using instantaneous p‑q theory or synchronous reference frame (dq) control. Hybrid filters combine a small passive filter for the dominant low‑order harmonics with an APF for the remaining spectrum, reducing the APF rating. Examiners frequently test the calculation of filter reactor and capacitor values: <strong>L = 1/(ω<sub>h</sub>²C)</strong> and the required kVAR rating <strong>Q = V²·ω<sub>h</sub>C</strong>.</p>
 
 <h3>Renewable Energy Grid Integration: Fault Ride‑Through, Voltage Support, and Grid Codes</h3>
+<!-- passage-cartoon:db01e1ed49bc -->
+<figure class="passage-cartoon" data-cartoon="db01e1ed49bc">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central wind turbine -->
+  <line x1="280" y1="200" x2="280" y2="120" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <line x1="280" y1="120" x2="280" y2="80" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <line x1="280" y1="120" x2="240" y2="150" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <line x1="280" y1="120" x2="320" y2="150" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <!-- Solar panel -->
+  <rect x="180" y="180" width="60" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Grid line -->
+  <line x1="14" y1="160" x2="546" y2="160" stroke="#1f2937" stroke-width="3" stroke-dasharray="8,4"/>
+  <!-- Voltage-time graph (top-left) -->
+  <line x1="60" y1="60" x2="60" y2="160" stroke="#1f2937" stroke-width="2"/>
+  <line x1="60" y1="160" x2="210" y2="160" stroke="#1f2937" stroke-width="2"/>
+  <path d="M60,160 C90,160 110,100 140,100 C170,100 190,160 210,160" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Converter block (top-right) -->
+  <rect x="350" y="60" width="150" height="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Crowbar circuit (bottom-left) -->
+  <rect x="60" y="200" width="100" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="60" y1="230" x2="160" y2="230" stroke="#1f2937" stroke-width="3"/>
+  <!-- Grid code book (bottom-right) -->
+  <rect x="400" y="200" width="100" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="450" y1="200" x2="450" y2="280" stroke="#1f2937" stroke-width="2"/>
+  <!-- Labels -->
+  <text x="80" y="40" font-family="sans-serif" font-size="14" fill="#1f2937">Fault Ride-Through</text>
+  <text x="480" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="end">Voltage Support</text>
+  <text x="80" y="280" font-family="sans-serif" font-size="14" fill="#1f2937">Grid Code</text>
+  <text x="480" y="280" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="end">Reactive Current</text>
+  <!-- Caption strip -->
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Renewable Energy Grid Integration</text>
+</svg></div>
+  <figcaption>Renewable Energy Grid Integration: Fault Ride‑Through, Voltage Support, and Grid Codes</figcaption>
+</figure>
+
 <p>Modern grid codes (e.g., ENTSO‑E NC RfG, IEEE 1547‑2018, Indian CEA Grid Code) mandate that wind turbines and solar PV plants remain connected during voltage dips and provide dynamic voltage support. Fault Ride‑Through (FRT) capability is defined by a voltage‑versus‑time profile: the plant must stay online for voltage dips down to 0 p.u. for up to 150 ms (type 1) or 0.2 p.u. for 620 ms (type 2). During the fault, the converter must inject reactive current proportional to the voltage dip, typically <strong>I<sub>q</sub> = K·(1 – V<sub>pcc</sub>)</strong> with <strong>K = 2 p.u.</strong> (i.e., 2 p.u. reactive current at zero voltage). This “voltage‑dependent current injection” helps the grid voltage recover.</p>
 <p>For doubly‑fed induction generators (DFIG), the rotor‑side converter (RSC) and grid‑side converter (GSC) are coordinated. The RSC controls rotor currents to maintain torque, while the GSC regulates DC‑link voltage and supplies reactive power. During a severe dip, the RSC may saturate; a crowbar circuit across the rotor windings protects the converter but temporarily turns the DFIG into an induction machine consuming reactive power. Modern “crowbar‑less” designs use advanced current‑limiting control to avoid this loss of voltage support.</p>
 <p>Full‑scale converter (Type 4) wind turbines and PV inverters inherently provide FRT because the machine is decoupled from the grid. Their control hierarchy includes: (i) an outer DC‑link voltage loop (for wind) or MPPT loop (for PV); (ii) an inner current loop in dq frame with bandwidth 10–20 × fundamental; (iii) a voltage‑support overlay that modifies the q‑axis current reference during faults. Grid codes also require frequency support: active power reduction/injection according to a droop characteristic <strong>ΔP = –K<sub>f</sub>·Δf</strong> (typical K<sub>f</sub> = 2–5 %/Hz). Compliance testing uses hardware‑in‑the‑loop (HIL) simulators to verify the response time (< 20 ms) and the magnitude of reactive current injection.</p>
 
 <h3>High Voltage Engineering: Insulation Coordination, Breakdown Mechanisms, and Testing Standards</h3>
+<!-- passage-cartoon:ae606b72f830 -->
+<figure class="passage-cartoon" data-cartoon="ae606b72f830">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320" width="560" height="320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Equipment -->
+  <rect x="220" y="60" width="120" height="180" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Insulation layers -->
+  <rect x="230" y="70" width="100" height="160" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="240" y="80" width="80" height="140" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Surge arrester -->
+  <line x1="360" y1="60" x2="360" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="350,60 370,60 360,40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Lightning bolt -->
+  <polyline points="200,30 220,50 200,70 240,80 220,100 260,90 240,110 280,100 260,120 300,110 280,130 320,120 300,140 340,130 320,150 360,140 360,60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Gas breakdown -->
+  <circle cx="80" cy="100" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="70" y1="90" x2="90" y2="110" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="70" y1="110" x2="90" y2="90" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Solid breakdown -->
+  <polyline points="80,190 80,220 70,250 90,250 80,220" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Liquid breakdown -->
+  <circle cx="460" cy="220" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="450" y1="210" x2="470" y2="230" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="450" y1="230" x2="470" y2="210" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Test waveforms -->
+  <polyline points="440,80 450,70 460,80 470,90 480,80" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <polyline points="440,110 450,100 460,110 470,120 480,110" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <polyline points="440,140 450,130 460,140 470,150 480,140" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Caption strip -->
+  <rect x="14" y="276" width="532" height="30" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <text x="280" y="294" font-size="12" fill="#1f2937" text-anchor="middle">High Voltage Engineering: Insulation Coordination, Breakdown Mechanisms, and Testing Standards</text>
+  <!-- Labels -->
+  <text x="280" y="30" font-size="14" fill="#1f2937" text-anchor="middle">Insulation Coordination</text>
+  <text x="380" y="150" font-size="14" fill="#1f2937" text-anchor="middle">Surge Arrester</text>
+  <text x="80" y="70" font-size="14" fill="#1f2937" text-anchor="middle">Gas Breakdown</text>
+  <text x="80" y="190" font-size="14" fill="#1f2937" text-anchor="middle">Solid Breakdown</text>
+  <text x="460" y="190" font-size="14" fill="#1f2937" text-anchor="middle">Liquid Breakdown</text>
+  <text x="460" y="55" font-size="14" fill="#1f2937" text-anchor="middle">Testing Standards</text>
+</svg></div>
+  <figcaption>High Voltage Engineering: Insulation Coordination, Breakdown Mechanisms, and Testing Standards</figcaption>
+</figure>
+
 <p>Insulation coordination ensures that the withstand voltage of equipment exceeds the expected overvoltages with an adequate safety margin. The statistical approach defines a withstand voltage <strong>V<sub>w</sub></strong> (e.g., 95 % probability of withstand) and a protective level <strong>V<sub>p</sub></strong> of the surge arrester such that <strong>V<sub>p</sub> ≤ 0.8·V<sub>w</sub></strong>. The coordination margin accounts for the arrester’s residual voltage, lead‑length inductance, and the steepness of the incoming surge. IEC 60071‑1/2 and IEEE 1313 provide the methodology.</p>
 <p>Breakdown mechanisms differ by insulation type. In gases (air, SF₆), the Townsend avalanche criterion <strong>α·d = ln(1+1/γ)</strong> (α = first ionisation coefficient, d = gap distance, γ = secondary emission coefficient) predicts the breakdown field. For uniform fields, air breaks down at ≈ 30 kV/cm (dry, 1 atm); SF₆ at ≈ 90 kV/cm. In non‑uniform fields (rod‑plane), the inception voltage for corona is given by Peek’s formula <strong>V<sub>c</sub> = m·g₀·r·ln(4h/r)</strong> where <strong>m</strong> is surface factor, <strong>g₀</strong> = 30 kV/cm, <strong>r</strong> conductor radius, <strong>h</strong> gap. Solid dielectrics (XLPE, paper‑oil) fail by thermal breakdown (runaway heating) or electrical treeing; the time‑to‑breakdown follows an inverse power law <strong>t<sub>bd</sub> = A·E<sup>–n</sup></strong> (E = electric field). Liquid insulation breakdown is governed by bubble formation and streamer propagation; the V‑t characteristic is often expressed as <strong>V = k·t<sup>–1/3</sup></strong>.</p>
 <p>Standard withstand tests include: (i) Power‑frequency withstand (dry and wet) – 1 min at 1.1 × rated voltage; (ii) Lightning impulse withstand – 1.2/50 µs wave, three positive and three negative shots, 90 % withstand probability; (iii) Switching impulse withstand – 250/2500 µs wave for voltages ≥ 300 kV; (iv) Partial discharge (PD) measurement – IEC 60270, detection sensitivity ≤ 5 pC for GIS. Type tests are performed on prototype units; routine tests on each manufactured piece include PD and power‑frequency withstand. Condition monitoring uses dissolved gas analysis (DGA) for oil‑filled transformers (key gases: H₂, CH₄, C₂H₂, C₂H₄, CO, CO₂) and online PD mapping for cables and GIS. The Duval triangle and Rogers ratios interpret DGA patterns to discriminate thermal faults (≤ 300 °C), high‑temperature thermal faults (> 700 °C), and arcing.</p>
