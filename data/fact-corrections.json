@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-27T11:02:47.911Z",
+ "updatedAt": "2026-11-27T11:37:01.368Z",
  "corrections": [
   {
    "file": "clat/course/english/lesson-grammar.html",
@@ -7021,6 +7021,55 @@
    "correction": "including a historic bronze in men’s hockey",
    "problem": "India's hockey gold at Tokyo 2020 is incorrect; it was bronze.",
    "appliedAt": "2026-11-27T11:02:47.911Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-profit-loss.html",
+   "quote": "Rearranging yields gross sales = (remittance + commission + expenses – advance) ÷ (1 – commission rate) when commission is a percentage of gross sales.",
+   "correction": "Rearranging yields gross sales = (remittance + expenses – advance) ÷ (1 – commission rate) when commission is a percentage of gross sales.",
+   "problem": "The formula incorrectly includes commission in the numerator; commission is a percentage of gross sales and is unknown, making the formula circular.",
+   "appliedAt": "2026-11-27T11:24:58.653Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-profit-loss.html",
+   "quote": "which is simply (new price – cost) × (new quantity – old quantity) – (old price – cost) × (old quantity – new quantity).",
+   "correction": "which is simply (new price – cost) × new quantity – (old price – cost) × old quantity.",
+   "problem": "The formula does not correctly compute marginal profit; it omits the term (new price - old price) × old quantity.",
+   "appliedAt": "2026-11-27T11:24:59.441Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-percentage.html",
+   "quote": "Under SLM, a fixed percentage of the original cost is depreciated each year. If cost = C, useful life = n years, residual value = R, annual depreciation = (C – R) / n. The percentage rate = (1/n) × 10",
+   "correction": "Under SLM, a fixed amount is depreciated each year. Annual depreciation = (C – R) / n. The depreciation rate on the depreciable amount is (1/n) × 100%.",
+   "problem": "SLM charges a fixed amount each year, not a fixed percentage of original cost (unless residual value is zero). The percentage rate is (1/n)×100% applied to the depreciable amount (C-R), not multiplied by (C-R).",
+   "appliedAt": "2026-11-27T11:25:08.371Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-time-work.html",
+   "quote": "The time to fill (or empty) the tank is the reciprocal of the net rate, provided the net rate is positive for filling and negative for emptying.",
+   "correction": "The time to fill or empty is the reciprocal of the absolute value of the net rate.",
+   "problem": "The reciprocal of a negative net rate is negative, but time cannot be negative; the time to empty is the reciprocal of the absolute value of the net rate.",
+   "appliedAt": "2026-11-27T11:28:41.013Z"
+  },
+  {
+   "file": "ibps-po/course/quant/lesson-time-work.html",
+   "quote": "The required time is then the capacity divided by the net hourly contribution.",
+   "correction": "The required time is the capacity divided by the absolute net hourly contribution.",
+   "problem": "If the net hourly contribution is negative, this yields negative time; time should be capacity divided by the absolute value of the net hourly contribution.",
+   "appliedAt": "2026-11-27T11:28:41.775Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "the pair becomes uniquely (18, 30) or (30, 18)",
+   "correction": "the pair becomes uniquely (30, 36) or (36, 30)",
+   "problem": "The example claims that with gcd=6, lcm=180, and 'consecutive multiples of 6', the pair is (18,30). But gcd(18,30)=6 and lcm(18,30)=90, not 180. The correct pair is (30,36) or (36,30).",
+   "appliedAt": "2026-11-27T11:37:00.915Z"
+  },
+  {
+   "file": "ibps-po/course/reasoning/lesson-data-sufficiency.html",
+   "quote": "two statements providing two distinct terms (e.g., a₂ = 7, a₃ = 15) create a system that uniquely determines r, d, and a₁",
+   "correction": "three statements providing three distinct terms (e.g., a₁ = 3, a₂ = 7, a₃ = 15) create a system that uniquely determines r, d, and a₁",
+   "problem": "A first-order linear recurrence aₙ₊₁ = r aₙ + d has three unknowns (a₁, r, d). Two terms (a₂, a₃) give only two equations, which is insufficient to uniquely determine all three unknowns. Three terms (or a₁ plus two terms) are needed.",
+   "appliedAt": "2026-11-27T11:37:01.368Z"
   }
  ]
 }
