@@ -248,6 +248,58 @@
 </ul>
 <div class="tip-box"><div class="tip-title">Mains strategy</div><div class="tip-text">Electrical Engineering answers: draw circuit diagrams, show step-by-step derivation of circuit equations, state assumptions clearly, quote IS codes (IS 456 for RCC, IS 800 for steel, IS 1893 for seismic design, IS 10262 for mix design), quote standard values (electrical resistivity of copper 1.72×10⁻⁸ Ω·m, copper density 8.96 g/cm³, electrical resistivity of aluminium 2.83×10⁻⁸ Ω·m, aluminium density 2.7 g/cm³).</div></div>
 <h3>Power Electronics: The DC Chopper Circuit Family</h3>
+<!-- passage-cartoon:fb88f4a55f01 -->
+<figure class="passage-cartoon" data-cartoon="fb88f4a55f01">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- DC source line -->
+  <path d="M60 100 H500" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="40" y="85" width="20" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="45" y1="85" x2="45" y2="115" stroke="#1f2937" stroke-width="4"/>
+  <line x1="55" y1="85" x2="55" y2="95" stroke="#1f2937" stroke-width="4"/>
+  <!-- Chopper switch (knife) -->
+  <path d="M280 60 L280 140" stroke="#1f2937" stroke-width="4" stroke-linecap="round"/>
+  <path d="M265 60 L295 60 L280 45 Z" stroke="#1f2937" stroke-width="3" fill="#1f2937"/>
+  <!-- Pulsed output -->
+  <path d="M280 140 H320 V120 H360 V140 H400 V120 H440 V140 H480" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="square"/>
+  <!-- Inductive load -->
+  <path d="M480 140 L500 140 M500 140 Q510 130 520 140 Q530 150 540 140 Q550 130 560 140" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Flyback diode -->
+  <path d="M500 120 L520 100 L500 80 M520 100 L540 100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="540" y1="95" x2="540" y2="105" stroke="#1f2937" stroke-width="3"/>
+  <!-- Four topology icons -->
+  <!-- Buck (step-down) -->
+  <path d="M140 190 V210 M130 210 L150 210 M140 190 L130 200 L150 200" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Boost (step-up) -->
+  <path d="M420 210 V190 M410 190 L430 190 M420 210 L410 200 L430 200" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Buck-Boost -->
+  <path d="M140 250 V230 M130 230 L150 230 M140 250 L130 240 L150 240 M140 250 V270 M130 270 L150 270" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Cuk (capacitor transfer) -->
+  <rect x="405" y="235" width="15" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="425" y="235" width="15" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="420" y1="250" x2="425" y2="250" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Inverter H-bridge -->
+  <rect x="220" y="265" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="260" y="265" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="220" y="300" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="260" y="300" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="235" y1="265" x2="235" y2="250" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="275" y1="265" x2="275" y2="250" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- PWM sine wave -->
+  <path d="M320 265 Q330 250 340 265 Q350 280 360 265 Q370 250 380 265 Q390 280 400 265" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="40" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">DC Chopper</text>
+  <text x="280" y="70" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Duty Cycle δ</text>
+  <text x="280" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Buck Boost Buck-Boost Cuk</text>
+  <text x="510" y="115" text-anchor="start" font-family="sans-serif" font-size="12" fill="#1f2937">Flyback Diode</text>
+  <text x="280" y="260" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">PWM Inverter</text>
+  <!-- Caption strip -->
+  <rect x="14" y="292" width="532" height="18" fill="#1f2937"/>
+  <text x="280" y="305" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#fbf7ec">Power Electronics: The DC Chopper Circuit Family</text>
+</svg></div>
+  <figcaption>Power Electronics: The DC Chopper Circuit Family</figcaption>
+</figure>
+
 <p>The study of power electronics in Paper II shifts focus from linear control (amplifiers, analog circuits) to switching devices that convert energy at high frequencies. The core syllabus area here is the <strong>DC Chopper</strong>, which acts as a variable DC voltage source. Unlike a transformer which changes AC voltage levels, a chopper chops a fixed DC input into a varying average output using semiconductor switches (BJT, MOSFET, IGBT). The fundamental operation relies on the concept of duty cycle (δ = t<sub>on</sub>/T), where T is the switching period.</p>
 <p>The standard reference for this domain is <em>Bernard K. Bose, Power Electronics</em>, which details the topologies extensively. A student must master four primary chopper configurations: Step-down (Buck), Step-up (Boost), Step-up-Step-down (Buck-Boost), and Cuk converters. Each has distinct voltage transfer ratios and polarity characteristics. For instance, in a Buck converter, the output voltage V_o is given by V_o = δ V_s, where V_s is the source voltage. Crucially, the load current must be continuous for these simple topologies to function as intended; if the load is highly resistive and frequency low, discontinuous conduction mode (DCM) occurs, altering the transfer ratio.</p>
 <p>A critical mechanism often tested is the <strong>flyback diode</strong> (or freewheeling diode). When the switch opens, the inductive load tries to maintain current flow. The voltage across the inductor reverses polarity, forward-biasing the diode. Current then circulates through the load and diode, bypassing the switch. This prevents high-voltage spikes that would destroy the switch (arcing). In modern designs using IGBTs or MOSFETs, this diode is often an intrinsic body diode or a fast recovery Schottky diode to minimize switching losses.</p>
@@ -363,6 +415,43 @@
 <p>Examiners often ask for the design of an LLC converter given input voltage range, output power, and desired efficiency. The steps: (1) select resonant frequency <strong>f_r</strong> (typically 100–200 kHz), (2) choose <strong>L_r</strong> and <strong>C_r</strong> to set <strong>Q</strong> for the required gain range, (3) determine <strong>L_m</strong> to set the no‑load gain, (4) verify ZVS condition <strong>I<sub>Lr,peak</sub> > I<sub>magnetizing</sub></strong> at minimum load, (5) calculate component stresses (peak voltage on switches, RMS current in L_r). A common trap is to ignore the effect of transformer parasitic capacitance on the resonant frequency; always include the effective <strong>C_r</strong> = C_r,external + C_oss,primary + C_oss,secondary reflected.</p>
 
 <h3>Orthogonal Frequency Division Multiplexing and MIMO Fundamentals</h3>
+<!-- passage-cartoon:716557ac1259 -->
+<figure class="passage-cartoon" data-cartoon="716557ac1259">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central OFDM symbol -->
+  <rect x="220" y="120" width="120" height="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Subcarriers -->
+  <line x1="240" y1="125" x2="240" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="260" y1="125" x2="260" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="280" y1="125" x2="280" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="300" y1="125" x2="300" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- High-rate stream arrow -->
+  <line x1="50" y1="160" x2="220" y2="160" stroke="#1f2937" stroke-width="4"/>
+  <!-- MIMO antennas -->
+  <circle cx="460" cy="130" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="460" cy="190" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="520" cy="130" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="520" cy="190" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Spatial streams -->
+  <line x1="470" y1="130" x2="510" y2="130" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="470" y1="190" x2="510" y2="190" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Cyclic prefix -->
+  <rect x="220" y="90" width="120" height="25" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="5,5"/>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="280" y="80" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">OFDM Symbol</text>
+  <text x="280" y="55" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Cyclic Prefix</text>
+  <text x="360" y="160" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="start">Subcarriers</text>
+  <text x="460" y="110" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">MIMO Antennas</text>
+  <text x="280" y="215" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">PAPR Challenge</text>
+  <!-- Section title -->
+  <text x="280" y="300" font-size="12" fill="white" font-family="sans-serif" text-anchor="middle">Orthogonal Frequency Division Multiplexing and MIMO Fundamentals</text>
+</svg></div>
+  <figcaption>Orthogonal Frequency Division Multiplexing and MIMO Fundamentals</figcaption>
+</figure>
+
 <p>Orthogonal Frequency Division Multiplexing (OFDM) splits a high‑rate data stream into <strong>N</strong> parallel low‑rate subcarriers spaced by <strong>Δf = 1 / T_u</strong>, where <strong>T_u</strong> is the useful symbol duration. Orthogonality is maintained because each subcarrier completes an integer number of cycles over <strong>T_u</strong>, making the inner product of different subcarriers zero. A cyclic prefix (CP) of length <strong>T_cp</strong> ≥ channel delay spread converts linear convolution into circular convolution, eliminating inter‑symbol interference (ISI) and inter‑carrier interference (ICI) provided the channel is time‑invariant over one OFDM symbol. The overhead factor is <strong>η = T_u / (T_u + T_cp)</strong>; typical values are 1/4 or 1/8.</p>
 <p>Peak‑to‑Average Power Ratio (PAPR) is a major drawback: the time‑domain OFDM signal is the sum of many independent subcarriers, leading to a high PAPR (≈ 10–12 dB for large N). This forces the power amplifier to operate with large back‑off, reducing efficiency. Techniques to reduce PAPR include clipping and filtering, selected mapping (SLM), partial transmit sequences (PTS), and tone reservation. In exams, you may be asked to compute the complementary cumulative distribution function (CCDF) of PAPR for a given N and compare the reduction achieved by SLM with <strong>U</strong> phase sequences.</p>
 <p>Multiple‑Input Multiple‑Output (MIMO) exploits spatial diversity and multiplexing. For a narrowband flat‑fading channel with <strong>N_t</strong> transmit and <strong>N_r</strong> receive antennas, the channel matrix <strong>H</strong> (size N_r × N_t) has singular values <strong>σ_i</strong>. The capacity with perfect channel state information at the receiver (CSIR) and equal power allocation is <strong>C = Σ<sub>i=1</sub><sup>r</sup> log₂ (1 + (ρ / N_t) σ_i²)</strong> where <strong>r = rank(H)</strong> and <strong>ρ</strong> is the average SNR. With channel state information at the transmitter (CSIT), water‑filling across eigenmodes maximizes capacity. Spatial multiplexing transmits independent streams on the strongest eigenmodes; diversity schemes (e.g., Alamouti space‑time block code for 2×1) achieve full diversity order <strong>N_t N_r</strong> without CSIT.</p>
@@ -384,6 +473,26 @@
 </ul>
 <p>Mastering these advanced topics and their associated pitfalls will significantly improve problem‑solving accuracy in the examination.</p>
 <h3>Power System Stability and FACTS Devices</h3>
+<!-- passage-cartoon:b5bf0bbca709 -->
+<figure class="passage-cartoon" data-cartoon="b5bf0bbca709">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <polyline points="280,80 150,240 410,240 280,80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="60" y="160" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="440" y="160" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="250" y="30" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="14" y="280" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="60" text-anchor="middle" font-size="14" fill="#1f2937">Rotor Angle</text>
+  <text x="120" y="240" text-anchor="end" font-size="14" fill="#1f2937">Voltage</text>
+  <text x="440" y="240" text-anchor="start" font-size="14" fill="#1f2937">Frequency</text>
+  <text x="55" y="175" text-anchor="end" font-size="14" fill="#1f2937">SVC</text>
+  <text x="505" y="175" text-anchor="start" font-size="14" fill="#1f2937">STATCOM</text>
+  <text x="280" y="25" text-anchor="middle" font-size="14" fill="#1f2937">UPFC</text>
+  <text x="280" y="300" text-anchor="middle" font-size="14" fill="#fbf7ec">Power System Stability and FACTS Devices</text>
+</svg></div>
+  <figcaption>Power System Stability and FACTS Devices</figcaption>
+</figure>
+
 <p>Power system stability is classified into rotor angle stability, voltage stability, and frequency stability. Rotor angle stability concerns the ability of synchronous machines to remain in synchronism after a disturbance; it is further divided into transient stability (large disturbances, first few seconds) and small‑signal stability (low‑frequency oscillations, 0.1–2 Hz). Voltage stability relates to the ability of the network to maintain acceptable voltage profiles under load increase or contingency; the nose‑point of the PV curve marks the voltage collapse boundary. Frequency stability depends on the balance between generation and load and is governed by primary, secondary, and tertiary control loops.</p>
 <p>Flexible AC Transmission Systems (FACTS) provide fast, controllable reactive power support and power flow regulation. The Static VAR Compensator (SVC) uses thyristor‑controlled reactors (TCR) and thyristor‑switched capacitors (TSC) to inject or absorb reactive power with a response time of 20–40 ms. The Static Synchronous Compensator (STATCOM) employs a voltage‑source converter (VSC) with a DC capacitor, delivering continuous reactive current independent of system voltage, and can also provide active power if an energy storage element is added. The Unified Power Flow Controller (UPFC) combines a series VSC and a shunt VSC sharing a common DC link, enabling independent control of real and reactive power flow on a transmission line. The Interline Power Flow Controller (IPFC) links multiple series converters through a common DC bus, allowing power exchange among several lines.</p>
 <p>In transient stability studies, the equal‑area criterion gives a quick assessment: the accelerating area (integral of mechanical power minus electrical power during fault) must be smaller than the decelerating area after fault clearance. FACTS devices enlarge the decelerating area by boosting post‑fault electrical power. For small‑signal stability, eigenvalue analysis of the linearised system identifies poorly damped inter‑area modes; a properly tuned Power System Stabiliser (PSS) or a STATCOM with supplementary damping controller adds positive damping torque. Voltage stability margin is quantified by the loading margin to the saddle‑node bifurcation; SVC/STATCOM placement at weak buses (high participation factors in the Jacobian singular vector) yields the greatest improvement.</p>

@@ -363,6 +363,40 @@ The scenario describes a classic case of <em>Transient Instability</em>. When a 
 <p>Candidates should allocate study time proportionally, but also recognise that high‑scoring questions often integrate two or three topics. Practising combined problems — e.g., designing a lead‑lag compensator for a generator excitation system — builds the cross‑domain fluency the paper rewards.</p>
 
 <h3>Syllabus Mapping &amp; Weightage Analysis</h3>
+<!-- passage-cartoon:45d0ae38ee19 -->
+<figure class="passage-cartoon" data-cartoon="45d0ae38ee19">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central balance scale -->
+  <line x1="280" y1="100" x2="280" y2="220" stroke="#1f2937" stroke-width="3"/>
+  <line x1="180" y1="100" x2="380" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <line x1="180" y1="100" x2="180" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <line x1="380" y1="100" x2="380" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <rect x="160" y="160" width="40" height="10" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="360" y="160" width="40" height="10" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="165" y="135" width="30" height="25" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="365" y="135" width="30" height="25" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Paper I / Paper II overlap -->
+  <rect x="100" y="30" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="340" y="30" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <path d="M220 50 L340 50 M225 45 L220 50 L225 55 M335 45 L340 50 L335 55" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Syllabus document -->
+  <rect x="30" y="80" width="100" height="70" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Weightage matrix spreadsheet -->
+  <rect x="430" y="80" width="100" height="70" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption strip -->
+  <rect x="14" y="280" width="532" height="25" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="180" y="125" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Transient Stability (30)</text>
+  <text x="380" y="125" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Digital Logic (7.5)</text>
+  <text x="280" y="90" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Priority = F×M/D</text>
+  <text x="280" y="25" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Paper I/II Overlap</text>
+  <text x="480" y="70" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Weightage Matrix</text>
+  <text x="280" y="297" text-anchor="middle" font-size="14" fill="white" font-family="sans-serif">Syllabus Mapping Weightage Analysis</text>
+</svg></div>
+  <figcaption>Syllabus Mapping Weightage Analysis</figcaption>
+</figure>
+
 <p>A systematic mapping of the official syllabus to past question papers reveals recurring patterns that can guide prioritisation. The UPSC notification lists the syllabus in broad headings; however, the depth required for each sub‑topic varies. For instance, “Power System Stability” appears as a single line but routinely generates 15‑20 marks through swing‑equation derivations, equal‑area criterion applications, and small‑signal stability analysis. Conversely, “Digital Signal Processing” is mentioned but rarely exceeds a single 5‑mark question on FIR/IIR filter basics.</p>
 <p>To construct a personal weightage matrix, list every sub‑topic from the notification, then tag each with three attributes: (1) Frequency — how many times it appeared in the last ten years; (2) Marks Potential — maximum marks a single question on that sub‑topic has carried; (3) Conceptual Difficulty — subjective rating based on standard textbook coverage. A simple spreadsheet can then compute a priority score = Frequency × Marks Potential / Difficulty. Topics scoring highest (e.g., Symmetrical Components, Root Locus, PWM Inverters) deserve the most rigorous preparation, including multiple derivations and numerical variations.</p>
 <p>Another useful mapping is the “Paper‑I vs Paper‑II overlap”. Electromagnetic Theory and Electrical Machines from Paper I underpin many Power System and Control System problems (e.g., synchronous machine modelling for stability studies). Explicitly linking these overlaps in notes prevents duplicated effort and reinforces the unified physics behind the curriculum.</p>
@@ -676,6 +710,50 @@ Conclusion: The loop gain is far below the threshold; the 12‑bit ADC quantisat
 <p>The modular multilevel converter (MMC) has become the de‑facto topology for high‑voltage direct current (HVDC) transmission and for interfacing large‑scale offshore wind farms. Each phase leg consists of an upper and lower arm, each arm containing N sub‑modules (SMs) — typically half‑bridge (HB) or full‑bridge (FB) cells. The arm voltage is the sum of the inserted SM capacitor voltages, allowing the converter to synthesize a near‑sinusoidal staircase waveform with low total harmonic distortion (THD) even at high voltage levels. The key control challenge is capacitor voltage balancing: the average capacitor voltage in each arm must track the reference V<sub>dc</sub>/2N while the instantaneous voltages differ due to circulating currents. The circulating current i<sub>circ</sub> = (i<sub>upper</sub> + i<sub>lower</sub>)/2 contains a dominant second‑harmonic component at twice the fundamental frequency, which is suppressed by a proportional‑resonant (PR) controller tuned at 2ω<sub>0</sub>. The arm energy balancing controller distributes the total arm energy equally among SMs using a sorting algorithm that selects the SMs with the highest (for insertion) or lowest (for bypass) capacitor voltages each switching period. For HVDC, the MMC operates with a DC‑link voltage of ±320 kV to ±640 kV and N ≈ 200–300 SMs per arm. The sub‑module capacitor rating is typically 10–20 kV, giving a total stored energy of several megajoules per phase. In renewable integration, the MMC can provide grid‑forming capability: the converter controls the AC‑side voltage magnitude and frequency directly, enabling black‑start and weak‑grid operation. The control architecture then includes a virtual synchronous machine (VSM) loop that emulates inertia and damping. Examination questions often ask for the derivation of the arm voltage equation v<sub>arm</sub> = (N<sub>ins</sub>/N) V<sub>dc</sub>/2 + v<sub>circ</sub>, the expression for the second‑harmonic circulating current amplitude I<sub>2h</sub> = (V<sub>ac</sub> / 2ωL<sub>arm</sub>) · (m/2) where m is the modulation index, and the sorting‑algorithm complexity O(N log N) per control cycle.</p>
 
 <h3>Distance Protection Coordination Using Impedance‑Based Relay Settings</h3>
+<!-- passage-cartoon:cda524a3676a -->
+<figure class="passage-cartoon" data-cartoon="cda524a3676a">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+
+  <!-- Central R‑X diagram: three mho circles -->
+  <circle cx="280" cy="160" r="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="70" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Fault‑resistance line -->
+  <line x1="280" y1="160" x2="350" y2="230" stroke="#1f2937" stroke-width="3"/>
+
+  <!-- Load‑encroachment quadrilateral -->
+  <rect x="400" y="120" width="80" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Left transmission line with towers and relays -->
+  <polygon points="70,190 80,160 90,190" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="170,190 180,160 190,190" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="80" y1="160" x2="180" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <rect x="75" y="150" width="10" height="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="175" y="150" width="10" height="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+
+  <!-- Right relay symbol -->
+  <rect x="460" y="145" width="30" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polyline points="465,155 475,170 465,185" stroke="#1f2937" stroke-width="2" fill="none"/>
+
+  <!-- Bottom caption line -->
+  <line x1="14" y1="280" x2="546" y2="280" stroke="#1f2937" stroke-width="1"/>
+
+  <!-- Labels -->
+  <text x="230" y="110" font-size="12" fill="#1f2937" font-family="sans-serif">Zone‑1</text>
+  <text x="360" y="80" font-size="12" fill="#1f2937" font-family="sans-serif">Zone‑2</text>
+  <text x="390" y="270" font-size="12" fill="#1f2937" font-family="sans-serif">Zone‑3</text>
+  <text x="315" y="195" font-size="12" fill="#1f2937" font-family="sans-serif">Fault‑R line</text>
+  <text x="400" y="110" font-size="12" fill="#1f2937" font-family="sans-serif">Load encroachment</text>
+
+  <!-- Section title -->
+  <text x="280" y="300" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Distance Protection Coordination Using Impedance‑Based Relay Settings</text>
+</svg></div>
+  <figcaption>Distance Protection Coordination Using Impedance‑Based Relay Settings</figcaption>
+</figure>
+
 <p>Distance relays protect transmission lines by measuring the apparent impedance Z<sub>app</sub> = V/I at the relay location and comparing it with preset reach settings. For a line of length L with series impedance Z<sub>L</sub> = R + jX, the Zone‑1 reach is typically set at 80 % of Z<sub>L</sub> to avoid over‑reach due to fault‑resistance and CT/PT errors. Zone‑2 is set at 120 % of Z<sub>L</sub> (or 100 % of the adjacent line impedance) with a time delay of 0.3–0.5 s, providing backup for the remote bus. Zone‑3 covers the remote bus and a portion of the next line, often set at 150 % of Z<sub>L</sub> with a 0.8–1.0 s delay. Coordination between adjacent relays requires that the Zone‑2 reach of the sending‑end relay does not exceed the Zone‑1 reach of the receiving‑end relay plus the impedance of the intervening line section. Mathematically, Z<sub>2,send</sub> ≤ Z<sub>1,recv</sub> + Z<sub>line,inter</sub>. The presence of fault resistance R<sub>f</sub> shifts the measured impedance along a line of slope R<sub>f</sub>/X<sub>L</sub> on the R‑X diagram, potentially causing under‑reach for high‑resistance earth faults. Modern relays employ load‑encroachment characteristics (quadrilateral or lens) to prevent mal‑operation during heavy load conditions where the load impedance falls inside the mho circle. The quadrilateral characteristic defines separate resistive (R<sub>set</sub>) and reactive (X<sub>set</sub>) reaches, allowing a larger resistive coverage without sacrificing reactive selectivity. For series‑compensated lines, the apparent impedance seen by the relay can become capacitive during sub‑synchronous resonance; a supplementary sub‑synchronous protection element (frequency‑based) is added. In exam solutions, draw the R‑X diagram showing Zone‑1, Zone‑2, Zone‑3 mho circles, the load‑encroachment boundary, and the fault‑resistance line. State the coordination inequality and compute the required Zone‑2 reach for a 200 km line with Z<sub>L</sub> = 0.05 + j0.4 Ω/km and an adjacent line of 150 km.</p>
 
 <h3>Electromagnetic Compatibility Requirements for Power‑Electronics Installations</h3>
@@ -827,6 +905,48 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 </div>
 
 <h3>Renewable Energy Integration and Grid Code Compliance</h3>
+<!-- passage-cartoon:cbf59fee1bcc -->
+<figure class="passage-cartoon" data-cartoon="cbf59fee1bcc">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Grid Code box -->
+  <rect x="200" y="20" width="160" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Voltage dip profile -->
+  <path d="M100,200 Q280,100 460,200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Fault Ride-Through bridge -->
+  <rect x="180" y="110" width="200" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Wind turbine -->
+  <line x1="80" y1="200" x2="80" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="100" x2="120" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="100" x2="50" y2="70" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="100" x2="50" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <!-- Solar panel -->
+  <rect x="480" y="180" width="50" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="495" y1="180" x2="495" y2="220" stroke="#1f2937" stroke-width="2"/>
+  <line x1="510" y1="180" x2="510" y2="220" stroke="#1f2937" stroke-width="2"/>
+  <!-- Crowbar circuit -->
+  <path d="M270,240 L280,230 L290,240 L300,230 L310,240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Reactive current injection arrow -->
+  <path d="M505,200 L505,150" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M500,155 L505,150 L510,155" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Harmonic emission waves -->
+  <path d="M180,80 Q230,60 280,80 Q330,100 380,80" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <path d="M180,60 Q230,40 280,60 Q330,80 380,60" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Droop control line -->
+  <line x1="400" y1="260" x2="500" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption strip -->
+  <rect x="14" y="276" width="532" height="30" fill="#1f2937"/>
+  <text x="280" y="295" font-size="14" fill="#fbf7ec" text-anchor="middle" font-family="sans-serif">Renewable Energy Integration and Grid Code Compliance</text>
+  <!-- Labels -->
+  <text x="280" y="100" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Fault Ride-Through</text>
+  <text x="280" y="260" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Crowbar</text>
+  <text x="510" y="140" font-size="14" fill="#1f2937" text-anchor="start" font-family="sans-serif">Reactive Current</text>
+  <text x="280" y="50" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Harmonic Limits</text>
+  <text x="450" y="270" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Droop Control</text>
+</svg></div>
+  <figcaption>Renewable Energy Integration and Grid Code Compliance</figcaption>
+</figure>
+
 <p>Grid codes mandate that wind farms and solar photovoltaic (PV) plants remain connected during voltage dips (fault ride‑through, FRT) and provide active/reactive power support. The typical FRT profile requires the plant to withstand a voltage dip to 0 % for 150 ms, 15 % for 620 ms, and recover to 90 % within 1.5 s. For a doubly‑fed induction generator (DFIG), the rotor‑side converter (RSC) controls rotor currents to limit the stator current during the dip, while the grid‑side converter (GSC) maintains the DC‑link voltage. The crowbar circuit across the rotor windings activates when the rotor current exceeds a threshold (typically 1.5 pu), shorting the rotor and converting the DFIG into a squirrel‑cage machine that can survive the dip without converter damage.</p>
 <p>For full‑converter wind turbines (Type‑4) and PV inverters, the VSC can inject reactive current I_q = k (V<sub>nom</sub> − V<sub>pcc</sub>) during the dip, where k is the voltage‑support gain prescribed by the grid code (often 2 pu/pu). The active current reference is reduced proportionally to the voltage dip depth to avoid over‑current. After fault clearance, a controlled active power ramp‑up (typically 10 %/s) prevents sudden power surges. Harmonic emission limits follow IEC 61000‑3‑6 for equipment connected to the transmission network; the 5th, 7th, 11th, and 13th current harmonics must stay below 1.5 %, 1.0 %, 0.8 %, and 0.6 % of rated current respectively. An LCL filter on the inverter output is tuned to attenuate switching‑frequency sidebands (typically 2‑10 kHz) while keeping the resonance frequency between 10 × fundamental and 0.5 × switching frequency.</p>
 <p>Frequency support requirements include synthetic inertia (ΔP = K<sub>inertia</sub>·df/dt) and primary frequency response (ΔP = K<sub>droop</sub>·Δf). For a 100 MW wind farm, a typical droop setting is 4 % (K<sub>droop</sub> = 2.5 MW/0.1 Hz). The controller must coordinate the kinetic energy release from the turbine rotor (for DFIG or direct‑drive) with the converter current limits. Examination problems often ask to size the crowbar resistance for a given DFIG rating, compute the required reactive current injection for a 30 % voltage dip, or verify harmonic compliance of a 5 MW PV inverter with a given LCL filter design.</p>
@@ -852,12 +972,83 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <li>Selecting a surge arrester based only on its rated voltage without verifying the TOV capability against the system’s maximum temporary over‑voltage duration.</li>
 </ul>
 <h3>Wide‑Area Monitoring and Control Using Phasor Measurement Units</h3>
+<!-- passage-cartoon:043b56abfdee -->
+<figure class="passage-cartoon" data-cartoon="043b56abfdee">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- India outline -->
+  <path d="M 100,200 L 280,80 L 460,200 L 380,280 L 180,280 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- PMUs -->
+  <circle cx="100" cy="200" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="80" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="460" cy="200" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- PDC -->
+  <rect x="260" y="145" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- GPS Satellite -->
+  <path d="M 268,40 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 M 256,40 L 240,30 M 304,40 L 320,30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Oscillation wave -->
+  <path d="M 440,160 Q 460,140 480,160 Q 500,180 520,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Voltage gauge -->
+  <path d="M 240,260 A 40,40 0 0,1 320,260" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 280,260 L 280,230" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Control lever -->
+  <path d="M 60,160 L 100,160 M 80,160 L 80,120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Spokes -->
+  <path d="M 280,145 L 280,52" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M 300,160 L 440,160" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M 280,175 L 280,240" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M 260,160 L 100,160" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="60" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">PMU</text>
+  <text x="300" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">GPS Sync</text>
+  <text x="330" y="160" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">PDC</text>
+  <text x="480" y="130" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">Oscillation</text>
+  <text x="280" y="280" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">Voltage Stability</text>
+  <text x="40" y="160" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">RAS Control</text>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <text x="280" y="298" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">Wide-Area Monitoring and Control Using Phasor Measurement Units</text>
+</svg></div>
+  <figcaption>Wide‑Area Monitoring and Control Using Phasor Measurement Units</figcaption>
+</figure>
+
 <p>Phasor Measurement Units (PMUs) provide time‑synchronised voltage and current phasors at rates of 30 to 60 samples per second, enabling a real‑time view of the power‑system state across a wide geographic area. The core of a wide‑area monitoring system (WAMS) is the phasor data concentrator (PDC) that aligns data streams from multiple PMUs using the IEEE C37.118 synchrophasor standard. Time synchronisation is achieved through GPS receivers with a typical accuracy of ±1 µs, which translates to a phase‑angle error of less than 0.02° at 50 Hz. The PDC forwards the aligned data to applications such as oscillation detection, voltage‑stability assessment, and remedial‑action schemes (RAS).</p>
 <p>Oscillation detection relies on modal analysis of the measured phasors. A common technique is the Prony method or the Matrix Pencil algorithm applied to a sliding window of 10–20 seconds of data. The identified modes are characterised by frequency (0.1–2 Hz for inter‑area oscillations), damping ratio, and mode shape. A damping ratio below 3 % typically triggers an alarm. For voltage‑stability monitoring, the Thevenin equivalent seen at a load bus is estimated from PMU voltage and current phasors: V_th = V_bus + Z_th × I_bus, where Z_th is obtained from a linear regression of V‑I pairs during a small disturbance. The voltage‑stability margin is then expressed as the ratio of the estimated Thevenin voltage to the load voltage.</p>
 <p>Wide‑area control actions include generation re‑dispatch, FACTS device set‑point adjustment, and load shedding. A typical RAS uses a linear‑quadratic regulator (LQR) designed on a reduced‑order model that captures the dominant inter‑area modes. The control law u = –Kx computes the required change in generator mechanical power or FACTS susceptance. Communication latency is a critical factor; the total round‑trip time from PMU measurement to actuator response must remain below 100 ms for effective damping of 0.5 Hz modes. Packet loss is mitigated by employing a Kalman filter at the PDC to reconstruct missing phasors.</p>
 <p>Cyber‑security of the WAMS is addressed by encrypting the IEEE C37.118 data frames with TLS 1.3 and authenticating PMUs using X.509 certificates. Anomaly‑based intrusion detection monitors the statistical properties of the phasor streams (mean, variance, rate of change of frequency) and raises alerts when deviations exceed predefined thresholds. Redundancy is provided by deploying at least two independent communication paths (e.g., fiber and microwave) for each PMU.</p>
 
 <h3>Adaptive Protection Schemes for Inverter‑Dominated Grids</h3>
+<!-- passage-cartoon:3b80f2580421 -->
+<figure class="passage-cartoon" data-cartoon="3b80f2580421">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central adaptive relay with three layers -->
+  <circle cx="280" cy="160" r="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="60" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="280" cy="160" r="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="280" cy="160" r="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Top: IBR fault current waveform -->
+  <polyline points="200,50 220,40 240,60 260,30 280,50 300,70 320,40 340,60 360,50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Left: PMU/SCADA -->
+  <rect x="30" y="130" width="100" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Right: Coordination Engine -->
+  <rect x="430" y="130" width="100" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom: IEC 61850 GOOSE arrow -->
+  <path d="M280,250 L280,180 M275,190 L280,180 L285,190" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip line -->
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="280" y="20" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">IBR Fault Current</text>
+  <text x="280" y="70" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Adaptive Relay</text>
+  <text x="14" y="165" text-anchor="start" font-size="14" fill="#1f2937" font-family="sans-serif">PMU/SCADA</text>
+  <text x="546" y="165" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">Coordination Engine</text>
+  <text x="280" y="270" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">IEC 61850 GOOSE</text>
+  <!-- Section title -->
+  <text x="280" y="305" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Adaptive Protection Schemes for Inverter‑Dominated Grids</text>
+</svg></div>
+  <figcaption>Adaptive Protection Schemes for Inverter‑Dominated Grids</figcaption>
+</figure>
+
 <p>High penetration of inverter‑based resources (IBR) fundamentally alters fault‑current characteristics: the magnitude is limited to 1.2–1.5 pu of the inverter rating, the waveform contains significant harmonic content, and the fault current may not exhibit a clear zero‑crossing. Conventional over‑current and distance relays, which assume a high‑magnitude, predominantly sinusoidal fault current, can misoperate or fail to operate. Adaptive protection addresses this by continuously updating relay settings based on real‑time system topology, IBR operating mode, and measured fault‑current contributions.</p>
 <p>The adaptive scheme typically consists of three layers: (1) a supervisory layer that receives PMU and SCADA data to build a live network model; (2) a coordination engine that solves a constrained optimisation problem to compute optimal pickup currents, time‑dial settings, and reach settings for each relay; (3) a local relay layer that implements the received settings via IEC 61850 GOOSE messages. The optimisation objective is to minimise the total operating time while maintaining selectivity margins of at least 0.3 s for primary‑backup pairs. Constraints include maximum allowable fault‑current contribution from each IBR (as per IEEE 1547‑2018), minimum voltage‑ride‑through capability, and communication latency limits.</p>
 <p>For distance protection, the reach setting is adapted by estimating the apparent impedance seen by the relay during a fault. With IBRs, the fault‑current angle can shift by up to ±30° relative to the pre‑fault voltage, causing an apparent impedance error of 15–20 %. The adaptive algorithm corrects this by injecting a virtual impedance compensation term derived from the measured positive‑sequence voltage and current at the relay location: Z_comp = (V_pre – V_fault) / I_fault – Z_line. The compensated impedance is then used in the standard mho or quadrilateral characteristic.</p>
@@ -876,6 +1067,44 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 </div>
 
 <h3>Optimal Power Flow with Security Constraints and Renewable Uncertainty</h3>
+<!-- passage-cartoon:4c6f0e9f09c2 -->
+<figure class="passage-cartoon" data-cartoon="4c6f0e9f09c2">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central transmission tower -->
+  <path d="M250 210 L260 110 L300 110 L310 210 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M255 130 L305 130" stroke="#1f2937" stroke-width="3"/>
+  <path d="M255 150 L305 150" stroke="#1f2937" stroke-width="3"/>
+  <path d="M255 170 L305 170" stroke="#1f2937" stroke-width="3"/>
+  <!-- Lines to supporting images -->
+  <path d="M260 160 L140 160" stroke="#1f2937" stroke-width="3"/>  <!-- left -->
+  <path d="M300 160 L420 160" stroke="#1f2937" stroke-width="3"/>  <!-- right -->
+  <path d="M280 110 L280 85" stroke="#1f2937" stroke-width="3"/>   <!-- top upper -->
+  <path d="M280 65 L280 50" stroke="#1f2937" stroke-width="3"/>    <!-- top lower -->
+  <path d="M280 210 L280 240" stroke="#1f2937" stroke-width="3"/>  <!-- bottom -->
+  <!-- First Stage: conventional generator -->
+  <path d="M80 190 L80 130 L100 100 L120 130 L120 190 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Second Stage: scenario fan -->
+  <path d="M420 160 L460 120" stroke="#1f2937" stroke-width="3"/>
+  <path d="M420 160 L460 160" stroke="#1f2937" stroke-width="3"/>
+  <path d="M420 160 L460 200" stroke="#1f2937" stroke-width="3"/>
+  <!-- N-1 Contingency symbol (gap in line) -->
+  <!-- Decomposition: square with diagonal -->
+  <rect x="260" y="220" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M260 220 L300 260" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="280" y="90" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">SCOPF</text>
+  <text x="280" y="30" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">N-1 Contingency</text>
+  <text x="100" y="120" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">First Stage</text>
+  <text x="460" y="120" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Second Stage</text>
+  <text x="280" y="210" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Benders / ADMM</text>
+  <!-- Caption strip -->
+  <rect x="14" y="276" width="532" height="30" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <text x="280" y="295" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Optimal Power Flow with Security Constraints and Renewable Uncertainty</text>
+</svg></div>
+  <figcaption>Optimal Power Flow with Security Constraints and Renewable Uncertainty</figcaption>
+</figure>
+
 <p>Security‑constrained optimal power flow (SCOPF) extends the classical OPF by enforcing N‑1 (or N‑k) contingency constraints within the optimisation. The decision variables include generator active/reactive outputs, transformer tap positions, shunt susceptances, and FACTS device set‑points. The objective is typically minimisation of total generation cost ∑ C_i(P_Gi) subject to power‑balance equations, generator limits, voltage limits, thermal limits on lines and transformers, and contingency‑specific post‑contingency limits. The problem is a large‑scale non‑linear programme (NLP) that is solved by successive linearisation (DC‑OPF) or interior‑point methods for the full AC‑SCOPF.</p>
 <p>Renewable uncertainty is incorporated through a two‑stage stochastic programming framework. In the first stage, here‑and‑now decisions (commitment of conventional units, scheduled FACTS settings) are made before the realisation of wind/solar output. In the second stage, recourse actions (redispatch, load shedding, storage dispatch) are taken for each scenario. A typical scenario set contains 20–50 scenarios generated by Latin‑hypercube sampling of the joint probability distribution of forecast errors. The expected cost of recourse is added to the first‑stage cost, yielding a risk‑neutral objective. Risk‑averse formulations replace the expectation with Conditional Value‑at‑Risk (CVaR) at a confidence level β (e.g., 95 %).</p>
 <p>Chance‑constrained OPF offers an alternative by requiring that the probability of violating a constraint (e.g., line thermal limit) be below a small ε (e.g., 0.01). Assuming Gaussian forecast errors, the chance constraint can be reformulated as a deterministic linear constraint: μ_f + Φ⁻¹(1‑ε) σ_f ≤ F_max, where μ_f and σ_f are the mean and standard deviation of the line flow, and Φ⁻¹ is the inverse standard normal CDF. This approach avoids scenario enumeration but requires accurate covariance estimation.</p>
