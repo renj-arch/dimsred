@@ -952,6 +952,36 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <p>Frequency support requirements include synthetic inertia (ΔP = K<sub>inertia</sub>·df/dt) and primary frequency response (ΔP = K<sub>droop</sub>·Δf). For a 100 MW wind farm, a typical droop setting is 4 % (K<sub>droop</sub> = 2.5 MW/0.1 Hz). The controller must coordinate the kinetic energy release from the turbine rotor (for DFIG or direct‑drive) with the converter current limits. Examination problems often ask to size the crowbar resistance for a given DFIG rating, compute the required reactive current injection for a 30 % voltage dip, or verify harmonic compliance of a 5 MW PV inverter with a given LCL filter design.</p>
 
 <h3>Power Quality Analysis and Mitigation Techniques</h3>
+<!-- passage-cartoon:233c2ae6d42a -->
+<figure class="passage-cartoon" data-cartoon="233c2ae6d42a">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Distorted then clean wave -->
+  <path d="M80,160 Q140,200 200,160 Q210,150 220,170 Q230,150 240,160 L340,160 L480,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-left: Voltage Sag icon -->
+  <path d="M70,50 L80,30 L90,50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-right: Harmonics icon -->
+  <path d="M470,50 L475,30 L480,50 L485,30 L490,50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-left: Flicker icon -->
+  <path d="M70,230 L80,250 L75,250 L85,270" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-right: Transient icon -->
+  <path d="M470,250 L480,230 L490,250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Mitigation Filter box -->
+  <rect x="260" y="120" width="80" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip line -->
+  <line x1="14" y1="280" x2="546" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="80" y="20" font-size="14" fill="#1f2937" text-anchor="middle">Voltage Sag</text>
+  <text x="480" y="20" font-size="14" fill="#1f2937" text-anchor="middle">Harmonics (THD)</text>
+  <text x="80" y="210" font-size="14" fill="#1f2937" text-anchor="middle">Flicker (Pst)</text>
+  <text x="480" y="210" font-size="14" fill="#1f2937" text-anchor="middle">Transients</text>
+  <text x="300" y="110" font-size="14" fill="#1f2937" text-anchor="middle">Mitigation Filter</text>
+  <!-- Section title -->
+  <text x="280" y="300" font-size="14" fill="#1f2937" text-anchor="middle">Power Quality Analysis &amp; Mitigation</text>
+</svg></div>
+  <figcaption>Power Quality Analysis and Mitigation Techniques</figcaption>
+</figure>
+
 <p>Power quality disturbances are classified into voltage sags/swells, harmonics, inter‑harmonics, flicker, and transients. The IEEE 1159 standard defines a sag as a reduction to 0.1‑0.9 pu for 0.5 cycles to 1 minute. The severity of a sag is quantified by the Sag Severity Index (SSI) = (1 − V<sub>min</sub>/V<sub>nom</sub>) × (t<sub>sag</sub>/T<sub>ref</sub>), where T<sub>ref</sub> = 1 s. For harmonic analysis, the Total Harmonic Distortion (THD) of voltage is THD_V = √(∑<sub>h=2</sub><sup>∞</sup> V_h²) / V<sub>1</sub>. The IEC 61000‑2‑2 compatibility levels for LV networks set THD_V ≤ 8 % and individual harmonic limits (5th ≤ 6 %, 7th ≤ 5 %, 11th ≤ 3.5 %, 13th ≤ 3 %).</p>
 <p>Mitigation strategies include passive filters (tuned series LC branches), active power filters (APF) based on VSCs, and hybrid filters. A single‑tuned passive filter for the 5th harmonic has impedance Z_f = j(ωL − 1/ωC) at 250 Hz; the filter is sized to carry the harmonic current I<sub>5</sub> while presenting a low impedance at 250 Hz and high impedance at fundamental. The quality factor Q = ωL/R determines the bandwidth; typical Q = 30‑50. An APF uses the instantaneous reactive power theory (p‑q theory) to compute the compensating current reference i_c* = i_load − i_fund, where i_fund is the fundamental component extracted by a synchronous reference frame PLL. The APF rating is chosen as 1.2‑1.5 times the maximum expected harmonic current.</p>
 <p>Flicker is assessed using the short‑term flicker severity P_st (10 min) and long‑term P_lt (2 h) per IEC 61000‑4‑15. The flicker emission limit for a single customer at the point of common coupling (PCC) is P_st ≤ 1.0. Mitigation includes static var compensators (SVC) or STATCOMs with fast voltage regulation (response < 1 cycle) and, for arc furnaces, series reactors to limit the rate of change of current. In exam questions, candidates may be asked to design a 5th‑harmonic passive filter for a 10 MVA industrial load with 15 % 5th‑harmonic current, compute the required capacitor and reactor values, and verify that the filter does not create parallel resonance with the system impedance at the 7th harmonic.</p>
@@ -1304,6 +1334,27 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <li>Sizing an active filter only on fundamental current rating without accounting for the harmonic spectrum up to the 50th order.</li>
 </ul>
 <h3>Voltage Stability Assessment and Control</h3>
+<!-- passage-cartoon:bf8098a91eb8 -->
+<figure class="passage-cartoon" data-cartoon="bf8098a91eb8">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <path d="M100,250 Q280,80 460,250" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <text x="280" y="60" text-anchor="middle" font-size="14" fill="#1f2937">PV Curve Nose</text>
+  <circle cx="100" cy="150" r="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="100" y1="150" x2="130" y2="120" stroke="#1f2937" stroke-width="2.5"/>
+  <text x="20" y="155" font-size="14" fill="#1f2937">Min Singular Value</text>
+  <path d="M400,50 L460,30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="460,30 450,40 455,30" fill="#1f2937"/>
+  <text x="460" y="20" text-anchor="end" font-size="14" fill="#1f2937">WAMS Phasor</text>
+  <rect x="460" y="180" width="60" height="40" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M480,190 L470,210 L485,210 L475,230" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <text x="460" y="235" font-size="14" fill="#1f2937">FACTS Control</text>
+  <rect x="14" y="300" width="532" height="20" fill="#1f2937"/>
+  <text x="280" y="312" text-anchor="middle" font-size="12" fill="#fbf7ec">Voltage Stability Assessment and Control</text>
+</svg></div>
+  <figcaption>Voltage Stability Assessment and Control</figcaption>
+</figure>
+
 <!-- passage-image:f6802ea9d0d9 -->
 <figure class="passage-photo" data-image="f6802ea9d0d9">
   <a href="https://commons.wikimedia.org/wiki/File:Thar_Khuri.jpg" target="_blank" rel="noopener">
@@ -1333,6 +1384,39 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 </div>
 
 <h3>Transmission Expansion Planning under Uncertainty</h3>
+<!-- passage-cartoon:b0433e4f0a72 -->
+<figure class="passage-cartoon" data-cartoon="b0433e4f0a72">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central stick figure -->
+  <path d="M280,128 a12,12 0 1,0 0,24 a12,12 0 1,0 0,-24 M280,152 L280,200 M260,170 L300,170 M280,200 L250,240 M280,200 L310,240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Blueprint -->
+  <rect x="260" y="140" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Dice (Monte Carlo) -->
+  <rect x="85" y="65" width="30" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="95" cy="75" r="2" fill="#1f2937"/>
+  <circle cx="100" cy="80" r="2" fill="#1f2937"/>
+  <circle cx="105" cy="85" r="2" fill="#1f2937"/>
+  <!-- Shield (Robust TEP) -->
+  <polygon points="460,60 480,80 460,110 440,80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Scenario Tree -->
+  <path d="M100,250 L100,210 M100,210 L70,190 M100,210 L130,190 M100,210 L100,180" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Gauge (Discount Rate) -->
+  <circle cx="460" cy="250" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="460" y1="250" x2="474" y2="236" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <text x="280" y="300" font-size="12" fill="#1f2937" text-anchor="middle">Transmission Expansion Planning under Uncertainty</text>
+  <!-- Labels -->
+  <text x="100" y="50" font-size="14" fill="#1f2937" text-anchor="middle">Monte Carlo</text>
+  <text x="460" y="50" font-size="14" fill="#1f2937" text-anchor="middle">Robust TEP</text>
+  <text x="280" y="130" font-size="14" fill="#1f2937" text-anchor="middle">HVDC Corridors</text>
+  <text x="100" y="200" font-size="14" fill="#1f2937" text-anchor="middle">Scenario Tree</text>
+  <text x="460" y="220" font-size="14" fill="#1f2937" text-anchor="middle">Discount Rate</text>
+</svg></div>
+  <figcaption>Transmission Expansion Planning under Uncertainty</figcaption>
+</figure>
+
 <!-- passage-image:9bffa7b55c3b -->
 <figure class="passage-photo" data-image="9bffa7b55c3b">
   <a href="https://commons.wikimedia.org/wiki/File:Panorama_von_Monaco-La_Turbie.jpg" target="_blank" rel="noopener">

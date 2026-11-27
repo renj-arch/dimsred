@@ -360,6 +360,40 @@
 <div class="example-box"><div class="ex-title">Examiner's trap</div><div class="ex-text">Question: "Why does a synchronous motor not start by itself when connected to AC supply?"
 <div class="ex-soln">Answer: At standstill, the stator produces a rotating magnetic field. The rotor (DC excited) is stationary. Due to inertia, the rotor cannot lock onto the rotating field instantly.</div></div></div>
 <h3>Electromagnetic Induction: The Physics of Energy Conversion</h3>
+<!-- passage-cartoon:d4650cdd5a40 -->
+<figure class="passage-cartoon" data-cartoon="d4650cdd5a40">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="260" y="20" width="40" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="260" y="280" width="40" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M240 40V280 M280 40V280 M320 40V280" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="280" cy="160" r="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M220 100V220 M340 100V220 M220 100H340 M220 220H340" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M160 160A50 50 0 0 1 220 100" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M340 220H400" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M160 160H100" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow2)"/>
+  <path d="M340 100A50 50 0 0 1 400 160" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow2)"/>
+  <path d="M220 220A10 10 0 0 1 240 220 M240 220A10 10 0 0 1 220 220" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="340" cy="220" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="340" cy="220" r="14" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="14" y="300" width="532" height="20" fill="#1f2937"/>
+  <text x="280" y="30" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Faraday's Law</text>
+  <text x="80" y="160" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Generator</text>
+  <text x="480" y="160" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Motor</text>
+  <text x="280" y="290" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Back EMF</text>
+  <text x="280" y="312" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#fbf7ec">Electromagnetic Induction: The Physics of Energy Conversion</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 3 L0 6 Z" fill="#1f2937"/>
+    </marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 3 L0 6 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+</svg></div>
+  <figcaption>Electromagnetic Induction: The Physics of Energy Conversion</figcaption>
+</figure>
+
 <p>The fundamental principle governing all electrical machines is Faraday's Law of Electromagnetic Induction, which states that an electromotive force (EMF) is induced in a conductor whenever the magnetic flux linking it changes. Mathematically, for a coil with N turns and flux φ, the induced EMF e = -N (dφ)/(dt). The negative sign represents Lenz's Law: the direction of the induced EMF opposes the change in flux that produced it. In practical terms, this means that to generate electricity (generator mode), mechanical work must be done to rotate a conductor within a magnetic field, converting kinetic energy into electrical energy. Conversely, to create motion (motor mode), an external electrical current is passed through a conductor in a magnetic field, producing a force F = BIL (Lorentz force), thereby converting electrical energy into mechanical work.</p>
 <p>The distinction between the two modes lies in the source of the power flow. In a generator, the induced EMF drives current against an external load resistance. The terminal voltage V_t is less than the generated EMF (E_g) due to internal armature resistance drop: V_t = E_g - I_a R_a. In a motor, the applied terminal voltage V_t must overcome both the back EMF (E_b) and the resistive drop to drive current: V_t = E_b + I_a R_a. This back EMF is crucial; without it, the armature current would be limited only by the small resistance of the winding, leading to a massive short-circuit current that would destroy the machine instantly. The magnitude of this back EMF is directly proportional to the speed (N) and flux (φ): E_b ∝ Nφ. Thus, if the field flux collapses or the load increases causing a speed drop, the back EMF decreases, drawing more current to restore equilibrium.</p>
 <p>The construction of machines optimizes this interaction. In DC machines, commutators and brushes mechanically rectify the alternating EMF generated in the armature coils into a unidirectional output voltage. This allows for stable DC power delivery. In AC machines (alternators), slip rings allow the rotating field to be supplied with DC excitation while the stator windings pick up the induced AC voltage directly, eliminating the need for heavy mechanical commutation on the high-voltage side. The choice between salient pole and cylindrical rotor constructions in synchronous machines depends on the speed of operation; <span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="Salient poles are used on the rotor to provide many poles for low-speed operation; they do not accommodate stator slots for winding distribution. The stator has slots for winding distribution.">hydroelectric generators (low speed) use salient poles to provide many poles for low-speed operation</span>, while thermal/gas turbine generators (high speed) use non-salient cylindrical rotors to withstand centrifugal forces.</p>
