@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Digital Controller Design: Discretisation, Quantisation and Limit‑Cycle Avoidance | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Digital Controller Design: Discretisation, Quantisation and Limit‑Cycle Avoidance</h1>
+<p class="meta">Electrical Engineering Optional: Syllabus, Sources &amp;amp; Strategy · <a href="/upsc/course/opt-electrical-engineering/lesson-overview">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Continuous Plant (left) -->
+  <rect x="30" y="100" width="120" height="100" fill="none" stroke="#1f2937" stroke-width="3" rx="6"/>
+  <path d="M50 180 Q70 150 90 180 Q110 210 130 180" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="90" y="90" text-anchor="middle" font-size="13" fill="#1f2937">Plant</text>
+  <!-- Digital Controller (center) -->
+  <rect x="220" y="110" width="120" height="80" fill="none" stroke="#1f2937" stroke-width="3" rx="6"/>
+  <text x="280" y="100" text-anchor="middle" font-size="13" fill="#1f2937">DSP</text>
+  <path d="M230 130 L220 130 M230 150 L220 150 M230 170 L220 170" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M330 130 L340 130 M330 150 L340 150 M330 170 L340 170" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Quantiser (right) -->
+  <rect x="410" y="110" width="120" height="80" fill="none" stroke="#1f2937" stroke-width="3" rx="6"/>
+  <path d="M430 170 L450 170 L450 150 L470 150 L470 130 L490 130 L490 110" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="470" y="100" text-anchor="middle" font-size="13" fill="#1f2937">Quantiser Δ</text>
+  <!-- Discretisation arrows (ZOH, Tustin) -->
+  <path d="M150 140 Q185 130 220 140" fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M150 170 Q185 180 220 170" fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <text x="185" y="125" text-anchor="middle" font-size="12" fill="#1f2937">ZOH</text>
+  <text x="185" y="195" text-anchor="middle" font-size="12" fill="#1f2937">Tustin</text>
+  <!-- Controller to Quantiser -->
+  <path d="M340 150 L410 150" fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <!-- Feedback loop with limit cycle -->
+  <path d="M410 150 Q450 150 450 220 Q280 220 280 150" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,4" marker-end="url(#arrow)"/>
+  <path d="M380 220 Q360 210 340 220 Q320 230 300 220" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <text x="340" y="210" text-anchor="middle" font-size="12" fill="#1f2937">Limit Cycle</text>
+  <!-- ADC (top-left) -->
+  <rect x="50" y="40" width="60" height="40" fill="none" stroke="#1f2937" stroke-width="2.5" rx="4"/>
+  <path d="M80 60 L100 60 M80 60 L85 55 M80 60 L85 65" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="80" y="32" text-anchor="middle" font-size="11" fill="#1f2937">ADC 12-bit</text>
+  <!-- Pole-zero map (top-right) -->
+  <circle cx="500" cy="60" r="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M490 50 L510 70 M510 50 L490 70" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M485 65 L505 85 M505 65 L485 85" stroke="#1f2937" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <text x="500" y="100" text-anchor="middle" font-size="12" fill="#1f2937">Pole Shift</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="286" width="532" height="20" fill="#1f2937"/>
+  <text x="280" y="300" text-anchor="middle" font-size="12" fill="#fbf7ec">Digital Controller Design: Discretisation, Quantisation &amp; Limit-Cycle Avoidance</text>
+</svg></div>
+<p class="meta">Digital Controller Design: Discretisation, Quantisation and Limit‑Cycle Avoidance</p></div></body></html>

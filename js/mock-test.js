@@ -106,6 +106,7 @@
             options: opts,
             correct: correct,
             section: q.section || '',
+            chart: q.chart || '',
             solution: q.solution || q.explain || ''
           };
         });
@@ -171,6 +172,8 @@
     if (i < 0 || i >= state.questions.length) return;
     state.current = i;
     var q = state.questions[i];
+    var _chartEl = document.getElementById('qChart');
+    if (_chartEl) _chartEl.innerHTML = q.chart || '';
     if (els.qText) els.qText.textContent = 'Q' + (i + 1) + '. ' + q.text;
     if (els.currentQ) els.currentQ.textContent = 'Question ' + (i + 1) + ' of ' + state.questions.length;
     if (els.options) {
