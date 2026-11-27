@@ -1,21 +1,290 @@
 {
- "generatedAt": "2026-11-27T21:19:44.664Z",
+ "generatedAt": "2026-11-27T22:03:46.373Z",
  "lessonsAudited": 18,
- "flagged": 1,
- "applied": 1,
- "modelCalls": 5,
- "modelFailures": 102,
+ "flagged": 28,
+ "applied": 8,
+ "modelCalls": 15,
+ "modelFailures": 49,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "neet/course/biology/lesson-genetics-inheritance.html",
-   "quote": "mediated by elongation factors Tu/EF‑1α and G/GTP",
-   "problem": "G/GTP is not an elongation factor; the translocation factor is EF-G (prokaryotes) or EF-2 (eukaryotes).",
-   "correction": "mediated by elongation factors Tu/EF-1α and EF-G/EF-2",
+   "file": "rbi/course/english/lesson-fillers-cloze.html",
+   "quote": "“approve” and “acknowledge” are positive polarity verbs that become infelicitous under negation",
+   "problem": "The verbs “approve” and “acknowledge” are not positive polarity items (PPIs); they can be freely negated (e.g., “did not approve” is perfectly natural). True PPIs include “some”, “already”, “rather”. The examples “welcome”, “embrace” are also not PPIs.",
+   "correction": "“approve” and “acknowledge” are not PPIs; they negate freely. True PPIs (e.g., “some”) resist negation; NPIs (e.g., “budge”) require it.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original 'G/GTP' is not a factor name; correction correctly identifies translocation factors EF-G/EF-2.",
+   "verifierReason": "Original falsely claims 'approve'/'acknowledge' are PPIs; they negate freely. Correction correctly identifies true PPIs (e.g., 'some') and NPIs.",
    "applied": true
+  },
+  {
+   "file": "rbi/course/english/lesson-fillers-cloze.html",
+   "quote": "Options like “proof” or “confirmation” are positive polarity and create a semantic clash because “no proof” is acceptable but “no confirmation” is less idiomatic",
+   "problem": "Nouns such as “proof” and “confirmation” are not positive polarity items; “no confirmation” is fully idiomatic in formal audit language. Polarity sensitivity applies to determiners/adverbs (e.g., “any”, “ever”), not to these nouns.",
+   "correction": "Nouns like “proof” and “confirmation” are not polarity-sensitive; both “no proof” and “no confirmation” are idiomatic.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original falsely treats 'proof'/'confirmation' as polarity-sensitive nouns; both 'no proof' and 'no confirmation' are fully idiomatic.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/english/lesson-fillers-cloze.html",
+   "quote": "the latter means “no bank did”",
+   "problem": "“Every bank did not ______ the guideline” does not unambiguously mean “no bank did”; in English it is scopally ambiguous and often conveys “not every bank did” (partial negation).",
+   "correction": "“Every bank did not …” is ambiguous and often means “not every bank did”, not “no bank did”.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claims 'Every bank did not' unambiguously means 'no bank did'; it is scopally ambiguous, often meaning 'not every bank did'.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/english/lesson-fillers-cloze.html",
+   "quote": "licensing “yield” and “benefit” as NPIs",
+   "problem": "“yield” and “benefit” are not negative polarity items; the NPI in the example is “any”. The matrix predicate “doubts” licenses the NPI “any”, not the verb “yield” or the noun “benefit”.",
+   "correction": "licensing the NPI “any” with a verb like “yield” and a noun like “benefit”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original misidentifies 'yield'/'benefit' as NPIs; the NPI is 'any', licensed by 'doubts'. Correction accurately rephrases.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/english/lesson-fillers-cloze.html",
+   "quote": "“provide” (will provide liquidity) changes the transitivity pattern and breaks the ellipsis licence",
+   "problem": "Both “cut” and “provide” are transitive verbs taking a direct object (“rates”, “liquidity”); “provide” does not alter the transitivity pattern and does not break the ellipsis licence.",
+   "correction": "“provide” (will provide liquidity) is also transitive and maintains the ellipsis licence.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claims 'provide' changes transitivity and breaks ellipsis; both 'cut' and 'provide' are transitive, so ellipsis is maintained.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v = f )",
+   "problem": "Wave speed formula missing wavelength (λ).",
+   "correction": "v = fλ",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original v=f misses wavelength; correction v=fλ is standard wave speed formula.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "where = 2 f (angular frequency), k = 2 / (wave number)",
+   "problem": "Angular frequency ω = 2πf, wave number k = 2π/λ; π missing.",
+   "correction": "where ω = 2πf (angular frequency), k = 2π/λ (wave number)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Angular frequency ω=2πf and wave number k=2π/λ; original omitted π.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v = (T/ ) .",
+   "problem": "Formula for transverse wave speed on string missing linear mass density (μ) and square root.",
+   "correction": "v = √(T/μ)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Transverse wave speed on string is √(T/μ); original missing sqrt and μ.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v = ( P/ ) = ( RT/M)",
+   "problem": "Speed of sound in gas missing adiabatic index (γ) and square root; also density ρ not shown.",
+   "correction": "v = √(γP/ρ) = √(γRT/M)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Speed of sound in gas is √(γP/ρ)=√(γRT/M); original missing γ, sqrt, ρ.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v 332 m/s",
+   "problem": "Missing approximate symbol; speed of sound at NTP is approximately 332 m/s.",
+   "correction": "v ≈ 332 m/s",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Speed of sound at NTP is approximate; original lacked ≈ symbol.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v t = v 0 (1 + t/273) v 0 + 0.6t m/s",
+   "problem": "Temperature dependence formula incorrect; should be square root of (1 + t/273).",
+   "correction": "v_t = v_0 √(1 + t/273) ≈ v_0 + 0.6t m/s",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Temperature dependence is v=v₀√(1+t/273); original used linear factor incorrectly.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v = (Y/ ) for longitudinal waves, v = (G/ ) for transverse waves. In liquids: v = (B/ )",
+   "problem": "Missing square root and density (ρ) in all formulas.",
+   "correction": "v = √(Y/ρ) for longitudinal waves, v = √(G/ρ) for transverse waves. In liquids: v = √(B/ρ)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Wave speeds in solids/liquids require √(modulus/ρ); original missing sqrt and ρ.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "Since /v = 2 f/v = 2 / = k (wave number)",
+   "problem": "Missing π in derivation; ω/v = 2πf/v = 2π/λ = k.",
+   "correction": "Since ω/v = 2πf/v = 2π/λ = k (wave number)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Derivation ω/v=2πf/v=2π/λ=k; original omitted π.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "&Delta; = (2 / ) &Delta;x . Similarly, time difference &Delta;t is related as: &Delta; = &Delta;t = 2 f&Delta;t",
+   "problem": "Phase difference formulas missing π; should be 2π/λ and 2πf.",
+   "correction": "Δφ = (2π/λ) Δx. Δφ = ωΔt = 2πfΔt",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Phase difference Δφ=(2π/λ)Δx=ωΔt=2πfΔt; original missing π.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "Points separated by a path difference of have a phase difference of 2 (they are in phase). Points separated by /2 have a phase difference of (they are out of phase).",
+   "problem": "Missing λ and π; path difference λ gives phase difference 2π, λ/2 gives π.",
+   "correction": "Points separated by a path difference of λ have a phase difference of 2π (they are in phase). Points separated by λ/2 have a phase difference of π (they are out of phase).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Path difference λ gives 2π phase, λ/2 gives π; original missing λ and π.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "if &Delta; = 0, 2 , 4 ,... constructive interference (A R = A 1 + A 2 ). If &Delta; = , 3 , 5 ,... destructive interference (A R = |A 1 A 2 |)",
+   "problem": "Phase difference values missing π; constructive at 0, 2π, 4π... destructive at π, 3π, 5π...",
+   "correction": "if Δφ = 0, 2π, 4π,... constructive interference (A_R = A_1 + A_2). If Δφ = π, 3π, 5π,... destructive interference (A_R = |A_1 - A_2|)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Constructive at 0,2π,4π… destructive at π,3π,5π…; amplitude difference for destructive.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v p = /k = f .",
+   "problem": "Phase velocity formula missing ω and λ; v_p = ω/k = fλ.",
+   "correction": "v_p = ω/k = fλ",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Phase velocity v_p=ω/k=fλ; original missing ω and λ.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "I = &frac12; v 2 A 2",
+   "problem": "Intensity formula for sound wave incomplete; missing density (ρ) and angular frequency squared (ω²).",
+   "correction": "I = ½ ρ v ω² A²",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Sound intensity I=½ρvω²A²; original missing ρ and ω².",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "I 0 = 10 12 W/m 2",
+   "problem": "Threshold of hearing intensity is 10⁻¹² W/m², not 10¹².",
+   "correction": "I₀ = 10⁻¹² W/m²",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Threshold of hearing is 10⁻¹² W/m²; original gave 10¹².",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "phase change of (180 ). This is equivalent to a path difference of /2",
+   "problem": "Phase change should be π (180°); path difference should be λ/2.",
+   "correction": "phase change of π (180°). This is equivalent to a path difference of λ/2",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Phase change π (180°) corresponds to path difference λ/2; original missing π and λ.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "I = &frac12; v 2 A 2 where is the density of the medium, v is the wave speed, and is the angular frequency",
+   "problem": "Formula written does not include density (ρ) and angular frequency (ω) as stated; correct formula is I = ½ ρ v ω² A².",
+   "correction": "I = ½ ρ v ω² A²",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Formula I=½ρvω²A²; original wrote I=½v²A² but claimed ρ and ω included.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-properties-of-matter.html",
+   "quote": "c_L ≈ 5960 m s⁻¹, c_S ≈ 3240 m s⁻¹",
+   "problem": "The given wave speeds do not match the stated material constants (E=200 GPa, ν=0.30, ρ=7850 kg/m³). Using the formulas provided, c_L ≈ 5860 m/s and c_S ≈ 3130 m/s.",
+   "correction": "c_L ≈ 5860 m s⁻¹, c_S ≈ 3130 m s⁻¹",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Calculated c_L=5860, c_S=3130 from given E,ν,ρ; original values incorrect.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-properties-of-matter.html",
+   "quote": "Prager–Ziegler rule",
+   "problem": "The equation dαᵢⱼ = c dεᵖᵢⱼ − γ αᵢⱼ dεᵖ_eq is the Armstrong–Frederick nonlinear kinematic hardening model, not the Prager–Ziegler rule.",
+   "correction": "Armstrong–Frederick rule",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Equation matches Armstrong-Frederick nonlinear kinematic hardening, not Prager-Ziegler.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/english/lesson-reading-comprehension.html",
+   "quote": "one can infer that City X is unlikely to achieve the higher ridership levels reported elsewhere",
+   "problem": "The text presents denying the antecedent as a valid inference (\"one can infer\") in a section defining inference as logical necessity, then correctly states it is invalid. The phrase \"one can infer\" wrongly suggests logical validity for a formal fallacy.",
+   "correction": "one might erroneously infer that City X is unlikely to achieve the higher ridership levels reported elsewhere",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original phrasing implies a valid inference of a logical fallacy; correction adds 'might erroneously' to flag it as invalid.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "at a given temperature, all gases have the same average molecular kinetic energy, (3/2)kT per molecule for monatomic gases",
+   "problem": "The average molecular kinetic energy is not the same for all gases; only the translational kinetic energy per molecule is (3/2)kT for all ideal gases. The value (3/2)kT is the total kinetic energy only for monatomic gases.",
+   "correction": "at a given temperature, all ideal gases have the same average translational kinetic energy, (3/2)kT per molecule",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original conflates total KE with translational KE; only translational KE is (3/2)kT for all ideal gases.",
+   "applied": true
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "The threshold of hearing is about 10 12 W/m 2 at 1 kHz.",
+   "problem": "Threshold of hearing is 10^-12 W/m^2, not 10^12 W/m^2.",
+   "correction": "The threshold of hearing is about 10^-12 W/m^2 at 1 kHz.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original gives 10^12 W/m², but threshold is 10^-12 W/m².",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "Wind-induced vibrations matched the bridge's natural frequency, causing large-amplitude torsional oscillations that destroyed the bridge.",
+   "problem": "Tacoma Narrows Bridge collapsed due to aeroelastic flutter, not simple resonance with wind-induced vibrations.",
+   "correction": "Wind-induced aeroelastic flutter caused large-amplitude torsional oscillations that destroyed the bridge.",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Tacoma Narrows collapse was aeroelastic flutter, not simple resonance."
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "The first resonance occurs at L 1 = /4 (approximately). The second resonance at L 2 = 3 /4. Therefore, = 2(L 2 L 1 ) and v = f .",
+   "problem": "Formulas missing wavelength symbol λ; should be L1 = λ/4, L2 = 3λ/4, λ = 2(L2 - L1), v = fλ.",
+   "correction": "The first resonance occurs at L1 = λ/4 (approximately). The second resonance at L2 = 3λ/4. Therefore, λ = 2(L2 - L1) and v = fλ.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Formulas missing λ; correction adds wavelength symbol.",
+   "applied": false
   }
  ]
 }

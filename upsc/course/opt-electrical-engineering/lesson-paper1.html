@@ -831,6 +831,49 @@
 <p>Practical fault analysis uses the bus impedance matrix <strong>Z<sub>bus</sub></strong> for each sequence. The fault current at bus k is obtained by injecting a current source at that bus in the appropriate sequence network and reading the resulting voltage. Software tools (e.g., PSCAD, ETAP) automate the construction of sequence networks from the single‑line diagram, but the examiner expects the candidate to draw the equivalent circuit for a given fault type and write the governing equations by hand.</p>
 
 <h3>Equal Area Criterion and Transient Stability Assessment</h3>
+<!-- passage-cartoon:b31c163ba2f9 -->
+<figure class="passage-cartoon" data-cartoon="b31c163ba2f9">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Balance scale central metaphor -->
+  <line x1="280" y1="40" x2="280" y2="80" stroke="#1f2937" stroke-width="3"/>
+  <line x1="160" y1="80" x2="400" y2="80" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="75" x2="280" y2="85" stroke="#1f2937" stroke-width="4"/>
+  <!-- Left pan -->
+  <line x1="180" y1="80" x2="180" y2="130" stroke="#1f2937" stroke-width="2.5"/>
+  <ellipse cx="180" cy="150" rx="50" ry="12" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Right pan -->
+  <line x1="380" y1="80" x2="380" y2="130" stroke="#1f2937" stroke-width="2.5"/>
+  <ellipse cx="380" cy="150" rx="50" ry="12" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Generator symbol left -->
+  <circle cx="100" cy="150" r="25" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="100" y1="135" x2="100" y2="165" stroke="#1f2937" stroke-width="3"/>
+  <line x1="85" y1="150" x2="115" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <text x="100" y="115" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Generator</text>
+  <!-- Infinite bus symbol right -->
+  <circle cx="460" cy="150" r="25" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <text x="460" y="155" text-anchor="middle" font-size="18" fill="#1f2937" font-family="sans-serif">∞</text>
+  <text x="460" y="115" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Infinite Bus</text>
+  <!-- Fault lightning on left pan -->
+  <polyline points="160,140 170,155 155,155 165,170" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Post-fault sine wave on right pan -->
+  <path d="M360,145 Q370,130 380,145 T400,145" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Labels for areas -->
+  <text x="180" y="185" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Accelerating Area</text>
+  <text x="380" y="185" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Decelerating Area</text>
+  <!-- Fulcrum label -->
+  <text x="280" y="55" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Critical Clearing Angle</text>
+  <!-- Swing equation label -->
+  <text x="280" y="230" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">Swing Equation: M d²δ/dt² = Pm – Pe</text>
+  <!-- SMIB label -->
+  <text x="280" y="255" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">SMIB System</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="286" width="532" height="30" fill="#1f2937"/>
+  <text x="280" y="307" text-anchor="middle" font-size="14" fill="#fbf7ec" font-family="sans-serif">Equal Area Criterion and Transient Stability Assessment</text>
+</svg></div>
+  <figcaption>Equal Area Criterion and Transient Stability Assessment</figcaption>
+</figure>
+
 <p>The equal area criterion (EAC) provides a graphical method to assess first‑swing transient stability of a single‑machine infinite‑bus (SMIB) system without solving the swing equation numerically. The swing equation in per‑unit form is <strong>M d²δ/dt² = P<sub>m</sub> – P<sub>e</sub>(δ)</strong>, where <strong>M = 2H/ω<sub>s</sub></strong> (H = inertia constant in seconds, ω<sub>s</sub> = synchronous speed). Multiplying by <strong>dδ/dt</strong> and integrating from the pre‑fault angle <strong>δ<sub>0</sub></strong> to a generic angle <strong>δ</strong> yields the energy balance: <strong>½ M (dδ/dt)² = ∫(P<sub>m</sub> – P<sub>e</sub>) dδ</strong>.</p>
 <p>During a fault the electrical power output drops to a low value <strong>P<sub>e,fault</sub></strong> (often zero for a three‑phase fault at the generator terminal). The accelerating area <strong>A<sub>acc</sub></strong> is the integral of <strong>P<sub>m</sub> – P<sub>e,fault</sub></strong> from <strong>δ<sub>0</sub></strong> to the clearing angle <strong>δ<sub>c</sub></strong>. After fault clearance the post‑fault power‑angle curve <strong>P<sub>e,post</sub>(δ)</strong> (usually a sine curve with reduced amplitude because of line outage) applies. The decelerating area <strong>A<sub>dec</sub></strong> is the integral of <strong>P<sub>e,post</sub> – P<sub>m</sub></strong> from <strong>δ<sub>c</sub></strong> to the maximum swing angle <strong>δ<sub>max</sub></strong> where speed returns to synchronous. Stability requires <strong>A<sub>acc</sub> ≤ A<sub>dec</sub></strong>. The critical clearing angle <strong>δ<sub>cr</sub></strong> satisfies equality; the corresponding critical clearing time <strong>t<sub>cr</sub></strong> is obtained by integrating the swing equation during the fault: <strong>t<sub>cr</sub> = √(2M(δ<sub>cr</sub>–δ<sub>0</sub>)/(P<sub>m</sub>–P<sub>e,fault</sub>))</strong>.</p>
 <p>For multi‑machine systems the EAC is extended by reducing the system to an equivalent two‑machine or one‑machine‑infinite‑bus model using coherency identification. The centre‑of‑inertia (COI) reference angle is defined as <strong>δ<sub>COI</sub> = Σ(M<sub>i</sub>δ<sub>i</sub>)/ΣM<sub>i</sub></strong>. Each machine’s relative angle <strong>δ<sub>i</sub> – δ<sub>COI</sub></strong> follows a swing equation with an equivalent inertia. The critical clearing time for the most critical machine (usually the one with the largest accelerating power) governs the overall stability limit.</p>
