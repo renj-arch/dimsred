@@ -243821,6 +243821,141 @@
         }
       ],
       "sol": "The lesson states that partitioned schemes suffer from added-mass instability when the fluid density is comparable to the solid density, citing blood flow in arteries as a specific example. This instability arises from the strong coupling between fluid pressure and structural acceleration at the interface."
+    },
+    {
+      "id": 126,
+      "text": "A capillary tube of radius r is dipped in a liquid of surface tension γ, density ρ, and contact angle θ. The capillary rise h is given by:",
+      "options": [
+        {
+          "l": "a",
+          "t": "h = 2γ cosθ/(ρ g r)",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "h = γ cosθ/(ρ g r)",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "h = 2γ sinθ/(ρ g r)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "h = γ sinθ/(ρ g r)",
+          "c": false
+        }
+      ],
+      "sol": "The upward force due to surface tension is the vertical component of the force acting along the circumference: F_up = 2πr γ cosθ. This balances the weight of the liquid column: W = πr² h ρ g. Equating F_up = W gives 2πr γ cosθ = πr² h ρ g, which simplifies to h = 2γ cosθ/(ρ g r). The factor 2 arises from the circumference, and cosθ accounts for the contact angle measured through the liquid. Options with sinθ or missing factor 2 are incorrect."
+    },
+    {
+      "id": 127,
+      "text": "The dimensionless group that compares viscous forces to surface tension forces is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "Reynolds number",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Capillary number",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Bond number",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Weber number",
+          "c": false
+        }
+      ],
+      "sol": "The Capillary number is defined as Ca = μU/γ, where μ is dynamic viscosity, U is characteristic velocity, and γ is surface tension. It directly represents the ratio of viscous forces (μU) to surface tension forces (γ). The Reynolds number (Re = ρUL/μ) compares inertia to viscous forces. The Bond number (Bo = ρgL²/γ) compares gravity to surface tension. The Weber number (We = ρU²L/γ) compares inertia to surface tension. Therefore, the correct choice is Capillary number."
+    },
+    {
+      "id": 128,
+      "text": "A long rod is fixed between two rigid supports and heated uniformly by ΔT. The thermal stress developed in the rod is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "σ = E α ΔT (tensile)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "σ = -E α ΔT (compressive)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "σ = E α ΔT/(1-ν)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "σ = -E α ΔT/(1-ν)",
+          "c": false
+        }
+      ],
+      "sol": "When the rod is constrained between rigid supports, the total axial strain must be zero. The free thermal strain would be ε_th = αΔT. To suppress this, a mechanical strain ε_mech = -αΔT is induced. For a linear elastic material, stress σ = E ε_mech = -E α ΔT. The negative sign indicates compressive stress on heating. The factor (1-ν) appears in plane-strain conditions for plates, not for a simple constrained rod. Hence the stress is -E α ΔT (compressive)."
+    },
+    {
+      "id": 129,
+      "text": "For a valid plane-strain fracture toughness K_IC measurement, the specimen thickness B must satisfy:",
+      "options": [
+        {
+          "l": "a",
+          "t": "B ≥ 2.5 (K_IC/σ_y)²",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "B ≤ 2.5 (K_IC/σ_y)²",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "B ≥ 2.5 (σ_y/K_IC)²",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "B ≤ 2.5 (σ_y/K_IC)²",
+          "c": false
+        }
+      ],
+      "sol": "Plane-strain fracture toughness K_IC requires the specimen to be thick enough to ensure plane-strain conditions at the crack tip. The standard thickness requirement is B ≥ 2.5 (K_IC/σ_y)², where σ_y is the yield strength. This ensures the plastic zone size is small relative to thickness, so the stress state is plane strain. The inverse ratio (σ_y/K_IC)² would give an incorrect thickness scale. The inequality direction is ≥, not ≤, because thicker specimens are needed to achieve plane strain."
+    },
+    {
+      "id": 130,
+      "text": "According to the von Mises yield criterion, the equivalent stress σ_eq in terms of principal stresses σ₁, σ₂, σ₃ is:",
+      "options": [
+        {
+          "l": "a",
+          "t": "σ_eq = √[(σ₁-σ₂)²+(σ₂-σ₃)²+(σ₃-σ₁)²]/√2",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "σ_eq = √[(σ₁-σ₂)²+(σ₂-σ₃)²+(σ₃-σ₁)²]/2",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "σ_eq = (|σ₁-σ₂|+|σ₂-σ₃|+|σ₃-σ₁|)/√2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "σ_eq = max(|σ₁-σ₂|,|σ₂-σ₃|,|σ₃-σ₁|)",
+          "c": false
+        }
+      ],
+      "sol": "The von Mises equivalent stress is derived from the second deviatoric stress invariant J₂. In terms of principal stresses, σ_eq = √(3J₂) = √[(σ₁-σ₂)²+(σ₂-σ₃)²+(σ₃-σ₁)²]/√2. This expression yields the uniaxial yield stress σ_y when yielding occurs. Option B has denominator 2 instead of √2. Option C is a sum of absolute differences, not the von Mises form. Option D is the Tresca criterion (maximum shear stress). Therefore, the correct formula is the one with denominator √2."
     }
   ],
   "mains-gs1/modern-india-1919-1947": [
@@ -265776,6 +265911,114 @@
         }
       ],
       "sol": "Quantum coherence is a genuine quantum resource. In the resource‑theory framework, coherence cannot be freely turned into work; any protocol that extracts work from coherence must perform a measurement or a coherent operation that inevitably produces measurement back‑action. This back‑action generates entropy, preserving the second law and ensuring that the total entropy production accounts for the quantum nature of the resource."
+    },
+    {
+      "id": 125,
+      "text": "For a steady‑state Markovian system, the thermodynamic uncertainty relation gives a lower bound on the relative uncertainty of a time‑integrated current J. Which inequality correctly expresses this bound?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Var(J)/⟨J⟩² ≥ 1/⟨Σ⟩",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Var(J)/⟨J⟩² ≥ 2/⟨Σ⟩",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Var(J)/⟨J⟩² ≥ ⟨Σ⟩/2",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Var(J)/⟨J⟩² ≥ ⟨Σ⟩",
+          "c": false
+        }
+      ],
+      "sol": "Barato and Seifert (2015) proved that for any steady‑state Markovian system the relative uncertainty satisfies Var(J)/⟨J⟩² ≥ 2/⟨Σ⟩, where ⟨Σ⟩ is the mean total entropy production over the observation time. The factor 2 is a universal constant in the original bound; it becomes tighter for unicyclic networks and looser for multicyclic ones."
+    },
+    {
+      "id": 126,
+      "text": "The randomness parameter r that characterises the number of rate‑limiting substeps in a molecular motor cycle is defined as:",
+      "options": [
+        {
+          "l": "a",
+          "t": "r = v d / (2D)",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "r = 2D / (v d)",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "r = D / (v d)",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "r = v / (2D d)",
+          "c": false
+        }
+      ],
+      "sol": "In stochastic thermodynamics of molecular motors, the randomness parameter r = 2D/(v d) quantifies the dispersion of stepping. Here D is the diffusion coefficient, v the mean velocity, and d the step size. It is distinct from the Fano factor and directly reflects the number of kinetic substeps in the motor’s mechanochemical cycle."
+    },
+    {
+      "id": 127,
+      "text": "In thermodynamic geometry, the sign of the scalar curvature is physically meaningful for indicating the nature of interactions (attractive vs repulsive) for which metric?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Ruppeiner metric",
+          "c": true
+        },
+        {
+          "l": "b",
+          "t": "Weinhold metric",
+          "c": false
+        },
+        {
+          "l": "c",
+          "t": "Both metrics",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Neither metric",
+          "c": false
+        }
+      ],
+      "sol": "The Ruppeiner metric is conformally related to the Weinhold metric by a temperature factor. The sign of the Ruppeiner curvature correlates with interaction type (negative for attractive, positive for repulsive), whereas the Weinhold curvature sign does not carry this direct thermodynamic interpretation. Hence only the Ruppeiner curvature sign is meaningful for interaction strength."
+    },
+    {
+      "id": 128,
+      "text": "In a quantum Otto cycle, if the working substance develops coherence (off‑diagonal elements in the energy basis) during the adiabatic strokes, what is the effect on the work output?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Coherence reduces the work output to zero",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Coherence adds an extra work term proportional to its magnitude",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Coherence has no effect on work output",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Coherence violates the second law of thermodynamics",
+          "c": false
+        }
+      ],
+      "sol": "When coherence is generated during the adiabatic strokes of a quantum Otto engine, the work output acquires an additional contribution proportional to the magnitude of the coherence. This term can enhance or diminish work depending on the driving protocol, but total entropy production remains non‑negative, so the second law is not violated. The extra term arises from the non‑commuting Hamiltonian dynamics that create off‑diagonal density‑matrix elements."
     }
   ],
   "biology/biomolecules-enzymes": [
