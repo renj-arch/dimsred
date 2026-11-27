@@ -1112,6 +1112,30 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <p>Modeling of inverter‑based resources in SCOPF includes their capability curves (P‑Q envelopes), voltage‑ride‑through requirements, and frequency‑response droop settings. Grid‑forming inverters are represented as controllable voltage sources with a virtual inertia constant H_vir and droop coefficient D_vir. Their contribution to system inertia appears in the swing‑equation constraints for frequency‑security contingencies. The SCOPF must also enforce rate‑of‑change‑of‑frequency (RoCoF) limits after the loss of the largest generator, which couples the inertia allocation to the optimisation.</p>
 
 <h3>Electromagnetic Transient Simulation for HVDC Converter Stations</h3>
+<!-- passage-cartoon:0387497e3fc4 -->
+<figure class="passage-cartoon" data-cartoon="0387497e3fc4">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <rect x="200" y="80" width="160" height="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polyline points="210,130 230,110 250,140 270,100 290,130 310,110 330,140 350,100" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="60" y="110" width="30" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="100" y="110" width="30" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="75" y1="110" x2="75" y2="90" stroke="#1f2937" stroke-width="3"/>
+  <line x1="115" y1="110" x2="115" y2="90" stroke="#1f2937" stroke-width="3"/>
+  <rect x="410" y="100" width="60" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="410" y1="100" x2="470" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <polyline points="280,210 270,230 285,230 275,250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="14" y1="276" x2="546" y2="276" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="70" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">EMT Simulation</text>
+  <text x="40" y="40" font-size="12" fill="#1f2937" font-family="sans-serif">PLL Bandwidth</text>
+  <text x="80" y="100" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Converter Transformer</text>
+  <text x="440" y="95" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Valve Bridge</text>
+  <text x="280" y="240" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">DC Fault Current</text>
+  <text x="280" y="295" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Electromagnetic Transient Simulation for HVDC Converter Stations</text>
+</svg></div>
+  <figcaption>Electromagnetic Transient Simulation for HVDC Converter Stations</figcaption>
+</figure>
+
 <p>Electromagnetic transient (EMT) simulation of HVDC converter stations captures sub‑cycle phenomena such as valve commutation failures, DC‑side fault currents, and control‑system interactions that are invisible to phasor‑domain tools. The simulation model comprises the AC network (represented by frequency‑dependent line models or π‑sections), the converter transformer (including saturation and magnetising branches), the valve bridge (ideal switches with snubber circuits or detailed IGBT/diode models), the DC cable/overhead line (distributed‑parameter Bergeron or frequency‑dependent model), and the control hierarchy (phase‑locked loop, current‑control loops, DC‑voltage control, power‑modulation controller).</p>
 <p>The time step for EMT studies is typically 10–50 µs to resolve the highest switching frequency (e.g., 2 kHz for modular multilevel converters). For a 12‑pulse line‑commutated converter (LCC), the commutation process is modelled by the overlap angle μ, which depends on the AC‑side inductance L_ac and the DC current I_d: μ = arccos(1 – 2 ω L_ac I_d / V_ll). A commutation failure occurs when the extinction angle γ falls below the minimum γ_min (≈ 10°). The simulation must capture the dynamic recovery of γ after a fault, which is governed by the PLL bandwidth and the current‑controller gains.</p>
 <p>For voltage‑source converters (VSC) based on modular multilevel converters (MMC), each sub‑module (SM) capacitor voltage is a state variable. The circulating current control loop suppresses the second‑harmonic circulating current i_circ,2 = (1/2) I_dc sin(2 ω t + φ). The SM capacitor voltage balancing algorithm (e.g., nearest‑level modulation with sorting) is implemented at the switching frequency. EMT models often use an averaged‑value model for the MMC when the focus is on slower dynamics (sub‑synchronous oscillations, DC‑voltage control), but a detailed switching model is required for insulation coordination and electromagnetic compatibility studies.</p>
@@ -1128,9 +1152,70 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <li>Failing to coordinate the adaptive protection settings update interval with the WAMS latency budget, causing stale settings during fast transients.</li>
 </ul>
 <h3>Sub‑Synchronous Resonance and Damping Techniques</h3>
+<!-- passage-cartoon:b8585f1b89c7 -->
+<figure class="passage-cartoon" data-cartoon="b8585f1b89c7">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <line x1="150" y1="160" x2="470" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="150" cy="160" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="230" cy="160" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="310" cy="160" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="390" cy="160" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="470" cy="160" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="75" y1="140" x2="75" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="85" y1="140" x2="85" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="475" y1="140" x2="475" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="485" y1="140" x2="485" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <polyline points="75,160 78,150 82,170 85,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="460" y="80" width="70" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="85" y1="160" x2="150" y2="160" stroke="#1f2937" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="475" y1="160" x2="390" y2="160" stroke="#1f2937" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="310" y="100" font-size="14" fill="#1f2937" text-anchor="middle">SSR</text>
+  <text x="310" y="80" font-size="14" fill="#1f2937" text-anchor="middle">Torsional Modes 15–36 Hz</text>
+  <text x="80" y="120" font-size="14" fill="#1f2937" text-anchor="middle">Series Capacitor</text>
+  <text x="80" y="200" font-size="14" fill="#1f2937" text-anchor="middle">Damping Resistor</text>
+  <text x="480" y="120" font-size="14" fill="#1f2937" text-anchor="middle">TCSC</text>
+  <text x="520" y="70" font-size="14" fill="#1f2937" text-anchor="middle">Lead‑Lag Controller</text>
+  <text x="280" y="300" font-size="12" fill="#1f2937" text-anchor="middle">Sub‑Synchronous Resonance and Damping Techniques</text>
+</svg></div>
+  <figcaption>Sub‑Synchronous Resonance and Damping Techniques</figcaption>
+</figure>
+
 <p>Sub‑synchronous resonance (SSR) arises when the electrical network exchanges energy with a turbine‑generator shaft at frequencies below the nominal system frequency. The phenomenon is classified into three main types: torsional interaction (TI), induction generator effect (IGE), and torsional amplification (TA). In a series‑compensated transmission line, the capacitive reactance creates a resonant frequency <em>f<sub>r</sub></em> = 1 / (2π√(L<sub>eq</sub>C<sub>series</sub>)). When <em>f<sub>r</sub></em> coincides with a torsional mode of the shaft (typically 10–45 Hz for large steam turbines), energy can be pumped into the mechanical system, leading to shaft fatigue or catastrophic failure. The IEEE SSR benchmark system (IEEE PES Task Force, 1995) defines a 5‑mass turbine‑generator model with modal frequencies at 15.5, 22.3, 29.8, 36.5 Hz. Damping techniques are grouped into passive, active, and control‑based methods. Passive solutions include supplementary damping resistors across the series capacitor, tuned‑mass dampers on the shaft, and static synchronous series compensators (SSSC) with a damping controller. Active methods employ a thyristor‑controlled series capacitor (TCSC) where the firing angle is modulated by a supplementary signal derived from shaft speed deviation Δω. The TCSC damping controller is typically a lead‑lag compensator: G<sub>c</sub>(s) = K (1 + sT<sub>1</sub>) / (1 + sT<sub>2</sub>) with T<sub>1</sub> > T<sub>2</sub> to provide phase lead at the target torsional mode. Modern grid‑forming voltage‑source converters (VSC) can inject a supplementary current proportional to Δω, effectively adding virtual damping torque. The design procedure follows: (1) compute the network‑generator impedance matrix Z<sub>net</sub>(jω) and the turbine‑generator mechanical impedance Z<sub>mech</sub>(jω); (2) locate frequencies where Re{Z<sub>net</sub> + Z<sub>mech</sub>} < 0; (3) synthesize a controller that makes the net resistance positive at those frequencies; (4) validate with time‑domain EMT simulation including saturation and protection logic. A practical rule of thumb: the supplementary damping torque coefficient D<sub>sup</sub> should be at least 5 % of the rated torque for the most vulnerable mode.</p>
 
 <h3>Harmonic Analysis and Active Filter Design</h3>
+<!-- passage-cartoon:ea25c910ab96 -->
+<figure class="passage-cartoon" data-cartoon="ea25c910ab96">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Power line -->
+  <line x1="50" y1="160" x2="510" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <!-- Harmonic waves -->
+  <path d="M150,140 Q160,120 170,140 Q180,160 190,140" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M280,140 Q290,120 300,140 Q310,160 320,140" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M410,140 Q420,120 430,140 Q440,160 450,140" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Passive filter box -->
+  <rect x="60" y="130" width="80" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- APF box -->
+  <rect x="260" y="120" width="120" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Arrow from APF to line -->
+  <line x1="320" y1="200" x2="320" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="315,165 320,160 325,165" fill="#1f2937"/>
+  <!-- Resonance peak -->
+  <polygon points="400,160 390,80 410,80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Labels -->
+  <text x="30" y="30" font-size="14" fill="#1f2937">IEEE 519 THD 5%</text>
+  <text x="80" y="80" font-size="14" fill="#1f2937">Passive Filter</text>
+  <text x="260" y="100" font-size="14" fill="#1f2937">Shunt APF</text>
+  <text x="380" y="60" font-size="14" fill="#1f2937">Resonance Peak</text>
+  <text x="400" y="200" font-size="14" fill="#1f2937">Rating 0.27 I1</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="290" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="308" font-size="13" fill="#fbf7ec" text-anchor="middle">Harmonic Analysis &amp; Active Filter Design</text>
+</svg></div>
+  <figcaption>Harmonic Analysis and Active Filter Design</figcaption>
+</figure>
+
 <p>Power‑quality standards (IEEE 519‑2014, IEC 61000‑3‑6) limit voltage total harmonic distortion (THD<sub>V</sub>) to 5 % and current THD<sub>I</sub> to 8 % at the point of common coupling for systems ≤ 69 kV. Harmonic sources include six‑pulse rectifiers (characteristic harmonics h = 6k ± 1), twelve‑pulse drives (h = 12k ± 1), and single‑phase nonlinear loads producing triplen (3rd, 9th, 15th) currents that add in the neutral. The harmonic load flow is solved by superimposing each harmonic order: V<sub>h</sub> = Z<sub>h</sub> I<sub>h</sub>, where Z<sub>h</sub> is the network impedance at harmonic h. Resonance occurs when the parallel combination of shunt capacitors and system inductance creates a high impedance at a specific h, amplifying voltage distortion. Active power filters (APF) are classified as shunt, series, or hybrid. A shunt APF injects a compensating current i<sub>c</sub> = i<sub>load</sub> – i<sub>ref</sub>, where i<sub>ref</sub> is the fundamental‑only component extracted by a synchronous reference frame (SRF) PLL or a moving‑average filter. The control bandwidth must exceed the highest targeted harmonic (typically 2.5 kHz for up to the 50th). The DC‑link voltage V<sub>dc</sub> is regulated by a PI controller that balances the average power drawn from the grid. Switching frequency f<sub>sw</sub> is chosen to satisfy the ripple current requirement Δi<sub>L</sub> ≤ 0.1 I<sub>rated</sub>: Δi<sub>L</sub> ≈ V<sub>dc</sub> / (L f<sub>sw</sub>). For a 400 V, 100 kVA APF with L = 2 mH, f<sub>sw</sub> ≥ 10 kHz. The rating of the APF is sized by the harmonic current spectrum: S<sub>APF</sub> = √3 V<sub>LL</sub> √(∑ I<sub>h</sub>²). A design example: a 6‑pulse rectifier draws I<sub>5</sub> = 0.2 I<sub>1</sub>, I<sub>7</sub> = 0.14 I<sub>1</sub>, I<sub>11</sub> = 0.09 I<sub>1</sub>. The APF must supply √(0.2²+0.14²+0.09²) I<sub>1</sub> ≈ 0.27 I<sub>1</sub>. If I<sub>1</sub> = 200 A, the APF current rating ≈ 54 A per phase. Passive tuned filters (single‑tuned, double‑tuned, high‑pass) are still used for bulk harmonic absorption; their quality factor Q = X<sub>L</sub>/R determines the sharpness of tuning. Coordination between passive and active filters avoids interaction: the passive filter handles the dominant low‑order harmonics, while the APF cleans the residual and provides dynamic reactive power support.</p>
 
 <div class="example-box">
@@ -1148,6 +1233,62 @@ The advanced sections above deepen the candidate’s ability to handle multi‑m
 <p>The modern smart grid relies on a layered communication architecture defined by IEC 61850 for substation automation, IEC 60870‑5‑104 for SCADA telecontrol, and IEEE 2030.5 (SEP 2.0) for demand‑response and distributed energy resource (DER) management. IEC 61850 uses Manufacturing Message Specification (MMS) over TCP/IP for client‑server services and Generic Object Oriented Substation Event (GOOSE) for fast peer‑to‑peer protection signalling (≤ 4 ms). Sampled Value (SV) streams transport digitised CT/PT data at 4 kHz or 80 samples/cycle for process‑bus applications. The protocol stack maps logical nodes (LN) such as PTOC (overcurrent protection) and MMXU (measurement) to data objects with standardized Common Data Classes (CDC). Cybersecurity is addressed by IEC 62351, which mandates TLS 1.2 for MMS, DTLS for GOOSE/SV, and role‑based access control (RBAC) with X.509 certificates. A typical deployment uses a Public Key Infrastructure (PKI) where each Intelligent Electronic Device (IED) holds a device certificate signed by the utility Certificate Authority (CA). Key management follows the IEC 62351‑9 certificate lifecycle: enrollment, renewal, revocation via CRL/OCSP. For wide‑area monitoring, IEEE C37.118.2 defines the synchrophasor data format (PMU streaming) over UDP with a configurable data rate (30–60 fps). The communication latency budget for wide‑area damping control is ≤ 100 ms round‑trip; therefore, network engineering must guarantee jitter < 10 ms and packet loss < 0.1 %. Intrusion detection systems (IDS) for the substation LAN employ specification‑based rules (e.g., unexpected GOOSE publisher MAC, MMS service outside allowed LN) and anomaly‑based machine‑learning models trained on normal traffic baselines. A defense‑in‑depth strategy includes: (1) physical port security (IEEE 802.1X), (2) VLAN segmentation (control, monitoring, corporate), (3) unidirectional security gateways (data diodes) for historian replication, (4) secure firmware update with signed images and secure boot. The NIST IR 7628 guideline maps these controls to the smart‑grid logical interfaces (e.g., Interface 3 – Substation to Control Center). Regular penetration testing and tabletop exercises validate incident‑response playbooks for scenarios such as GOOSE spoofing or malicious set‑point changes to inverter reactive power.</p>
 
 <h3>Electric Vehicle Grid Integration and Charging Infrastructure</h3>
+<!-- passage-cartoon:6480c710ada7 -->
+<figure class="passage-cartoon" data-cartoon="6480c710ada7">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+
+  <!-- Transformer -->
+  <rect x="30" y="130" width="40" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Feeder line -->
+  <path d="M70,160 H500" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Level 1 charger -->
+  <rect x="190" y="100" width="30" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Level 2 charger -->
+  <rect x="290" y="100" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- DC fast charger -->
+  <rect x="390" y="80" width="50" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Voltage meter -->
+  <circle cx="500" cy="160" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="500" y1="160" x2="521" y2="139" stroke="#1f2937" stroke-width="3"/>
+
+  <!-- Charger-to-feeder lines (single path) -->
+  <path d="M205,130 V160 M310,130 V160 M415,130 V160" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Smart charging clock -->
+  <circle cx="80" cy="60" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M80,60 L92,60 M80,60 L80,42" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- V2G bidirectional arrow -->
+  <path d="M430,60 L490,60" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- BESS battery -->
+  <rect x="460" y="250" width="40" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Phase balance triangle -->
+  <path d="M70,260 L80,240 L90,260 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Bottom caption strip -->
+  <rect x="14" y="290" width="532" height="30" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+
+  <!-- Labels -->
+  <text x="300" y="60" font-size="14" fill="#1f2937" text-anchor="middle">Level 1/2/DC</text>
+  <text x="500" y="120" font-size="14" fill="#1f2937" text-anchor="middle">Voltage Rise</text>
+  <text x="80" y="30" font-size="14" fill="#1f2937" text-anchor="middle">Smart Charging</text>
+  <text x="460" y="30" font-size="14" fill="#1f2937" text-anchor="middle">V2G</text>
+  <text x="480" y="285" font-size="14" fill="#1f2937" text-anchor="middle">BESS</text>
+  <text x="80" y="285" font-size="14" fill="#1f2937" text-anchor="middle">Phase Balance</text>
+
+  <!-- Section title -->
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle">Electric Vehicle Grid Integration and Charging Infrastructure</text>
+</svg></div>
+  <figcaption>Electric Vehicle Grid Integration and Charging Infrastructure</figcaption>
+</figure>
+
 <p>Electric vehicle (EV) charging loads are classified by power level: Level 1 (1.4–1.9 kW, 120 V AC), Level 2 (3.7–22 kW, 240/400 V AC), and DC fast charging (50–350 kW, 400–800 V DC). The aggregate impact on distribution networks is assessed through stochastic charging models that consider arrival time, state‑of‑charge (SOC) distribution, and driver behaviour. A common Monte‑Carlo framework samples daily mileage from a log‑normal distribution (μ = 40 km, σ = 15 km), converts to energy demand using vehicle efficiency (0.15 kWh/km), and assigns charging start times based on a time‑of‑use price signal. Voltage deviation ΔV at a feeder node is approximated by ΔV ≈ (P<sub>EV</sub>R + Q<sub>EV</sub>X) / V<sub>nom</sub>, where R and X are the cumulative feeder resistance and reactance. For a 10 kV feeder with R = 0.5 Ω, X = 0.8 Ω, a cluster of 50 kW EV chargers (PF = 0.95) causes ΔV ≈ (50 000×0.5 + 16 400×0.8)/10 000 ≈ 3.8 % voltage rise – exceeding the ±2.5 % statutory limit. Mitigation strategies include: (1) smart charging algorithms that shift load to off‑peak (valley‑filling) using model‑predictive control (MPC) with a 15‑minute resolution; (2) vehicle‑to‑grid (V2G) where the EV battery provides ancillary services (frequency regulation, voltage support) under ISO 15118‑20 communication; (3) on‑site stationary storage (BESS) co‑located with DC fast chargers to shave peak demand; (4) phase‑balancing of single‑phase Level 2 chargers across the three phases to reduce neutral current and voltage unbalance factor (VUF). The IEC 61851‑1 standard defines the control pilot (CP) duty‑cycle signalling for maximum current: 10 % duty = 6 A, 50 % = 32 A, 96 % = 80 A. For DC charging, IEC 61851‑23/24 and CHAdeMO/CCS‑2 protocols manage the handshake, insulation monitoring, and dynamic current limit based on battery temperature. Grid codes increasingly require EV chargers to provide reactive power capability (Q = ±0.33 P<sub>rated</sub>) and ride‑through during voltage dips (LVRT) down to 0.2 p.u. for 150 ms. Planning studies use the probabilistic load flow (PLF) with EV penetration scenarios up to 30 % of residential customers, evaluating transformer loss‑of‑life using the IEEE C57.91 hot‑spot temperature model.</p>
 
 <h3>Power System Reliability Assessment Using Monte Carlo Simulation</h3>
