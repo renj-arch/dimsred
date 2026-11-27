@@ -659,6 +659,57 @@ Corrected H = 150.22 + 0.026 = 150.246 m ≈ 150.25 m.</div>
 <p>Design considerations for ASCS deployment: (1) detector layout must capture queue formation on all critical approaches; (2) communication infrastructure (fiber, wireless) must support sub‑second data exchange; (3) fallback to time‑of‑day plans is essential for system failures; (4) institutional coordination among traffic agencies, transit operators, and emergency services ensures priority logic (e.g., transit signal priority, emergency vehicle pre‑emption) is embedded in the optimisation objective.</p>
 
 <h3>Modern Surveying Integration: GNSS, LiDAR, and Photogrammetry for 3D Modeling</h3>
+<!-- passage-cartoon:abdbd2d33409 -->
+<figure class="passage-cartoon" data-cartoon="abdbd2d33409">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central 3D model (cube) -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <polygon points="280,140 320,120 380,150 340,170"/>
+    <polygon points="280,140 240,120 300,150 340,170"/>
+    <polygon points="240,120 280,140 320,120"/>
+    <polygon points="300,150 340,170 380,150"/>
+  </g>
+  <!-- GNSS satellite -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <circle cx="120" cy="80" r="30"/>
+    <line x1="120" y1="50" x2="120" y2="20"/>
+    <line x1="120" y1="20" x2="110" y2="30"/>
+    <line x1="120" y1="20" x2="130" y2="30"/>
+  </g>
+  <!-- LiDAR airplane -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <path d="M440,80 l-30,0 l-10,-15 l-10,30 l-10,-30 l-10,15 l-30,0"/>
+  </g>
+  <!-- Photogrammetry camera -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <rect x="380" y="220" width="40" height="20"/>
+    <line x1="400" y1="220" x2="400" y2="200"/>
+    <circle cx="400" cy="190" r="5"/>
+  </g>
+  <!-- Arrows to central model -->
+  <g stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)">
+    <line x1="150" y1="80" x2="260" y2="140"/>
+    <line x1="410" y1="80" x2="340" y2="150"/>
+    <line x1="400" y1="200" x2="340" y2="160"/>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Labels -->
+  <text x="120" y="130" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">GNSS</text>
+  <text x="440" y="130" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">LiDAR</text>
+  <text x="400" y="250" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Photogrammetry</text>
+  <text x="280" y="260" font-family="sans-serif" font-size="16" fill="#1f2937" text-anchor="middle">3D Model Fusion</text>
+  <!-- Bottom caption strip -->
+  <rect x="0" y="300" width="560" height="20" fill="#e5e1d9"/>
+  <text x="280" y="315" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Modern Surveying Integration</text>
+</svg></div>
+  <figcaption>Modern Surveying Integration: GNSS, LiDAR, and Photogrammetry for 3D Modeling</figcaption>
+</figure>
+
 <p>Contemporary surveying merges Global Navigation Satellite System (GNSS) positioning, Light Detection and Ranging (LiDAR), and digital photogrammetry to produce high‑resolution three‑dimensional models for engineering design, asset inventory, and deformation monitoring. GNSS provides absolute georeferencing: dual‑frequency receivers (L1/L2 or L1/L5) achieve centimetre‑level accuracy in real‑time kinematic (RTK) mode with a base‑station baseline < 20 km, or in precise point positioning (PPP) mode using satellite‑based augmentation (e.g., IGS orbits, clock corrections). Multi‑constellation (GPS, GLONASS, Galileo, BeiDou) increases satellite visibility, reducing dilution of precision (DOP) in urban canyons.</p>
 <p>Airborne LiDAR systems emit laser pulses (typically 1064 nm) at rates up to 2 MHz, recording multiple returns per pulse. The point cloud density (points/m²) depends on flight altitude, scan angle, and pulse repetition frequency. For corridor mapping, a density of 20–50 pts/m² yields vertical accuracy of 5–10 cm (RMSE) on hard surfaces. Terrestrial laser scanning (TLS) complements airborne data by capturing vertical façades and under‑bridge geometry with millimetre precision. Registration of multiple TLS stations uses iterative closest point (ICP) algorithms constrained by GNSS‑surveyed control targets.</p>
 <p>Structure‑from‑Motion (SfM) photogrammetry processes overlapping images (typically 80 % forward, 60 % side overlap) to generate dense point clouds and textured meshes. Camera calibration (focal length, principal point, radial distortion) is solved simultaneously with exterior orientation via bundle adjustment. Ground sampling distance (GSD) = (sensor width × flight height) / (focal length × image width). For a 24 MP full‑frame sensor at 100 m altitude with 35 mm lens, GSD ≈ 2.5 cm. Accuracy of SfM models reaches 1–2 × GSD when ground control points (GCPs) are distributed at ≤ 50 m intervals.</p>
@@ -666,6 +717,53 @@ Corrected H = 150.22 + 0.026 = 150.246 m ≈ 150.25 m.</div>
 <p>Quality assurance follows ISO 19157 (geographic information — data quality). Metadata records include acquisition date, sensor model, processing software version, coordinate reference system, and estimated positional uncertainties (horizontal, vertical). For legal cadastre, the combined standard uncertainty must not exceed 2 cm horizontal and 3 cm vertical (k=2). Continuous operating reference stations (CORS) networks provide real‑time correction streams (RTCM 3.x) enabling survey‑grade GNSS without a local base, streamlining field operations for large linear projects.</p>
 
 <h3>Risk Management and Value Engineering in Construction Projects</h3>
+<!-- passage-cartoon:89140944c3c2 -->
+<figure class="passage-cartoon" data-cartoon="89140944c3c2">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- background -->
+  <line x1="180" y1="160" x2="380" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <!-- scale beam -->
+  <path d="M180,160 V240 H165 V250 H150 V240 H165" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- left pan with bowl -->
+  <path d="M380,160 V240 H395 V250 H410 V240 H395" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- right pan with bowl -->
+  <polygon points="170,250 180,230 190,250" fill="#1f2937"/>
+  <!-- risk triangle -->
+  <circle cx="190" cy="250" r="6" fill="#1f2937"/>
+  <!-- risk cloud -->
+  <circle cx="380" cy="250" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- gear -->
+  <path d="M380,250 L400,230 L380,230 L400,250 L380,270 L400,250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- arrow from gear -->
+  <rect x="80" y="50" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- risk matrix icon -->
+  <rect x="420" y="50" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Monte Carlo dice -->
+  <rect x="80" y="260" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- contingency box -->
+  <rect x="420" y="260" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- FAST rect1 -->
+  <rect x="480" y="260" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- FAST rect2 -->
+  <rect x="540" y="260" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- FAST rect3 -->
+  <line x1="460" y1="275" x2="480" y2="275" stroke="#1f2937" stroke-width="3"/>
+  <!-- FAST arrow1 -->
+  <line x1="520" y1="275" x2="540" y2="275" stroke="#1f2937" stroke-width="3"/>
+  <!-- FAST arrow2 -->
+  <rect x="14" y="290" width="532" height="20" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <!-- caption strip -->
+  <text x="100" y="35" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Risk Matrix</text>
+  <text x="440" y="35" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Monte Carlo</text>
+  <text x="100" y="245" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Contingency</text>
+  <text x="480" y="245" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">FAST Diagram</text>
+  <text x="380" y="130" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Value Eng.</text>
+  <text x="280" y="304" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Risk Management and Value Engineering in Construction Projects</text>
+</svg></div>
+  <figcaption>Risk Management and Value Engineering in Construction Projects</figcaption>
+</figure>
+
 <p>Effective project delivery integrates quantitative risk analysis with value engineering (VE) to optimise cost, schedule, and performance. Risk identification uses a structured Work Breakdown Structure (WBS) and a risk breakdown structure (RBS) covering technical, environmental, contractual, and stakeholder categories. Qualitative assessment ranks risks by probability (P) and impact (I) on a 1–5 scale, producing a risk matrix. Quantitative analysis employs Monte Carlo simulation on the CPM schedule and cost model: each risk event is assigned a probability distribution (e.g., triangular for duration delay, lognormal for cost overrun). The simulation yields probabilistic completion dates (P50, P80) and cost contingencies (e.g., 10 % at P80). Sensitivity charts (tornado diagrams) highlight drivers such as ground condition uncertainty or permit delays.</p>
 <p>Risk response strategies follow the hierarchy: avoid (design change), mitigate (ground improvement, advanced procurement), transfer (insurance, contractual clauses), accept (contingency reserve). Contingency allocation distinguishes between management reserve (for unknown‑unknowns) and contingency reserve (for known risks). Earned Value Management (EVM) tracks risk‑adjusted performance: the risk‑adjusted baseline incorporates contingency drawdown curves linked to risk trigger events.</p>
 <p>Value Engineering applies a systematic function‑analysis methodology (FAST diagram) to identify functions that contribute to project value. The VE job plan comprises: (1) Information phase — gather design, cost, schedule data; (2) Function analysis — classify functions as basic, secondary, unwanted; (3) Creative phase — generate alternatives using brainstorming and TRIZ principles; (4) Evaluation phase — score alternatives on cost, performance, schedule, risk using weighted criteria; (5) Development phase — prepare detailed designs for selected alternatives; (6) Presentation phase — submit VE proposals with life‑cycle cost analysis (LCCA). LCCA discounts future costs (maintenance, energy, replacement) to present value using a real discount rate (typically 3–5 %).</p>
@@ -699,9 +797,80 @@ Corrected H = 150.22 + 0.026 = 150.246 m ≈ 150.25 m.</div>
 </div>
 
 <h3>Bridge Hydraulics and Scour Assessment for River Crossings</h3>
+<!-- passage-cartoon:d100794063ae -->
+<figure class="passage-cartoon" data-cartoon="d100794063ae">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Water surface -->
+  <line x1="14" y1="120" x2="546" y2="120" stroke="#1f2937" stroke-width="3"/>
+  <!-- Pier -->
+  <rect x="270" y="120" width="20" height="140" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Scour hole -->
+  <ellipse cx="280" cy="200" rx="30" ry="20" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Riprap stones -->
+  <circle cx="250" cy="255" r="5" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="270" cy="255" r="5" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="290" cy="255" r="5" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="310" cy="255" r="5" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left graph: axes -->
+  <line x1="80" y1="80" x2="80" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="180" x2="180" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left graph: flood curve -->
+  <path d="M80,180 Q130,100 180,80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Right profile: HEC-RAS stepped line -->
+  <polyline points="380,180 420,180 420,160 460,160 460,140 500,140" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Riprap ruler line -->
+  <line x1="240" y1="270" x2="320" y2="270" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption line -->
+  <line x1="14" y1="286" x2="546" y2="286" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="50" y="80" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="start">100‑yr Flood Qd</text>
+  <text x="500" y="170" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="end">HEC‑RAS Profile</text>
+  <text x="280" y="60" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">HEC‑18 Scour Eq.</text>
+  <text x="280" y="285" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Riprap D50 = 4.5 m</text>
+  <text x="280" y="306" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Bridge Hydraulics and Scour Assessment</text>
+</svg></div>
+  <figcaption>Bridge Hydraulics and Scour Assessment for River Crossings</figcaption>
+</figure>
+
 <p>Bridge hydraulic design integrates open‑channel flow analysis with local scour prediction at piers and abutments. The design discharge Q<sub>d</sub> is obtained from the 100‑year flood frequency curve (Log‑Pearson Type III) and increased by a factor of 1.1 for climate‑change allowance. The water‑surface profile is computed using the standard step method (HEC‑RAS) with Manning’s n values calibrated from field measurements (typically 0.030‑0.035 for natural channels). For a cylindrical pier of diameter D, the equilibrium scour depth y<sub>s</sub> is estimated by the HEC‑18 equation y<sub>s</sub>/D = 2.0 K₁ K₂ K₃ (F<sub>r</sub>)⁰·⁴³ where K₁ accounts for pier shape (1.0 for circular), K₂ for flow angle (1.0 for aligned flow), K₃ for bed condition (1.1 for live‑bed), and F<sub>r</sub> = V/√(g y) is the Froude number based on approach velocity V and flow depth y. Abutment scour uses the Froehlich equation y<sub>s</sub> = 2.27 K₁ K₂ (L′/y)⁰·⁴³ F<sub>r</sub>⁰·⁶¹ where L′ is the projected abutment length. Countermeasures include riprap (D₅₀ ≥ 1.5 y<sub>s</sub>), guide banks, and sacrificial piles. The examiner may ask to compute the required riprap size for a pier with D = 2 m, V = 3 m/s, y = 5 m, and live‑bed condition; the candidate must first compute F<sub>r</sub> = 3/√(9.81 × 5) = 0.43, then y<sub>s</sub> = 2.0 × 1.0 × 1.0 × 1.1 × (0.43)⁰·⁴³ × 2 = 2.0 × 1.1 × 0.68 × 2 ≈ 3.0 m, and finally D₅₀ = 1.5 × 3.0 = 4.5 m (rounded to standard class 4‑6 m). A frequent trap is neglecting the live‑bed factor K₃, which underestimates scour by ~10 %.</p>
 
 <h3>Flood Routing and Reservoir Operation: Muskingum and Dynamic Programming Approaches</h3>
+<!-- passage-cartoon:e483e4abc89a -->
+<figure class="passage-cartoon" data-cartoon="e483e4abc89a">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Dam body -->
+  <rect x="240" y="150" width="80" height="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Dam top (spillway) -->
+  <polygon points="240,150 280,120 320,150" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Inflow arrow line -->
+  <line x1="14" y1="190" x2="230" y2="190" stroke="#1f2937" stroke-width="3"/>
+  <!-- Inflow arrowhead -->
+  <polygon points="230,190 220,185 220,195" fill="#1f2937"/>
+  <!-- Outflow arrow line -->
+  <line x1="330" y1="190" x2="546" y2="190" stroke="#1f2937" stroke-width="3"/>
+  <!-- Outflow arrowhead -->
+  <polygon points="546,190 536,185 536,195" fill="#1f2937"/>
+  <!-- Supporting rectangles -->
+  <rect x="80" y="80" width="80" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="440" y="80" width="100" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="80" y="240" width="100" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="440" y="240" width="100" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="280" y="130" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Reservoir Routing</text>
+  <text x="120" y="70" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Muskingum</text>
+  <text x="490" y="70" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Dynamic Programming</text>
+  <text x="130" y="230" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Calibration K,X</text>
+  <text x="490" y="230" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Evaporation Trap</text>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <text x="280" y="300" font-size="12" fill="#fbf7ec" text-anchor="middle" font-family="sans-serif">Flood Routing and Reservoir Operation</text>
+</svg></div>
+  <figcaption>Flood Routing and Reservoir Operation: Muskingum and Dynamic Programming Approaches</figcaption>
+</figure>
+
 <p>Flood routing through a reservoir or river reach is essential for spillway design and real‑time operation. The Muskingum method discretises the continuity equation ∂Q/∂x + ∂S/∂t = 0 with a linear storage‑outflow relationship S = K [ X I + (1‑X) O ] where K is the travel time (h) and X the weighting factor (0 ≤ X ≤ 0.5). The routing coefficients are C₀ = (‑K X + 0.5 Δt) / (K (1‑X) + 0.5 Δt), C₁ = (K X + 0.5 Δt) / (K (1‑X) + 0.5 Δt), C₂ = (K (1‑X) – 0.5 Δt) / (K (1‑X) + 0.5 Δt), and the outflow at step j+1 is O<sub>j+1</sub> = C₀ I<sub>j+1</sub> + C₁ I<sub>j</sub> + C₂ O<sub>j</sub>. Calibration of K and X uses observed inflow‑outflow hydrographs; typical values for Indian rivers are K = 0.5‑2.0 day, X = 0.1‑0.3. For multi‑reservoir systems, dynamic programming (DP) optimises release policies by minimising a cost function J = Σ (w₁ ΔS² + w₂ ΔR²) subject to mass balance S<sub>t+1</sub> = S<sub>t</sub> + I<sub>t</sub> – R<sub>t</sub> – E<sub>t</sub> and constraints S<sub>min</sub> ≤ S ≤ S<sub>max</sub>, R<sub>min</sub> ≤ R ≤ R<sub>max</sub>. The DP backward recursion evaluates the value function V<sub>t</sub>(S) = min<sub>R</sub> { immediate cost + V<sub>t+1</sub>(S′) }. A classic exam question provides a 3‑month inflow series, reservoir capacity 100 MCM, and asks for the optimal release schedule using a discretised storage grid of 10 MCM; the candidate must set up the stage‑wise decision table and identify the policy that meets downstream demand while keeping end‑of‑horizon storage ≥ 30 MCM. The trap is to ignore evaporation losses E<sub>t</sub> (often 5‑10 % of storage) which shifts the optimal policy toward higher releases early in the season.</p>
 
 <h3>Building Information Modeling for Integrated Project Delivery and Clash Detection</h3>
