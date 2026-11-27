@@ -1,30 +1,227 @@
 {
- "generatedAt": "2026-11-27T05:21:05.857Z",
- "lessonsAudited": 18,
- "flagged": 2,
- "applied": 1,
- "modelCalls": 6,
- "modelFailures": 98,
- "deadlineHit": false,
+ "generatedAt": "2026-11-27T05:54:43.387Z",
+ "lessonsAudited": 10,
+ "flagged": 22,
+ "applied": 10,
+ "modelCalls": 12,
+ "modelFailures": 29,
+ "deadlineHit": true,
  "problems": [
   {
-   "file": "cds/course/maths/lesson-number-system.html",
-   "quote": "LCM is always larger than the largest number",
-   "problem": "LCM can be equal to the largest number (e.g., LCM(2,4)=4). The correct statement is that LCM is greater than or equal to the largest number.",
-   "correction": "LCM is always greater than or equal to the largest number",
+   "file": "upsc/course/opt-bengali/lesson-paper1.html",
+   "quote": "Shirshendu Mukhopadhyay’s “Ghanada” series",
+   "problem": "The Ghanada series was written by Premendra Mitra, not Shirshendu Mukhopadhyay.",
+   "correction": "Premendra Mitra’s “Ghanada” series",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original statement is false; LCM can equal the largest number. Correction is accurate.",
+   "verifierReason": "Ghanada created by Premendra Mitra, not Shirshendu Mukhopadhyay.",
    "applied": true
   },
   {
-   "file": "cds/course/maths/lesson-number-system.html",
-   "quote": "0 ≤ r b",
-   "problem": "The remainder theorem states 0 ≤ r < b; the text has a typo missing the '<' symbol.",
-   "correction": "0 ≤ r < b",
+   "file": "upsc/course/opt-bengali/lesson-paper1.html",
+   "quote": "Nabarun Bhattacharya (“Herbert”)",
+   "problem": "Herbert is a novel, not a short story; the paragraph is about short story experimentation.",
+   "correction": "Nabarun Bhattacharya’s short stories",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original omitted '<' sign; correct inequality is 0 ≤ r < b.",
+   "verifierReason": "Herbert is a novel; Nabarun Bhattacharya wrote short stories, correction valid.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-bengali/lesson-paper1.html",
+   "quote": "His 1923 production of “Chirakumar Sabha”",
+   "problem": "Chirakumar Sabha was written by Rabindranath Tagore in 1926, so a 1923 production is impossible.",
+   "correction": "His 1926 production of “Chirakumar Sabha”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Chirakumar Sabha written 1926, not 1923.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-paper1.html",
+   "quote": "Baptist missionaries, notably Sidney Endle and J. D. Anderson",
+   "problem": "Sidney Endle was not a Baptist missionary; he was an Indian Civil Service officer.",
+   "correction": "Baptist missionaries like J. D. Anderson, and civil servant Sidney Endle",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Endle was ICS officer, not Baptist missionary; correction accurately separates roles",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-paper1.html",
+   "quote": "His receipt of the Sahitya Akademi Award in 1989 for Onthai Mwdwi (retrospectively recognised) marked the first national honour for a Bodo creative writer",
+   "problem": "The Sahitya Akademi Award for Bodo did not exist in 1989; the first award for Bodo was given in 2005 to Laksheswar Brahma.",
+   "correction": "His work Onthai Mwdwi (1965) gained recognition, but the first Sahitya Akademi Award for Bodo was in 2005",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Sahitya Akademi Bodo award started 2005; 1989 award impossible",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-overview.html",
+   "quote": "Buragohin movement",
+   "problem": "No historical 'Buragohin movement' exists in Bodo context; likely a confusion with the Bodo movement or Bodoland movement.",
+   "correction": "Bodo movement",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Buragohin is an Ahom administrative title, not a Bodo movement; correction to Bodo movement is accurate.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-overview.html",
+   "quote": "Boro Kachari Primer (1860s)",
+   "problem": "The first Bodo primer, Boro Kachari Primer, was published in 1884, not the 1860s.",
+   "correction": "Boro Kachari Primer (1884)",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "First Boro Kachari Primer published in 1884 by American Baptist Mission; 1860s is incorrect."
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-overview.html",
+   "quote": "the Bodo Accord (1993) legitimized Bodo as an official language of Assam",
+   "problem": "The 1993 Bodo Accord made Bodo the official language of the Bodoland Autonomous Council, not the entire state of Assam.",
+   "correction": "the Bodo Accord (1993) legitimized Bodo as the official language of the Bodoland Autonomous Council",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "1993 Accord made Bodo official language of BAC only, not Assam state; correction accurately reflects this scope.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-overview.html",
+   "quote": "Unicode proposal (U+0980–U+09FF) that added the U+097B (BODO LETTER VOCALIC RR) and U+097C (BODO LETTER VOCALIC LL) to encode /ɯ/ and /ʔ/",
+   "problem": "Wrong Unicode block (U+0980–U+09FF is Bengali, not Devanagari); U+097B/U+097C are DEVANAGARI LETTER VOCALIC RR/LL, not BODO LETTER..., and they represent Sanskrit vocalic sounds, not Bodo's /ɯ/ and /ʔ/.",
+   "correction": "Unicode proposal for the Devanagari block (U+0900–U+097F) that assigned U+097B (DEVANAGARI LETTER VOCALIC RR) and U+097C (DEVANAGARI LETTER VOCALIC LL) for Bodo's high central vowel and glottal stop",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original cites wrong block (Bengali), wrong names (BODO LETTER), and wrong semantics (added vs assigned); correction fixes block, names, and usage context.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-bengali/lesson-paper1.html",
+   "quote": "Sarat Chandra Chattopadhyay ’s America‑r Diary (1923)",
+   "problem": "Sarat Chandra Chattopadhyay never visited America; he wrote Burma‑r Diary (1913) about his time in Burma.",
+   "correction": "Sarat Chandra Chattopadhyay’s Burma‑r Diary (1913)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Sarat Chandra never visited America; wrote Burma-r Diary (1913).",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-bengali/lesson-paper1.html",
+   "quote": "Sunil Gangopadhyay ’s Arjun series (1970s‑90s)",
+   "problem": "The Arjun detective series was created by Samaresh Majumdar, not Sunil Gangopadhyay.",
+   "correction": "Samaresh Majumdar’s Arjun series (1970s‑90s)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Arjun series created by Samaresh Majumdar, not Sunil Gangopadhyay.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-bengali/lesson-paper1.html",
+   "quote": "the migrant labourer’s journey in Mahasweta Devi ’s Chotti Munda Evam Tar Tir",
+   "problem": "Chotti Munda Evam Tar Tir (1980) centres on tribal resistance led by Chotti Munda, not a migrant labourer’s journey.",
+   "correction": "the tribal resistance in Mahasweta Devi’s Chotti Munda Evam Tar Tir",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Novel centres on tribal resistance, not migrant labourer.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-bengali/lesson-paper1.html",
+   "quote": "Anjum Hasan (English‑language but Bengali‑rooted)",
+   "problem": "Anjum Hasan is an Assamese‑origin English writer, not Bengali‑rooted.",
+   "correction": "Anjum Hasan (English‑language writer)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Anjum Hasan is Assamese-origin, not Bengali-rooted.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-paper2.html",
+   "quote": "first Bodo grammar, “Bodo Bhasha Siksha”",
+   "problem": "The first Bodo grammar was An Outline of the Kachari Language (1884) by Rev. Sidney Endle; Bodo Bhasha Siksha is a later grammar (1952) by Modaram Brahma.",
+   "correction": "the Bodo grammar “Bodo Bhasha Siksha”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Endle's 1884 'Outline of the Kachari Language' is the first Bodo grammar; Brahma's 'Bodo Bhasha Siksha' is 1952.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-bodo/lesson-paper2.html",
+   "quote": "notably the “Bodo Khonthai” series produced by missionaries and local reformers",
+   "problem": "Bodo Khonthai is a literary magazine started in 1952, not an early twentieth-century primer series; early primers were publications like the “Bodo Primer” by missionaries.",
+   "correction": "notably the “Bodo Primer” series produced by missionaries and local reformers",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "'Bodo Khonthai' is a literary magazine (est. 1952), not a primer series; early primers were missionary publications."
+  },
+  {
+   "file": "upsc/course/opt-botany/lesson-paper1.html",
+   "quote": "UPR in plastids (GUN1‑mediated retrograde signaling)",
+   "problem": "GUN1 mediates general plastid retrograde signaling, not a defined unfolded protein response; plastid UPR is not established in higher plants.",
+   "correction": "plastid retrograde signaling (GUN1‑mediated)",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Plastids lack defined UPR; GUN1 mediates retrograde signaling, not UPR. Correction accurate."
+  },
+  {
+   "file": "upsc/course/opt-chemistry/lesson-overview.html",
+   "quote": "Photophysical parameters — radiative rate (kᵣ), non‑radiative rate (kₙᵣ), quantum yield (Φ = kᵣ/(kᵣ+kₙᵣ)) — are routinely extracted from temperature‑dependent emission lifetimes using the Strickler‑Be",
+   "problem": "The Strickler‑Berg relation estimates the radiative rate from absorption/emission spectra, not from temperature‑dependent lifetimes. Temperature‑dependent lifetimes are used to obtain non‑radiative rates.",
+   "correction": "Photophysical parameters — radiative rate (kᵣ), non‑radiative rate (kₙᵣ), quantum yield (Φ = kᵣ/(kᵣ+kₙᵣ)) — are routinely extracted from temperature‑dependent emission lifetimes and the Strickler‑Berg",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Strickler-Berg estimates k_r from spectra, not temp-dependent lifetimes; temp-dependent lifetimes give k_nr.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-chemistry/lesson-overview.html",
+   "quote": "Oxidative addition to a d⁸ M(0) or d¹⁰ M(I) centre increases the metal oxidation state by two and the electron count by two",
+   "problem": "Typical oxidative addition occurs at d¹⁰ M(0) (e.g., Pd(0)) or d⁸ M(I) (e.g., Rh(I)), not d⁸ M(0) or d¹⁰ M(I).",
+   "correction": "Oxidative addition to a d¹⁰ M(0) or d⁸ M(I) centre increases the metal oxidation state by two and the electron count by two",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Oxidative addition typical at d10 M(0) (Pd(0)) or d8 M(I) (Rh(I)), not d8 M(0) or d10 M(I).",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-chemistry/lesson-overview.html",
+   "quote": "Basis‑set choice follows the correlation‑consistent series: minimal (STO‑3G) → split‑valence (6‑31G(d), def2‑SVP) → triple‑ζ with polarization (def2‑TZVP, 6‑311+G(d,p)) → quadruple‑ζ (def2‑QZVP)",
+   "problem": "The listed basis sets (Pople, Ahlrichs) are not the correlation‑consistent series (cc‑pVXZ).",
+   "correction": "Basis‑set choice follows a hierarchy: minimal (STO‑3G) → split‑valence (6‑31G(d), def2‑SVP) → triple‑ζ with polarization (def2‑TZVP, 6‑311+G(d,p)) → quadruple‑ζ (def2‑QZVP)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Listed basis sets are Pople/Ahlrichs, not correlation-consistent (cc-pVXZ) series.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-chemistry/lesson-overview.html",
+   "quote": "diffusion‑limited capacity (using the Randles–Sevcik equation)",
+   "problem": "The Randles–Sevcik equation describes peak current in cyclic voltammetry, not diffusion‑limited capacity in galvanostatic charge‑discharge.",
+   "correction": "diffusion‑limited capacity (using the Sand equation)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Randles-Sevcik gives CV peak current; Sand equation gives diffusion-limited capacity in galvanostatic discharge.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-chemistry/lesson-paper1.html",
+   "quote": "thermal cyclisation of (2E,4Z,6E)‑octatriene yields a trans‑dimethylcyclohexadiene, whereas photochemical closure gives the cis isomer",
+   "problem": "The stereochemical outcomes are reversed: thermal disrotatory closure of this 4n+2 system gives the cis isomer, photochemical conrotatory gives the trans isomer.",
+   "correction": "thermal cyclisation of (2E,4Z,6E)‑octatriene yields a cis‑dimethylcyclohexadiene, whereas photochemical closure gives the trans isomer",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original reverses stereochemistry: thermal 4n+2 disrotatory gives cis, photochemical conrotatory gives trans for (2E,4Z,6E)-octatriene.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-chemistry/lesson-paper1.html",
+   "quote": "involves 4 π electrons and follows an antarafacial‑suprafacial pathway",
+   "problem": "The [2,3]-Wittig rearrangement is a 6-electron (4n+2) process, not 4π; it proceeds via a suprafacial‑suprafacial pathway, not antarafacial‑suprafacial.",
+   "correction": "involves 6 electrons and follows a suprafacial‑suprafacial pathway",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "[2,3]-Wittig is a 6-electron suprafacial-suprafacial sigmatropic shift, not 4π antarafacial-suprafacial.",
    "applied": false
   }
  ]
