@@ -1,40 +1,40 @@
 {
- "generatedAt": "2026-11-27T07:18:53.858Z",
+ "generatedAt": "2026-11-27T07:48:11.044Z",
  "lessonsAudited": 18,
  "flagged": 3,
- "applied": 0,
- "modelCalls": 6,
- "modelFailures": 67,
+ "applied": 1,
+ "modelCalls": 9,
+ "modelFailures": 61,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "upsc/course/opt-kannada/lesson-overview.html",
-   "quote": "adopting the halegannada script reforms that replaced the archaic talakattu with the modern vatteluttu ‑derived forms",
-   "problem": "Kannada script is not derived from vatteluttu (a Tamil script); it evolved from the Kadamba script.",
-   "correction": "adopting the halegannada script reforms that replaced the archaic talakattu with the modern Kadamba‑derived forms",
+   "file": "upsc/course/opt-marathi/lesson-paper2.html",
+   "quote": "1995 novel Cuckold",
+   "problem": "Wrong publication year for Kiran Nagarkar's Cuckold; it was published in 1997, not 1995.",
+   "correction": "1997 novel Cuckold",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original wrongly attributes modern Kannada forms to Tamil vatteluttu; they derive from Kadamba script.",
+   "verifierReason": "Cuckold first published by Penguin India in 1997; won Sahitya Akademi Award 2000.",
    "applied": false
   },
   {
-   "file": "upsc/course/opt-kannada/lesson-overview.html",
-   "quote": "commissioned the Kannada‑English Dictionary (1919) edited by Ferdinand Kittel",
-   "problem": "Ferdinand Kittel died in 1903; his dictionary was first published in 1894. He could not have edited a 1919 edition.",
-   "correction": "commissioned the Kannada‑English Dictionary (1894) compiled by Ferdinand Kittel",
+   "file": "upsc/course/opt-mechanical-engineering/lesson-paper2.html",
+   "quote": "which might require post-processing heat treatment (Thermal processing) not needed in traditional casting",
+   "problem": "Investment casting of turbine blades (e.g., Ni-based superalloys) requires extensive heat treatment (solutionizing, aging, HIP) for microstructure control; it is false that traditional casting avoids heat treatment.",
+   "correction": "which might require post-processing heat treatment (Thermal processing) similar to or more extensive than traditional casting",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Kittel died 1903; his dictionary published 1894, not 1919. Correction fixes date and role.",
-   "applied": false
+   "verifierReason": "Original falsely claims traditional casting avoids heat treatment; Ni-based superalloys require extensive heat treatment regardless of casting method.",
+   "applied": true
   },
   {
-   "file": "upsc/course/opt-kannada/lesson-overview.html",
-   "quote": "The 1963 Karnataka Official Language Act reinforced Kannada’s primacy in state legislation",
-   "problem": "The state was named Mysore until 1973; the 1963 act was the Mysore Official Language Act.",
-   "correction": "The 1963 Mysore Official Language Act reinforced Kannada’s primacy in state legislation",
+   "file": "upsc/course/opt-mechanical-engineering/lesson-paper2.html",
+   "quote": "σ_θ(r) = E α / (1 − ν) · [ (1/r²) ∫₀ʳ T(ρ) ρ dρ + ν ∫ʳᴿ T(ρ) ρ dρ / (R² − r²) ]",
+   "problem": "Formula uses solid-cylinder limits (0, R) and an erroneous term ν∫ʳᴿ/(R²−r²) for a hollow heat-exchanger tube; correct hollow-cylinder formulation uses inner/outer radii r_i, r_o and denominator (r_o²−r_i²).",
+   "correction": "σ_θ(r) = Eα/(1−ν)[(1/r²)∫_{r_i}^r Tρ dρ + (1/(r_o²−r_i²))∫_{r_i}^{r_o} Tρ dρ (1+r_i²/r²) − T(r)]",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "State was Mysore until 1973; 1963 act was Mysore Official Language Act, not Karnataka.",
+   "verifierReason": "Original uses solid-cylinder limits and incorrect ν term; proposed correction matches standard hollow-cylinder thermal stress formula (Timoshenko & Goodier).",
    "applied": false
   }
  ]
