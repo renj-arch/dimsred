@@ -22,7 +22,8 @@ for (const f of Object.keys(ROUTES)) if (process.env[ROUTES[f]] && process.env[f
 
 const DRY = process.argv.includes('--dry');
 const LIMIT = Math.max(1, parseInt((process.argv[process.argv.indexOf('--limit') + 1] || '8'), 10) || 8);
-const ONLY = (process.argv[process.argv.indexOf('--file') + 1] || '').replace(/^--/, '');
+const _fileIdx = process.argv.indexOf('--file');
+const ONLY = _fileIdx >= 0 ? (process.argv[_fileIdx + 1] || '') : '';
 const HARD = /quantum|relativ|topolog|algebra|geometry|analysis|thermo|electromagnet|fluid|control|signal|crypto|condensed|particle|string|gauge|tensor|manifold|cohomology|dynamics|statistical|plasma|nuclear|astro|spectral|stochastic|operator|hilbert|differential/i;
 
 const strip = (s) => String(s).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<svg[\s\S]*?<\/svg>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
