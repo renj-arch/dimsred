@@ -1,0 +1,188 @@
+name: Lesson Lecture Video
+
+# Builds lecture videos from course lessons. Rendering is heavy (Chromium frames
+# + ffmpeg + Piper), so it runs on GitHub-hosted runners only — never the owner's
+# machine.
+#
+# FACT-AUDIT GATE (owner's rule): a video is made only after the lesson passes
+# the fact audit for the exact prose on the page.
+#   * mode=single audits that one lesson first (--audit), then renders only if
+#     the audit is clean and records the certified prose hash.
+#   * mode=changed never audits; it only renders lessons the audit lane has
+#     already certified. If a lane expands a lesson, its prose hash changes and
+#     the video is BLOCKED until the audit re-certifies it, then re-rendered.
+#
+# Outputs are uploaded as artefacts by default (full lectures are large). Set
+# commit=true to force-add the manifest and the rendered MP4s to the repo.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'single = one lesson (audit first); changed = certified lessons that are stale'
+        required: true
+        default: 'single'
+        type: choice
+        options: [single, changed]
+      lesson:
+        description: 'Lesson path for mode=single (e.g. upsc/course/mains-gs1/lesson-ancient-india.html)'
+        required: false
+        default: 'upsc/course/mains-gs1/lesson-ancient-india.html'
+        type: string
+      max_slides:
+        description: 'Cap slides for a quick sample (0 = render the whole lesson)'
+        required: false
+        default: '0'
+        type: string
+      limit:
+        description: 'mode=changed: how many stale certified lessons to render'
+        required: false
+        default: '1'
+        type: string
+      voice:
+        description: 'Piper voice'
+        required: false
+        default: 'en_US-lessac-medium'
+        type: string
+      commit:
+        description: 'Force-add manifest + MP4s to the repo (large)'
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # One audited, stale lesson per day, off the hour. The audit lane must have
+    # certified it for the video to be eligible.
+    - cron: '41 3 * * *'
+
+permissions:
+  contents: write
+  models: read
+
+concurrency:
+  group: lesson-video
+  cancel-in-progress: false
+
+jobs:
+  video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      LESSON_TTS: piper
+      PIPER_VOICE: ${{ inputs.voice || 'en_US-lessac-medium' }}
+      PIPER_DATA_DIR: .cache/piper
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install ffmpeg, Python and fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-liberation python3 python3-pip
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Chromium for frame capture
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Piper
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install piper-tts==1.8.0
+
+      - name: Cache the Piper voice
+        uses: actions/cache@v4
+        with:
+          path: .cache/piper
+          key: lesson-video-piper-${{ inputs.voice || 'en_US-lessac-medium' }}
+
+      - name: Resolve target
+        id: target
+        run: |
+          set -euo pipefail
+          MODE="${{ inputs.mode || 'changed' }}"
+          MAXS="${{ inputs.max_slides || '0' }}"
+          LIMIT="${{ inputs.limit || '1' }}"
+          LESSON="${{ inputs.lesson }}"
+          ARGS=""
+          if [ "$MODE" = "single" ]; then
+            ARGS="--lesson $LESSON --audit --tts piper"
+          else
+            ARGS="--changed --limit $LIMIT --tts piper"
+          fi
+          if [ "$MAXS" != "0" ] && [ -n "$MAXS" ]; then ARGS="$ARGS --max-slides $MAXS"; fi
+          echo "args=$ARGS" >> "$GITHUB_OUTPUT"
+
+      - name: Audit status (gate preview)
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ inputs.mode }}" = "single" ] && [ -n "${{ inputs.lesson }}" ]; then
+            node scripts/lesson-video/build.js --lesson "${{ inputs.lesson }}" --check || true
+          fi
+
+      - name: Build lecture video(s)
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHON: python3
+        run: |
+          set -euo pipefail
+          node scripts/lesson-video/build.js ${{ steps.target.outputs.args }}
+          echo '--- manifest ---'
+          cat data/lesson-videos.json 2>/dev/null | head -c 4000 || true
+
+      - name: Upload lecture videos
+        uses: actions/upload-artifact@v4
+        with:
+          name: lesson-videos-${{ github.run_number }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            out/lesson-video/**/*.mp4
+            data/lesson-videos.json
+
+      - name: Commit manifest + videos (optional)
+        if: ${{ inputs.commit == true }}
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          # data/* and media/* are gitignored; force-add the manifest and the
+          # rendered videos explicitly (same pattern as the film lane).
+          git add -f data/lesson-videos.json
+          if [ -d media/lesson-videos ]; then git add -f media/lesson-videos; fi
+          if git diff --staged --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "lesson-video: render $(date +'%Y-%m-%d %H:%M UTC')"
+          for attempt in 1 2 3; do
+            git fetch --depth=1 --no-tags origin "$GITHUB_REF_NAME" 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            if git push origin "HEAD:$GITHUB_REF_NAME"; then echo "pushed (attempt $attempt)"; exit 0; fi
+            sleep 5
+          done
+          echo "::warning::could not push; artefacts are still uploaded"
+          exit 0
