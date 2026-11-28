@@ -1,61 +1,508 @@
 {
- "generatedAt": "2026-11-28T09:42:21.659Z",
- "lessonsAudited": 18,
- "flagged": 5,
- "applied": 3,
- "modelCalls": 8,
- "modelFailures": 33,
- "deadlineHit": false,
+ "generatedAt": "2026-11-28T10:15:39.360Z",
+ "lessonsAudited": 16,
+ "flagged": 50,
+ "applied": 22,
+ "modelCalls": 38,
+ "modelFailures": 17,
+ "deadlineHit": true,
  "problems": [
   {
-   "file": "cgl/course/quant/lesson-speed-distance.html",
-   "quote": "Relative speed = |S₁ S₂|",
-   "problem": "The formula incorrectly concatenates the speeds instead of taking their difference.",
-   "correction": "Relative speed = |S₁ − S₂|",
+   "file": "clat/course/gk/lesson-legal-gk.html",
+   "quote": "In State of Gujarat v. Mirzapur Moti Kureshi Kassab Jamat (2005), the Court severed the unconstitutional portion of a cattle‑preservation law",
+   "problem": "The 2005 Supreme Court judgment upheld the constitutional validity of the Gujarat cattle‑preservation law; it did not sever any portion.",
+   "correction": "In State of Gujarat v. Mirzapur Moti Kureshi Kassab Jamat (2005), the Court upheld the constitutional validity of the cattle‑preservation law.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original lacks operator; |S1−S2| is correct for same-direction relative speed.",
+   "verifierReason": "The 2005 judgment upheld the total ban on cattle slaughter; it did not sever any provision.",
    "applied": false
   },
   {
-   "file": "cgl/course/ga/lesson-indian-geography.html",
-   "quote": "Iron ore (hematite and magnetite) reserves exceed 25 billion tonnes",
-   "problem": "India's iron ore reserves are much lower; the figure 25 billion tonnes refers to total resources (approx. 22.5 billion tonnes), not reserves.",
-   "correction": "Iron ore (hematite and magnetite) resources are about 22.5 billion tonnes",
+   "file": "clat/course/gk/lesson-legal-gk.html",
+   "quote": "Constitutional bodies (e.g., Finance Commission, UPSC, CAG) enjoy greater independence because their removal requires impeachment or a special majority",
+   "problem": "Only the CAG and CEC have removal akin to impeachment; Finance Commission members serve at the President's pleasure, and UPSC members are removed by the President after a Supreme Court inquiry.",
+   "correction": "Constitutional bodies such as the CAG and CEC enjoy greater independence because their removal requires a process akin to impeachment; other constitutional bodies have different removal procedures.",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "IBM data: total iron ore resources ~22.5 Bt; reserves ~5.5 Bt. Quote confuses reserves with resources.",
-   "applied": true
-  },
-  {
-   "file": "cgl/course/ga/lesson-indian-geography.html",
-   "quote": "Godavari (2018)",
-   "problem": "The Godavari Water Disputes Tribunal was constituted in 1969, not 2018.",
-   "correction": "Godavari (1969)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Godavari Water Disputes Tribunal constituted 1969 per ISRWD Act; 2018 is incorrect.",
-   "applied": true
-  },
-  {
-   "file": "cgl/course/ga/lesson-indian-geography.html",
-   "quote": "1,186 blocks were classified as over‑exploited in the 2022 assessment",
-   "problem": "The 2022 groundwater assessment reported 1,006 over‑exploited blocks; 1,186 was the 2017 figure.",
-   "correction": "1,006 blocks were classified as over‑exploited in the 2022 assessment",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "CGWB 2022 assessment: 1,006 over-exploited units; 1,186 was 2017 figure.",
-   "applied": true
-  },
-  {
-   "file": "cgl/course/ga/lesson-indian-geography.html",
-   "quote": "in 2023‑24, MSP procurement covered 43 million tonnes of wheat and 55 million tonnes of rice",
-   "problem": "Wheat procurement in 2023‑24 was about 26.2 million tonnes; 43 million tonnes was the 2021‑22 figure.",
-   "correction": "in 2023‑24, MSP procurement covered about 26 million tonnes of wheat and 55 million tonnes of rice",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "FCI data: RMS 2023-24 wheat procurement 26.2 Mt; 43 Mt was 2021-22. Rice ~55 Mt correct.",
+   "verifierReason": "Only CAG and CEC have removal via impeachment/special majority; Finance Commission serves at President's pleasure, UPSC requires SC inquiry.",
    "applied": false
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-puzzles.html",
+   "quote": "opposite the centre of the circle",
+   "problem": "In circular seating puzzles, the centre of the circle is a geometric point, not a seat or person. The term \"opposite\" relates two seats on the circumference; referring to \"opposite the centre\" is meaningless and not a valid clue.",
+   "correction": "opposite a person in the circle",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "In circular seating puzzles, 'opposite' describes a pairwise relation between two seats on the circumference; the centre is a geometric point, not a seat. The correction uses standard puzzle terminolo",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-puzzles.html",
+   "quote": "solvable in O(V · E) with the Hopcroft‑Karp algorithm",
+   "problem": "Hopcroft‑Karp algorithm runs in O(E √V) time, not O(V·E).",
+   "correction": "solvable in O(E √V) with the Hopcroft‑Karp algorithm",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Hopcroft-Karp is O(E√V), not O(V·E); correction is accurate",
+   "applied": false
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-puzzles.html",
+   "quote": "guarantees the smallest search tree",
+   "problem": "MRV heuristic does not guarantee the smallest search tree; it is a heuristic that often reduces search effort but not guaranteed.",
+   "correction": "often reduces the search tree",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "MRV is a heuristic, not a guarantee; 'often reduces' correctly reflects this",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-direction-distance.html",
+   "quote": "For a morning problem at 09:00 local solar time, the Sun’s azimuth is 090° – 45° = 045° (North‑East), so shadows fall towards 225° (South‑West).",
+   "problem": "The Sun's azimuth at 09:00 in the northern hemisphere is not 045° (NE); it is approximately 135° (SE). The calculation incorrectly uses 090° as the noon azimuth instead of 180°.",
+   "correction": "For a morning problem at 09:00 local solar time, the Sun’s azimuth is approximately 135° (South‑East), so shadows fall towards 315° (North‑West).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "09:00 solar azimuth is far east of north, ~120‑135°, not 045°; correction to ~135° is appropriate.",
+   "applied": false
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-direction-distance.html",
+   "quote": "Distance each travelled: A = 10 km, B = 10 km.",
+   "problem": "B's distance travelled is 10√2 km, not 10 km, because B's speed is 5√2 km/h for 2 hours.",
+   "correction": "Distance each travelled: A = 10 km, B = 10√2 km (≈14.14 km).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Given speed 5√2 km/h for 2 h, distance =10√2 km; correction fixes the error.",
+   "applied": false
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-syllogism.html",
+   "quote": "“No non‑engineers are managers”, which is the obverse of “All managers are engineers”",
+   "problem": "The statement “No non‑engineers are managers” is not the obverse of “All managers are engineers”; it is the converse of the obverse.",
+   "correction": "“No non‑engineers are managers”, which is the converse of the obverse of “All managers are engineers”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Obverse of 'All M are E' is 'No M are non-E'; 'No non-E are M' is converse of that obverse.",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-syllogism.html",
+   "quote": "“Some non‑students are not teachers” is the contrapositive of “Some teachers are not students”",
+   "problem": "The contrapositive of “Some teachers are not students” is “Some non‑students are not non‑teachers”, not “Some non‑students are not teachers”.",
+   "correction": "“Some non‑students are not non‑teachers” is the contrapositive of “Some teachers are not students”",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Contrapositive of O proposition 'Some T are not S' is 'Some non-S are not non-T', not 'Some non-S are not T'.",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-syllogism.html",
+   "quote": "which under Boolean interpretation already lacks existential import for the subject class",
+   "problem": "Under Boolean interpretation, an ordinary I‑statement (“Some A are B”) has existential import for the subject class; it does not lack it.",
+   "correction": "which under Boolean interpretation already has existential import for the subject class",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Boolean interpretation gives existential import to particular (I, O) propositions; 'Some A are B' asserts existence.",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-syllogism.html",
+   "quote": "“Few” → 90 %",
+   "problem": "“Few” denotes a small proportion (e.g., <10%), not 90%.",
+   "correction": "“Few” → <10 %",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "'Few' means a small proportion; 90% is 'most'. '<10%' is a standard rough threshold for 'few' in such contexts.",
+   "applied": false
+  },
+  {
+   "file": "cgl/course/reasoning/lesson-puzzles.html",
+   "quote": "Δ contradicts the theorem and does not guarantee a proper assignment; moreover, the theorem applies to a single graph, not a compariso",
+   "problem": "The phrase is a garbled fragment that makes no sense and misstates Brooks' theorem; Δ is a number and cannot contradict the theorem.",
+   "correction": "Remove the garbled fragment; the correct statement is: Brooks' theorem gives χ ≤ Δ for the conflict graph (except complete graphs/odd cycles).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original garbled; correction correctly states Brooks' theorem χ≤Δ except cliques/odd cycles.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "each and every are preferred over each and every as a redundant pair",
+   "problem": "Self-contradictory statement; 'each and every' is a redundant pair, not preferred over itself",
+   "correction": "each and every is a redundant pair; each or every alone is preferred",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original is self-contradictory; correction correctly states 'each and every' is redundant and singles are preferred.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "Pied‑piping is mandatory in formal writing when the relative pronoun is whom or which and the preposition is monosyllabic",
+   "problem": "The condition that the preposition must be monosyllabic is incorrect; in formal writing pied‑piping is required for all prepositions with whom/which, regardless of length.",
+   "correction": "Pied‑piping is mandatory in formal writing when the relative pronoun is whom or which",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Monosyllabic condition is false; formal grammar requires pied-piping with whom/which for all prepositions.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "The Taiwan Strait (180 km at narrowest) separates the Taiwan Strait from the East China Sea",
+   "problem": "The Taiwan Strait does not separate itself from the East China Sea; it separates Taiwan from mainland China (or the South China Sea from the East China Sea). Also, the narrowest width is about 130 km, not 180 km.",
+   "correction": "The Taiwan Strait (130 km at narrowest) separates Taiwan from mainland China",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original is nonsensical (strait cannot separate itself); correction fixes geography and uses accepted 130 km width (CIA Factbook).",
+   "applied": false
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "Raising can also be object-to-subject (e.g., I believe him to be honest)",
+   "problem": "The verb 'believe' is an ECM verb, not a raising verb; the example illustrates ECM (accusative case on embedded subject), not object-to-subject raising.",
+   "correction": "ECM verbs assign accusative case to the embedded subject (e.g., I believe him to be honest)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "'Believe' is a canonical ECM verb; 'him' receives accusative case from matrix verb, not raising.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/legal/lesson-legal-maxims.html",
+   "quote": "In State of Rajasthan v. Union of India (1977), the Court held that the existence of a statutory tribunal does not oust Article 32 jurisdiction where the tribunal’s remedy is not co‑extensive with the",
+   "problem": "The case State of Rajasthan v. Union of India (1977) concerns the justiciability of President's Rule under Article 356, not the doctrine of exhaustion of alternative remedies or Article 32 jurisdiction over statutory tribunals.",
+   "correction": "The principle that a statutory tribunal does not oust Article 32 jurisdiction unless its remedy is co‑extensive with the fundamental right is established in cases such as L. Chandra Kumar v. Union of ",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original cites wrong case (Art. 356 case); correction cites correct authorities on Art. 32/tribunal jurisdiction.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "the order is generally numeral → ordinal → quantifier",
+   "problem": "The standard order of postdeterminers is ordinal → numeral → quantifier (e.g., 'the first three chapters'), not numeral → ordinal → quantifier.",
+   "correction": "the order is generally ordinal → numeral → quantifier",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Standard postdeterminer order is ordinal → cardinal → quantifier (e.g., 'first three chapters'); original reverses first two.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "In relative clauses introduced by that , the preposition cannot be stranded",
+   "problem": "Preposition stranding is grammatical with 'that' (e.g., 'The house that I live in'); it is pied‑piping that is blocked.",
+   "correction": "In relative clauses introduced by that , the preposition cannot be pied‑piped",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "'That' relatives allow stranding ('the house that I live in') but block pied-piping (*'in that I live'); original misstates the restriction.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "* every book that you read is acceptable",
+   "problem": "The asterisk incorrectly marks a grammatical sentence as ungrammatical; 'every book that you read' is a well-formed quantified NP with a restrictive relative clause.",
+   "correction": "every book that you read is acceptable",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Sentence \"Every book that you read is acceptable\" is grammatical; asterisk incorrectly marks it ungrammatical; correction removes asterisk appropriately.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/legal/lesson-case-studies.html",
+   "quote": "35 to 40 questions to be completed in 35 to 40 minutes",
+   "problem": "CLAT Legal Reasoning does not have a separate 35‑40 minute time limit; the exam is a composite 120‑minute paper with about 30 Legal Reasoning questions.",
+   "correction": "about 30 questions within a total 120‑minute paper, no separate time limit",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "CLAT is a 120-min composite paper; no separate sectional timer for Legal Reasoning"
+  },
+  {
+   "file": "clat/course/legal/lesson-case-studies.html",
+   "quote": "K. S. Puttaswamy v. Union of India (2017) applied the test to the right to privacy, striking down the mandatory linking of Aadhaar with bank accounts",
+   "problem": "The 2017 Puttaswamy judgment recognized privacy as a fundamental right but did not strike down Aadhaar linking; that was done in the 2018 Aadhaar judgment.",
+   "correction": "The mandatory linking of Aadhaar with bank accounts was struck down in the 2018 Aadhaar judgment (K.S. Puttaswamy (Retd.) v. Union of India)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "2017 Puttaswamy declared privacy a fundamental right; mandatory Aadhaar linking struck down in 2018 judgment",
+   "applied": false
+  },
+  {
+   "file": "clat/course/legal/lesson-case-studies.html",
+   "quote": "State of Rajasthan v. Union of India (1977) the Court invalidated a law that imposed a blanket ban on the sale of certain goods",
+   "problem": "State of Rajasthan v. Union of India (1977) concerned the Urban Land (Ceiling and Regulation) Act, not a public health ban on sale of goods.",
+   "correction": "The case dealt with the Urban Land (Ceiling and Regulation) Act, not a blanket ban on sale of goods",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "State of Rajasthan v. Union of India (1977) upheld Urban Land Ceiling Act, did not invalidate a sales ban"
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "The United States’ 2022 Energy Act identifies 50 critical minerals, largely overlapping but adding beryllium, gallium, and germanium.",
+   "problem": "There is no '2022 Energy Act'; the US critical minerals list was published by the USGS in 2022. Also, beryllium, gallium, and germanium are already on the EU list, not additions.",
+   "correction": "The United States’ 2022 critical minerals list (USGS) identifies 50 critical minerals, largely overlapping the EU list.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "No 2022 Energy Act; USGS published 2022 list under 2020 Act. Beryllium, gallium, germanium on both lists.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "The EU’s Circular Economy Action Plan targets a 15 % recycling rate for rare‑earth elements by 2030.",
+   "problem": "The 15% recycling target for critical raw materials by 2030 is set by the Critical Raw Materials Act, not the Circular Economy Action Plan, and applies to all critical raw materials, not only rare‑earth elements.",
+   "correction": "The EU’s Critical Raw Materials Act targets a 15 % recycling rate for critical raw materials by 2030.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "15% recycling target is in Critical Raw Materials Act (2024), not Circular Economy Action Plan; applies to all CRMs.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "the WTO dispute DS598 (China — Rare Earths) which established that export quotas on raw materials violate GATT Article XI.",
+   "problem": "The correct WTO disputes are DS431, DS432, DS433 (China — Rare Earths) and DS394, DS395, DS398 (China — Raw Materials); DS598 is a different dispute.",
+   "correction": "the WTO disputes DS431/432/433 (China — Rare Earths) which established that export quotas on raw materials violate GATT Article XI.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "DS598 is auto dispute; rare earths disputes are DS431/432/433. Export quotas violation established there.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "In 2021, the Central African Republic adopted the CFA franc’s peg to the euro as a de‑facto euroization step",
+   "problem": "The CFA franc has been pegged to the euro since 1999; the Central African Republic did not adopt the peg in 2021.",
+   "correction": "The Central African Republic uses the CFA franc, which has been pegged to the euro since 1999.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "CFA franc pegged to euro since 1999; CAR did not adopt peg in 2021.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "the 2022 expansion of the Presidential Medal of Freedom to include posthumous awards for pandemic responders.",
+   "problem": "The Presidential Medal of Freedom has always allowed posthumous awards; there was no 2022 expansion for pandemic responders.",
+   "correction": "the 2022 awarding of the Presidential Medal of Freedom to pandemic responders.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Medal always allowed posthumous awards; 2022 ceremony included pandemic responders like nurse Sandra Lindsay.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "where the relative clause is a complement, not an adjunct",
+   "problem": "Relative clauses are adjuncts (modifiers), not complements.",
+   "correction": "where the relative clause is an adjunct, not a complement",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Relative clauses are standardly analyzed as adjuncts, not complements; correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "The grammatical alternative uses a cleft: Who is it that pictures of ___ hang on the wall?",
+   "problem": "This cleft does not rescue the subject island violation; the gap remains inside the subject NP.",
+   "correction": "Subject island violations cannot be rescued by clefting.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Subject island violations are not rescued by clefting; the example remains ungrammatical.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "The bottle broke open is acceptable because break is causative",
+   "problem": "In \"The bottle broke open\", \"break\" is unaccusative, not causative.",
+   "correction": "The bottle broke open is acceptable because break is an unaccusative verb that allows resultatives",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "In 'The bottle broke open', break is unaccusative, not causative; correction correctly identifies this.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "Unaccusative verbs ( arrive, fall ) cannot host resultatives",
+   "problem": "Some unaccusative verbs (e.g., break) can host resultatives.",
+   "correction": "Unaccusative verbs like arrive and fall typically resist resultatives, but some unaccusatives (e.g., break) allow them",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Blanket claim is false; some unaccusatives (e.g., break) allow resultatives; correction is nuanced and accurate.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/english/lesson-grammar.html",
+   "quote": "whereas resultatives cannot (* The wall was painted red is acceptable as a passive of a resultative, but the resultative reading is preserved",
+   "problem": "Resultatives can passivize; the example is grammatical and preserves the resultative reading.",
+   "correction": "whereas resultatives can passivize ( The wall was painted red ), preserving the resultative reading",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Resultatives can passivize (e.g., 'The wall was painted red') preserving the resultative reading; original is wrong.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "2023 IMF Spring Meetings saw a consensus to launch a new round of quota negotiations, targeting completion before the 2025 Annual Meetings",
+   "problem": "The 2023 Spring Meetings did not launch a new round; the 16th General Review of Quotas was already underway, and the target then was completion by the 2023 Annual Meetings, not 2025.",
+   "correction": "The 2023 IMF Spring Meetings urged completion of the ongoing 16th General Review of Quotas by the 2023 Annual Meetings",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "16th Review ongoing since 2019; 2023 Spring Meetings urged completion by 2023 Annual Meetings, not launch new round targeting 2025",
+   "applied": true
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "reverted to the pre‑1995 GATT practice where panel reports can be adopted only by consensus",
+   "problem": "The WTO DSU provides for negative‑consensus adoption of panel reports; the Appellate Body paralysis leads to appeals into the void, not a reversion to GATT positive‑consensus practice.",
+   "correction": "left panel reports in limbo as appeals cannot be heard, effectively allowing a losing party to block adoption",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "WTO DSU uses negative consensus; AB paralysis causes appeals into void, not reversion to GATT positive consensus",
+   "applied": true
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "The 2023 “Veto Initiative” (General Assembly resolution 76/262)",
+   "problem": "Resolution 76/262 was adopted in April 2022 (76th session), not 2023.",
+   "correction": "The 2022 “Veto Initiative” (General Assembly resolution 76/262)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "UNGA Res 76/262 adopted 26 April 2022 (76th session), not 2023",
+   "applied": true
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "with a mandate to channel USD 100 billion per year by 2020 from developed to developing countries",
+   "problem": "The USD 100 billion/year by 2020 is a collective goal of developed countries, not a mandate of the Green Climate Fund.",
+   "correction": "as part of the collective goal to mobilize USD 100 billion per year by 2020",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "$100bn/yr by 2020 is collective developed-country goal (Copenhagen/Cancun/Paris), not GCF mandate",
+   "applied": false
+  },
+  {
+   "file": "clat/course/gk/lesson-static-gk.html",
+   "quote": "Ratification of these eight is a prerequisite for many trade‑preference schemes and for membership in the ILO’s Governing Body",
+   "problem": "Ratification of the eight fundamental conventions is not a prerequisite for ILO Governing Body membership.",
+   "correction": "Ratification of these eight is a prerequisite for many trade‑preference schemes",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "ILO Governing Body membership does not require ratification of all 8 fundamental conventions",
+   "applied": true
+  },
+  {
+   "file": "clat/course/legal/lesson-case-studies.html",
+   "quote": "a selection committee’s decision made without following the prescribed procedure was ultra vires because the statutory rule mandated a specific method",
+   "problem": "Kraipak concerned natural justice/bias, not statutory procedural ultra vires; the governing rule was not statutory.",
+   "correction": "a selection committee’s decision vitiated by bias violated natural justice and was void",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Kraipak v. Union of India (1970) concerned bias/natural justice, not statutory procedural ultra vires.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/legal/lesson-case-studies.html",
+   "quote": "the Court struck down a presidential proclamation under Article 356 because the material placed before the President did not disclose a breakdown of constitutional machinery",
+   "problem": "State of Rajasthan v. Union of India (1977) upheld the proclamation’s non-justiciability; the first striking down for lack of material was S.R. Bommai (1994).",
+   "correction": "the Court in S.R. Bommai v. Union of India (1994) struck down a proclamation under Article 356 for lack of material showing breakdown of constitutional machinery",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "First striking down of Art. 356 proclamation for lack of material was S.R. Bommai (1994); Rajasthan case upheld non-justiciability.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/legal/lesson-case-studies.html",
+   "quote": "The Court in Minerva Mills v. Union of India (1980) applied both tests to strike down clauses that attempted to expand Parliament’s amending power beyond the basic structure",
+   "problem": "Minerva Mills applied the basic structure doctrine, not the ‘necessary and proper’ and ‘federal compatibility’ tests as articulated here.",
+   "correction": "The Court in Minerva Mills v. Union of India (1980) struck down clauses expanding amending power as violative of the basic structure",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Minerva Mills applied basic structure doctrine, not 'necessary and proper' or 'federal compatibility' tests."
+  },
+  {
+   "file": "clat/course/quant/lesson-numerical-ability.html",
+   "quote": "if A and B share 3 : 2 and admit C for 1/5 share, the new ratio might be 3 : 2 : 1",
+   "problem": "The new ratio 3:2:1 gives C a 1/6 share, not 1/5. The example's sacrifice calculation uses 3:2:1, so the stated share is inconsistent.",
+   "correction": "if A and B share 3 : 2 and admit C for 1/6 share, the new ratio might be 3 : 2 : 1",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original gives C 1/5 but ratio 3:2:1 yields 1/6; correction to 1/6 fixes inconsistency.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/quant/lesson-basic-maths.html",
+   "quote": "a φ(m) ≡ 1 (mod m)",
+   "problem": "Euler's theorem is misstated as a multiplied by φ(m) instead of a raised to the power φ(m).",
+   "correction": "a^φ(m) ≡ 1 (mod m)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original lacks exponent notation; Euler's theorem requires a^φ(m). Correction is standard and accurate.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/quant/lesson-basic-maths.html",
+   "quote": "a p−1 ≡ 1 (mod p)",
+   "problem": "Fermat's little theorem is misstated as a multiplied by (p-1) instead of a raised to the power (p-1).",
+   "correction": "a^{p-1} ≡ 1 (mod p)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original lacks exponent notation; Fermat's little theorem requires a^{p-1}. Correction is standard and accurate.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/quant/lesson-numerical-ability.html",
+   "quote": "more than two moving bodies interact — trains crossing platforms, overtaking other trains, or meeting trains coming from opposite directions",
+   "problem": "The examples given involve at most two moving bodies (overtaking and meeting trains) and one stationary object (platform), not more than two moving bodies.",
+   "correction": "two or more bodies interact — trains crossing platforms, overtaking other trains, or meeting trains coming from opposite directions",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original claims 'more than two moving bodies' (3+), but examples show max 2 moving bodies (platform is stationary). Correction 'two or more bodies' accurately covers all examples.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/legal/lesson-legal-principles.html",
+   "quote": "The Court held that the amendment applies retrospectively to daughters born before 9 September 2005, provided the father was alive on that date.",
+   "problem": "Vineeta Sharma (2020) overruled the requirement that the father be alive on 9 September 2005; the daughter's coparcenary right accrues by birth irrespective of the father's survival.",
+   "correction": "The Court held that the amendment applies retrospectively to daughters born before 9 September 2005, irrespective of whether the father was alive on that date.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Vineeta Sharma (2020) overruled Phulavati; daughter's coparcenary right accrues by birth regardless of father's survival on 9 Sep 2005.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/legal/lesson-legal-principles.html",
+   "quote": "the pith and substance of the Act was “public health and morals”, a State List entry",
+   "problem": "The pith and substance in Balsara was 'intoxicating liquors' (Entry 31, List II), not 'public health and morals', which is not a legislative entry.",
+   "correction": "the pith and substance of the Act was “intoxicating liquors”, a State List entry (Entry 31, List II)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Balsara case pith and substance was 'intoxicating liquors' (Entry 31, List II); 'public health and morals' is not a legislative entry.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/legal/lesson-legal-principles.html",
+   "quote": "cite the relevant entries (Entry 28 List II vs Entry 33 List I)",
+   "problem": "Entry 33 List I concerns foreign trade; inter‑state trade falls under Entry 42 List I.",
+   "correction": "cite the relevant entries (Entry 28 List II vs Entry 42 List I)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Entry 33 List I covers foreign trade; inter-state trade is under Entry 42 List I per Seventh Schedule.",
+   "applied": true
+  },
+  {
+   "file": "clat/course/legal/lesson-legal-principles.html",
+   "quote": "State of Uttaranchal v. Balwant Singh Chaufal (2010)",
+   "problem": "Incorrect state name; the state was renamed Uttarakhand in 2007, so the case is cited as State of Uttarakhand.",
+   "correction": "State of Uttarakhand v. Balwant Singh Chaufal (2010)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Uttaranchal renamed Uttarakhand effective 1 Jan 2007; a 2010 SC judgment must carry the current state name.",
+   "applied": false
+  },
+  {
+   "file": "clat/course/quant/lesson-basic-maths.html",
+   "quote": "the fundamental solution of the negative Pell equation",
+   "problem": "7/5 is not the fundamental solution to x^2 - 2y^2 = -1; the fundamental solution is 1/1 (the first convergent).",
+   "correction": "a solution of the negative Pell equation",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Fundamental solution to x^2-2y^2=-1 is (1,1); (7,5) is the second solution.",
+   "applied": true
   }
  ]
 }
