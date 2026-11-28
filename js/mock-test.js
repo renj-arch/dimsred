@@ -35,12 +35,13 @@
   function quickTrick(t) {
     var s = String(t || '').toLowerCase();
     if (/average|mean/.test(s)) return 'The average must lie between the smallest and largest value, pulled toward the biggest group — reject any option outside that band.';
+    if (/scheme|invest|principal|compound|semi-?annual|per annum/.test(s)) return 'Work out the whole amount at the base rate once; moving part of it to a scheme that compounds more often adds only a small margin — so pick the option just above (or below) that base figure and eliminate the far ones.';
     if (/percentage|percent|% ?increase|% ?decrease/.test(s)) return 'Build from 10% (shift the decimal), then add multiples; pick the option nearest your estimate.';
     if (/ratio|proportion|respectively/.test(s)) return 'Add the parts for the denominator, then scale; the answer is a simple fraction of the total.';
     if (/profit|loss|cost price|selling price|marked price|discount/.test(s)) return 'Take CP = 100, apply the percentage, then convert — SP/CP gives the answer directly.';
     if (/time and work|efficiency|together|days|hours/.test(s)) return 'Convert to per-day rates, add for "together", and invert; together is always faster than the fastest alone.';
     if (/speed|distance|train|km\/|m\/s/.test(s)) return 'Speeds are in inverse ratio to times for the same distance; fix units first (×5/18 for km/h to m/s).';
-    if (/interest|si\b|ci\b|compound|simple/.test(s)) return 'SI is linear (P×R×T/100); CI is slightly more — estimate and pick the nearest, not the linear value.';
+    if (/interest|simple|compound/.test(s)) return 'SI grows linearly (P×R×T/100); CI is slightly more — estimate and pick the nearest, not the linear value.';
     if (/data interpretation|chart|graph|pie|bar|table/.test(s)) return 'Read the axis units first; the answer is usually a clean round figure — reject odd ones.';
     if (/probability|chance/.test(s)) return 'Probability = favourable ÷ total; eliminate options above 1 or outside the obvious range.';
     if (/area|perimeter|volume|radius|diameter/.test(s)) return 'Write the formula, keep units consistent, and sanity-check the magnitude (areas scale as the square).';
@@ -227,9 +228,8 @@
     var _trick = quickTrick(q.text);
     var _html = '<strong style="color:#34d399">Answer: ' + String.fromCharCode(65 + q.correct) + ') ' + (q.options[q.correct] || '') + '</strong>';
     if (q.solution) _html += '<br>' + q.solution;
-    var _shownTrick = (_res && _res.shortcut) ? _res.shortcut : _trick;
-    if (_shownTrick) _html += '<div style="margin-top:8px;color:#f59e0b"><strong>⚡ Quick trick:</strong> ' + _shownTrick + '</div>';
-    if (_res) _html += '<div style="margin-top:8px;color:#c4b5fd"><strong>🧪 Research Team — ' + (_res.name || 'method') + (_res.seconds ? ' (' + _res.seconds + 's)' : '') + ':</strong><ol style="margin:4px 0 0 18px">' + (_res.steps || []).map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></div>';
+    if (_trick) _html += '<div style="margin-top:8px;color:#f59e0b"><strong>⚡ Quick guess:</strong> ' + _trick + '</div>';
+    if (_res) _html += '<div style="margin-top:8px;color:#c4b5fd"><strong>🧪 Research Team — ' + (_res.name || 'method') + (_res.seconds ? ' (' + _res.seconds + 's)' : '') + ':</strong>' + (_res.shortcut ? '<div style="color:#f59e0b;margin:4px 0">⚡ ' + _res.shortcut + '</div>' : '') + '<ol style="margin:4px 0 0 18px">' + (_res.steps || []).map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></div>';
     var _ex = explainFor(q.text);
     if (_ex) {
       var _cl = String.fromCharCode(65 + q.correct);
@@ -349,7 +349,7 @@
       var optLetters = q.options.map(function (_, j) { return String.fromCharCode(65 + j); });
       var userLetter = state.answers[i] != null ? optLetters[state.answers[i]] : '--';
       var correctLetter = optLetters[q.correct];
-      var _revRes = researchFor(q.text), _revTrick = ((_revRes && _revRes.shortcut) ? _revRes.shortcut : quickTrick(q.text));
+      var _revRes = researchFor(q.text), _revTrick = quickTrick(q.text);
       var _revEx = explainFor(q.text);
       var _revWrong = '';
       if (_revEx) {
@@ -362,7 +362,7 @@
         '<div class="review-correct">Correct: <strong>' + correctLetter + '</strong> ' + q.options[q.correct] + '</div>' +
         (q.solution ? '<div class="review-sol">Solution: ' + q.solution + '</div>' : '') +
         (_revTrick ? '<div class="review-sol" style="color:#f59e0b">⚡ ' + _revTrick + '</div>' : '') +
-        (_revRes ? '<div class="review-sol" style="color:#c4b5fd">🧪 ' + (_revRes.name || 'Research method') + ': ' + (_revRes.steps || []).join(' → ') + '</div>' : '') +
+        (_revRes ? '<div class="review-sol" style="color:#c4b5fd">🧪 ' + (_revRes.name || 'Research method') + ': ' + (_revRes.shortcut ? '⚡ ' + _revRes.shortcut + ' — ' : '') + (_revRes.steps || []).join(' → ') + '</div>' : '') +
         (_revEx ? '<div class="review-sol" style="color:#93c5fd"><strong>Why ' + correctLetter + ' is right:</strong> ' + (_revEx.whyCorrect || '') + '</div>' : '') +
         (_revWrong ? '<div class="review-sol" style="color:#fca5a5"><strong>Why the others are wrong:</strong><ul style="margin:4px 0 0 18px">' + _revWrong + '</ul></div>' : '');
       els.reviewList.appendChild(item);

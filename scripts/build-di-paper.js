@@ -99,7 +99,7 @@ function lineSvg(title, labels, values, unit) {
 }
 
 function tableHtml(title, headers, rows) {
-  return `<div style="overflow-x:auto;margin:8px 0"><table style="width:100%;border-collapse:collapse;font-size:.9em"><caption style="text-align:left;font-weight:700;padding:4px 0">${esc(title)}</caption><thead><tr>${headers.map((h) => `<th style="border:1px solid #d1d5db;padding:6px 8px;background:#f3f4f6;color:#111827">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td style="border:1px solid #d1d5db;padding:6px 8px;color:#111827">${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<div style="overflow-x:auto;margin:8px 0;background:#ffffff;border:1px solid #d1d5db;border-radius:8px;padding:10px"><table style="width:100%;border-collapse:collapse;font-size:.9em;color:#111827"><caption style="text-align:left;font-weight:700;padding:4px 0;color:#111827">${esc(title)}</caption><thead><tr>${headers.map((h) => `<th style="border:1px solid #d1d5db;padding:6px 8px;background:#f3f4f6;color:#111827">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td style="border:1px solid #d1d5db;padding:6px 8px;color:#111827">${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
 function opts(correct, distractors) {
