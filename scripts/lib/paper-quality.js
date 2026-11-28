@@ -17,7 +17,9 @@ function badQuestion(q) {
   const opts = raw.map(optText);
   if (opts.some((o) => !o)) return 'empty option';
   if (new Set(opts.map(norm)).size !== opts.length) return 'duplicate options';
-  if (opts.every((o, i) => /^[a-d]$/i.test(o) || /^option [a-d]$/i.test(o) || o === String.fromCharCode(65 + i))) return 'placeholder options';
+  var letters = opts.map(function (o) { return String(o).trim().toUpperCase(); });
+  if (letters.join('') === 'ABCD' || letters.join('') === '1234') return 'placeholder options';
+  if (opts.every(function (o) { return /^option [a-d]$/i.test(String(o).trim()); })) return 'placeholder options';
   if (!raw.some((o) => o && o.correct === true) && q.correct == null && q.answer == null) return 'no answer key';
   return '';
 }
