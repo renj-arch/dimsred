@@ -641,6 +641,26 @@
 <div><table><caption>FACTS Device Comparison</caption><thead><tr><th>Device</th><th>Topology</th><th>Control Variable</th><th>Response Time</th><th>Typical Rating</th></tr></thead><tbody><tr><td>SVC</td><td>TCR + TSC</td><td>Reactive current</td><td>20–40 ms</td><td>±100 Mvar</td></tr><tr><td>STATCOM</td><td>VSC + DC capacitor</td><td>Reactive current (voltage independent)</td><td>&lt;5 ms</td><td>±200 Mvar</td></tr><tr><td>UPFC</td><td>Series VSC + Shunt VSC</td><td>P, Q, V, δ</td><td>&lt;5 ms</td><td>±300 Mvar series, ±200 Mvar shunt</td></tr><tr><td>IPFC</td><td>Multiple series VSCs</td><td>Power exchange among lines</td><td>&lt;5 ms</td><td>±150 Mvar per converter</td></tr></tbody></table></div>
 
 <h3>Advanced Digital Modulation and Coding Techniques</h3>
+<!-- passage-cartoon:11099b4c0dfa -->
+<figure class="passage-cartoon" data-cartoon="11099b4c0dfa">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <path d="M200,80 h160 v160 h-160 z M200,120 h160 M200,160 h160 M200,200 h160 M240,80 v160 M280,80 v160 M320,80 v160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M60,60 h80 v80 h-80 z M70,70 h60 M70,90 h60 M70,110 h60 M90,60 v80 M110,60 v80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M460,60 L520,100 M460,100 L520,60 M460,80 L520,80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M60,220 h80 v60 h-80 z M160,220 h80 v60 h-80 z M100,250 L160,250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M460,260 v-60 M460,200 L450,210 M460,200 L470,210 M460,260 h40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="60" text-anchor="middle" font-size="14" fill="#1f2937">QAM Constellation</text>
+  <text x="100" y="40" text-anchor="middle" font-size="14" fill="#1f2937">LDPC Decoding</text>
+  <text x="490" y="40" text-anchor="middle" font-size="14" fill="#1f2937">Polar Codes</text>
+  <text x="100" y="210" text-anchor="middle" font-size="14" fill="#1f2937">Turbo Codes</text>
+  <text x="490" y="190" text-anchor="middle" font-size="14" fill="#1f2937">Coding Gain</text>
+  <text x="280" y="305" text-anchor="middle" font-size="12" fill="#1f2937">Advanced Digital Modulation and Coding Techniques</text>
+</svg></div>
+  <figcaption>Advanced Digital Modulation and Coding Techniques</figcaption>
+</figure>
+
 <p>Modern communication systems employ higher‑order constellations and capacity‑approaching codes. Quadrature Amplitude Modulation (QAM) maps bits onto a two‑dimensional grid; the average symbol energy for square M‑QAM is E_s = (2/3)(M‑1)d² where d is the minimum Euclidean distance. The symbol error probability in AWGN is approximated by P_s ≈ 4(1‑1/√M) Q(√(3 E_s/((M‑1)N₀))). For non‑square constellations (e.g., 32‑QAM, 128‑QAM) the exact distance spectrum must be used. Bit‑interleaved coded modulation (BICM) separates the binary encoder from the mapper, allowing iterative demapping and decoding; the extrinsic information transfer (EXIT) chart predicts convergence thresholds.</p>
 <p>Low‑Density Parity‑Check (LDPC) codes and polar codes dominate 5G and Wi‑Fi 6/7. An LDPC code is defined by a sparse parity‑check matrix H; belief‑propagation decoding on the Tanner graph iterates variable‑node and check‑node updates. The decoding threshold (in E_b/N₀) for a regular (3,6) LDPC ensemble is ≈1.1 dB from the Shannon limit. Polar codes achieve capacity on binary‑input memoryless channels via channel polarization; the successive‑cancellation list (SCL) decoder with CRC‑aided list size L=8 provides near‑ML performance at practical block lengths (N=1024). Turbo codes, though older, remain in LTE; their iterative MAP decoder exchanges extrinsic log‑likelihood ratios (LLRs) between two constituent recursive systematic convolutional (RSC) decoders.</p>
 <p>Coded modulation design uses the concept of Euclidean distance spectrum and the union bound. For a rate‑R code with minimum squared Euclidean distance d_min², the asymptotic coding gain over uncoded BPSK is G_c = 10 log₁₀(R d_min²) dB. In practice, the effective coding gain at a target BER (e.g., 10⁻⁵) is lower due to error floors. Multilevel coding (MLC) with multistage decoding (MSD) partitions the constellation into levels, each protected by a binary code of appropriate rate; the overall rate is the sum of level rates. This approach achieves the capacity of the constellation‑constrained channel.</p>
