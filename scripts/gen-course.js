@@ -141,7 +141,7 @@ function head(exam, examDir, examName, title, desc, canonical, extra, depth) {
 }
 
 function foot() {
-  return '    </div>\n</body>\n</html>';
+  return '    </div>\n<script src="/js/lesson-video-embed.js" defer></script>\n</body>\n</html>';
 }
 
 function generateAutoContent(lesson, moduleName, examKey) {

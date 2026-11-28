@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lesson Lecture Videos | vlymbooq</title>
+<meta name="description" content="Full lesson lecture videos — narrated, animated and fact-audited. Published only after the fact audit certifies the exact lesson text.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{background:#09090b;color:#fafafa;font-family:Inter,'Segoe UI',system-ui,sans-serif;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 20px 80px}
+  a{color:#a78bfa;text-decoration:none}
+  .nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.9em;color:#a1a1aa;margin-bottom:26px}
+  .nav a{color:#a1a1aa}
+  .nav a:hover{color:#fafafa}
+  h1{font-size:1.9em;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{color:#a1a1aa;line-height:1.6;max-width:760px;margin:0 0 10px}
+  .gate{display:inline-flex;align-items:center;gap:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);
+    color:#6ee7b7;border-radius:999px;padding:6px 12px;font-size:.78em;font-weight:700;letter-spacing:.03em;margin:8px 0 26px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+  .card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden}
+  .card video{width:100%;aspect-ratio:16/9;display:block;background:#000}
+  .body{padding:14px 16px 16px}
+  .t{font-weight:700;margin:0 0 6px;font-size:1.02em;text-transform:capitalize}
+  .l{color:#a1a1aa;font-size:.8em;line-height:1.5;margin:0 0 10px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .pill{font-size:.7em;font-weight:700;border-radius:999px;padding:3px 9px;background:rgba(167,139,250,.12);color:#c4b5fd}
+  .pill.ok{background:rgba(52,211,153,.12);color:#6ee7b7}
+  .go{font-size:.8em;font-weight:700}
+  .empty{background:#111113;border:1px dashed rgba(255,255,255,.16);border-radius:14px;padding:34px;text-align:center;color:#a1a1aa;line-height:1.7}
+  .empty b{color:#fafafa}
+  code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;font-size:.85em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav">
+    <a href="/">← Home</a>
+    <a href="/lecture.html">Spoken Lectures</a>
+    <a href="/upsc/course/">Course</a>
+    <a href="/cartoons/">Cartoons</a>
+  </div>
+  <h1>Lesson Lecture Videos</h1>
+  <p class="sub">Each video walks the <b>entire</b> lesson — every section, table and cartoon — with narration and the diagrams animated. A video is published only after the <b>fact audit certifies the exact lesson text</b>, so what you watch matches what has been checked.</p>
+  <div class="gate">✓ fact-audit gated</div>
+  <div id="grid" class="grid"></div>
+  <div id="empty" class="empty" hidden>
+    <b>No lecture video is published yet.</b><br>
+    The pipeline is built and running on GitHub Actions, but a video is only released after the lesson passes the fact audit for its current text. Check back soon, or open any lesson and use “Watch lecture” once its video is ready.
+  </div>
+</div>
+<script>
+(function () {
+  var grid = document.getElementById('grid');
+  var empty = document.getElementById('empty');
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
+  function titleOf(rel) { var s = rel.split('/').pop().replace(/^lesson-/, '').replace(/\.html$/, ''); return s.replace(/-/g, ' '); }
+  fetch('/data/lesson-videos.json?cb=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (m) {
+      var items = [];
+      if (m && m.lessons) {
+        Object.keys(m.lessons).forEach(function (rel) {
+          var e = m.lessons[rel];
+          if (!e || !e.video || e.video.indexOf('media/') !== 0 || e.truncated) return;
+          items.push({ rel: rel, e: e });
+        });
+      }
+      if (!items.length) { empty.hidden = false; return; }
+      items.sort(function (a, b) { return String(b.e.generatedAt || '').localeCompare(String(a.e.generatedAt || '')); });
+      grid.innerHTML = items.map(function (it) {
+        var e = it.e, rel = it.rel;
+        var lesson = '/' + rel.replace(/\.html$/, '');
+        var mins = Math.max(1, Math.round((e.durationSec || 0) / 60));
+        var exam = rel.split('/')[0].toUpperCase();
+        return '<div class="card">' +
+          '<video controls preload="metadata" src="/' + esc(e.video) + '"></video>' +
+          '<div class="body">' +
+            '<div class="t">' + esc(titleOf(rel)) + '</div>' +
+            '<div class="l">' + esc(exam) + ' · ' + mins + ' min · ' + (e.slides || 0) + ' slides · ' + (e.coverage || 100) + '% of the lesson covered</div>' +
+            '<div class="row"><span class="pill ok">✓ fact-audited</span>' +
+              (e.generatedAt ? '<span class="pill">' + esc(String(e.generatedAt).slice(0, 10)) + '</span>' : '') +
+              '<a class="go" href="' + esc(lesson) + '">Read the lesson →</a></div>' +
+          '</div></div>';
+      }).join('');
+    })
+    .catch(function () { empty.hidden = false; });
+})();
+</script>
+</body>
+</html>
