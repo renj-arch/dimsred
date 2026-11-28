@@ -1,50 +1,70 @@
 {
- "generatedAt": "2026-11-28T14:00:11.351Z",
+ "generatedAt": "2026-11-28T14:21:51.247Z",
  "lessonsAudited": 18,
- "flagged": 4,
- "applied": 2,
- "modelCalls": 12,
- "modelFailures": 41,
+ "flagged": 6,
+ "applied": 0,
+ "modelCalls": 15,
+ "modelFailures": 27,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "ibps-po/course/reasoning/lesson-coding-decoding.html",
-   "quote": "Remember that rotation is invertible only when s and L are coprime",
-   "problem": "A cyclic rotation (shift) on a block of length L is always invertible for any shift s (1 ≤ s < L); the inverse is rotation by L−s. The condition that s and L are coprime is required for the permutation to be a single cycle, not for invertibility.",
-   "correction": "Remember that rotation forms a single cycle only when s and L are coprime",
+   "file": "jee/course/chemistry/lesson-physical-chemistry.html",
+   "quote": "if ΔG 0",
+   "problem": "Missing '<' symbol; should be 'if ΔG < 0'",
+   "correction": "if ΔG < 0",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original confuses invertibility (always true for rotations) with single-cycle property (requires coprime). Correction is accurate.",
+   "verifierReason": "Original lacks '<' making it incorrect; correction adds proper inequality.",
    "applied": false
   },
   {
-   "file": "ibps-po/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "Together they intersect at 99 only",
-   "problem": "99 has digit sum 18, not 9; no two-digit multiple of 11 has digit sum 9, so the intersection is empty",
-   "correction": "Together they have no common value, so the combination is insufficient",
+   "file": "jee/course/chemistry/lesson-physical-chemistry.html",
+   "quote": "K_p = K_c(RT) Δn_gas",
+   "problem": "Missing exponentiation; Δn_gas should be exponent",
+   "correction": "K_p = K_c(RT)^{Δn_gas}",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original claim is wrong; no two‑digit multiple of 11 has digit sum 9, so intersection is empty. Correction is accurate.",
-   "applied": true
+   "verifierReason": "Original missing exponent; correction correctly uses (RT)^{Δn_gas}.",
+   "applied": false
   },
   {
-   "file": "ibps-po/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "knowing only the radius and an inscribed angle does not determine the chord length unless the central angle is also known",
-   "problem": "An inscribed angle determines the central angle (central angle = 2 × inscribed angle), so radius and inscribed angle together do determine chord length",
-   "correction": "knowing only the radius and an inscribed angle determines the chord length via the central angle",
+   "file": "jee/course/chemistry/lesson-physical-chemistry.html",
+   "quote": "(Q K → reverse)",
+   "problem": "Missing '>' symbol; should be 'Q > K'",
+   "correction": "(Q > K → reverse)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Inscribed angle determines central angle (2×), allowing chord length from radius. Correction is correct.",
-   "applied": true
+   "verifierReason": "Original missing '>'; correction restores proper condition Q > K.",
+   "applied": false
   },
   {
-   "file": "ibps-po/course/reasoning/lesson-puzzles-seating.html",
-   "quote": "A clue such as 'A sits third to the left of B' is interpreted differently depending on whether A faces the centre",
-   "problem": "In circular seating puzzles, 'to the left of B' is always from B's perspective, so the facing direction that determines left/right is B's, not A's.",
-   "correction": "A clue such as 'A sits third to the left of B' is interpreted differently depending on whether B faces the centre",
+   "file": "jee/course/chemistry/lesson-physical-chemistry.html",
+   "quote": "∫ 0 p ( Z −1)/ p d",
+   "problem": "Missing integration variable in fugacity coefficient formula; should be dp",
+   "correction": "∫_0^p (Z−1)/p dp",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Left/right in seating puzzles is always from the reference person's (B's) perspective, not the subject's (A's).",
+   "verifierReason": "Fugacity coefficient formula ln φ = ∫_0^p (Z-1)/p dp; original missing differential dp.",
+   "applied": false
+  },
+  {
+   "file": "jee/course/maths/lesson-differentiation-applications.html",
+   "quote": "since e^ξ ≤ e |x| for ξ between 0 and x, the error is bounded by e |x| |x| n+1 /(n+1)!",
+   "problem": "The inequality e^ξ ≤ e|x| is false; correct bound is e^ξ ≤ e^{|x|}. The error bound expression is also garbled.",
+   "correction": "since e^ξ ≤ e^{|x|} for ξ between 0 and x, the error is bounded by e^{|x|} |x|^{n+1}/(n+1)!",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original bound e^ξ ≤ e|x| is false; correct bound e^ξ ≤ e^{|x|} yields correct error bound.",
+   "applied": false
+  },
+  {
+   "file": "jee/course/maths/lesson-vector-3d.html",
+   "quote": "Three points A, B, C with position vectors a, b, c are collinear (lie on the same line) if one vector can be written as a linear combination of the other two.",
+   "problem": "The condition 'one vector can be written as a linear combination of the other two' is not equivalent to collinearity; any vector in the span of two vectors satisfies this, but collinearity requires an affine combination (coefficients summing to 1).",
+   "correction": "Three points A, B, C with position vectors a, b, c are collinear if one vector can be written as an affine combination of the other two (coefficients sum to 1).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original misses affine condition; correction correctly states coefficients sum to 1.",
    "applied": false
   }
  ]
