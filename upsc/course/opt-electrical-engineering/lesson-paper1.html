@@ -443,6 +443,57 @@
 <p>Frequency stability relates to the balance between generation and load. If generation drops below load, frequency falls; if generation exceeds load, frequency rises. Modern grids have automatic generation control (AGC) to maintain frequency within narrow bands (e.g., 50 Hz ± 0.2 Hz). However, severe imbalances can lead to under-frequency load shedding schemes to prevent blackouts.</p>
 <div class="example-box"><div class="ex-title">Examiner's trap</div><div class="ex-text">Question: "Why does a synchronous motor not start by itself when connected to AC supply?" Answer: At standstill, the stator produces a rotating magnetic field. The rotor (DC excited) is stationary. Due to inertia, the rotor cannot lock onto the rotating field instantly. Furthermore, if the rotor were unexcited (induction mode), it would act like an induction motor but with very low torque because the slip rings are not designed for high starting currents and the cage winding (if present) has high resistance.</div></div>
 <h3>Network Theorems in AC Steady‑State Analysis: Superposition, Thevenin, and Norton with Phasors</h3>
+<!-- passage-cartoon:986c1d22e9de -->
+<figure class="passage-cartoon" data-cartoon="986c1d22e9de">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="284" width="532" height="22" fill="#e5e2da"/>
+  <text x="280" y="300" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Network Theorems in AC</text>
+  <!-- Central person -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <circle cx="280" cy="140" r="30"/>
+    <line x1="280" y1="170" x2="280" y2="230"/>
+    <line x1="260" y1="190" x2="300" y2="190"/>
+    <line x1="260" y1="210" x2="300" y2="210"/>
+    <line x1="250" y1="140" x2="210" y2="120"/>
+    <line x1="310" y1="140" x2="350" y2="120"/>
+  </g>
+  <!-- Superposition waves -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <path d="M210 120 q20 -30 40 0 q20 30 40 0" />
+    <path d="M350 120 q20 -30 40 0 q20 30 40 0" />
+    <!-- Resultant vector -->
+    <line x1="250" y1="120" x2="390" y2="120" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Thevenin/Norton box -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <rect x="180" y="240" width="80" height="40"/>
+    <line x1="220" y1="240" x2="220" y2="280"/>
+    <line x1="180" y1="260" x2="260" y2="260"/>
+  </g>
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <rect x="300" y="240" width="80" height="40"/>
+    <line x1="340" y1="240" x2="340" y2="280"/>
+    <line x1="300" y1="260" x2="380" y2="260"/>
+  </g>
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Labels -->
+  <text x="280" y="100" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Superposition</text>
+  <text x="220" y="285" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Thevenin</text>
+  <text x="340" y="285" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Norton</text>
+  <text x="460" y="150" font-family="sans-serif" font-size="13" fill="#1f2937">Conjugate Match</text>
+  <!-- Conjugate match arrow -->
+  <line x1="380" y1="150" x2="440" y2="150" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)"/>
+</svg></div>
+  <figcaption>Network Theorems in AC Steady‑State Analysis: Superposition, Thevenin, and Norton with Phasors</figcaption>
+</figure>
+
 <p>In AC steady‑state <span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="Superposition holds for linear circuits with sources of any frequencies; the phasor addition method described requires sources of the same frequency.">the phasor superposition method applies only to linear circuits where all sources operate at the same frequency.</span> When multiple sinusoidal sources of identical frequency are present, each source can be considered independently by replacing the others with their internal impedances (short circuit for ideal voltage sources, open circuit for ideal current sources). The individual phasor responses are then added vectorially to obtain the total response. This is fundamentally different from the DC case because the phase angles of the phasors must be preserved during addition; scalar addition of magnitudes leads to gross errors.</p>
 <p>Thevenin’s theorem in the phasor domain states that any linear two‑terminal network can be replaced by an equivalent voltage source <strong>V<sub>th</sub></strong> in series with an impedance <strong>Z<sub>th</sub></strong>. <strong>V<sub>th</sub></strong> is the open‑circuit voltage across the terminals measured with all independent sources active. <strong>Z<sub>th</sub></strong> is the impedance seen from the terminals with all independent sources deactivated (voltage sources shorted, current sources opened) while dependent sources remain. The same procedure yields the Norton equivalent: a current source <strong>I<sub>N</sub></strong> = <strong>V<sub>th</sub></strong>/<strong>Z<sub>th</sub></strong> in parallel with <strong>Z<sub>th</sub></strong>. Because impedances are complex, the division must be performed in polar or rectangular form, preserving both magnitude and angle.</p>
 <p>A frequent examiner twist is to embed a dependent source whose controlling variable lies outside the portion of the circuit being Thevenized. In that case the dependent source cannot be deactivated; its effect must be retained while calculating <strong>Z<sub>th</sub></strong> by applying a test voltage (or current) source at the terminals and measuring the resulting current (or voltage). The ratio gives <strong>Z<sub>th</sub></strong> directly. This “test‑source method” is the only reliable way when dependent sources are present.</p>
