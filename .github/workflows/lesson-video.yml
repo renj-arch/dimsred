@@ -157,6 +157,21 @@ jobs:
           echo '--- manifest ---'
           cat data/lesson-videos.json 2>/dev/null | head -c 4000 || true
 
+      # Persist what the in-lane audit certified (hash + clean flag), even when it
+      # blocked the render. Without this the audit work is thrown away and the
+      # next run starts from zero. Additive: ci-push merges with the audit lane.
+      - name: Publish audit state
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -f data/fact-audit-state.json data/fact-audit.json 2>/dev/null || true
+          if git diff --staged --quiet; then echo "no audit-state change"; exit 0; fi
+          bash scripts/ci-push.sh "lesson-video: fact-audit state for the rendered lesson"
+
       - name: Upload lecture videos
         uses: actions/upload-artifact@v4
         with:
