@@ -921,12 +921,81 @@
 </div>
 
 <h3>Statistical Inference: Point Estimation, Confidence Intervals, and Hypothesis Testing</h3>
+<!-- passage-cartoon:550311f3b121 -->
+<figure class="passage-cartoon" data-cartoon="550311f3b121">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central parameter -->
+  <circle cx="280" cy="160" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Arrow from left to parameter (MLE) -->
+  <line x1="150" y1="160" x2="250" y2="160" stroke="#1f2937" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Confidence interval bar -->
+  <path d="M220 210 H340 M220 205 V215 M340 205 V215" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Hypothesis test diamond -->
+  <polygon points="280,90 310,110 280,130 250,110" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Fisher information curve -->
+  <path d="M100 250 Q140 230 180 250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- t-distribution curve -->
+  <path d="M360 250 Q400 220 440 250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Chi-square (Wilks) curve -->
+  <path d="M240 70 Q280 40 320 70" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="286" width="532" height="20" fill="#e8e0d0" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="320" y="150" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Parameter θ</text>
+  <text x="150" y="140" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">MLE θ̂</text>
+  <text x="280" y="190" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Confidence Interval</text>
+  <text x="180" y="100" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Likelihood Ratio Test</text>
+  <text x="100" y="260" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Fisher Info I(θ)</text>
+  <text x="420" y="260" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">t‑distribution</text>
+  <text x="280" y="279.5" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Statistical Inference</text>
+</svg></div>
+  <figcaption>Statistical Inference: Point Estimation, Confidence Intervals, and Hypothesis Testing</figcaption>
+</figure>
+
 <p>Statistical inference occupies a substantial portion of Paper II. Point estimation begins with the concepts of unbiasedness <strong>E[θ̂]=θ</strong>, consistency <strong>θ̂_n → θ</strong> in probability, and efficiency measured by the Cramér–Rao lower bound <strong>Var(θ̂) ≥ 1/I(θ)</strong> where <strong>I(θ)=E[(∂/∂θ log f(X;θ))²]</strong> is the Fisher information. The maximum likelihood estimator (MLE) solves the likelihood equation <strong>∂/∂θ log L(θ)=0</strong> and, under regularity conditions, is asymptotically normal with variance <strong>I(θ)<sup>−1</sup></strong>. The method of moments equates sample moments to theoretical moments; it is simpler but generally less efficient.</p>
 <p>Confidence intervals are constructed from pivotal quantities — functions of the data and the parameter whose distribution does not depend on the parameter. For a normal sample with known variance, <strong>(X̄−μ)/(σ/√n) ∼ N(0,1)</strong> yields the exact interval <strong>X̄ ± z<sub>α/2</sub> σ/√n</strong>. When the variance is unknown, the pivotal <strong>(X̄−μ)/(S/√n) ∼ t<sub>n−1</sub></strong> gives the Student‑t interval. For large samples, the asymptotic normality of the MLE provides approximate intervals <strong>θ̂ ± z<sub>α/2</sub> √(I(θ̂)<sup>−1</sup>/n)</strong>.</p>
 <p>Hypothesis testing is framed by the Neyman–Pearson lemma: the most powerful test of size <strong>α</strong> for simple versus simple hypotheses rejects when the likelihood ratio <strong>Λ(x)=f₁(x)/f₀(x)</strong> exceeds a constant <strong>k</strong> chosen to achieve the desired size. For composite hypotheses, the likelihood‑ratio test statistic <strong>λ = sup<sub>θ∈Θ₀</sub> L(θ) / sup<sub>θ∈Θ</sub> L(θ)</strong> leads, under regularity, to <strong>−2 log λ ∼ χ²<sub>dim(Θ)−dim(Θ₀)</sub></strong> asymptotically (Wilks’ theorem). The power function <strong>β(θ)=P_θ(reject H₀)</strong> and the concept of uniformly most powerful (UMP) tests are examined through the Karlin–Rubin theorem for one‑parameter exponential families.</p>
 <p>Examiners often combine estimation and testing: derive the MLE, compute its asymptotic variance, construct a confidence interval, and then formulate the corresponding likelihood‑ratio test. Familiarity with the exponential family form <strong>f(x;θ)=h(x)exp{η(θ)T(x)−A(θ)}</strong> simplifies the derivation of sufficient statistics, Fisher information, and UMP tests.</p>
 
 <h3>Linear Programming: Duality Theory, Sensitivity Analysis, and the Simplex Method</h3>
+<!-- passage-cartoon:b7048d8455d8 -->
+<figure class="passage-cartoon" data-cartoon="b7048d8455d8">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Scale beam -->
+  <line x1="200" y1="180" x2="360" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <!-- Supports -->
+  <line x1="200" y1="180" x2="200" y2="210" stroke="#1f2937" stroke-width="3"/>
+  <line x1="360" y1="180" x2="360" y2="210" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left pan -->
+  <path d="M180,210 Q200,230 220,210" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Right pan -->
+  <path d="M340,210 Q360,230 380,210" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Shadow price coin -->
+  <circle cx="380" cy="210" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Simplex pivot arrow -->
+  <line x1="180" y1="250" x2="220" y2="250" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="220,250 210,245 210,255" fill="#1f2937"/>
+  <!-- Caption strip -->
+  <rect x="14" y="276" width="532" height="30" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="150" y="210" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="end">Primal</text>
+  <text x="410" y="210" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="start">Dual</text>
+  <text x="280" y="150" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Weak Duality</text>
+  <text x="410" y="250" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="start">Shadow Price</text>
+  <text x="150" y="250" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="end">Simplex Pivot</text>
+  <!-- Section title -->
+  <text x="280" y="270.5" font-size="10" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Linear Programming: Duality Theory, Sensitivity Analysis, and the Simplex Method</text>
+</svg></div>
+  <figcaption>Linear Programming: Duality Theory, Sensitivity Analysis, and the Simplex Method</figcaption>
+</figure>
+
 <p>Linear programming (LP) is a core optimisation topic in Paper II. The primal problem in standard form is <strong>maximise cᵀx subject to Ax ≤ b, x ≥ 0</strong>. Its dual is <strong>minimise bᵀy subject to Aᵀy ≥ c, y ≥ 0</strong>. Weak duality states <strong>cᵀx ≤ bᵀy</strong> for any feasible primal‑dual pair; strong duality asserts equality at optimality provided both problems are feasible. Complementary slackness <strong>x_j (cᵀ−yᵀA)_j = 0</strong> and <strong>y_i (b−Ax)_i = 0</strong> characterises optimal solutions and provides a certificate of optimality.</p>
 <p>The simplex algorithm moves from one basic feasible solution to an adjacent one by pivoting on a non‑basic variable with positive reduced cost <strong>c_j − yᵀA_j > 0</strong>. Degeneracy (basic variable at zero) can cause cycling; Bland’s rule (choose the smallest index) guarantees finite termination. The revised simplex method maintains the basis inverse <strong>B<sup>−1</sup></strong> explicitly, reducing computational effort for large sparse problems.</p>
 <p>Sensitivity analysis examines how the optimal solution changes when <strong>c</strong>, <strong>b</strong>, or <strong>A</strong> are perturbed. The shadow price of a constraint equals the optimal dual variable <strong>y_i</strong> and indicates the rate of change of the objective with respect to <strong>b_i</strong> within the allowable range. The range of optimality for a cost coefficient <strong>c_j</strong> is the interval where the current basis remains optimal; it is derived from the reduced‑cost signs. Adding a new variable or constraint is handled by the dual simplex method, which restores feasibility while preserving optimality.</p>
