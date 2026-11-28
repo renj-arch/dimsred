@@ -871,6 +871,41 @@
 </table>
 <p>Exam questions often ask to verify that a given boundary value problem is self‑adjoint, to compute the first few eigenvalues using the Rayleigh quotient, or to expand a piecewise smooth function in a series of eigenfunctions and discuss pointwise versus mean‑square convergence.</p>
 
+
+<!-- passage-cartoon:bf7a8920fe7d -->
+<figure class="passage-cartoon" data-cartoon="bf7a8920fe7d">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central: Delta spike and Green's arch -->
+  <line x1="180" y1="200" x2="380" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="280,200 275,140 285,140" fill="#1f2937"/>
+  <path d="M180,200 Q230,140 280,140 Q330,140 380,200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="280" y="125" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Green's Function G(x,ξ)</text>
+  <text x="280" y="220" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">δ(x−ξ) source</text>
+  <!-- Left: Sturm-Liouville y1, y2 -->
+  <path d="M50,200 Q100,160 140,140" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="5,3"/>
+  <path d="M170,200 Q130,160 140,140" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="5,3"/>
+  <circle cx="140" cy="140" r="4" fill="#1f2937"/>
+  <text x="100" y="115" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">y₁, y₂ solutions</text>
+  <!-- Right: Dirichlet Laplacian domain -->
+  <rect x="400" y="120" width="130" height="100" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="465" cy="170" r="3" fill="#1f2937"/>
+  <path d="M410,170 Q440,150 465,170 Q490,190 520,170" stroke="#1f2937" stroke-width="2" fill="none" stroke-dasharray="3,2"/>
+  <path d="M410,180 Q440,165 465,180 Q490,195 520,180" stroke="#1f2937" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+  <text x="465" y="110" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Dirichlet Laplacian</text>
+  <!-- Top: Method of Images -->
+  <line x1="180" y1="60" x2="380" y2="60" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="40" r="6" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <text x="280" cy="30" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">+q</text>
+  <circle cx="280" cy="80" r="6" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <text x="280" y="95" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">−q</text>
+  <text x="280" y="22.4" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Method of Images</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="280" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="273.5" font-size="14" font-family="sans-serif" fill="#fbf7ec" text-anchor="middle">Functions of Several Variables and Vector Analysis (10)</text>
+</svg></div>
+  <figcaption>Functions of Several Variables and Vector Analysis (10)</figcaption>
+</figure>
 <h3>Green's Functions for Ordinary and Partial Differential Equations</h3>
 <p>A Green's function G(x, ξ) for a linear differential operator L with homogeneous boundary conditions satisfies L G(x, ξ) = δ(x − ξ) in the sense of distributions. Once G is known, the solution of the inhomogeneous problem L u = f with the same boundary conditions is given by the convolution u(x) = ∫ G(x, ξ) f(ξ) dξ. For a regular Sturm‑Liouville operator L = −(p y')' + q y on [a, b] with separated boundary conditions, the Green's function can be constructed from two linearly independent solutions y₁, y₂ of the homogeneous equation L y = 0 that satisfy the left and right boundary conditions respectively. If W(ξ) = p(ξ)(y₁(ξ) y₂'(ξ) − y₁'(ξ) y₂(ξ)) is the Wronskian, then</p>
 <p>G(x, ξ) = { y₁(x) y₂(ξ) / W(ξ)  for a ≤ x ≤ ξ,  y₁(ξ) y₂(x) / W(ξ)  for ξ ≤ x ≤ b }.</p>
@@ -961,6 +996,61 @@
 </ul>
 <p>Typical exam tasks: derive the recurrence relation for J_ν(x) from the generating function; prove the orthogonality of Legendre polynomials using the Sturm‑Liouville form; express ∫₀^∞ x e<sup>−α x²</sup> J_ν(β x) dx in terms of hypergeometric functions; use the method of Frobenius to find the series solution of Bessel's equation around x = 0.</p>
 
+
+<!-- passage-cartoon:0aeaf1a3d521 -->
+<figure class="passage-cartoon" data-cartoon="0aeaf1a3d521">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central grid with PDE curve -->
+  <path stroke="#1f2937" stroke-width="3" fill="none" d="
+    M180,60 h200 v180 h-200 z
+    M220,60 v180
+    M260,60 v180
+    M300,60 v180
+    M340,60 v180
+    M180,100 h200
+    M180,140 h200
+    M180,180 h200
+    M180,220 h200
+    M180,150 Q280,80 380,150
+  "/>
+  <!-- Heat Equation (parabolic) -->
+  <path stroke="#1f2937" stroke-width="3" fill="none" d="
+    M40,100 h110
+    M60,90 v20
+    M80,90 v20
+    M100,90 v20
+    M120,90 v20
+    M140,95 l10,5 -10,5
+  "/>
+  <!-- Wave Equation (hyperbolic) -->
+  <path stroke="#1f2937" stroke-width="3" fill="none" d="
+    M420,100 Q440,70 460,100 Q480,130 500,100 Q520,70 520,100
+  "/>
+  <!-- Poisson Equation (elliptic) -->
+  <path stroke="#1f2937" stroke-width="3" fill="none" d="
+    M50,190 h80 v60 h-80 z
+    M90,190 v60
+    M50,220 h80
+  "/>
+  <!-- Lax-Richtmyer equivalence -->
+  <path stroke="#1f2937" stroke-width="3" fill="none" d="
+    M470,190 v60
+    M430,190 h80
+    M430,190 v40 h20 v-40
+    M510,190 v40 h-20 v-40
+  "/>
+  <!-- Labels -->
+  <text x="280" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Finite Difference</text>
+  <text x="80" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Heat Equation</text>
+  <text x="480" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Wave Equation</text>
+  <text x="80" y="260" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Poisson Equation</text>
+  <text x="480" y="260" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Lax-Richtmyer</text>
+  <!-- Bottom caption strip -->
+  <text x="280" y="291" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Functions of Several Variables and Vector Analysis (12)</text>
+</svg></div>
+  <figcaption>Functions of Several Variables and Vector Analysis (12)</figcaption>
+</figure>
 <h3>Finite Difference Methods for Partial Differential Equations</h3>
 <p>Finite difference methods (FDM) approximate derivatives by algebraic difference quotients on a discrete grid, converting a PDE into a system of algebraic equations. For a uniform grid with spacing h in space and k in time, the standard second‑order central difference for the second derivative is u<sub>xx</sub>(x_i, t_n) ≈ (u<sub>i+1</sub>^n − 2u_i^n + u<sub>i−1</sub>^n)/h². The first derivative can be approximated by central difference (u<sub>i+1</sub>^n − u<sub>i−1</sub>^n)/(2h) (second order) or upwind difference (u_i^n − u<sub>i−1</sub>^n)/h (first order) for convection‑dominated problems.</p>
 <h4>Parabolic Equations: Heat Equation</h4>
@@ -989,6 +1079,46 @@
 <h3>Analytic Geometry in Three Dimensions: Spheres, Cones, and Conicoids</h3>
 <p>The general second‑degree equation in three variables, <strong>F(x,y,z) = ax² + by² + cz² + 2fyz + 2gzx + 2hxy + 2ux + 2vy + 2wz + d = 0</strong>, represents a central conicoid, a paraboloid, a cylinder, a cone, or a pair of planes depending on the ranks of the associated matrices. Let <strong>A</strong> be the 3×3 matrix of quadratic coefficients and <strong>B</strong> the 4×4 augmented matrix. The classification hinges on <strong>rank(A)</strong> and <strong>rank(B)</strong>: if <strong>rank(A) = 3</strong> and <strong>rank(B) = 4</strong> we have a central conicoid (ellipsoid, hyperboloid of one or two sheets); if <strong>rank(A) = 3</strong> and <strong>rank(B) = 3</strong> a cone; if <strong>rank(A) = 2</strong> and <strong>rank(B) = 4</strong> a paraboloid (elliptic or hyperbolic); if <strong>rank(A) = 2</strong> and <strong>rank(B) = 3</strong> a cylinder; if <strong>rank(A) = 1</strong> a pair of planes. The canonical form is obtained by an orthogonal transformation diagonalising <strong>A</strong> followed by a translation eliminating linear terms when the centre exists. For a central conicoid the centre <strong>(x₀,y₀,z₀)</strong> solves <strong>∇F = 0</strong>, i.e. <strong>A[x₀ y₀ z₀]ᵀ = –[u v w]ᵀ</strong>. The tangent plane at <strong>(x₁,y₁,z₁)</strong> on the surface is <strong>F₁(x,y,z) = 0</strong> where <strong>F₁</strong> is obtained by <strong>x²→xx₁, y²→yy₁, z²→zz₁, 2xy→xy₁+x₁y, 2yz→yz₁+y₁z, 2zx→zx₁+z₁x, 2x→x+x₁, 2y→y+y₁, 2z→z+z₁</strong>. The enveloping cone with vertex <strong>(α,β,γ)</strong> has equation <strong>F(x,y,z)F(α,β,γ) = [F₁(α,β,γ)]²</strong>; the enveloping cylinder with generators parallel to a line <strong>l/m/n</strong> is obtained by eliminating the parameter from <strong>F(x+lt,y+mt,z+nt)=0</strong>. Generating lines exist only on hyperboloids of one sheet and hyperbolic paraboloids; for <strong>x²/a² + y²/b² – z²/c² = 1</strong> the two systems are <strong>(x/a – z/c) = λ(1 – y/b), (x/a + z/c) = (1/λ)(1 + y/b)</strong> and <strong>(x/a – z/c) = μ(1 + y/b), (x/a + z/c) = (1/μ)(1 – y/b)</strong>. The diametral plane conjugate to a direction <strong>l,m,n</strong> is <strong>(al+hm+gn)x + (hl+bm+fn)y + (gl+fm+cn)z + ul+vm+wn = 0</strong>. Polar plane of <strong>(α,β,γ)</strong> is <strong>F₁(α,β,γ)=0</strong>; if the point lies outside, this is the chord of contact of tangent planes.</p>
 
+
+<!-- passage-cartoon:5f19dfea3f46 -->
+<figure class="passage-cartoon" data-cartoon="5f19dfea3f46">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central staircase (step integrator α) -->
+  <path d="M100,200 H220 V160 H340 V100 H460" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- f(x)=x²+1 curve -->
+  <path d="M100,190 C140,185 180,182 220,180 C260,175 300,160 340,150 C380,140 420,115 460,100" stroke="#1f2937" stroke-width="3" fill="none" stroke-dasharray="5,3"/>
+  <!-- Jump points on staircase -->
+  <circle cx="220" cy="160" r="4" fill="#1f2937"/>
+  <circle cx="340" cy="100" r="4" fill="#1f2937"/>
+  <!-- Corresponding points on f curve -->
+  <circle cx="220" cy="180" r="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="340" cy="150" r="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Dashed lines connecting jumps to f -->
+  <line x1="220" y1="160" x2="220" y2="180" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="3,3"/>
+  <line x1="340" y1="100" x2="340" y2="150" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="3,3"/>
+  <!-- Weight blocks representing jump sizes -->
+  <rect x="210" y="160" width="20" height="40" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="330" y="100" width="20" height="60" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Arrow to summation -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <path d="M460,150 L500,150" stroke="#1f2937" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <!-- Labels -->
+  <text x="100" y="147.7" font-size="14" fill="#1f2937" font-family="sans-serif">Step Integrator α</text>
+  <text x="220" y="130" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Jumps 2@1, 3@2</text>
+  <text x="340" y="80" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">f(x)=x²+1</text>
+  <text x="407.7" y="150" font-size="14" fill="#1f2937" font-family="sans-serif">Sum = 2·f(1)+3·f(2)</text>
+  <text x="469.3" y="180" font-size="14" fill="#1f2937" font-family="sans-serif">Result = 19</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#e8e0d0" stroke="#1f2937" stroke-width="0.5"/>
+  <text x="280" y="284" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Functions of Several Variables &amp; Vector Analysis (13)</text>
+</svg></div>
+  <figcaption>Functions of Several Variables and Vector Analysis (13)</figcaption>
+</figure>
 <h3>Riemann–Stieltjes Integration and Functions of Bounded Variation</h3>
 <p>The Riemann–Stieltjes integral <strong>∫ₐᵇ f dα</strong> generalises the Riemann integral by replacing the increment <strong>Δx</strong> with <strong>Δα(x)</strong> where <strong>α</strong> is a monotonically increasing function on <strong>[a,b]</strong>. For a partition <strong>P = {x₀,…,xₙ}</strong> and tags <strong>tᵢ ∈ [xᵢ₋₁,xᵢ]</strong>, the sum is <strong>S(P,f,α) = Σ f(tᵢ)[α(xᵢ) – α(xᵢ₋₁)]</strong>. The integral exists if these sums converge to a limit independent of the choice of partitions and tags as <strong>‖P‖→0</strong>. A necessary and sufficient condition for existence when <strong>f</strong> is continuous and <strong>α</strong> is of bounded variation is that <strong>f</strong> and <strong>α</strong> have no common discontinuities. Functions of bounded variation (<strong>BV</strong>) are those for which <strong>Vₐᵇ(α) = sup_P Σ|α(xᵢ) – α(xᵢ₋₁)| < ∞</strong>. Every <strong>BV</strong> function admits a Jordan decomposition <strong>α = α₁ – α₂</strong> where <strong>α₁, α₂</strong> are increasing; <strong>α₁(x) = (Vₐˣ(α) + α(x))/2, α₂(x) = (Vₐˣ(α) – α(x))/2</strong>. The space <strong>BV[a,b]</strong> is a Banach space under the norm <strong>‖α‖ = |α(a)| + Vₐᵇ(α)</strong>. Integration by parts holds: <strong>∫ₐᵇ f dα = f(b)α(b) – f(a)α(a) – ∫ₐᵇ α df</strong> provided one integral exists. Change of variable: if <strong>φ</strong> is strictly monotone and <strong>f ∈ R(α)</strong> on <strong>[φ(c),φ(d)]</strong>, then <strong>f∘φ ∈ R(α∘φ)</strong> on <strong>[c,d]</strong> and <strong>∫<sub>φ(c)</sub><sup>φ(d)</sup> f dα = ∫_c^d (f∘φ) d(α∘φ)</strong>. The Riemann–Stieltjes integral with respect to a step function <strong>α(x) = Σ cₖ χ<sub>[xₖ,∞)</sub>(x)</strong> reduces to a weighted sum <strong>Σ cₖ f(xₖ)</strong>, providing a unified framework for discrete and continuous probability distributions (expectation <strong>E[X] = ∫ x dF(x)</strong> where <strong>F</strong> is the cumulative distribution function). Helly's selection theorem states that a uniformly bounded sequence in <strong>BV</strong> has a pointwise convergent subsequence; this underpins weak convergence of measures.</p>
 
@@ -1006,6 +1136,47 @@
 <h3>Conformal Mapping: Schwarz–Christoffel Transformation and Boundary Correspondence</h3>
 <p>The Schwarz–Christoffel formula maps the upper half‑plane <strong>Im(w) > 0</strong> conformally onto a polygon with interior angles <strong>αₖπ (0 < αₖ < 2)</strong> at vertices <strong>wₖ</strong>. The derivative of the mapping <strong>z = f(w)</strong> is <strong>f'(w) = A ∏<sub>k=1</sub>^n (w – wₖ)<sup>αₖ – 1</sup></strong> where <strong>A</strong> is a complex constant determining scale and rotation, and <strong>wₖ</strong> are the pre‑vertices on the real axis corresponding to the polygon vertices. The pre‑vertices satisfy <strong>w₁ < w₂ < … < wₙ</strong> and are determined (up to three degrees of freedom from the Möbius automorphisms of the half‑plane) by the side‑length conditions <strong>∫<sub>wₖ</sub><sup>wₖ₊₁</sup> f'(w) dw = side vector</strong>. For a triangle (<strong>n=3</strong>), the map reduces to the Schwarz triangle function expressible via hypergeometric functions. For a rectangle, the pre‑vertices can be chosen symmetrically and the integral becomes an elliptic integral of the first kind; the aspect ratio is a function of the modulus <strong>k</strong>. The Schwarz reflection principle extends the map analytically across boundary segments where the boundary values are real: if <strong>f</strong> maps a segment of the real axis onto a straight line, then <strong>f(w) = f(w)</strong> (or a rotated version) provides the analytic continuation. This principle is crucial for solving Laplace's equation on polygons with piecewise constant boundary conditions (e.g., electrostatic potential near a conducting corner). The map <strong>z = w^α</strong> (with <strong>0 < α < 2</strong>) opens or closes angles; composing such power maps with Möbius transformations constructs maps for circular‑arc polygons. For the exterior of a polygon, the formula uses <strong>f'(w) = A ∏ (w – wₖ)<sup>-βₖ</sup></strong> where <strong>βₖ = 2 – αₖ</strong> are the exterior angles. Numerical computation of the pre‑vertices for <strong>n > 4</strong> requires solving a non‑linear system; the parameter problem is often tackled by the method of accessory parameters or by mapping to a circular slit domain first.</p>
 
+
+<!-- passage-cartoon:3c5c286a3800 -->
+<figure class="passage-cartoon" data-cartoon="3c5c286a3800">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central integral sign -->
+  <path d="M 260 100 C 260 80 300 80 300 100 C 300 120 260 120 260 140 C 260 160 300 160 300 180 C 300 200 260 200 260 220" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Kernel wavy line -->
+  <path d="M 260 160 Q 270 150 280 160 Q 290 170 300 160" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Top Fredholm integral -->
+  <path d="M 270 60 C 270 50 290 50 290 60 C 290 70 270 70 270 80 C 270 90 290 90 290 100" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Bottom Volterra integral -->
+  <path d="M 270 220 C 270 210 290 210 290 220 C 290 230 270 230 270 240 C 270 250 290 250 290 260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Neumann series rectangles -->
+  <rect x="40" y="130" width="100" height="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="40" y="160" width="100" height="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="40" y="190" width="100" height="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Flowchart: oval -->
+  <path d="M 450 110 C 450 95 510 95 510 110 C 510 125 450 125 450 110" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Flowchart: parallelogram -->
+  <path d="M 450 140 L 510 140 L 530 160 L 470 160 Z" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Flowchart: rectangle -->
+  <rect x="450" y="190" width="60" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Flowchart: diamond -->
+  <path d="M 480 230 L 510 250 L 480 270 L 450 250 Z" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Flowchart arrows -->
+  <line x1="480" y1="125" x2="480" y2="140" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="500" y1="160" x2="500" y2="190" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="480" y1="220" x2="480" y2="230" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Labels -->
+  <text x="280" y="40" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Fredholm</text>
+  <text x="280" y="280" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Volterra</text>
+  <text x="14" y="160" text-anchor="start" font-size="14" fill="#1f2937" font-family="sans-serif">Neumann Series</text>
+  <text x="546" y="160" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">Flowchart</text>
+  <text x="546" y="250" text-anchor="end" font-size="14" fill="#1f2937" font-family="sans-serif">Newton-Raphson</text>
+  <!-- Caption strip -->
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Functions of Several Variables &amp; Vector Analysis (14)</text>
+</svg></div>
+  <figcaption>Functions of Several Variables and Vector Analysis (14)</figcaption>
+</figure>
 <h3>Integral Equations: Fredholm and Volterra Theory with Applications</h3>
 <p>An integral equation seeks an unknown function <strong>φ(x)</strong> appearing under an integral sign. The linear Fredholm equation of the second kind is <strong>φ(x) = f(x) + λ ∫ₐᵇ K(x,t) φ(t) dt</strong>; the first kind is <strong>f(x) = λ ∫ₐᵇ K(x,t) φ(t) dt</strong>. Volterra equations have variable upper limit: <strong>φ(x) = f(x) + λ ∫ₐˣ K(x,t) φ(t) dt</strong>. The kernel <strong>K(x,t)</strong> is degenerate (separable) if <strong>K(x,t) = Σ<sub>i=1</sub>^n u_i(x) v_i(t)</strong>; then the Fredholm equation reduces to a linear algebraic system for the moments <strong>c_i = ∫ v_i(t) φ(t) dt</strong>. For a general kernel, the Neumann series <strong>φ = f + λ Kf + λ² K²f + …</strong> converges for <strong>|λ| < 1/‖K‖</strong> where <strong>‖K‖</strong> is the operator norm on <strong>L²</strong> or <strong>C[a,b]</strong>. The resolvent kernel <strong>R(x,t;λ)</strong> satisfies <strong>φ(x) = f(x) + λ ∫ R(x,t;λ) f(t) dt</strong> and is given by the Fredholm determinants <strong>R = D(x,t;λ)/D(λ)</strong> where <strong>D(λ) = 1 – λ ∫ K(t,t) dt + …</strong>. The Fredholm alternative: for a compact operator <strong>K</strong> on a Banach space, either <strong>(I – λK)φ = f</strong> has a unique solution for every <strong>f</strong>, or the homogeneous equation <strong>(I – λK)φ = 0</strong> has non‑trivial solutions; in the latter case the inhomogeneous equation is solvable iff <strong>f</strong> is orthogonal to all solutions of the adjoint homogeneous equation <strong>ψ = λ K*ψ</strong>. For symmetric kernels <strong>K(x,t) = K(t,x)</strong>, the Hilbert–Schmidt theorem guarantees a complete orthonormal set of eigenfunctions <strong>{φₙ}</strong> with real eigenvalues <strong>λₙ → 0</strong>; the solution expands as <strong>φ = Σ (⟨f,φₙ⟩/(1 – λλₙ)) φₙ</strong>. Volterra equations of convolution type <strong>φ(x) = f(x) + λ ∫₀ˣ k(x–t) φ(t) dt</strong> are solved by Laplace transform: <strong>Φ(s) = F(s) + λ K(s) Φ(s) ⇒ Φ(s) = F(s)/(1 – λK(s))</strong>. The connection to ODEs: the initial value problem <strong>y'' + p(x)y' + q(x)y = 0, y(0)=y₀, y'(0)=y₁</strong> converts to a Volterra equation via Green's function. The method of successive approximations (Picard iteration) for <strong>φ = f + λ Kφ</strong> converges for all <strong>λ</strong> when <strong>K</strong> is a Volterra operator because <strong>‖Kⁿ‖ ≤ Mⁿ (x–a)ⁿ/n!</strong>.</p>
 
@@ -1021,6 +1192,91 @@
 <li>Using the standard quadratic formula in a numerical algorithm without the stable rearrangement; this causes catastrophic cancellation when <strong>b² ≫ 4ac</strong> and is a standard "common error" cited in examiner reports.</li>
 <li>Neglecting to state the condition <strong>|λ| < 1/‖K‖</strong> for Neumann series convergence in Fredholm equations; the series may diverge even if a unique solution exists for larger <strong>λ</strong> via the resolvent.</li>
 </ul>
+
+<!-- passage-cartoon:ad442fa9d81d -->
+<figure class="passage-cartoon" data-cartoon="ad442fa9d81d">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Central matrix A (3x3 grid) -->
+    <g transform="translate(120,60)">
+      <line x1="0" y1="0" x2="75" y2="0"/>
+      <line x1="0" y1="25" x2="75" y2="25"/>
+      <line x1="0" y1="50" x2="75" y2="50"/>
+      <line x1="0" y1="75" x2="75" y2="75"/>
+      <line x1="0" y1="0" x2="0" y2="75"/>
+      <line x1="25" y1="0" x2="25" y2="75"/>
+      <line x1="50" y1="0" x2="50" y2="75"/>
+      <line x1="75" y1="0" x2="75" y2="75"/>
+    </g>
+    <!-- Arrow from A to D -->
+    <line x1="195" y1="97.5" x2="260" y2="97.5" marker-end="url(#arrowhead)"/>
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937"/>
+      </marker>
+    </defs>
+    <!-- Diagonal matrix D (three squares on diagonal) -->
+    <rect x="260" y="60" width="25" height="25"/>
+    <rect x="285" y="85" width="25" height="25"/>
+    <rect x="310" y="110" width="25" height="25"/>
+    <!-- Balance scale (signature) -->
+    <g transform="translate(80,220)">
+      <line x1="0" y1="0" x2="0" y2="-40"/> <!-- pivot -->
+      <line x1="-30" y1="-40" x2="30" y2="-40"/> <!-- beam -->
+      <line x1="-30" y1="-40" x2="-30" y2="0"/> <!-- left pan -->
+      <line x1="30" y1="-40" x2="30" y2="0"/> <!-- right pan -->
+      <!-- weights: +, -, 0 -->
+      <text x="9.9" y="40.9" font-size="14" text-anchor="middle" fill="#1f2937">+</text>
+      <text x="9.9" y="23.2" font-size="14" text-anchor="middle" fill="#1f2937">0</text>
+      <text x="30" y="23.2" font-size="14" text-anchor="middle" fill="#1f2937">−</text>
+    </g>
+    <!-- Sylvester's Criterion checklist -->
+    <g transform="translate(420,220)">
+      <line x1="0" y1="0" x2="60" y2="0"/>
+      <line x1="0" y1="0" x2="0" y2="-60"/>
+      <line x1="0" y1="-20" x2="60" y2="-20"/>
+      <line x1="0" y1="-40" x2="60" y2="-40"/>
+      <line x1="0" y1="-60" x2="60" y2="-60"/>
+      <line x1="20" y1="0" x2="20" y2="-60"/>
+      <line x1="40" y1="0" x2="40" y2="-60"/>
+      <!-- checkmarks in leading principal positions -->
+      <polyline points="5,-15 12,-8 25,-25" stroke="#1f2937" stroke-width="3" fill="none"/>
+      <polyline points="25,-35 32,-28 45,-45" stroke="#1f2937" stroke-width="3" fill="none"/>
+      <polyline points="45,-55 52,-48 65,-65" stroke="#1f2937" stroke-width="3" fill="none"/>
+    </g>
+    <!-- Trap: non-symmetric matrix with warning -->
+    <g transform="translate(280,40)">
+      <!-- warning triangle -->
+      <polygon points="0,-10 -20,20 20,20" fill="none"/>
+      <line x1="0" y1="0" x2="0" y2="10"/>
+      <circle cx="0" cy="14" r="2" fill="#1f2937"/>
+      <!-- non-symmetric 2x2 matrix -->
+      <g transform="translate(50,-20)">
+        <rect x="0" y="0" width="25" height="25"/>
+        <rect x="25" y="0" width="25" height="25"/>
+        <rect x="0" y="25" width="25" height="25"/>
+        <rect x="25" y="25" width="25" height="25"/>
+        <line x1="25" y1="0" x2="25" y2="50"/>
+        <line x1="0" y1="25" x2="50" y2="25"/>
+      </g>
+    </g>
+    <!-- Complex field: circle -->
+    <circle cx="280" cy="260" r="30"/>
+    <text x="280" y="265" font-size="20" text-anchor="middle" fill="#1f2937">ℂ</text>
+  </g>
+  <!-- Labels -->
+  <text x="220" y="50" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Congruence Transform</text>
+  <text x="80" y="160" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Signature (p,q,r)</text>
+  <text x="420" y="160" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Sylvester's Criterion</text>
+  <text x="280" y="23.2" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Trap: Non-symmetric</text>
+  <text x="280" y="300" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Over ℂ: Rank only</text>
+  <!-- Bottom caption strip -->
+  
+  
+</svg></div>
+  <figcaption>Functions of Several Variables and Vector Analysis (15)</figcaption>
+</figure>
 <h3>Quadratic Forms, Sylvester's Law of Inertia, and Canonical Forms for Bilinear Forms</h3>
 <p>A quadratic form on a finite‑dimensional vector space <em>V</em> over a field <em>F</em> (characteristic ≠ 2) is a map <em>Q</em>: <em>V</em> → <em>F</em> such that <em>Q</em>(α<em>v</em>) = α²<em>Q</em>(<em>v</em>) and the associated symmetric bilinear form <em>B</em>(<em>u</em>,<em>v</em>) = ½(<em>Q</em>(<em>u</em>+<em>v</em>) – <em>Q</em>(<em>u</em>) – <em>Q</em>(<em>v</em>)) is bilinear. Choosing a basis gives a symmetric matrix <em>A</em> with <em>Q</em>(<em>x</em>) = <em>x</em>ᵀ<em>A</em><em>x</em>. Two matrices <em>A</em>, <em>A</em>′ represent the same quadratic form under a change of basis iff they are congruent: <em>A</em>′ = <em>P</em>ᵀ<em>A</em><em>P</em> for some invertible <em>P</em>. Congruence preserves rank and, over ℝ, the numbers of positive, negative, and zero eigenvalues — the <strong>signature</strong> (p, q, r). <strong>Sylvester's Law of Inertia</strong> states that these integers are invariants of the congruence class; equivalently, every real symmetric matrix is congruent to a diagonal matrix with p entries +1, q entries –1, and r entries 0. Over ℂ the only invariants are rank, because every non‑zero complex number has a square root, so the canonical form is diag(1,…,1,0,…,0).</p>
 <p><strong>Sylvester's criterion</strong> gives a practical test for positive definiteness: a real symmetric matrix is positive definite iff all its leading principal minors are positive. For negative definiteness the signs alternate starting with negative. This criterion fails for semidefiniteness; one must check all principal minors. A common examiner trap is to apply Sylvester's criterion to a non‑symmetric matrix or to confuse congruence with similarity (which preserves eigenvalues but not signature). Another trap: the law of inertia holds for any ordered field, but over ℚ the canonical form may require rational squares that do not exist; the statement “every quadratic form over ℚ is diagonalizable” is true, but the diagonal entries need not be ±1.</p>

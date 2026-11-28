@@ -474,6 +474,46 @@
 </ul>
 <p>These advanced topics integrate second‑law analysis, compressible‑flow theory, plastic‑limit methods, and thermoelastic coupling to give a complete picture of real‑world mechanical‑engineering systems.</p>
 <h3>Second‑Law Analysis of Real‑Gas Power Cycles</h3>
+<!-- passage-cartoon:7eee4e0c9cf2 -->
+<figure class="passage-cartoon" data-cartoon="7eee4e0c9cf2">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Equation box -->
+  <rect x="230" y="30" width="100" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- T-s diagram axes -->
+  <line x1="260" y1="180" x2="360" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="260" y1="180" x2="260" y2="80" stroke="#1f2937" stroke-width="3"/>
+  <!-- T-s curve -->
+  <path d="M260,180 C290,150 320,110 340,100" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Compressor icon -->
+  <rect x="80" y="130" width="50" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="150" x2="130" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <!-- Combustor icon -->
+  <rect x="430" y="130" width="50" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <path d="M455,130 Q450,110 455,90 Q460,110 455,130" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Arrow from compressor to T-s -->
+  <path d="M130,150 L260,150" fill="none" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <!-- Arrow from combustor to T-s -->
+  <path d="M430,150 L360,150" fill="none" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="280" width="532" height="26" fill="none" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="280" y="23.2" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Peng‑Robinson EOS</text>
+  <text x="280" y="210" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Exergy Destruction</text>
+  <text x="83" y="150" font-size="14" fill="#1f2937" text-anchor="end" font-family="sans-serif">Compressor</text>
+  <text x="484.7" y="150" font-size="14" fill="#1f2937" text-anchor="start" font-family="sans-serif">Combustor</text>
+  <!-- Section title -->
+  <text x="280" y="274" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Second‑Law Analysis of Real‑Gas Power Cycles</text>
+</svg></div>
+  <figcaption>Second‑Law Analysis of Real‑Gas Power Cycles</figcaption>
+</figure>
+
 <p>Ideal‑gas assumptions simplify the first and second laws but become inaccurate above 800 K where specific heats vary strongly and intermolecular forces matter. A rigorous second‑law analysis for real gases uses a cubic equation of state — most commonly Peng‑Robinson or Soave‑Redlich‑Kwong — to obtain enthalpy, entropy and fugacity coefficients as functions of temperature and pressure. The specific exergy of a stream is then</p>
 <p>ψ = (h − h₀) − T₀(s − s₀) + ½ V² + g z</p>
 <p>where the reference state (h₀, s₀) is taken at the dead‑state temperature T₀ and pressure p₀. For a closed‑cycle gas turbine the total exergy destruction Σ I = T₀ Σ ΔS_gen is distributed among the compressor, combustor, turbine and heat‑exchangers. Because the real‑gas entropy departure Δs_dep = s^ig − s^real is a function of the compressibility factor Z, the exergy destruction in the compressor can be significantly larger than the ideal‑gas prediction at pressure ratios above 30. The combustor exergy loss is dominated by chemical irreversibility; using the real‑gas enthalpy of formation for the fuel‑air mixture shifts the adiabatic flame temperature, which directly changes the turbine inlet exergy. In combined‑cycle plants the bottoming steam cycle receives a lower‑temperature heat source when real‑gas effects are accounted for, reducing the overall second‑law efficiency. Practising engineers therefore map the entire cycle on a T‑s diagram generated from the EOS, compute component‑wise exergy destruction, and identify the compressor and combustor as primary targets for improvement — for example by intercooling or by staged combustion with exhaust‑gas recirculation.</p>
@@ -646,6 +686,37 @@
 <li>Using a single reference temperature for exergy destruction in components that experience a wide temperature gradient, such as a turbine blade cooling passage.</li>
 </ul>
 <h3>Real‑Gas Thermodynamics in High‑Pressure Turbine Expansion</h3>
+<!-- passage-cartoon:c3da1e8f5f38 -->
+<figure class="passage-cartoon" data-cartoon="c3da1e8f5f38">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Axes for T-s diagram -->
+  <line x1="200" y1="80" x2="200" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <line x1="200" y1="240" x2="440" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <!-- Ideal gas isentropic line -->
+  <line x1="200" y1="240" x2="440" y2="80" stroke="#1f2937" stroke-width="3" stroke-dasharray="6,4"/>
+  <!-- Real gas curve -->
+  <path d="M200,240 Q320,180 440,80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Turbine blade -->
+  <polygon points="260,280 280,306 300,280" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Equation of state box -->
+  <rect x="40" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- NASA GLASSES box -->
+  <rect x="400" y="240" width="120" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="80" y="100" font-size="14" fill="#1f2937" text-anchor="middle">Ideal Gas</text>
+  <text x="380" y="100" font-size="14" fill="#1f2937" text-anchor="middle">Real Gas</text>
+  <text x="280" y="30" font-size="14" fill="#1f2937" text-anchor="middle">T‑s Diagram</text>
+  <text x="100" y="260" font-size="14" fill="#1f2937" text-anchor="middle">Peng‑Robinson</text>
+  <text x="460" y="260" font-size="14" fill="#1f2937" text-anchor="middle">NASA GLASSES</text>
+  <!-- Caption strip -->
+  <rect x="14" y="286" width="532" height="20" fill="#1f2937"/>
+  <text x="280" y="279.8" font-size="13" fill="#fbf7ec" text-anchor="middle">Real‑Gas Thermodynamics in High‑Pressure Turbine Expansion</text>
+</svg></div>
+  <figcaption>Real‑Gas Thermodynamics in High‑Pressure Turbine Expansion</figcaption>
+</figure>
+
 <!-- passage-image:5ac8cdf32045 -->
 <figure class="passage-photo" data-image="5ac8cdf32045">
   <a href="https://commons.wikimedia.org/wiki/File:NASA_seal.svg" target="_blank" rel="noopener">
@@ -671,6 +742,34 @@
 </div>
 
 <h3>Fracture Mechanics of Welded Pressure Vessel Joints</h3>
+<!-- passage-cartoon:85cfb705e68d -->
+<figure class="passage-cartoon" data-cartoon="85cfb705e68d">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="286" width="532" height="20" fill="#fff" stroke="#1f2937" stroke-width="2"/>
+  <text x="280" y="279.5" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Fracture Mechanics of Welded Pressure Vessel Joints</text>
+  <!-- Vessel body -->
+  <rect x="140" y="60" width="280" height="180" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Weld toe -->
+  <path d="M140 150 L180 130 L220 150" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Crack at weld toe -->
+  <path d="M190 140 q0 -10 -10 -20" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Arrow for applied stress -->
+  <line x1="300" y1="120" x2="340" y2="120" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="340,120 334,116 334,124" fill="#1f2937"/>
+  <!-- Arrow for residual stress -->
+  <line x1="300" y1="200" x2="340" y2="200" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="340,200 334,196 334,204" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="150" y="140" font-family="sans-serif" font-size="13" fill="#1f2937">Weld toe radius</text>
+  <text x="345" y="115" font-family="sans-serif" font-size="13" fill="#1f2937">Applied stress</text>
+  <text x="345" y="205" font-family="sans-serif" font-size="13" fill="#1f2937">Residual stress</text>
+  <text x="260" y="250" font-family="sans-serif" font-size="13" fill="#1f2937">Failure assessment diagram</text>
+</svg></div>
+  <figcaption>Fracture Mechanics of Welded Pressure Vessel Joints</figcaption>
+</figure>
+
 <p>Welded joints in pressure vessels introduce geometric discontinuities (toe radius, undercut) and residual stress fields that dominate fracture‑mechanics assessments. The stress‑intensity factor for a surface crack at a weld toe is expressed as <strong>K<sub>I</sub> = Y σ √(π a)</strong>, where the geometry factor <em>Y</em> depends on the weld profile angle <em>θ</em>, the toe radius <em>ρ</em>, and the crack aspect ratio <em>a/c</em>. For a double‑V butt weld with a 30° reinforcement angle and a toe radius of 1 mm, finite‑element calibration suggests <em>Y ≈ 1.12 (1 + 0.3 a/ρ)</em> for shallow cracks (a < 2 mm). Residual stresses from welding can approach 0.8 σ<sub>y</sub> in the heat‑affected zone; they are incorporated by superposition: <strong>K<sub>total</sub> = K<sub>applied</sub> + K<sub>residual</sub></strong>. The residual‑stress intensity factor is obtained from the weight‑function method: <strong>K<sub>residual</sub> = ∫<sub>0</sub><sup>a</sup> σ<sub>res</sub>(x) m(x,a) dx</strong>, where <em>m(x,a)</em> is the weight function for a surface crack in a plate. In ASME Section VIII‑2, the allowable flaw size is determined by the failure assessment diagram (FAD) using the ratio <em>K<sub>r</sub> = K<sub>total</sub>/K<sub>mat</sub></em> and the load ratio <em>L<sub>r</sub> = σ<sub>ref</sub>/σ<sub>y</sub></em>. For a 20 mm thick SA‑516‑Gr70 vessel operating at 15 MPa, a 3 mm deep toe crack may yield <em>K<sub>r</sub> ≈ 0.68</em> and <em>L<sub>r</sub> ≈ 0.45</em>, placing the point inside the Level 2 acceptance curve. However, if the weld toe radius is reduced to 0.3 mm by grinding, <em>Y</em> may rise to 1.35 and <em>K<sub>r</sub></em> may exceed 0.85, potentially requiring repair. Examiner questions often provide a weld geometry, a residual‑stress distribution (e.g., σ<sub>res</sub> = 0.6 σ<sub>y</sub> exp(‑x/2 mm)), and ask for the critical crack depth using the FAD. The candidate must set up the weight‑function integral, evaluate it analytically or numerically, and then plot the assessment point.</p>
 
 <h3>Thermo‑Mechanical Fatigue of Gas‑Turbine Blades</h3>
