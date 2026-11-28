@@ -24,6 +24,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'data', 'course-questions.json');
+const pq = require('./lib/paper-quality');
 const { isMetaQuestion, isLessonMeta, hasLeakedReasoning } = require('./lib/question-quality');
 
 const AMBIGUOUS = /not in options|not matching|closest|most likely|likely intended|expected answer|i'?ll go with|let me (just )?(take|use|recompute|recalculate)|hmm|not consistent|pattern may be/i;
@@ -172,6 +173,10 @@ function main() {
         return o.toLowerCase().replace(/−|–|—/g, '-').replace(/\s+/g, '');
       });
       if (new Set(normOpts).size !== normOpts.length) { drop('duplicate options'); continue; }
+      // The shared paper gate: rejects placeholder shells ("A/B/C/D") and
+      // stems shorter than 12 characters, so the lesson bank matches the
+      // quality the paper bank is held to.
+      if (pq.badQuestion({ text: text, options: opts, answer: answer })) { drop('option quality'); continue; }
 
       const key = text.toLowerCase().replace(/\s+/g, ' ').trim();
       if (seen.has(key)) { drop('duplicate question'); continue; }
