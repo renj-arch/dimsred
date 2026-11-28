@@ -164,8 +164,9 @@ const marks = students.map(() => [rand(55, 95), rand(50, 90), rand(60, 98)]);
 const tabs = tableHtml('Marks out of 100', ['Student', 'Maths', 'Science', 'English'], students.map((s, i) => [s, marks[i][0], marks[i][1], marks[i][2]]));
 const totals = marks.map((m) => m.reduce((x, y) => x + y, 0));
 const best = students[totals.indexOf(Math.max(...totals))];
-add(`Which student has the highest total?`, tabs, best,
-  students.filter((s) => s !== best).concat([students[0] === best ? students[1] : students[0]]).slice(0, 3),
+const bestLabel = 'Student ' + best;
+const otherLabels = students.filter((s) => s !== best).map((s) => 'Student ' + s).slice(0, 3);
+add(`Which student has the highest total?`, tabs, bestLabel, otherLabels,
   `Totals: ${students.map((s, i) => s + '=' + totals[i]).join(', ')}; highest ${best} (${Math.max(...totals)}).`);
 const si = 1;
 add(`What is ${students[si]}'s percentage in Science?`, tabs,
