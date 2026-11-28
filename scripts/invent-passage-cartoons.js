@@ -24,6 +24,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const cartoonText = require('./lib/cartoon-text');
 
 const ROOT = path.resolve(__dirname, '..');
 const STORE = path.join(ROOT, 'data', 'passage-cartoons.json');
@@ -208,14 +209,23 @@ function validSvg(svg) {
     if (+tm[1] < 6 || +tm[1] > W - 6 || +tm[2] < 12 || +tm[2] > H - 4) { oob = true; break; }
   }
   if (oob) return 'label outside canvas';
-  // Reject labels that sit on top of each other (the Bhakti cartoon failure).
-  var pts = [];
-  var tre2 = /<text\b[^>]*\bx="(-?[\d.]+)"[^>]*\by="(-?[\d.]+)"/g, t2;
-  while ((t2 = tre2.exec(svg))) pts.push([+t2[1], +t2[2]]);
-  for (var a = 0; a < pts.length; a++) {
-    for (var b = a + 1; b < pts.length; b++) {
-      if (Math.abs(pts[a][0] - pts[b][0]) < 20 && Math.abs(pts[a][1] - pts[b][1]) < 16) return 'overlapping labels';
+  // Reject labels whose rendered text boxes collide (bbox, not just anchors), and
+  // labels parked on the bottom caption strip. This is the audit's geometry, so
+  // a cartoon that passes here also passes repair-cartoon-labels.js.
+  if (cartoonText.collidingPairs(svg, 3).length) return 'overlapping labels';
+  var cstrips = cartoonText.captionStrips(svg, W, H);
+  if (cstrips.length) {
+    var cboxes = cartoonText.textBoxes(svg);
+    var onStrip = 0;
+    for (var ci = 0; ci < cboxes.length; ci++) {
+      for (var cj = 0; cj < cstrips.length; cj++) {
+        var s = cstrips[cj];
+        if (Math.min(cboxes[ci].right, s.right) - Math.max(cboxes[ci].left, s.x) > 3 &&
+            Math.min(cboxes[ci].bottom, s.bottom) - Math.max(cboxes[ci].top, s.y) > 3) { onStrip++; break; }
+      }
     }
+    // One caption per strip is expected; a stray label on it is a collision.
+    if (onStrip > cstrips.length) return 'label on caption strip';
   }
   return '';
 }
@@ -244,7 +254,10 @@ async function makeOne(hosted, lessonTitle, p, model) {
       console.error('  model failed: ' + e.message);
       continue;
     }
-    const svg = sanitise(extractSvg(text));
+    const svg0 = sanitise(extractSvg(text));
+    // Auto-fix residual geometry (separate overlaps, drop a redundant caption
+    // bar) before the gate, so a mostly-good panel is repaired, not thrown away.
+    const svg = cartoonText.repairSvg(svg0).svg;
     const bad = validSvg(svg);
     if (bad) { console.error('  rejected (' + bad + ')'); continue; }
     return svg;

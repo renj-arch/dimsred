@@ -1,70 +1,66 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * repair-cartoon-labels.js — pull cartoon labels back inside the canvas.
+ * repair-cartoon-labels.js — fix overlapping text in passage-cartoon SVGs.
  *
- * Some generated SVGs place a <text> at x<0 / y<0 or beyond viewBox, so the
- * label is clipped at the edge. This clamps every text anchor into the canvas
- * (with a margin) across lesson pages.
+ * The generation gate only compared label anchor points, so ~1/3 of the 3,900
+ * inline cartoons have labels whose rendered text boxes collide (including
+ * labels parked inside the dark bottom caption strip). This walks the lessons,
+ * repairs each SVG deterministically (nudge apart, evict from the caption strip,
+ * drop only if it cannot be separated inside the canvas), and rewrites the page.
  *
- *   node scripts/repair-cartoon-labels.js --dry
+ *   node scripts/repair-cartoon-labels.js --lesson upsc/course/... --dry
  *   node scripts/repair-cartoon-labels.js
  */
 const fs = require('fs');
 const path = require('path');
+const { repairSvg, collidingPairs } = require('./lib/cartoon-text');
+
 const ROOT = path.resolve(__dirname, '..');
 const DRY = process.argv.includes('--dry');
+const only = (() => { const i = process.argv.indexOf('--lesson'); return i >= 0 ? process.argv[i + 1] : null; })();
 
-function walk(dir, out) {
-  let es = [];
-  try { es = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return out; }
-  for (const e of es) {
-    const p = path.join(dir, e.name);
-    if (e.isDirectory()) walk(p, out);
-    else if (/^lesson-.*\.html$/.test(e.name)) out.push(p);
-  }
-  return out;
+function lessons() {
+  if (only) return [path.resolve(ROOT, only)];
+  const out = [];
+  (function walk(dir) {
+    let es = []; try { es = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return; }
+    for (const e of es) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (/^lesson-.*\.html$/.test(e.name)) out.push(p);
+    }
+  })(path.join(ROOT, 'upsc', 'course'));
+  return out.sort();
 }
 
-let figures = 0, fixedFigs = 0, fixedLabels = 0;
-const files = walk(path.join(ROOT, 'upsc', 'course'), []);
-for (const f of files) {
-  let html = fs.readFileSync(f, 'utf8');
+let files = 0, cartoons = 0, repaired = 0, movedTotal = 0, droppedTotal = 0, capsRemoved = 0, remainingTotal = 0, failed = 0;
+const FIG = /<figure class="passage-cartoon" data-cartoon="([a-z0-9]+)">([\s\S]*?)<\/figure>/g;
+for (const file of lessons()) {
+  let html; try { html = fs.readFileSync(file, 'utf8'); } catch (e) { continue; }
   let changed = false;
-  html = html.replace(/<figure class="passage-cartoon"[\s\S]*?<\/figure>/g, function (block) {
-    figures++;
-    let b = block;
-    const vb = b.match(/viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/);
-    const W = vb ? +vb[1] : 560, H = vb ? +vb[2] : 320;
-    let any = false;
-    b = b.replace(/<text\b([^>]*)>/g, function (tag, attrs) {
-      const xm = attrs.match(/\bx="(-?[\d.]+)"/);
-      const ym = attrs.match(/\by="(-?[\d.]+)"/);
-      if (!xm || !ym) return tag;
-      let x = +xm[1], y = +ym[1];
-      const nx = Math.max(12, Math.min(W - 12, x));
-      const ny = Math.max(16, Math.min(H - 8, y));
-      if (nx === x && ny === y) return tag;
-      fixedLabels++; any = true;
-      let a2 = attrs.replace(/\bx="-?[\d.]+"/, 'x="' + nx + '"').replace(/\by="-?[\d.]+"/, 'y="' + ny + '"');
-      return '<text' + a2 + '>';
-    });
-    // Also clamp tspan x/y that repeat the anchor.
-    b = b.replace(/<tspan\b([^>]*)>/g, function (tag, attrs) {
-      const xm = attrs.match(/\bx="(-?[\d.]+)"/);
-      const ym = attrs.match(/\by="(-?[\d.]+)"/);
-      if (!xm && !ym) return tag;
-      let a2 = attrs;
-      if (xm) { const nx = Math.max(12, Math.min(W - 12, +xm[1])); a2 = a2.replace(/\bx="-?[\d.]+"/, 'x="' + nx + '"'); }
-      if (ym) { const ny = Math.max(16, Math.min(H - 8, +ym[1])); a2 = a2.replace(/\by="-?[\d.]+"/, 'y="' + ny + '"'); }
-      return '<tspan' + a2 + '>';
-    });
-    if (any) { fixedFigs++; changed = true; }
-    return b;
+  // Use a replace callback so replacements never invalidate regex offsets.
+  const next = html.replace(FIG, (whole) => {
+    const svg = (whole.match(/<svg[\s\S]*?<\/svg>/i) || [])[0];
+    if (!svg) return whole;
+    cartoons++;
+    if (!collidingPairs(svg, 3).length) return whole;
+    const res = repairSvg(svg);
+    if (res.remaining > 0) failed++;
+    if (res.svg == null || res.svg === svg) return whole;
+    // Any change counts — a caption-bar removal fixes a cartoon with moved=0.
+    repaired++;
+    movedTotal += res.moved;
+    droppedTotal += res.dropped;
+    capsRemoved += res.captionRemoved ? 1 : 0;
+    remainingTotal += res.remaining;
+    changed = true;
+    return whole.replace(svg, res.svg);
   });
-  if (changed) {
-    if (!DRY) fs.writeFileSync(f, html, 'utf8');
-    console.log(path.relative(ROOT, f).replace(/\\/g, '/'));
-  }
+  if (changed && !DRY) { fs.writeFileSync(file, next, 'utf8'); }
+  if (changed) files++;
 }
-console.log((DRY ? 'DRY: ' : '') + 'figures scanned: ' + figures + ' | figures fixed: ' + fixedFigs + ' | labels clamped: ' + fixedLabels);
+console.log((DRY ? 'DRY: ' : '') + 'cartoons seen: ' + cartoons + ' | repaired: ' + repaired +
+  ' | labels moved: ' + movedTotal + ' | dropped: ' + droppedTotal +
+  ' | caption bars removed: ' + capsRemoved +
+  ' | files: ' + files + ' | still-overlapping svgs: ' + failed);
