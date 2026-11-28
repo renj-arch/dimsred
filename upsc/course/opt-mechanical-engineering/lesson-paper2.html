@@ -185,6 +185,95 @@
 </ul>
 <div class="tip-box"><div class="tip-title">Mains strategy</div><div class="tip-text">For design answers: state the load, material, failure criterion and factor of safety, then show the calculation. For manufacturing, use flow diagrams and sketch tool–work interaction. For heat transfer, always draw the temperature profile and label boundary conditions.</div></div>
 <h3>Advanced Synthesis: Interdisciplinary Failure Modes and Optimization</h3>
+<!-- passage-cartoon:c43e2e8d2733 -->
+<figure class="passage-cartoon" data-cartoon="c43e2e8d2733">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central die/stamp with cracks and arrows -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Die block -->
+    <rect x="220" y="100" width="120" height="80" rx="4"/>
+    <rect x="230" y="110" width="100" height="60" rx="2"/>
+    <!-- Punch -->
+    <rect x="250" y="40" width="60" height="65" rx="2"/>
+    <line x1="280" y1="40" x2="280" y2="100" stroke-dasharray="6,4"/>
+    <!-- Cracks on die -->
+    <path d="M235 115 L260 155 L245 170"/>
+    <path d="M325 115 L300 155 L315 170"/>
+    <path d="M250 160 L280 180 L260 175"/>
+    <!-- Arrows from four disciplines -->
+    <path d="M180 140 L220 140" marker-end="url(#arrow)"/>
+    <path d="M340 140 L380 140" marker-end="url(#arrow)"/>
+    <path d="M280 40 L280 10" marker-end="url(#arrow)"/>
+    <path d="M280 180 L280 230" marker-end="url(#arrow)"/>
+    <!-- Arrowheads -->
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+      </marker>
+    </defs>
+  </g>
+  <!-- Top-left: Warehouse floor cracking under AGV -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <rect x="30" y="30" width="160" height="100" rx="4"/>
+    <rect x="40" y="40" width="30" height="50" rx="2"/>
+    <rect x="80" y="40" width="30" height="50" rx="2"/>
+    <rect x="120" y="40" width="30" height="50" rx="2"/>
+    <line x1="30" y1="90" x2="190" y2="90"/>
+    <path d="M60 90 L75 115 L90 90"/>
+    <path d="M130 90 L145 115 L160 90"/>
+    <circle cx="55" cy="55" r="8"/>
+    <circle cx="95" cy="55" r="8"/>
+    <circle cx="135" cy="55" r="8"/>
+  </g>
+  <!-- Top-right: Heat exchanger tubes cracking -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <rect x="370" y="30" width="160" height="100" rx="4"/>
+    <line x1="380" y1="80" x2="520" y2="80" stroke-width="4"/>
+    <rect x="390" y="50" width="120" height="15" rx="2"/>
+    <rect x="390" y="115" width="120" height="15" rx="2"/>
+    <path d="M420 50 L420 130" stroke-dasharray="4,4"/>
+    <path d="M460 50 L460 130" stroke-dasharray="4,4"/>
+    <path d="M420 80 L410 70 L430 90" stroke-width="2"/>
+    <path d="M460 80 L450 70 L470 90" stroke-width="2"/>
+  </g>
+  <!-- Bottom-left: Stress-strain curve ductile to brittle -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <rect x="30" y="190" width="160" height="100" rx="4"/>
+    <line x1="50" y1="270" x2="170" y2="270"/>
+    <line x1="50" y1="190" x2="50" y2="270"/>
+    <path d="M50 270 Q80 200 120 220 Q140 210 160 240" fill="none"/>
+    <path d="M50 270 Q70 230 90 250 Q100 240 110 260" fill="none" stroke-dasharray="4,4"/>
+    <text x="110" y="199.6" font-size="11" fill="#1f2937" text-anchor="middle">Stress</text>
+    <text x="180" y="275" font-size="11" fill="#1f2937" text-anchor="middle">Strain</text>
+  </g>
+  <!-- Bottom-right: Laser additive manufacturing -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <rect x="370" y="190" width="160" height="100" rx="4"/>
+    <circle cx="450" cy="240" r="30" fill="none"/>
+    <path d="M420 240 Q450 210 480 240" stroke-dasharray="3,3"/>
+    <path d="M420 240 Q450 270 480 240" stroke-dasharray="3,3"/>
+    <line x1="450" y1="210" x2="450" y2="270" stroke-width="1.5"/>
+    <circle cx="450" cy="240" r="5" fill="#1f2937"/>
+    <circle cx="435" cy="230" r="3" fill="#1f2937"/>
+    <circle cx="465" cy="250" r="3" fill="#1f2937"/>
+    <circle cx="440" cy="255" r="2" fill="#1f2937"/>
+    <circle cx="460" cy="230" r="2" fill="#1f2937"/>
+  </g>
+  <!-- Labels -->
+  <text x="280" y="40.6" font-size="14" fill="#1f2937" text-anchor="middle" font-weight="bold">Mechanism-Process Coupling</text>
+  <text x="110" y="25" font-size="12" fill="#1f2937" text-anchor="middle">Optimization Trade-offs</text>
+  <text x="450" y="25" font-size="12" fill="#1f2937" text-anchor="middle">Thermal Distortion</text>
+  <text x="110" y="185" font-size="12" fill="#1f2937" text-anchor="middle">Ductile-Brittle Shift</text>
+  <text x="450" y="185" font-size="12" fill="#1f2937" text-anchor="middle">Variable Conductivity</text>
+  <text x="280" y="305" font-size="13" fill="#1f2937" text-anchor="middle">Boundary Conditions</text>
+  <!-- Bottom caption strip -->
+  
+  
+</svg></div>
+  <figcaption>Advanced Synthesis: Interdisciplinary Failure Modes and Optimization</figcaption>
+</figure>
+
 <p>The core syllabus teaches you the isolated principles of manufacturing, design, heat transfer, and industrial engineering. However, the UPSC Mains examiner frequently tests your ability to synthesize these topics into complex, real-world scenarios where one discipline dictates the failure of another. This section moves beyond standard textbook problems to address "boundary condition" questions.</p>
 <p><strong>Mechanism-Process Coupling:</strong> Consider a high-speed stamping operation (Manufacturing). Standard texts discuss tool wear and blank holder forces in isolation. However, an advanced question might ask you to analyze the thermal distortion of the die (Heat Transfer) caused by frictional heating during cold working, and how this distortion alters the part geometry (Machine Design tolerance stack-up). The examiner may present a case where the material's yield strength increases due to strain hardening (Machine Design), but the cooling rate is insufficient to prevent residual stresses that lead to springback (Manufacturing/Forming). You must identify the coupling point: <em>Thermal expansion of the tool altering clearance, leading to increased cutting forces and accelerated wear.</em></p>
 <p><strong>System Optimization Trade-offs:</strong> In Industrial Engineering, you learn EOQ for inventory. An advanced scenario introduces a constraint from Machine Design: the warehouse floor must support specific dynamic loads from automated guided vehicles (AGVs). If you optimize purely for storage density (Industrial Engineering), you might violate the structural safety factor of the facility (Machine Design). Similarly, in Heat Transfer, optimizing a heat exchanger for minimum surface area (cost) often conflicts with maintaining a specific LMTD to prevent thermal shock cracking in the tubes (Material failure/Design). The examiner expects you to articulate these trade-offs rather than just calculating an optimal value.</p>
@@ -202,6 +291,39 @@
 </div>
 
 <h3>Critical Thinking: Examiner's Twists and Conceptual Traps</h3>
+<!-- passage-cartoon:47c3233df584 -->
+<figure class="passage-cartoon" data-cartoon="47c3233df584">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central exam paper -->
+  <rect x="180" y="60" width="200" height="160" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <path d="M 190,100 H 370 M 190,140 H 370 M 190,180 H 370" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Examiner hand and pen -->
+  <path d="M 530,130 L 530,150 M 530,140 L 380,140" fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <!-- Twist arrows from pen to questions -->
+  <path d="M 380,140 L 280,100 M 380,140 L 280,140 M 380,140 L 280,180" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Left inset: Heat Transfer -->
+  <rect x="30" y="60" width="120" height="80" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M 90,70 L 90,130 M 70,70 L 90,70 M 90,70 L 110,70" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+  <!-- Right inset: Machine Design -->
+  <rect x="410" y="60" width="120" height="80" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M 470,75 A 25,25 0 1,0 470,125 A 25,25 0 1,0 470,75 M 480,95 L 485,100 M 480,100 L 485,95" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Top inset: Industrial Engineering -->
+  <rect x="220" y="20" width="120" height="60" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M 230,70 Q 280,30 330,70 M 230,50 L 330,40" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+  <!-- Labels -->
+  <text x="280" y="45" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">STANDARD QUESTIONS</text>
+  <text x="390" y="110" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">BOUNDARY CONDITION CHANGE</text>
+  <text x="90" y="50" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">HEAT TRANSFER</text>
+  <text x="470" y="50" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">MACHINE DESIGN</text>
+  <text x="280" y="85" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">INDUSTRIAL ENGG</text>
+  <!-- Caption strip -->
+  <line x1="14" y1="295" x2="546" y2="295" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Critical Thinking: Examiner's Twists and Conceptual Traps</text>
+</svg></div>
+  <figcaption>Critical Thinking: Examiner's Twists and Conceptual Traps</figcaption>
+</figure>
+
 <p>The UPSC examiner often uses "twist" questions to test if a student has merely memorized formulas or understands the physics. These twists usually involve changing the boundary conditions of a standard problem.</p>
 <p><strong>The Twist in Heat Transfer:</strong> A standard question asks for heat loss through a composite wall. The twist? Introduce a phase change material (PCM) layer or a variable thermal conductivity k(T). Standard Fourier law integration fails here; you must use the concept of enthalpy flux during melting. Another twist: Ask for the temperature distribution in a fin with an insulated tip, but then ask how the answer changes if the tip is exposed to convection. The examiner wants to see if you can modify the boundary condition equation (dT/dx = 0 vs -k dT/dx = h(T - T_∞)).</p>
 <p><strong>The Twist in Machine Design:</strong> Standard problems assume static loading or simple bending. A twist involves a "shock load" scenario where the dynamic factor K_d is applied to a fatigue calculation. Or, consider a gear train where one gear has a slight eccentricity (manufacturing defect). How does this eccentricity induce vibration and alter the contact ratio? The examiner expects you to link the manufacturing error (eccentricity) to the dynamic loading (Machine Design) and the resulting failure mode (pitting or breakage).</p>
@@ -243,6 +365,111 @@
 <li><strong>Assuming Constant Demand in Inventory:</strong> Failing to adjust EOQ models when lead time varies due to supply chain disruptions or seasonal demand fluctuations.</li>
 </ul>
 <h3>Finite Element Modeling for Structural Integrity Assessment</h3>
+<!-- passage-cartoon:6fa9fe310e08 -->
+<figure class="passage-cartoon" data-cartoon="6fa9fe310e08">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central turbine blade with FEA mesh -->
+  <path d="M280 60 L260 120 L265 120 L250 240 L310 240 L295 120 L300 120 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <g stroke="#1f2937" stroke-width="1.5" fill="none">
+    <path d="M260 120 L280 140 L300 120"/>
+    <path d="M265 120 L280 150 L295 120"/>
+    <path d="M255 150 L280 180 L305 150"/>
+    <path d="M250 180 L280 210 L310 180"/>
+    <path d="M250 240 L260 220 L270 240"/>
+    <path d="M270 240 L280 220 L290 240"/>
+    <path d="M290 240 L300 220 L310 240"/>
+  </g>
+  <!-- Nodes -->
+  <g fill="#1f2937">
+    <circle cx="260" cy="120" r="3"/>
+    <circle cx="300" cy="120" r="3"/>
+    <circle cx="265" cy="120" r="3"/>
+    <circle cx="295" cy="120" r="3"/>
+    <circle cx="280" cy="140" r="3"/>
+    <circle cx="280" cy="150" r="3"/>
+    <circle cx="255" cy="150" r="3"/>
+    <circle cx="305" cy="150" r="3"/>
+    <circle cx="280" cy="180" r="3"/>
+    <circle cx="250" cy="180" r="3"/>
+    <circle cx="310" cy="180" r="3"/>
+    <circle cx="280" cy="210" r="3"/>
+    <circle cx="250" cy="240" r="3"/>
+    <circle cx="260" cy="220" r="3"/>
+    <circle cx="270" cy="240" r="3"/>
+    <circle cx="280" cy="220" r="3"/>
+    <circle cx="290" cy="240" r="3"/>
+    <circle cx="300" cy="220" r="3"/>
+    <circle cx="310" cy="240" r="3"/>
+  </g>
+  <!-- Left: Mesh refinement sequence -->
+  <g stroke="#1f2937" stroke-width="1.5" fill="none">
+    <!-- Coarse -->
+    <rect x="40" y="80" width="60" height="60"/>
+    <line x1="40" y1="110" x2="100" y2="110"/>
+    <line x1="70" y1="80" x2="70" y2="140"/>
+    <!-- Medium -->
+    <rect x="40" y="160" width="60" height="60"/>
+    <line x1="40" y1="175" x2="100" y2="175"/>
+    <line x1="40" y1="190" x2="100" y2="190"/>
+    <line x1="55" y1="160" x2="55" y2="220"/>
+    <line x1="85" y1="160" x2="85" y2="220"/>
+    <!-- Fine -->
+    <rect x="40" y="240" width="60" height="60"/>
+    <line x1="40" y1="252" x2="100" y2="252"/>
+    <line x1="40" y1="264" x2="100" y2="264"/>
+    <line x1="40" y1="276" x2="100" y2="276"/>
+    <line x1="40" y1="288" x2="100" y2="288"/>
+    <line x1="52" y1="240" x2="52" y2="300"/>
+    <line x1="64" y1="240" x2="64" y2="300"/>
+    <line x1="76" y1="240" x2="76" y2="300"/>
+    <line x1="88" y1="240" x2="88" y2="300"/>
+  </g>
+  <!-- Right: Boundary conditions -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <!-- Fixed support -->
+    <rect x="460" y="80" width="40" height="10"/>
+    <line x1="460" y1="90" x2="460" y2="110"/>
+    <line x1="470" y1="90" x2="470" y2="110"/>
+    <line x1="480" y1="90" x2="480" y2="110"/>
+    <line x1="490" y1="90" x2="490" y2="110"/>
+    <line x1="500" y1="90" x2="500" y2="110"/>
+    <!-- Symmetry -->
+    <line x1="460" y1="170" x2="500" y2="170" stroke-dasharray="5,3"/>
+    <line x1="480" y1="150" x2="480" y2="190"/>
+    <line x1="470" y1="160" x2="470" y2="180" stroke-width="1"/>
+    <line x1="490" y1="160" x2="490" y2="180" stroke-width="1"/>
+    <!-- Contact -->
+    <rect x="460" y="240" width="40" height="10"/>
+    <rect x="460" y="255" width="40" height="10"/>
+    <path d="M460 250 L500 250" stroke-dasharray="3,3"/>
+  </g>
+  <!-- Top: Equation -->
+  <text x="280" y="35" text-anchor="middle" font-size="14" font-family="serif" fill="#1f2937">K u = F</text>
+  <!-- Bottom: Stress contour -->
+  <g stroke="#1f2937" stroke-width="1.5" fill="none">
+    <ellipse cx="280" cy="280" rx="80" ry="20"/>
+    <ellipse cx="280" cy="280" rx="60" ry="15"/>
+    <ellipse cx="280" cy="280" rx="40" ry="10"/>
+    <ellipse cx="280" cy="280" rx="20" ry="5"/>
+  </g>
+  <!-- Labels -->
+  <text x="70" y="70" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Mesh Refinement</text>
+  <text x="480" y="70" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Boundary Conditions</text>
+  <text x="280" y="308" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Von Mises Stress</text>
+  <text x="280" y="55" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#1f2937">Stiffness Equation</text>
+  <!-- Distorted element warning -->
+  <g transform="translate(400,40)" stroke="#1f2937" stroke-width="2" fill="none">
+    <path d="M0 0 L30 5 L25 30 L-5 25 Z" stroke-dasharray="4,2"/>
+    <text x="10" y="20" font-size="10" font-family="sans-serif" fill="#1f2937">Aspect Ratio &gt; 5</text>
+  </g>
+  <!-- Caption strip -->
+  
+  
+</svg></div>
+  <figcaption>Finite Element Modeling for Structural Integrity Assessment</figcaption>
+</figure>
+
 <p>Finite element analysis (FEA) is the cornerstone of modern machine design validation. The method discretises a continuous domain into a mesh of elements connected at nodes, allowing the solution of the governing equilibrium equations <strong>K u = F</strong> where <strong>K</strong> is the global stiffness matrix, <strong>u</strong> the nodal displacement vector and <strong>F</strong> the applied load vector. For linear elastic problems the element stiffness matrix is derived from the strain‑displacement matrix <strong>B</strong> and the material constitutive matrix <strong>D</strong> as <strong>kₑ = ∫ Bᵀ D B dV</strong>. Convergence is verified by mesh refinement studies; a typical criterion is that the strain energy norm changes by less than 1 % between successive refinements.</p>
 <p>Boundary conditions must reflect the physical constraints: fixed supports impose zero displacement, symmetry planes enforce zero normal displacement and zero shear traction, while contact interfaces require either penalty or Lagrange multiplier formulations to prevent penetration. In rotating machinery, centrifugal body forces are introduced as <strong>ρ ω² r</strong> acting radially, and thermal loads are incorporated through the thermal strain vector <strong>εᵗ = α ΔT</strong> where <strong>α</strong> is the coefficient of thermal expansion.</p>
 <p>Post‑processing focuses on stress intensity factors for fracture mechanics, von Mises equivalent stress for yield assessment, and fatigue life prediction using the S‑N curve corrected for mean stress (Goodman or Gerber relations). A common examiner twist is to ask for the effect of mesh distortion on stress concentration factors; the answer emphasises that poorly shaped elements (aspect ratio > 5, Jacobian < 0.2) artificially stiffen the model and underestimate peak stresses.</p>
@@ -269,6 +496,62 @@
 <p>Design mitigation includes using bellows expansion joints to absorb axial growth, selecting low‑expansion alloys (e.g., Incoloy 800H) for high‑ΔT service, and applying a thermal barrier coating on the fire‑side to reduce the surface temperature gradient. A frequent examiner trap is to ignore the effect of temperature‑dependent modulus <strong>E(T)</strong> on stress redistribution; the correct approach is to iterate the FEA with updated material properties at each temperature step.</p>
 
 <h3>Reliability Centered Maintenance and Failure Mode Effects Analysis</h3>
+<!-- passage-cartoon:cd455f01a7b7 -->
+<figure class="passage-cartoon" data-cartoon="cd455f01a7b7">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central gear -->
+  <path d="M280,110
+    L285,115 L295,115 L300,110 L295,105 L285,105 Z
+    M330,160 L335,155 L345,155 L350,160 L345,165 L335,165 Z
+    M280,210 L285,205 L295,205 L300,210 L295,215 L285,215 Z
+    M230,160 L225,155 L215,155 L210,160 L215,165 L225,165 Z
+    M310,122 L318,118 L325,125 L318,132 L310,128 Z
+    M310,198 L318,194 L325,197 L318,204 L310,200 Z
+    M250,122 L242,118 L235,125 L242,132 L250,128 Z
+    M250,198 L242,194 L235,197 L242,204 L250,200 Z
+    M280,100 A60,60 0 1,1 279.99,100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- P-F Interval arrow -->
+  <path d="M100,160 L460,160 M450,155 L460,160 L450,165" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="150" cy="160" r="6" stroke="#1f2937" stroke-width="3" fill="#fbf7ec"/>
+  <circle cx="410" cy="160" r="6" stroke="#1f2937" stroke-width="3" fill="#fbf7ec"/>
+  <!-- Four maintenance figures -->
+  <!-- Fig1 On-condition -->
+  <path d="M180,95 A8,8 0 1,1 179.9,95 M180,103 L180,120 M170,110 L190,110 M180,120 L170,135 L180,120 L190,135" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Fig2 Scheduled restoration -->
+  <path d="M250,95 A8,8 0 1,1 249.9,95 M250,103 L250,120 M240,110 L260,110 M250,120 L240,135 L250,120 L260,135" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Fig3 Scheduled discard -->
+  <path d="M320,95 A8,8 0 1,1 319.9,95 M320,103 L320,120 M310,110 L330,110 M320,120 L310,135 L320,120 L330,135" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Fig4 Run-to-failure -->
+  <path d="M390,95 A8,8 0 1,1 389.9,95 M390,103 L390,120 M380,110 L400,110 M390,120 L380,135 L390,120 L400,135 M380,100 L400,100 M380,105 L400,105" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Icons -->
+  <path d="M180,140 L180,150 M175,145 L185,145 M175,148 L185,148" stroke="#1f2937" stroke-width="2.5" fill="none"/> <!-- vibration -->
+  <path d="M170,155 L190,155 M170,155 L170,165 L190,165 L190,155" stroke="#1f2937" stroke-width="2" fill="none"/> <!-- oil -->
+  <path d="M250,135 L265,120 M265,120 L270,125 L260,135" stroke="#1f2937" stroke-width="2.5" fill="none"/> <!-- wrench -->
+  <path d="M320,135 L310,125 L330,125 L320,135 M320,125 L320,115" stroke="#1f2937" stroke-width="2.5" fill="none"/> <!-- new part -->
+  <path d="M410,150 L400,140 L420,140 L410,150 M410,150 L410,170 M400,160 L420,160" stroke="#1f2937" stroke-width="2.5" fill="none"/> <!-- broken -->
+  <!-- FMEA top-left -->
+  <path d="M40,30 L200,30 L200,120 L40,120 Z M40,50 L200,50 M40,70 L200,70 M40,90 L200,90 M80,30 L80,120 M120,30 L120,120 M160,30 L160,120" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Weibull top-right -->
+  <path d="M380,110 L380,30 L520,30 M380,110 L520,110 M390,105 L410,95 L430,90 L450,88 L470,90 L490,95 L510,105" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Severity bottom-left -->
+  <path d="M40,250 L200,250 M40,250 L40,240 M70,250 L70,240 M100,250 L100,240 M130,250 L130,240 M160,250 L160,240 M190,250 L190,240 M200,250 L200,240" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Cost bottom-right -->
+  <path d="M380,270 L380,220 L520,220 M380,270 L520,270 M390,260 L410,250 L430,245 L450,243 L470,245 L490,250 L510,260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Caption strip line -->
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1.5"/>
+  <!-- Labels -->
+  <text x="280" y="90" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">RCM Logic</text>
+  <text x="120" y="25" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">FMEA → RPN</text>
+  <text x="280" y="140" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">P-F Interval</text>
+  <text x="450" y="25" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Weibull β, η</text>
+  <text x="450" y="250" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Cost Optimum T*</text>
+  <text x="280" y="200" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">4 Task Types</text>
+  <text x="280" y="304" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Reliability Centered Maintenance &amp; FMEA</text>
+</svg></div>
+  <figcaption>Reliability Centered Maintenance and Failure Mode Effects Analysis</figcaption>
+</figure>
+
 <p>Reliability Centered Maintenance (RCM) structures maintenance tasks around the functional failures of each asset. The process begins with a Failure Mode and Effects Analysis (FMEA) that lists every component, its possible failure modes, the local effect, the system‑level effect, and a Risk Priority Number (RPN) = Severity × Occurrence × Detection. Typical severity ratings follow a 1–10 scale where 10 denotes loss of safety or environmental breach.</p>
 <p>RCM decision logic then classifies each failure mode into one of four task categories: (1) On‑condition tasks (predictive monitoring such as vibration analysis, oil spectroscopy), (2) Scheduled restoration (overhaul at fixed intervals), (3) Scheduled discard (replace‑at‑life), (4) Run‑to‑failure (no proactive task, accepted for non‑critical functions). The selection criteria are based on the P‑F interval – the time between potential failure detection and functional failure – which must be longer than the inspection interval for on‑condition tasks to be effective.</p>
 <p>Quantitative reliability models feed the RCM: the Weibull distribution <strong>R(t) = exp[−(t/η)^β]</strong> provides the reliability function, where <strong>β</strong> (shape) indicates infant mortality (<1), random failures (=1) or wear‑out (>1). The characteristic life <strong>η</strong> is obtained from field data or accelerated life testing. Maintenance optimisation uses the cost‑per‑unit‑time function <strong>C(T) = (C_p + C_f · F(T)) / T</strong> where <strong>C_p</strong> is preventive cost, <strong>C_f</strong> failure cost, <strong>F(T)</strong> cumulative failure probability at interval <strong>T</strong>. The optimal interval <strong>T*</strong> satisfies <strong>dC/dT = 0</strong>.</p>
