@@ -475,6 +475,37 @@
 <p>Post‑processing focuses on stress intensity factors for fracture mechanics, von Mises equivalent stress for yield assessment, and fatigue life prediction using the S‑N curve corrected for mean stress (Goodman or Gerber relations). A common examiner twist is to ask for the effect of mesh distortion on stress concentration factors; the answer emphasises that poorly shaped elements (aspect ratio > 5, Jacobian < 0.2) artificially stiffen the model and underestimate peak stresses.</p>
 
 <h3>Non‑Traditional Machining: Electrochemical and Laser Processes</h3>
+<!-- passage-cartoon:8dbd8bde38d6 -->
+<figure class="passage-cartoon" data-cartoon="8dbd8bde38d6">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central workpiece -->
+  <rect x="200" y="80" width="160" height="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- ECM tool electrode -->
+  <rect x="120" y="100" width="30" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Electrolyte flow lines -->
+  <path d="M150 120 Q165 120 175 130 Q185 140 200 140" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="4 2"/>
+  <path d="M150 150 Q165 150 175 150 Q185 150 200 150" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="4 2"/>
+  <path d="M150 180 Q165 180 175 170 Q185 160 200 160" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="4 2"/>
+  <!-- Laser head -->
+  <rect x="410" y="100" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Laser beam lines -->
+  <line x1="430" y1="140" x2="360" y2="140" stroke="#1f2937" stroke-width="3"/>
+  <line x1="430" y1="140" x2="360" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <!-- Ablation spot -->
+  <circle cx="360" cy="145" r="4" stroke="#1f2937" stroke-width="3" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="30" y="130" font-size="14" fill="#1f2937" font-family="sans-serif">ECM: Anodic Dissolution</text>
+  <text x="450" y="130" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="end">LBM: Laser Ablation</text>
+  <text x="280" y="60" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">No Heat Affected Zone</text>
+  <text x="280" y="220" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Complex Cavities</text>
+  <!-- Caption strip -->
+  <rect x="14" y="276" width="532" height="30" fill="#fbf7ec"/>
+  <text x="280" y="269" font-size="16" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Non‑Traditional Machining: Electrochemical and Laser Processes</text>
+</svg></div>
+  <figcaption>Non‑Traditional Machining: Electrochemical and Laser Processes</figcaption>
+</figure>
+
 <p>Electrochemical machining (ECM) removes material by controlled anodic dissolution. The material removal rate (MRR) follows Faraday’s law: <strong>MRR = (I · M) / (n · F · ρ)</strong> where <strong>I</strong> is the current, <strong>M</strong> the atomic weight, <strong>n</strong> the valency, <strong>F</strong> Faraday’s constant and <strong>ρ</strong> the density. The inter‑electrode gap (IEG) is maintained typically between 0.1 mm and 0.5 mm by a servo system that adjusts the feed rate to keep the voltage constant. ECM produces no heat‑affected zone, no tool wear, and can machine complex cavities in hard alloys such as Inconel 718.</p>
 <p>Laser beam machining (LBM) uses a focused high‑power density beam (10⁶–10⁸ W/cm²) to melt and vaporise material. The key parameters are pulse energy, pulse duration, repetition rate and assist gas pressure. For cutting, the kerf width is approximated by <strong>w ≈ 2 · √(α · tₚ/π)</strong> where <strong>α</strong> is thermal diffusivity and <strong>tₚ</strong> pulse duration. Short pulses (picosecond, femtosecond) enable cold ablation with minimal recast layer, essential for micro‑fluidic channels in aerospace components.</p>
 <p>Both processes are selected when conventional cutting forces would cause distortion, when material hardness exceeds tool capability, or when intricate internal geometries are required. The trade‑off lies in capital cost, electrolyte handling for ECM, and the need for precise beam delivery optics in LBM.</p>
@@ -557,6 +588,62 @@
 <p>Quantitative reliability models feed the RCM: the Weibull distribution <strong>R(t) = exp[−(t/η)^β]</strong> provides the reliability function, where <strong>β</strong> (shape) indicates infant mortality (<1), random failures (=1) or wear‑out (>1). The characteristic life <strong>η</strong> is obtained from field data or accelerated life testing. Maintenance optimisation uses the cost‑per‑unit‑time function <strong>C(T) = (C_p + C_f · F(T)) / T</strong> where <strong>C_p</strong> is preventive cost, <strong>C_f</strong> failure cost, <strong>F(T)</strong> cumulative failure probability at interval <strong>T</strong>. The optimal interval <strong>T*</strong> satisfies <strong>dC/dT = 0</strong>.</p>
 
 <h3>Multi‑Objective Optimization in Production Planning</h3>
+<!-- passage-cartoon:490f0228771d -->
+<figure class="passage-cartoon" data-cartoon="490f0228771d">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central three-way balance -->
+  <line x1="280" y1="80" x2="280" y2="160" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <line x1="280" y1="160" x2="200" y2="220" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <line x1="280" y1="160" x2="360" y2="220" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <!-- Pans -->
+  <ellipse cx="280" cy="55" rx="30" ry="8" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <ellipse cx="180" cy="245" rx="25" ry="7" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <ellipse cx="380" cy="245" rx="25" ry="7" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Weights in pans -->
+  <circle cx="280" cy="55" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="180" cy="245" r="9" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="380" cy="245" r="9" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Pareto front (top-left) -->
+  <path d="M100 140 C120 100 160 70 200 50" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="100" y1="140" x2="200" y2="140" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="100" y1="50" x2="100" y2="140" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <!-- ε-Constraint slider (left) -->
+  <rect x="55" y="100" width="10" height="150" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <rect x="50" y="160" width="20" height="12" fill="#1f2937"/>
+  <!-- NSGA-II evolution (right) -->
+  <circle cx="460" cy="130" r="5" fill="#1f2937" opacity="0.6"/>
+  <circle cx="480" cy="140" r="5" fill="#1f2937" opacity="0.6"/>
+  <circle cx="450" cy="150" r="5" fill="#1f2937" opacity="0.6"/>
+  <circle cx="470" cy="160" r="5" fill="#1f2937" opacity="0.6"/>
+  <circle cx="490" cy="145" r="5" fill="#1f2937" opacity="0.6"/>
+  <circle cx="460" cy="200" r="5" fill="#1f2937"/>
+  <circle cx="475" cy="205" r="5" fill="#1f2937"/>
+  <circle cx="455" cy="215" r="5" fill="#1f2937"/>
+  <circle cx="480" cy="210" r="5" fill="#1f2937"/>
+  <circle cx="490" cy="200" r="5" fill="#1f2937"/>
+  <line x1="460" y1="130" x2="460" y2="200" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#arrow)"/>
+  <line x1="480" y1="140" x2="475" y2="205" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#arrow)"/>
+  <line x1="450" y1="150" x2="455" y2="215" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- Labels -->
+  <text x="280" y="35" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">Makespan</text>
+  <text x="145" y="250" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">Tardiness</text>
+  <text x="415" y="250" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">Energy</text>
+  <text x="150" y="30" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Pareto Front</text>
+  <text x="60" y="85" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">ε-Constraint</text>
+  <text x="470" y="85" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">NSGA-II</text>
+  <!-- Caption strip -->
+  <rect x="14" y="292" width="532" height="14" fill="#1f2937"/>
+  <text x="280" y="286.3" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#fbf7ec">Multi‑Objective Optimization in Production Planning</text>
+</svg></div>
+  <figcaption>Multi‑Objective Optimization in Production Planning</figcaption>
+</figure>
+
 <p>Production planning often requires simultaneous minimisation of makespan, total tardiness, and energy consumption. The problem is formulated as a mixed‑integer linear program (MILP) with decision variables <strong>x<sub>ijk</sub></strong> = 1 if job <strong>j</strong> follows job <strong>i</strong> on machine <strong>k</strong>. Objectives: <strong>min C_max</strong> (makespan), <strong>min ∑ T_j</strong> (tardiness), <strong>min ∑ E_k</strong> (energy). Constraints include machine capacity, sequence‑dependent setup times, and release dates.</p>
 <p>Pareto optimality is used: a solution is non‑dominated if no other solution improves one objective without worsening another. The ε‑constraint method converts the multi‑objective problem into a series of single‑objective MILPs by fixing upper bounds on all but one objective. For example, minimise makespan subject to <strong>∑ T_j ≤ ε₁</strong> and <strong>∑ E_k ≤ ε₂</strong>. By varying <strong>ε₁, ε₂</strong> the Pareto front is traced.</p>
 <p>Heuristic approaches such as Non‑Dominated Sorting Genetic Algorithm II (NSGA‑II) are employed when the MILP size exceeds solver capability. NSGA‑II maintains a population, applies crossover and mutation, and uses fast non‑dominated sorting with crowding distance to preserve diversity. Convergence is monitored by the hyper‑volume indicator. In examinations, a typical question asks to formulate the ε‑constraint model for a three‑machine flow shop with given processing times and due dates; the answer must show the decision variables, the three objective functions, and the linearised constraints for sequence‑dependent setups.</p>
@@ -571,9 +658,80 @@
 <li>Applying the Weibull shape parameter β = 1 for all components without verifying the failure mode distribution.</li>
 </ul>
 <h3>Additive Manufacturing: Powder Bed Fusion Defect Mechanisms and Process Optimization</h3>
+<!-- passage-cartoon:83af9676e773 -->
+<figure class="passage-cartoon" data-cartoon="83af9676e773">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central PBF cross-section -->
+  <rect x="260" y="30" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="280,60 265,120 295,120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="230" y="120" width="100" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <ellipse cx="280" cy="130" rx="25" ry="6" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="240" y="140" width="80" height="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Defects -->
+  <path d="M 195 175 m -3 0 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 M 195 185 m -3 0 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 M 195 195 m -3 0 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0" stroke="#1f2937" stroke-width="3" fill="#1f2937"/>
+  <path d="M 355 170 L 360 200 L 365 170" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 270 100 m -4 0 a 4 4 0 1 0 8 0 a 4 4 0 1 0 -8 0 M 280 95 m -4 0 a 4 4 0 1 0 8 0 a 4 4 0 1 0 -8 0 M 290 100 m -4 0 a 4 4 0 1 0 8 0 a 4 4 0 1 0 -8 0" stroke="#1f2937" stroke-width="3" fill="#1f2937"/>
+  <path d="M 240 250 L 240 260 Q 280 240 320 260 L 320 250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Optimization icons -->
+  <rect x="50" y="60" width="60" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 55 95 L 55 65 L 105 65 M 55 90 Q 80 70 100 75" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="460" y="60" width="40" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="480" cy="75" r="8" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="50" y="240" width="60" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 50 240 Q 80 230 110 240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="460" y="240" width="40" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="20" stroke="#1f2937" stroke-width="1" fill="#fbf7ec"/>
+  <!-- Labels -->
+  <text x="50" y="180" font-family="sans-serif" font-size="13" fill="#1f2937">Lack-of-Fusion</text>
+  <text x="460" y="180" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="start">Keyhole Pores</text>
+  <text x="280" y="70" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Balling</text>
+  
+  <text x="80" y="50" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">DOE Window</text>
+  
+  <text x="280" y="283.5" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Additive Manufacturing: PBF Defects &amp; Optimization</text>
+</svg></div>
+  <figcaption>Additive Manufacturing: Powder Bed Fusion Defect Mechanisms and Process Optimization</figcaption>
+</figure>
+
 <p>Powder bed fusion (PBF) using laser or electron beam sources builds parts layer by layer by selectively melting metal powder. The dominant defect families are lack‑of‑fusion pores, keyhole‑induced vapor depressions, balling, and residual‑stress‑driven distortion. Lack‑of‑fusion pores arise when the volumetric energy density <em>E</em> = P / (v · h · t) falls below the threshold required to fully melt the track width <em>w</em> and hatch spacing <em>h</em>; typical process windows for Ti‑6Al‑4V lie between 50 J mm⁻³ and 100 J mm⁻³. Keyhole pores form when the laser power density exceeds the vaporization threshold, creating a deep, unstable vapor cavity that collapses and traps gas; the dimensionless keyhole number <em>K</em> = (2 α P) / (π k v r₀²) (α absorptivity, k thermal conductivity, r₀ beam radius) predicts the transition. Balling results from Rayleigh‑Plateau instability of the melt track when the scan speed is too high relative to surface tension forces; the critical wavelength λ<sub>c</sub> = 2π √(σ/ρ g) governs droplet formation. Residual stresses develop from steep thermal gradients; the peak tensile stress σ<sub>max</sub> ≈ E α ΔT / (1 − ν) can exceed the yield strength, causing warpage or cracking. Process optimisation uses a hierarchical approach: (1) design of experiments (DOE) on power, speed, hatch, layer thickness to map the density‑energy density curve; (2) in‑situ melt‑pool monitoring with high‑speed photodiodes or coaxial cameras to detect keyhole signatures; (3) post‑build hot isostatic pressing (HIP) at 920 °C/100 MPa for Ti‑6Al‑4V to close internal pores; (4) stress‑relief heat treatment at 640 °C for 2 h to reduce distortion before machining. Standards such as ASTM F3122 (Ti‑6Al‑4V PBF) and ISO/ASTM 52900 provide acceptance criteria for density (>99.9 %), tensile properties, and surface roughness (Ra ≤ 10 µm as‑built).</p>
 
 <h3>Gear Design: Contact Stress, Surface Fatigue, and Lubrication Regimes</h3>
+<!-- passage-cartoon:1236fd801c7f -->
+<figure class="passage-cartoon" data-cartoon="1236fd801c7f">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central gear tooth -->
+  <path d="M260,160 L250,110 Q280,100 310,110 L300,160 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Magnifying glass -->
+  <circle cx="280" cy="130" r="25" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="298" y1="148" x2="330" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <!-- Load arrow -->
+  <line x1="140" y1="160" x2="260" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="260,160 250,155 250,165" fill="#1f2937"/>
+  <!-- Lubrication arrow -->
+  <line x1="280" y1="80" x2="280" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="280,130 275,120 285,120" fill="#1f2937"/>
+  <!-- Left gear pair -->
+  <circle cx="80" cy="160" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="120" cy="160" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Lambda symbol -->
+  <path d="M455,150 L460,170 M460,150 L465,150" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Micro-geometry crowning -->
+  <path d="M240,60 Q280,40 320,60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="20" fill="#fbf7ec" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="280" y="90" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Contact Stress</text>
+  <text x="100" y="130" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Gear Pair</text>
+  <text x="460" y="130" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Lubrication λ</text>
+  <text x="280" y="30" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Micro‑geometry</text>
+  <text x="280" y="284" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Gear Design: Contact Stress, Surface Fatigue, and Lubrication Regimes</text>
+</svg></div>
+  <figcaption>Gear Design: Contact Stress, Surface Fatigue, and Lubrication Regimes</figcaption>
+</figure>
+
 <p>Spur and helical gear tooth contact is governed by Hertzian line contact theory. The maximum contact pressure σ<sub>H</sub> = √( (F<sub>t</sub> · K<sub>a</sub> · K<sub>v</sub> · K<sub>m</sub>) / (b · d<sub>p</sub> · (1/u + 1)) ) where F<sub>t</sub> is tangential load, K<sub>a</sub> application factor, K<sub>v</sub> dynamic factor, K<sub>m</sub> load distribution factor, b face width, d<sub>p</sub> pitch diameter, and u gear ratio. The allowable contact stress σ<sub>Hlim</sub> for case‑hardened steels (e.g., 20MnCr5 carburized to 58 HRC) is typically 1.5 GPa per ISO 6336‑2. Surface fatigue (pitting) initiates when the subsurface orthogonal shear stress τ<sub>max</sub> ≈ 0.3 σ<sub>H</sub> exceeds the material’s endurance limit; the number of cycles to pitting N<sub>p</sub> follows a power law N<sub>p</sub> = C · σ<sub>H</sub>⁻ⁿ with n ≈ 9–10 for hardened steels. Lubrication regime is quantified by the specific film thickness λ = h<sub>min</sub> / √(R<sub>q1</sub>² + R<sub>q2</sub>²). λ < 1 indicates boundary lubrication with high asperity contact and accelerated wear; 1 < λ < 3 is mixed lubrication; λ > 3 denotes full elastohydrodynamic lubrication (EHL). The minimum film thickness in EHL for line contacts is given by the Dowson‑Higginson equation h<sub>min</sub> = 2.65 · (η₀ · u)<sup>0.7</sup> · (α · E')<sup>0.43</sup> · (R<sub>x</sub>)<sup>0.43</sup> · (W)<sup>‑0.13</sup>, where η₀ is base oil viscosity, u entrainment speed, α pressure‑viscosity coefficient, E' reduced elastic modulus, R<sub>x</sub> equivalent radius, and W dimensionless load. Gear micro‑geometry modifications — tip relief, crowning, and helix angle optimization — shift the load distribution to reduce peak σ<sub>H</sub> and increase λ. Surface treatments such as shot peening (introducing compressive residual stresses of 300–500 MPa) and superfinishing (Ra < 0.1 µm) further raise pitting resistance. Design verification uses finite‑element contact analysis with a penalty or Lagrange multiplier formulation to capture edge loading and misalignment effects.</p>
 
 <div class="example-box">
@@ -588,6 +746,46 @@
 </div>
 
 <h3>Transient Heat Conduction in Multilayer Composite Walls</h3>
+<!-- passage-cartoon:fb8e22b47236 -->
+<figure class="passage-cartoon" data-cartoon="fb8e22b47236">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Composite wall layers -->
+  <rect x="180" y="90" width="200" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="180" y="130" width="200" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="180" y="190" width="200" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Heat flux arrow -->
+  <path d="M280 90 L280 230" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="280,230 275,220 285,220" fill="#1f2937"/>
+  <!-- Temperature curve (thermal lag) -->
+  <path d="M280 90 Q300 130 280 170 Q260 210 280 230" stroke="#1f2937" stroke-width="3" fill="none" stroke-dasharray="5,5"/>
+  <!-- Turbine blade with TBC -->
+  <path d="M50 80 L110 40 L110 80 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M55 78 L108 42" stroke="#1f2937" stroke-width="2" stroke-dasharray="2,2"/>
+  <!-- Finite-difference grid (Crank-Nicolson) -->
+  <line x1="400" y1="40" x2="400" y2="100" stroke="#1f2937" stroke-width="2"/>
+  <line x1="440" y1="40" x2="440" y2="100" stroke="#1f2937" stroke-width="2"/>
+  <line x1="400" y1="50" x2="460" y2="50" stroke="#1f2937" stroke-width="2"/>
+  <line x1="400" y1="80" x2="460" y2="80" stroke="#1f2937" stroke-width="2"/>
+  <!-- Biot number gauge -->
+  <circle cx="80" cy="240" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="80" y1="240" x2="93" y2="232.5" stroke="#1f2937" stroke-width="3"/>
+  <!-- Thermal stress zigzag -->
+  <polyline points="420,240 440,220 460,240 480,220 500,240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip -->
+  <line x1="100" y1="280" x2="460" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="300" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Transient Heat Conduction in Multilayer Composite Walls</text>
+  <!-- Labels -->
+  <text x="280" y="80" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Composite Wall</text>
+  <text x="300" y="150" font-size="13" font-family="sans-serif" fill="#1f2937">Thermal Lag</text>
+  <text x="80" y="35" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">TBC Life</text>
+  <text x="430" y="35" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Crank-Nicolson</text>
+  <text x="80" y="215" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Biot Number</text>
+  <text x="460" y="215" font-size="13" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Thermal Stress</text>
+</svg></div>
+  <figcaption>Transient Heat Conduction in Multilayer Composite Walls</figcaption>
+</figure>
+
 <p>Transient conduction through a composite slab of N layers is solved by the Laplace‑transform method or by a finite‑difference/finite‑volume discretisation that respects interfacial temperature and heat‑flux continuity. For a wall with layers i = 1…N, each having thickness L<sub>i</sub>, thermal conductivity k<sub>i</sub>, density ρ<sub>i</sub>, and specific heat c<sub>p,i</sub>, the governing equation in each layer is ∂T/∂t = α<sub>i</sub> ∂²T/∂x² with α<sub>i</sub> = k<sub>i</sub>/(ρ<sub>i</sub>c<sub>p,i</sub>). At each interface x = ΣL<sub>j</sub>, the conditions are T<sub>i</sub> = T<sub>i+1</sub> and k<sub>i</sub> ∂T<sub>i</sub>/∂x = k<sub>i+1</sub> ∂T<sub>i+1</sub>/∂x. The Biot number for the outer surfaces Bi = h L<sub>eq</sub>/k<sub>eq</sub> (L<sub>eq</sub> total thickness, k<sub>eq</sub> harmonic mean) decides whether lumped‑capacitance is permissible; Bi < 0.1 allows a single‑node model, otherwise a distributed model is required. The Fourier number Fo = α t/L² characterises the penetration depth of the thermal wave; for a step change in surface temperature, the dimensionless temperature θ* = (T − T<sub>i</sub>)/(T<sub>s</sub> − T<sub>i</sub>) at the mid‑plane of a homogeneous slab is given by the series solution θ* = Σ (4/π(2n+1)) exp[−(2n+1)²π²Fo/4] sin[(2n+1)π/2]. In composites, the eigen‑values become roots of a transcendental equation involving the thermal effusivity ratios e<sub>i</sub> = √(k<sub>i</sub>ρ<sub>i</sub>c<sub>p,i</sub>). Numerical implementation uses an implicit Crank‑Nicolson scheme with a non‑uniform grid that aligns nodes at material interfaces; the resulting tridiagonal system is solved at each time step Δt chosen to satisfy Fo ≤ 0.5 for stability if an explicit scheme is used. Practical applications include thermal barrier coating (TBC) life prediction on turbine blades, where a 0.3 mm YSZ layer (k ≈ 1.2 W m⁻¹ K⁻¹) on a 2 mm Ni‑based superalloy substrate (k ≈ 25 W m⁻¹ K⁻¹) experiences cyclic surface heat fluxes of 1 MW m⁻²; the transient temperature lag across the TBC governs the thermal‑stress range Δσ ≈ E α ΔT/(1 − ν). Accurate prediction requires temperature‑dependent k(T) and c<sub>p</sub>(T) data, typically supplied in NIST‑IR databases.</p>
 
 <h3>Stochastic Queueing Models for Flexible Manufacturing Systems</h3>
