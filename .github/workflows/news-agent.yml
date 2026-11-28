@@ -60,6 +60,9 @@ jobs:
       - name: Fetch and validate the wire
         run: node scripts/fetch-news.js
 
+      - name: Drop items past the freshness window
+        run: node scripts/prune-news.js
+
       - name: Re-check the snapshot contract
         run: node scripts/check-feed-data.js news
 
