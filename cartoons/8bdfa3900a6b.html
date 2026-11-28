@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Multiaxial Fatigue Criteria and Critical Plane Methods | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Multiaxial Fatigue Criteria and Critical Plane Methods</h1>
+<p class="meta">Mechanical Engineering Paper I: Core Topics · <a href="/upsc/course/opt-mechanical-engineering/lesson-paper1">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Background margin guides (not rendered) -->
+  
+  <!-- Central crankshaft with combined loading -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Crankshaft body -->
+    <rect x="180" y="100" width="200" height="40" rx="5"/>
+    <circle cx="180" cy="120" r="20" stroke-width="3"/>
+    <circle cx="380" cy="120" r="20" stroke-width="3"/>
+    <!-- Crank pin -->
+    <circle cx="280" cy="120" r="15" stroke-width="2"/>
+    <line x1="280" y1="105" x2="280" y2="60" stroke-width="3"/>
+    <line x1="275" y1="60" x2="285" y2="60" stroke-width="4"/>
+    
+    <!-- Bending arrows (vertical) -->
+    <path d="M280 40 L280 60" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M280 200 L280 180" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M280 40 L280 60" stroke-width="3" marker-start="url(#arrow)"/>
+    <path d="M280 200 L280 180" stroke-width="3" marker-start="url(#arrow)"/>
+    
+    <!-- Torsion arrows (curved, 90 deg phase) -->
+    <path d="M180 120 A40 40 0 0 1 220 80" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M380 120 A40 40 0 0 0 340 80" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M180 120 A40 40 0 0 0 220 160" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M380 120 A40 40 0 0 1 340 160" stroke-width="3" marker-end="url(#arrow)"/>
+    
+    <!-- Critical plane at 45 deg -->
+    <line x1="250" y1="90" x2="310" y2="150" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="8,4"/>
+    <!-- Von Mises equivalent (wrong plane - horizontal) -->
+    <line x1="250" y1="120" x2="310" y2="120" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="4,4" opacity="0.5"/>
+  </g>
+  
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  
+  <!-- Left: Von Mises approach -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <circle cx="80" cy="120" r="35" stroke-dasharray="6,3" opacity="0.5"/>
+    <text x="80" y="70" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">von Mises</text>
+    <text x="80" y="170" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Underestimates</text>
+  </g>
+  
+  <!-- Right: Critical Plane method -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <line x1="480" y1="85" x2="520" y2="155" stroke-width="3"/>
+    <line x1="480" y1="155" x2="520" y2="85" stroke-width="2" stroke-dasharray="4,4"/>
+    <text x="500" y="76.2" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">Critical Plane</text>
+    <text x="500" y="175" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Fatemi-Socie</text>
+  </g>
+  
+  <!-- Top: Machine elements -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <!-- Gear tooth -->
+    <path d="M100 30 L110 20 L120 30 L115 30 L115 45 L105 45 L105 30 Z" stroke-width="2.5"/>
+    <text x="110" y="20.8" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#1f2937">Gear Tooth</text>
+    
+    <!-- Turbine disk -->
+    <circle cx="460" cy="35" r="18" stroke-width="2.5"/>
+    <circle cx="460" cy="35" r="8" stroke-width="1.5"/>
+    <g stroke-width="1.5">
+      <line x1="460" y1="17" x2="460" y2="53"/>
+      <line x1="442" y1="35" x2="478" y2="35"/>
+      <line x1="448" y1="21" x2="472" y2="49"/>
+      <line x1="472" y1="21" x2="448" y2="49"/>
+    </g>
+    <text x="460" y="60" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#1f2937">Turbine Disk</text>
+  </g>
+  
+  <!-- Bottom caption strip -->
+  <rect x="14" y="286" width="532" height="30" fill="#1f2937" rx="3"/>
+  <text x="280" y="279.5" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#fbf7ec" font-weight="bold">
+    Multiaxial Fatigue Criteria and Critical Plane Methods
+  </text>
+  
+  <!-- Key data label near center -->
+  <text x="280" y="230" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">90° Out-of-Phase</text>
+  <text x="280" y="248" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Crack at 45°</text>
+</svg></div>
+<p class="meta">Multiaxial Fatigue Criteria and Critical Plane Methods</p></div></body></html>
