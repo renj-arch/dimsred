@@ -1,130 +1,30 @@
 {
- "generatedAt": "2026-11-28T13:02:54.588Z",
+ "generatedAt": "2026-11-28T13:11:37.225Z",
  "lessonsAudited": 18,
- "flagged": 12,
- "applied": 5,
- "modelCalls": 22,
- "modelFailures": 22,
+ "flagged": 2,
+ "applied": 1,
+ "modelCalls": 7,
+ "modelFailures": 48,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "english/course/grammar/lesson-para-jumbles.html",
-   "quote": "('The war ended in 1918') typically precedes the sentence in Past Perfect ('The treaty had been signed')",
-   "problem": "The example reverses the actual historical sequence; the Treaty of Versailles was signed in 1919, after the war ended in 1918. Past Perfect 'had been signed' places the signing before the reference time 'the war ended', making the illustration factually incoherent.",
-   "correction": "('The treaty was signed in 1919') typically precedes the sentence in Past Perfect ('The war had ended in 1918')",
+   "file": "english/course/grammar/lesson-active-passive.html",
+   "quote": "He is expected to be finished the report",
+   "problem": "This construction is presented as a marginal lower passive but is ungrammatical; the lower passive of 'They expect him to finish the report' promotes the object of the lower verb ('the report') to subject of the higher clause.",
+   "correction": "The report is expected to be finished by him",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original example implies treaty signed before war ended (1919 vs 1918), creating historical impossibility. Correction aligns tense logic with actual chronology.",
-   "applied": false
-  },
-  {
-   "file": "ctet/course/evs/lesson-food-health.html",
-   "quote": "20–25 g protein, 10–12 g fat",
-   "problem": "RUTF composition per 100g is reversed; actual protein ~10-12g, fat ~28-32g",
-   "correction": "10–12 g protein, 28–32 g fat",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Standard RUTF (e.g., Plumpy'Nut) per 100g provides ~10-12g protein and ~28-32g fat; original values are reversed.",
+   "verifierReason": "Original sentence is ungrammatical; correction provides proper passive construction.",
    "applied": true
   },
   {
-   "file": "ctet/course/evs/lesson-food-health.html",
-   "quote": "Hb 8.3 mg/L",
-   "problem": "Unit error: clinical pallor appears at Hb ~8.3 g/dL, not mg/L",
-   "correction": "Hb 8.3 g/dL",
+   "file": "gate/course/aptitude/lesson-logical-reasoning.html",
+   "quote": "“B above C” means row(B) = row(C) − 1 in a bottom‑to‑top numbering",
+   "problem": "The constraint for 'B is immediately above C' with bottom-to-top numbering (where higher numbers represent higher floors) should be row(B) = row(C) + 1, not row(B) = row(C) - 1. The given formula would place B below C.",
+   "correction": "“B above C” means row(B) = row(C) + 1 in a bottom‑to‑top numbering",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Hemoglobin is clinically reported in g/dL; 8.3 mg/L is physiologically impossible (0.00083 g/dL).",
-   "applied": false
-  },
-  {
-   "file": "ctet/course/cdp/lesson-pedagogy.html",
-   "quote": "Feedback that focuses only on the task (“Good job”) yields minimal gains",
-   "problem": "Misclassifies 'Good job' as task-level feedback; in Hattie & Timperley (2007), 'Good job' is self-level feedback (praise), not task feedback.",
-   "correction": "Feedback that focuses only on the self (“Good job”) yields minimal gains",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Hattie & Timperley (2007) explicitly classify 'Good job' as self-level feedback (praise), not task-level feedback.",
-   "applied": true
-  },
-  {
-   "file": "ctet/course/cdp/lesson-pedagogy.html",
-   "quote": "Meta‑analyses (e.g., Kane Staiger, 2012)",
-   "problem": "Kane & Staiger (2012) is a primary study (MET project), not a meta-analysis.",
-   "correction": "Studies (e.g., Kane & Staiger, 2012)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Kane & Staiger 2012 is MET primary study, not meta-analysis",
-   "applied": false
-  },
-  {
-   "file": "ctet/course/cdp/lesson-pedagogy.html",
-   "quote": "Lesson Planning, Transaction, Assessment, and Professional Development",
-   "problem": "The first PINDICS domain is 'Planning', not 'Lesson Planning'.",
-   "correction": "Planning, Transaction, Assessment, and Professional Development",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "PINDICS first domain is 'Planning' per NCERT framework",
-   "applied": true
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-improvement.html",
-   "quote": "Because he was tired, he left early, and she did too /q is ungrammatical",
-   "problem": "The sentence is grammatical; the coordinate clause \"she did too\" is a conjunct of \"he left early\" with VP-ellipsis, not an illicit gapping across a subordinate boundary.",
-   "correction": "The sentence is grammatical; \"she did too\" is a coordinate conjunct with VP-ellipsis.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "The sentence is grammatical; 'and' coordinates two main clauses, the second using VP-ellipsis ('did too'). No illicit gapping occurs.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "* Dr Rao, chairing the committee, resigned is a supplementive, not a reduced relative",
-   "problem": "The asterisk incorrectly marks the grammatical sentence 'Dr Rao, chairing the committee, resigned' as ungrammatical; it is a well-formed supplementive participial clause.",
-   "correction": "Dr Rao, chairing the committee, resigned is a supplementive, not a reduced relative",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Asterisk wrongly marks grammatical supplementive participial clause as ungrammatical; correction removes asterisk accurately.",
-   "applied": true
-  },
-  {
-   "file": "english/course/grammar/lesson-grammar-basics.html",
-   "quote": "* That he lied is clear vs It is clear he lied",
-   "problem": "The asterisk incorrectly marks the grammatical sentence 'That he lied is clear' as ungrammatical; that-clauses can appear sentence-initially without deletion.",
-   "correction": "That he lied is clear vs It is clear he lied",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Asterisk wrongly marks grammatical subject that-clause as ungrammatical; correction removes asterisk accurately.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-correction.html",
-   "quote": "Errors such as 'He can swim, can he?' (double positive) or 'You're ready, aren't you?' (incorrect pronoun) are common.",
-   "problem": "The example \"You're ready, aren't you?\" is grammatically correct; the pronoun \"you\" matches the subject \"You're\", so it is not an error.",
-   "correction": "Errors such as 'He can swim, can he?' (double positive) are common.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "\"You're ready, aren't you?\" is grammatically correct; the tag question pronoun matches the subject. The original incorrectly labels it an error.",
-   "applied": false
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-correction.html",
-   "quote": "The examiner often embeds an NPI inside a relative clause whose antecedent is negated, testing whether the candidate recognises that the relative clause constitutes a separate licensing domain.",
-   "problem": "A negated antecedent (e.g., \"no student who has any money\") can license an NPI in the relative clause; the relative clause is not inherently a separate licensing domain that blocks licensing.",
-   "correction": "The examiner often embeds an NPI inside a relative clause whose antecedent is negated, testing whether the candidate recognises that the negated antecedent licenses the NPI.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "A negated antecedent (e.g., \"no student\") can license an NPI in a relative clause; the clause is not a separate licensing domain that blocks licensing.",
-   "applied": true
-  },
-  {
-   "file": "english/course/grammar/lesson-sentence-correction.html",
-   "quote": "It seemed that he left early is marginal; He seemed to leave early is preferred",
-   "problem": "The claim that extraposition with 'seem' is marginal is false; 'It seemed that he left early' is fully grammatical and common.",
-   "correction": "It seemed that he left early is grammatical; He seemed to leave early is an alternative.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original claim that 'It seemed that he left early' is marginal is inaccurate; the sentence is grammatical. Correction correctly states it is grammatical.",
+   "verifierReason": "In bottom‑to‑top numbering higher rows have larger numbers, so B above C requires row(B)=row(C)+1; the original -1 is incorrect and the correction is accurate.",
    "applied": false
   }
  ]
