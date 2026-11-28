@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-28T07:09:09.258Z",
+  "updatedAt": "2026-11-28T19:46:34.576Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -34489,6 +34489,540 @@
       "note": "The lab answer differs from the answer key in the paper; kept for review.",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-28T07:09:09.253Z"
+    },
+    {
+      "id": "6a1678b2dffa7111",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-28-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-28-jee-paper2b.html",
+      "paperFile": "full-2026-11-28-jee-paper2b.json",
+      "questionNumber": 1,
+      "section": "Mathematics",
+      "question": "Which LU‑type factorisation guarantees numerical stability without any row pivoting for a given matrix?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Doolittle",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Crout",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Cholesky",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Block LU",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the factorisation types listed.",
+        "Recall that Doolittle and Crout are general LU decompositions that may require row pivoting for stability.",
+        "Recognize that Cholesky decomposition applies to symmetric positive‑definite matrices and is numerically stable without pivoting.",
+        "Note that Block LU is a variant of general LU and also may need pivoting.",
+        "Conclude that the only LU‑type method guaranteeing stability without pivoting is Cholesky."
+      ],
+      "verifierCheck": "Cholesky factorization applies to symmetric positive definite (SPD) matrices and computes A = LL^T where L is lower triangular. For SPD matrices, the factorization exists uniquely and the algorithm is numerically stable without any row pivoting because the growth factor is bounded by 1 (the diagonal entries of L are positive and the algorithm only involves square roots and divisions by these positive pivots). In contrast, Doolittle, Crout, and Block LU are general LU factorizations that require partial pivoting to control element growth and ensure stability for arbitrary matrices; without pivoting they can be highly unstable. Thus, among the options, only Cholesky guarantees stability without pivoting for its applicable matrix class.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Cholesky No-Pivot",
+          "idea": "Mnemonic links Cholesky to stability",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall: 'Cho-lesky sounds like stable-sky'.",
+            "Doolittle/Crout need pivoting for stability.",
+            "Pick Cholesky."
+          ]
+        },
+        {
+          "name": "SPD Stability Rule",
+          "idea": "Positive definiteness guarantees no pivoting",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Check if matrix is symmetric positive definite (SPD).",
+            "Only Cholesky factorizes SPD matrices without pivoting.",
+            "Select Cholesky."
+          ]
+        },
+        {
+          "name": "Eliminate LU Variants",
+          "idea": "Quickly discard options needing pivoting",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Doolittle and Crout are LU with pivoting.",
+            "Block LU still requires pivoting generally.",
+            "Only Cholesky is pivot-free for SPD."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-28T19:41:55.792Z"
+    },
+    {
+      "id": "b0f5926e1f66039c",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-28-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-28-jee-paper2b.html",
+      "paperFile": "full-2026-11-28-jee-paper2b.json",
+      "questionNumber": 4,
+      "section": "Mathematics",
+      "question": "The sum of binomial coefficients C(N, k) where k ≡ r (mod m) can be expressed as:",
+      "options": [
+        {
+          "label": "A",
+          "text": "(1/m) Σⱼ₌₀ᵐ⁻¹ ωₘ⁻ʲʳ (1+ωₘʲ)ᴺ",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "(1/N) Σⱼ₌₀ᴺ⁻¹ ωₙ⁻ʲʳ (1+ωₙʲ)ᵐ",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "(1/m) Σⱼ₌₀ᵐ⁻¹ ωₘʲʳ (1+ωₘ⁻ʲ)ᴺ",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "(1/N) Σⱼ₌₀ᴺ⁻¹ ωₙʲʳ (1+ωₙ⁻ʲ)ᵐ",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the roots of unity filter: sum_{k ≡ r (mod m)} a_k = (1/m) Σ_{j=0}^{m-1} ω_m^{-jr} A(ω_m^j) where A(x) = Σ a_k x^k.",
+        "For binomial coefficients, A(x) = (1+x)^N = Σ_{k=0}^N C(N,k) x^k.",
+        "Substitute: sum = (1/m) Σ_{j=0}^{m-1} ω_m^{-jr} (1+ω_m^j)^N.",
+        "This matches option A exactly."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Roots of Unity Filter",
+          "idea": "Direct recall of the standard formula for sums over congruence classes using roots of unity.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall formula: sum_{k≡r mod m} C(N,k) = (1/m) Σ_{j=0}^{m-1} ω_m^{-jr} (1+ω_m^j)^N.",
+            "Match with option A exactly."
+          ]
+        },
+        {
+          "name": "Modulus Determines Root Order",
+          "idea": "The modulus m dictates the roots of unity order, eliminating options with N.",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "The sum is over k ≡ r (mod m), so the filter uses m-th roots of unity.",
+            "Options B and D use 1/N and N-th roots; eliminate them.",
+            "Between A and C, the standard filter uses ω^{-jr} to select residue r.",
+            "Choose A."
+          ]
+        },
+        {
+          "name": "Standard Form Mnemonic",
+          "idea": "Memorize the canonical expression; it appears in textbooks as option A.",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Mnemonic: 'One over m, sum over m, omega to minus j r, one plus omega to j, all to the N.'",
+            "This matches option A word-for-word.",
+            "Select A."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-28T19:43:11.063Z"
+    },
+    {
+      "id": "8b873a0eaeb835de",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-28-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-28-jee-paper2b.html",
+      "paperFile": "full-2026-11-28-jee-paper2b.json",
+      "questionNumber": 7,
+      "section": "Mathematics",
+      "question": "Consider the sum S(n) = Σₖ₌₁ⁿ (k² + 2k). As a polynomial in n, the degree of S(n) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "The sum S(n) = Σ_{k=1}^n (k^2 + 2k) is a sum of polynomials in k.",
+        "The highest degree term in the summand is k^2 (degree 2).",
+        "The sum of k^2 from 1 to n is a polynomial in n of degree 3.",
+        "The sum of 2k is a polynomial in n of degree 2.",
+        "Therefore S(n) is a polynomial in n of degree 3.",
+        "Explicitly, S(n) = n(n+1)(2n+7)/6 = (1/3)n^3 + (3/2)n^2 + (7/6)n, confirming degree 3."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Power Sum Rule",
+          "idea": "Sum of k^p has degree p+1",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify highest power in summand: k² (p=2).",
+            "Add 1 to power: 2+1=3."
+          ]
+        },
+        {
+          "name": "Leading Term Only",
+          "idea": "Degree determined by leading term sum",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Leading term of summand is k².",
+            "Sum of k² ~ n³/3, so degree 3."
+          ]
+        },
+        {
+          "name": "Known Sum Formulas",
+          "idea": "Use closed forms for sums",
+          "kind": "mnemonic",
+          "seconds": 10,
+          "steps": [
+            "Sum k² = n(n+1)(2n+1)/6 (degree 3).",
+            "Sum 2k = n(n+1) (degree 2).",
+            "Overall degree = max(3,2)=3."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-28T19:43:43.325Z"
+    },
+    {
+      "id": "b5a6dcecf944018c",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-28-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-28-jee-paper2b.html",
+      "paperFile": "full-2026-11-28-jee-paper2b.json",
+      "questionNumber": 14,
+      "section": "Mathematics",
+      "question": "According to Kepler's third law, if the semi-major axis of a planet's orbit is doubled, the orbital period increases by a factor of:",
+      "options": [
+        {
+          "label": "A",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2√2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2^(3/2)",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Kepler's third law: T^2 ∝ a^3, where T is orbital period and a is semi-major axis.",
+        "Thus T ∝ a^(3/2).",
+        "If a is doubled (a → 2a), the new period T' ∝ (2a)^(3/2) = 2^(3/2) a^(3/2).",
+        "So T' = 2^(3/2) T, meaning the period increases by a factor of 2^(3/2).",
+        "Option C is exactly 2^(3/2)."
+      ],
+      "verifierCheck": "Kepler's third law states T^2 ∝ a^3, so T ∝ a^(3/2). Doubling the semi-major axis (a' = 2a) gives T'/T = (2)^(3/2) = 2^(3/2) = √8 = 2√2. Both options B (2√2) and C (2^(3/2)) are mathematically equivalent, making the question ambiguous. The direct expression from the exponent is 2^(3/2), so option C is chosen.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Memory Peg",
+          "idea": "Mnemonic \"Double axis → period times 2√2\" for quick recall.",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Memorize: factor = (2)^(3/2) = 2√2.",
+            "Match to option C: 2^(3/2)."
+          ]
+        },
+        {
+          "name": "Exponent Rule",
+          "idea": "Kepler's law gives T ∝ a^(3/2), so doubling a multiplies T by 2^(3/2).",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall T^2 ∝ a^3 → T ∝ a^(3/2).",
+            "Substitute a → 2a: T_new/T_old = (2)^(3/2).",
+            "Recognize 2^(3/2) = 2√2, option C."
+          ]
+        },
+        {
+          "name": "Square-Cube Ratio",
+          "idea": "Compute ratio of periods squared equals ratio of semi-major axes cubed.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write (T2/T1)^2 = (a2/a1)^3.",
+            "Plug a2/a1 = 2: (T2/T1)^2 = 8.",
+            "Take square root: T2/T1 = √8 = 2√2 = 2^(3/2)."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-28T19:45:09.657Z"
+    },
+    {
+      "id": "7ebfedcd959b842b",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-28-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-28-jee-paper2b.html",
+      "paperFile": "full-2026-11-28-jee-paper2b.json",
+      "questionNumber": 15,
+      "section": "Mathematics",
+      "question": "The image of the real axis under the Möbius transformation f(z) = (z-i)/(z+i) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Unit circle",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Imaginary axis",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Line Re(z)=0",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Circle |z-1|=1",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let z = x be a real number.",
+        "Compute |f(x)| = |x-i|/|x+i| = sqrt(x^2+1)/sqrt(x^2+1) = 1.",
+        "Thus the image of the real axis is a subset of the unit circle.",
+        "The Möbius transformation maps the extended real line (including ∞) onto the full unit circle.",
+        "Therefore the image is the unit circle."
+      ],
+      "verifierCheck": "For real x, f(x) = (x-i)/(x+i). Multiplying numerator and denominator by (x-i) gives (x^2 - 2ix -1)/(x^2+1) = (x^2-1)/(x^2+1) - i(2x)/(x^2+1). Then |f(x)|^2 = ((x^2-1)^2+4x^2)/(x^2+1)^2 = (x^4+2x^2+1)/(x^2+1)^2 = 1, so the image lies on the unit circle. As x varies over ℝ, the point covers the entire circle, with x=∞ mapping to 1. Thus the image is the unit circle.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Cayley transform",
+          "idea": "Standard map from real line to unit circle",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Recognize f(z)=(z-i)/(z+i) as Cayley transform",
+            "It maps upper half-plane to unit disk",
+            "Boundary (real axis) maps to boundary (unit circle)"
+          ]
+        },
+        {
+          "name": "Modulus check",
+          "idea": "For real z, |z-i|=|z+i| so |f(z)|=1",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Let z=x∈ℝ",
+            "Compute |f(x)| = |x-i|/|x+i| = √(x²+1)/√(x²+1)=1",
+            "All images have modulus 1",
+            "Continuous map covers full unit circle"
+          ]
+        },
+        {
+          "name": "Three-point mapping",
+          "idea": "Möbius maps circles to circles; three points determine the circle",
+          "kind": "shortcut",
+          "seconds": 10,
+          "steps": [
+            "Pick three real points: 0, 1, ∞",
+            "Compute f(0)=-1, f(1)=-i, f(∞)=1",
+            "These lie on unit circle |z|=1",
+            "Image is unit circle"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-28T19:46:01.906Z"
+    },
+    {
+      "id": "6bfbbfb58140fa81",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-28-jee-paper2b",
+      "paperTitle": "JEE Main — Paper 2B (B.Planning) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-28-jee-paper2b.html",
+      "paperFile": "full-2026-11-28-jee-paper2b.json",
+      "questionNumber": 16,
+      "section": "Mathematics",
+      "question": "Which of the following Lagrange points is dynamically stable?",
+      "options": [
+        {
+          "label": "A",
+          "text": "L1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "L2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "L3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "L4",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the five Lagrange points in the circular restricted three-body problem.",
+        "L1, L2, L3 are collinear points and are linearly unstable (saddle points).",
+        "L4 and L5 are triangular points and can be dynamically stable if the mass ratio μ < 0.0385 (Routh criterion).",
+        "Among the given options, only L4 is a triangular Lagrange point.",
+        "Thus, L4 is the dynamically stable Lagrange point listed.",
+        "Select option D."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "L4/L5 Mnemonic",
+          "idea": "'L4 and L5 survive' - the only stable Lagrange points",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall: 'L4 and L5 are alive/stable'",
+            "L1, L2, L3 are unstable (require station-keeping)",
+            "Select the only stable option listed"
+          ]
+        },
+        {
+          "name": "Triangle Stability Rule",
+          "idea": "Only equilateral triangle points (L4/L5) are stable; collinear points (L1-L3) are saddle points",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "L1, L2, L3 lie on the line connecting the two masses → unstable saddle points",
+            "L4 and L5 form equilateral triangles with the masses → Coriolis force provides restoring effect",
+            "Stability exists only at L4 and L5 for mass ratio < 0.0385"
+          ]
+        },
+        {
+          "name": "Collinear vs Triangular",
+          "idea": "Collinear points = unstable; Triangular points = stable",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Classify: L1, L2, L3 are collinear (on the axis)",
+            "Classify: L4, L5 are triangular (60° off-axis)",
+            "Only triangular points are dynamically stable"
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-28T19:46:34.060Z"
     }
   ]
 }
