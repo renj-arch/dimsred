@@ -20,6 +20,8 @@ concurrency:
 
 permissions:
   contents: write
+  # Self-chaining: the lane dispatches its own next run while work remains.
+  actions: write
 
 jobs:
   intro:
@@ -51,7 +53,9 @@ jobs:
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           LIMIT: ${{ github.event.inputs.limit || '20' }}
-        run: node scripts/add-layman-intro.js --limit "$LIMIT"
+        run: |
+          set -o pipefail
+          node scripts/add-layman-intro.js --limit "$LIMIT" 2>&1 | tee /tmp/lane.log
 
       - name: Publish the intros
         env:
@@ -64,3 +68,28 @@ jobs:
           git add upsc/course 2>/dev/null || true
           git add -f data/layman-intro-state.json 2>/dev/null || true
           bash scripts/ci-push.sh "layman-intro: start-here blocks on hard lessons"
+
+      # Self-chain: run again immediately while lessons still lack an intro. The
+      # 2-hour cron is only a restart net. If this run made no progress (model
+      # or quota failure) we stop instead of spinning; the cron retries later.
+      - name: Queue the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REMAIN=$(node scripts/add-layman-intro.js --remaining | grep -o 'LANE_REMAINING=[0-9]*' | tail -1 | cut -d= -f2)
+          DONE=$(grep -o 'LANE_DONE=[0-9]*' /tmp/lane.log 2>/dev/null | tail -1 | cut -d= -f2)
+          echo "remaining=${REMAIN:-?} done=${DONE:-0}"
+          if [ -z "$REMAIN" ] || [ "$REMAIN" -le 0 ]; then
+            echo "::notice::Layman Intro lane complete — no lesson is waiting."; exit 0
+          fi
+          if [ "${DONE:-0}" -le 0 ]; then
+            echo "::warning::no progress this run; not chaining — the cron will retry."; exit 0
+          fi
+          for i in 1 2 3; do
+            if gh workflow run layman-intro.yml --ref main -f limit="${{ github.event.inputs.limit || '20' }}"; then
+              echo "Queued the next Layman Intro run."; exit 0
+            fi
+            echo "Dispatch attempt $i failed; retrying..."; sleep 10
+          done
+          echo "::warning::could not dispatch the next run"

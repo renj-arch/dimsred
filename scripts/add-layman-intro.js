@@ -57,6 +57,14 @@ function extractJson(t) {
 }
 
 async function main() {
+  if (process.argv.includes('--remaining')) {
+    // Used by the workflow's self-chain: how many lessons still lack an intro.
+    const pending = files()
+      .filter((f) => { try { return fs.readFileSync(f, 'utf8').includes('<div class="lesson-body"'); } catch (e) { return false; } })
+      .filter((f) => { try { return !fs.readFileSync(f, 'utf8').includes('<!-- layman-intro -->'); } catch (e) { return false; } });
+    console.log('LANE_REMAINING=' + pending.length);
+    return;
+  }
   if (!DRY && !require('./lib/hosted').enabled()) { console.error('no model route'); process.exitCode = 1; return; }
   const hosted = DRY ? null : require('./lib/hosted');
   let state = { done: [] };
@@ -108,5 +116,6 @@ async function main() {
     console.log('  + ' + rel);
   }
   if (!DRY) console.log('plain intros added: ' + added);
+  if (!DRY) console.log('LANE_DONE=' + added + ' LANE_REMAINING=' + Math.max(0, all.length - added));
 }
 main().catch((e) => { console.error(e && e.stack || e); process.exitCode = 1; });
