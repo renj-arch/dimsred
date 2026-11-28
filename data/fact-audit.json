@@ -1,250 +1,31 @@
 {
- "generatedAt": "2026-11-28T19:48:19.177Z",
- "lessonsAudited": 17,
- "flagged": 24,
- "applied": 8,
- "modelCalls": 24,
- "modelFailures": 44,
- "deadlineHit": true,
+ "generatedAt": "2026-11-28T19:53:46.551Z",
+ "lessonsAudited": 18,
+ "flagged": 2,
+ "applied": 0,
+ "modelCalls": 4,
+ "modelFailures": 55,
+ "deadlineHit": false,
  "problems": [
   {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "CI – SI = P (R/100) 2",
-   "problem": "Formula missing exponent; the difference should be P (R/100)², not P (R/100) multiplied by 2.",
-   "correction": "CI – SI = P (R/100)²",
+   "file": "rrb-station-master/course/maths/lesson-mensuration.html",
+   "quote": "By angles, a triangle may be acute (all angles 90°).",
+   "problem": "Acute triangle defined incorrectly: all angles 90° describes a right angle, not acute.",
+   "correction": "By angles, a triangle may be acute (all angles < 90°).",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original shows multiplication by 2; correct 2-year CI-SI difference is P(R/100)².",
+   "verifierReason": "Original defines acute triangle as all angles 90° (impossible sum, describes right angle). Correction correctly states all angles < 90°.",
    "applied": false
   },
   {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "CI – SI = P (R/100) 2 (300 + R)/100",
-   "problem": "Formula missing exponent on (R/100); should be squared.",
-   "correction": "CI – SI = P (R/100)² (300 + R)/100",
+   "file": "rrb-station-master/course/maths/lesson-number-system.html",
+   "quote": "0 ≤ r b",
+   "problem": "The division algorithm states the remainder r satisfies 0 ≤ r < b, but the text writes '0 ≤ r b' missing the less-than sign.",
+   "correction": "0 ≤ r < b",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original shows multiplication by 2; correct 3-year CI-SI difference is P(R/100)²(300+R)/100.",
+   "verifierReason": "Original omits '<' making it wrong; correction restores proper inequality 0 ≤ r < b.",
    "applied": false
-  },
-  {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "PV = X [1 – (1 + r) - n] / r",
-   "problem": "Exponent notation missing; (1+r) - n incorrectly denotes subtraction instead of (1+r)⁻ⁿ.",
-   "correction": "PV = X [1 – (1 + r)⁻ⁿ] / r",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original uses subtraction; PV annuity formula requires (1+r)⁻ⁿ.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "X = P r / [1 – (1 + r) - n]",
-   "problem": "Exponent notation missing; (1+r) - n incorrectly denotes subtraction instead of (1+r)⁻ⁿ.",
-   "correction": "X = P r / [1 – (1 + r)⁻ⁿ]",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original uses subtraction; loan payment formula requires (1+r)⁻ⁿ.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "PV₀ = C × [1 − ((1 + g)/(1 + r)) n ] / [(r − g)(1 + r) k ]",
-   "problem": "The discount factor for the deferral period k is written as (1+r)k (multiplication) instead of (1+r)^k (exponentiation). Discounting back k periods requires raising (1+r) to the power k.",
-   "correction": "PV₀ = C × [1 − ((1 + g)/(1 + r))^n ] / [(r − g)(1 + r)^k]",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original missing exponents; correction matches standard growing annuity formula.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/quant/lesson-simple-interest.html",
-   "quote": "The annual sinking‑fund deposit is P × CRF",
-   "problem": "The Capital Recovery Factor (CRF) gives the total annual payment (interest + principal recovery) for a loan, not the sinking-fund deposit alone. The sinking-fund deposit to accumulate P at rate r is P × r/[(1+r)^n − 1], which is smaller than P × CRF.",
-   "correction": "The annual capital recovery amount (total outlay) is P × CRF; the sinking-fund deposit is P × r/[(1+r)^n − 1]",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "CRF is loan payment, not sinking fund deposit; correction correctly separates them.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "Together they have no common candidate, so the combination is insufficient. , so the combination is sufficient.",
-   "problem": "Contradictory claims: the text first says the combination is insufficient, then says it is sufficient.",
-   "correction": "Together they have no common candidate, so the combination is insufficient.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original states both insufficient and sufficient; correction removes contradiction.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "The logical constraint “two‑digit” and the algebraic constraints “digit sum = 9” and “multiple of 11” together produce a unique answer.",
-   "problem": "False claim: no two‑digit multiple of 11 has a digit sum of 9; the constraints yield no solution, not a unique answer.",
-   "correction": "The logical constraint “two‑digit” and the algebraic constraints “digit sum = 9” and “multiple of 11” together yield no solution, so the data are insufficient.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Two-digit multiples of 11 have even digit sums; none sum to 9.",
-   "applied": true
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "Be careful with “or” versus “and” logic: |x| a means x a (an “or” condition).",
-   "problem": "The quoted rule “|x| a means x a” is missing inequality signs; the correct rule for absolute value inequalities is not represented.",
-   "correction": "Be careful with “or” versus “and” logic: |x| > a means x > a or x < -a (an “or” condition).",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original lacks signs; correction accurately gives |x|>a expansion.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "The correct translation is x 3.",
-   "problem": "The translation of x² > 9 is given as “x 3” which is missing inequality signs; the correct solution set is x < -3 or x > 3.",
-   "correction": "The correct translation is x < -3 or x > 3.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original incomplete; correction correctly states x<-3 or x>3.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-syllogism.html",
-   "quote": "Universal Instantiation (UI): from “All X are Y” infer “x is Y” for an arbitrary individual x of class X",
-   "problem": "Misstates the primitive UI rule; UI on ∀x(Xx→Yx) yields Xa→Ya, not Ya directly. The given rule combines UI with an assumption (x is X) and modus ponens.",
-   "correction": "Universal Instantiation (UI): from “All X are Y” infer “if x is X then x is Y” for an arbitrary individual x",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Primitive UI on ∀x(Xx→Yx) yields Xa→Ya, not Ya; correction states conditional form correctly.",
-   "applied": true
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-syllogism.html",
-   "quote": "because EG requires an existential premise to introduce a constant",
-   "problem": "EG (Existential Generalisation) generalises from a constant to an existential statement; it does not introduce a constant. EI (Existential Instantiation) introduces a constant from an existential premise.",
-   "correction": "because EI requires an existential premise to introduce a constant",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "EG generalizes from constant to existential; EI introduces constant from existential premise.",
-   "applied": true
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "the pair becomes uniquely (18, 30) or (30, 18)",
-   "problem": "18 and 30 are not consecutive multiples of 6 (they differ by 12, not 6), and their lcm is 90, not 180. The correct pair for consecutive multiples of 6 with gcd 6 and lcm 180 is (30, 36).",
-   "correction": "the pair becomes uniquely (30, 36) or (36, 30)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "18 and 30 have LCM 90, not 180; consecutive multiples of 6 with GCD 6 and LCM 180 are 30 and 36.",
-   "applied": true
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-data-sufficiency.html",
-   "quote": "two statements providing two distinct terms (e.g., a₂ = 7, a₃ = 15) create a system that uniquely determines r, d, and a₁",
-   "problem": "Two terms provide only two equations for three unknowns (r, d, a₁); they do not uniquely determine the sequence. Three terms (or a₁ plus two terms) are needed.",
-   "correction": "two statements providing two distinct terms are insufficient to determine r, d, and a₁ uniquely; three terms are needed",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Two terms yield two equations for three unknowns (r, d, a₁); system is underdetermined. Three terms needed.",
-   "applied": true
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-inequality.html",
-   "quote": "a − k , a − k ≤ x ≤ a + k , x a + k , and x ≤ a − k or x ≥ a + k respectively",
-   "problem": "Missing inequality operators in the compound interval translations: first form |x-a|<k should be 'a-k < x < a+k' not 'a-k'; third form |x-a|>k should be 'x < a-k or x > a+k' not 'x a+k'.",
-   "correction": "a − k < x < a + k , a − k ≤ x ≤ a + k , x < a − k or x > a + k , and x ≤ a − k or x ≥ a + k respectively",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original omits operators for strict inequalities; correction matches standard absolute value interval definitions.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-inequality.html",
-   "quote": "D − A",
-   "problem": "The example list of inequalities includes \"D − A\" which is an algebraic expression, not an inequality (missing relational operator like <, ≤, >, ≥).",
-   "correction": "D − A < 5 (or similar complete inequality)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Original is an expression, not an inequality; correction adds relational operator to form valid inequality.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-inequality.html",
-   "quote": "replace C in the third inequality with its upper bound A + B to get E ≥ 2(A + B) − D",
-   "problem": "Substituting an upper bound of C (C < A+B) into a lower-bound constraint E ≥ 2C − D is mathematically invalid; it does not guarantee E ≥ 2(A+B) − D. A lower bound on E requires a lower bound on C.",
-   "correction": "Use a lower bound for C to derive a lower bound for E, or note that the upper bound on C gives an upper bound on 2C−D, which does not constrain E from below.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Substituting upper bound into lower-bound inequality is invalid; correction correctly notes need for lower bound on C.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-inequality.html",
-   "quote": "From D − A we get D and A > D − 5",
-   "problem": "The phrase is garbled and incomplete; it appears to reference an inequality like D − A < 5 but states it incorrectly.",
-   "correction": "From D − A < 5 we get A > D − 5",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Garbled phrase; correction provides valid algebraic manipulation from D-A<5 to A>D-5.",
-   "applied": false
-  },
-  {
-   "file": "rbi/course/reasoning/lesson-inequality.html",
-   "quote": "if 0 a b /(1‑ a )",
-   "problem": "The text is incomplete and missing mathematical symbols; it should describe the convergence condition for 0 < a < 1.",
-   "correction": "if 0 < a < 1 the sequence converges to b/(1−a)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Fragment missing symbols; correction completes with standard convergence condition and limit.",
-   "applied": false
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-general-science.html",
-   "quote": "The periodic law, first recognised by Mendeleev and refined by Moseley, states that element properties are a periodic function of atomic numbers.",
-   "problem": "Mendeleev's periodic law was based on atomic weights, not atomic numbers; the modern law based on atomic numbers was established by Moseley.",
-   "correction": "The periodic law, first recognised by Mendeleev based on atomic weights and later refined by Moseley to atomic numbers, states that element properties are a periodic function of atomic numbers.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Mendeleev's law based on atomic weights; Moseley refined to atomic numbers.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-general-science.html",
-   "quote": "exothermic (ΔH 0)",
-   "problem": "Missing inequality sign; exothermic reactions have ΔH < 0, not ΔH = 0.",
-   "correction": "exothermic (ΔH < 0)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Exothermic reactions have negative ΔH; ΔH=0 is thermoneutral.",
-   "applied": false
-  },
-  {
-   "file": "rrb-station-master/course/general-awareness/lesson-indian-history.html",
-   "quote": "The 1950 Constitution abolished the princely order",
-   "problem": "The 1950 Constitution did not abolish the princely order; it classified princely states as Part B and Part C states. The princely order was abolished by the 26th Amendment Act, 1971.",
-   "correction": "The 1950 Constitution integrated the princely states into Part B and Part C states",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "1950 Constitution classified princely states as Part B/C; abolition came in 1971.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/maths/lesson-average.html",
-   "quote": "the distances from the mean are inversely proportional to the quantities",
-   "problem": "This statement is false for three or more components; the inverse proportionality holds only for two components. For three components, the relationship is more complex and requires successive alligation or solving a system of equations.",
-   "correction": "the distances from the mean are not simply inversely proportional to the quantities",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Alligation inverse proportionality only holds for two components; for three+ it's more complex.",
-   "applied": true
-  },
-  {
-   "file": "rrb-station-master/course/maths/lesson-average.html",
-   "quote": "the average rate of return over multiple periods with varying principal amounts is the weighted arithmetic mean of the period rates, weighted by the principal",
-   "problem": "In finance, the average rate of return over multiple periods with varying principal amounts is not generally the weighted arithmetic mean; the correct measures are the geometric mean (time-weighted return) or internal rate of return (money-weighted return).",
-   "correction": "the average rate of return over multiple periods with varying principal amounts is not the weighted arithmetic mean",
-   "confidence": "medium",
-   "verified": true,
-   "verifierReason": "Weighted arithmetic mean is not the correct average return; time-weighted (geometric) or money-weighted (IRR) are used."
   }
  ]
 }

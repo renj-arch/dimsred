@@ -1303,6 +1303,28 @@
 <p>The <strong>Vitali covering theorem</strong> states: given a set <em>E</em> ⊂ ℝⁿ of finite outer measure and a Vitali cover <em>𝒱</em> (a collection of closed balls such that each point of <em>E</em> is contained in arbitrarily small balls from <em>𝒱</em>), there exists a countable disjoint subcollection {Bₖ} ⊂ <em>𝒱</em> covering almost all of <em>E</em> (i.e., |<em>E</em>  ∪Bₖ| = 0). The proof uses a greedy selection of maximal balls. This lemma is the engine behind the <strong>Lebesgue differentiation theorem</strong>: for <em>f</em> ∈ L¹<sub>loc</sub>(ℝⁿ), lim<sub>r→0</sub> (1/|B(x,r)|) ∫<sub>B(x,r)</sub> |<em>f</em>(y) – <em>f</em>(x)| dy = 0 for a.e. x. In particular, the average of <em>f</em> over balls converges to <em>f</em>(x) a.e.</p>
 <p>Consequences: (1) If <em>F</em> is absolutely continuous, then <em>F</em>′(x) = lim<sub>h→0</sub> (<em>F</em>(x+h)–<em>F</em>(x))/h exists a.e. and equals the Radon–Nikodym derivative of the Lebesgue–Stieltjes measure μ<sub><em>F</em></sub> w.r.t. Lebesgue measure. (2) The Hardy–Littlewood maximal function M<em>f</em>(x) = sup<sub>r>0</sub> (1/|B(x,r)|) ∫<sub>B(x,r)</sub> |<em>f</em>| satisfies the weak‑type (1,1) estimate |{M<em>f</em> > λ}| ≤ (C/λ)‖<em>f</em>‖₁, which is proved via Vitali covering. Examiner traps: confusing absolute continuity of a function with absolute continuity of its associated measure (they are equivalent for continuous functions of bounded variation, but a singular continuous function like the Cantor function has derivative zero a.e. yet is not absolutely continuous). Another trap: stating the Vitali covering theorem with open balls; the standard proof requires closed balls to guarantee disjointness and the 5r‑covering property. Also, the Lebesgue differentiation theorem fails for <em>f</em> ∈ L¹ only if one replaces balls by arbitrary rectangles (the strong differentiation theorem requires the basis to differentiate the integral).</p>
 
+
+<!-- passage-cartoon:85fab52f34a3 -->
+<figure class="passage-cartoon" data-cartoon="85fab52f34a3">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <path d="M 80,160 C 150,140 200,180 280,160 C 360,140 410,180 480,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="40" y="140" width="40" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <text x="60" y="168" font-size="16" text-anchor="middle" fill="#1f2937" font-family="sans-serif">H</text>
+  <rect x="240" y="30" width="80" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M 50,130 L 50,150 M 50,170 L 50,190 M 40,160 L 60,160" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M 100,180 L 200,180 L 150,220 Z M 200,180 L 300,180 L 250,220 Z M 300,180 L 400,180 L 350,220 Z M 150,220 L 250,220 L 200,260 Z M 250,220 L 350,220 L 300,260 Z" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="14" y="290" width="532" height="20" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <text x="20" y="130" font-size="14" fill="#1f2937" font-family="sans-serif">Hilbert H</text>
+  <text x="20" y="190" font-size="14" fill="#1f2937" font-family="sans-serif">Cauchy kernel</text>
+  <text x="280" y="23.2" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Plemelj ½</text>
+  <text x="280" y="150" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">R-H jump</text>
+  <text x="280" y="265" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Lax-Milgram</text>
+  
+  <text x="280" y="284" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Functions of Several Variables and Vector Analysis (16)</text>
+</svg></div>
+  <figcaption>Functions of Several Variables and Vector Analysis (16)</figcaption>
+</figure>
 <h3>Singular Integral Equations, Hilbert Transform, and Boundary Value Problems</h3>
 <p>A <strong>singular integral equation</strong> on a contour Γ ⊂ ℂ has the form <em>a</em>(t)φ(t) + (b(t)/πi) ∫<sub>Γ</sub> φ(τ)/(τ – t) dτ = f(t), where the integral is a Cauchy principal value. The kernel 1/(τ – t) is the Cauchy kernel; its boundary values on Γ give the <strong>Plemelj–Sokhotski formulas</strong>: for φ ∈ Lᵖ(Γ), the Cauchy integral Φ(z) = (1/2πi) ∫<sub>Γ</sub> φ(τ)/(τ – z) dτ has non‑tangential limits Φ⁺(t) = ½φ(t) + (1/2πi) p.v.∫ φ(τ)/(τ – t) dτ and Φ⁻(t) = –½φ(t) + (1/2πi) p.v.∫ φ(τ)/(τ – t) dτ. The <strong>Hilbert transform</strong> on ℝ is Hf(x) = (1/π) p.v.∫<sub>ℝ</sub> f(t)/(x – t) dt; on the unit circle it is Hf(eⁱθ) = (1/2π) p.v.∫<sub>0</sub>²π f(eⁱφ) cot((θ–φ)/2) dφ. H is a bounded linear operator on Lᵖ for 1 < p < ∞ (‖H‖ₚ = tan(π/(2p)) for p≥2, cot(π/(2p)) for p≤2) but not on L¹ or L∞.</p>
 <p>These tools solve the <strong>Riemann–Hilbert problem</strong>: find a sectionally analytic function Φ(z) with prescribed jump Φ⁺(t) = G(t)Φ⁻(t) + g(t) on Γ. When G ≡ 1 the problem reduces to a singular integral equation solvable by the Plemelj formulas. Applications include the Dirichlet problem for Laplace’s equation in the upper half‑plane: u(x,y) = (y/π) ∫<sub>ℝ</sub> f(t)/((x–t)²+y²) dt, whose boundary values give the Poisson integral; the conjugate harmonic function is obtained via the Hilbert transform. In aerodynamics, the lift on a Joukowski airfoil is expressed through a singular integral equation for the vortex sheet strength.</p>
