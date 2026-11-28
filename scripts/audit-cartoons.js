@@ -70,6 +70,20 @@ function extractJson(text) {
 }
 
 async function main() {
+  if (process.argv.includes('--remaining')) {
+    let st = { figures: {} };
+    try { st = JSON.parse(fs.readFileSync(STATE, 'utf8')); } catch (e) {}
+    st.figures = st.figures || {};
+    let remaining = 0;
+    for (const f of walk(path.join(ROOT, 'upsc', 'course'), [])) {
+      const html = fs.readFileSync(f, 'utf8');
+      const re = /<figure class="passage-cartoon"[^>]*data-cartoon="([a-z0-9]+)"[\s\S]*?<\/figure>/g;
+      let m;
+      while ((m = re.exec(html))) { if (!st.figures[f + '#' + m[1]] && labelsOf(m[0]).length) remaining++; }
+    }
+    console.log('LANE_REMAINING=' + remaining);
+    return;
+  }
   if (!DRY && !require('./lib/hosted').enabled()) { console.error('no model route'); process.exitCode = 1; return; }
   const hosted = DRY ? null : require('./lib/hosted');
   let state = {};
@@ -139,6 +153,7 @@ async function main() {
   if (!DRY) {
     fs.writeFileSync(STATE, JSON.stringify(state, null, 1) + '\n', 'utf8');
     console.log('cartoon audit: ' + checked + ' checked, ' + flagged + ' flags, ' + removed + ' labels removed' + (APPLY ? '' : ' (dry apply)'));
+    console.log('LANE_DONE=' + checked);
   }
 }
 main().catch((e) => { console.error(e && e.stack || e); process.exitCode = 1; });

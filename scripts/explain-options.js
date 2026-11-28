@@ -77,6 +77,13 @@ function pool() {
 }
 
 async function main() {
+  if (process.argv.includes('--remaining')) {
+    let s = { items: {} };
+    try { s = JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch (e) {}
+    s.items = s.items || {};
+    console.log('LANE_REMAINING=' + pool().filter((q) => !s.items[q.key]).length);
+    return;
+  }
   if (!DRY && !require('./lib/hosted').enabled()) { console.error('no model route'); process.exitCode = 1; return; }
   const hosted = DRY ? null : require('./lib/hosted');
   let store = { items: {} };
@@ -113,5 +120,6 @@ async function main() {
     console.log('  + ' + q.text.slice(0, 60));
   }
   if (!DRY) console.log('added ' + done + '; store now ' + Object.keys(store.items).length);
+  if (!DRY) console.log('LANE_DONE=' + done + ' LANE_REMAINING=' + all.filter((q) => !store.items[q.key]).length);
 }
 main().catch((e) => { console.error(e && e.stack || e); process.exitCode = 1; });
