@@ -1,0 +1,116 @@
+name: Lesson Fact Audit
+
+# Every lesson is read for factual errors: wrong dates, wrong attributions, and
+# wrong relations between two true facts. The Non-Cooperation paragraph said the
+# movement was launched on 1 August 1920 "coinciding with the first anniversary
+# of the death of Tilak" - Tilak died that day, so it was the day, not an
+# anniversary. Grammatical sentence, correct date, wrong relation. Nothing in a
+# grep or a test finds that; it takes reading the prose.
+#
+# The lane reports. It does not rewrite lessons by default, because the reviewer
+# is a model and models assert wrong corrections too: auditing that paragraph, it
+# called Mehr Chand Khanna a civil servant when he was the Rehabilitation
+# minister. Corrections it is confident about can be applied with --apply, and
+# those are marked on the page in green with the reason on hover.
+
+on:
+  schedule:
+    # The 30-minute cron was throttled by GitHub on this busy public repo (the
+    # lane ran only a few times a day). Each run now dispatches the next one
+    # itself; this cron is a restart net, not the engine.
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Lessons to audit this run'
+        required: false
+        default: '20'
+      apply:
+        description: 'Apply verified high-confidence corrections (marked green on the page)'
+        required: false
+        default: 'true'
+      file:
+        description: 'One lesson path, or blank for all'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  # The cron is throttled on a busy public repo (the lane was running only a
+  # few times a day at */30). Each run now queues the next one itself; the cron
+  # is a restart net, not the engine.
+  actions: write
+
+concurrency:
+  group: fact-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read the lessons for wrong claims
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LIMIT: ${{ github.event.inputs.limit || '20' }}
+          APPLY: ${{ github.event.inputs.apply || 'true' }}
+          FILE: ${{ github.event.inputs.file || '' }}
+          AUDIT_DEADLINE_MIN: '25'
+          AUDIT_WORKERS: '3'
+        run: |
+          ARGS="--report data/fact-audit.json"
+          if [ -n "$FILE" ]; then ARGS="$ARGS --file $FILE"; else ARGS="$ARGS --all --limit $LIMIT"; fi
+          if [ "$APPLY" = "true" ]; then ARGS="$ARGS --apply"; fi
+          node scripts/audit-lesson-facts.js $ARGS
+
+      - name: Publish the audit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -f data/fact-audit.json
+          git add -f data/fact-audit-state.json
+          git add -f data/fact-corrections.json
+          git add -- */course 2>/dev/null || true
+          git add upsc/course 2>/dev/null || true
+          bash scripts/ci-push.sh "fact-audit: claims that do not hold up"
+
+      # Keep the lane continuous without relying on a frequent cron: GitHub
+      # heavily throttles */30 schedules on busy public repos. A run with a
+      # 25-minute deadline ends, queues the next, and the chain continues. The
+      # cron above only restarts a broken chain.
+      - name: Queue the next audit run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          for i in 1 2 3; do
+            if gh workflow run fact-audit.yml --ref main -f limit=20; then
+              echo "Queued the next fact-audit run"
+              exit 0
+            fi
+            echo "dispatch attempt $i failed, retrying..."
+            sleep $((5 + RANDOM % 10))
+          done
+          echo "::warning::could not queue the next fact-audit run; the 6-hourly cron will restart it"

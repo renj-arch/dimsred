@@ -1,0 +1,92 @@
+name: Divinity Expand
+
+# Grows divinity.html by a few verified topics each run (a deity, mantra,
+# festival, text or comparative theme). The model writes 2-3 paragraphs and an
+# independent model verifies accuracy before the section is appended.
+
+on:
+  schedule:
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'Topics to add this run'
+        required: false
+        default: '3'
+
+concurrency:
+  group: divinity-expand
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  # Self-chaining: the lane dispatches its own next run while topics remain.
+  actions: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Add verified divinity topics
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI: '1'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          COUNT: ${{ github.event.inputs.count || '3' }}
+        run: |
+          set -o pipefail
+          node scripts/expand-divinity.js --count "$COUNT" 2>&1 | tee /tmp/lane.log
+
+      - name: Publish the divinity hub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add divinity.html 2>/dev/null || true
+          git add -f data/divinity-state.json 2>/dev/null || true
+          bash scripts/ci-push.sh "divinity: verified topics added"
+
+      # Self-chain while topics remain; the daily cron is the restart net.
+      - name: Queue the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REMAIN=$(node scripts/expand-divinity.js --remaining | grep -o 'LANE_REMAINING=[0-9]*' | tail -1 | cut -d= -f2)
+          DONE=$(grep -o 'LANE_DONE=[0-9]*' /tmp/lane.log 2>/dev/null | tail -1 | cut -d= -f2)
+          echo "remaining=${REMAIN:-?} done=${DONE:-0}"
+          if [ -z "$REMAIN" ] || [ "$REMAIN" -le 0 ]; then
+            echo "::notice::Divinity lane complete — every topic is written."; exit 0
+          fi
+          if [ "${DONE:-0}" -le 0 ]; then
+            echo "::warning::no progress this run; not chaining — the cron will retry."; exit 0
+          fi
+          for i in 1 2 3; do
+            if gh workflow run divinity-expand.yml --ref main -f count="${{ github.event.inputs.count || '3' }}"; then
+              echo "Queued the next Divinity run."; exit 0
+            fi
+            echo "Dispatch attempt $i failed; retrying..."; sleep 10
+          done
+          echo "::warning::could not dispatch the next run"

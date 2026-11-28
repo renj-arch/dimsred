@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Groundwater Flow Modelling in Hard Rock Aquifers: Concepts and Applications | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.9em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.75em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.9em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Groundwater Flow Modelling in Hard Rock Aquifers: Concepts and Applications</h1>
+<p class="meta">Geology Paper II: Core Topics · <a href="/upsc/course/opt-geology/lesson-paper2">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  
+  <!-- Central cross-section: Deccan Traps basalt with fractures -->
+  <path d="M50 80 L510 80 L510 260 L50 260 Z" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Basalt layers -->
+  <path d="M50 120 L510 120" stroke="#1f2937" stroke-width="2" stroke-dasharray="8,4"/>
+  <path d="M50 160 L510 160" stroke="#1f2937" stroke-width="2" stroke-dasharray="8,4"/>
+  <path d="M50 200 L510 200" stroke="#1f2937" stroke-width="2" stroke-dasharray="8,4"/>
+  <path d="M50 240 L510 240" stroke="#1f2937" stroke-width="2" stroke-dasharray="8,4"/>
+  
+  <!-- Weathered mantle (top 10-30m) -->
+  <path d="M50 80 Q280 50 510 80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <path d="M50 80 Q280 65 510 80" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="4,3"/>
+  
+  <!-- Fractures (discrete) -->
+  <path d="M120 80 Q130 140 125 260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M200 80 Q195 150 205 260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M300 80 Q310 130 300 260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M380 80 Q370 160 385 260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M440 80 Q450 120 445 260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  
+  <!-- Fault zone (high-permeability conduit) -->
+  <path d="M260 80 Q255 180 265 260" stroke="#1f2937" stroke-width="4" fill="none"/>
+  <path d="M255 80 Q250 180 260 260" stroke="#1f2937" stroke-width="4" fill="none"/>
+  
+  <!-- Left: EPM Continuum representation (smooth gradient lines) -->
+  <g opacity="0.6">
+    <path d="M60 100 Q180 100 180 140 Q180 180 60 180 Z" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <path d="M60 140 Q180 140 180 180 Q180 220 60 220 Z" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <path d="M60 180 Q180 180 180 220 Q180 260 60 260 Z" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="2,2"/>
+  </g>
+  
+  <!-- Right: DFN Fracture network (explicit geometry) -->
+  <g>
+    <path d="M380 100 L460 120" stroke="#1f2937" stroke-width="2"/>
+    <path d="M380 140 L460 130" stroke="#1f2937" stroke-width="2"/>
+    <path d="M380 180 L460 170" stroke="#1f2937" stroke-width="2"/>
+    <path d="M380 220 L460 210" stroke="#1f2937" stroke-width="2"/>
+    <path d="M420 100 L440 180" stroke="#1f2937" stroke-width="1.5"/>
+    <path d="M400 140 L450 220" stroke="#1f2937" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Hybrid connector arrow (center top) -->
+  <path d="M250 60 L280 60" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M310 60 L340 60" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  
+  <!-- MAR recharge arrow (top center) -->
+  <path d="M280 40 L280 55" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M275 45 L285 45" stroke="#1f2937" stroke-width="2"/>
+  
+  <!-- Pumping well (left) -->
+  <rect x="70" y="60" width="12" height="25" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M76 60 L76 45" stroke="#1f2937" stroke-width="2"/>
+  <path d="M70 45 L82 45" stroke="#1f2937" stroke-width="2"/>
+  
+  <!-- Observation well (right) -->
+  <rect x="478" y="60" width="12" height="25" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M484 60 L484 45" stroke="#1f2937" stroke-width="2"/>
+  <path d="M478 45 L490 45" stroke="#1f2937" stroke-width="2"/>
+  
+  <!-- Labels -->
+  <text x="120" y="40" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Weathered Mantle</text>
+  <text x="120" y="290" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Deccan Traps Basalt</text>
+  <text x="120" y="110" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">EPM Continuum</text>
+  <text x="440" y="110" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">DFN Fractures</text>
+  <text x="280" y="55" font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">Hybrid EPM-DFN</text>
+  <text x="280" y="30" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">MAR Recharge</text>
+  
+  <!-- Bottom caption strip -->
+  
+  
+</svg></div>
+<p class="meta">Groundwater Flow Modelling in Hard Rock Aquifers: Concepts and Applications</p></div><!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body></html>

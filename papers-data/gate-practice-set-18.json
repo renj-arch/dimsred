@@ -1,0 +1,671 @@
+{
+  "folder": "gate",
+  "slug": "practice-set-18",
+  "title": "GATE Practice Set 18",
+  "pageTitle": "GATE Practice Set 18 — Solved Paper",
+  "pageDesc": "Free GATE practice paper set 18 with detailed solutions. Pattern: Paper.",
+  "meta": "15 Q · 42 min · 23 marks · Paper pattern",
+  "timerMinutes": 42,
+  "totalMarks": 23,
+  "createdDate": "2026-11-20",
+  "blueprint": {
+    "paper": "paper1",
+    "name": "Paper",
+    "total": 65,
+    "marks": 100,
+    "duration": 180,
+    "negative": 0.33,
+    "source": "GATE: 65 questions, 100 marks, 180 minutes; General Aptitude 10 questions (15 marks), core 55 questions (85 marks).",
+    "provisional": false,
+    "sections": [
+      {
+        "name": "Core Subject",
+        "count": 13,
+        "bank": [
+          "Core Subject",
+          "Engineering Mathematics",
+          "Structural",
+          "Geotechnical",
+          "Water",
+          "Data Structures & Algorithms",
+          "Computer Organization & OS",
+          "Theory of Computation",
+          "DS & Algorithms",
+          "CO & OS",
+          "Networks",
+          "Analog",
+          "Digital",
+          "Thermodynamics",
+          "Strength of Materials",
+          "Production"
+        ]
+      },
+      {
+        "name": "General Aptitude",
+        "count": 2,
+        "bank": [
+          "General Aptitude"
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "name": "Core Subject",
+      "color": "#6366f1"
+    },
+    {
+      "name": "General Aptitude",
+      "color": "#a855f7"
+    }
+  ],
+  "questions": [
+    {
+      "section": "Core Subject",
+      "text": "A solid circular shaft is subjected to a bending moment of 400 N·m and a torque of 300 N·m. According to the Maximum Shear Stress Theory (Guest's Theory), the equivalent bending moment (Mₑ) for design purposes is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "450 N·m",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "350 N·m",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "500 N·m",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "700 N·m",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Mₑ = 0.5 [ M + √(M² + T²) ]. √(400² + 300²) = 500. Mₑ = 0.5 [ 400 + 500 ] = 450 N·m. Full: Max shear stress theory gives equivalent torque Tₑ = √(M² + T²) = 500 N·m. Equivalent bending moment Mₑ = (M + Tₑ)/2 = (400 + 500)/2 = 450 N·m. This Mₑ produces the same max bending stress as the combined loading.",
+      "topic": "Machine Design - Shaft Design",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-19T13:20:00.674Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2030,
+      "q": 1
+    },
+    {
+      "section": "General Aptitude",
+      "text": "The price of a commodity increases by 25%. To keep the total expenditure unchanged, by what percentage must the consumption be reduced?",
+      "options": [
+        {
+          "label": "A",
+          "text": "25%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "15%",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20%",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "16.67%",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut (Product Constancy): For constant expenditure, Price × Consumption = Constant. A 25% increase in price means the price becomes 5/4 of original. Consumption must become 4/5 of original to keep product constant. Reduction = 1 - 4/5 = 1/5 = 20%. Formula: % Reduction = (% Increase) / (100 + % Increase) × 100 = 25/125 × 100 = 20%. Full Solution: Let original price = P, original consumption = C. Expenditure E = P × C. New Price = P + 25% of P = 1.25P. Let new consumption = C'. Since expenditure is unchanged, 1.25P × C' = P × C ⇒ C' = C / 1.25 = 0.8C. Reduction in consumption = C - 0.8C = 0.2C. Percentage reduction = (0.2C / C) × 100 = 20%.",
+      "topic": "Percentages - Product Constancy",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:30:59.617Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2047,
+      "q": 2
+    },
+    {
+      "section": "General Aptitude",
+      "text": "A car travels from city P to city Q at a speed of 60 km/h and returns from Q to P at a speed of 40 km/h. What is the average speed for the entire journey?",
+      "options": [
+        {
+          "label": "A",
+          "text": "50 km/h",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "48 km/h",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "45 km/h",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "55 km/h",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For equal distances, average speed = 2ab/(a+b) = 2*60*40/(100) = 48 km/h. Full solution: Let distance one way = d. Time forward = d/60, return = d/40. Total distance = 2d, total time = d/60 + d/40 = (2d+3d)/120 = 5d/120 = d/24. Average speed = 2d / (d/24) = 48 km/h.",
+      "topic": "Average Speed",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-18T13:34:37.327Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 2017,
+      "q": 3
+    },
+    {
+      "section": "Core Subject",
+      "text": "A Carnot refrigeration cycle operates between a cold reservoir at −10°C and a hot reservoir at 30°C. Using the shortcut COP = T_cold / (T_hot − T_cold) with temperatures in Kelvin, the coefficient of performance is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "6.5",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "6.0",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "7.0",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5.5",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Convert to Kelvin: T_cold = 263 K, T_hot = 303 K. COP = 263 / (303 − 263) = 263 / 40 = 6.575 ≈ 6.5. Full: COP_Carnot = T_L/(T_H−T_L) = 263/40 = 6.575.",
+      "topic": "Refrigeration - Carnot COP",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:26:12.052Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2037,
+      "q": 4
+    },
+    {
+      "section": "Core Subject",
+      "text": "Water flows laminarly in a smooth circular pipe (D = 0.02 m) with thermal conductivity k = 0.6 W/m·K. For constant wall temperature the Nusselt number is 3.66. Using the shortcut h = Nu·k/D, the convective heat transfer coefficient (in W/m²·K) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "100",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "110",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "115",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "120",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For laminar constant‑wall‑temp flow, Nu = 3.66. h = 3.66 × 0.6 / 0.02 = 109.8 ≈ 110 W/m²·K. Full: h = Nu·k/D = 3.66×0.6/0.02 = 109.8 W/m²·K.",
+      "topic": "Heat Transfer - Laminar Pipe Flow",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:26:12.014Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2034,
+      "q": 5
+    },
+    {
+      "section": "Core Subject",
+      "text": "Air enters a cooling coil at 30°Cdry-bulb temperature. The coil apparatus dew point (ADP) temperature is 5°C. If the bypass factor of the coil is 0.2, the exit air dry-bulb temperature (in °C) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "15",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "20",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "25",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Bypass Factor (BPF) = (T_exit - T_ADP) / (T_in - T_ADP). Rearranging: T_exit = T_ADP + BPF × (T_in - T_ADP) = 5 + 0.2 × (30 - 5) = 5 + 5 = 10°C. Full: By definition, BPF represents the fraction of air bypassing the coil unconditioned. Energy balance gives T_exit = (1-BPF)T_ADP + BPF×T_in = 0.8×5 + 0.2×30 = 4 + 6 = 10°C.",
+      "topic": "Refrigeration & Air Conditioning - Psychrometrics",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-19T13:20:00.659Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2028,
+      "q": 6
+    },
+    {
+      "section": "Core Subject",
+      "text": "A carbide tool follows Taylor’s equation VT^n = C with n = 0.25. At a cutting speed V₁ = 100 m/min the tool life is T₁ = 20 min. Using the ratio‑elimination shortcut T₂ = T₁ (V₁/V₂)^{1/n}, the tool life (in min) at V₂ = 150 m/min is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3.5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3.8",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "4.0",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "4.5",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: T₂ = T₁ (V₁/V₂)^{1/n}. Here 1/n = 4. (100/150)^4 = (2/3)^4 = 16/81 ≈ 0.1975. T₂ = 20 × 0.1975 ≈ 3.95 ≈ 4.0 min. Full: C = 100×20^0.25; T₂ = (C/150)^{1/0.25} = 4.0 min.",
+      "topic": "Manufacturing - Tool Life",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:26:12.027Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2035,
+      "q": 7
+    },
+    {
+      "section": "Core Subject",
+      "text": "A steel ball (density 7800 kg/m³, specific heat 460 J/kg·K, diameter 20 mm) initially at 500°C is suddenly immersed in oil at 50°C. The convection heat transfer coefficient is 500 W/m²·K. Assuming lumped capacitance method is valid, the thermal time constant (in seconds) of the ball is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "12 s",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "18 s",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "24 s",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "30 s",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For a sphere, thermal time constant τ = ρcV/(hA) = ρcD/(6h). Plug values: τ = (7800 × 460 × 0.02) / (6 × 500) = 71760 / 3000 = 23.92 ≈ 24 s. Full: Volume V = πD³/6, surface area A = πD², so V/A = D/6. τ = ρc(V/A)/h = ρcD/(6h). Calculation yields 23.92 s, closest to 24 s.",
+      "topic": "Heat Transfer - Transient Conduction (Lumped Capacitance)",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:28:41.077Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2044,
+      "q": 8
+    },
+    {
+      "section": "Core Subject",
+      "text": "A solid cubic casting of side 50 mm solidifies in 10 minutes. Using Chvorinov's rule (t = B(V/A)²), the solidification time (in minutes) for a cubic casting of the same material with side 100 mm is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "20",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "30",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "40",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "50",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For a cube, V/A = a/6, so t ∝ a². Side doubles (×2), time increases by 2² = 4 times. 10 × 4 = 40 min. Full method: Chvorinov's rule states t = B(V/A)². For a cube of side 'a', Volume = a³, Surface Area = 6a². V/A = a/6. Thus t = B(a/6)² ∝ a². For a₁ = 50 mm, t₁ = 10 min. For a₂ = 100 mm = 2a₁, t₂ = t₁ × (a₂/a₁)² = 10 × (2)² = 40 min.",
+      "topic": "Manufacturing Engineering - Solidification Time (Chvorinov's Rule)",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:27:33.842Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2040,
+      "q": 9
+    },
+    {
+      "section": "Core Subject",
+      "text": "A cantilever beam of length L = 1 m has a rectangular cross‑section 50 mm × 100 mm (b = 0.05 m, h = 0.1 m) and Young’s modulus E = 200 GPa. A tip mass m = 10 kg is attached. Using the shortcut ω_n = √(3EI / mL³) and f = ω_n / 2π, the fundamental natural frequency (in Hz) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "70",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "75",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "78",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "80",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: I = bh³/12 = 0.05×0.1³/12 = 4.167×10⁻⁶ m⁴. ω_n = √(3×200×10⁹×4.167×10⁻⁶ / (10×1³)) ≈ √(2.5×10⁵) ≈ 500 rad/s. f = 500/(2π) ≈ 79.6 ≈ 80 Hz. Full: compute I, then ω_n, then f.",
+      "topic": "Vibrations - Cantilever Beam",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:26:12.042Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2036,
+      "q": 10
+    },
+    {
+      "section": "Core Subject",
+      "text": "The stress‑strain data for a mild steel specimen are given in the table. Using the shortcut of taking the slope between the two points nearest the origin, estimate the Young’s modulus (in GPa).",
+      "options": [
+        {
+          "label": "A",
+          "text": "190 GPa",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "200 GPa",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "210 GPa",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "220 GPa",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For small strains the curve is linear, so E ≈ Δσ/Δε using the first two points. From the table Δσ = 210 MPa‑0 = 210 MPa, Δε = 0.0011‑0 = 0.0011. E ≈ 210/0.0011 MPa = 190 000 MPa = 190 GPa. Full steps: Δσ = 210 MPa, Δε = 0.0011, E = 210 MPa / 0.0011 = 190 909 MPa ≈ 190 GPa. Hence option A.",
+      "topic": "Materials – Elastic modulus",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "Groq openai/gpt-oss-120b",
+      "generatedAt": "2026-11-19T13:14:48.072Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Strain (ε)",
+          "Stress (σ) MPa"
+        ],
+        "rows": [
+          [
+            "0",
+            "0"
+          ],
+          [
+            "0.0011",
+            "210"
+          ],
+          [
+            "0.0025",
+            "420"
+          ],
+          [
+            "0.0040",
+            "560"
+          ]
+        ]
+      },
+      "chartData": null,
+      "id": 2020,
+      "q": 11
+    },
+    {
+      "section": "Core Subject",
+      "text": "A vibration isolation system has a frequency ratio r = ω/ω_n = 3 and a damping ratio ζ = 0.1. Using the high-frequency approximation for transmissibility (TR ≈ 1/r² for r >> 1), the force transmissibility is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.11",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "0.15",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.20",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "0.25",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For frequency ratio r > √2 and light damping, transmissibility TR ≈ 1/r². Here r = 3, so TR ≈ 1/9 ≈ 0.111. Full: Exact transmissibility TR = √[(1+(2ζr)²)/((1-r²)²+(2ζr)²)]. With ζ=0.1, r=3: numerator = 1+(0.6)² = 1.36; denominator = (1-9)²+(0.6)² = 64+0.36 = 64.36; TR = √(1.36/64.36) = √0.02113 = 0.145. The approximation 1/r² = 0.111 is a standard quick estimate for high frequency ratios.",
+      "topic": "Vibrations - Vibration Isolation Transmissibility",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:28:41.087Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2045,
+      "q": 12
+    },
+    {
+      "section": "Core Subject",
+      "text": "A column with both ends fixed has a critical Euler buckling load P_cr. If the end conditions are changed to one end fixed and the other free, the critical load becomes:",
+      "options": [
+        {
+          "label": "A",
+          "text": "P_cr/64",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "P_cr/4",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "P_cr/2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "P_cr/16",
+          "correct": true
+        }
+      ],
+      "solution": "Shortcut: Euler load P_cr ∝ n² where n is the end condition coefficient. Fixed-Fixed: n=2 (n²=4). Fixed-Free: n=0.5 (n²=0.25). Ratio = 0.25/4 = 1/16. Full method: P_cr = n²π²EI/L². For Fixed-Fixed, n=2 → P_cr(FF) = 4π²EI/L². For Fixed-Free, n=0.5 → P_cr(FFr) = 0.25π²EI/L². Given P_cr(FF) = P_cr, then P_cr(FFr) = P_cr × (0.25/4) = P_cr/16.",
+      "topic": "Strength of Materials - Column Buckling (Euler's Theory)",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:27:33.851Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2041,
+      "q": 13
+    },
+    {
+      "section": "Core Subject",
+      "text": "A centrifugal pump operating at 1200 rpm delivers a flow rate of 0.15 m³/s against a head of 30 m. If the pump speed is increased to 1800 rpm while maintaining the same impeller diameter and efficiency, what is the new head developed by the pump? (Use the pump affinity law H ∝ N²)",
+      "options": [
+        {
+          "label": "A",
+          "text": "45 m",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "67.5 m",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "90 m",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "135 m",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Head scales with the square of the speed ratio. H₂ = H₁ × (N₂/N₁)² = 30 × (1800/1200)² = 30 × (1.5)² = 30 × 2.25 = 67.5 m. Full: Affinity laws for centrifugal pumps (constant diameter): Q ∝ N, H ∝ N², P ∝ N³. Speed ratio = 1800/1200 = 1.5. Head ratio = (1.5)² = 2.25. New head = 30 × 2.25 = 67.5 m.",
+      "topic": "Fluid Machinery - Pump Affinity Laws",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:28:41.064Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2043,
+      "q": 14
+    },
+    {
+      "section": "Core Subject",
+      "text": "A steam pipe with an outer radius of 25 mm is to be insulated with a material of thermal conductivity 0.1 W/m·K. The external convection heat transfer coefficient is 5 W/m²·K. The critical radius of insulation (in mm) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "10",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "20",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "50",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "100",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Critical radius for a cylinder is simply r_cr = k/h = 0.1/5 = 0.02 m = 20 mm. Full method: The critical radius is the radius at which heat transfer is maximized, derived by setting dQ/dr = 0 for cylindrical conduction-convection resistance R_total = ln(r/r_pipe)/(2πkL) + 1/(2πhrL). Differentiating gives r_cr = k/h. Substituting k = 0.1 W/m·K and h = 5 W/m²·K yields 0.02 m = 20 mm. Since the pipe radius (25 mm) > r_cr, adding insulation actually reduces heat loss immediately.",
+      "topic": "Heat Transfer - Critical Thickness of Insulation",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+      "generatedAt": "2026-11-20T13:27:33.823Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 2038,
+      "q": 15
+    }
+  ]
+}

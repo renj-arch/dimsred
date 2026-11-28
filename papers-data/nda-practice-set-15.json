@@ -1,0 +1,601 @@
+{
+ "folder": "nda",
+ "slug": "practice-set-15",
+ "title": "NDA Practice Set 15",
+ "pageTitle": "NDA Practice Set 15 — Solved Paper",
+ "pageDesc": "Free NDA practice paper set 15 with detailed solutions. Pattern: Mathematics.",
+ "meta": "15 Q · 19 min · 38 marks · Mathematics pattern",
+ "timerMinutes": 19,
+ "totalMarks": 15,
+ "createdDate": "2026-11-26",
+ "blueprint": {
+  "paper": "maths",
+  "name": "Mathematics",
+  "total": 120,
+  "marks": 300,
+  "duration": 150,
+  "negative": 0.333333,
+  "source": "NDA Paper I Mathematics: 120 questions, 300 marks, 150 minutes; negative 1/3.",
+  "provisional": false,
+  "sections": [
+   {
+    "name": "Mathematics",
+    "count": 15,
+    "bank": [
+     "Mathematics"
+    ]
+   }
+  ]
+ },
+ "sections": [
+  {
+   "name": "Mathematics",
+   "color": "#a855f7"
+  }
+ ],
+ "questions": [
+  {
+   "section": "Mathematics",
+   "text": "The value of the definite integral <span class=\"math\">∫₀^π/2 \\frac{\\sin x}{\\sin x + \\cos x} dx</span> is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "π/2",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "π/4",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "π",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "π/8",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use King's Property <span class=\"math\">I = ∫_a^b f(x)dx = ∫_a^b f(a+b-x)dx</span>. Here <span class=\"math\">f(π/2 - x) = \\cos x/(\\sin x + \\cos x)</span>. Add original <span class=\"math\">I</span> and transformed <span class=\"math\">I</span>: <span class=\"math\">2I = ∫_0^{\\pi/2} 1 dx = π/2 ⇒ I = π/4</span>. Full Solution: Let <span class=\"math\">I = ∫_0^{\\pi/2} \\frac{\\sin x}{\\sin x + \\cos x} dx</span>. Applying the property, <span class=\"math\">I = ∫_0^{\\pi/2} \\frac{\\sin(\\pi/2-x)}{\\sin(\\pi/2-x)+\\cos(\\pi/2-x)} dx = ∫_0^{\\pi/2} \\frac{\\cos x}{\\cos x + \\sin x} dx</span>. Adding the two expressions for <span class=\"math\">I</span>: <span class=\"math\">2I = ∫_0^{\\pi/2} \\frac{\\sin x + \\cos x}{\\sin x + \\cos x} dx = ∫_0^{\\pi/2} 1 dx = [x]_0^{\\pi/2} = \\pi/2</span>. Therefore, <span class=\"math\">I = \\pi/4</span>.",
+   "topic": "Definite Integrals",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-26T00:15:45.354Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 839,
+   "q": 1
+  },
+  {
+   "section": "Mathematics",
+   "text": "lim_{x→0} (sin5x)/x equals:",
+   "options": [
+    {
+     "label": "A",
+     "text": "1",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "0",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "25",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "5",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Standard limit lim_{x→0} sin(kx)/x = k. Here k = 5, so the limit is 5. Full solution: rewrite as 5·(sin5x)/(5x) and use lim_{u→0} sin u / u = 1.",
+   "topic": "Calculus - Limits",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-26T00:12:49.710Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 829,
+   "q": 2
+  },
+  {
+   "id": 826,
+   "q": 3,
+   "section": "Mathematics",
+   "text": "A shopkeeper sells a cricket bat with a marked price of ₹5,000. He offers two alternatives: Scheme A: 15% discount followed by a further 10% discount on the reduced price. Scheme B: A single flat discount of x%. To make the final selling price identical in both schemes, what is the value of x?",
+   "options": [
+    {
+     "label": "A",
+     "text": "25%",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "23.5%",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "22.5%",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "24%",
+     "correct": false
+    }
+   ],
+   "solution": "Discount A = 15%. Remaining = 85%.\nDiscount B = 10%. Remaining = 90%.\nCombined Remaining = 85% x 90% = 0.85 x 0.90 = 0.765.\nTotal Discount = 1 - 0.765 = 0.235.\nx = 23.5%."
+  },
+  {
+   "section": "Mathematics",
+   "text": "lim_{x→0} (e^x - 1 - x)/x^2 equals:",
+   "options": [
+    {
+     "label": "A",
+     "text": "0",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "1/2",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "1",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "∞",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use Maclaurin series e^x = 1 + x + x^2/2 + x^3/6 + …; then numerator ≈ x^2/2, so limit = 1/2. Full: e^x = 1 + x + x^2/2 + o(x^2). Substituting, (e^x - 1 - x)/x^2 = (x^2/2 + o(x^2))/x^2 → 1/2 as x→0.",
+   "topic": "Calculus",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-26T00:13:13.467Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 831,
+   "q": 4
+  },
+  {
+   "id": 718,
+   "q": 5,
+   "section": "Mathematics",
+   "text": "A bank offers a special 'Festival Savings Scheme' where the interest rate for the first year is 5% per annum on the principal. However, the interest earned in the first year is added to the principal at the end of the year. If a customer deposits ₹10,000 and closes the account after exactly one year, what is the total amount received?",
+   "options": [
+    {
+     "label": "A",
+     "text": "₹10,500",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "₹10,525",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "₹10,600",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "₹10,400",
+     "correct": false
+    }
+   ],
+   "solution": "Simple Interest = (P * R * T) / 100.\nSubstituting values: P = 10000, R = 5%, T = 1 year.\nSI = (10000 * 5 * 1) / 100.\nSI = 500.\nTotal Amount = Principal + Interest = 10000 + 500 = 10500."
+  },
+  {
+   "id": 830,
+   "q": 6,
+   "section": "Mathematics",
+   "text": "A retailer marks up a commodity by 25% above its cost price. He then offers a discount of x% on this marked price. If the final selling price equals the original cost price plus half of the initial profit he would have made had there been no discount, what is the value of x?",
+   "options": [
+    {
+     "label": "A",
+     "text": "10",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "12",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "15",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "20",
+     "correct": false
+    }
+   ],
+   "solution": "Let Cost Price (CP) = Rs. 100.\nInitial Profit (if no discount) = Marked Price - CP = 125 - 100 = 25.\nHalf of this initial profit = 25 / 2 = 12.5.\nTarget Selling Price = CP + Half Initial Profit = 100 + 12.5 = 112.5.\nMarked Price (MP) = 125.\nDiscount Amount = MP - SP = 125 - 112.5 = 12.5.\nDiscount Percentage (x) = (Discount / MP) * 100 = (12.5 / 125) * 100 = 10%."
+  },
+  {
+   "section": "Mathematics",
+   "text": "The value of the definite integral ∫₀^{π/2} sin² x dx is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "π/2",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "π/8",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "π/6",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "π/4",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Use symmetry ∫₀^{π/2} sin²x dx = ∫₀^{π/2} cos²x dx. Adding gives ∫₀^{π/2} 1 dx = π/2, so each integral = π/4. Full solution: Integrate sin²x = (1-cos2x)/2 from 0 to π/2 → [x/2 - sin2x/4]₀^{π/2} = π/4.",
+   "topic": "Calculus - Definite Integration",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:59:54.057Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 730,
+   "q": 7
+  },
+  {
+   "section": "Mathematics",
+   "text": "The magnitude of the projection of vector a = 2i + 3j + 6k on vector b = i + 2j + 2k is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "20/9",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "10/3",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "5",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "20/3",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Projection magnitude = (a·b)/|b|. a·b = 2*1+3*2+6*2 = 20. |b| = √(1+4+4)=3. So projection = 20/3. Full: Compute dot product = 20, magnitude of b = 3, then projection = 20/3.",
+   "topic": "Vectors",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-26T00:13:17.753Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 833,
+   "q": 8
+  },
+  {
+   "section": "Mathematics",
+   "text": "The distance between the parallel lines 3x + 4y + 5 = 0 and 3x + 4y - 10 = 0 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "3",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "4",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "5",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "6",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Distance between parallel lines ax+by+c1=0 and ax+by+c2=0 is |c1-c2|/√(a²+b²). Here |5-(-10)|/5 = 15/5 = 3. Full solution: Apply formula directly.",
+   "topic": "Coordinate Geometry - Distance Between Parallel Lines",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-24T02:59:51.076Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 729,
+   "q": 9
+  },
+  {
+   "id": 717,
+   "q": 10,
+   "section": "Mathematics",
+   "text": "A suburban train covers a distance of 120 km in 2 hours at its scheduled speed. On the return journey, due to signal disruptions at exactly 5 platforms encountered, the train incurs a fixed 'delay penalty' of 4 minutes for every platform passed. If the train maintains the exact same average speed between these platforms as it did on the outbound journey, how much total time is required for the entire return trip?",
+   "options": [
+    {
+     "label": "A",
+     "text": "2 hours",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "2 hours 10 minutes",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "2 hours 20 minutes",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "2 hours 30 minutes",
+     "correct": false
+    }
+   ],
+   "solution": "1. Outbound average speed = 120 km / 2 hrs = 60 km/hr.\n2. Return journey distance is also 120 km.\n3. Ideal time for return trip at 60 km/hr = 120/60 = 2 hours (120 mins).\n4. Delay penalty = 4 minutes per platform * 5 platforms = 20 minutes.\n5. Total time = Ideal time + Penalty = 120 mins + 20 mins = 140 mins."
+  },
+  {
+   "section": "Mathematics",
+   "text": "Two fair dice are rolled. The probability that the sum of the numbers is 9 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "1/6",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "1/9",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "1/12",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "1/18",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Total outcomes = 36. Favorable pairs for sum 9: (3,6),(4,5),(5,4),(6,3) → 4 outcomes. Probability = 4/36 = 1/9. Full: List all 36 equally likely outcomes, count those with sum 9, divide by 36.",
+   "topic": "Probability",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-26T00:13:19.158Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 834,
+   "q": 11
+  },
+  {
+   "section": "Mathematics",
+   "text": "If A = [[2,1,1],[1,2,1],[1,1,2]], what is det(A)?",
+   "options": [
+    {
+     "label": "A",
+     "text": "0",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "4",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "2",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "8",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: For a 3×3 matrix with diagonal a and off-diagonal b, det = (a-b)^2 (a+2b). Here a=2, b=1 → (1)^2 × 4 = 4. Full solution: apply the formula or perform row operations to obtain an upper‑triangular matrix and multiply the diagonal entries.",
+   "topic": "Matrices and Determinants",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-26T00:12:47.002Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 827,
+   "q": 12
+  },
+  {
+   "section": "Mathematics",
+   "text": "The modulus of (1 + i)^8 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "8",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "32",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "16",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "64",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: |1+i| = √2, so |(1+i)^8| = (√2)^8 = 2^4 = 16. Full solution: Compute modulus of base: √(1^2+1^2)=√2; raise to power 8: (√2)^8 = (2^{1/2})^8 = 2^4 = 16.",
+   "topic": "Complex Numbers",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "Groq openai/gpt-oss-120b",
+   "generatedAt": "2026-11-26T00:15:11.919Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 836,
+   "q": 13
+  },
+  {
+   "section": "Mathematics",
+   "text": "The value of sin15° cos15° is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "1/2",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "√3/4",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "1/4",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "√3/2",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use sin2θ = 2 sinθ cosθ ⇒ sinθ cosθ = (1/2) sin2θ. For θ=15°, sin30° = 1/2, so the product = (1/2)×(1/2) = 1/4. Full solution: compute sin15° and cos15° via half‑angle formulas or known exact values and multiply.",
+   "topic": "Trigonometry",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-26T00:12:48.652Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 828,
+   "q": 14
+  },
+  {
+   "section": "Mathematics",
+   "text": "The value of lim_{x→0} (1 - cos x)/x^2 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "0",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "1/2",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "1",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "2",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use the standard limit (1 - cos x) ~ x^2/2 as x→0, so the ratio tends to 1/2. Full solution: Apply the series expansion cos x = 1 - x^2/2 + x^4/24 - …; then (1 - cos x)/x^2 = (x^2/2 - x^4/24 + …)/x^2 → 1/2.",
+   "topic": "Limits",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-26T00:15:11.318Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 835,
+   "q": 15
+  }
+ ],
+ "totalQuestions": 15
+}

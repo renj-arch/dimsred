@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Vectors &amp; Statistics — NDA Mathematics (Paper 1) Lesson | vlymbooq</title>
+    <meta name="description" content="Free NDA Mathematics (Paper 1) Vectors &amp; Statistics lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/nda/course/maths/lesson-vector-statistics.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body h4{font-size:.95em;font-weight:600;margin:12px 0 6px;color:var(--text-sec)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9em;background:var(--bg-card);border-radius:var(--radius);overflow:hidden}
+        .lesson-body table th,.lesson-body table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+        .lesson-body table th{background:rgba(255,255,255,.03);color:var(--text);font-weight:600;font-size:.9em;text-transform:uppercase;letter-spacing:.03em}
+        .lesson-body table td{color:var(--text-sec)}
+        .lesson-body table tr:last-child td{border-bottom:none}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--purple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/nda/">NDA</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics (Paper 1)</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-statistics.html" class="active">Vectors & Statistics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; NDA Mathematics (Paper 1)</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Vectors &amp; Statistics</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 20 Nov 2026 &#183; 13,862 words &#183; 4 sections &#183; illustrated</div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Vector algebra, 3D geometry, probability, mean, median, mode, variance, correlation.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Vectors &middot; 3D Geometry &middot; Statistics &middot; Probability</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+
+
+                    <p>Welcome to the NDA Mathematics (Paper 1) lesson on Vectors &amp; Statistics. This comprehensive guide covers the entire syllabus for vectors, 3D geometry, statistics, and probability as prescribed by the UPSC NDA examination. The content is structured to progress from fundamental concepts to advanced applications, with each topic illustrated through fully solved examples that mirror the NDA exam pattern. NDA-specific shortcut techniques (labelled as NDA Shortcuts) are provided throughout to help you solve problems faster and with greater accuracy. By the end of this lesson, you will have a thorough command of all four chapters and the confidence to tackle any question that appears in the examination.</p>
+                    <p>This lesson is part of the Module 1 curriculum for NDA Mathematics (Paper 1). It follows the Coordinate Geometry lesson and precedes the final course revision. Each section includes theory, formula tables, worked examples, shortcut tips, and practice questions with detailed solutions. The estimated study time for this lesson is 4&ndash;6 hours, including practice question attempts. We recommend studying the sections in order (Vectors &rarr; 3D Geometry &rarr; Statistics &rarr; Probability) as concepts build progressively.</p>
+
+                    <h2 id="vectors">1. Vectors</h2>
+                    <p>Vector algebra is a fundamental chapter in the NDA Mathematics (Paper 1) syllabus, typically contributing 3&ndash;4 questions per examination. A vector is a mathematical quantity that possesses both <strong>magnitude</strong> and <strong>direction</strong>, distinguished from scalars which have only magnitude. Vectors are represented geometrically as directed line segments, with the length representing magnitude and the arrow indicating direction. In the NDA exam, vectors are applied across problems in mechanics, geometry, and physics-based scenarios, making this chapter essential for both Paper 1 and Paper 2.</p>
+                    <p>The study of vectors is introduced through the concept of a <strong>free vector</strong> (no fixed point of application) and a <strong>localised vector</strong> (fixed at a specific point). The NDA syllabus focuses primarily on free vectors in three-dimensional space using the Cartesian coordinate system. A vector in 3D is expressed as <math>\vec{a}=a_1\hat{i}+a_2\hat{j}+a_3\hat{k}</math>, where <math>\hat{i},\hat{j},\hat{k}</math> are unit vectors along the X, Y, Z axes respectively, and <math>a_1,a_2,a_3</math> are the scalar components.</p>
+                    <p>Throughout this section, we will explore the classification, operations, and applications of vectors, with special emphasis on problem-solving techniques that yield maximum marks in the NDA objective format. Each concept is accompanied by at least one fully solved example mirroring the NDA question style.</p>
+
+                    
+
+<h3>Representation of Vectors</h3>
+                    <p>Vectors can be represented in three equivalent forms that appear in NDA questions. The <strong>geometric representation</strong> uses a directed line segment with an arrowhead. The <strong>algebraic representation</strong> uses components: <math>\vec{a}=x\hat{i}+y\hat{j}+z\hat{k}</math>. The <strong>column-vector representation</strong> writes the components in a column: <math>\vec{a}=\begin{pmatrix}x\\y\\z\end{pmatrix}</math>. The NDA exam uses the algebraic representation most frequently, especially in vector algebra problems involving dot products, cross products, and scalar triple products.</p>
+                    <p>The <strong>magnitude</strong> (or modulus) of a vector <math>\vec{a}=a_1\hat{i}+a_2\hat{j}+a_3\hat{k}</math> is given by <math>|\vec{a}|=\sqrt{a_1^2+a_2^2+a_3^2}</math>. This is the length of the vector and is always non-negative. The magnitude is zero only for the zero vector. NDA questions often require computing magnitudes of vectors and their combinations (sum, difference, cross product) as intermediate steps.</p>
+
+                    <h3>Types of Vectors</h3>
+                    <p>Vectors are classified into several categories based on their magnitude, direction, and positional relationships. Recognising the type of vector involved in a problem is often the first step toward selecting the correct formula or property. The table below summarises every vector type you must know for the NDA examination.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Vector Type</th><th>Definition</th><th>Mathematical Representation</th><th>Key Property</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Zero Vector (Null Vector)</td><td>Vector with zero magnitude</td><td><math>\vec{0}=0\hat{i}+0\hat{j}+0\hat{k}</math></td><td>Arbitrary direction; identity for addition</td></tr>
+                            <tr><td>Unit Vector</td><td>Vector with magnitude exactly 1</td><td><math>\hat{a}=\vec{a}/|\vec{a}|</math></td><td>Used to indicate direction only</td></tr>
+                            <tr><td>Equal Vectors</td><td>Same magnitude and direction</td><td><math>\vec{a}=\vec{b} \iff |\vec{a}|=|\vec{b}|,\; \text{same direction}</math></td><td>Corresponding components are equal</td></tr>
+                            <tr><td>Negative Vector</td><td>Same magnitude, opposite direction</td><td><math>-\vec{a}</math></td><td><math>\vec{a}+(-\vec{a})=\vec{0}</math></td></tr>
+                            <tr><td>Collinear Vectors</td><td>Vectors lying on same or parallel lines</td><td><math>\vec{a}=\lambda\vec{b}</math> for some scalar <math>\lambda</math></td><td>Cross product is zero</td></tr>
+                            <tr><td>Coplanar Vectors</td><td>Vectors lying in the same plane</td><td><math>[\vec{a}\,\vec{b}\,\vec{c}]=0</math></td><td>Scalar triple product equals zero</td></tr>
+                            <tr><td>Position Vector</td><td>Vector from origin O to point P</td><td><math>\vec{OP}=x\hat{i}+y\hat{j}+z\hat{k}</math></td><td>Coordinates <math>(x,y,z)</math> directly give the vector</td></tr>
+                            <tr><td>Free Vector</td><td>Can be translated without changing meaning</td><td>Standard representation</td><td>Direction and magnitude invariant under translation</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>The <strong>unit vector</strong> is particularly important in NDA questions. To obtain it, divide the vector by its own magnitude: <math>\hat{a}=\vec{a}/|\vec{a}|</math>. Every vector can be expressed as the product of its magnitude and its unit vector: <math>\vec{a}=|\vec{a}|\,\hat{a}</math>. This decomposition is frequently used in problems involving force vectors, velocity vectors, and displacements in the NDA exam.</p>
+                    <p><strong>Collinearity</strong> is another frequently tested concept. Two vectors <math>\vec{a}</math> and <math>\vec{b}</math> are collinear if one is a scalar multiple of the other. In the NDA exam, questions on collinearity often ask you to find an unknown component such that two vectors become parallel. The condition <math>a_1/b_1 = a_2/b_2 = a_3/b_3</math> is the standard approach.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 1: Finding a Unit Vector</div>
+                        <div class="ex-text">If <math>\vec{a}=2\hat{i}+3\hat{j}-6\hat{k}</math>, find the unit vector in the direction of <math>\vec{a}</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>|\vec{a}|=\sqrt{2^2+3^2+(-6)^2}=\sqrt{4+9+36}=\sqrt{49}=7</math>. Hence <math>\hat{a}=(2\hat{i}+3\hat{j}-6\hat{k})/7</math>.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 2: Collinearity of Vectors</div>
+                        <div class="ex-text">Find the value of <math>\lambda</math> for which the vectors <math>\vec{a}=2\hat{i}+3\hat{j}+4\hat{k}</math> and <math>\vec{b}=4\hat{i}+6\hat{j}+\lambda\hat{k}</math> are collinear.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> For collinearity, <math>\vec{b}=k\vec{a}</math> for some scalar <math>k</math>. Comparing <math>\hat{i}</math> and <math>\hat{j}</math> components: <math>4=2k \Rightarrow k=2</math> and <math>6=3k \Rightarrow k=2</math>. Then <math>\lambda = 4k = 4\times2 = 8</math>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #1: Unit Vector Verification</div>
+                        <div class="tip-text">Always verify that the magnitude of a unit vector equals exactly 1. In NDA objective questions, any option whose magnitude does not equal 1 can be eliminated instantly. Compute <math>\sqrt{l^2+m^2+n^2}</math> in under 5 seconds using mental arithmetic on the component squares.</div>
+                    </div>
+
+                    <h3>Vector Addition &amp; Scalar Multiplication</h3>
+                    <p><strong>Vector addition</strong> follows two geometric laws: the triangle law and the parallelogram law. According to the triangle law, if two vectors are represented as two sides of a triangle taken in order, the third side (in reverse order) represents their resultant. The parallelogram law states that if two vectors are represented as adjacent sides of a parallelogram, the diagonal through the common point gives the resultant vector.</p>
+                    <p>In Cartesian component form, vector addition is performed component-wise. If <math>\vec{a}=a_1\hat{i}+a_2\hat{j}+a_3\hat{k}</math> and <math>\vec{b}=b_1\hat{i}+b_2\hat{j}+b_3\hat{k}</math>, then:</p>
+                    <p><math>\vec{a}+\vec{b}=(a_1+b_1)\hat{i}+(a_2+b_2)\hat{j}+(a_3+b_3)\hat{k}</math></p>
+                    <p>Similarly, <strong>scalar multiplication</strong> scales each component: <math>\lambda\vec{a}=(\lambda a_1)\hat{i}+(\lambda a_2)\hat{j}+(\lambda a_3)\hat{k}</math>.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Property</th><th>Statement</th><th>Formula</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Commutativity</td><td>Order of addition does not matter</td><td><math>\vec{a}+\vec{b}=\vec{b}+\vec{a}</math></td></tr>
+                            <tr><td>Associativity</td><td>Grouping does not affect sum</td><td><math>(\vec{a}+\vec{b})+\vec{c}=\vec{a}+(\vec{b}+\vec{c})</math></td></tr>
+                            <tr><td>Distributive (scalar over addition)</td><td>Scalar multiplies each vector</td><td><math>\lambda(\vec{a}+\vec{b})=\lambda\vec{a}+\lambda\vec{b}</math></td></tr>
+                            <tr><td>Distributive (scalar sum)</td><td>Sum of scalars times a vector</td><td><math>(\lambda+\mu)\vec{a}=\lambda\vec{a}+\mu\vec{a}</math></td></tr>
+                            <tr><td>Zero vector identity</td><td>Adding zero does nothing</td><td><math>\vec{a}+\vec{0}=\vec{a}</math></td></tr>
+                            <tr><td>Additive inverse</td><td>Negative cancels the vector</td><td><math>\vec{a}+(-\vec{a})=\vec{0}</math></td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 3: Vector Addition and Scalar Multiplication</div>
+                        <div class="ex-text">If <math>\vec{a}=3\hat{i}+4\hat{j}-2\hat{k}</math> and <math>\vec{b}=\hat{i}-3\hat{j}+5\hat{k}</math>, find <math>\vec{a}+\vec{b}</math> and <math>2\vec{a}-3\vec{b}</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>\vec{a}+\vec{b}=(3+1)\hat{i}+(4-3)\hat{j}+(-2+5)\hat{k}=4\hat{i}+\hat{j}+3\hat{k}</math>. For <math>2\vec{a}-3\vec{b}</math> we compute: <math>2\vec{a}=6\hat{i}+8\hat{j}-4\hat{k}</math>, <math>3\vec{b}=3\hat{i}-9\hat{j}+15\hat{k}</math>. Then <math>2\vec{a}-3\vec{b}=(6-3)\hat{i}+(8+9)\hat{j}+(-4-15)\hat{k}=3\hat{i}+17\hat{j}-19\hat{k}</math>.</div>
+                    </div>
+
+                    <h3>Dot Product &amp; Cross Product</h3>
+                    <h4>Dot Product (Scalar Product)</h4>
+                    <p>The dot product of two vectors yields a scalar quantity. It is defined geometrically as <math>\vec{a}\cdot\vec{b}=|\vec{a}||\vec{b}|\cos\theta</math>, where <math>\theta</math> is the angle between the vectors. In component form, <math>\vec{a}\cdot\vec{b}=a_1b_1+a_2b_2+a_3b_3</math>. The dot product is commutative: <math>\vec{a}\cdot\vec{b}=\vec{b}\cdot\vec{a}</math>.</p>
+                    <p><strong>Key applications tested in NDA:</strong> (i) Finding the angle between two vectors using <math>\cos\theta=(\vec{a}\cdot\vec{b})/(|\vec{a}||\vec{b}|)</math>. (ii) Checking perpendicularity: if <math>\vec{a}\cdot\vec{b}=0</math>, vectors are orthogonal. (iii) Finding the projection of one vector onto another: <math>\text{proj}_{\vec{b}}\vec{a}=(\vec{a}\cdot\vec{b})/|\vec{b}|</math>.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 4: Dot Product &amp; Angle Between Vectors</div>
+                        <div class="ex-text">Find the angle between <math>\vec{a}=2\hat{i}+2\hat{j}-\hat{k}</math> and <math>\vec{b}=6\hat{i}-3\hat{j}+2\hat{k}</math>. Also find the projection of <math>\vec{a}</math> on <math>\vec{b}</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>\vec{a}\cdot\vec{b}=12-6-2=4</math>. <math>|\vec{a}|=\sqrt{4+4+1}=3</math>, <math>|\vec{b}|=\sqrt{36+9+4}=7</math>. <math>\cos\theta=4/(3\cdot7)=4/21</math>, so <math>\theta=\cos^{-1}(4/21)</math>. Projection of <math>\vec{a}</math> on <math>\vec{b}=(\vec{a}\cdot\vec{b})/|\vec{b}|=4/7</math>.</div>
+                    </div>
+
+                    <h4>Cross Product (Vector Product)</h4>
+                    <p>The cross product of two vectors produces a third vector perpendicular to both original vectors. Its magnitude is <math>|\vec{a}\times\vec{b}|=|\vec{a}||\vec{b}|\sin\theta</math>, which geometrically represents the area of the parallelogram formed by the two vectors. The direction is given by the right-hand thumb rule and is expressed via the unit normal <math>\hat{n}</math>.</p>
+                    <p>In determinant form: <math>\vec{a}\times\vec{b}=\begin{vmatrix} \hat{i} &amp; \hat{j} &amp; \hat{k} \\ a_1 &amp; a_2 &amp; a_3 \\ b_1 &amp; b_2 &amp; b_3 \end{vmatrix}</math>. The cross product is anti-commutative: <math>\vec{a}\times\vec{b}=-(\vec{b}\times\vec{a})</math>.</p>
+                    <p><strong>Important NDA applications:</strong> (i) Finding a vector perpendicular to two given vectors. (ii) Computing area of triangle formed by three points: area <math>=\frac{1}{2}|\vec{AB}\times\vec{AC}|</math>. (iii) Checking collinearity: if <math>\vec{a}\times\vec{b}=\vec{0}</math>, vectors are parallel or collinear.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 5: Cross Product &amp; Area of Triangle</div>
+                        <div class="ex-text">If <math>\vec{a}=\hat{i}+\hat{j}+\hat{k}</math> and <math>\vec{b}=\hat{i}-\hat{j}</math>, find <math>\vec{a}\times\vec{b}</math>. Also find a unit vector perpendicular to both <math>\vec{a}</math> and <math>\vec{b}</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>\vec{a}\times\vec{b}= \begin{vmatrix} \hat{i} &amp; \hat{j} &amp; \hat{k} \\ 1 &amp; 1 &amp; 1 \\ 1 &amp; -1 &amp; 0 \end{vmatrix} = \hat{i}(0+1) - \hat{j}(0-1) + \hat{k}(-1-1) = \hat{i}+\hat{j}-2\hat{k}</math>. The unit vector perpendicular to both is <math>\hat{n}=(\vec{a}\times\vec{b})/|\vec{a}\times\vec{b}|=(\hat{i}+\hat{j}-2\hat{k})/\sqrt{6}</math>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #2: Cross Product Determinant</div>
+                        <div class="tip-text">When expanding the <math>3\times3</math> determinant for cross product, follow the pattern: <math>\hat{i}(a_2b_3-a_3b_2) - \hat{j}(a_1b_3-a_3b_1) + \hat{k}(a_1b_2-a_2b_1)</math>. Notice the minus sign on the <math>\hat{j}</math> term &mdash; this is the most common source of errors in NDA exams. Practise with at least 10 determinants before the exam to build speed.</div>
+                    </div>
+
+                    <h3>Scalar Triple Product</h3>
+                    <p>The scalar triple product of three vectors <math>\vec{a},\vec{b},\vec{c}</math> is defined as <math>[\vec{a}\,\vec{b}\,\vec{c}]=\vec{a}\cdot(\vec{b}\times\vec{c})</math>. It represents the volume of the parallelepiped formed by the three vectors as adjacent edges. In determinant form:</p>
+                    <p><math>[\vec{a}\,\vec{b}\,\vec{c}] = \begin{vmatrix} a_1 &amp; a_2 &amp; a_3 \\ b_1 &amp; b_2 &amp; b_3 \\ c_1 &amp; c_2 &amp; c_3 \end{vmatrix}</math>.</p>
+                    <p><strong>Critical NDA properties:</strong> (i) Cyclic permutation does not change the value: <math>[\vec{a}\,\vec{b}\,\vec{c}]=[\vec{b}\,\vec{c}\,\vec{a}]=[\vec{c}\,\vec{a}\,\vec{b}]</math>. (ii) Swapping any two vectors changes the sign. (iii) The triple product is zero if and only if the three vectors are coplanar &mdash; this is the most common NDA question type involving scalar triple products.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 6: Scalar Triple Product &amp; Coplanarity</div>
+                        <div class="ex-text">Check whether <math>\vec{a}=2\hat{i}+3\hat{j}-\hat{k}</math>, <math>\vec{b}=\hat{i}+2\hat{j}+3\hat{k}</math>, and <math>\vec{c}=-\hat{i}+\hat{j}+\hat{k}</math> are coplanar.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>[\vec{a}\,\vec{b}\,\vec{c}] = \begin{vmatrix} 2 &amp; 3 &amp; -1 \\ 1 &amp; 2 &amp; 3 \\ -1 &amp; 1 &amp; 1 \end{vmatrix} = 2(2-3)-3(1+3)-1(1+2) = -2-12-3 = -17 \neq 0</math>. Since the scalar triple product is non-zero, the three vectors are <strong>not</strong> coplanar. They form a parallelepiped of volume 17 cubic units.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #3: Coplanarity in Seconds</div>
+                        <div class="tip-text">If the three vectors exhibit linear dependence (e.g., <math>\vec{c}=\vec{a}+\vec{b}</math> or <math>\vec{c}=2\vec{a}-\vec{b}</math>), the scalar triple product is automatically zero and the vectors are coplanar. In such NDA questions, you can answer without performing any determinant calculation. Simply check if one vector can be expressed as a linear combination of the other two.</div>
+                    </div>
+
+                    <h3>Section Formula &amp; Position Vectors</h3>
+                    <p>The section formula for vectors is an extension of the coordinate geometry section formula and is frequently tested in NDA. If a point P divides the line segment AB (with position vectors <math>\vec{a}</math> and <math>\vec{b}</math>) in the ratio <math>m:n</math>:</p>
+                    <p><strong>Internally:</strong> <math>\vec{p} = \frac{m\vec{b}+n\vec{a}}{m+n}</math></p>
+                    <p><strong>Externally:</strong> <math>\vec{p} = \frac{m\vec{b}-n\vec{a}}{m-n}</math></p>
+                    <p>The <strong>midpoint</strong> is a special case of internal division with <math>m=n=1</math>: <math>\vec{p}=(\vec{a}+\vec{b})/2</math>. The centroid of a triangle with vertices <math>\vec{a},\vec{b},\vec{c}</math> is <math>\vec{g}=(\vec{a}+\vec{b}+\vec{c})/3</math>.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 7: Section Formula for Vectors</div>
+                        <div class="ex-text">Find the position vector of the point P that divides the segment AB in the ratio 2:3 internally, where <math>\vec{a}=3\hat{i}-\hat{j}+2\hat{k}</math> and <math>\vec{b}=\hat{i}+4\hat{j}+3\hat{k}</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using internal division formula: <math>\vec{p} = (2\vec{b}+3\vec{a})/(2+3) = (2(\hat{i}+4\hat{j}+3\hat{k}) + 3(3\hat{i}-\hat{j}+2\hat{k}))/5 = ((2+9)\hat{i}+(8-3)\hat{j}+(6+6)\hat{k})/5 = (11\hat{i}+5\hat{j}+12\hat{k})/5</math>.</div>
+                    </div>
+
+                    <h3>Applications of Vectors in Geometry</h3>
+<!-- course-figure:vector-statistics-figure -->
+<figure class="lesson-figure" data-figure="vector-statistics-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Vector Statistics Concept Flow for Geography GS1 Exam"><defs><marker id="arrowhead-lesson-vector-statistics-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="150" width="150" height="80" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="105" y="190" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="105" dy="0">Vectors</tspan></text><rect x="210" y="150" width="150" height="80" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="285" y="190" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="285" dy="0">3D Geometry</tspan></text><rect x="390" y="150" width="150" height="80" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="465" y="190" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="465" dy="0">Statistics</tspan></text><rect x="570" y="150" width="150" height="80" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="645" y="190" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="645" dy="0">Probability</tspan></text><path d="M 180 190 L 210 190" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure)"/><path d="M 360 190 L 390 190" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure)"/><path d="M 540 190 L 570 190" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure)"/></g><g><text x="195" y="180" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="195" dy="0">leads to</tspan></text><text x="375" y="180" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="375" dy="0">feeds</tspan></text><text x="555" y="180" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="555" dy="0">underpins</tspan></text><text x="380" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">Exam Hook: Vector methods quantify spatial patterns (Art. 243)</tspan></text><text x="380" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">Key: Classification → Application → Inference</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Vector Statistics Concept Flow for Geography GS1 Exam</strong> — Shows how vectors feed 3D geometry, statistics, and probability in geographic analysis.
+    &middot; <a href="../../../figures/svg-vector-statistics-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+
+                    <p>Vectors provide elegant solutions to many geometric problems in the NDA syllabus. The key applications include:</p>
+                    <p><strong>Area of a triangle:</strong> If <math>A,B,C</math> are three points, area <math>= \frac{1}{2}|\vec{AB}\times\vec{AC}|</math>. This is derived from the fact that the magnitude of the cross product equals the area of the parallelogram formed by two vectors.</p>
+                    <p><strong>Area of a parallelogram:</strong> With adjacent sides <math>\vec{a}</math> and <math>\vec{b}</math>, area <math>= |\vec{a}\times\vec{b}|</math>.</p>
+                    <p><strong>Volume of a parallelepiped:</strong> With adjacent edges <math>\vec{a},\vec{b},\vec{c}</math>, volume <math>= |[\vec{a}\,\vec{b}\,\vec{c}]|</math> (absolute value of scalar triple product).</p>
+                    <p><strong>Volume of a tetrahedron:</strong> <math>V = \frac{1}{6}|[\vec{a}\,\vec{b}\,\vec{c}]|</math>, where <math>\vec{a},\vec{b},\vec{c}</math> are three edges meeting at a vertex.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 8: Area of Triangle using Vectors</div>
+                        <div class="ex-text">Find the area of the triangle with vertices <math>A(1,1,1)</math>, <math>B(2,3,4)</math>, and <math>C(3,4,5)</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>\vec{AB}=\hat{i}+2\hat{j}+3\hat{k}</math>, <math>\vec{AC}=2\hat{i}+3\hat{j}+4\hat{k}</math>. <math>\vec{AB}\times\vec{AC}= \begin{vmatrix} \hat{i} &amp; \hat{j} &amp; \hat{k} \\ 1 &amp; 2 &amp; 3 \\ 2 &amp; 3 &amp; 4 \end{vmatrix} = \hat{i}(8-9)-\hat{j}(4-6)+\hat{k}(3-4) = -\hat{i}+2\hat{j}-\hat{k}</math>. Area <math>= \frac12|\vec{AB}\times\vec{AC}| = \frac12\sqrt{1+4+1} = \frac{\sqrt{6}}{2}</math> sq units.</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr><th>Geometric Quantity</th><th>Vector Formula</th><th>NDA Application</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Area of Triangle</td><td><math>\frac12|\vec{AB}\times\vec{AC}|</math></td><td>Find area from coordinates of 3 vertices</td></tr>
+                            <tr><td>Area of Parallelogram</td><td><math>|\vec{a}\times\vec{b}|</math></td><td>Adjacent sides given as vectors</td></tr>
+                            <tr><td>Volume of Parallelepiped</td><td><math>|[\vec{a}\,\vec{b}\,\vec{c}]|</math></td><td>3 edges meeting at a vertex</td></tr>
+                            <tr><td>Volume of Tetrahedron</td><td><math>\frac16|[\vec{a}\,\vec{b}\,\vec{c}]|</math></td><td>3 edges from one vertex</td></tr>
+                            <tr><td>Unit Vector along <math>\vec{a}</math></td><td><math>\hat{a}=\vec{a}/|\vec{a}|</math></td><td>Used for direction</td></tr>
+                            <tr><td>Vector Perpendicular to <math>\vec{a},\vec{b}</math></td><td><math>\vec{a}\times\vec{b}</math></td><td>Finding normal to a plane</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #4: Area &amp; Volume Ratios</div>
+                        <div class="tip-text">In NDA questions involving tetrahedra, remember that the volume of a tetrahedron is exactly one-sixth of the parallelepiped volume formed by the same three vectors. This factor of <math>1/6</math> is a common trap &mdash; students often forget to divide by 6. Also note that the area of a triangle is half the area of the corresponding parallelogram.</div>
+                    </div>
+
+                    <h2 id="3d-geometry">2. 3D Geometry</h2>
+                    <p>Three-dimensional geometry extends the concepts of coordinate geometry into space. In the NDA syllabus, this chapter covers direction cosines, direction ratios, equations of lines, and angles between lines. Vector methods provide an elegant and efficient approach to solving 3D problems, and most NDA questions in this section are designed to be solved using vector algebra.</p>
+                    <p>The transition from 2D to 3D involves the introduction of a third coordinate axis (Z-axis) perpendicular to both X and Y axes. Any point in space is represented as <math>(x,y,z)</math>, and the position vector of a point P is <math>\vec{OP}=x\hat{i}+y\hat{j}+z\hat{k}</math>. The distance between two points <math>A(x_1,y_1,z_1)</math> and <math>B(x_2,y_2,z_2)</math> is given by <math>AB=\sqrt{(x_2-x_1)^2+(y_2-y_1)^2+(z_2-z_1)^2}</math>.</p>
+
+                    <h3>Direction Cosines &amp; Ratios</h3>
+                    <p>If a line makes angles <math>\alpha,\beta,\gamma</math> with the positive X, Y, Z axes respectively, then the numbers <math>l=\cos\alpha,\;m=\cos\beta,\;n=\cos\gamma</math> are called the <strong>direction cosines</strong> (d.c.) of the line. The fundamental relation is <math>l^2+m^2+n^2=\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1</math>.</p>
+                    <p><strong>Direction ratios</strong> (d.r.) are any three numbers <math>(a,b,c)</math> proportional to the direction cosines: <math>l/a=m/b=n/c</math>. Given direction ratios, the direction cosines can be recovered using <math>l=a/\sqrt{a^2+b^2+c^2}</math>, and similarly for <math>m</math> and <math>n</math>.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Concept</th><th>Formula / Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>D.C. of line joining <math>A(x_1,y_1,z_1)</math> to <math>B(x_2,y_2,z_2)</math></td><td><math>l=(x_2-x_1)/AB,\; m=(y_2-y_1)/AB,\; n=(z_2-z_1)/AB</math></td></tr>
+                            <tr><td>D.C. from direction ratios <math>(a,b,c)</math></td><td><math>l=a/\sqrt{a^2+b^2+c^2},\; m=b/\sqrt{a^2+b^2+c^2},\; n=c/\sqrt{a^2+b^2+c^2}</math></td></tr>
+                            <tr><td>Perpendicular lines condition</td><td><math>l_1l_2+m_1m_2+n_1n_2=0</math> or <math>a_1a_2+b_1b_2+c_1c_2=0</math></td></tr>
+                            <tr><td>Parallel lines condition</td><td><math>l_1/l_2=m_1/m_2=n_1/n_2</math> or <math>a_1/a_2=b_1/b_2=c_1/c_2</math></td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 9: Finding Direction Cosines</div>
+                        <div class="ex-text">Find the direction cosines of the line joining the points <math>A(1,2,3)</math> and <math>B(3,2,1)</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Direction ratios = <math>(3-1,2-2,1-3)=(2,0,-2)</math>. <math>AB=\sqrt{2^2+0^2+(-2)^2}=\sqrt{8}=2\sqrt{2}</math>. Therefore d.c. = <math>(\frac{2}{2\sqrt{2}},\frac{0}{2\sqrt{2}},\frac{-2}{2\sqrt{2}})=(\frac{1}{\sqrt{2}},0,-\frac{1}{\sqrt{2}})</math>. Verification: <math>(\frac{1}{\sqrt{2}})^2+0^2+(-\frac{1}{\sqrt{2}})^2=\frac12+0+\frac12=1</math>.</div>
+                    </div>
+
+                    <h3>Equation of Lines</h3>
+                    <p>A straight line in 3D space can be expressed in two equivalent forms:</p>
+                    <p><strong>Vector form:</strong> <math>\vec{r}=\vec{a}+\lambda\vec{b}</math>, where <math>\vec{a}</math> is the position vector of a fixed point on the line, and <math>\vec{b}</math> is the direction vector (parallel to the line).</p>
+                    <p><strong>Cartesian (symmetric) form:</strong> <math>\frac{x-x_1}{a}=\frac{y-y_1}{b}=\frac{z-z_1}{c}</math>, where <math>(x_1,y_1,z_1)</math> is a fixed point and <math>(a,b,c)</math> are direction ratios.</p>
+                    <p>The conversion between the two forms is straightforward: the components of <math>\vec{b}</math> become <math>(a,b,c)</math>, and the coordinates of the fixed point give <math>(x_1,y_1,z_1)</math>. NDA questions frequently ask you to convert from one form to another or to identify the direction vector from the equation.</p>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #5: Line from Two Points</div>
+                        <div class="tip-text">Given two points <math>A(x_1,y_1,z_1)</math> and <math>B(x_2,y_2,z_2)</math>, the line equation in symmetric form is simply <math>\frac{x-x_1}{x_2-x_1}=\frac{y-y_1}{y_2-y_1}=\frac{z-z_1}{z_2-z_1}</math>. No need to compute the direction vector separately. In NDA MCQs, scan the denominators of the given options &mdash; they should match the differences between the two point coordinates.</div>
+                    </div>
+
+                    <h3>Angle Between Lines</h3>
+                    <p>If two lines have direction cosines <math>(l_1,m_1,n_1)</math> and <math>(l_2,m_2,n_2)</math>, the acute angle <math>\theta</math> between them satisfies:</p>
+                    <p><math>\cos\theta = |l_1l_2+m_1m_2+n_1n_2|</math>.</p>
+                    <p>Using direction ratios <math>(a_1,b_1,c_1)</math> and <math>(a_2,b_2,c_2)</math>:</p>
+                    <p><math>\cos\theta = \frac{|a_1a_2+b_1b_2+c_1c_2|}{\sqrt{a_1^2+b_1^2+c_1^2}\,\sqrt{a_2^2+b_2^2+c_2^2}}</math>.</p>
+                    <p>The absolute value ensures the acute angle is returned. For the obtuse angle, simply subtract from <math>180&deg;</math>.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 10: Angle Between Two Lines</div>
+                        <div class="ex-text">Find the angle between the lines whose direction ratios are proportional to <math>(1,1,1)</math> and <math>(1,-1,0)</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>\cos\theta = |1\cdot1+1\cdot(-1)+1\cdot0|/(\sqrt{3}\cdot\sqrt{2}) = |1-1+0|/\sqrt{6} = 0</math>. Hence <math>\theta=90&deg;</math>, and the two lines are perpendicular to each other.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #6: Perpendicular &amp; Parallel in 3D</div>
+                        <div class="tip-text">Two checks solve 80% of angle-based NDA MCQs: (i) if <math>a_1a_2+b_1b_2+c_1c_2=0</math>, lines are perpendicular; (ii) if <math>a_1/a_2=b_1/b_2=c_1/c_2</math>, lines are parallel. If neither holds, compute <math>\cos\theta</math> directly. Memorise this decision tree for instant recall in the exam hall.</div>
+                    </div>
+
+                    <h3>Distance from a Point to a Line</h3>
+                    <p>The perpendicular distance from a point <math>P(x_1,y_1,z_1)</math> to a line with direction ratios <math>(a,b,c)</math> passing through <math>A(x_0,y_0,z_0)</math> is given by:</p>
+                    <p><math>d = \frac{|\vec{AP}\times\vec{b}|}{|\vec{b}|}</math>, where <math>\vec{b}=a\hat{i}+b\hat{j}+c\hat{k}</math> is the direction vector of the line.</p>
+                    <p>This formula uses the cross product to find the area of the parallelogram formed by <math>\vec{AP}</math> and <math>\vec{b}</math>, then divides by the base length <math>|\vec{b}|</math> to obtain the perpendicular height (distance).</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 11: Distance from Point to Line</div>
+                        <div class="ex-text">Find the distance from point <math>P(2,1,3)</math> to the line passing through <math>A(1,0,1)</math> with direction ratios <math>(1,2,2)</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>\vec{AP}=(2-1)\hat{i}+(1-0)\hat{j}+(3-1)\hat{k}=\hat{i}+\hat{j}+2\hat{k}</math>. <math>\vec{b}=\hat{i}+2\hat{j}+2\hat{k}</math>. <math>\vec{AP}\times\vec{b}= \begin{vmatrix} \hat{i} &amp; \hat{j} &amp; \hat{k} \\ 1 &amp; 1 &amp; 2 \\ 1 &amp; 2 &amp; 2 \end{vmatrix} = \hat{i}(2-4)-\hat{j}(2-2)+\hat{k}(2-1) = -2\hat{i}+0\hat{j}+\hat{k}</math>. <math>|\vec{AP}\times\vec{b}|=\sqrt{4+0+1}=\sqrt{5}</math>, <math>|\vec{b}|=\sqrt{1+4+4}=3</math>. Distance <math>= \sqrt{5}/3</math> units.</div>
+                    </div>
+
+                    <h3>Equation of a Plane</h3>
+                    <p><span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="Misstates NDA syllabus; planes are a major topic (equations, angles, distances), not just basic understanding.">The NDA syllabus covers both lines and planes in detail, including plane equations, angles, and distances.</span> for solving comprehensive problems. A plane is defined by a point <math>A(x_1,y_1,z_1)</math> lying on it and a normal vector <math>\vec{n}=a\hat{i}+b\hat{j}+c\hat{k}</math> perpendicular to it. The cartesian equation is <math>a(x-x_1)+b(y-y_1)+c(z-z_1)=0</math> or simply <math>ax+by+cz+d=0</math>.</p>
+                    <p><strong>Angle between a line and a plane:</strong> If <math>\theta</math> is the angle between the line (direction vector <math>\vec{b}</math>) and the plane (normal vector <math>\vec{n}</math>), then <math>\sin\theta = |\vec{b}\cdot\vec{n}|/(|\vec{b}||\vec{n}|)</math>. Note that we use <math>\sin\theta</math> (not <math>\cos\theta</math>) because the angle with the plane is complementary to the angle with the normal.</p>
+
+                    <h4>Distance from a Point to a Plane</h4>
+                    <p>The perpendicular distance from point <math>P(x_1,y_1,z_1)</math> to the plane <math>ax+by+cz+d=0</math> is:</p>
+                    <p><math>d = \frac{|ax_1+by_1+cz_1+d|}{\sqrt{a^2+b^2+c^2}}</math>.</p>
+                    <p><span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="Paragraph 17 incorrectly describes the formula from paragraph 16 (angle between line and plane, sinθ = |b·n|/(|b||n|)) as a distance formula. The formula gives an angle, not a distance; the denominator normalizes vectors, not plane coefficients.">The distance from a point to a plane formula (|ax₁+by₁+cz₁+d|/√(a²+b²+c²)) is a commonly tested distance formula; the angle formula in paragraph 16 uses sine and gives an angle.</span></p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 12: Distance from a Point to a Plane</div>
+                        <div class="ex-text">Find the distance from the point <math>P(1,2,3)</math> to the plane <math>2x-3y+6z+14=0</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Distance <math>= |2(1)-3(2)+6(3)+14|/\sqrt{4+9+36} = |2-6+18+14|/7 = 28/7 = 4</math> units.</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr><th>Concept</th><th>Formula</th><th>Notes</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Line (vector form)</td><td><math>\vec{r}=\vec{a}+\lambda\vec{b}</math></td><td><math>\vec{a}</math> = point, <math>\vec{b}</math> = direction</td></tr>
+                            <tr><td>Line (cartesian form)</td><td><math>(x-x_1)/a=(y-y_1)/b=(z-z_1)/c</math></td><td><math>(a,b,c)</math> = direction ratios</td></tr>
+                            <tr><td>Plane (vector form)</td><td><math>(\vec{r}-\vec{a})\cdot\vec{n}=0</math></td><td><math>\vec{n}</math> = normal vector</td></tr>
+                            <tr><td>Plane (cartesian form)</td><td><math>ax+by+cz+d=0</math></td><td><math>(a,b,c)</math> = normal ratios</td></tr>
+                            <tr><td>Angle between two lines</td><td><math>\cos\theta=(a_1a_2+b_1b_2+c_1c_2)/(\sqrt{}...)</math></td><td>Use absolute value</td></tr>
+                            <tr><td>Angle between line and plane</td><td><math>\sin\theta=(\vec{b}\cdot\vec{n})/(|\vec{b}||\vec{n}|)</math></td><td>Sine, not cosine</td></tr>
+                            <tr><td>Distance: point to plane</td><td><math>d=|ax_1+by_1+cz_1+d|/\sqrt{a^2+b^2+c^2}</math></td><td>Denominator = magnitude of normal</td></tr>
+                            <tr><td>Distance: point to line</td><td><math>d=|\vec{AP}\times\vec{b}|/|\vec{b}|</math></td><td>A = point on line</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #7: 3D Formula Sheet Strategy</div>
+                        <div class="tip-text">The single most effective preparation for NDA 3D geometry is memorising the distance formulas. Point-to-plane and point-to-line distance questions appear in nearly every NDA exam. The point-to-plane formula <math>|ax_1+by_1+cz_1+d|/\sqrt{a^2+b^2+c^2}</math> is the most frequently tested &mdash; practise it until you can compute it in under 30 seconds.</div>
+                    </div>
+                        <div class="ex-text">Find the distance from the point <math>P(1,2,3)</math> to the plane <math>2x-3y+6z+14=0</math>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Distance <math>= |ax_1+by_1+cz_1+d|/\sqrt{a^2+b^2+c^2} = |2(1)-3(2)+6(3)+14|/\sqrt{4+9+36} = |2-6+18+14|/7 = 28/7 = 4</math> units.</div>
+                    <!-- course-addon:start -->
+<h3>Conditional Probability and Bayes' Theorem</h3>
+<p>Conditional probability quantifies the likelihood of an event A occurring given that another event B has already occurred. It is denoted by P(A|B) and defined as P(A∩B)/P(B) provided P(B) > 0. This definition yields the multiplication rule: P(A∩B) = P(A|B)P(B) = P(B|A)P(A). The rule extends to any finite sequence of events, giving the chain rule P(A₁∩A₂∩…∩Aₙ) = P(A₁)P(A₂|A₁)…P(Aₙ|A₁∩…∩Aₙ₋₁). Bayes' theorem follows by equating the two expressions for P(A∩B): P(A|B) = P(B|A)P(A)/P(B). When the sample space is partitioned into mutually exclusive and exhaustive events E₁, E₂, …, Eₙ, the denominator expands to ∑ P(B|Eᵢ)P(Eᵢ). This form is the standard tool for updating prior probabilities with new evidence.</p>
+<p>In practical problems the partition often arises from causes (e.g., machines producing items, diseases in a population) and the observed effect (defective item, positive test). The prior probabilities P(Eᵢ) represent base rates, while the likelihoods P(B|Eᵢ) are the conditional probabilities of the evidence under each cause. The posterior P(Eᵢ|B) then shows how the evidence shifts belief. A common pitfall is ignoring the base rate, leading to the base‑rate fallacy. For instance, a test with 99 % sensitivity and 99 % specificity applied to a disease with 0.1 % prevalence yields a positive predictive value of only about 9 %, because the large number of false positives from the healthy majority overwhelms the true positives.</p>
+<p>Bayes' theorem also underpins the odds form: posterior odds = prior odds × likelihood ratio. The likelihood ratio for a hypothesis H versus its complement ¬H given data D is P(D|H)/P(D|¬H). This formulation is especially useful in sequential updating, where each new piece of evidence multiplies the current odds. In examinations, questions often present a two‑stage experiment (e.g., drawing balls from urns, selecting a box then a coin) and ask for the probability of a particular initial condition given the final outcome. The systematic approach is to draw a tree diagram, label each branch with the appropriate conditional probability, compute the joint probabilities at the leaves, and then apply Bayes' formula.</p>
+<p>Another frequent variant combines the law of total probability with Bayes' theorem to find the probability of an event that can occur through several disjoint pathways. For example, a factory has three machines producing bolts with different defect rates; given a randomly selected bolt is defective, find the probability it came from a specific machine. The solution requires computing the overall defect probability as the weighted sum of the machine‑specific defect rates, then dividing the relevant joint probability by this total. Mastery of these steps, together with careful bookkeeping of notation, is essential for performing well in probability sections.</p>
+
+<h3>Random Variables, Expectation, and Variance</h3>
+<p>A random variable is a function that assigns a real number to each outcome in a sample space. Discrete random variables take countable values and are described by a probability mass function (PMF) p(x) = P(X = x) satisfying p(x) ≥ 0 and ∑ p(x) = 1. Continuous random variables take values in an interval and are described by a probability density function (PDF) f(x) ≥ 0 with ∫ f(x) dx = 1 over the support. The cumulative distribution function (CDF) F(x) = P(X ≤ x) unifies both types: for discrete variables it is a step function, for continuous variables it is differentiable with derivative f(x).</p>
+<p>The expectation (or mean) of a random variable X, denoted E[X] or μ, is the weighted average of its possible values. For a discrete variable, E[X] = ∑ x·p(x); for a continuous variable, E[X] = ∫ x·f(x) dx. Expectation is linear: E[aX + bY] = aE[X] + bE[Y] for any constants a, b and random variables X, Y, regardless of independence. This linearity is a powerful tool for simplifying calculations, especially when dealing with sums of indicator variables. The variance, Var(X) = E[(X − μ)²] = E[X²] − μ², measures dispersion about the mean. For a linear transformation, Var(aX + b) = a²Var(X). If X and Y are independent, Var(X + Y) = Var(X) + Var(Y); more generally, Var(X + Y) = Var(X) + Var(Y) + 2Cov(X, Y), where Cov(X, Y) = E[XY] − E[X]E[Y].</p>
+<p>Higher moments provide further shape information. The third central moment, scaled by σ³, gives skewness; the fourth central moment, scaled by σ⁴, gives kurtosis. Moment‑generating functions (MGFs) Mₓ(t) = E[e<sup>tX</sup>] (when they exist) encode all moments: the n‑th derivative at zero equals E[Xⁿ]. MGFs are particularly useful for proving distributional results, such as the sum of independent Poisson variables being Poisson, or the sum of independent normal variables being normal. The characteristic function φₓ(t) = E[e<sup>itX</sup>] always exists and serves the same purpose in more advanced settings.</p>
+<p>In examination problems, you will often be asked to compute the mean and variance of a function of a random variable, e.g., Y = X² or Y = aX + b. The direct method uses the definition with the PMF or PDF of X. An alternative is to first find the distribution of Y (if feasible) and then compute its moments. For linear functions, the linearity of expectation and the scaling property of variance give immediate answers. For non‑linear functions, one must be careful: E[g(X)] ≠ g(E[X]) in general (Jensen's inequality). A typical trap is to assume E[1/X] = 1/E[X] for a positive random variable, which is false unless X is degenerate.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Expectation and Variance of a Discrete Distribution</div>
+<div class="ex-text">A random variable X has the following probability mass function: P(X = 0) = 0.2, P(X = 1) = 0.5, P(X = 2) = 0.3. Find E[X], E[X²], Var(X), and the standard deviation σ.</div>
+<div class="ex-soln">First compute E[X] = Σ x·P(X = x) = 0·0.2 + 1·0.5 + 2·0.3 = 0 + 0.5 + 0.6 = 1.1. Next E[X²] = Σ x²·P(X = x) = 0²·0.2 + 1²·0.5 + 2²·0.3 = 0 + 0.5 + 1.2 = 1.7. Then Var(X) = E[X²] − (E[X])² = 1.7 − (1.1)² = 1.7 − 1.21 = 0.49. The standard deviation σ = √Var(X) = √0.49 = 0.7. All steps follow directly from the definitions; no shortcuts are needed for a three‑point distribution.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy for Probability Questions</div>
+<div class="tip-text">When a probability question appears, first identify whether it asks for a simple probability, a conditional probability, or a Bayes update. Draw a quick tree diagram or a two‑way table to organise the given data. Write down the relevant formula (multiplication rule, law of total probability, Bayes' theorem) before plugging numbers. For expectation and variance, always compute E[X] and E[X²] separately; mixing them leads to sign errors. Keep a mental checklist: (1) verify that probabilities sum to 1, (2) check independence assumptions before using product rules, (3) use linearity of expectation even when variables are dependent, (4) remember that variance of a sum requires covariance unless independence is stated. Practise these steps on past papers until they become automatic.</div>
+</div>
+
+<h3>Binomial and Poisson Distributions</h3>
+<p>The binomial distribution models the number of successes in a fixed number n of independent Bernoulli trials, each with success probability p. Its PMF is P(X = k) = C(n, k) pᵏ (1−p)ⁿ⁻ᵏ for k = 0, 1, …, n. The mean is μ = np and the variance is σ² = np(1−p). The distribution is symmetric when p = 0.5, skewed right for p < 0.5, and skewed left for p > 0.5. A useful approximation is the normal approximation to the binomial when n is large and p is not too close to 0 or 1; the rule of thumb is np ≥ 5 and n(1−p) ≥ 5. Continuity correction (adding or subtracting 0.5) improves accuracy when using the normal curve to approximate discrete binomial probabilities.</p>
+<p>The Poisson distribution arises as a limit of the binomial when n → ∞, p → 0, while np = λ remains constant. It models the number of rare events occurring in a fixed interval of time or space. Its PMF is P(X = k) = e<sup>−λ</sup> λᵏ / k! for k = 0, 1, 2, … . Both the mean and variance equal λ. The Poisson distribution is infinitely divisible: the sum of independent Poisson variables with parameters λ₁, λ₂, … is Poisson with parameter Σλᵢ. This property is frequently used in problems involving merging independent arrival streams (e.g., calls to a switchboard from different sources). The Poisson process, with its inter‑arrival times following an exponential distribution, provides a continuous‑time framework, but the discrete Poisson distribution suffices for most examination questions.</p>
+<p>Typical exam problems ask for the probability of at most k successes, at least k successes, or exactly k successes. For the binomial, direct computation using the PMF is feasible for small n; for larger n, normal approximation or cumulative tables are expected. For the Poisson, the recursion P(X = k+1) = (λ/(k+1)) P(X = k) allows rapid manual calculation of successive probabilities. A common twist is to give the mean and variance of a distribution and ask to identify whether it is binomial or Poisson: if mean = variance, it suggests Poisson; if variance < mean, it suggests binomial (since np(1−p) < np for 0 < p < 1). Another twist is to ask for the mode of the distribution. For binomial, the mode is ⌊(n+1)p⌋ (or two adjacent values when (n+1)p is integer). For Poisson, the mode is ⌊λ⌋ (or λ and λ−1 when λ is integer).</p>
+<p>Applications often involve quality control (defective items in a batch), reliability (system failures), or arrival processes (customers per hour). In such word problems, the first step is to recognise the underlying Bernoulli or rare‑event structure, then extract n and p or λ. Be careful with wording: “at most 2 defects” means P(X ≤ 2); “more than 2 defects” means 1 − P(X ≤ 2). When the problem states “the probability of a defect is 0.02 and 100 items are inspected”, the binomial parameters are n = 100, p = 0.02. If it says “on average 3 defects occur per 100 items”, the Poisson parameter is λ = 3. The distinction between a fixed number of trials and a fixed interval is crucial.</p>
+
+<h3>Correlation Coefficient and Linear Regression</h3>
+<p>The Pearson product‑moment correlation coefficient r measures the strength and direction of a linear relationship between two quantitative variables X and Y. It is defined as r = Cov(X, Y) / (σₓ σᵧ) = Σ (xᵢ − x̄)(yᵢ − ȳ) / √[Σ (xᵢ − x̄)² Σ (yᵢ − ȳ)²]. The value of r lies in [−1, 1]; r = 1 indicates perfect positive linear association, r = −1 perfect negative linear association, and r = 0 no linear association (though non‑linear dependence may still exist). The coefficient is symmetric: r(X, Y) = r(Y, X). It is invariant under changes of origin and scale: r(aX + b, cY + d) = r(X, Y) for a, c > 0 (sign flips if a or c is negative).</p>
+<p>Linear regression seeks the line Y = a + bX that best predicts Y from X in the least‑squares sense, minimising Σ (yᵢ − a − b xᵢ)². The slope estimator is b = Cov(X, Y) / Var(X) = r (σᵧ / σₓ), and the intercept is a = ȳ − b x̄. The regression line always passes through the point (x̄, ȳ). The coefficient of determination R² = r² gives the proportion of variance in Y explained by the linear model. The complementary regression line X = a' + b'Y has slope b' = Cov(X, Y) / Var(Y) = r (σₓ / σᵧ). The two lines coincide only when r = ±1. The angle θ between the two regression lines satisfies tan θ = |(1 − r²) / (r (σₓ/σᵧ + σᵧ/σₓ))|, a formula occasionally tested in advanced problems.</p>
+<p>In examination questions, you may be given summary statistics (Σx, Σy, Σx², Σy², Σxy, n) and asked to compute r, the regression equations, or to estimate Y for a given X. The computational formulas are: r = [n Σxy − Σx Σy] / √{[n Σx² − (Σx)²][n Σy² − (Σy)²]}; b = [n Σxy − Σx Σy] / [n Σx² − (Σx)²]; a = (Σy − b Σx) / n. It is essential to keep sufficient decimal places during intermediate steps to avoid rounding errors that change the final answer. A frequent trap is to confuse the regression of Y on X with the regression of X on Y; the regression coefficients are reciprocals only when r = ±1.</p>
+<p>Another common scenario provides a scatter plot or a table of paired observations and asks to comment on the correlation. Visual inspection can reveal outliers, non‑linear patterns, or heteroscedasticity that invalidate the Pearson r. Spearman's rank correlation ρ is a non‑parametric alternative that measures monotonic association; it is computed by ranking the data and applying the Pearson formula to the ranks. While Spearman's ρ may not be in all syllabi, awareness of its existence helps avoid misinterpretation when the relationship is clearly curved. Finally, remember that correlation does not imply causation; a high r may be due to a lurking variable, reverse causality, or coincidence.</p>
+
+<h3>Vector Triple Product and Applications in Mechanics</h3>
+<p>The vector triple product a × (b × c) appears frequently in physics and engineering. The identity a × (b × c) = b (a·c) − c (a·b) expresses the result as a linear combination of b and c, lying in the plane spanned by them. This identity can be proved by expanding both sides in components or by using the scalar triple product and the orthogonality of the cross product. A related identity is (a × b) × c = b (a·c) − a (b·c), which differs by a sign and the order of vectors. Both forms are useful: the first when the inner cross product is b × c, the second when it is a × b.</p>
+<p>Geometrically, b × c is a vector perpendicular to the plane of b and c. The cross product of a with this normal yields a vector back in the original plane, orthogonal to a. The magnitude |a × (b × c)| equals |a| |b × c| sin φ, where φ is the angle between a and the normal b × c. This magnitude also equals |b × c| times the magnitude of the projection of a onto the plane of b and c. In mechanics, the vector triple product simplifies expressions for torque, angular momentum, and the Coriolis force. For a particle of mass m at position r with velocity v, the angular momentum L = r × (m v). The time derivative dL/dt = r × F (torque) when mass is constant. If the force is central, F is parallel to r, so torque vanishes and L is conserved.</p>
+<p>Another application is the expression for the acceleration of a particle in a rotating frame. The Coriolis acceleration is 2 ω × v', where ω is the angular velocity of the frame and v' is the velocity relative to the frame. The centrifugal acceleration is ω × (ω × r). Using the vector triple product identity, ω × (ω × r) = ω (ω·r) − r (ω·ω). If ω is perpendicular to r (as in planar rotation), ω·r = 0 and the centrifugal acceleration reduces to −ω² r, directed radially outward. These derivations are standard in rigid‑body dynamics and appear in advanced problem‑solving contexts.</p>
+<p>In examination problems, you may be asked to simplify a given vector expression using the triple product identity, or to prove that three vectors are coplanar by showing their scalar triple product is zero, which is equivalent to the vector triple product being expressible in terms of two of them. A typical question: “If a, b, c are non‑zero vectors such that a × (b × c) = 0, prove that a is parallel to b × c or b and c are parallel.” The solution uses the identity: a × (b × c) = b (a·c) − c (a·b) = 0 ⇒ b (a·c) = c (a·b). If b and c are not parallel, they are linearly independent, so the coefficients must be zero: a·c = 0 and a·b = 0, implying a is orthogonal to both b and c, hence parallel to b × c. Mastery of these algebraic manipulations is essential for vector‑calculus questions.</p>
+
+<ul>
+<li>Confusing conditional probability with joint probability and forgetting to divide by the conditioning event’s probability.</li>
+<li>Applying the multiplication rule P(A∩B) = P(A)P(B) without verifying independence.</li>
+<li>Using the normal approximation to the binomial without checking np ≥ 5 and n(1−p) ≥ 5, or omitting the continuity correction.</li>
+<li>Assuming the regression slope of Y on X is the reciprocal of the slope of X on Y for any correlation value.</li>
+<li>Misapplying the vector triple product identity by reversing the order of vectors, leading to sign errors.</li>
+<li>Treating correlation as causation and ignoring the possibility of a lurking variable.</li>
+<li>Forgetting that the variance of a sum of dependent variables includes the covariance term.</li></ul>
+<h3>Vector Spaces, Linear Independence, and Basis</h3>
+<p>A vector space over the real numbers is a set V with vector addition and scalar multiplication satisfying eight axioms (closure, associativity, commutativity, identity, inverses, distributivity, compatibility, and scalar identity). Familiar examples include ℝⁿ (n‑tuples of reals) and polynomials of degree ≤ n. A subset S ⊆ V is linearly independent if the only linear combination giving the zero vector is the trivial one (all coefficients zero); equivalently, no vector in S is a linear combination of the others. A set that spans V and is linearly independent is a basis. The number of vectors in any basis of V is the dimension, dim V. The standard basis of ℝⁿ has n vectors, so dim ℝⁿ = n. A typical exam question asks whether given vectors form a basis for ℝ³: form a 3×3 matrix with them as columns and check if its determinant is non‑zero. Zero determinant means linear dependence, so not a basis. Another common task is to extend a linearly independent set to a basis by adding standard basis vectors until the matrix reaches full rank. The rank–nullity theorem states dim V = rank(T) + nullity(T) for T: V → W. It gives the dimension of the solution space of Ax = 0: nullity(A) equals the number of free variables in the row‑echelon form.</p>
+
+<h3>Orthogonal Projections and the Gram–Schmidt Process</h3>
+<p>Given a subspace W of ℝⁿ with an orthonormal basis {u₁, u₂, …, uₖ}, the orthogonal projection of v onto W is Σ (v·uᵢ) uᵢ. This projection is the unique vector in W minimizing ‖v − w‖. When the basis is not orthonormal, the Gram–Schmidt process converts it. Starting with linearly independent {v₁, v₂, …, vₖ}, set u₁ = v₁ / ‖v₁‖. For each subsequent i, compute wᵢ = vᵢ − Σ<sub>j=1</sub><sup>i-1</sup> (vᵢ·uⱼ) uⱼ, then uᵢ = wᵢ / ‖wᵢ‖. The resulting {u₁, …, uₖ} is orthonormal and spans the same subspace. Exam problems often give three vectors in ℝ⁴ and ask for an orthonormal basis of their span; apply Gram–Schmidt stepwise. The process also yields the QR decomposition A = QR (Q orthonormal columns, R upper triangular with positive diagonal). QR decomposition underpins many numerical algorithms, including least squares. Substituting A = QR into the normal equations AᵀA x = Aᵀb gives R x = Qᵀb, a triangular system solved by back substitution, avoiding ill‑conditioning from AᵀA. The projection matrix P = Q Qᵀ projects onto the column space of A; P is symmetric and idempotent (P² = P), properties often tested in multiple‑choice questions.</p>
+
+<div class="example-box">
+<div class="ex-title">Projection onto a Subspace</div>
+<div class="ex-text">Let W be the subspace of ℝ³ spanned by vectors a = (1, 2, 2) and b = (2, 1, −1). Find the orthogonal projection of v = (3, 0, 1) onto W.</div>
+<div class="ex-soln">First apply Gram–Schmidt to obtain an orthonormal basis of W. Set u₁ = a / ‖a‖. ‖a‖ = √(1²+2²+2²) = 3, so u₁ = (1/3, 2/3, 2/3). Compute w₂ = b − (b·u₁) u₁. b·u₁ = (2)(1/3)+(1)(2/3)+(−1)(2/3) = 2/3+2/3−2/3 = 2/3. Then w₂ = (2,1,−1) − (2/3)(1/3,2/3,2/3) = (2,1,−1) − (2/9,4/9,4/9) = (16/9,5/9,−13/9). ‖w₂‖ = √((256+25+169)/81) = √(450/81) = √(50/9) = (5√2)/3. Thus u₂ = w₂ / ‖w₂‖ = (16/9,5/9,−13/9) × (3/(5√2)) = (16/(15√2), 5/(15√2), −13/(15√2)). Now projection p = (v·u₁) u₁ + (v·u₂) u₂. v·u₁ = (3)(1/3)+(0)(2/3)+(1)(2/3) = 1+0+2/3 = 5/3. v·u₂ = (3)(16/(15√2)) + (0)(5/(15√2)) + (1)(−13/(15√2)) = (48−13)/(15√2) = 35/(15√2) = 7/(3√2). Then p = (5/3) u₁ + (7/(3√2)) u₂ = (5/3)(1/3,2/3,2/3) + (7/(3√2))(16/(15√2),5/(15√2),−13/(15√2)) = (5/9,10/9,10/9) + (112/90,35/90,−91/90) = (50/90+112/90, 100/90+35/90, 100/90−91/90) = (162/90, 135/90, 9/90) = (9/5, 3/2, 1/10). The orthogonal projection of v onto W is (9/5, 3/2, 1/10).</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for a projection, first check whether the given spanning vectors are already orthogonal. If they are, normalize them and use the simple formula Σ (v·uᵢ) uᵢ. If not, apply Gram–Schmidt but keep intermediate fractions exact; decimal approximations often lead to rounding errors that change the final answer. Write each step clearly — examiners award method marks even if the arithmetic slips.</div>
+</div>
+
+<h3>Continuous Random Variables and the Normal Distribution</h3>
+<p>A continuous random variable X is described by a probability density function (pdf) f(x) such that f(x) ≥ 0 for all x and ∫<sub>-∞</sub><sup>∞</sup> f(x) dx = 1. The probability that X lies in [a, b] is ∫_a^b f(x) dx. The cumulative distribution function (cdf) is F(x) = P(X ≤ x) = ∫<sub>-∞</sub>^x f(t) dt. Expectation and variance are E[X] = ∫ x f(x) dx, Var(X) = E[X²] − (E[X])². The most important continuous distribution is the normal (Gaussian) with parameters μ (mean) and σ² (variance). Its pdf is f(x) = (1/(σ√(2π))) exp(−(x−μ)²/(2σ²)). The standard normal has μ = 0, σ = 1; its cdf is Φ(z). Any normal variable standardizes: Z = (X−μ)/σ ~ N(0,1). Probabilities are P(a ≤ X ≤ b) = Φ((b−μ)/σ) − Φ((a−μ)/σ). The empirical rule: ≈68 % within μ±σ, 95 % within μ±2σ, 99.7 % within μ±3σ. The normal distribution arises as the limit of the binomial (De Moivre–Laplace) and, generally, of sums of independent variables (Central Limit Theorem). Exams may ask for a percentile: given P(X ≤ x) = 0.95, use Φ⁻¹(0.95) ≈ 1.645, so x = μ + 1.645σ. Another common problem: if X₁ ~ N(μ₁,σ₁²) and X₂ ~ N(μ₂,σ₂²) are independent, then X₁+X₂ ~ N(μ₁+μ₂, σ₁²+σ₂²). This extends to linear combinations and underpins confidence intervals for the mean when σ² is known.</p>
+
+<h3>Fundamentals of Hypothesis Testing: Z‑Test, t‑Test, and Chi‑Square Test</h3>
+<p>Hypothesis testing uses sample data to evaluate a claim about a population parameter. The null hypothesis H₀ represents the status quo (e.g., μ = μ₀); the alternative H₁ represents the research claim (e.g., μ ≠ μ₀, μ > μ₀, or μ < μ₀). A test statistic is computed; its sampling distribution under H₀ is known. The p‑value is the probability, assuming H₀ true, of obtaining a test statistic at least as extreme as observed. If p‑value < α (commonly 0.05 or 0.01), reject H₀. The Z‑test applies when σ² is known or n is large (n ≥ 30, by CLT). The statistic is Z = (x̄ − μ₀) / (σ/√n) ~ N(0,1) under H₀. The t‑test is used when σ² is unknown and n is small; t = (x̄ − μ₀) / (s/√n) follows a t‑distribution with n−1 degrees of freedom. The t‑distribution has heavier tails, reflecting uncertainty from estimating σ. For two independent samples with equal variances, pooled variance s_p² = ((n₁−1)s₁² + (n₂−1)s₂²) / (n₁+n₂−2) yields a t‑statistic with n₁+n₂−2 df. The chi‑square test has two main forms: goodness‑of‑fit compares observed Oᵢ with expected Eᵢ; χ² = Σ (Oᵢ−Eᵢ)²/Eᵢ follows χ² with k−1−m df (k categories, m estimated parameters). The test of independence in a contingency table uses the same formula with expected frequencies from marginal totals; df = (r−1)(c−1). A frequent trap is applying chi‑square when expected frequencies are below 5; combine categories or use an exact test instead.</p>
+
+<h3>Multiple Linear Regression: Estimation, Diagnostics, and Model Selection</h3>
+<p>Multiple linear regression extends simple regression to several explanatory variables: Y = β₀ + β₁X₁ + … + βₚXₚ + ε, with ε ~ N(0, σ²) independent. In matrix form, y = Xβ + ε, where y is n×1, X is n×(p+1) (first column ones), β is (p+1)×1. The OLS estimator minimizes RSS = (y−Xβ)ᵀ(y−Xβ). Setting the derivative to zero gives normal equations XᵀX β̂ = Xᵀy, so β̂ = (XᵀX)⁻¹ Xᵀy provided XᵀX is invertible (columns of X linearly independent). Fitted values ŷ = Xβ̂ = Hy, where H = X(XᵀX)⁻¹Xᵀ is the hat matrix (symmetric, idempotent). Residuals e = y − ŷ = (I−H)y. An unbiased estimator of σ² is s² = RSS/(n−p−1). Standard errors of coefficients are square roots of diagonal elements of s² (XᵀX)⁻¹. t‑tests for individual coefficients use t = β̂ⱼ / SE(β̂ⱼ) with n−p−1 df. The overall F‑test compares the full model with the intercept‑only model: F = (RSS₀−RSS)/p ÷ (RSS/(n−p−1)). Diagnostics: residual plots (vs fitted) for linearity and homoscedasticity, normal Q‑Q plots for error normality, leverage (diagonal of H) for influential points. Cook’s distance Dᵢ = (eᵢ²/(p+1)) × (hᵢᵢ/(1−hᵢᵢ)²) flags observations disproportionately affecting the fit. Multicollinearity inflates variances of β̂; detected via VIFⱼ = 1/(1−Rⱼ²), where Rⱼ² is from regressing Xⱼ on other predictors. Model selection criteria: adjusted R², AIC = n ln(RSS/n) + 2(p+1), BIC = n ln(RSS/n) + (p+1) ln n balance fit and parsimony. Stepwise procedures (forward, backward, bidirectional) automate search but should be supplemented with subject‑matter knowledge.</p>
+
+<ul>
+<li>Confusing the dimension of a vector space with the number of vectors in a spanning set that is not linearly independent.</li>
+<li>Forgetting to normalize vectors after Gram–Schmidt, leading to a non‑orthonormal basis and incorrect projection coefficients.</li>
+<li>Using the normal approximation for a binomial probability without checking np ≥ 5 and n(1−p) ≥ 5, or omitting the continuity correction.</li>
+<li>Applying a Z‑test when the population variance is unknown and the sample size is small; the t‑test is required in that situation.</li>
+<li>Ignoring the expected‑frequency condition (Eᵢ ≥ 5) in a chi‑square test, which invalidates the χ² approximation.</li>
+<li>Interpreting a high R² in multiple regression as proof of causation, while overlooking multicollinearity or omitted‑variable bias.</li>
+<li>Review these traps regularly to avoid losing marks on advanced topics.</li></ul>
+<h3>Vector Calculus Fundamentals: Gradient, Divergence, and Curl</h3>
+<p>This section introduces the foundational concepts of gradient, divergence, and curl, essential operations in vector calculus. These operations extend vector algebra to multivariable functions, providing tools to describe rates of change, flow, and rotation in scalar and vector fields. Understanding their definitions and physical interpretations is crucial for advanced problem-solving and applying vectors in physics and engineering.</p>
+
+<h4>The Gradient of a Scalar Field (∇f)</h4>
+<p>For a scalar field f(x, y, z) (a function assigning a scalar value to each point in space, like temperature or pressure), the gradient is a vector field. It points in the direction of the greatest rate of increase of f, and its magnitude represents that maximum rate.</p>
+<ul>
+ <li><strong>Definition:</strong> ∇f = (∂f/∂x) <strong>i</strong> + (∂f/∂y) <strong>j</strong> + (∂f/∂z) <strong>k</strong>. The symbol ∇ (nabla or del) is a vector differential operator.</li>
+ <li><strong>Physical Interpretation:</strong> If f represents temperature, ∇f indicates the direction of most rapid temperature increase. If f is a potential energy function, -∇f gives the conservative force. The gradient vector is always perpendicular to level surfaces (where f is constant).</li>
+ <li><strong>Applications:</strong> Calculating directional derivatives (rate of change in direction <strong>u</strong>, given by ∇f ⋅ <strong>u</strong>), finding normal vectors to surfaces, and analyzing conservative force fields.</li>
+</ul>
+
+<h4>The Divergence of a Vector Field (∇ ⋅ F)</h4>
+<p>For a vector field F = P(x, y, z)<strong>i</strong> + Q(x, y, z)<strong>j</strong> + R(x, y, z)<strong>k</strong> (assigning a vector to each point, like fluid velocity or electric field), the divergence is a scalar field. It measures the outward flux per unit volume at a point, quantifying the "source" or "sink" strength.</p>
+<ul>
+ <li><strong>Definition:</strong> ∇ ⋅ F = ∂P/∂x + ∂Q/∂y + ∂R/∂z. This is the scalar product of the del operator and F.</li>
+ <li><strong>Physical Interpretation:</strong> If F represents fluid velocity, positive divergence indicates a source (fluid flowing out), negative divergence a sink (fluid flowing in). Zero divergence implies incompressible flow (no net flow in or out).</li>
+ <li><strong>Applications:</strong> Gauss's Divergence Theorem, relating flux through a closed surface to divergence within the volume. Fundamental in electromagnetism (Gauss's Law) and fluid dynamics.</li>
+</ul>
+
+<h4>The Curl of a Vector Field (∇ × F)</h4>
+<p>For a vector field F = P(x, y, z)<strong>i</strong> + Q(x, y, z)<strong>j</strong> + R(x, y, z)<strong>k</strong>, the curl is a vector field. It measures the "rotation" or "circulation" at a point. Its direction indicates the axis of rotation; its magnitude represents maximum circulation density.</p>
+<ul>
+ <li><strong>Definition:</strong> ∇ × F = <br>
+ | <strong>i</strong> &nbsp; <strong>j</strong> &nbsp; <strong>k</strong> | <br>
+ | ∂/∂x &nbsp; ∂/∂y &nbsp; ∂/∂z | <br>
+ | P &nbsp; Q &nbsp; R &nbsp; | <br>
+ = (∂R/∂y - ∂Q/∂z)<strong>i</strong> + (∂P/∂z - ∂R/∂x)<strong>j</strong> + (∂Q/∂x - ∂P/∂y)<strong>k</strong>. This is the vector product of del and F.</li>
+ <li><strong>Physical Interpretation:</strong> If F represents fluid velocity, non-zero curl means a small paddle wheel would rotate. Zero curl indicates an irrotational field (e.g., conservative force fields where work is path-independent).</li>
+ <li><strong>Applications:</strong> Stokes' Theorem, relating circulation around a closed curve to curl flux through a bounded surface. Crucial in electromagnetism (Ampere's Law, Faraday's Law) and fluid vorticity.</li>
+</ul>
+<p>Understanding these operations provides deeper insight into how vectors describe physical phenomena in multi-dimensional spaces. For exams, focus on definitions, output type (scalar or vector), and core physical meaning.</p>
+
+<h3>Probability Generating Functions and Moment Generating Functions</h3>
+<p>Probability Generating Functions (PGFs) and Moment Generating Functions (MGFs) are powerful analytical tools in probability theory. They characterize random variables, compute moments (mean, variance), and simplify analysis of sums of independent random variables, often providing a more tractable approach than direct summation or integration.</p>
+
+<h4>Probability Generating Function (PGF) for Discrete Random Variables</h4>
+<p>The PGF is used for discrete random variables taking non-negative integer values (0, 1, 2, ...). If X has probability mass function P(X=k) = p_k, its PGF is:</p>
+<ul>
+ <li><strong>Definition:</strong> G_X(t) = E[t<sup>X</sup>] = Σ<sub>k=0</sub><sup>∞</sup> p_k t<sup>k</sup>, for all t where the sum converges.</li>
+ <li><strong>Key Properties and Applications:</strong>
+ <ul>
+ <li>G_X(1) = Σ p_k = 1.</li>
+ <li>First derivative at t=1 gives the mean: G_X'(1) = Σ k p_k = E[X].</li>
+ <li>Second derivative at t=1 gives E[X(X-1)]: G_X''(1) = Σ k(k-1) p_k = E[X²] - E[X].</li>
+ <li>Variance: Var(X) = E[X²] - (E[X])² = (G_X''(1) + G_X'(1)) - (G_X'(1))².</li>
+ <li>If X and Y are independent, PGF of Z = X+Y is G_Z(t) = G_X(t) G_Y(t), simplifying distribution of sums.</li>
+ <li>Coefficient of t<sup>k</sup> in G_X(t) expansion gives P(X=k).</li>
+ </ul>
+</li>
+</ul>
+
+<h4>Moment Generating Function (MGF) for General Random Variables</h4>
+<p>The MGF applies to both discrete and continuous random variables. For any random variable X:</p>
+<ul>
+ <li><strong>Definition:</strong> M_X(t) = E[e<sup>tX</sup>], for all t where the expectation exists.
+ <ul>
+ <li>Discrete X: M_X(t) = Σ e<sup>tx</sup> P(X=x).</li>
+ <li>Continuous X: M_X(t) = ∫ e<sup>tx</sup> f(x) dx, where f(x) is the PDF.</li>
+ </ul>
+</li>
+ <li><strong>Key Properties and Applications:</strong>
+ <ul>
+ <li>M_X(0) = 1.</li>
+ <li>k-th derivative at t=0 gives k-th moment: M_X<sup>(k)</sup>(0) = E[X<sup>k</sup>].
+ <ul>
+ <li>First derivative: M_X'(0) = E[X].</li>
+ <li>Second derivative: M_X''(0) = E[X²].</li>
+ </ul>
+</li>
+ <li>Variance: Var(X) = M_X''(0) - (M_X'(0))².</li>
+ <li>If X and Y are independent, MGF of Z = X+Y is M_Z(t) = M_X(t) M_Y(t).</li>
+ <li><strong>Uniqueness Theorem:</strong> If two random variables have the same MGF (existing in an interval around 0), they have the same distribution.</li>
+ </ul>
+</li>
+</ul>
+<p>PGFs are specific to discrete, non-negative integer-valued variables; MGFs are universally applicable. Both provide efficient ways to derive moments and analyze sums of independent variables.</p>
+
+<div class="example-box"><div class="ex-title">Calculating Variance using a Moment Generating Function</div><div class="ex-text">A random variable X has the Moment Generating Function M_X(t) = (1 - 2t)⁻³. Find the mean and variance of X.</div><div class="ex-soln">Given M_X(t) = (1 - 2t)⁻³.
+To find the mean E[X], compute the first derivative at t=0:
+M_X'(t) = d/dt [(1 - 2t)⁻³] = -3(1 - 2t)⁻⁴ × (-2) = 6(1 - 2t)⁻⁴.
+E[X] = M_X'(0) = 6(1)⁻⁴ = 6.
+
+To find E[X²], compute the second derivative at t=0:
+M_X''(t) = d/dt [6(1 - 2t)⁻⁴] = 6 × (-4)(1 - 2t)⁻⁵ × (-2) = 48(1 - 2t)⁻⁵.
+E[X²] = M_X''(0) = 48(1)⁻⁵ = 48.
+
+Variance: Var(X) = E[X²] - (E[X])² = 48 - 36 = 12.
+Mean = 6, Variance = 12.</div></div>
+
+<div class="tip-box"><div class="tip-title">MGF and PGF Exam Strategy</div><div class="tip-text">When finding moments of a distribution, check if its MGF or PGF is provided or easily derived. Using derivatives at t=0 (MGF) or t=1 (PGF) is often faster and less error-prone than direct summation or integration. Key formulas: E[X] = M_X'(0) or G_X'(1); Var(X) = M_X''(0) - (M_X'(0))² or G_X''(1) + G_X'(1) - (G_X'(1))².</div></div>
+
+<h3>Sampling Distributions and Confidence Intervals</h3>
+<p>Building on random variables, probability distributions, and hypothesis testing, sampling distributions and confidence intervals form the bedrock of inferential statistics. They enable drawing conclusions about unknown population parameters from sample data.</p>
+
+<h4>Sampling Distributions</h4>
+<p>A sampling distribution is the probability distribution of a statistic (sample mean, proportion, variance) obtained from all possible samples of a specific size from a population.</p>
+<ul>
+ <li><strong>Importance:</strong> Sample statistics estimate population parameters. The sampling distribution quantifies their variability and accuracy.</li>
+ <li><strong>Sampling Distribution of the Sample Mean (X̄):</strong>
+ <ul>
+ <li>Population mean μ, standard deviation σ, sample size n:
+ <ul>
+ <li>E[X̄] = μ (unbiased estimator).</li>
+ <li>Var(X̄) = σ²/n; standard error SE(X̄) = σ/√n.</li>
+ </ul>
+</li>
+ <li><strong>Central Limit Theorem (CLT):</strong> For sufficiently large n (conventionally n ≥ 30), the sampling distribution of X̄ is approximately normal regardless of population shape. If the population is normal, X̄ is normal for any n.</li>
+ <li><strong>Standardization:</strong> Z = (X̄ - μ) / (σ/√n) ~ N(0, 1).</li>
+ </ul>
+</li>
+ <li><strong>Sampling Distribution of the Sample Proportion (p̂):</strong>
+ <ul>
+ <li>Population proportion P, sample size n:
+ <ul>
+ <li>E[p̂] = P.</li>
+ <li>Var(p̂) = P(1-P)/n; SE(p̂) = √[P(1-P)/n].</li>
+ </ul>
+</li>
+ <li><strong>Normal Approximation:</strong> For large n (typically nP ≥ 5 and n(1-P) ≥ 5), p̂ is approximately normal.</li>
+ <li><strong>Standardization:</strong> Z = (p̂ - P) / √[P(1-P)/n] ~ N(0, 1).</li>
+ </ul>
+</li>
+</ul>
+
+<h4>Confidence Intervals</h4>
+<p>A confidence interval (CI) is a range of values from sample statistics likely to contain the true population parameter with a specified confidence level.</p>
+<ul>
+ <li><strong>General Form:</strong> Point Estimate ± (Critical Value × Standard Error).</li>
+ <li><strong>CI for Population Mean (μ):</strong>
+ <ul>
+ <li><strong>σ Known:</strong> X̄ ± Z<sub>(α/2)</sub> (σ/√n). Z<sub>(α/2)</sub> is the critical Z-value (e.g., 95% CI: Z<sub>0.025</sub> ≈ 1.96).</li>
+ <li><strong>σ Unknown:</strong>
+ <ul>
+ <li><strong>Small n (n &lt; 30):</strong> X̄ ± t<sub>(α/2, n-1)</sub> (s/√n). s = sample SD; t with n-1 degrees of freedom.</li>
+ <li><strong>Large n (n ≥ 30):</strong> t-distribution approximates normal; Z-values often used with s substituted for σ.</li>
+ </ul>
+</li>
+ </ul>
+</li>
+ <li><strong>CI for Population Proportion (P):</strong> p̂ ± Z<sub>(α/2)</sub> √[p̂(1-p̂)/n]. Sample proportion p̂ used in standard error since P is unknown.</li>
+ <li><strong>Interpretation:</strong> A 95% CI means that if many samples were taken and CIs constructed, ~95% would contain the true mean. It does NOT mean a 95% probability that the true parameter lies in this specific interval.</li>
+</ul>
+<p>Confidence intervals provide a range of plausible values, offering more nuance than point estimates or binary hypothesis tests. They are indispensable for practical decision-making.</p>
+
+<h3>Advanced Regression Diagnostics and Regularization Techniques</h3>
+<p>Building on multiple linear regression fundamentals, this section covers sophisticated methods for assessing model quality, identifying problematic data points, and enhancing robustness against multicollinearity, heteroscedasticity, and overfitting.</p>
+
+<h4>Advanced Diagnostics for Model Assumptions</h4>
+<ul>
+ <li><strong>Heteroscedasticity Detection and Correction:</strong>
+ <ul>
+ <li><strong>Detection:</strong> Visual inspection of residual plots (residuals vs. fitted values) suggests non-constant error variance; formal tests (Breusch-Pagan, White) provide quantitative assessment.</li>
+ <li><strong>Correction:</strong> Transform the dependent variable (e.g., log) or use Weighted Least Squares (WLS), assigning weights based on error variances.</li>
+ </ul>
+</li>
+ <li><strong>Autocorrelation of Errors:</strong>
+ <ul>
+ <li><strong>Detection:</strong> In time series, errors may correlate over time, violating OLS independence. Durbin-Watson test detects first-order autocorrelation.</li>
+ <li><strong>Correction:</strong> Autocorrelation causes inefficient estimates and incorrect standard errors. Solutions: Generalized Least Squares (GLS) or time series models (e.g., ARIMA).</li>
+ </ul>
+</li>
+ <li><strong>Outliers, Leverage, and Influence:</strong>
+ <ul>
+ <li><strong>Outliers:</strong> Observations with large residuals, far from the regression line. Identified via standardized or studentized residuals.</li>
+ <li><strong>Leverage:</strong> Measures how extreme an observation's predictor values are. High leverage points pull the regression line. Quantified by hat matrix diagonals (h<sub>ii</sub>).</li>
+ <li><strong>Influence:</strong> Combines outlier and leverage. An influential point significantly alters coefficients if removed. Metrics: Cook's Distance (D<sub>i</sub>), DFFITS. High-influence points warrant investigation.</li>
+ </ul>
+</li>
+ <li><strong>Multicollinearity Management:</strong>
+ <ul>
+ <li><strong>Detection:</strong> Variance Inflation Factor (VIF); VIF > 5 or 10 indicates severe multicollinearity.</li>
+ <li><strong>Solutions:</strong> Remove or combine correlated predictors (if justifiable), or use regularization techniques.</li>
+ </ul>
+</li>
+</ul>
+
+<h4>Regularization Techniques (Shrinkage Methods)</h4>
+<p>These methods address overfitting and multicollinearity by adding a penalty to the OLS objective function, shrinking coefficients toward zero. This reduces variance at the cost of slight bias, often improving predictive performance on new data.</p>
+<ul>
+ <li><strong>Ridge Regression (L2 Regularization):</strong>
+ <ul>
+ <li><strong>Objective:</strong> Minimize Σ(y<sub>i</sub> - β₀ - Σβ<sub>j</sub>x<sub>ij</sub>)² + λΣβ<sub>j</sub>².</li>
+ <li><strong>Effect:</strong> Shrinks coefficients but does not set them to zero. Effective for high multicollinearity, distributing effects among correlated predictors. λ (lambda) controls penalty strength, chosen via cross-validation.</li>
+ </ul>
+</li>
+ <li><strong>Lasso Regression (L1 Regularization):</strong>
+ <ul>
+ <li><strong>Objective:</strong> Minimize Σ(y<sub>i</sub> - β₀ - Σβ<sub>j</sub>x<sub>ij</sub>)² + λΣ|β<sub>j</sub>|.</li>
+ <li><strong>Effect:</strong> Shrinks coefficients and sets some exactly to zero, performing feature selection for sparser, more interpretable models. λ is a tuning parameter.</li>
+ </ul>
+</li>
+ <li><strong>Elastic Net Regression:</strong>
+ <ul>
+ <li><strong>Objective:</strong> Combine Ridge and Lasso: Σ(y<sub>i</sub> - β₀ - Σβ<sub>j</sub>x<sub>ij</sub>)² + λ₁Σ|β<sub>j</sub>| + λ₂Σβ<sub>j</sub>².</li>
+ <li><strong>Effect:</strong> Retains Lasso's feature selection while handling groups of correlated predictors better than Lasso alone (which arbitrarily picks one). Balances Ridge and Lasso properties.</li>
+ </ul>
+</li>
+</ul>
+<p>These techniques provide a robust toolkit for building reliable, stable, and interpretable regression models, addressing real-world data challenges and improving predictive accuracy.</p>
+
+<h3>Multivariate Probability Distributions: Joint, Marginal, and Conditional</h3>
+<p>Real-world phenomena often involve multiple interacting variables. Multivariate probability distributions extend probability concepts to two or more random variables, modeling their relationships and combined behavior.</p>
+
+<h4>Joint Probability Distributions</h4>
+<p>The joint distribution for random variables X and Y describes probabilities of simultaneous values.</p>
+<ul>
+ <li><strong>Joint PMF (Discrete):</strong>
+ <ul>
+ <li>P(X=x, Y=y) = p(x, y). Probability X=x AND Y=y.</li>
+ <li>Properties: p(x, y) ≥ 0; Σ<sub>x</sub> Σ<sub>y</sub> p(x, y) = 1.</li>
+ </ul>
+</li>
+ <li><strong>Joint PDF (Continuous):</strong>
+ <ul>
+ <li>f(x, y). Relative likelihood of X=x, Y=y. P(a ≤ X ≤ b, c ≤ Y ≤ d) = ∫<sub>c</sub><sup>d</sup> ∫<sub>a</sub><sup>b</sup> f(x, y) dx dy.</li>
+ <li>Properties: f(x, y) ≥ 0; ∫<sub>-∞</sub><sup>∞</sup> ∫<sub>-∞</sub><sup>∞</sup> f(x, y) dx dy = 1.</li>
+ </ul>
+</li>
+</ul>
+
+<h4>Marginal Probability Distributions</h4>
+<p>The marginal distribution of one variable (e.g., X) is obtained by summing (discrete) or integrating (continuous) the joint distribution over all values of the other variable(s).</p>
+<ul>
+ <li><strong>Marginal PMF (Discrete):</strong>
+ <ul>
+ <li>p<sub>X</sub>(x) = Σ<sub>y</sub> p(x, y).</li>
+ <li>p<sub>Y</sub>(y) = Σ<sub>x</sub> p(x, y).</li>
+ </ul>
+</li>
+ <li><strong>Marginal PDF (Continuous):</strong>
+ <ul>
+ <li>f<sub>X</sub>(x) = ∫<sub>-∞</sub><sup>∞</sup> f(x, y) dy.</li>
+ <li>f<sub>Y</sub>(y) = ∫<sub>-∞</sub><sup>∞</sup> f(x, y) dx.</li>
+ </ul>
+</li>
+ <li><strong>Interpretation:</strong> Probability of a single variable taking a value, irrespective of other variables.</li>
+</ul>
+
+<h4>Conditional Probability Distributions</h4>
+<p>The conditional distribution of one variable given another's specific value describes how the first variable's probability changes based on the observed second variable.</p>
+<ul>
+ <li><strong>Conditional PMF (Discrete):</strong>
+ <ul>
+ <li>P(Y=y | X=x) = p(x, y) / p<sub>X</sub>(x), if p<sub>X</sub>(x) > 0.</li>
+ <li>P(X=x | Y=y) = p(x, y) / p<sub>Y</sub>(y), if p<sub>Y</sub>(y) > 0.</li>
+ </ul>
+</li>
+ <li><strong>Conditional PDF (Continuous):</strong>
+ <ul>
+ <li>f(y | x) = f(x, y) / f<sub>X</sub>(x), if f<sub>X</sub>(x) > 0.</li>
+ <li>f(x | y) = f(x, y) / f<sub>Y</sub>(y), if f<sub>Y</sub>(y) > 0.</li>
+ </ul>
+</li>
+ <li><strong>Interpretation:</strong> Fundamental for modeling variable influence (e.g., probability of outcome Y given condition X).</li>
+</ul>
+
+<h4>Independence of Random Variables</h4>
+<p>X and Y are independent iff their joint distribution factors into the product of marginals; the outcome of one does not affect the other's distribution.</p>
+<ul>
+ <li><strong>Discrete:</strong> p(x, y) = p<sub>X</sub>(x) p<sub>Y</sub>(y) for all x, y.</li>
+ <li><strong>Continuous:</strong> f(x, y) = f<sub>X</sub>(x) f<sub>Y</sub>(y) for all x, y.</li>
+ <li><strong>Equivalently:</strong> Conditional distribution equals marginal (p(y | x) = p<sub>Y</sub>(y) or f(y | x) = f<sub>Y</sub>(y)). Knowing X provides no information about Y.</li>
+</ul>
+<p>Understanding joint, marginal, and conditional distributions is fundamental for multivariate analysis, enabling modeling of complex interacting systems and forming the basis for Bayesian networks and graphical models.</p>
+
+<h3>Common Traps</h3>
+<ul>
+ <li>Confusing output types: Gradient (scalar→vector), Divergence (vector→scalar), Curl (vector→vector).</li>
+ <li>Incorrect evaluation points: PGF derivatives at t=1, MGF derivatives at t=0.</li>
+ <li>Misinterpreting confidence intervals: 95% CI means 95% of all such intervals contain the parameter, not a 95% probability for this specific interval.</li>
+ <li>Ignoring CLT/normal approximation assumptions (n ≥ 30 for means; np ≥ 5, n(1-p) ≥ 5 for proportions).</li>
+ <li>Failing to check multicollinearity or heteroscedasticity in regression, leading to unreliable estimates and incorrect standard errors.</li>
+ <li>Not distinguishing Ridge (shrinks, no zeroing) from Lasso (shrinks and zeros coefficients for feature selection).</li>
+ <li>Confusing joint P(X and Y), marginal P(X) or P(Y), and conditional P(Y given X); they are distinct concepts linked by specific formulas.</li></ul>
+<h3>Integral Theorems of Vector Calculus: Green's, Stokes', and Divergence Theorems</h3>
+<p>The three classical integral theorems relate line, surface, and volume integrals of vector fields to integrals of their derivatives. Green's theorem in the plane relates a line integral around a simple closed curve C to a double integral over the enclosed region D: ∮<sub>C</sub> (P dx + Q dy) = ∬<sub>D</sub> (∂Q/∂x − ∂P/∂y) dA. It requires P and Q to have continuous partial derivatives on an open set containing D. Stokes' theorem generalizes Green's theorem to three dimensions: for an oriented surface S with boundary curve ∂S, ∮<sub>∂S</sub> F·dr = ∬<sub>S</sub> (∇ × F)·n dS, where n is the unit normal consistent with the orientation. The divergence theorem (Gauss's theorem) relates the flux of a vector field F across a closed surface ∂V to the volume integral of its divergence: ∬<sub>∂V</sub> F·n dS = ∭<sub>V</sub> (∇·F) dV. All three theorems assume continuously differentiable field components and piecewise-smooth surfaces and curves. They are foundational for simplifying integrals, deriving conservation laws, and proving identities such as ∇·(∇×F)=0 and ∇×(∇f)=0. Typical exam tasks include verifying the theorems for given fields and surfaces, computing flux via a volume integral, and identifying conservative (curl zero on a simply connected domain) or solenoidal (divergence zero) fields.</p>
+
+<h3>Bayesian Inference: Prior, Likelihood, Posterior, and Conjugate Families</h3>
+<p>Bayesian inference updates a prior π(θ) for an unknown parameter θ using observed data x via the likelihood L(θ|x) = f(x|θ). Bayes' theorem gives the posterior π(θ|x) ∝ L(θ|x)π(θ). The normalizing constant is the marginal likelihood m(x) = ∫ L(θ|x)π(θ) dθ. A conjugate prior yields a posterior in the same family, giving closed-form updates. The Beta–Binomial pair is the canonical example: if X|θ ~ Binomial(n, θ) and θ ~ Beta(α, β), then θ|X ~ Beta(α+X, β+n−X). The posterior mean is (α+X)/(α+β+n), a weighted average of the prior mean α/(α+β) and the sample proportion X/n. For normal data with known variance σ², a normal prior N(μ₀, τ₀²) yields a normal posterior N(μ₁, τ₁²) where 1/τ₁² = 1/τ₀² + n/σ² and μ₁ = (μ₀/τ₀² + n x̄/σ²) τ₁². The Poisson–Gamma pair works similarly: if X|λ ~ Poisson(λ) and λ ~ Gamma(α, β), then λ|X ~ Gamma(α+Σxᵢ, β+n). Conjugate families simplify computation and give intuitive interpretations of prior sample size and prior sum of observations. Non-conjugate models require numerical methods like MCMC, but the conjugate framework remains a benchmark for approximations. Examiners often ask for the posterior distribution, the posterior predictive distribution, or the Bayes estimator under squared-error loss (the posterior mean).</p>
+
+<div class="example-box">
+<div class="ex-title">Posterior Computation for Beta‑Binomial Model</div>
+<div class="ex-text">Suppose a coin is tossed 20 times and 14 heads are observed. The prior for the probability of heads θ is Beta(3, 2). Derive the posterior distribution of θ and compute the posterior mean and a 95% credible interval using the normal approximation to the Beta posterior.</div>
+<div class="ex-soln">The likelihood is Binomial(20, θ). With prior Beta(3, 2), the posterior is Beta(α+X, β+n−X) = Beta(3+14, 2+20−14) = Beta(17, 8). Posterior mean = 17/(17+8) = 17/25 = 0.68. Posterior variance = (17·8)/((25)²·26) = 136/(625·26) ≈ 0.00837. Standard deviation ≈ √0.00837 ≈ 0.0915. Using normal approximation, a 95% credible interval is 0.68 ± 1.96·0.0915 ≈ (0.50, 0.86). The exact Beta quantiles give a similar interval.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a conjugate pair is identified, write the posterior parameters immediately; do not re‑derive the normalising constant. For credible intervals, state the approximation used (normal or exact quantiles) and note the conditions (large posterior sample size) that justify it.</div>
+</div>
+
+<h3>Nonparametric Statistical Tests: Sign Test, Wilcoxon Signed‑Rank, and Mann–Whitney U</h3>
+<p>Nonparametric tests make minimal distributional assumptions, using ranks or signs instead of raw values. The sign test for a single sample tests H₀: median = m₀ by counting the number of observations exceeding m₀. Under H₀, the count follows Binomial(n, 0.5) ignoring ties. The Wilcoxon signed-rank test for paired data or one-sample symmetry ranks absolute differences |Xᵢ−m₀|, assigns signs, and sums the positive ranks W⁺. Under H₀, the distribution of W⁺ is symmetric; for n > 20 a normal approximation with mean n(n+1)/4 and variance n(n+1)(2n+1)/24 is used. The Mann–Whitney U test (Wilcoxon rank‑sum) compares two independent samples. All observations are pooled and ranked; U = Σ ranks of sample 1 − n₁(n₁+1)/2. Under H₀ of identical distributions, E(U) = n₁n₂/2 and Var(U) = n₁n₂(n₁+n₂+1)/12. A continuity correction of 0.5 improves the normal approximation. These tests are robust to outliers and do not require normality, but they assume independence and, for the signed‑rank test, symmetry of the difference distribution. Efficiency relative to the t‑test is 0.955 for normal data, rising for heavy‑tailed distributions. Common exam questions ask to compute the test statistic for small samples using exact tables, apply the normal approximation with continuity correction, and interpret the p-value.</p>
+
+<h3>Time Series Fundamentals: Stationarity, Autocorrelation, and ARIMA Modeling</h3>
+<p>A time series {Yₜ} is weakly stationary if its mean μₜ = μ is constant, its variance σₜ² = σ² is constant, and its autocovariance γₖ = Cov(Yₜ, Yₜ₋ₖ) depends only on lag k. The autocorrelation function (ACF) ρₖ = γₖ/γ₀ measures linear dependence at lag k. For a stationary AR(1) process Yₜ = φ Yₜ₋₁ + εₜ with |φ| < 1 and εₜ ~ WN(0, σ²), the ACF decays exponentially: ρₖ = φᵏ. An MA(1) process Yₜ = εₜ + θ εₜ₋₁ has ρ₁ = θ/(1+θ²) and ρₖ = 0 for k ≥ 2. The ARMA(p, q) model combines autoregressive and moving‑average parts. If the series is non‑stationary due to a unit root, differencing yields stationarity: ∇Yₜ = Yₜ − Yₜ₋₁. The ARIMA(p, d, q) model applies ARMA to the d‑th differenced series. Model identification uses the sample ACF and partial ACF (PACF): AR(p) shows PACF cutting off after lag p, MA(q) shows ACF cutting off after lag q. Parameter estimation is typically by maximum likelihood or conditional least squares. Diagnostic checking examines residuals for white noise using the Ljung‑Box Q statistic. Forecasting uses the fitted model to produce h‑step ahead predictions with prediction intervals that widen with horizon. Examiners often provide ACF/PACF plots and ask to suggest an ARIMA order, write the model equation, or compute one-step forecasts.</p>
+
+<h3>Bootstrap Resampling and Confidence Interval Construction</h3>
+<p>The bootstrap approximates the sampling distribution of a statistic by resampling with replacement from the observed data. Given a sample x₁,…,xₙ, a bootstrap sample x₁*,…,xₙ* is drawn by sampling n observations with replacement from the original set. The statistic of interest θ̂* is computed for each bootstrap replicate. Repeating B times (B ≥ 1000) yields an empirical distribution of θ̂*. The percentile confidence interval uses the α/2 and 1−α/2 quantiles of the bootstrap distribution as limits. The bias‑corrected and accelerated (BCa) interval adjusts for bias and skewness, using the proportion of bootstrap replicates less than the original estimate and an acceleration factor estimated via jackknife. The bootstrap‑t interval studentises each replicate by its estimated standard error, then uses the quantiles of the t‑distribution. Bootstrap methods work for complex statistics (median, correlation, regression coefficients) where analytic standard errors are unavailable. They assume the sample is representative of the population and that the statistic is a smooth function of the data; they can fail for extreme quantiles or non‑smooth functionals. In examinations, candidates may be asked to describe the algorithm, compute a percentile interval from a given bootstrap distribution, or explain why the bootstrap-t interval can be more accurate than the percentile interval when the statistic's variance depends on the parameter.</p>
+
+<ul>
+<li>Confusing the conditions for Green's theorem (planar, simply connected) with those for Stokes' theorem (orientable surface with boundary).</li>
+<li>Using a conjugate prior without verifying that the likelihood belongs to the corresponding exponential family.</li>
+<li>Applying the Wilcoxon signed‑rank test when the symmetry assumption for differences is violated.</li>
+<li>Identifying an ARIMA model solely from ACF/PACF plots without checking stationarity of the differenced series.</li>
+<li>Constructing a bootstrap percentile interval for a statistic with high skewness and ignoring the BCa correction.</li>
+<li>Misinterpreting a 95% credible interval as a 95% confidence interval for the parameter.</li>
+<li>Each of these traps can be avoided by carefully checking assumptions before applying the method.</li></ul>
+<!-- course-addon:end --></div>
+
+                    <!-- course-figure:vector-statistics-figure-2 -->
+<figure class="lesson-figure" data-figure="vector-statistics-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Vectors 3D Geometry Statistics Probability Concept Flow Diagram Overview"><defs><marker id="arrowhead-lesson-vector-statistics-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="105" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="105" dy="0">Vectors</tspan></text><rect x="210" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="285" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="285" dy="0">3D Geometry</tspan></text><rect x="390" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="465" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="465" dy="0">Statistics</tspan></text><rect x="570" y="150" width="150" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="645" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="645" dy="0">Probability</tspan></text><path d="M 180 180 L 210 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure-2)"/><path d="M 360 180 L 390 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure-2)"/><path d="M 540 180 L 570 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-vector-statistics-figure-2)"/></g><g><text x="195" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="195" dy="0">used in</tspan></text><text x="375" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="375" dy="0">feeds</tspan></text><text x="555" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="555" dy="0">basis</tspan></text><text x="30" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 12: Vector addition in 3D</tspan></text><text x="30" y="60" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Def: Probability = favourable/total</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Vectors 3D Geometry Statistics Probability Concept Flow Diagram Overview</strong> — Shows how vectors underpin 3D geometry, which feeds statistics and probability.
+    &middot; <a href="../../../figures/svg-vector-statistics-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+<h2 id="statistics">3. Statistics</h2>
+                    <p>Statistics is a high-scoring and relatively straightforward chapter in the NDA Mathematics syllabus, contributing 3&ndash;5 questions per exam. The focus is on descriptive statistics: measures of central tendency, measures of dispersion, and frequency distributions. Unlike calculus or trigonometry, statistics problems are formula-driven and require careful arithmetic rather than abstract reasoning. With consistent practice, full marks can be achieved in this section.</p>
+                    <p>The NDA exam typically includes questions that test both conceptual understanding (e.g., effect of changing scale on variance) and computational ability (e.g., calculating mean or standard deviation from a frequency table). Understanding when to apply each formula is as important as knowing the formula itself.</p>
+
+                    <h3>Measures of Central Tendency</h3>
+                    <p>Central tendency refers to the value around which a data set clusters. The three principal measures are the mean, median, and mode. Each has strengths and weaknesses, and the NDA exam expects you to know which measure is appropriate for a given type of data distribution.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Measure</th><th>Ungrouped Data</th><th>Grouped Data (Discrete)</th><th>Grouped Data (Continuous)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Mean</strong> <math>(\bar{x})</math></td><td><math>\bar{x}=(\sum_{i=1}^n x_i)/n</math></td><td><math>\bar{x}=(\sum f_ix_i)/(\sum f_i)</math></td><td><math>\bar{x}=(\sum f_ix_i)/(\sum f_i)</math>, where <math>x_i</math> = class mark</td></tr>
+                            <tr><td><strong>Median</strong></td><td>Middle value after sorting; n odd: <math>(n+1)/2</math>th; n even: avg of <math>n/2</math>th and <math>(n/2+1)</math>th</td><td>Cumulative frequency method: find cf just &ge; <math>n/2</math></td><td><math>L + h\cdot\frac{n/2 - cf}{f}</math></td></tr>
+                            <tr><td><strong>Mode</strong></td><td>Most frequent observation</td><td>Value with highest frequency</td><td><math>L + h\cdot\frac{f_1-f_0}{2f_1-f_0-f_2}</math></td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Mean, Median, Mode</h4>
+                    <p>The <strong>arithmetic mean</strong> is the most widely used measure but is sensitive to outliers. The <strong>median</strong> is robust to extreme values and is preferred for skewed distributions. The <strong>mode</strong> identifies the most common value and is useful for categorical or discrete data.</p>
+                    <p><strong>Empirical relationship:</strong> For a moderately skewed (unimodal) distribution, the following approximation holds: <math>\text{Mode} \approx 3\,\text{Median} - 2\,\text{Mean}</math>. This relation is directly tested in NDA exams &mdash; given any two of the three measures, you can estimate the third.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 13: Mean &amp; Median Computation</div>
+                        <div class="ex-text">The test scores of 5 students are 8, 12, 15, 20, and 25. Find the mean and median. Also estimate the mode using the empirical relation.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Mean <math>= (8+12+15+20+25)/5 = 80/5 = 16</math>. Sorted data: 8, 12, 15, 20, 25. Since n=5 (odd), median = <math>(5+1)/2=3</math>rd value = <strong>15</strong>. Estimated mode <math>= 3(15)-2(16) = 45-32 = 13</math>.</div>
+                    </div>
+
+                    <h4>Weighted Mean &amp; Combined Mean</h4>
+                    <p>If two groups have means <math>\bar{x}_1</math> and <math>\bar{x}_2</math> with sizes <math>n_1</math> and <math>n_2</math>, the combined mean is: <math>\bar{x} = (n_1\bar{x}_1 + n_2\bar{x}_2)/(n_1+n_2)</math>. This formula is frequently tested in NDA exam questions where data sets are merged or split.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 14: Combined Mean</div>
+                        <div class="ex-text">The mean marks of 20 boys in a class is 75 and that of 15 girls is 80. Find the combined mean of the class.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Combined mean <math>= (20\times75 + 15\times80)/(20+15) = (1500+1200)/35 = 2700/35 \approx 77.14</math>.</div>
+                    </div>
+
+                    <h3>Measures of Dispersion</h3>
+                    <p>While central tendency describes the centre of data, dispersion measures how spread out the data is. For the NDA exam, the key dispersion measures are range, variance, and standard deviation. The standard deviation is simply the square root of the variance and shares the same unit as the data, making it the preferred measure for interpretation.</p>
+
+                    <h4>Range, Variance, Standard Deviation</h4>
+                    <p><strong>Range</strong> = Maximum value &minus; Minimum value. It is the simplest measure but highly sensitive to outliers.</p>
+                    <p><strong>Variance</strong> (<math>\sigma^2</math>) for ungrouped data: <math>\sigma^2 = \frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})^2</math>.</p>
+                    <p><strong>Shortcut (computational) formula:</strong> <math>\sigma^2 = \frac{1}{n}\sum x_i^2 - \bar{x}^2</math>. This form avoids computing deviations individually and is faster in NDA objective calculations.</p>
+                    <p><strong>Standard Deviation</strong> (<math>\sigma</math>) = <math>\sqrt{\sigma^2}</math>.</p>
+                    <p>For grouped data: <math>\sigma^2 = \frac{1}{N}\sum f_i(x_i-\bar{x})^2 = \frac{1}{N}\sum f_ix_i^2 - \bar{x}^2</math>, where <math>N=\sum f_i</math>.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Measure</th><th>Formula</th><th>Properties</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Range</td><td>Max &minus; Min</td><td>Unit dependent; affected by outliers</td></tr>
+                            <tr><td>Variance (<math>\sigma^2</math>)</td><td><math>\frac{1}{n}\sum(x_i-\bar{x})^2</math> or <math>\frac{1}{n}\sum x_i^2 - \bar{x}^2</math></td><td>Always &ge; 0; unchanged by adding constant; multiplied by <math>k^2</math> if each value is multiplied by <math>k</math></td></tr>
+                            <tr><td>Standard Deviation (<math>\sigma</math>)</td><td><math>\sqrt{\sigma^2}</math></td><td>Same unit as data; most common measure in NDA</td></tr>
+                            <tr><td>Coefficient of Variation (CV)</td><td><math>(\sigma/\bar{x})\times100\%</math></td><td>Relative measure; used to compare variability across different data sets</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 15: Variance &amp; Standard Deviation</div>
+                        <div class="ex-text">Find the variance and standard deviation of the data set: 2, 4, 6, 8, 10.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Mean <math>=6</math>. <math>\sum x_i^2 = 4+16+36+64+100 = 220</math>. Variance <math>= 220/5 - 6^2 = 44 - 36 = 8</math>. Standard deviation <math>= \sqrt{8} = 2\sqrt{2} \approx 2.828</math>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #8: Effect of Scale Change on Variance</div>
+                        <div class="tip-text">This is one of the most commonly tested concepts in NDA statistics. If each observation is increased by a constant <math>k</math>, variance and standard deviation remain <strong>unchanged</strong>. If each observation is multiplied by a constant <math>k</math>, the new variance = <math>k^2 \times</math> (original variance) and new SD = <math>|k| \times</math> (original SD). For example, adding 5 to each number does not change the spread, but multiplying each by 3 multiplies the variance by 9. This property alone can solve 2&ndash;3 NDA MCQs instantly without recalculation.</div>
+                    </div>
+
+                    <h3>Frequency Distribution</h3>
+                    <p>A frequency distribution organises raw data into classes or categories with associated frequencies. The NDA exam covers both discrete and continuous frequency distributions. Key concepts include:</p>
+                    <ul>
+                        <li><strong>Class limits:</strong> The lower and upper boundaries defining a class interval (e.g., 10&ndash;20).</li>
+                        <li><strong>Class boundaries:</strong> True limits that eliminate gaps between classes (e.g., 9.5&ndash;20.5 for the class 10&ndash;20).</li>
+                        <li><strong>Class mark (midpoint):</strong> <math>(L+U)/2</math>, used as <math>x_i</math> in the mean formula for grouped data.</li>
+                        <li><strong>Class width:</strong> Difference between successive lower limits or between class boundaries.</li>
+                        <li><strong>Cumulative frequency:</strong> Running total of frequencies, used to locate the median class in continuous distributions.</li>
+                    </ul>
+                    <p>The <strong>histogram</strong> (bar graph with no gaps) and <strong>frequency polygon</strong> (line graph connecting midpoints) are graphical representations of frequency distributions. NDA questions may ask you to identify the correct shape of a distribution (symmetric, positively skewed, negatively skewed) based on the relative positions of mean, median, and mode.</p>
+
+                    <h4>Quartiles &amp; Interquartile Range</h4>
+                    <p>Quartiles divide the data into four equal parts. <math>Q_1</math> (lower quartile) is the 25th percentile, <math>Q_2</math> is the median (50th percentile), and <math>Q_3</math> (upper quartile) is the 75th percentile. The <strong>interquartile range (IQR)</strong> = <math>Q_3 - Q_1</math> measures the spread of the middle 50% of the data and is robust to outliers. The formula for <math>Q_1</math> and <math>Q_3</math> in continuous grouped data follows the same structure as the median but uses <math>n/4</math> and <math>3n/4</math> respectively.</p>
+
+                    <h3>Skewness &amp; Symmetry of Distributions</h3>
+                    <p>Skewness describes the asymmetry of a frequency distribution. The NDA exam tests the relationship between mean, median, and mode to determine the shape:</p>
+                    <ul>
+                        <li><strong>Symmetric distribution:</strong> Mean = Median = Mode. The frequency curve is bell-shaped and balanced.</li>
+                        <li><strong>Positively skewed (right-skewed):</strong> Mean &gt; Median &gt; Mode. The tail extends to the right. Examples include income distributions and test scores with a few very high values.</li>
+                        <li><strong>Negatively skewed (left-skewed):</strong> Mean &lt; Median &lt; Mode. The tail extends to the left. Examples include age at retirement and difficulty-level test scores.</li>
+                    </ul>
+                    <p>In a positively skewed distribution, the mean is pulled toward the tail and is greater than the median. In a negatively skewed distribution, the mean is less than the median. The empirical relation <math>\text{Mode}=3\text{Median}-2\text{Mean}</math> holds approximately for moderately skewed distributions and is directly tested in NDA MCQs.</p>
+
+                    <h3>Correlation (Conceptual Overview)</h3>
+                    <p><strong>Correlation</strong> measures the strength and direction of the linear relationship between two variables <math>X</math> and <math>Y</code>. The <strong>Pearson correlation coefficient</strong> <math>r</math> ranges from &minus;1 to +1:</p>
+                    <p><math>r = \frac{n\sum XY - (\sum X)(\sum Y)}{\sqrt{[n\sum X^2-(\sum X)^2][n\sum Y^2-(\sum Y)^2]}}</math>.</p>
+                    <p>A value of <math>r=+1</math> indicates perfect positive correlation, <math>r=-1</math> indicates perfect negative correlation, and <math>r=0</math> indicates no linear correlation. NDA questions on correlation typically involve interpreting the value of <math>r</math> or computing it from summary data.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Type of Distribution</th><th>Mean vs Median vs Mode</th><th>Shape</th><th>NDA Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Symmetric</td><td>Mean = Median = Mode</td><td>Bell-shaped curve</td><td>Standard normal distribution</td></tr>
+                            <tr><td>Positively Skewed</td><td>Mean &gt; Median &gt; Mode</td><td>Tail on the right</td><td>Distribution of wealth</td></tr>
+                            <tr><td>Negatively Skewed</td><td>Mean &lt; Median &lt; Mode</td><td>Tail on the left</td><td>Age at retirement</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h2 id="probability">4. Probability</h2>
+                    <p>Probability is one of the highest-weightage chapters in NDA Paper 1, with 5&ndash;6 questions appearing consistently. The chapter progresses from basic classical definitions to advanced theorems such as Bayes' theorem. Understanding the logical structure of probability &mdash; sample spaces, events, and conditional relationships &mdash; is critical for solving both simple and complex problems.</p>
+                    <p>NDA probability questions are known for their variety: some test direct formula application, while others require multi-step reasoning involving combinations, conditional probabilities, or Bayes' theorem. A systematic approach&mdash;identifying the sample space, defining events, and applying the appropriate theorem&mdash;ensures accuracy.</p>
+
+                    <h3>Basic Concepts</h3>
+                    <p>A <strong>random experiment</strong> is an action with multiple well-defined possible outcomes. The <strong>sample space (S)</strong> is the set of all possible outcomes. An <strong>event (E)</strong> is any subset of the sample space. The classical definition of probability for equally likely outcomes is:</p>
+                    <p><math>P(E) = n(E)/n(S)</math>.</p>
+                    <p>Probability satisfies three axioms: (i) <math>0 \le P(E) \le 1</math> for every event E; (ii) <math>P(S)=1</math>; (iii) for mutually exclusive events <math>A</math> and <math>B</math>, <math>P(A\cup B)=P(A)+P(B)</math>.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Term</th><th>Definition</th><th>Mathematical Expression</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Mutually Exclusive Events</td><td>Events that cannot occur simultaneously</td><td><math>P(A\cap B)=0</math></td></tr>
+                            <tr><td>Exhaustive Events</td><td>Union of events covers the entire sample space</td><td><math>A\cup B=S</math></td></tr>
+                            <tr><td>Independent Events</td><td>Occurrence of one does not affect the other</td><td><math>P(A\cap B)=P(A)P(B)</math></td></tr>
+                            <tr><td>Complementary Event</td><td>Event that does not occur</td><td><math>P(\bar{A})=1-P(A)</math></td></tr>
+                            <tr><td>Addition Theorem (Two Events)</td><td>Probability of at least one event</td><td><math>P(A\cup B)=P(A)+P(B)-P(A\cap B)</math></td></tr>
+                            <tr><td>Addition Theorem (Three Events)</td><td>Inclusion&ndash;exclusion principle</td><td><math>P(A\cup B\cup C)=P(A)+P(B)+P(C)-P(A\cap B)-P(B\cap C)-P(C\cap A)+P(A\cap B\cap C)</math></td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 16: Basic Probability &amp; Addition Theorem</div>
+                        <div class="ex-text">A bag contains 3 red and 5 green balls. Two balls are drawn without replacement. Find the probability that either both are red or both are green.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>P(\text{both red}) = (3/8)\times(2/7) = 6/56</math>. <math>P(\text{both green}) = (5/8)\times(4/7) = 20/56</math>. Since mutually exclusive, <math>P = 6/56+20/56 = 26/56 = 13/28 \approx 0.464</math>.</div>
+                    </div>
+
+                    <h3>Conditional Probability</h3>
+                    <p>Conditional probability answers the question: given that event B has occurred, what is the probability that event A also occurs? The formula is:</p>
+                    <p><math>P(A|B) = P(A\cap B)/P(B)</math>, provided <math>P(B) &gt; 0</math>.</p>
+                    <p>For independent events, knowledge of B does not affect A, so <math>P(A|B)=P(A)</math> and <math>P(B|A)=P(B)</math>.</p>
+                    <p><strong>Multiplication theorem:</strong> <math>P(A\cap B) = P(A)P(B|A) = P(B)P(A|B)</math>. This generalises to three events: <math>P(A\cap B\cap C) = P(A)P(B|A)P(C|A\cap B)</math>.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 17: Conditional Probability</div>
+                        <div class="ex-text">Given <math>P(A)=0.5</math>, <math>P(B)=0.4</math>, and <math>P(A\cap B)=0.2</math>. Find <math>P(A|B)</math> and <math>P(B|A)</math>. Are A and B independent?</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>P(A|B)=0.2/0.4=0.5</math>. <math>P(B|A)=0.2/0.5=0.4</math>. Since <math>P(A|B)=P(A)</math> and <math>P(B|A)=P(B)</math>, events A and B are <strong>independent</strong>. Alternatively, <math>P(A\cap B)=0.2=0.5\times0.4=P(A)P(B)</math>, confirming independence.</div>
+                    </div>
+
+                    <h3>Total Probability Theorem</h3>
+                    <p>Let <math>E_1,E_2,\dots,E_n</math> be a partition of the sample space S (mutually exclusive and exhaustive). Then for any event A:</p>
+                    <p><math>P(A) = \sum_{i=1}^n P(E_i)P(A|E_i)</math>.</p>
+                    <p>This theorem is the foundation for Bayes' theorem and is used whenever the probability of an event depends on which of several mutually exclusive scenarios occurs.</p>
+
+                    <h3>Bayes' Theorem</h3>
+                    <p>Bayes' theorem reverses the conditional probability: given that event A has occurred, what is the probability that it was caused by a particular event <math>E_i</math>?</p>
+                    <p><math>P(E_i|A) = \frac{P(E_i)P(A|E_i)}{\sum_{j=1}^n P(E_j)P(A|E_j)}</math>.</p>
+                    <p>This theorem is particularly important in NDA for problems involving medical testing, quality control, and source identification. The numerator is the contribution of the <math>i</math>-th event to the total probability of A; the denominator is <math>P(A)</math> from the theorem of total probability.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 18: Bayes' Theorem</div>
+                        <div class="ex-text">In a population, 5% have a certain disease. A diagnostic test detects the disease with 90% accuracy (true positive rate) and has a 10% false positive rate. If a randomly selected person tests positive, what is the probability they actually have the disease?</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let D = having the disease, T = testing positive. <math>P(D)=0.05</math>, <math>P(T|D)=0.9</math>, <math>P(T|\bar{D})=0.1</math>. By total probability: <math>P(T)=P(D)P(T|D)+P(\bar{D})P(T|\bar{D}) = 0.05\times0.9 + 0.95\times0.1 = 0.045+0.095 = 0.14</math>. By Bayes' theorem: <math>P(D|T)=P(D)P(T|D)/P(T)=0.045/0.14 \approx 0.321</math>. So there is approximately a 32% chance the positive result is correct. This counter-intuitive result (low positive predictive value) is a classic NDA question model.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #9: Bayes' Denominator First</div>
+                        <div class="tip-text">In NDA Bayes' theorem questions, always compute the denominator <math>P(A)=\sum P(E_j)P(A|E_j)</math> first. This is the total probability of the observed event, and the answer is simply the numerator <math>P(E_i)P(A|E_i)</math> divided by this denominator. Many NDA options include the numerator and denominator values separately, so identifying <math>P(A)</math> first can help you eliminate wrong choices immediately.</div>
+                    </div>
+
+                    <h3>Probability Distributions for NDA</h3>
+                    <h4>Binomial Distribution</h4>
+                    <p>A random variable X follows a binomial distribution with parameters <math>n</math> (number of trials) and <math>p</math> (probability of success in each trial) if:</p>
+                    <p><math>P(X=r) = {}^{n}C_{r}\,p^{r}q^{n-r}</math>, where <math>q=1-p</math>.</p>
+                    <p>The mean of the binomial distribution is <math>np</math>, and the variance is <math>npq</math>. NDA questions may ask you to compute binomial probabilities or to identify the mean and variance from given parameters.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 19: Binomial Probability</div>
+                        <div class="ex-text">A fair coin is tossed 5 times. Find the probability of getting exactly 3 heads.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Here <math>n=5</math>, <math>p=1/2</math>, <math>q=1/2</math>. <math>P(X=3) = {}^{5}C_{3}(1/2)^3(1/2)^2 = 10\times(1/32) = 10/32 = 5/16</math>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #10: Binomial Sum Formula</div>
+                        <div class="tip-text">For binomial problems asking &quot;at least one&quot;, use the complement: <math>P(X\ge1)=1-P(X=0)=1-q^n</math>. This is faster than summing multiple terms. Similarly, for &quot;at most one&quot;, compute <math>P(X=0)+P(X=1)=q^n+npq^{n-1}</math>. These shortcuts save 30&ndash;45 seconds per NDA question.</div>
+                    </div>
+
+                    <h3>Random Variables &amp; Expectation</h3>
+                    <p>A <strong>random variable</strong> is a function that assigns a numerical value to each outcome of a random experiment. Random variables are classified as discrete (taking countable values like 0,1,2,...) or continuous (taking any value in an interval). The NDA syllabus focuses on discrete random variables and their probability distributions.</p>
+                    <p>The <strong>probability mass function (PMF)</strong> of a discrete random variable X assigns a probability to each possible value <math>x_i</math>. The PMF satisfies: (i) <math>0 \le p_i \le 1</math> for all i, and (ii) <math>\sum_i p_i = 1</math>. The cumulative distribution function (CDF) gives <math>P(X \le x)</math> and is obtained by summing probabilities up to <math>x</math>.</p>
+                    <p>The <strong>expected value</strong> (also called the mean) of a discrete random variable is the probability-weighted average of its possible values. The <strong>variance</strong> measures the spread of the distribution around the mean. These two quantities completely characterise the central tendency and dispersion of a probability distribution, analogous to the mean and variance of a frequency distribution in statistics.</p> Random variables can be discrete (countable values, e.g., number of heads in 5 tosses) or continuous (uncountable values, e.g., height, weight). For the NDA syllabus, the focus is on discrete random variables.</p>
+                    <p>The <strong>probability distribution</strong> of a discrete random variable X lists each possible value <math>x_i</math> along with its probability <math>p_i=P(X=x_i)</math>, such that <math>\sum p_i=1</math>.</p>
+                    <p><strong>Expected value (mean) of X:</strong> <math>E(X)=\sum x_i p_i</math>.</p>
+                    <p><strong>Variance of X:</strong> <math>Var(X)=E(X^2)-[E(X)]^2</math>, where <math>E(X^2)=\sum x_i^2 p_i</math>.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 20: Expected Value</div>
+                        <div class="ex-text">A random variable X has the distribution: P(X=1)=0.2, P(X=2)=0.3, P(X=3)=0.5. Find E(X) and Var(X).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> <math>E(X)=1(0.2)+2(0.3)+3(0.5)=0.2+0.6+1.5=2.3</math>. <math>E(X^2)=1(0.2)+4(0.3)+9(0.5)=0.2+1.2+4.5=5.9</math>. <math>Var(X)=5.9-(2.3)^2=5.9-5.29=0.61</math>.</div>
+                    </div>
+
+                    <h3>Probability: Key Formulas Summary Table</h3>
+
+                    <table>
+                        <thead>
+                            <tr><th>Concept</th><th>Formula</th><th>When to Use</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Classical Probability</td><td><math>P(E)=n(E)/n(S)</math></td><td>Equally likely outcomes</td></tr>
+                            <tr><td>Addition Theorem</td><td><math>P(A\cup B)=P(A)+P(B)-P(A\cap B)</math></td><td>Finding at least one of two events</td></tr>
+                            <tr><td>Conditional Probability</td><td><math>P(A|B)=P(A\cap B)/P(B)</math></td><td>Probability given partial information</td></tr>
+                            <tr><td>Multiplication Theorem</td><td><math>P(A\cap B)=P(A)P(B|A)</math></td><td>Probability of joint occurrence</td></tr>
+                            <tr><td>Total Probability</td><td><math>P(A)=\sum P(E_i)P(A|E_i)</math></td><td>Partition of sample space</td></tr>
+                            <tr><td>Bayes' Theorem</td><td><math>P(E_i|A)=P(E_i)P(A|E_i)/P(A)</math></td><td>Reverse conditional probability</td></tr>
+                            <tr><td>Binomial Probability</td><td><math>P(X=r)={}^{n}C_{r}p^{r}q^{n-r}</math></td><td>Fixed number of independent trials</td></tr>
+                            <tr><td>Expected Value</td><td><math>E(X)=\sum x_i p_i</math></td><td>Mean of a probability distribution</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut #11: Addition Theorem for Three Events</div>
+                        <div class="tip-text">For three events, the addition theorem is: <math>P(A\cup B\cup C)=P(A)+P(B)+P(C)-P(A\cap B)-P(B\cap C)-P(C\cap A)+P(A\cap B\cap C)</math>. The signs alternate: + for single events, &minus; for pairwise intersections, + for triple intersection. This pattern continues for any number of events and is a common NDA question type.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">Exam Strategy for NDA Mathematics Paper 1</div>
+                        <div class="tip-text"><strong>Time Management:</strong> Allocate approximately 1.5&ndash;2 minutes per question from this chapter. For vector cross products and Bayes' theorem problems, solve systematically without jumping steps. For statistics, always use the shortcut variance formula to minimise arithmetic errors. Practise at least 30&ndash;40 mixed questions from previous NDA papers (2018&ndash;2025) before the exam. Maintain a formula sheet with all key equations for quick revision in the final week.</div>
+                    </div>
+
+                    <h3>Key Takeaways &amp; Revision Checklist</h3>
+                    <p>Before moving on to practice questions, ensure you have mastered the following concepts. Use this checklist to track your preparation for the NDA exam:</p>
+                    <ul>
+                        <li><strong>Vectors:</strong> Types of vectors, addition and scalar multiplication, dot product (angle, projection), cross product (area, perpendicular vector), scalar triple product (volume, coplanarity), section formula, application to triangle area and tetrahedron volume.</li>
+                        <li><strong>3D Geometry:</strong> Direction cosines and their relation, direction ratios, conversion between d.c. and d.r., equation of a line (vector and cartesian), angle between two lines, distance from point to line, equation of a plane, distance from point to plane, angle between line and plane.</li>
+                        <li><strong>Statistics:</strong> Mean (ungrouped, grouped, combined, weighted), median, mode, empirical relation, range, variance (formula and shortcut), standard deviation, effect of scale change on variance, frequency distribution concepts, quartiles and IQR, skewness types, correlation coefficient.</li>
+                        <li><strong>Probability:</strong> Classical definition, mutually exclusive and independent events, addition theorem (2 and 3 events), conditional probability, multiplication theorem, total probability theorem, Bayes' theorem, binomial distribution, expected value and variance of discrete random variables.</li>
+                    </ul>
+
+                    <table>
+                        <thead>
+                            <tr><th>Chapter</th><th>Weightage in NDA</th><th>Difficulty</th><th>Recommended Practice</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Vectors</td><td>3&ndash;4 questions</td><td>Medium</td><td>20+ problems on dot/cross product</td></tr>
+                            <tr><td>3D Geometry</td><td>2&ndash;3 questions</td><td>Medium</td><td>15+ problems on lines and planes</td></tr>
+                            <tr><td>Statistics</td><td>3&ndash;5 questions</td><td>Easy&ndash;Medium</td><td>25+ problems on mean/variance/SD</td></tr>
+                            <tr><td>Probability</td><td>5&ndash;6 questions</td><td>Medium&ndash;Hard</td><td>30+ problems including Bayes' and binomial</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">Final NDA Exam Tip</div>
+                        <div class="tip-text"><strong>Revision Plan:</strong> In the last 30 days before the NDA exam, revise this chapter as follows: Days 1&ndash;5: Vectors (all types, dot, cross, triple product). Days 6&ndash;8: 3D Geometry (lines, planes, distances). Days 9&ndash;12: Statistics (mean, variance, skewness). Days 13&ndash;16: Probability (Bayes', binomial, expectation). Days 17&ndash;30: Mixed practice with previous year papers. Focus on accuracy first, speed second. A score of 80%+ in this chapter is achievable with systematic preparation.</div>
+                    </div>
+
+                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-coordinate-geometry.html" class="btn btn-primary">&#x2190; Coordinate Geometry</a>
+                    <a href="../index.html" class="btn btn-success">&#x2190; Course Home</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":3,"text":"Find the direction cosines of the line joining (1,2,3) and (3,2,1).","options":[{"l":"a","t":"(1/√2, 0, -1/√2)","c":true},{"l":"b","t":"(1/√3, 0, -1/√3)","c":false},{"l":"c","t":"(1/√2, 1/√2, 0)","c":false},{"l":"d","t":"(0, 1/√2, -1/√2)","c":false}],"sol":"Direction ratios = (2,0,-2). AB = 2√2. D.C. = (2/(2√2), 0, -2/(2√2)) = (1/√2, 0, -1/√2)."},{"id":4,"text":"The mean of 5 numbers is 12. If one number 18 is removed, the new mean is:","options":[{"l":"a","t":"10.5","c":true},{"l":"b","t":"10","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"12","c":false}],"sol":"Sum = 12×5 = 60. Remove 18 → sum = 42. New mean = 42/4 = 10.5."},{"id":5,"text":"A bag contains 3 red and 5 green balls. Two balls are drawn without replacement. The probability both are red is:","options":[{"l":"a","t":"3/28","c":true},{"l":"b","t":"9/64","c":false},{"l":"c","t":"3/8","c":false},{"l":"d","t":"1/7","c":false}],"sol":"P(both red) = (3/8)×(2/7) = 6/56 = 3/28."},{"id":6,"text":"If P(A)=0.5, P(B)=0.4, P(A∩B)=0.2, then P(A|B) is:","options":[{"l":"a","t":"0.5","c":true},{"l":"b","t":"0.4","c":false},{"l":"c","t":"0.6","c":false},{"l":"d","t":"0.2","c":false}],"sol":"P(A|B)=P(A∩B)/P(B)=0.2/0.4=0.5."},{"id":8,"text":"The variance of 2, 4, 6, 8, 10 is:","options":[{"l":"a","t":"8","c":true},{"l":"b","t":"10","c":false},{"l":"c","t":"6","c":false},{"l":"d","t":"4","c":false}],"sol":"Mean=6. ∑x_i²=4+16+36+64+100=220. Variance = 220/5 - 36 = 44-36=8."},{"id":9,"text":"In a test with 5% disease prevalence, 90% sensitivity, 10% false positive rate. P(disease|positive) ≈ ?","options":[{"l":"a","t":"0.32","c":true},{"l":"b","t":"0.45","c":false},{"l":"c","t":"0.50","c":false},{"l":"d","t":"0.90","c":false}],"sol":"P(D)=0.05, P(T|D)=0.9, P(T|D')=0.1. P(D|T)=0.045/(0.045+0.095)=0.045/0.14≈0.321."},{"id":10,"text":"The angle between lines with d.r. (1,1,1) and (1,-1,0) is:","options":[{"l":"a","t":"90°","c":true},{"l":"b","t":"60°","c":false},{"l":"c","t":"45°","c":false},{"l":"d","t":"0°","c":false}],"sol":"cosθ=(1-1+0)/(√3×√2)=0 ⇒ θ=90°."},{"id":11,"text":"If the mean is 20 and the mode is 26, the median (via empirical relation) is:","options":[{"l":"a","t":"22","c":true},{"l":"b","t":"24","c":false},{"l":"c","t":"20","c":false},{"l":"d","t":"18","c":false}],"sol":"Mode = 3Median - 2Mean ⇒ 26 = 3M - 40 ⇒ 3M = 66 ⇒ Median = 22."},{"id":13,"text":"A fair coin tossed 5 times. Probability of exactly 3 heads:","options":[{"l":"a","t":"5/16","c":true},{"l":"b","t":"3/8","c":false},{"l":"c","t":"1/2","c":false},{"l":"d","t":"10/32","c":false}],"sol":"P = ⁵C₃(1/2)⁵ = 10/32 = 5/16."},{"id":14,"text":"Combined mean of 20 boys (mean 75) and 15 girls (mean 80) is:","options":[{"l":"a","t":"77.14","c":true},{"l":"b","t":"77.5","c":false},{"l":"c","t":"76.5","c":false},{"l":"d","t":"78","c":false}],"sol":"Combined mean = (20×75+15×80)/(35) = 2700/35 ≈ 77.14."}];
+        var answered={},correctCount=0,lessonSlug="vector-statistics";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("nda-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("nda-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("nda-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

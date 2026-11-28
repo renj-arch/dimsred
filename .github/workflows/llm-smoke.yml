@@ -1,0 +1,65 @@
+name: LLM Smoke Test
+
+# The run title shows the model tag — with several smokes in flight, the
+# plain "LLM Smoke Test" titles made runs indistinguishable (2026-10-18).
+# NOTE: this concurrency group keeps only ONE pending run — a newer dispatch
+# CANCELS an older pending one (it is NOT queued behind it). Never fire two
+# smokes back to back; wait for the pending one to go active first.
+run-name: 'LLM Smoke: ${{ inputs.model }}'
+
+# Dispatch-only verdict on the model layer: one cheap hosted call through
+# scripts/lib/ollama.js (NVIDIA NIM -> Groq -> OpenRouter -> GitHub Models,
+# local Ollama only as a last resort), printing PASS/FAIL in under a minute.
+#
+# Built after the 2026-10-17 post-mortem: Question Quality #15 and the Site
+# Agent run wedged for hours because the local model's default thinking mode
+# streamed at a fraction of a token per second on the 4-vCPU runner. This
+# workflow is the cheap canary for the current transport, not a model pull.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'qwen3:4b'
+
+concurrency:
+  group: llm-smoke
+  # false: verification runs must never cancel each other mid-flight — we
+  # queue 4b and 9b smokes back to back (the 4b seeds the fast cache class).
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # One hosted call. No model pull, no swap file.
+      - name: Smoke — hosted model answers directly
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SMOKE_CAP_MIN: '6'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/llm-smoke-test.js

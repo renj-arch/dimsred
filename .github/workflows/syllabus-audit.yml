@@ -1,0 +1,82 @@
+name: Syllabus Coverage Audit
+
+# Measures the UPSC Mains GS course against the official syllabus, topic by
+# topic, and reports covered / thin / missing. This is a keyword heuristic: it
+# shows where to look, it does not certify accuracy. It never fails the build
+# (run with --strict manually to gate on missing topics).
+
+on:
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: 'Fail the run if any topic is missing'
+        type: choice
+        options: ['false', 'true']
+        default: 'false'
+  schedule:
+    - cron: '17 3 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Partial checkout. The repo carries a ~9 GB data/questions corpus that no
+      # deploy path ships; a full checkout of it makes this job crawl. This audit
+      # only reads upsc/course/** and data/syllabus-map.json, so fetch the commit
+      # and tree (filter: blob:none) and materialise only those paths.
+      - name: Check out main (sparse, blobs on demand)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            /scripts/
+            /data/syllabus-map.json
+            /upsc/course/
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run syllabus coverage audit
+        id: audit
+        shell: bash
+        run: |
+          set -o pipefail
+          ARGS=""
+          if [ "${{ inputs.strict }}" = "true" ]; then ARGS="--strict"; fi
+          node scripts/audit-syllabus-coverage.js $ARGS | tee /tmp/syllabus-audit.txt
+
+      - name: Publish summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Syllabus coverage audit'
+            echo ''
+            echo '```'
+            if [ -f /tmp/syllabus-audit.txt ]; then
+              cat /tmp/syllabus-audit.txt
+            else
+              echo 'audit did not produce output'
+            fi
+            echo '```'
+            echo ''
+            echo 'Heuristic: keyword presence only. Verify every thin/missing row by hand.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: syllabus-coverage
+          path: |
+            data/syllabus-coverage.json
+            data/syllabus-map.json
+          if-no-files-found: warn

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock Test — DIMSRED</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--bg:#0a0e17;--card:#111827;--border:#1e293b;--accent:#3b82f6;--accent2:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1000px;margin:0 auto;padding:16px}
+.test-header{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;display:flex;flex-direction:column;gap:12px}
+.timer-bar{background:linear-gradient(135deg,#1e293b,#0f172a);border:2px solid var(--accent);border-radius:10px;padding:14px;text-align:center}
+.timer-value{font-size:34px;font-weight:800;letter-spacing:-1px}
+.timer-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.timer-danger{color:var(--red)}
+.test-meta{display:flex;gap:16px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:13px}
+.meta-value{font-size:16px;font-weight:700;color:var(--accent);display:block}
+.meta-label{font-size:11px;color:var(--muted);text-transform:uppercase}
+.test-content{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;min-height:400px}
+.q-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.q-chip{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.q-chip:hover{border-color:var(--accent);color:var(--accent)}
+.q-chip.answered{background:var(--green);color:#fff;border-color:var(--green)}
+.q-chip.marked{border-color:var(--yellow);color:var(--yellow)}
+.q-chip.current{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.3)}
+.q-display{font-size:17px;line-height:1.7;margin-bottom:18px}
+.q-options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.q-option{display:flex;align-items:center;padding:12px 16px;border:2px solid var(--border);border-radius:10px;background:rgba(255,255,255,.03);cursor:pointer;transition:all .15s;font-size:15px}
+.q-option input{margin-right:12px;accent-color:var(--accent)}
+.q-option:hover{border-color:var(--accent);background:rgba(59,130,246,.08)}
+.q-option.selected{border-color:var(--accent);background:rgba(59,130,246,.15)}
+.q-nav-actions{display:flex;gap:10px;justify-content:space-between;margin-top:20px}
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-weight:700;cursor:pointer;font-size:15px}
+.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--red);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-weight:700;cursor:pointer}
+.btn-danger:hover{opacity:.9}
+.result-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;text-align:center;display:none}
+.result-stats{display:flex;justify-content:center;gap:24px;margin:24px 0;flex-wrap:wrap}
+.result-item{text-align:center}
+.result-big{font-size:40px;font-weight:800;color:var(--accent)}
+.result-small{font-size:12px;color:var(--muted);text-transform:uppercase}
+.review-list{max-height:400px;overflow-y:auto;margin-top:24px;border:1px solid var(--border);border-radius:8px}
+.review-item{padding:14px;border-bottom:1px solid var(--border);font-size:14px}
+.review-item:last-child{border-bottom:none}
+.review-item.correct{border-left:3px solid var(--green)}
+.review-item.incorrect{border-left:3px solid var(--red)}
+.review-q{font-weight:600;margin-bottom:6px}
+.review-ans,.review-correct{font-size:13px;margin-bottom:4px}
+.review-sol{font-size:13px;color:var(--muted);margin-top:6px}
+.review-ans strong,.review-correct strong{color:var(--text)}
+a.back-link{color:var(--accent2);text-decoration:none}
+a.back-link:hover{text-decoration:underline}
+@media(max-width:600px){.container{padding:10px}.timer-value{font-size:26px}.result-big{font-size:30px}}
+</style>
+</head>
+<body data-exam="" data-paper="">
+<div class="container">
+  <div class="test-header">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2 id="testTitle">Mock Test</h2>
+      <a href="papers.html" class="back-link">← Browse All Papers</a>
+    </div>
+    <div class="timer-bar">
+      <div class="timer-label">Time Remaining</div>
+      <div class="timer-value" id="timerDisplay">60:00</div>
+    </div>
+    <div class="test-meta">
+      <span class="meta-item"><span class="meta-value" id="metaQuestions">0</span><span class="meta-label">Questions</span></span>
+      <span class="meta-item"><span class="meta-value" id="metaExam">Exam</span><span class="meta-label"></span></span>
+      <span class="meta-item"><span class="meta-value" id="metaTime">0 min</span><span class="meta-label">Duration</span></span>
+    </div>
+  </div>
+
+  <div class="test-content" id="testWrapper" style="display:none">
+    <div class="q-nav" id="questionGrid"></div>
+    <div id="qChart" style="margin-bottom:10px"></div>
+    <div class="q-display" id="qText">Loading question...</div>
+    <div class="q-options" id="options"></div>
+    <div class="q-nav-actions">
+      <button class="btn-ghost" id="prevBtn">← Previous</button>
+      <button class="btn-ghost" id="revealBtn">Show Answer</button>
+      <button class="btn-ghost" id="markBtn">Mark</button>
+      <button class="btn-ghost" id="nextBtn">Next →</button>
+      <button class="btn-danger" id="submitBtn">Finish Test</button>
+    </div>
+  </div>
+
+  <div class="result-panel" id="resultPanel">
+    <h2>Test Complete</h2>
+    <div class="result-stats">
+      <div class="result-item"><div class="result-big" id="scoreDisplay">0/0</div><div class="result-small">Score</div></div>
+      <div class="result-item"><div class="result-big" id="percentileDisplay">0</div><div class="result-small">Percentile</div></div>
+      <div class="result-item"><div class="result-big" id="accuracyDisplay">0%</div><div class="result-small">Accuracy</div></div>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+    <div style="margin-top:24px">
+      <button class="btn-ghost" onclick="location.href='papers.html'">← Browse Papers</button>
+      <button class="btn-primary" onclick="location.reload()">Retake Test</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function getParam(name){const u=new URLSearchParams(location.search);return u.get(name);}
+document.body.setAttribute('data-exam', getParam('exam') || '');
+document.body.setAttribute('data-paper', getParam('paper') || '');
+</script>
+<script src="js/mock-test.js"></script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

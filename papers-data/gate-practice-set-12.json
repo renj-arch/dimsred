@@ -1,0 +1,686 @@
+{
+  "folder": "gate",
+  "slug": "practice-set-12",
+  "title": "GATE Practice Set 12",
+  "pageTitle": "GATE Practice Set 12 — Solved Paper",
+  "pageDesc": "Free GATE practice paper set 12 with detailed solutions. Pattern: Paper.",
+  "meta": "15 Q · 42 min · 23 marks · Paper pattern",
+  "timerMinutes": 42,
+  "totalMarks": 23,
+  "createdDate": "2026-11-14",
+  "blueprint": {
+    "paper": "paper1",
+    "name": "Paper",
+    "total": 65,
+    "marks": 100,
+    "duration": 180,
+    "negative": 0.33,
+    "source": "GATE: 65 questions, 100 marks, 180 minutes; General Aptitude 10 questions (15 marks), core 55 questions (85 marks).",
+    "provisional": false,
+    "sections": [
+      {
+        "name": "Core Subject",
+        "count": 13,
+        "bank": [
+          "Core Subject",
+          "Engineering Mathematics",
+          "Structural",
+          "Geotechnical",
+          "Water",
+          "Data Structures & Algorithms",
+          "Computer Organization & OS",
+          "Theory of Computation",
+          "DS & Algorithms",
+          "CO & OS",
+          "Networks",
+          "Analog",
+          "Digital",
+          "Thermodynamics",
+          "Strength of Materials",
+          "Production"
+        ]
+      },
+      {
+        "name": "General Aptitude",
+        "count": 2,
+        "bank": [
+          "General Aptitude"
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "name": "Core Subject",
+      "color": "#6366f1"
+    },
+    {
+      "name": "General Aptitude",
+      "color": "#a855f7"
+    }
+  ],
+  "questions": [
+    {
+      "section": "Core Subject",
+      "text": "A cantilever beam of length L, flexural rigidity EI, carries a point load P at its free end. The maximum deflection at the free end is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "PL³/(2EI)",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "PL³/(4EI)",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "PL³/(3EI)",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "PL³/(6EI)",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: The tip deflection of a cantilever with end load P is a standard formula δ = PL³/(3EI). Full solution: Integrating the moment M(x)=−P(L−x) twice and applying boundary conditions y(0)=0, y'(0)=0 yields y(L)=PL³/(3EI).",
+      "topic": "Strength of Materials",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:24:57.474Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1951,
+      "q": 1
+    },
+    {
+      "section": "Core Subject",
+      "text": "The bar chart shows the number of patents filed by four companies in 2022. Which company filed the maximum number of patents?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Alpha Corp",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Beta Ltd",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Gamma Inc",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Delta Co",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Look at the tallest bar; no calculation needed. Full: From the chart, Gamma Inc's bar reaches 120, higher than Alpha (90), Beta (75), Delta (60). Hence Gamma Inc filed the most patents.",
+      "topic": "Data interpretation – bar chart",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:21:35.414Z",
+      "reviewed": false,
+      "imageUrl": "https://example.com/patents2022.png",
+      "tableData": {},
+      "chartData": {
+        "type": "bar",
+        "labels": [
+          "Alpha Corp",
+          "Beta Ltd",
+          "Gamma Inc",
+          "Delta Co"
+        ],
+        "datasets": [
+          {
+            "label": "Patents",
+            "data": [
+              90,
+              75,
+              120,
+              60
+            ]
+          }
+        ]
+      },
+      "id": 1943,
+      "q": 2
+    },
+    {
+      "section": "Core Subject",
+      "text": "A fair die is rolled twice. What is the probability that the sum of the outcomes is 7?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/6",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1/12",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1/9",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1/8",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: There are 6 favorable pairs (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) out of 36 equally likely outcomes, giving 1/6. Full solution: Total outcomes = 6×6 = 36. Favorable outcomes for sum 7 = 6. Probability = 6/36 = 1/6.",
+      "topic": "Probability",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:24:57.462Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1949,
+      "q": 3
+    },
+    {
+      "section": "Core Subject",
+      "text": "Water flows through a horizontal pipe of varying cross-section. At point 1, pressure is 200 kPa and velocity is 2 m/s. At point 2, velocity is 4 m/s. Assuming incompressible, inviscid flow, the pressure at point 2 is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "206 kPa",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "194 kPa",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "200 kPa",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "188 kPa",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: The dynamic pressure drop = ½ρ(v2²−v1²) = 0.5×1000×(16−4) = 6000 Pa = 6 kPa, so p2 = 200−6 = 194 kPa. Full solution: By Bernoulli, p1+½ρv1² = p2+½ρv2² → p2 = 200 kPa + 0.5×1000×(2²−4²) = 200 kPa − 6 kPa = 194 kPa.",
+      "topic": "Fluid Mechanics",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:24:57.469Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1950,
+      "q": 4
+    },
+    {
+      "section": "Core Subject",
+      "text": "The rank of the matrix [[1, 2, 3], [2, 4, 6], [3, 6, 9]] is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "1",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "3",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Observe that Row 2 = 2 × Row 1 and Row 3 = 3 × Row 1, so only one linearly independent row exists; hence Rank = 1 immediately. Full: Perform row operations R2→R2−2R1 and R3→R3−3R1 to obtain two zero rows; the number of non-zero rows in the row echelon form is 1, confirming rank = 1.",
+      "topic": "Linear Algebra - Rank of Matrix",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:25:53.979Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 1952,
+      "q": 5
+    },
+    {
+      "section": "Core Subject",
+      "text": "A steam pipe with an outer radius of 2 mm is to be insulated with a material of thermal conductivity 0.05 W/m·K. The convective heat transfer coefficient at the outer surface is 10 W/m²·K. The minimum thickness of insulation required to reduce heat loss compared to the bare pipe is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "3 mm",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "5 mm",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8 mm",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "10 mm",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Critical radius rc = k/h = 0.05/10 = 5 mm. Since pipe radius (2 mm) < rc, insulation must reach rc. Minimum thickness = 5 - 2 = 3 mm. Full Solution: For a cylinder, critical radius of insulation is rc = k/h = 0.05/10 = 0.005 m = 5 mm. The bare pipe radius is 2 mm. As r_pipe < rc, adding insulation initially increases heat loss until the outer radius equals rc. To ensure heat loss is less than the bare pipe, the outer radius of insulation must be at least rc. Thus, minimum thickness = rc - r_pipe = 5 - 2 = 3 mm.",
+      "topic": "Heat Transfer - Conduction",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:26:19.989Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1955,
+      "q": 6
+    },
+
+    {
+      "section": "Core Subject",
+      "text": "The table lists the resistances (Ω) of four resistors measured at 20°C. Which resistor will have the highest resistance at 100°C, given that its temperature coefficient of resistance is 0.004/°C?",
+      "options": [
+        {
+          "label": "A",
+          "text": "R1",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "R2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "R3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "R4",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use ΔR = R0·α·ΔT. The resistor with largest product R0·α will increase most. Full: Compute for each. Assume α values: R1=0.004, R2=0.002, R3=0.003, R4=0.001. ΔT=80°C. ΔR1=R1×0.004×80 = R1×0.32. Since R1 also has highest α, its increase proportionally largest. Hence R1 will be highest at 100°C.",
+      "topic": "Table data – temperature coefficient",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:21:35.423Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [
+          "Resistor",
+          "R(20°C) Ω",
+          "α (per °C)"
+        ],
+        "rows": [
+          [
+            "R1",
+            "100",
+            "0.004"
+          ],
+          [
+            "R2",
+            "120",
+            "0.002"
+          ],
+          [
+            "R3",
+            "110",
+            "0.003"
+          ],
+          [
+            "R4",
+            "130",
+            "0.001"
+          ]
+        ]
+      },
+      "chartData": {},
+      "id": 1944,
+      "q": 8
+    },
+    {
+      "section": "Core Subject",
+      "text": "The resonant frequency of a series RLC circuit with L = 1 mH and C = 1 μF is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "1.59 kHz",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "5.03 kHz",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "15.9 kHz",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "50.3 kHz",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: f = 1/(2π√(LC)). √(LC) = √(10⁻³ × 10⁻⁶) = √10⁻⁹ = 3.16×10⁻⁵. 2π ≈ 6.28. Denominator ≈ 6.28 × 3.16×10⁻⁵ ≈ 2×10⁻⁴. f ≈ 1/(2×10⁻⁴) = 5000 Hz = 5 kHz. Option B (5.03 kHz) is closest. Full solution: Resonant frequency f₀ = 1/(2π√(LC)). Given L = 1 mH = 10⁻³ H, C = 1 μF = 10⁻⁶ F. LC = 10⁻⁹. √(LC) = 10⁻⁴.⁵ = 3.162×10⁻⁵ s. 2π√(LC) = 6.283 × 3.162×10⁻⁵ = 1.987×10⁻⁴ s. f₀ = 1/(1.987×10⁻⁴) = 5033 Hz ≈ 5.03 kHz.",
+      "topic": "Network Theory",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:08:44.510Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 1941,
+      "q": 9
+    },
+    {
+      "section": "Core Subject",
+      "text": "An ideal air-standard Diesel cycle has a compression ratio of 16 and a cut-off ratio of 2. If the ratio of specific heats γ = 1.4, the thermal efficiency (in %) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "55",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "58",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "61",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "65",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use η = 1 − (1/γ) × (r_c^γ − 1) / [r^(γ−1)(r_c − 1)]. Approximate 16^0.4 ≈ 3.03 and 2^1.4 ≈ 2.64; η ≈ 1 − (1/1.4) × (1.64)/(3.03) ≈ 61.4%, closest to 61%. Full: Substitute r=16, r_c=2, γ=1.4 into formula: η = 1 − (1/1.4) × (2^1.4 − 1) / [16^0.4 × (2−1)] = 1 − (1/1.4) × 1.639 / 3.031 = 0.614 ≈ 61%.",
+      "topic": "Thermodynamics - Diesel Cycle",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:25:53.985Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 1953,
+      "q": 10
+    },
+    {
+      "section": "Core Subject",
+      "text": "A solid circular shaft of diameter 50 mm transmits 50 kW power at 600 rpm. The maximum shear stress induced in the shaft (in MPa) is approximately:",
+      "options": [
+        {
+          "label": "A",
+          "text": "68.8",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "17.2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "34.4",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "137.6",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Torque T = P/ω = 50000/(2π×10) ≈ 795.8 N·m. τ_max = 16T/(πd³) = 16×795.8/(π×0.05³) ≈ 34.4 MPa. Full Solution: Angular velocity ω = 2πN/60 = 20π rad/s. Torque T = P/ω = 50000/(20π) = 2500/π N·m. Polar section modulus Z_p = πd³/16 = π(0.05)³/16. τ_max = T/Z_p = (2500/π) / (π×1.25×10⁻⁴/16) = 40000/(π²×1.25×10⁻⁴) ≈ 34.4×10⁶ Pa = 34.4 MPa.",
+      "topic": "Mechanics of Materials - Torsion",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:23:44.496Z",
+      "reviewed": false,
+      "imageUrl": "https://example.com/placeholder.png",
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "bar",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 1948,
+      "q": 11
+    },
+    {
+      "section": "Core Subject",
+      "text": "A column of length L and flexural rigidity EI is fixed at one end and free at the other. The critical buckling load (Euler's crippling load) is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "π²EI/4L²",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "π²EI/L²",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "4π²EI/L²",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "2π²EI/L²",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Memorize effective length L_e for end conditions: Fixed-Free → L_e = 2L. Substitute into P_cr = π²EI/L_e² = π²EI/(2L)² = π²EI/4L². Option elimination: π²EI/L² is for Hinged-Hinged; 4π²EI/L² is for Fixed-Fixed. Full: The boundary conditions for a fixed-free column yield an effective length factor K=2. Using Euler's formula P_cr = π²EI/(KL)² gives π²EI/4L².",
+      "topic": "Strength of Materials - Column Buckling",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:25:53.990Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 1954,
+      "q": 12
+    },
+    {
+      "section": "General Aptitude",
+      "text": "A shopkeeper marks up the price of an article by 40% and then offers a discount of 20% on the marked price. What is his profit percentage?",
+      "options": [
+        {
+          "label": "A",
+          "text": "8%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "12%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "15%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20%",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: For successive percentage changes of a% and b%, net change = a + b + ab/100. Here a = +40% (markup), b = -20% (discount). Net = 40 - 20 + (40 × -20)/100 = 20 - 8 = 12% profit. Step-by-step: Assume CP = ₹100. Marked Price = 100 + 40% of 100 = ₹140. Selling Price after 20% discount = 140 - 20% of 140 = 140 - 28 = ₹112. Profit = 112 - 100 = ₹12. Profit% = (12/100) × 100 = 12%.",
+      "topic": "Profit and Loss / Successive Percentage Change",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:02:29.056Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1939,
+      "q": 13
+    },
+    {
+      "section": "General Aptitude",
+      "text": "A shopkeeper sells an article at a loss of 10%. If he had sold it for ₹50 more, he would have gained 10%. What is the cost price of the article?",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹200",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "₹250",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "₹300",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹350",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: The difference between a 10% loss and a 10% gain is 20% of the cost price. This 20% equals ₹50, so cost price = 50 / 0.20 = ₹250. Full solution: Let CP = x. SP at 10% loss = 0.9x. SP at 10% gain = 1.1x. The difference is 1.1x - 0.9x = 0.2x = 50, giving x = 250.",
+      "topic": "Profit and Loss",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:26:59.760Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {},
+      "chartData": {},
+      "id": 1956,
+      "q": 14
+    },
+    {
+      "section": "Core Subject",
+      "text": "The number of edges in a complete graph with 10 vertices is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "45",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "55",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "90",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "100",
+          "correct": false
+        }
+      ],
+      "solution": "Shortcut: Use formula n(n-1)/2. For n=10, 10×9/2=45. Unit-digit trick: 10×9=90 (ends in 0), half of number ending in 0 ends in 0 or 5. Only option A (45) ends in 5. Full solution: A complete graph K_n has exactly n(n-1)/2 edges because each of the n vertices connects to (n-1) others, and each edge is counted twice. Substituting n=10 gives 10×9/2 = 45 edges.",
+      "topic": "Graph Theory",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-14T22:08:44.507Z",
+      "reviewed": false,
+      "imageUrl": null,
+      "tableData": {
+        "headers": [],
+        "rows": []
+      },
+      "chartData": {
+        "type": "",
+        "labels": [],
+        "datasets": []
+      },
+      "id": 1940,
+      "q": 15
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards — Spaced Repetition — DIMSRED</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--bg:#0a0e17;--card:#111827;--border:#1e293b;--accent:#3b82f6;--accent2:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:520px;margin:40px auto;padding:16px}
+.page-header{text-align:center;margin-bottom:24px}
+.flashcard-wrapper{perspective:1000px}
+.flashcard{width:100%;height:320px;position:relative;transform-style:preserve-3d;transition:transform 0.6s;cursor:pointer;border-radius:16px;border:1px solid var(--border);background:var(--card)}
+.flashcard.flipped{transform:rotateY(180deg)}
+.front,.back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;box-sizing:border-box;text-align:center}
+.front{background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid var(--border);color:var(--text)}
+.back{background:linear-gradient(135deg,#064e3b,#042f2e);border:1px solid var(--green);color:#dcfce7;transform:rotateY(180deg)}
+.flip-hint{font-size:11px;color:var(--muted);margin-top:12px}
+.card-q{font-size:20px;font-weight:700;line-height:1.6}
+.card-answer{font-size:16px;line-height:1.6;color:#bbf7d0}
+.card-sol{margin-top:14px;font-size:13px;color:#a7f3d0;line-height:1.5}
+.card-meta{font-size:11px;color:var(--muted);margin-top:10px}
+.controls{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;padding:14px;border-radius:10px;border:none;font-weight:700;font-size:15px;cursor:pointer;transition:all .15s}
+.btn-yes{background:var(--green);color:#fff}
+.btn-yes:hover{opacity:.9}
+.btn-no{background:var(--red);color:#fff}
+.btn-no:hover{opacity:.9}
+.btn-reset{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-reset:hover{border-color:var(--accent);color:var(--accent)}
+.progress{margin-top:16px;text-align:center}
+.progress-bar{height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;width:100%}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width .3s;width:0}
+.progress-text{font-size:12px;color:var(--muted);margin-top:6px}
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+a.back-link{color:var(--accent);text-decoration:none;font-weight:600}
+a.back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <h1>🃏 Flashcards</h1>
+    <p>Spaced repetition for quick revision. Flip to see the answer, then rate yourself.</p>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+    <div class="progress-text" id="progressText">0 / 0 learned</div>
+  </div>
+
+  <div class="empty" id="emptyState" style="display:none">
+    <div class="empty-icon">📭</div>
+    <div class="empty-text">No flashcards yet. Add your first deck below.</div>
+  </div>
+
+  <div class="flashcard-wrapper" id="cardWrapper" style="display:none">
+    <div class="flashcard" id="flashcard">
+      <div class="front">
+        <div class="card-q" id="cardQ">Question</div>
+        <div class="flip-hint">Tap to flip →</div>
+      </div>
+      <div class="back">
+        <div class="card-answer" id="cardAnswer">Answer</div>
+        <div class="card-sol" id="cardSol"></div>
+        <div class="card-meta" id="cardMeta">Topic • Exam</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-no" id="btnAgain">❌ Again</button>
+      <button class="btn btn-yes" id="btnGotIt">✓ Got it</button>
+    </div>
+    <div style="margin-top:14px;text-align:center">
+      <button class="btn btn-reset" id="btnReset">🔄 Restart Deck</button>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;text-align:center">
+    <a href="index.html" class="back-link">← Home</a>
+  </div>
+
+<script>
+(function(){
+  // Starter flashcard deck — in production this is built from lesson summaries + PYQs
+  var deck = [
+    { q: 'Article 368 deals with?', a: 'Amendment of the Constitution', sol: 'Article 368 in Part XX empowers Parliament to amend the Constitution.', topic: 'Polity', exam: 'UPSC' },
+    { q: 'Gaganyaan is by?', a: 'ISRO', sol: 'ISRO\u2019s crewed orbital spacecraft programme.', topic: 'Sci & Tech', exam: 'UPSC' },
+    { q: 'Ganga of the South', a: 'Godavari River', sol: 'Godavari is called the Ganga of the South.', topic: 'Geography', exam: 'SSC' },
+    { q: 'Repo rate Nov 2026', a: '6.25%', sol: 'RBI kept repo rate at 6.25% in Oct 2026 policy.', topic: 'Economy', exam: 'RBI' },
+    { q: 'President\u2019s Rule Article', a: 'Article 356', sol: 'Article 356 — failure of constitutional machinery in a state.', topic: 'Polity', exam: 'UPSC' },
+    { q: 'Project Cheetah park', a: 'Kuno National Park', sol: 'Cheetahs reintroduced in Kuno NP, Madhya Pradesh.', topic: 'Environment', exam: 'UPSC' },
+    { q: 'Hydraulic radius max condition', a: 'Most economical canal section', sol: 'Most economical section: max hydraulic radius → min wetted perimeter.', topic: 'Civil Engg', exam: 'GATE' },
+    { q: 'Ideal voltmeter resistance', a: 'Infinity', sol: 'Ideal voltmeter draws zero current → infinite resistance.', topic: 'Physics', exam: 'NEET' },
+    { q: 'Master-slave JK flip-flop', a: 'Eliminates race-around', sol: 'Master-slave JK FF eliminates race-around condition.', topic: 'Digital', exam: 'GATE' },
+    { q: 'Impulse = F × t', a: '10 N × 5 s = 50 Ns', sol: 'Impulse = Force × time = change in momentum.', topic: 'Physics', exam: 'NEET' }
+  ];
+
+  var state = {
+    index: 0,
+    learned: new Set(),
+    flipped: false,
+    total: deck.length
+  };
+
+  // Load saved progress
+  try {
+    var saved = JSON.parse(localStorage.getItem('fc_progress') || '{}');
+    if (saved.learned) state.learned = new Set(saved.learned);
+  } catch(e){}
+
+  var cardEl = document.getElementById('flashcard');
+  var cardQ = document.getElementById('cardQ');
+  var cardAnswer = document.getElementById('cardAnswer');
+  var cardSol = document.getElementById('cardSol');
+  var cardMeta = document.getElementById('cardMeta');
+  var fill = document.getElementById('fill');
+  var progText = document.getElementById('progressText');
+  var emptyState = document.getElementById('emptyState');
+  var cardWrapper = document.getElementById('cardWrapper');
+
+  function flipCard(){ cardEl.classList.toggle('flipped'); state.flipped = !state.flipped; }
+
+  function renderCard(){
+    if(deck.length === 0){ emptyState.style.display='block'; cardWrapper.style.display='none'; return; }
+    emptyState.style.display='none'; cardWrapper.style.display='block';
+    var c = deck[state.index];
+    cardQ.textContent = c.q;
+    cardAnswer.textContent = c.a;
+    cardSol.textContent = c.sol;
+    cardMeta.textContent = c.topic + ' · ' + c.exam;
+    cardEl.classList.remove('flipped'); state.flipped = false;
+    updateProgress();
+  }
+
+  function rateCard(known){
+    if(known) state.learned.add(state.index);
+    state.index++;
+    if(state.index >= deck.length){
+      // Deck complete — show celebration
+      cardQ.textContent = '🎉 Deck Complete!';
+      cardAnswer.textContent = 'You reviewed all ' + deck.length + ' flashcards.';
+      cardSol.textContent = 'Come back tomorrow for spaced repetition review.';
+      cardMeta.textContent = '';
+      document.querySelector('.controls').style.display='none';
+      document.querySelector('.btn-reset').style.display='inline-block';
+    } else {
+      renderCard();
+    }
+    updateProgress();
+    saveProgress();
+  }
+
+  function resetDeck(){
+    state.index = 0;
+    state.learned = new Set();
+    document.querySelector('.controls').style.display='flex';
+    document.querySelector('.btn-reset').style.display='none';
+    renderCard();
+    saveProgress();
+  }
+
+  function updateProgress(){
+    var pct = state.total ? Math.round((state.learned.size / state.total) * 100) : 0;
+    fill.style.width = pct + '%';
+    progText.textContent = state.learned.size + ' / ' + state.total + ' learned (' + pct + '%)';
+  }
+
+  function saveProgress(){
+    try { localStorage.setItem('fc_progress', JSON.stringify({ learned: Array.from(state.learned) })); } catch(e){}
+  }
+
+  // Wire up buttons (functions are inside this IIFE, so inline onclick won't reach them)
+  document.getElementById('flashcard').addEventListener('click', flipCard);
+  document.getElementById('btnAgain').addEventListener('click', function(){ rateCard(false); });
+  document.getElementById('btnGotIt').addEventListener('click', function(){ rateCard(true); });
+  document.getElementById('btnReset').addEventListener('click', resetDeck);
+
+  // Daily deck: 20 cards rotated from the question bank, so the page is not the
+  // same ten starter cards every visit. Falls back to the built-in deck.
+  fetch('data/flashcards-daily.json?' + Date.now()).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+    var cards = (d && d.cards) || [];
+    if (!cards.length) return;
+    deck = cards.map(function(c){ return { q: c.q, a: c.a, sol: c.sol || '', topic: c.topic || 'Revision', exam: c.exam || 'UPSC' }; });
+    state.index = 0;
+    state.learned = new Set();
+    state.total = deck.length;
+    var ctr = document.querySelector('.controls'); if (ctr) ctr.style.display = 'flex';
+    var res = document.querySelector('.btn-reset'); if (res) res.style.display = 'none';
+    renderCard();
+  }).catch(function(){});
+
+  renderCard();
+})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

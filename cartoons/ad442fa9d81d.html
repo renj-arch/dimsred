@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Computer Programming for Numerical Methods: Algorithms, Flowcharts, and Error Control | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.9em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.75em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.9em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Computer Programming for Numerical Methods: Algorithms, Flowcharts, and Error Control</h1>
+<p class="meta">Mathematics Paper I: Core Topics · <a href="/upsc/course/opt-mathematics/lesson-paper1">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Central matrix A (3x3 grid) -->
+    <g transform="translate(120,60)">
+      <line x1="0" y1="0" x2="75" y2="0"/>
+      <line x1="0" y1="25" x2="75" y2="25"/>
+      <line x1="0" y1="50" x2="75" y2="50"/>
+      <line x1="0" y1="75" x2="75" y2="75"/>
+      <line x1="0" y1="0" x2="0" y2="75"/>
+      <line x1="25" y1="0" x2="25" y2="75"/>
+      <line x1="50" y1="0" x2="50" y2="75"/>
+      <line x1="75" y1="0" x2="75" y2="75"/>
+    </g>
+    <!-- Arrow from A to D -->
+    <line x1="195" y1="97.5" x2="260" y2="97.5" marker-end="url(#arrowhead)"/>
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937"/>
+      </marker>
+    </defs>
+    <!-- Diagonal matrix D (three squares on diagonal) -->
+    <rect x="260" y="60" width="25" height="25"/>
+    <rect x="285" y="85" width="25" height="25"/>
+    <rect x="310" y="110" width="25" height="25"/>
+    <!-- Balance scale (signature) -->
+    <g transform="translate(80,220)">
+      <line x1="0" y1="0" x2="0" y2="-40"/> <!-- pivot -->
+      <line x1="-30" y1="-40" x2="30" y2="-40"/> <!-- beam -->
+      <line x1="-30" y1="-40" x2="-30" y2="0"/> <!-- left pan -->
+      <line x1="30" y1="-40" x2="30" y2="0"/> <!-- right pan -->
+      <!-- weights: +, -, 0 -->
+      <text x="9.9" y="40.9" font-size="14" text-anchor="middle" fill="#1f2937">+</text>
+      <text x="9.9" y="23.2" font-size="14" text-anchor="middle" fill="#1f2937">0</text>
+      <text x="30" y="23.2" font-size="14" text-anchor="middle" fill="#1f2937">−</text>
+    </g>
+    <!-- Sylvester's Criterion checklist -->
+    <g transform="translate(420,220)">
+      <line x1="0" y1="0" x2="60" y2="0"/>
+      <line x1="0" y1="0" x2="0" y2="-60"/>
+      <line x1="0" y1="-20" x2="60" y2="-20"/>
+      <line x1="0" y1="-40" x2="60" y2="-40"/>
+      <line x1="0" y1="-60" x2="60" y2="-60"/>
+      <line x1="20" y1="0" x2="20" y2="-60"/>
+      <line x1="40" y1="0" x2="40" y2="-60"/>
+      <!-- checkmarks in leading principal positions -->
+      <polyline points="5,-15 12,-8 25,-25" stroke="#1f2937" stroke-width="3" fill="none"/>
+      <polyline points="25,-35 32,-28 45,-45" stroke="#1f2937" stroke-width="3" fill="none"/>
+      <polyline points="45,-55 52,-48 65,-65" stroke="#1f2937" stroke-width="3" fill="none"/>
+    </g>
+    <!-- Trap: non-symmetric matrix with warning -->
+    <g transform="translate(280,40)">
+      <!-- warning triangle -->
+      <polygon points="0,-10 -20,20 20,20" fill="none"/>
+      <line x1="0" y1="0" x2="0" y2="10"/>
+      <circle cx="0" cy="14" r="2" fill="#1f2937"/>
+      <!-- non-symmetric 2x2 matrix -->
+      <g transform="translate(50,-20)">
+        <rect x="0" y="0" width="25" height="25"/>
+        <rect x="25" y="0" width="25" height="25"/>
+        <rect x="0" y="25" width="25" height="25"/>
+        <rect x="25" y="25" width="25" height="25"/>
+        <line x1="25" y1="0" x2="25" y2="50"/>
+        <line x1="0" y1="25" x2="50" y2="25"/>
+      </g>
+    </g>
+    <!-- Complex field: circle -->
+    <circle cx="280" cy="260" r="30"/>
+    <text x="280" y="265" font-size="20" text-anchor="middle" fill="#1f2937">ℂ</text>
+  </g>
+  <!-- Labels -->
+  <text x="220" y="50" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Congruence Transform</text>
+  <text x="80" y="160" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Signature (p,q,r)</text>
+  <text x="420" y="160" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Sylvester's Criterion</text>
+  <text x="280" y="23.2" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Trap: Non-symmetric</text>
+  <text x="280" y="300" font-size="14" text-anchor="middle" fill="#1f2937" font-family="sans-serif">Over ℂ: Rank only</text>
+  <!-- Bottom caption strip -->
+  
+  
+</svg></div>
+<p class="meta">Functions of Several Variables and Vector Analysis (15)</p></div><!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body></html>

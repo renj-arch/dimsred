@@ -1,0 +1,179 @@
+name: Question Quality
+
+# Runs the question-quality/generation agent against data/questions ONLY.
+# Separated from site-agent because data/questions is ~9GB: checking it out
+# alongside the full site caused 33-min "early EOF" failures and OOM'd the
+# heavy model. Here the checkout is questions-only and generation runs on a
+# clean machine on the MID tier qwen3.5:9b (2026-10-18 right-sizing: the
+# 17GB 27B cannot complete multi-call runs on the 4-vCPU runner — every
+# 27B run of this workflow died before its later steps).
+
+on:
+  schedule:
+    - cron: '10 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: question-quality
+  # false, NOT true: this pipeline publishes only at the very END (archive +
+  # quiz conversions + commit). cancel-in-progress killed 59 of the last 60
+  # runs mid-flight — the converter step never executed even once since it
+  # shipped on 2026-10-15. With false, a newer trigger waits (superseding any
+  # older pending run) instead of murdering the in-flight publish.
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/questions
+            data/category-moves.json
+            data/papers.json
+            data/official-paper-sources.json
+            data/ocr-cache
+            data/archive-answers.json
+            data/archive-taxonomy.json
+            data/pyq-patterns.json
+            data/wiki-syllabus-plan.json
+            data/agent-log.json
+            data/questions-report.json
+            data/quiz-proper.json
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Swap kept as a safety net; the 9b tier fits RAM without it.
+      - name: Setup Python PDF tools
+        run: |
+          pip install --quiet pypdf pymupdf pytesseract pillow
+          sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr
+
+      # Discover official answer-key URLs (portal + archive strategies) for
+      # papers that have a QP but no key yet. Verified URLs only, else retry
+      # next run — never guessed.
+      - name: Discover official paper URLs
+        run: python3 scripts/discover-official-papers.py
+
+      # OCR scanned QP/key PDFs into data/ocr-cache/ so the ingestor's strict
+      # validators can run on text-layer-less official papers. Idempotent:
+      # cached papers are skipped, so this only pays the OCR cost once.
+      - name: OCR scanned official papers
+        run: python3 scripts/ocr-paper.py
+
+      # Ingest verified official papers (QP + key PDFs → key-joined questions
+      # with strict validation; anything uncertain is dropped, never faked)
+      # straight into data/papers.json. The Papers agent then enriches them
+      # with qwen3.5:9b explanations in the same run.
+      - name: Ingest official papers
+        run: python3 scripts/ingest-official-paper.py
+
+      - name: Apply curated question-category moves
+        run: node scripts/apply-question-category-moves.js
+
+      - name: Run question-quality agent
+        # Safety net. Run #18's agent overran a 130-min deadline by ~52 min
+        # (an in-flight CPU stream cannot be interrupted mid-call) and the
+        # run then died in a later step with publish skipped. 165 = 110-min
+        # deadline + the observed overshoot + margin. If it still fires, the
+        # checkpoint publish below runs anyway (if: always()).
+        timeout-minutes: 165
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          # Signals site-agent.js to run ONLY the Questions+Content agents
+          AGENT_ONLY: questions
+          # Wall-clock deadline: the agent stops starting new LLM work past
+          # this point so the run still reaches its publish steps; skipped
+          # work rotates in next run.
+          AGENT_DEADLINE_MIN: '110'
+        run: node scripts/site-agent.js
+
+      # Checkpoint publish. Run #18 spent 6h and published NOTHING: the agent
+      # ran to 19:18, the (slow) archive-answers step burned the rest of the
+      # ceiling and the 6h job cap killed publish. Everything the agent has
+      # already written is committed here, before the slow LLM steps, so no
+      # timeout can erase it. always(): even a failed or step-capped agent
+      # still gets its partial output published.
+      - name: Publish agent fixes (checkpoint)
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/ocr-cache data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          bash scripts/ci-push.sh "question-quality: agent fixes checkpoint (run #${{ github.run_number }})"
+
+      # Archive answers moved to the dedicated 27B quality lane
+      # (.github/workflows/archive-27b.yml, daily) on 2026-10-18 — tiered
+      # rollout: one pipeline at a time, user-visible content on the 27B.
+      # The move ALSO makes the sidecar single-writer on purpose: two writers
+      # racing on data/archive-answers.json could drop each other's entries
+      # (the exact failure class the invented pool hit today, where a merge
+      # kept one side's questions and dropped the other's). If that lane is
+      # ever disabled, re-enable this step — but then add an id-union merge
+      # for data/archive-answers.json to ci-push first, or keep only one
+      # writer active.
+
+      # 9b converts fill-blank fragments into proper MCQs for the quiz
+      # (current-affairs serves these first). The old 27B never reached this
+      # step — every run died earlier. Quota 6/run kept; raise once the tier
+      # proves itself.
+      - name: Convert proper quiz MCQs (9b)
+        timeout-minutes: 60
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          MAX_CONVERT: '25'
+        run: node scripts/convert-quiz-proper.js
+
+      # Rebuild the mega quiz bank from the current corpus (fast, no model).
+      # Without this tracked + deployed, mega-test.html 404s live.
+      - name: Rebuild mega quiz bank
+        timeout-minutes: 10
+        run: node scripts/build-mega-quiz.js
+
+      # always(): even if a step above was capped or failed, this still
+      # commits and pushes everything already produced.
+      - name: Publish question fixes
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/ocr-cache data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          bash scripts/ci-push.sh "question-quality: qwen3.5:9b improved questions (run #${{ github.run_number }})"

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Music Drop — vlymbooq</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{
+  --bg:#09090b;--bg-elevated:#0c0c0f;--bg-card:#111113;--bg-hover:#18181b;
+  --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);
+  --text:#fafafa;--text-secondary:#a1a1aa;--text-muted:#52525b;
+  --purple:#a78bfa;--purple-dark:#8b5cf6;--emerald:#34d399;
+  --radius:12px;--radius-lg:16px;--radius-full:100px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--text);text-decoration:none}
+.lock-screen{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.lock-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px 32px;text-align:center;max-width:400px;width:90%}
+.lock-card h1{font-size:1.25em;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.lock-card p{color:var(--text-muted);font-size:.9em;margin-bottom:24px}
+.lock-input{width:100%;padding:12px 16px;border-radius:var(--radius-full);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text);font-size:.95em;margin-bottom:16px;outline:none}
+.lock-input:focus{border-color:var(--purple)}
+.lock-btn{width:100%;padding:12px;border-radius:var(--radius-full);border:none;background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;font-weight:700;font-size:.9em;cursor:pointer}
+.lock-btn:hover{filter:brightness(1.1)}
+.lock-error{color:#ef4444;font-size:.9em;margin-top:8px;display:none}
+.music-page{display:none;padding:48px 24px;max-width:800px;margin:0 auto}
+.music-header{margin-bottom:40px}
+.music-header h1{font-size:2.5em;font-weight:900;letter-spacing:-.04em;line-height:1.1;margin-bottom:12px;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.music-header .subtitle{color:var(--text-secondary);font-size:1.1em}
+.song-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+.song-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:transform .2s}
+.song-card:hover{transform:translateY(-4px);border-color:var(--border-hover)}
+.song-art{position:relative;height:200px;background:#000}
+.song-art img{width:100%;height:100%;object-fit:cover}
+.song-art .play-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.song-card:hover .song-art .play-overlay{opacity:1}
+.play-tri{width:0;height:0;border-left:24px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent}
+.song-info{padding:20px}
+.song-title{font-weight:700;font-size:1.05em;margin-bottom:4px}
+.song-meta{font-size:.9em;color:var(--text-muted)}
+.audio-wrap{margin-top:12px;width:100%}
+.audio-wrap audio{width:100%;height:40px}
+.private-note{margin-top:40px;padding:20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);font-size:.9em;color:var(--text-muted)}
+a.back-link{color:var(--purple);text-decoration:none;font-weight:700}
+a.back-link:hover{text-decoration:underline}
+</style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' https://krvlufonfbcabgcjomvs.supabase.co https://api.github.com; frame-src https://accounts.google.com; upgrade-insecure-requests">
+<script>
+// Owner-only gate — music drop is private to the site owner (red835699@gmail.com).
+(function(){
+  'use strict';
+  var SB_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
+  var SB_ANON = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
+  var API = '/api/on-demand';
+  var LOGIN_URL = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+
+  function getToken(){ try{ return localStorage.getItem('sb_access_token') || ''; }catch(e){ return ''; } }
+  function tokenExpired(){
+    var tok = getToken();
+    if (!tok) return true;
+    try {
+      var parts = tok.split('.');
+      if (parts.length < 2) return false;
+      var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+      if (payload && payload.exp) return (payload.exp * 1000) - Date.now() < 60000;
+      return false;
+    } catch(e) { return false; }
+  }
+  function refreshToken(){
+    var rt = localStorage.getItem('sb_refresh_token');
+    if (!rt) return Promise.resolve('');
+    return fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST', headers: { 'apikey': SB_ANON, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: rt })
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (d && d.access_token) {
+        try { localStorage.setItem('sb_access_token', d.access_token); if (d.refresh_token) localStorage.setItem('sb_refresh_token', d.refresh_token); } catch(e) {}
+        return d.access_token;
+      }
+      return '';
+    }).catch(function(){ return ''; });
+  }
+  function freshToken(){
+    var t = getToken();
+    if (!t) return Promise.resolve('');
+    if (!tokenExpired()) return Promise.resolve(t);
+    return refreshToken();
+  }
+  function checkOwner(){
+    freshToken().then(function(t){
+      if (!t) { window.location.replace(LOGIN_URL); return; }
+      fetch(API + '?whoami=1', { headers: { 'Authorization': 'Bearer ' + t } })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(w){
+          if (w && typeof w.owner === 'boolean' && w.owner) {
+            document.getElementById('musicApp').style.display = 'block';
+            document.getElementById('ownerGate').style.display = 'none';
+          } else {
+            document.getElementById('ownerGate').innerHTML =
+              '<div class="owner-lock"><div class="lock">🔒</div>' +
+              '<div style="font-weight:800">Owner only</div>' +
+              '<div style="color:var(--muted);font-size:.9em;margin-top:8px">This page is private to the site owner.</div>' +
+              '<button class="btn btn-primary" onclick="window.location.replace(\'/login.html?redirect=' + encodeURIComponent(window.location.pathname) + '\')">Sign in as owner</button></div>';
+          }
+        }).catch(function(){ window.location.replace(LOGIN_URL); });
+    });
+  }
+  checkOwner();
+})();
+</script>
+</head>
+<body>
+
+<!-- Owner gate (shown until auth resolves) -->
+<div id="ownerGate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg)">
+  <div style="text-align:center;color:var(--muted)">
+    <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+    <div style="font-weight:800">Owner only</div>
+    <div style="color:var(--muted);font-size:.9em;margin-top:8px">Verifying access…</div>
+  </div>
+</div>
+
+<!-- Music app (hidden until owner confirmed) -->
+<div id="musicApp" style="display:none">
+  <a href="index.html" class="back-link">← Home</a>
+
+  <div class="music-header">
+    <h1>Music Drop</h1>
+    <div class="subtitle">Standalone releases — private preview</div>
+  </div>
+
+  <div class="song-grid">
+    <!-- Song 1 -->
+    <div class="song-card">
+      <div class="song-art">
+        <div class="play-overlay"><div class="play-tri"></div></div>
+        <img src="logo.png" alt="Song art" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--purple),var(--purple-dark))'">
+      </div>
+      <div class="song-info">
+        <div class="song-title">Untitled Hit</div>
+        <div class="song-meta">Solo release · Produced by vlymbooq</div>
+        <div class="audio-wrap">
+          <audio controls preload="none">
+            <source src="audio/untitled-hit.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 2 (template — replace with your tracks) -->
+    <div class="song-card">
+      <div class="song-art">
+        <div class="play-overlay"><div class="play-tri"></div></div>
+        <img src="logo.png" alt="Song art" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,var(--emerald),var(--purple-dark))'">
+      </div>
+      <div class="song-info">
+        <div class="song-title">Add Your Track</div>
+        <div class="song-meta">Drop your MP3 in <code>/audio/</code> and add a card below</div>
+        <div class="audio-wrap">
+          <audio controls preload="none">
+            <source src="audio/placeholder.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="private-note">
+    <strong>How to add songs:</strong> Place your MP3 files in <code>/audio/</code>, then copy a <code>song-card</code> block above, update the title, meta, and <code>src</code> path. Owner-only page.
+  </div>
+</div>
+
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

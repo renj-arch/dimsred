@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Roadmaps — DIMSRED</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--bg:#0a0e17;--card:#111827;--border:#1e293b;--accent:#3b82f6;--accent2:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:20px}
+.page-header{margin-bottom:24px}
+.roadmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.road-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;cursor:pointer;transition:all .15s}
+.road-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.road-exam{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.road-title{font-size:18px;font-weight:700;margin-bottom:10px}
+.road-desc{font-size:13px;color:var(--muted);margin-bottom:14px}
+.road-stats{display:flex;gap:12px;margin-bottom:14px;font-size:12px;color:var(--muted)}
+.road-stats span{background:rgba(255,255,255,.03);padding:4px 10px;border-radius:20px}
+.road-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-top:10px}
+.badge-prelims{background:rgba(59,130,246,.2);color:var(--accent)}
+.badge-mains{background:rgba(139,92,246,.2);color:var(--accent2)}
+.badge-full{background:rgba(16,185,129,.2);color:var(--green)}
+.road-content{display:none;margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px}
+.road-content.show{display:block}
+.phase{margin-bottom:20px}
+.phase-title{font-size:15px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.phase-weeks{font-size:12px;color:var(--muted);margin-bottom:8px}
+.phase-list{list-style:none}
+.phase-list li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:13px}
+.phase-list li:last-child{border-bottom:none}
+.phase-list li::before{content:'▸ ';color:var(--accent2);font-weight:700}
+.back-link{color:var(--accent);text-decoration:none;font-weight:600}
+.back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <h1>🗺️ Study Roadmaps</h1>
+    <p>Structured, week-by-week study plans for every exam. Click a card to expand the plan.</p>
+  </div>
+
+  <div class="roadmap-grid">
+    <!-- UPSC -->
+    <div class="road-card" onclick="toggleRoad(this, 'upsc')">
+      <div class="road-exam">UPSC Civil Services</div>
+      <div class="road-title">Prelims + Mains Roadmap</div>
+      <div class="road-desc">12-month integrated plan covering GS I–IV, CSAT, Essay, and Optional subject.</div>
+      <div class="road-stats"><span>48 weeks</span><span>~92 chapters</span><span>Daily current affairs</span></div>
+      <div class="road-badge badge-full">Full Coverage</div>
+      <div class="road-content" id="road-upsc">
+        <div class="phase">
+          <div class="phase-title">Phase 1 — Foundation (Weeks 1–12)</div>
+          <div class="phase-weeks">NCERT + Standard books</div>
+          <ul class="phase-list">
+            <li>Polity: Laxmikanth Chapters 1–20 + Constitution articles</li>
+            <li>History: Ancient + Medieval + Modern (Spectrum)</li>
+            <li>Geography: Physical + Indian + World (GC Leong)</li>
+            <li>Economy: Ramesh Singh + Economic Survey chapters</li>
+            <li>Science: NCERT Class 6–10 Science + current tech</li>
+            <li>Environment: Shankar IAS + current affairs</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 2 — Intensive (Weeks 13–24)</div>
+          <div class="phase-weeks">Mains answer writing + PYQs</div>
+          <ul class="phase-list">
+            <li>GS I: History, Geography, Society — answer writing practice</li>
+            <li>GS II: Polity, Governance, IR — 250-word answers</li>
+            <li>GS III: Economy, Agriculture, Security, S&T</li>
+            <li>GS IV: Ethics — case studies + thinkers</li>
+            <li>Essay: 1 essay per week on philosophical topics</li>
+            <li>CSAT: Reasoning + comprehension daily</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 3 — Revision + Tests (Weeks 25–48)</div>
+          <div class="phase-weeks">Mock tests + current affairs revision</div>
+          <ul class="phase-list">
+            <li>Sectional mocks for each GS paper</li>
+            <li>Full-length prelims + mains test series</li>
+            <li>Daily current affairs revision (last 18 months)</li>
+            <li>Optional subject completion + revision</li>
+            <li>Previous year paper analysis (2013–2025)</li>
+            <li>Interview preparation (DAF-based mocks)</li>
+          </ul>
+        </div>
+        <a href="papers.html" style="color:var(--accent);text-decoration:none;font-weight:600">Take UPSC Previous Year Papers →</a>
+      </div>
+    </div>
+
+    <!-- SSC CGL -->
+    <div class="road-card" onclick="toggleRoad(this, 'cgl')">
+      <div class="road-exam">SSC CGL</div>
+      <div class="road-title">Tier 1 + Tier 2 Roadmap</div>
+      <div class="road-desc">20-week plan covering Quant, Reasoning, English, and General Awareness.</div>
+      <div class="road-stats"><span>20 weeks</span><span>4 sections</span><span>Sectional mocks</span></div>
+      <div class="road-badge badge-prelims">Tier 1 + Tier 2</div>
+      <div class="road-content" id="road-cgl">
+        <div class="phase">
+          <div class="phase-title">Phase 1 — Concept Building (Weeks 1–8)</div>
+          <div class="phase-weeks">Basics of all 4 sections</div>
+          <ul class="phase-list">
+            <li>Quant: Number system, percentage, profit-loss, ratio</li>
+            <li>Reasoning: Analogy, classification, series, coding-decoding</li>
+            <li>English: Grammar, vocabulary, comprehension basics</li>
+            <li>GA: History, geography, polity, science one-liners</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 2 — Advanced + Speed (Weeks 9–16)</div>
+          <div class="phase-weeks">Advanced topics + time management</div>
+          <ul class="phase-list">
+            <li>Quant: Algebra, geometry, mensuration, trigonometry</li>
+            <li>Reasoning: Puzzles, seating arrangement, syllogism</li>
+            <li>English: Error spotting, cloze test, para jumbles</li>
+            <li>GA: Current affairs (last 6 months), schemes, awards</li>
+            <li>Daily sectional mock tests</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 3 — Mock Tests (Weeks 17–20)</div>
+          <div class="phase-weeks">Full-length tests + revision</div>
+          <ul class="phase-list">
+            <li>Tier 1 full mocks (2 per week)</li>
+            <li>Tier 2 descriptive practice</li>
+            <li>Weak area revision</li>
+            <li>Previous year papers (2020–2025)</li>
+          </ul>
+        </div>
+        <a href="papers.html" style="color:var(--accent);text-decoration:none;font-weight:600">Take SSC CGL Papers →</a>
+      </div>
+    </div>
+
+    <!-- NEET -->
+    <div class="road-card" onclick="toggleRoad(this, 'neet')">
+      <div class="road-exam">NEET UG</div>
+      <div class="road-title">1-Year Medical Roadmap</div>
+      <div class="road-desc">NCERT-based plan covering Physics, Chemistry, and Biology (Botany + Zoology).</div>
+      <div class="road-stats"><span>52 weeks</span><span>3 subjects</span><span>Daily practice</span></div>
+      <div class="road-badge badge-full">Full Syllabus</div>
+      <div class="road-content" id="road-neet">
+        <div class="phase">
+          <div class="phase-title">Phase 1 — NCERT Completion (Weeks 1–24)</div>
+          <div class="phase-weeks">Read + make notes</div>
+          <ul class="phase-list">
+            <li>Biology: NCERT Class 11 + 12 (complete reading)</li>
+            <li>Chemistry: Physical + Organic + Inorganic basics</li>
+            <li>Physics: Mechanics, thermodynamics, waves</li>
+            <li>Daily: 50 MCQs + 10 previous year questions</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 2 — Advanced + PYQs (Weeks 25–40)</div>
+          <div class="phase-weeks">Previous year questions + advanced concepts</div>
+          <ul class="phase-list">
+            <li>Biology: Genetics, evolution, ecology, human physiology</li>
+            <li>Chemistry: Coordination, biomolecules, polymers</li>
+            <li>Physics: Electrostatics, optics, modern physics</li>
+            <li>Weekly: Subject-wise mock test</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 3 — Revision + Full Mocks (Weeks 41–52)</div>
+          <div class="phase-weeks">Full syllabus revision + testing</div>
+          <ul class="phase-list">
+            <li>Daily: 1 full NEET mock (180 questions, 3 hours)</li>
+            <li>Revision: NCERT line-by-line (2nd pass)</li>
+            <li>Error log: review every wrong question</li>
+            <li>Previous year papers (2016–2025)</li>
+          </ul>
+        </div>
+        <a href="papers.html" style="color:var(--accent);text-decoration:none;font-weight:600">Take NEET Papers →</a>
+      </div>
+    </div>
+
+    <!-- JEE -->
+    <div class="road-card" onclick="toggleRoad(this, 'jee')">
+      <div class="road-exam">JEE Main</div>
+      <div class="road-title">Engineering Entrance Roadmap</div>
+      <div class="road-desc">Physics, Chemistry, and Mathematics with problem-solving focus.</div>
+      <div class="road-stats"><span>40 weeks</span><span>3 subjects</span><span>Problem practice</span></div>
+      <div class="road-badge badge-full">JEE Main + Advanced</div>
+      <div class="road-content" id="road-jee">
+        <div class="phase">
+          <div class="phase-title">Phase 1 — Concepts (Weeks 1–20)</div>
+          <div class="phase-weeks">Build fundamentals</div>
+          <ul class="phase-list">
+            <li>Math: Algebra, calculus, coordinate geometry</li>
+            <li>Physics: Mechanics, waves, thermodynamics</li>
+            <li>Chemistry: Mole concept, atomic structure, bonding</li>
+            <li>Daily: 25 problems per subject</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 2 — Advanced Problems (Weeks 21–32)</div>
+          <div class="phase-weeks">JEE-level difficulty</div>
+          <ul class="phase-list">
+            <li>Math: Calculus applications, vectors, 3D geometry</li>
+            <li>Physics: Electromagnetism, modern physics</li>
+            <li>Chemistry: Organic reactions, equilibrium, kinetics</li>
+            <li>Weekly: Part tests + full mocks</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 3 — Mock Tests (Weeks 33–40)</div>
+          <div class="phase-weeks">JEE Main pattern practice</div>
+          <ul class="phase-list">
+            <li>Daily: 1 JEE Main mock (75 questions, 3 hours)</li>
+            <li>Integer-type + numerical value practice</li>
+            <li>Previous year papers (2019–2025)</li>
+            <li>Revision of formula sheets</li>
+          </ul>
+        </div>
+        <a href="papers.html" style="color:var(--accent);text-decoration:none;font-weight:600">Take JEE Papers →</a>
+      </div>
+    </div>
+
+    <!-- CTET -->
+    <div class="road-card" onclick="toggleRoad(this, 'ctet')">
+      <div class="road-exam">CTET Paper 1</div>
+      <div class="road-title">Teaching Eligibility Roadmap</div>
+      <div class="road-desc">Child Development, Mathematics, EVS, and Language papers.</div>
+      <div class="road-stats"><span>12 weeks</span><span>5 sections</span><span>Pedagogy focus</span></div>
+      <div class="road-badge badge-prelims">Paper 1 + Paper 2</div>
+      <div class="road-content" id="road-ctet">
+        <div class="phase">
+          <div class="phase-title">Phase 1 — Subject Prep (Weeks 1–6)</div>
+          <div class="phase-weeks">Core subject concepts</div>
+          <ul class="phase-list">
+            <li>CDP: Child development, learning theories, inclusive education</li>
+            <li>Mathematics: Number system, geometry, measurement</li>
+            <li>EVS: Family, food, shelter, water, travel</li>
+            <li>Language: Grammar, comprehension, pedagogy</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-title">Phase 2 — Pedagogy + Mocks (Weeks 7–12)</div>
+          <div class="phase-weeks">Teaching aptitude + testing</div>
+          <ul class="phase-list">
+            <li>CTET pedagogy: NCF, RTE, CCE, teaching methods</li>
+            <li>Daily: 1 section mock + 50 pedagogy MCQs</li>
+            <li>Weekly: Full paper mock (150 questions)</li>
+            <li>Previous year papers (2021–2025)</li>
+          </ul>
+        </div>
+        <a href="papers.html" style="color:var(--accent);text-decoration:none;font-weight:600">Take CTET Papers →</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;text-align:center;color:var(--muted);font-size:13px">
+    Roadmaps are generated from exam syllabi and previous year question patterns. Start with any exam and take sectional mocks.
+  </div>
+</div>
+
+<script>
+function toggleRoad(el, id){
+  var content = document.getElementById('road-'+id);
+  if(!content) return;
+  if(content.classList.contains('show')){
+    content.classList.remove('show');
+  } else {
+    document.querySelectorAll('.road-content.show').forEach(function(c){ c.classList.remove('show'); });
+    content.classList.add('show');
+    content.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

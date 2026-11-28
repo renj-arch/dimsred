@@ -1,0 +1,1172 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Measure Theory — The Foundations of Integration | vlymbooq</title>
+    <meta name="description" content="Deep dive into Measure Theory — sigma-algebras, Lebesgue measure, integration, convergence theorems, Lp spaces, and the rigorous foundations of probability.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-measure-theory.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.75em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.9em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.75em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.9em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.9em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.75em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.9em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.75em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.75em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.9em;color:var(--text-muted);margin-top:6px}
+    </style>
+</head>
+<body id="main">
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-info-theory.html">Info Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-measure-theory.html" class="active" style="color:var(--text);font-weight:600">Measure Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-category-theory.html">Category Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-set-theory.html">Set Theory &amp; Logic <span class="s-tag">🔬</span></a>
+                    <a href="lesson-functional-analysis.html">Functional Analysis <span class="s-tag">🔬</span></a>
+                    <a href="#">Algebra <span class="s-tag">📖</span></a>
+                    <a href="#">Calculus <span class="s-tag">📖</span></a>
+                    <a href="#">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="#">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="#">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="#">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="#">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="#">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+<!-- course-figure:measure-theory-figure -->
+<figure class="lesson-figure" data-figure="measure-theory-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Measure Theory Foundations for Competitive Exam Revision Diagram"><defs><marker id="arrowhead-lesson-measure-theory-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="80" width="120" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="90" y="105" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="90" dy="0">Sigma-Algebras</tspan></text><rect x="180" y="80" width="130" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="245" y="105" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="245" dy="0">Lebesgue Integral</tspan></text><rect x="340" y="80" width="120" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="400" y="105" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">L^p Spaces</tspan></text><rect x="490" y="80" width="130" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="555" y="105" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="555" dy="0">Radon-Nikodym</tspan></text><rect x="650" y="80" width="110" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="705" y="105" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="705" dy="0">Fubini Theorem</tspan></text><rect x="325" y="200" width="150" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="400" y="216.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Probability</tspan><tspan x="400" dy="16.25">Foundations</tspan></text><path d="M 150 105 L 180 105" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-measure-theory-figure)"/><path d="M 310 105 L 340 105" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-measure-theory-figure)"/><path d="M 460 105 L 490 105" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-measure-theory-figure)"/><path d="M 620 105 L 650 105" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-measure-theory-figure)"/><path d="M 400 130 L 400 200" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-measure-theory-figure)"/></g><g><text x="165" y="95" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="165" dy="0">defines</tspan></text><text x="325" y="95" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="325" dy="0">extends</tspan></text><text x="475" y="95" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="475" dy="0">norms</tspan></text><text x="635" y="95" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="635" dy="0">integrates</tspan></text><text x="400" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">underpins</tspan></text><text x="30" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 14: σ-algebra definition</tspan></text><text x="30" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Key: L^p spaces are Banach</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Measure Theory Foundations for Competitive Exam Revision Diagram</strong> — Shows how σ‑algebras, Lebesgue integration, Lᵖ norms, Radon‑Nikodym, Fubini, and probability intertwine.
+    &middot; <a href="./figures/svg-measure-theory-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.9em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Measure Theory — The Mathematics of Size</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Measure theory answers the question: how do we measure the "size" of a set? It starts simply — length of an interval, area of a rectangle — but quickly leads to deep questions about infinity, the structure of the real line, and the foundations of integration. Without measure theory, there is no rigorous probability theory, no Lebesgue integral, no modern analysis. It's the invisible scaffolding beneath the mathematics of uncertainty and change.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Measure theory is the soul of modern analysis. It tells us what we can integrate, what we can average, and what we can know."</div>
+                    <div class="attribution">— Henri Lebesgue</div>
+                </div>
+
+                <!-- ========== PART 1: MEASURE ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>📏 Sigma-Algebras and Measures — The Foundation</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Problem with Length</div>
+                    <div class="story-title">Can Every Set Have a Length? The Banach-Tarski Paradox</div>
+                    <div class="story-text">In 1902, Lebesgue asked: can we assign a "length" to every subset of the real line that satisfies basic properties — length of an interval is its length, length is translation-invariant, and length is countably additive (the length of a disjoint union equals the sum of lengths)? The answer is no. There exist <strong>non-measurable sets</strong> — sets so pathological that no consistent notion of length can include them. The <strong>Vitali set</strong> is the classic example: pick one element from each coset of ℚ in ℝ. It has the bizarre property that countably many disjoint translations of it cover [0,1], so it can't have any consistent length. Even more dramatically, the <strong>Banach-Tarski paradox</strong> (1924) shows you can decompose a sphere into finitely many pieces, rotate them, and reassemble them into two identical copies of the original sphere — but the pieces are non-measurable. This is why we need <strong>σ-algebras</strong>: families of "well-behaved" sets that we can measure.</div>
+                    <div class="story-moral">Not every set can be measured. Measure theory tells us which sets are well-behaved enough to have a size — and which are too pathological.</div>
+                </div>
+
+                <h3>Sigma-Algebras</h3>
+                <p>A <strong>σ-algebra</strong> (or σ-field) F on a set X is a collection of subsets containing X, closed under complements and countable unions. The pair (X, F) is a <strong>measurable space</strong>. The <strong>Borel σ-algebra</strong> on ℝ is the smallest σ-algebra containing all open intervals — it's generated by (a,b), (−∞,a], or any family that generates the open sets. Borel sets include intervals, open sets, closed sets, Gδ sets, Fσ sets, and more — but still not all subsets. The <strong>Lebesgue σ-algebra</strong> extends the Borel σ-algebra to include all sets that differ from a Borel set by a set of measure zero (the completion).</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">σ-Algebra Axioms</div><div class="f-math">∅∈F, closed under complements, countable unions</div></div>
+                    <div class="formula-card"><div class="f-label">Measure</div><div class="f-math">μ(∅)=0, countable additivity</div></div>
+                    <div class="formula-card"><div class="f-label">Borel σ-Algebra</div><div class="f-math">Smallest σ-algebra with all open sets</div></div>
+                    <div class="formula-card"><div class="f-label">Probability Measure</div><div class="f-math">μ(Ω) = 1</div></div>
+                </div>
+
+                <h3>Constructing the Lebesgue Measure</h3>
+                <p>The <strong>Lebesgue measure</strong> λ on ℝ is built in stages. Start with the <strong>outer measure</strong> λ*(A) = inf{ Σ |Iₙ| : A ⊆ ∪ Iₙ } where Iₙ are intervals. A set A is <strong>Lebesgue measurable</strong> if it splits every set appropriately (Carathéodory's criterion): λ*(E) = λ*(E∩A) + λ*(E\A) for all E ⊆ ℝ. This gives a σ-algebra containing the Borel sets, and λ is countably additive on it. The Lebesgue measure of an interval is its length, it's translation-invariant, and it satisfies all the intuitive properties of "length" — but only on measurable sets.</p>
+
+                <div class="step-reveal">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.9em;font-weight:600">The Cantor Set — Measure Zero, Yet Uncountable</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        The Cantor set is constructed by repeatedly removing the middle third of intervals. Start with [0,1]. Remove (1/3, 2/3). Then remove the middle third of each remaining piece, and so on.<br><br>
+                        The total length removed = 1/3 + 2/9 + 4/27 + ... = 1. So the Cantor set has <strong>Lebesgue measure 0</strong>. Yet it's <strong>uncountable</strong> — it has as many points as the entire interval [0,1]!<br><br>
+                        The Cantor set is a perfect, nowhere-dense set of measure zero. It shows that "size" in the sense of measure is very different from "size" in the sense of cardinality. It also appears in dynamics, fractal geometry, and as the attractor of iterated function systems.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: INTEGRATION ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>∫ The Lebesgue Integral — Integrating Without Continuity</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Riemann Problem</div>
+                    <div class="story-title">Why Riemann's Integral Isn't Enough — and What Lebesgue Did About It</div>
+                    <div class="story-text">The Riemann integral approximates area by slicing vertically — partitioning the x-axis and summing rectangles. This works for continuous functions and many discontinuous ones, but it fails for functions with "too many" discontinuities. The indicator function of the rationals (1 on ℚ, 0 elsewhere) is nowhere continuous, and its Riemann integral doesn't exist. Lebesgue's insight: slice <strong>horizontally</strong> instead. Instead of partitioning the domain, partition the <strong>range</strong> and measure the set where the function takes values in each range interval. For the indicator of ℚ, the set where it's 1 is ℚ, which has measure 0 — so the integral is 0. The <strong>Lebesgue integral</strong> exists for a much wider class of functions — all measurable functions — and satisfies powerful convergence theorems that the Riemann integral lacks.</div>
+                    <div class="story-moral">The Riemann integral asks "what's the value at each x?" The Lebesgue integral asks "how large is the set where the function takes each value?" The second question turns out to be far more powerful.</div>
+                </div>
+
+                <h3>Measurable Functions and Simple Functions</h3>
+                <p>A function f: X → ℝ is <strong>measurable</strong> if the preimage of every Borel set is measurable. This is equivalent to {x : f(x) &gt; c} being measurable for all c ∈ ℝ. Almost every function you can reasonably define is measurable — continuous functions, step functions, limits of measurable functions. A <strong>simple function</strong> is a finite linear combination of indicator functions of measurable sets. The integral of a simple function is Σ aᵢ·μ(Aᵢ). For a non-negative measurable function f, the integral is the supremum of integrals of simple functions ≤ f. For general f, split into positive and negative parts.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Three Convergence Theorems</div>
+                    <div class="insight-text">Monotone Convergence: fₙ ↗ f ⇒ ∫ fₙ → ∫ f</div>
+                    <div class="insight-sub">Dominated Convergence: |fₙ| ≤ g, fₙ → f a.e. ⇒ ∫ fₙ → ∫ f</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.9em;font-weight:600">The Dominated Convergence Theorem in Action</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Let fₙ(x) = n·xⁿ for x ∈ [0,1]. Pointwise, fₙ(x) → 0 for x ∈ [0,1), and fₙ(1) = n → ∞. So the pointwise limit is 0 almost everywhere (except at x=1, a set of measure 0).<br><br>
+                        Can we swap limit and integral? ∫₀¹ n·xⁿ dx = n/(n+1) → 1. The pointwise limit is 0, so ∫ fₙ → 1 ≠ 0 = ∫ 0!<br><br>
+                        The dominated convergence theorem doesn't apply because there's no integrable dominating function g with |fₙ| ≤ g for all n. Indeed, supₙ fₙ(1) = ∞. This shows why the conditions matter — when they're satisfied, swapping limit and integral is justified; when they're not, all bets are off.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: LP SPACES ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>📊 Lᵖ Spaces — Function Spaces with Norms</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Space of Functions</div>
+                    <div class="story-title">Lᵖ Spaces — Measuring the Size of a Function</div>
+                    <div class="story-text">Once we have the Lebesgue integral, we can define norms on function spaces. For p ≥ 1, the <strong>Lᵖ norm</strong> is ‖f‖ₚ = (∫ |f|ᵖ dμ)^{1/p}. The space Lᵖ consists of all measurable functions with finite Lᵖ norm, identifying functions that agree almost everywhere. L² is a Hilbert space (inner product ⟨f,g⟩ = ∫ f ḡ dμ) and is the natural setting for Fourier series and quantum mechanics. L¹ is the space of integrable functions. L^∞ consists of essentially bounded functions. The <strong>Hölder inequality</strong> says ∫ |fg| ≤ ‖f‖ₚ·‖g‖₉ for 1/p + 1/q = 1, generalizing Cauchy-Schwarz (p=q=2). <strong>Riesz-Fischer theorem</strong>: Lᵖ spaces are complete (every Cauchy sequence converges) — they're <strong>Banach spaces</strong>. This completeness is what makes modern analysis work: we can solve equations by finding approximate solutions and taking limits.</div>
+                    <div class="story-moral">Lᵖ spaces give us a way to measure functions like we measure vectors — with norms, convergence, and completeness.</div>
+                </div>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Lᵖ Norm</div><div class="f-math">‖f‖ₚ = (∫ |f|ᵖ)^{1/p}</div></div>
+                    <div class="formula-card"><div class="f-label">Hölder</div><div class="f-math">∫ |fg| ≤ ‖f‖ₚ·‖g‖₉</div></div>
+                    <div class="formula-card"><div class="f-label">Minkowski</div><div class="f-math">‖f+g‖ₚ ≤ ‖f‖ₚ + ‖g‖ₚ</div></div>
+                    <div class="formula-card"><div class="f-label">Riesz-Fischer</div><div class="f-math">Lᵖ is complete (Banach)</div></div>
+                </div>
+
+                <h3>Modes of Convergence</h3>
+                <p>In measure theory, there are several distinct notions of convergence for functions. <strong>Pointwise a.e.</strong> convergence: fₙ(x) → f(x) for almost every x. <strong>Convergence in measure</strong>: for every ε > 0, μ({|fₙ − f| &gt; ε}) → 0. <strong>Convergence in Lᵖ</strong>: ‖fₙ − f‖ₚ → 0. These are related: Lᵖ convergence implies convergence in measure; convergence in measure implies a subsequence converges pointwise a.e.; but in general, none of these implications reverse. The <strong>Egoroff theorem</strong> says that on a finite measure space, pointwise a.e. convergence implies <strong>uniform</strong> convergence on sets of arbitrarily large measure — almost uniform convergence.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Convergence that Isn't What It Seems</div>
+                    <div class="ex-text">Consider fₙ = n·χ_{[0,1/n]}. Pointwise, fₙ(x) → 0 for all x > 0, but fₙ(0) = n → ∞. Pointwise a.e., fₙ → 0. In measure: for any ε > 0, μ({|fₙ| > ε}) = 1/n → 0. But ∫ fₙ = n·(1/n) = 1, so ‖fₙ‖₁ = 1 — they do NOT converge in L¹ to 0. This function "escapes to infinity" in the L¹ norm even though it converges to 0 pointwise.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌌 Radon-Nikodym, Fubini, and the Foundations of Probability</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Changing Measures</div>
+                    <div class="story-title">The Radon-Nikodym Theorem — When Is One Measure "Denser" Than Another?</div>
+                    <div class="story-text">Given two measures μ and ν on the same measurable space, when can we write ν(A) = ∫_A f dμ for some measurable function f? The <strong>Radon-Nikodym theorem</strong> says: if ν is absolutely continuous with respect to μ (ν(A) = 0 whenever μ(A) = 0), then there exists a <strong>Radon-Nikodym derivative</strong> f = dν/dμ such that ν(A) = ∫_A f dμ. This is the measure-theoretic version of the chain rule. In probability, this gives conditional expectation: E[X|G] is the Radon-Nikodym derivative of a measure with respect to another. The <strong>Lebesgue decomposition theorem</strong> says any measure can be uniquely decomposed into an absolutely continuous part, a singular continuous part, and a discrete part — the mathematical structure behind the distinction between continuous and discrete probability distributions.</div>
+                    <div class="story-moral">The Radon-Nikodym theorem tells us when one measure can be described as a "density" with respect to another — it's why probability density functions exist.</div>
+                </div>
+
+                <h3>Product Measures and Fubini's Theorem</h3>
+                <p>Given two measure spaces (X, F, μ) and (Y, G, ν), the <strong>product measure</strong> μ×ν on X×Y is defined by (μ×ν)(A×B) = μ(A)·ν(B) on rectangles, then extended to the product σ-algebra. <strong>Fubini's theorem</strong> says that if f is integrable with respect to the product measure, then the iterated integrals exist and are equal: ∫_{X×Y} f d(μ×ν) = ∫_X (∫_Y f(x,y) dν(y)) dμ(x) = ∫_Y (∫_X f(x,y) dμ(x)) dν(y). This is the justification for "changing the order of integration" in multivariable calculus — but it requires integrability, which is not automatic. The <strong>Tonelli theorem</strong> gives a useful sufficient condition: if f ≥ 0, the iterated integrals are always equal (even if infinite).</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Fubini's Theorem</div>
+                    <div class="insight-text">For integrable f, the order of integration doesn't matter: ∬ f = ∫∫ f dx dy = ∫∫ f dy dx</div>
+                    <div class="insight-sub">But this is NOT always true for non-integrable functions! Fubini's theorem requires absolute integrability with respect to the product measure.</div>
+                </div>
+
+                <h3>Probability Theory as Measure Theory</h3>
+                <p>Modern probability theory is entirely built on measure theory. A <strong>probability space</strong> (Ω, F, P) is just a measure space with P(Ω) = 1. A <strong>random variable</strong> is a measurable function X: Ω → ℝ. Its <strong>expected value</strong> is E[X] = ∫_Ω X dP. The <strong>law</strong> of X is the pushforward measure P_X(A) = P(X ∈ A). <strong>Conditional expectation</strong> E[X|G] for a sub-σ-algebra G ⊆ F is defined via the Radon-Nikodym theorem. The <strong>Kolmogorov extension theorem</strong> constructs infinite-dimensional probability spaces (like the space of all Brownian motion paths). The <strong>strong law of large numbers</strong> and <strong>central limit theorem</strong> are theorems about convergence of integrals with respect to product measures. Measure theory provides the mathematical rigor that makes probability a branch of mathematics rather than a collection of heuristics.</p>
+
+                <div class="step-reveal">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.9em;font-weight:600">The Vitali Set — A Non-Measurable Set</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Define an equivalence relation on [0,1]: x ~ y if x − y ∈ ℚ. This partitions [0,1] into uncountably many equivalence classes, each a coset of ℚ. Using the axiom of choice, pick one element from each equivalence class to form the <strong>Vitali set V</strong>.<br><br>
+                        Key properties: for any rational q ∈ [0,1], the translates V_q = V + q (mod 1) are disjoint and their union over all q ∈ ℚ∩[0,1] is exactly [0,1].<br><br>
+                        If V were Lebesgue measurable with measure m, then each V_q would also have measure m (translation invariance). Countable additivity would give: 1 = λ([0,1]) = Σ_m λ(V_q) = Σ_m m. If m = 0, the sum is 0. If m > 0, the sum is infinite. Both contradiction. So V is <strong>not measurable</strong>.<br><br>
+                        The existence of non-measurable sets requires the axiom of choice. Without it, it's consistent that every set of reals is Lebesgue measurable (Solovay, 1970).
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <div class="quote">"Probability theory is measure theory with a soul — the soul being the interpretation of measure as degree of belief, and measurable functions as random variables."</div>
+                    <div class="attribution">— Mark Kac</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Measure Theory Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build measure theory intuition.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                <!-- course-addon:start -->
+<h3>Completion of Measure Spaces and the Lebesgue σ‑algebra</h3>
+<p>The Carathéodory extension theorem constructs a measure on a σ‑algebra from a pre‑measure defined on an algebra. Starting with the algebra of finite unions of half‑open intervals in ℝ, the pre‑measure λ₀((a,b]) = b−a extends uniquely to a measure on the σ‑algebra generated by that algebra — the Borel σ‑algebra ℬ(ℝ). However, the resulting measure space (ℝ, ℬ, λ) is not complete: there exist subsets of Borel null sets that are not Borel measurable. The completion adds every subset of a λ‑null Borel set to the σ‑algebra and assigns it measure zero. The completed σ‑algebra is the Lebesgue σ‑algebra ℒ, and the completed measure is the Lebesgue measure λ̄. Every Lebesgue measurable set E can be written as E = B ∪ N where B ∈ ℬ and N ⊂ Z for some Borel null set Z. This decomposition is unique up to null sets and shows that ℒ is strictly larger than ℬ (|ℒ| = 2^𝔠 while |ℬ| = 𝔠). Completeness is essential for the dominated convergence theorem and for Fubini’s theorem, because the product of complete measure spaces is again complete after taking the completion of the product σ‑algebra.</p>
+<h4>Key properties</h4>
+<ul>
+<li>If μ is a measure on (X, Σ), the completion Σ̄ consists of all sets A ⊂ X for which there exist B, C ∈ Σ with B ⊂ A ⊂ C and μ(C B) = 0.</li>
+<li>The extended measure μ̄(A) = μ(B) = μ(C) is well defined and makes (X, Σ̄, μ̄) a complete measure space.</li>
+<li>For Lebesgue measure, every set of outer measure zero is Lebesgue measurable; this characterises ℒ as the σ‑algebra of Carathéodory measurable sets for the outer measure λ*.</li>
+</ul>
+
+<h3>Signed Measures, Hahn and Jordan Decompositions</h3>
+<p>A signed measure ν on a measurable space (X, Σ) is a countably additive set function taking values in [−∞, ∞] that never assumes both +∞ and −∞. The Hahn decomposition theorem states that there exist disjoint measurable sets P, N with P ∪ N = X such that ν(E) ≥ 0 for all E ⊂ P and ν(E) ≤ 0 for all E ⊂ N. The pair (P, N) is unique up to ν‑null sets. From a Hahn decomposition one obtains the Jordan decomposition ν = ν⁺ − ν⁻ where ν⁺(E) = ν(E ∩ P) and ν⁻(E) = −ν(E ∩ N) are mutually singular positive measures. The total variation |ν| = ν⁺ + ν⁻ is a positive measure satisfying |ν(E)| ≤ |ν|(E) for all E. The space of finite signed measures equipped with the total variation norm is a Banach space. The Radon‑Nikodym theorem extends to signed measures: if ν ≪ μ then there exists an integrable function f = dν/dμ with ν(E) = ∫_E f dμ, and |ν|(E) = ∫_E |f| dμ.</p>
+<h4>Applications</h4>
+<ul>
+<li>Decomposition of a complex measure into real and imaginary parts, each a signed measure.</li>
+<li>Representation of bounded linear functionals on C₀(X) via the Riesz‑Markov theorem, yielding regular signed Borel measures.</li>
+<li>In probability, the difference of two probability measures is a signed measure of total mass zero; its Jordan decomposition gives the positive and negative parts used in total variation distance.</li>
+</ul>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Hahn Decomposition of a Simple Signed Measure</div>
+<div class="ex-text">Let ν be the signed measure on (ℝ, ℬ) defined by ν(E) = ∫_E (1<sub>[0,1]</sub> − 2·1<sub>[2,3]</sub>) dλ. Find a Hahn decomposition (P, N) and the Jordan decomposition ν⁺, ν⁻.</div>
+<div class="ex-soln">The density f = 1<sub>[0,1]</sub> − 2·1<sub>[2,3]</sub> is positive on [0,1] and negative on [2,3]; it is zero elsewhere. Take P = [0,1] and N = [2,3] ∪ (ℝ ([0,1] ∪ [2,3])). Then for any Borel E ⊂ P, ν(E) = λ(E) ≥ 0; for any E ⊂ N, ν(E) = −2λ(E ∩ [2,3]) ≤ 0. Thus (P, N) is a Hahn decomposition. The Jordan positive part is ν⁺(E) = ν(E ∩ P) = λ(E ∩ [0,1]), and the negative part is ν⁻(E) = −ν(E ∩ N) = 2λ(E ∩ [2,3]). The total variation is |ν|(E) = λ(E ∩ [0,1]) + 2λ(E ∩ [2,3]).</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for a Hahn or Jordan decomposition, first identify the sign of the density (or the sign of the measure on generating sets). Write the positive and negative sets explicitly; uniqueness up to null sets means any choice that respects the sign works. For total variation, remember |ν| = ν⁺ + ν⁻ and that ‖ν‖ = |ν|(X).</div>
+</div>
+
+<h3>Differentiation of Measures and the Lebesgue Differentiation Theorem</h3>
+<p>Given a locally finite Borel measure μ on ℝⁿ, the derivative of μ with respect to Lebesgue measure λ at a point x is defined as the limit (if it exists) of μ(B(x,r))/λ(B(x,r)) as r → 0, where B(x,r) is the open ball. The Lebesgue differentiation theorem states that for any f ∈ L¹_loc(ℝⁿ), the limit of the averages (1/λ(B(x,r))) ∫<sub>B(x,r)</sub> f(y) dy equals f(x) for λ‑almost every x. Equivalently, if μ ≪ λ with density f = dμ/dλ, then the Radon‑Nikodym derivative is recovered almost everywhere by the limit of ratios of measures of shrinking balls. The proof uses the Hardy‑Littlewood maximal function Mf(x) = sup<sub>r>0</sub> (1/λ(B(x,r))) ∫<sub>B(x,r)</sub> |f(y)| dy and the weak‑type (1,1) inequality λ({Mf > α}) ≤ Cₙ α⁻¹ ‖f‖₁. This maximal inequality also yields the Lebesgue differentiation theorem for locally integrable functions and the Besicovitch covering theorem for general Radon measures. A corollary is that for any locally integrable f, the set of Lebesgue points — points where the average of |f(y)−f(x)| over B(x,r) tends to zero — has full measure.</p>
+<h4>Consequences</h4>
+<ul>
+<li>If μ is a finite Borel measure on ℝⁿ, then for λ‑a.e. x the limit lim<sub>r→0</sub> μ(B(x,r))/λ(B(x,r)) exists and equals the Radon‑Nikodym derivative dμ/dλ(x).</li>
+<li>The theorem fails for arbitrary sequences of sets shrinking to x; the balls (or cubes) must satisfy a regularity condition such as bounded eccentricity.</li>
+<li>In probability, the theorem justifies the interpretation of a density as a limit of relative frequencies in shrinking neighbourhoods.</li>
+</ul>
+
+<h3>Conditional Expectation as Orthogonal Projection in L²</h3>
+<p>Let (Ω, ℱ, P) be a probability space and 𝒢 ⊂ ℱ a sub‑σ‑algebra. For X ∈ L²(Ω, ℱ, P) the conditional expectation E[X | 𝒢] is the unique 𝒢‑measurable random variable Y ∈ L²(Ω, 𝒢, P) satisfying ∫_G Y dP = ∫_G X dP for all G ∈ 𝒢. The subspace L²(Ω, 𝒢, P) is closed in L²(Ω, ℱ, P); therefore the orthogonal projection Π_𝒢 onto this subspace exists and coincides with the conditional expectation operator. This geometric view yields immediate properties: ‖E[X | 𝒢]‖₂ ≤ ‖X‖₂ (contraction), the tower property E[E[X | ℋ] | 𝒢] = E[X | 𝒢] for 𝒢 ⊂ ℋ, and the fact that X − E[X | 𝒢] is orthogonal to every 𝒢‑measurable L² variable. For general X ∈ L¹, conditional expectation is defined by approximation with L² variables or via the Radon‑Nikodym theorem applied to the signed measure ν(G) = ∫_G X dP. The projection interpretation also explains why conditional expectation is the best predictor in mean‑square sense: among all 𝒢‑measurable random variables Y, E[(X−Y)²] is minimised uniquely by Y = E[X | 𝒢].</p>
+<h4>Key identities</h4>
+<ul>
+<li>Linearity: E[aX + bY | 𝒢] = aE[X | 𝒢] + bE[Y | 𝒢].</li>
+<li>Taking out what is known: if Z is 𝒢‑measurable and bounded, E[ZX | 𝒢] = Z E[X | 𝒢].</li>
+<li>Independence: if X is independent of 𝒢, then E[X | 𝒢] = E[X] a.s.</li>
+</ul>
+
+<h3>Martingale Convergence Theorems</h3>
+<p>A filtration (ℱₙ)<sub>n≥0</sub> is an increasing sequence of sub‑σ‑algebras of ℱ. A sequence (Mₙ) of integrable random variables adapted to (ℱₙ) is a martingale if E[M<sub>n+1</sub> | ℱₙ] = Mₙ a.s. for all n; it is a sub‑martingale (super‑martingale) if the conditional expectation is ≥ (≤) Mₙ. Doob’s martingale convergence theorem states that if (Mₙ) is an L¹‑bounded martingale (i.e. supₙ E[|Mₙ|] < ∞), then Mₙ converges almost surely and in L¹ to an integrable limit M_∞. For non‑negative super‑martingales the L¹‑boundedness is automatic, so they converge a.s. to a finite limit. The upcrossing inequality provides a quantitative proof: for any a < b, the expected number of upcrossings of the interval [a,b] by (Mₙ) is bounded by (E[(M₀−a)⁻])/(b−a). This yields a.s. convergence for any super‑martingale bounded in L¹. If the martingale is bounded in L^p for some p > 1, then convergence also holds in L^p and the limit satisfies Mₙ = E[M_∞ | ℱₙ] for all n (the martingale is closed). The theorem extends to backward martingales and to martingales indexed by continuous time under right‑continuity of the filtration. Applications include the strong law of large numbers (via the martingale Mₙ = Sₙ/n), the convergence of likelihood ratios in statistics, and the construction of stochastic integrals.</p>
+<h4>Important corollaries</h4>
+<ul>
+<li>Lévy’s upward theorem: if ℱₙ ↑ ℱ_∞ and X ∈ L¹, then E[X | ℱₙ] → E[X | ℱ_∞] a.s. and in L¹.</li>
+<li>Lévy’s downward theorem: if ℱₙ ↓ ℱ_∞, then E[X | ℱₙ] → E[X | ℱ_∞] a.s. and in L¹.</li>
+<li>Kolmogorov’s 0‑1 law follows from the martingale convergence theorem applied to the tail σ‑algebra.</li>
+</ul>
+
+<ul>
+<li>Confusing the completion of a measure space with the Carathéodory extension; the former adds subsets of null sets, the latter builds a measure from a pre‑measure.</li>
+<li>Assuming a signed measure can take both +∞ and −∞ on different sets; by definition it cannot.</li>
+<li>Forgetting that the Hahn decomposition is unique only up to ν‑null sets, not pointwise.</li>
+<li>Applying the Lebesgue differentiation theorem to arbitrary shrinking families without a regularity condition (e.g., rectangles with unbounded eccentricity).</li>
+<li>Treating conditional expectation as a pointwise operation rather than an equivalence class in L¹; two versions differ on a null set.</li>
+<li>Using the martingale convergence theorem without verifying L¹‑boundedness (or non‑negativity for super‑martingales).</li>
+<li>Misidentifying the orthogonal projection in L² with the conditional expectation for non‑square‑integrable variables; the projection argument only works directly in L².</li></ul>
+<h3>Carathéodory Extension and Outer Measures</h3>
+<p>The Carathéodory extension theorem provides the standard mechanism for constructing a complete measure from a pre‑measure defined on an algebra. Starting with a set function μ₀ on an algebra 𝒜 of subsets of X that is countably additive and σ‑finite, one defines the outer measure μ* for any E ⊂ X by μ*(E) = inf { Σ μ₀(Aₙ) : E ⊂ ⋃ Aₙ, Aₙ ∈ 𝒜 }. The collection ℳ of Carathéodory‑measurable sets — those satisfying μ*(A) = μ*(A ∩ E) + μ*(A ∩ Eᶜ) for every A ⊂ X — forms a σ‑algebra containing 𝒜, and the restriction of μ* to ℳ is a complete measure extending μ₀. If μ₀ is σ‑finite, the extension is unique. This construction underlies Lebesgue measure on ℝⁿ (where 𝒜 is the algebra of finite unions of half‑open rectangles) and product measures on infinite product spaces. A subtle point: the outer measure is defined for all subsets, but measurability is a nontrivial condition; the Vitali set shows that not every subset of ℝ is Lebesgue measurable. The theorem also yields the completion of any measure space by taking the outer measure induced by the original measure and restricting to the Carathéodory σ‑algebra.</p>
+<h4>Key steps in the proof</h4>
+<ol>
+<li>Show μ* is an outer measure: monotonicity, countable subadditivity, μ*(∅)=0.</li>
+<li>Prove ℳ is a σ‑algebra using the Carathéodory criterion.</li>
+<li>Verify μ* restricted to ℳ is countably additive.</li>
+<li>Establish uniqueness via the π‑λ theorem when μ₀ is σ‑finite.</li>
+</ol>
+<p>Applications include the construction of Haar measure on locally compact groups and the definition of Hausdorff measures on metric spaces.</p>
+
+<h3>Regularity of Borel Measures and Radon Measures</h3>
+<p>On a locally compact Hausdorff space X, a Borel measure μ is called inner regular if μ(E) = sup { μ(K) : K ⊂ E, K compact } for every Borel set E, and outer regular if μ(E) = inf { μ(U) : E ⊂ U, U open }. A Radon measure is a Borel measure that is finite on compact sets, outer regular on all Borel sets, and inner regular on open sets. Every finite Borel measure on a metric space is automatically regular (Ulam’s theorem). On ℝⁿ, Lebesgue measure is Radon; the same holds for any locally finite Borel measure on a second‑countable locally compact Hausdorff space. Regularity is essential for approximation arguments: Lusin’s theorem states that a measurable function is nearly continuous on a set of large measure, and the proof uses inner regularity to find a compact set where the function is uniformly continuous. The Riesz–Markov–Kakutani representation theorem identifies the dual of C_c(X) (continuous functions with compact support) with the space of signed Radon measures, making regularity a bridge between functional analysis and measure theory.</p>
+<h4>Examples and counterexamples</h4>
+<ul>
+<li>Counting measure on an uncountable discrete space is not Radon because it is infinite on compact (finite) sets.</li>
+<li>The Dieudonné measure on the first uncountable ordinal ω₁ (with the order topology) is a Borel probability measure that fails inner regularity.</li>
+<li>Any probability measure on a Polish space is tight (Prokhorov’s theorem), hence Radon.</li>
+</ul>
+
+<div class="example-box">
+<div class="ex-title">Worked Problem: Verifying Radon Property</div>
+<div class="ex-text">Let μ be the measure on ℝ defined by μ(E) = Σ<sub>q∈E∩ℚ</sub> 2<sup>-n(q)</sup> where n(q) enumerates the rationals. Show that μ is a Radon measure.</div>
+<div class="ex-soln">The measure is concentrated on the countable set ℚ, so μ is σ‑finite and finite on compact sets (any compact set contains only finitely many rationals, giving a finite sum). For outer regularity, given a Borel set E and ε>0, choose a finite subset F⊂E∩ℚ such that μ(E)−μ(F)<ε/2. Each rational q∈F has an open interval I_q containing q with μ(I_q) arbitrarily close to 2<sup>-n(q)</sup>; the union U = ⋃ I_q is open, contains F, and μ(U) ≤ μ(F)+ε/2 < μ(E)+ε. Hence μ(E) = inf μ(U). For inner regularity on open sets, let U be open. Since μ is supported on ℚ, μ(U) = Σ<sub>q∈U∩ℚ</sub> 2<sup>-n(q)</sup>. For any ε>0 pick a finite subset F⊂U∩ℚ with μ(U)−μ(F)<ε. The set K = F is compact (finite) and μ(K)=μ(F) > μ(U)−ε. Thus μ is inner regular on open sets. Therefore μ is Radon.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Strategy</div>
+<div class="tip-text">When asked to prove a measure is Radon, first check finiteness on compacts, then construct open supersets for outer regularity and compact subsets for inner regularity on opens. Use the fact that on metric spaces every finite Borel measure is automatically regular; cite Ulam’s theorem to save time.</div>
+</div>
+
+<h3>Riesz Representation Theorem for Positive Linear Functionals</h3>
+<p>The Riesz–Markov–Kakutani theorem states that every positive linear functional Λ on C_c(X), where X is a locally compact Hausdorff space, corresponds uniquely to a Radon measure μ such that Λ(f) = ∫_X f dμ for all f ∈ C_c(X). Positivity means Λ(f) ≥ 0 whenever f ≥ 0. The proof proceeds by defining an outer measure μ* on all subsets via μ*(E) = inf { Λ(f) : f ∈ C_c(X), f ≥ 1_E } and then restricting to the Carathéodory σ‑algebra. One shows that every continuous function with compact support is μ‑measurable and that the integral reproduces Λ. Uniqueness follows from the fact that C_c(X) separates points of the space of Radon measures (Urysohn’s lemma). This theorem is the foundation of the duality (C<sub>0</sub>(X))* ≅ M(X) (the space of signed Radon measures) and underlies the definition of weak* convergence of measures. In probability, it justifies the identification of distributions with linear functionals on bounded continuous functions.</p>
+<h4>Extensions and variants</h4>
+<ul>
+<li>For complex‑valued functionals, the Jordan decomposition yields a complex Radon measure.</li>
+<li>On a compact space, C(X) = C_c(X) and the representing measure is finite.</li>
+<li>The theorem fails if X is not locally compact; e.g., on an infinite‑dimensional Banach space there are positive linear functionals not given by measures.</li>
+</ul>
+
+<h3>Birkhoff Ergodic Theorem and Invariant Measures</h3>
+<p>Let (X, ℬ, μ) be a probability space and T : X → X a measure‑preserving transformation (μ(T⁻¹A) = μ(A) for all A ∈ ℬ). The transformation is ergodic if every invariant set has measure 0 or 1. Birkhoff’s pointwise ergodic theorem asserts that for any f ∈ L¹(μ), the time averages (1/n) Σ<sub>k=0</sub><sup>n-1</sup> f(T^k x) converge for μ‑almost every x to a T‑invariant function f* ∈ L¹(μ). Moreover, ∫ f* dμ = ∫ f dμ. If T is ergodic, f* is constant μ‑a.e. and equals the space average ∫ f dμ. The proof uses the maximal ergodic inequality: for λ>0, μ({ sup_n (1/n) Σ<sub>k=0</sub><sup>n-1</sup> f(T^k x) > λ }) ≤ (1/λ) ∫<sub>f>λ</sub> f dμ. This inequality is the analogue of the Hardy–Littlewood maximal inequality in the dynamical setting. The theorem extends to amenable group actions and to L^p spaces (1 ≤ p ≤ ∞). Applications include the strong law of large numbers (take T as the shift on a product space) and the equidistribution of sequences modulo 1 (Weyl’s criterion).</p>
+<h4>Key corollaries</h4>
+<ul>
+<li>Von Neumann’s mean ergodic theorem: the averages converge in L² norm to the orthogonal projection onto the subspace of invariant functions.</li>
+<li>Hopf’s ergodic theorem for flows: the same statement holds for a measure‑preserving flow {T_t}.</li>
+<li>Unique ergodicity: if there is only one invariant probability measure, then time averages converge uniformly for continuous functions.</li>
+</ul>
+
+<h3>Disintegration of Measures and Conditional Distributions</h3>
+<p>Given a measurable map π : X → Y between standard Borel spaces and a probability measure μ on X, disintegration provides a family of probability measures {μ_y}<sub>y∈Y</sub> on the fibres π⁻¹(y) such that μ = ∫ μ_y d(π_*μ)(y) and for every bounded measurable f on X, ∫ f dμ = ∫ (∫ f dμ_y) d(π_*μ)(y). The existence and uniqueness (up to π_*μ‑null sets) of such a disintegration is a deep theorem (Rokhlin, 1949). In probability, this is precisely the construction of regular conditional distributions: for a random variable X and a sub‑σ‑algebra 𝒢, the conditional law of X given 𝒢 is a kernel from Ω to ℝ satisfying the defining integral identities. Disintegration also underlies the definition of conditional expectation for non‑integrable variables and the theory of Palm measures in point processes. A practical criterion: if π is a continuous surjection between compact metric spaces, the disintegration can be obtained by approximating μ with measures supported on finite partitions and taking a weak* limit.</p>
+<h4>Examples</h4>
+<ul>
+<li>Lebesgue measure on the unit square disintegrated over the projection onto the first coordinate yields the family of one‑dimensional Lebesgue measures on vertical fibres.</li>
+<li>For a Gaussian vector (X,Y) in ℝ², the conditional distribution of Y given X=x is Gaussian with mean and variance given by the usual regression formulas; this is a disintegration of the joint law over the marginal of X.</li>
+</ul>
+
+<ul>
+<li>Confusing the Carathéodory extension with the completion of a measure space; the former builds a measure from a pre‑measure, the latter adds subsets of null sets.</li>
+<li>Assuming every Borel measure on a metric space is Radon without verifying local finiteness or separability.</li>
+<li>Applying the Riesz representation theorem to functionals that are not positive or not defined on C_c(X).</li>
+<li>Using Birkhoff’s theorem without checking measure preservation or ergodicity; the limit may be a non‑constant invariant function.</li>
+<li>Treating disintegration as a pointwise definition of conditional probability for every y; it holds only for almost every y with respect to the pushforward measure.</li>
+<li>Neglecting the σ‑finiteness hypothesis in the uniqueness part of the Carathéodory extension theorem.</li>
+<li>Review these traps before the exam to avoid common mistakes.</li></ul>
+<h3>Marcinkiewicz Interpolation Theorem and Real Interpolation</h3>
+<p>The Marcinkiewicz interpolation theorem provides a powerful tool for extending boundedness of linear operators from endpoint spaces to intermediate <em>L</em><sup>p</sup> spaces. Let <em>T</em> be a sublinear operator defined on simple functions taking values in a measure space (<em>X</em>, <em>μ</em>) and mapping to measurable functions on (<em>Y</em>, <em>ν</em>). Suppose there exist constants <em>C</em><sub>0</sub>, <em>C</em><sub>1</sub> such that for all simple <em>f</em> the weak‑type estimates hold:</p>
+<ul>
+<li><em>ν</em>({<em>y</em> : |<em>Tf</em>(<em>y</em>)| > <em>λ</em>}) ≤ (<em>C</em><sub>0</sub>‖<em>f</em>‖<sub><em>L</em><sup><em>p</em><sub>0</sub></sup></sub>/<em>λ</em>)<sup><em>p</em><sub>0</sub></sup> for some 0 < <em>p</em><sub>0</sub> < ∞,</li>
+<li><em>ν</em>({<em>y</em> : |<em>Tf</em>(<em>y</em>)| > <em>λ</em>}) ≤ (<em>C</em><sub>1</sub>‖<em>f</em>‖<sub><em>L</em><sup><em>p</em><sub>1</sub></sup></sub>/<em>λ</em>)<sup><em>p</em><sub>1</sub></sup> for some <em>p</em><sub>0</sub> < <em>p</em><sub>1</sub> ≤ ∞.</li>
+</ul>
+<p>Then for every <em>p</em> with <em>p</em><sub>0</sub> < <em>p</em> < <em>p</em><sub>1</sub> the operator extends uniquely to a bounded linear map <em>T</em> : <em>L</em><sup><em>p</em></sup>(<em>X</em>) → <em>L</em><sup><em>p</em></sup>(<em>Y</em>) and the strong‑type norm satisfies ‖<em>T</em>‖<sub><em>p</em></sub> ≤ <em>C</em><sub>0</sub><sup>1−<em>θ</em></sup><em>C</em><sub>1</sub><sup><em>θ</em></sup> where <em>θ</em> ∈ (0,1) is defined by 1/<em>p</em> = (1−<em>θ</em>)/<em>p</em><sub>0</sub> + <em>θ</em>/<em>p</em><sub>1</sub>. The proof uses a decomposition of <em>f</em> into a “large” part and a “small” part at a carefully chosen level <em>λ</em>, together with the distribution function and the layer‑cake representation. The theorem is strictly stronger than the Riesz–Thorin convexity theorem because it only requires weak‑type bounds at the endpoints; it applies, for example, to the Hardy–Littlewood maximal operator, which is of weak type (1,1) and strong type (∞,∞), yielding strong boundedness on all <em>L</em><sup><em>p</em></sup> for 1 < <em>p</em> ≤ ∞.</p>
+<p>Real interpolation spaces (<em>L</em><sup><em>p</em><sub>0</sub></sup>, <em>L</em><sup><em>p</em><sub>1</sub></sup>)<sub><em>θ</em>,<em>q</em></sub> refine this picture. For 0 < <em>θ</em> < 1 and 1 ≤ <em>q</em> ≤ ∞ the <em>K</em>‑functional <em>K</em>(<em>t</em>, <em>f</em>) = inf{‖<em>f</em><sub>0</sub>‖<sub><em>p</em><sub>0</sub></sub> + <em>t</em>‖<em>f</em><sub>1</sub>‖<sub><em>p</em><sub>1</sub></sub> : <em>f</em> = <em>f</em><sub>0</sub> + <em>f</em><sub>1</sub>} generates the norm ‖<em>f</em>‖<sub><em>θ</em>,<em>q</em></sub> = (∫<sub>0</sub><sup>∞</sup> [<em>t</em><sup>−<em>θ</em></sup><em>K</em>(<em>t</em>, <em>f</em>)]<sup><em>q</em></sup> d<em>t</em>/<em>t</em>)<sup>1/<em>q</em></sup>. When <em>q</em> = <em>p</em> the space coincides with <em>L</em><sup><em>p</em></sup>; when <em>q</em> = ∞ one obtains the weak‑<em>L</em><sup><em>p</em></sup> (Lorentz) space <em>L</em><sup><em>p</em>,∞</sup>. The Marcinkiewicz theorem can be restated as: a sublinear operator of weak types (<em>p</em><sub>0</sub>, <em>p</em><sub>0</sub>) and (<em>p</em><sub>1</sub>, <em>p</em><sub>1</sub>) extends boundedly to every real interpolation space between the endpoints. This formulation is essential in modern harmonic analysis, where operators such as singular integrals are first shown to be of weak type (1,1) and then interpolated to obtain the full <em>L</em><sup><em>p</em></sup> theory.</p>
+
+<h3>Sobolev Spaces, Embedding Theorems, and Compactness</h3>
+<p>For an open set Ω ⊂ ℝ<sup>n</sup> and integers <em>k</em> ≥ 0, 1 ≤ <em>p</em> ≤ ∞ the Sobolev space <em>W</em><sup><em>k</em>,<em>p</em></sup>(Ω) consists of all locally integrable functions whose weak derivatives up to order <em>k</em> belong to <em>L</em><sup><em>p</em></sup>(Ω). The norm is ‖<em>u</em>‖<sub><em>W</em><sup><em>k</em>,<em>p</em></sup></sub> = (∑<sub>|α|≤<em>k</em></sub>‖D<sup>α</sup><em>u</em>‖<sub><em>p</em></sub><sup><em>p</em></sup>)<sup>1/<em>p</em></sup> (with the usual modification for <em>p</em> = ∞). The space is a Banach space; for <em>p</em> = 2 it is a Hilbert space denoted <em>H</em><sup><em>k</em></sup>(Ω). The fundamental Sobolev embedding theorem states that if <em>kp</em> < <em>n then <em>W</em><sup><em>k</em>,<em>p</em></sup>(Ω) continuously embeds into <em>L</em><sup><em>p</em>*</sup>(Ω) where <em>p</em>* = <em>np</em>/(<em>n</em> − <em>kp</em>). If <em>kp</em> = <em>n</em> the embedding holds into the Orlicz space exp<em>L</em> (Trudinger’s exponential integrability). If <em>kp</em> > <em>n</em> then functions are Hölder continuous of exponent <em>α</em> = <em>k</em> − <em>n</em>/<em>p</em> (Morrey’s inequality). The Rellich–Kondrachov compactness theorem asserts that for bounded Lipschitz domains the embedding <em>W</em><sup><em>k</em>,<em>p</em></sup>(Ω)  <em>L</em><sup><em>q</em></sup>(Ω) is compact whenever 1 ≤ <em>q</em> < <em>p</em>* (or <em>q</em> < ∞ in the critical case <em>kp</em> = <em>n</em>). This compactness underpins the existence theory for elliptic PDEs via the direct method of the calculus of variations: a minimizing sequence in <em>W</em><sup>1,<em>p</em></sup> has a subsequence converging strongly in <em>L</em><sup><em>p</em></sup>, allowing passage to the limit in nonlinear terms.</em></p>
+<p>Trace theorems describe the restriction of Sobolev functions to the boundary ∂Ω. For <em>p</em> > 1 the trace operator maps <em>W</em><sup>1,<em>p</em></sup>(Ω) continuously onto the Besov space <em>B</em><sup>1−1/<em>p</em></sup><sub><em>p</em>,<em>p</em></sub>(∂Ω). When <em>p</em> = 2 this is the fractional Sobolev space <em>H</em><sup>1/2</sup>(∂Ω). The trace is essential for formulating boundary value problems in a variational setting. Extension operators (e.g., the Calderón–Stein extension) allow one to extend a function in <em>W</em><sup><em>k</em>,<em>p</em></sup>(Ω) to a function in <em>W</em><sup><em>k</em>,<em>p</em></sup>(ℝ<sup>n</sup>) with controlled norm, provided Ω satisfies a uniform cone condition. This reduces many questions on domains to the whole space where Fourier analysis is available.</p>
+<p>Fractional Sobolev–Slobodeckij spaces <em>W</em><sup><em>s</em>,<em>p</em></sup>(Ω) for non‑integer <em>s</em> > 0 are defined via the Gagliardo seminorm [<em>u</em>]<sub><em>s</em>,<em>p</em></sub> = (∫<sub>Ω×Ω</sub> |<em>u</em>(<em>x</em>) − <em>u</em>(<em>y</em>)|<sup><em>p</em></sup> / |<em>x</em> − <em>y</em>|<sup><em>n</em>+<em>sp</em></sup> d<em>x</em>d<em>y</em>)<sup>1/<em>p</em></sup>. They interpolate between integer‑order spaces and satisfy analogous embedding and compactness results. These spaces appear naturally in the study of nonlocal operators such as the fractional Laplacian (−Δ)<sup><em>s</em></sup> and in the trace theory for <em>W</em><sup>1,<em>p</em></sup>.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Verifying a Sobolev Embedding</div>
+<div class="ex-text">Let Ω = (0,1) ⊂ ℝ and consider u(x) = x<sup>α</sup> with α > 0. Determine for which α the function belongs to W<sup>1,p</sup>(Ω) and, using the one‑dimensional Sobolev embedding, decide whether u is Hölder continuous up to the boundary.</div>
+<div class="ex-soln">Compute the weak derivative u'(x) = α x<sup>α−1</sup>. The L<sup>p</sup> norm of u is ∫<sub>0</sub><sup>1</sup> x<sup>αp</sup> dx = 1/(αp+1) < ∞ for all α > −1/p; since α > 0 this always holds. The L<sup>p</sup> norm of u' is ∫<sub>0</sub><sup>1</sup> α<sup>p</sup> x<sup>(α−1)p</sup> dx = α<sup>p</sup>/( (α−1)p+1 ) provided (α−1)p > −1, i.e. α > 1 − 1/p. Hence u ∈ W<sup>1,p</sup>(0,1) iff α > 1 − 1/p. In one dimension the Sobolev embedding gives W<sup>1,p</sup> C<sup>0,1−1/p</sup> for p > 1. Therefore u is Hölder continuous of exponent 1−1/p exactly when α > 1−1/p. For p = 2 this means α > 1/2; the function x<sup>1/2</sup> lies in W<sup>1,2</sup> and is 1/2‑Hölder, while x<sup>1/4</sup> fails to have a square‑integrable derivative and is not in W<sup>1,2</sup>.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for the range of p for which a given function belongs to a Sobolev space, first compute the weak derivative explicitly, then check the integrability conditions at singular points (usually the boundary or the origin). Remember the critical exponent α = 1 − 1/p separates membership from non‑membership in W<sup>1,p</sup> on (0,1). For embedding questions, recall the three regimes kp < n, kp = n, kp > n and the corresponding target spaces L<sup>p*</sup>, exp L, and C<sup>0,α</sup>. Write down the formula for p* = np/(n−kp) and the Hölder exponent α = k − n/p; these are the quick‑reference facts examiners expect you to reproduce.</div>
+</div>
+
+<h3>Fourier Transform on L<sup>p</sup> Spaces and the Hausdorff–Young Inequality</h3>
+<p>The Fourier transform ℱ initially defined on the Schwartz space 𝒮(ℝ<sup>n</sup>) extends uniquely to a unitary operator on <em>L</em><sup>2</sup>(ℝ<sup>n</sup>) by Plancherel’s theorem. For 1 ≤ <em>p</em> ≤ 2 the Hausdorff–Young inequality states that ℱ maps <em>L</em><sup><em>p</em></sup>(ℝ<sup>n</sup>) boundedly into <em>L</em><sup><em>p</em>'</sup>(ℝ<sup>n</sup>) where 1/<em>p</em> + 1/<em>p</em>' = 1, with norm ‖ℱ<em>f</em>‖<sub><em>p</em>'</sub> ≤ ‖<em>f</em>‖<sub><em>p</em></sub>. The constant 1 is sharp (Babenko–Beckner). The proof uses the Riesz–Thorin interpolation theorem between the trivial bound ‖ℱ<em>f</em>‖<sub>∞</sub> ≤ ‖<em>f</em>‖<sub>1</sub> and the Plancherel identity ‖ℱ<em>f</em>‖<sub>2</sub> = ‖<em>f</em>‖<sub>2</sub>. For <em>p</em> > 2 the Fourier transform does not map <em>L</em><sup><em>p</em></sup> into any <em>L</em><sup><em>q</em></sup> with <em>q</em> < ∞; indeed, there exist functions in <em>L</em><sup><em>p</em></sup> whose Fourier transforms are not even locally integrable. This failure is closely related to the restriction phenomenon: the Fourier transform of an <em>L</em><sup><em>p</em></sup> function cannot be restricted to a lower‑dimensional surface unless <em>p</em> is sufficiently small.</p>
+<p>The Hausdorff–Young inequality has a precise converse: if a measurable function <em>g</em> on ℝ<sup>n</sup> satisfies that its inverse Fourier transform belongs to <em>L</em><sup><em>p</em></sup> for some 1 ≤ <em>p</em> ≤ 2, then <em>g</em> ∈ <em>L</em><sup><em>p</em>'</sup>. This characterises the image of <em>L</em><sup><em>p</em></sup> under ℱ. The inequality also implies the Young convolution inequality ‖<em>f</em> * <em>g</em>‖<sub><em>r</em></sub> ≤ ‖<em>f</em>‖<sub><em>p</em></sub>‖<em>g</em>‖<sub><em>q</em></sub> for 1 + 1/<em>r</em> = 1/<em>p</em> + 1/<em>q</em> by applying ℱ and using pointwise multiplication. In the endpoint case <em>p</em> = 1 the Fourier transform maps into the space of continuous functions vanishing at infinity, C<sub>0</sub>(ℝ<sup>n</sup>), with the uniform bound ‖ℱ<em>f</em>‖<sub>∞</sub> ≤ ‖<em>f</em>‖<sub>1</sub>. This is the Riemann–Lebesgue lemma. For <em>p</em> = 2 the image is all of <em>L</em><sup>2</sup>. The interpolation scale thus fills the whole range 1 ≤ <em>p</em> ≤ 2.</p>
+<p>Sharp constants and extremisers for Hausdorff–Young are known: Gaussians are the unique (up to symmetries) extremisers for 1 < <em>p</em> < 2 (Lieb, 1990). This result connects to the Brascamp–Lieb inequalities and to the theory of optimal constants in functional inequalities. In harmonic analysis the inequality is used to prove boundedness of Fourier multipliers on <em>L</em><sup><em>p</em></sup> via transference, and to establish Strichartz estimates for dispersive PDEs where the Fourier transform converts the equation into a multiplication operator.</p>
+
+<h3>Gaussian Measures on Separable Banach Spaces and the Cameron–Martin Theorem</h3>
+<p>Let <em>X</em> be a separable Banach space with Borel σ‑algebra ℬ(<em>X</em>). A centred Gaussian measure γ on <em>X</em> is a probability measure such that every continuous linear functional ℓ ∈ <em>X</em>* induces a centred Gaussian random variable ℓ on (<em>X</em>, γ) with variance ‖ℓ‖<sub><em>H</em></sub><sup>2</sup> for some Hilbertian seminorm ‖·‖<sub><em>H</em></sub> on <em>X</em>*. The Cameron–Martin space <em>H</em>(γ) is the completion of <em>X</em>* under this seminorm; it embeds continuously and densely into <em>X</em>. The measure γ is quasi‑invariant under translations by elements of <em>H</em>(γ): for <em>h</em> ∈ <em>H</em>(γ) the translated measure γ<sub><em>h</em></sub>(·) = γ(· − <em>h</em>) is absolutely continuous with respect to γ, and the Radon–Nikodym derivative is given by the Cameron–Martin formula dγ<sub><em>h</em></sub>/dγ(<em>x</em>) = exp(⟨<em>x</em>, <em>h</em>⟩<sub><em>H</em></sub> − ½‖<em>h</em>‖<sub><em>H</em></sub><sup>2</sup>), where ⟨·,·⟩<sub><em>H</em></sub> denotes the inner product on <em>H</em>(γ) and the pairing ⟨<em>x</em>, <em>h</em>⟩<sub><em>H</em></sub> is interpreted as the limit of ℓ<sub>n</sub>(<em>x</em>) for a sequence ℓ<sub>n</sub> ∈ <em>X</em>* converging to <em>h</em> in <em>H</em>(γ). If <em>h</em> ∉ <em>H</em>(γ) then γ<sub><em>h</em></sub> is singular with respect to γ (the Feldman–Hájek theorem). This dichotomy is the infinite‑dimensional analogue of the fact that translating a non‑degenerate Gaussian on ℝ<sup>n</sup> by any vector yields an equivalent measure.</p>
+<p>The Cameron–Martin space coincides with the reproducing kernel Hilbert space associated with the covariance operator of γ. In concrete terms, if γ is the law of a Gaussian process (e.g., Brownian motion on C[0,1]), then <em>H</em>(γ) consists of the absolutely continuous functions with square‑integrable derivative (the Dirichlet space). The quasi‑invariance property underlies the Girsanov theorem for stochastic differential equations in infinite dimensions and the construction of Malliavin calculus. Moreover, the Fernique theorem guarantees that γ has finite exponential moments: there exists <em>α</em> > 0 such that ∫<sub><em>X</em></sub> exp(α‖<em>x</em>‖<sup>2</sup>) dγ(<em>x</em>) < ∞. This integrability is essential for defining the Ornstein–Uhlenbeck semigroup and for proving the logarithmic Sobolev inequality of Gross, which in turn yields hypercontractivity of the Ornstein–Uhlenbeck semigroup and the Poincaré inequality on Gaussian space.</p>
+<p>Gaussian measures on Banach spaces also satisfy the concentration of measure phenomenon: for any 1‑Lipschitz function <em>F</em> : <em>X</em> → ℝ, γ({|<em>F</em> − median(<em>F</em>)| > <em>t</em>}) ≤ 2 exp(−<em>t</em><sup>2</sup>/2). This is the infinite‑dimensional version of the Gaussian isoperimetric inequality and is a cornerstone of the theory of metric measure spaces with Ricci curvature bounded below. The Cameron–Martin theorem, together with the Feldman–Hájek dichotomy, provides the complete classification of equivalence and orthogonality of Gaussian measures on a fixed Banach space in terms of the difference of their means and the relative position of their Cameron–Martin spaces.</p>
+
+<ul>
+<li>Confusing the weak‑type endpoint in Marcinkiewicz interpolation with strong‑type boundedness; the theorem only guarantees strong bounds for interior exponents.</li>
+<li>Assuming Sobolev embedding holds for the critical exponent <em>p</em>* without the Trudinger exponential correction when <em>kp</em> = <em>n</em>.</li>
+<li>Applying the Hausdorff–Young inequality for <em>p</em> > 2; the Fourier transform does not map <em>L</em><sup><em>p</em></sup> into any <em>L</em><sup><em>q</em></sup> in that range.</li>
+<li>Treating the Cameron–Martin space as the whole Banach space; translations outside <em>H</em>(γ) produce singular measures.</li>
+<li>Neglecting the separability hypothesis in the definition of Gaussian measures on Banach spaces; without it the covariance operator may fail to be trace‑class.</li>
+<li>Using the Rellich–Kondrachov compactness theorem on domains that are not Lipschitz; the embedding can fail to be compact.</li>
+<li>Forgetting that the Marcinkiewicz theorem requires sublinearity of the operator; linear operators satisfy the hypothesis automatically, but many nonlinear operators do not.</li>
+</ul>
+The advanced topics above complete the measure‑theoretic toolkit needed for modern analysis and probability examinations.
+<h3>Haar Measure on Locally Compact Groups</h3>
+<p>On a locally compact Hausdorff group <strong>G</strong> there exists a non‑zero regular Borel measure <strong>μ</strong> that is left‑invariant: <strong>μ(gE)=μ(E)</strong> for every Borel set <strong>E⊂G</strong> and every <strong>g∈G</strong>. This measure is unique up to a positive multiplicative constant and is called the <em>left Haar measure</em>. A right Haar measure is defined analogously with right translation invariance. The modular function <strong>Δ:G→(0,∞)</strong> relates the two: <strong>dμ_R(g)=Δ(g)⁻¹ dμ_L(g)</strong>. For compact groups the Haar measure can be normalised to a probability measure; for discrete groups it coincides with counting measure. The existence proof uses the Riesz representation theorem applied to the positive linear functional <strong>f↦∫_G f(g) dμ(g)</strong> on <strong>C_c(G)</strong> obtained by averaging a fixed compactly supported continuous function over the group. Uniqueness follows from the fact that any two left‑invariant regular Borel measures are mutually absolutely continuous and the Radon–Nikodym derivative must be a continuous homomorphism into the positive reals, which is constant because <strong>G</strong> is connected or by a standard argument using compact neighbourhoods of the identity. Haar measure is the cornerstone of abstract harmonic analysis: it provides the integration theory needed to define the Fourier transform on <strong>L¹(G)</strong> and to develop the Plancherel theorem for type I groups. In probability, the Haar measure on a compact group yields the unique translation‑invariant probability law, which is the distribution of a “uniform” random element. The modular function also appears in the change‑of‑variables formula for integrals under group actions and in the definition of the convolution algebra <strong>L¹(G)</strong>.</p>
+
+<h3>Optimal Transport and Wasserstein Spaces</h3>
+<p>Given two probability measures <strong>μ,ν</strong> on a Polish space <strong>X</strong>, a <em>transport plan</em> is a coupling <strong>π∈𝒫(X×X)</strong> with marginals <strong>μ,ν</strong>. The <strong>p‑Wasserstein distance</strong> (1≤p<∞) is defined by <strong>W_p(μ,ν)= (inf_π ∫<sub>X×X</sub> d(x,y)^p dπ(x,y))<sup>1/p</sup></strong>, where the infimum runs over all couplings. For <strong>p=∞</strong> one uses the essential supremum of the cost. The space <strong>𝒫_p(X)</strong> of probability measures with finite <strong>p</strong>‑th moment becomes a complete separable metric space under <strong>W_p</strong>. Kantorovich duality states that <strong>W_p(μ,ν)^p = sup<sub>φ,ψ</sub> (∫ φ dμ + ∫ ψ dν)</strong> where the supremum is over bounded continuous functions satisfying <strong>φ(x)+ψ(y) ≤ d(x,y)^p</strong>. When <strong>X=ℝ^n</strong> and <strong>p=2</strong>, Brenier’s theorem shows that if <strong>μ</strong> is absolutely continuous, the optimal plan is induced by a map <strong>T=∇φ</strong> where <strong>φ</strong> is convex; this map pushes <strong>μ</strong> forward to <strong>ν</strong> and solves the Monge problem. The displacement interpolation <strong>μ_t = ((1-t)Id + t T)_# μ</strong> gives a constant‑speed geodesic in <strong>W<sub>2</sub></strong>, endowing the space with a formal Riemannian structure (Otto calculus). Wasserstein spaces are central in gradient‑flow formulations of PDEs (e.g., the heat equation as the gradient flow of entropy), in the theory of Ricci curvature lower bounds via displacement convexity (Lott–Sturm–Villani), and in statistical applications such as domain adaptation and generative modelling.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Computing a 1‑Wasserstein Distance on the Line</div>
+<div class="ex-text">Let μ be the uniform distribution on [0,1] and ν the uniform distribution on [2,3]. Compute W₁(μ,ν).</div>
+<div class="ex-soln">Both measures have cumulative distribution functions F_μ(x)=x for x∈[0,1] (0 below, 1 above) and F_ν(x)=x-2 for x∈[2,3]. The optimal coupling for p=1 on ℝ is the monotone rearrangement: the quantile functions are Q_μ(t)=t, Q_ν(t)=t+2 for t∈[0,1]. Then W₁ = ∫<sub>0</sub><sup>1</sup> |Q_μ(t)-Q_ν(t)| dt = ∫<sub>0</sub><sup>1</sup> 2 dt = 2. Equivalently, the unique transport map is T(x)=x+2, and the cost is ∫<sub>0</sub><sup>1</sup> |x-(x+2)| dx = 2.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for a Wasserstein distance on ℝ, immediately write down the quantile functions; the 1‑Wasserstein distance equals the L¹ distance between quantiles. For p=2 on ℝⁿ with absolutely continuous μ, recall Brenier’s map is the gradient of a convex potential — this is the only case where an explicit Monge map is guaranteed.</div>
+</div>
+
+<h3>Capacity Theory and Choquet’s Theorem</h3>
+<p>A <em>capacity</em> on a measurable space <strong>(X,𝒜)</strong> is a set function <strong>Cap:𝒜→[0,∞]</strong> that is monotone, continuous from below on increasing sequences, and continuous from above on decreasing sequences of compact sets (when a topology is present). The classical example is the Newtonian capacity in ℝⁿ (n≥3) defined by <strong>Cap(K)=inf{∫|∇u|² : u∈C_c^∞, u≥1 on K}</strong>. Choquet’s capacitability theorem states that for any analytic (Suslin) set <strong>A</strong> in a Polish space, <strong>Cap(A)=sup{Cap(K): K⊂A, K compact}</strong>. This allows one to extend capacities from compact sets to all analytic sets and to define the <em>outer capacity</em> <strong>Cap^*(E)=inf{Cap(U): E⊂U, U open}</strong>. A set is <em>quasi‑everywhere</em> if its complement has capacity zero. In potential theory, a property holds quasi‑everywhere if it holds outside a polar set. Choquet’s theorem also underlies the representation of a convex compact set as the closed convex hull of its extreme points (Choquet–Bishop–de Leeuw theorem): every point in a metrizable compact convex set is the barycenter of a probability measure supported on the extreme points. This representation is used in ergodic theory (ergodic decomposition), in the theory of Gaussian processes (extremal measures), and in the study of martingale measures in mathematical finance.</p>
+
+<h3>Vector Measures and the Bartle–Dunford–Schwartz Theorem</h3>
+<p>A <em>vector measure</em> is a countably additive map <strong>m:𝒜→B</strong> where <strong>B</strong> is a Banach space. The <em>variation</em> of <strong>m</strong> is the positive measure <strong>|m|(E)=sup_π Σ‖m(E_i)‖</strong> over finite partitions. A vector measure has <em>bounded variation</em> iff <strong>|m|(X)<∞</strong>. The Bartle–Dunford–Schwartz theorem characterises the dual of the space of integrable functions with respect to a finite positive measure <strong>μ</strong>: every bounded linear functional on <strong>L¹(μ)</strong> can be represented as <strong>f↦∫ f g dμ</strong> for some <strong>g∈L^∞(μ)</strong> if and only if the measure space is <em>localisable</em>. For vector measures, the integration theory of Bartle (1966) defines the integral of a scalar function <strong>f</strong> with respect to <strong>m</strong> by approximating <strong>f</strong> with simple functions; the integral exists for all <strong>f</strong> in the space <strong>L¹(m)</strong> of <strong>|m|</strong>-integrable functions. The Radon–Nikodym property (RNP) of a Banach space <strong>B</strong> is equivalent to the statement that every <strong>B</strong>-valued measure of bounded variation that is absolutely continuous with respect to a finite positive measure has a Bochner‑integrable density. Spaces with the RNP include reflexive spaces and separable dual spaces; <strong>L¹[0,1]</strong> and <strong>c₀</strong> fail the RNP. The theorem is essential for the study of operator‑valued measures, stochastic integration in Banach spaces, and the geometry of Banach spaces (e.g., the Krein–Milman theorem for vector measures).</p>
+
+<h3>Large Deviations Principles and Rate Functions</h3>
+<p>A family of probability measures <strong>{μ_ε}</strong> on a topological space <strong>X</strong> satisfies a <em>large deviations principle</em> (LDP) with speed <strong>a_ε→∞</strong> and <em>good rate function</em> <strong>I:X→[0,∞]</strong> if for every measurable set <strong>A</strong>, <strong>-inf<sub>x∈A°</sub> I(x) ≤ liminf<sub>ε→0</sub> a_ε⁻¹ log μ_ε(A) ≤ limsup<sub>ε→0</sub> a_ε⁻¹ log μ_ε(A) ≤ -inf<sub>x∈Ā</sub> I(x)</strong>. The function <strong>I</strong> is lower semicontinuous and has compact level sets (goodness). Cramér’s theorem gives the LDP for empirical means of i.i.d. random vectors in ℝⁿ: the rate function is the Legendre–Fenchel transform of the logarithmic moment generating function, <strong>I(x)=sup<sub>θ∈ℝⁿ</sub> (⟨θ,x⟩-Λ(θ))</strong>. Sanov’s theorem extends this to empirical measures on a Polish space, with rate function the relative entropy <strong>H(ν|μ)</strong>. The contraction principle states that if <strong>μ_ε</strong> satisfies an LDP with rate <strong>I</strong> and <strong>f:X→Y</strong> is continuous, then <strong>f_* μ_ε</strong> satisfies an LDP with rate <strong>J(y)=inf<sub>x:f(x)=y</sub> I(x)</strong>. Varadhan’s lemma provides Laplace asymptotics: <strong>lim<sub>ε→0</sub> a_ε⁻¹ log ∫ exp(a_ε F(x)) dμ_ε(x) = sup<sub>x∈X</sub> (F(x)-I(x))</strong> for bounded continuous <strong>F</strong>. LDPs are the rigorous foundation of rare‑event simulation, statistical mechanics (Gibbs measures), and the Freidlin–Wentzell theory of small‑noise diffusions, where the rate function is the action functional of the associated deterministic control problem.</p>
+
+<ul>
+<li>Confusing the modular function with the Haar measure itself; the modular function is a homomorphism, not a measure.</li>
+<li>Assuming the optimal transport map exists for every pair of measures; it requires absolute continuity of the source for p=2 on ℝⁿ.</li>
+<li>Treating capacity as a measure; capacities are only subadditive and need not be countably additive.</li>
+<li>Applying the Bartle–Dunford–Schwartz representation on non‑localisable measure spaces; the dual of L¹ may be strictly larger than L^∞.</li>
+<li>Using Cramér’s theorem without verifying the finiteness of the logarithmic moment generating function in a neighbourhood of the origin.</li>
+<li>Neglecting the goodness condition on the rate function; without compact level sets the LDP may fail to give tightness.</li>
+<li>Mixing up the speed a_ε with the scaling of the random variables; the speed must tend to infinity for a non‑trivial LDP.</li>
+</ul>
+<p>These advanced topics complete the measure‑theoretic toolkit needed for modern analysis and probability examinations.</p>
+<h3>Monotone Class Theorem and π‑λ Systems</h3>
+<p>The monotone class theorem provides a bridge between algebraic and σ‑algebraic structures. A <strong>π‑system</strong> is a collection of sets closed under finite intersections; a <strong>λ‑system</strong> (or Dynkin system) is a collection containing the whole space, closed under complements and under countable disjoint unions. The theorem states: if a λ‑system contains a π‑system, then it also contains the σ‑algebra generated by that π‑system. This result is often used to prove uniqueness of measures: two measures that agree on a π‑system and are σ‑finite on the generated σ‑algebra must coincide everywhere. The proof proceeds by showing that the collection of sets on which the two measures agree forms a λ‑system, then invoking the theorem. A typical application is the verification that the product measure constructed via Carathéodory’s extension is the unique measure satisfying the product formula on rectangles. In examinations, candidates are asked to identify whether a given family is a π‑system or a λ‑system and to apply the theorem to extend a property from an algebra to the full σ‑algebra.</p>
+<h4>Key steps in a standard proof</h4>
+<ol>
+<li>Define 𝒟 = {A ∈ σ(𝒫) : μ₁(A) = μ₂(A)} where 𝒫 is a π‑system.</li>
+<li>Show 𝒟 is a λ‑system: Ω ∈ 𝒟 because μ₁(Ω)=μ₂(Ω); if A∈𝒟 then Aᶜ∈𝒟 by finite additivity; if (Aₙ) are disjoint in 𝒟 then ∪Aₙ∈𝒟 by countable additivity.</li>
+<li>Since 𝒫 ⊂ 𝒟 and 𝒫 is a π‑system, the monotone class theorem yields σ(𝒫) ⊂ 𝒟.</li>
+</ol>
+<p>Examiners frequently test the distinction between a π‑system and an algebra: an algebra is closed under finite unions and complements, hence automatically a π‑system, but the converse fails. A common trap is to assume that a λ‑system is a σ‑algebra; it need not be closed under arbitrary finite unions, only under disjoint countable unions.</p>
+
+<h3>Dynkin’s π‑λ Theorem and Uniqueness of Measures</h3>
+<p>Dynkin’s π‑λ theorem is a reformulation of the monotone class theorem tailored for measure theory. It asserts that if 𝒫 is a π‑system and ℒ is a λ‑system with 𝒫 ⊂ ℒ, then σ(𝒫) ⊂ ℒ. The theorem is instrumental in proving the uniqueness part of the Carathéodory extension theorem: any two σ‑finite measures that coincide on a π‑system generating the σ‑algebra are identical. A classic example is the uniqueness of Lebesgue measure on the Borel σ‑algebra of ℝ; the collection of finite unions of half‑open intervals forms a π‑system generating the Borel sets, and any translation‑invariant σ‑finite measure agreeing with length on intervals must be Lebesgue measure. In probability, the theorem underpins the fact that a probability measure is uniquely determined by its values on a π‑system such as the cylinder sets of a product space. When a problem asks to show that two probability measures are equal, the standard strategy is to exhibit a π‑system on which they agree and verify σ‑finiteness (or boundedness) on the generated σ‑algebra.</p>
+<div class="example-box">
+<div class="ex-title">Worked Example: Uniqueness of a Probability Measure on a Product Space</div>
+<div class="ex-text">Let (Ω,ℱ,ℙ) be a probability space and let 𝒞 be the collection of cylinder sets {ω : (ω₁,…,ωₙ) ∈ B} where B belongs to the Borel σ‑algebra of ℝⁿ. Show that ℙ is uniquely determined by its values on 𝒞.</div>
+<div class="ex-soln">The family 𝒞 is a π‑system because the intersection of two cylinder sets is again a cylinder set (possibly with a larger index set). The σ‑algebra generated by 𝒞 is the product σ‑algebra ℱ. Since ℙ is a probability measure, it is finite, hence σ‑finite. If another probability measure ℚ agrees with ℙ on 𝒞, then the set 𝒟 = {A ∈ ℱ : ℙ(A)=ℚ(A)} is a λ‑system containing 𝒞. By Dynkin’s π‑λ theorem, σ(𝒞)=ℱ ⊂ 𝒟, so ℙ=ℚ on all of ℱ.</div>
+</div>
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for uniqueness, first identify a convenient π‑system (intervals, rectangles, cylinders). Verify that the measures are σ‑finite on the generated σ‑algebra; for probability measures this is automatic. Then state Dynkin’s theorem explicitly — examiners award marks for naming the theorem and checking its hypotheses.</div>
+</div>
+
+<h3>Kolmogorov Extension Theorem and Construction of Stochastic Processes</h3>
+<p>The Kolmogorov extension theorem (also called the Kolmogorov consistency theorem) guarantees the existence of a stochastic process with prescribed finite‑dimensional distributions. Let (S,𝒮) be a measurable space and let {μ<sub>t₁,…,tₙ</sub>} be a family of probability measures on the product σ‑algebra 𝒮<sup>⊗ n</sup> indexed by finite subsets of an arbitrary index set T. The family must satisfy two consistency conditions: (1) symmetry under permutation of coordinates, and (2) marginalisation — integrating out the last coordinate yields the measure for the smaller index set. If these hold, there exists a unique probability measure ℙ on the product space S^T equipped with the product σ‑algebra such that the finite‑dimensional distributions of the coordinate process coincide with the given family. The proof constructs an outer measure on the algebra of cylinder sets using the consistent family, then applies Carathéodory’s extension theorem. A crucial hypothesis is that the index set T can be arbitrary; no topological assumptions on S are needed beyond measurability. In practice, the theorem is used to construct Brownian motion (by specifying Gaussian finite‑dimensional distributions with the correct covariance), Markov chains (via transition kernels), and Lévy processes. Examination questions often ask to verify the consistency conditions for a proposed family of distributions or to explain why the theorem fails if the marginalisation condition is dropped.</p>
+<h4>Typical verification steps</h4>
+<ol>
+<li>Define the finite‑dimensional distributions explicitly (e.g., multivariate normal with mean zero and covariance min(s,t)).</li>
+<li>Check symmetry: the joint density is invariant under permutation of time indices.</li>
+<li>Check marginalisation: integrate the (n+1)‑dimensional density over the last variable and confirm the resulting density matches the n‑dimensional specification.</li>
+<li>Conclude existence of a process on ℝ<sup>[0,∞)</sup> with those distributions.</li>
+</ol>
+<p>A frequent pitfall is to confuse the Kolmogorov extension theorem with the Daniell–Kolmogorov theorem for stochastic processes with continuous paths; the latter requires an additional tightness condition (Kolmogorov’s continuity criterion) to obtain a version with continuous sample paths.</p>
+
+<h3>Prokhorov’s Theorem, Tightness, and Weak Convergence of Probability Measures</h3>
+<p>Prokhorov’s theorem characterises relative compactness in the space of probability measures equipped with the topology of weak convergence. A family ℳ of probability measures on a metric space (X,d) is <strong>tight</strong> if for every ε>0 there exists a compact set K⊂X such that sup<sub>μ∈ℳ</sub> μ(Kᶜ) < ε. The theorem states: if X is a Polish space (complete separable metric), then a family ℳ is relatively compact for weak convergence if and only if it is tight. The proof uses the fact that on a Polish space every probability measure is inner regular, and constructs a countable dense set of test functions to apply the Arzelà–Ascoli type argument. Consequences include the existence of weakly convergent subsequences from any tight sequence, and the equivalence of tightness and relative compactness for sequences. In examinations, candidates must be able to verify tightness for a given sequence — for example, a sequence of Gaussian measures with uniformly bounded variances on ℝ is tight because the mass outside a large interval can be made uniformly small using Chebyshev’s inequality. A common error is to assume tightness holds on any metric space; the Polish assumption is essential, and counterexamples exist on non‑complete spaces.</p>
+<h4>Application to the Central Limit Theorem</h4>
+<p>In the proof of the Lindeberg–Feller central limit theorem, one shows that the sequence of normalized sums is tight by establishing a uniform bound on the second moments. Prokhorov’s theorem then yields a weakly convergent subsequence; the limit is identified as the standard normal distribution via characteristic functions. The tightness step is often the only place where the metric space structure (ℝ with Euclidean distance) is used explicitly.</p>
+
+<h3>Portmanteau Theorem and Characterizations of Weak Convergence</h3>
+<p>The Portmanteau theorem provides several equivalent definitions of weak convergence of probability measures on a metric space (X,d). Let μₙ, μ be probability measures on the Borel σ‑algebra. The following are equivalent: (i) μₙ ⇒ μ (i.e., ∫ f dμₙ → ∫ f dμ for every bounded continuous f); (ii) limsup μₙ(F) ≤ μ(F) for all closed sets F; (iii) liminf μₙ(G) ≥ μ(G) for all open sets G; (iv) μₙ(A) → μ(A) for all Borel sets A with μ(∂A)=0 (continuity sets); (v) ∫ f dμₙ → ∫ f dμ for every bounded Lipschitz function f. The equivalence of (i)–(iv) is the classical Portmanteau theorem; (v) is a useful variant because Lipschitz functions form a separable class, facilitating metric arguments such as the Lévy–Prokhorov metric. In practice, to prove weak convergence one often verifies convergence on a convergence‑determining class — for example, the class of intervals (−∞,x] on ℝ, or the class of cylinder sets on a product space. Examiners test the ability to switch between these characterizations: a typical question asks to show that μₙ ⇒ μ implies μₙ(F) → μ(F) for every closed F with μ(∂F)=0, or to construct a counterexample where μₙ(F) does not converge for a closed set with positive boundary measure. A frequent trap is to assume that convergence of measures on all Borel sets follows from weak convergence; this is false without the continuity‑set condition.</p>
+<ul>
+<li>Confusing tightness with uniform integrability; they are distinct concepts.</li>
+<li>Applying Prokhorov’s theorem on a non‑Polish space without checking completeness.</li>
+<li>Assuming weak convergence implies convergence of expectations of unbounded functions.</li>
+<li>Neglecting the boundary condition μ(∂A)=0 when using the continuity‑set characterization.</li>
+<li>Treating the Lévy–Prokhorov metric as a norm on the space of measures.</li>
+<li>These traps illustrate common pitfalls that can cost marks if not recognised.</li></ul>
+<h3>Besov and Triebel–Lizorkin Spaces: Interpolation and Embedding</h3>
+<p>Besov spaces B<sup>s</sup><sub>p,q</sub> and Triebel–Lizorkin spaces F<sup>s</sup><sub>p,q</sub> refine the classical Sobolev scale by measuring smoothness through differences or Littlewood–Paley decompositions. For s ∈ ℝ, 0 &lt; p,q ≤ ∞, the Besov norm is defined via the dyadic decomposition (φ<sub>j</sub>) of unity: ‖f‖<sub>B<sup>s</sup><sub>p,q</sub></sub> = (‖2<sup>js</sup>‖φ<sub>j</sub> * f‖<sub>L<sup>p</sup></sub>‖)<sub>ℓ<sup>q</sup></sub>. The Triebel–Lizorkin norm swaps the order of integration and summation: ‖f‖<sub>F<sup>s</sup><sub>p,q</sub></sub> = ‖(∑<sub>j</sub> 2<sup>jsq</sup> |φ<sub>j</sub> * f|<sup>q</sup>)<sup>1/q</sup>‖<sub>L<sup>p</sup></sub>. When p = q the two scales coincide with the Sobolev–Slobodeckij spaces W<sup>s,p</sup>. Real interpolation yields (L<sup>p</sup><sub>0</sub>, L<sup>p</sup><sub>1</sub>)<sub>θ,q</sub> = B<sup>θ</sup><sub>p,q</sub> for 0 &lt; θ &lt; 1, while complex interpolation gives [L<sup>p</sup><sub>0</sub>, L<sup>p</sup><sub>1</sub>]<sub>θ</sub> = F<sup>θ</sup><sub>p,2</sub>. Embedding theorems: B<sup>s</sup><sub>p,q</sub> L<sup>r</sup> if s &gt; n(1/p − 1/r) and q ≤ ∞; F<sup>s</sup><sub>p,q</sub> C<sup>k,α</sup> when s &gt; k + α + n/p. The critical borderline s = n/p separates function spaces from distributions. Examiners often test the identification of B<sup>0</sup><sub>p,2</sub> = F<sup>0</sup><sub>p,2</sub> = L<sup>p</sup> for 1 &lt; p &lt; ∞, and the failure of the embedding B<sup>n/p</sup><sub>p,1</sub> L<sup>∞</sup> when q &gt; 1.</p>
+
+<h3>Malliavin Calculus: Integration by Parts on Wiener Space</h3>
+<p>Malliavin calculus provides a differential structure on the classical Wiener space (Ω, ℱ, ℙ) where Ω = C<sub>0</sub>([0,1]; ℝ<sup>d</sup>). The derivative operator D maps a smooth cylindrical functional F = f(W(h<sub>1</sub>), …, W(h<sub>n</sub>)) to the H‑valued random variable DF = ∑<sub>i=1</sub><sup>n</sup> ∂<sub>i</sub>f(W(h)) ⊗ h<sub>i</sub>, with H the Cameron–Martin space L<sup>2</sup>([0,1]; ℝ<sup>d</sup>). Its adjoint δ (the Skorokhod integral) satisfies the duality relation 𝔼[⟨DF, u⟩<sub>H</sub>] = 𝔼[F δ(u)] for u ∈ Dom(δ). The Ornstein–Uhlenbeck operator L = −δD has spectrum {−k : k ∈ ℕ} and yields the Meyer inequalities ‖F‖<sub>𝔻<sup>k,p</sup></sub> ≍ ‖(I−L)<sup>k/2</sup>F‖<sub>L<sup>p</sup></sub>. A cornerstone is the integration‑by‑parts formula: for F ∈ 𝔻<sup>1,2</sup> and u ∈ Dom(δ), 𝔼[F δ(u)] = 𝔼[⟨DF, u⟩<sub>H</sub>]. This underpins the Clark–Ocone representation F = 𝔼[F] + ∫<sub>0</sub><sup>1</sup> 𝔼[D<sub>t</sub>F | ℱ<sub>t</sub>] dW<sub>t</sub> and the proof of Hörmander’s theorem for hypoelliptic diffusions. In exams, candidates must distinguish the Itô integral (adapted integrands) from the Skorokhod integral (anticipative integrands) and verify the chain rule Dφ(F) = φ′(F) DF for Lipschitz φ.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Skorokhod Integral of a Deterministic Function</div>
+<div class="ex-text">Let u(t) = t on [0,1]. Compute δ(u) and verify the duality relation with F = W(1) = ∫<sub>0</sub><sup>1</sup> dW<sub>s</sub>.</div>
+<div class="ex-soln">The deterministic function u belongs to H = L<sup>2</sup>([0,1]) and is adapted, so its Skorokhod integral coincides with the Itô integral: δ(u) = ∫<sub>0</sub><sup>1</sup> t dW<sub>t</sub>. For F = W(1), DF = 1 (the constant function 1 in H). Then 𝔼[⟨DF, u⟩<sub>H</sub>] = 𝔼[∫<sub>0</sub><sup>1</sup> 1·t dt] = ∫<sub>0</sub><sup>1</sup> t dt = 1/2. On the other hand, 𝔼[F δ(u)] = 𝔼[W(1) ∫<sub>0</sub><sup>1</sup> t dW<sub>t</sub>] = ∫<sub>0</sub><sup>1</sup> t dt = 1/2 by Itô isometry. The duality holds.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for the Malliavin derivative of a functional, first write the functional as a smooth function of finitely many Wiener integrals. Apply the chain rule term‑by‑term, then identify the resulting H‑valued random variable. For Skorokhod integrals, check whether the integrand is adapted; if yes, replace δ by the Itô integral to simplify calculations.</div>
+</div>
+
+<h3>Measure Concentration: Isoperimetric Inequalities and Lévy’s Lemma</h3>
+<p>Concentration of measure describes how a Lipschitz function on a high‑dimensional metric probability space is tightly clustered around its median. On the sphere S<sup>n</sup> with normalized uniform measure σ, Lévy’s lemma states: for any 1‑Lipschitz f : S<sup>n</sup> → ℝ, σ({|f − M<sub>f</sub>| ≥ ε}) ≤ 2 exp(−(n−1)ε<sup>2</sup>/2), where M<sub>f</sub> is a median. The Gaussian analogue: for γ the standard Gaussian measure on ℝ<sup>n</sup>, γ({|f − ∫ f dγ| ≥ ε}) ≤ 2 exp(−ε<sup>2</sup>/2). These follow from the isoperimetric inequality: among sets of given measure, half‑spaces (Gaussian) or spherical caps (sphere) minimise boundary measure. The Herbst argument converts a logarithmic Sobolev inequality (LSI) γ(f<sup>2</sup> log f<sup>2</sup>) ≤ 2 ∫ |∇f|<sup>2</sup> dγ into sub‑Gaussian tails. Talagrand’s convex distance inequality extends concentration to product spaces: for a convex set A ⊂ ℝ<sup>n</sup> and the Hamming‑type distance d<sub>T</sub>, ℙ(d<sub>T</sub>(X, A) ≥ ε) ≤ exp(−ε<sup>2</sup>/4). In statistical learning, concentration yields uniform laws of large numbers via covering numbers. Examiners frequently ask to derive the Gaussian tail bound from the LSI or to compare the constants in Lévy’s lemma versus the Gaussian bound.</p>
+
+<h3>Entropy and Relative Entropy in Measure Spaces: Data Processing and Variational Formulas</h3>
+<p>For probability measures μ ≪ ν on a measurable space, the relative entropy (Kullback–Leibler divergence) is D(μ‖ν) = ∫ log(dμ/dν) dμ, with D(μ‖ν) = +∞ if μ ⊄ ν. The variational representation D(μ‖ν) = sup<sub>f</sub> {∫ f dμ − log ∫ e<sup>f</sup> dν} (Donsker–Varadhan) characterises entropy as a convex conjugate. The data‑processing inequality: for any measurable map T, D(T<sub>#</sub>μ ‖ T<sub>#</sub>ν) ≤ D(μ‖ν). Pinsker’s inequality bounds total variation by entropy: ‖μ − ν‖<sub>TV</sub> ≤ √(½ D(μ‖ν)). The chain rule D(μ<sub>1</sub>⊗μ<sub>2</sub> ‖ ν<sub>1</sub>⊗ν<sub>2</sub>) = D(μ<sub>1</sub>‖ν<sub>1</sub>) + D(μ<sub>2</sub>‖ν<sub>2</sub>) holds for product measures. In information theory, the mutual information I(X;Y) = D(ℙ<sub>XY</sub> ‖ ℙ<sub>X</sub>⊗ℙ<sub>Y</sub>) satisfies I(X;Y) = H(X) − H(X|Y). The entropy power inequality N(X+Y) ≥ N(X)+N(Y) for independent random vectors with densities follows from the Brunn–Minkowski inequality. Exam questions often require proving the data‑processing inequality via Jensen’s inequality applied to the convex function x log x, or deriving the Gaussian log‑Sobolev inequality from the entropy variational formula.</p>
+
+<h3>Ergodic Decomposition and Choquet Theory for Invariant Measures</h3>
+<p>Let (X, ℬ, T) be a measure‑preserving system with T : X → X measurable and μ a T‑invariant probability measure. The set ℳ<sub>T</sub> of all invariant measures is a convex compact subset of the space of probability measures (weak* topology). By Choquet’s theorem, every μ ∈ ℳ<sub>T</sub> admits a unique representation μ = ∫<sub>ℰ</sub> ν dτ(ν) where ℰ ⊂ ℳ<sub>T</sub> is the set of ergodic measures and τ is a probability measure on ℰ. This ergodic decomposition yields the pointwise ergodic theorem: for μ‑a.e. x, the empirical measures (1/n)∑<sub>k=0</sub><sup>n−1</sup> δ<sub>T<sup>k</sup>x</sub> converge weakly to the ergodic component ν<sub>x</sub>. The extremal points of ℳ<sub>T</sub> are precisely the ergodic measures; a measure is ergodic iff it cannot be written as a non‑trivial convex combination of invariant measures. In smooth dynamics, the decomposition underlies the construction of Sinai‑Ruelle‑Bowen measures for Axiom A attractors. Examiners test the ability to identify ergodic components for a given invariant measure (e.g., Lebesgue measure on the circle rotation by an irrational angle is already ergodic, while Lebesgue on a rational rotation decomposes into atomic measures on periodic orbits).</p>
+
+<ul>
+<li>Confusing Besov and Triebel–Lizorkin norms when p ≠ q; the order of ℓ<sup>q</sup> and L<sup>p</sup> norms is decisive.</li>
+<li>Treating the Skorokhod integral as an Itô integral for non‑adapted integrands; the duality formula fails without the Malliavin derivative.</li>
+<li>Applying Lévy’s lemma on the sphere without normalising the measure; the constant (n−1) depends on the radius.</li>
+<li>Using Pinsker’s inequality in the wrong direction; it bounds total variation by entropy, not the reverse.</li>
+<li>Assuming every invariant measure is ergodic; the ergodic decomposition shows the generic invariant measure is a mixture.</li>
+<li>These traps illustrate common pitfalls that can cost marks if not recognised.</li></ul>
+<h3>Vitali Covering Theorem and the Differentiation of Integrals</h3>
+<h4>Statement</h4>
+<p>The Vitali covering theorem asserts that for any set <strong>E</strong> ⊂ ℝⁿ of finite outer Lebesgue measure and any Vitali cover <strong>𝒱</strong> of <strong>E</strong> (a collection of closed balls such that each point of <strong>E</strong> is the center of arbitrarily small balls from <strong>𝒱</strong>), there exists a countable disjoint subfamily <strong>{Bₖ}</strong> ⊂ <strong>𝒱</strong> covering almost all of <strong>E</strong>: |E ⋃ₖ Bₖ| = 0. The theorem holds for any doubling metric measure space, but the classical proof uses the Besicovitch covering lemma in ℝⁿ.</p>
+<h4>Proof Sketch</h4>
+<p>Select a maximal disjoint subcollection by a greedy algorithm: choose a ball of maximal radius, remove all balls intersecting it, repeat. The maximality guarantees that the dilated balls (by factor 5) cover the original set. The disjointness yields a summable series of measures, and the covering property gives the almost‑everywhere conclusion. The constant 5 is sharp for the simple Vitali lemma; the Besicovitch constant depends only on dimension.</p>
+<h4>Differentiation of Integrals</h4>
+<p>As a direct corollary, for any locally integrable function <strong>f</strong> on ℝⁿ, the limit lim<sub>r→0</sub> (1/|B(x,r)|) ∫<sub>B(x,r)</sub> f(y) dy = f(x) holds for almost every x. This is the Lebesgue differentiation theorem. The proof applies the Vitali covering theorem to the sets where the maximal function exceeds a threshold, yielding the weak‑type (1,1) estimate for the Hardy–Littlewood maximal operator.</p>
+<h4>Examiner Traps</h4>
+<ul>
+<li>Confusing the Vitali covering theorem with the Besicovitch covering theorem; the former requires a Vitali cover (centered at points of the set), the latter works for arbitrary families of balls with bounded overlap.</li>
+<li>Forgetting that the differentiation theorem fails for the uncentered maximal function without additional hypotheses.</li>
+<li>Assuming the theorem holds for all measures; it requires the doubling property or a Vitali covering relation.</li>
+</ul>
+
+<h3>Lusin's Theorem and Approximation by Continuous Functions</h3>
+<h4>Statement</h4>
+<p>Lusin's theorem states that for any finite measure space (X, ℬ, μ) with μ regular, every measurable function f : X → ℝ is nearly continuous: for every ε > 0 there exists a closed set F ⊂ X with μ(X F) < ε such that f|<sub>F</sub> is continuous. If X is a locally compact Hausdorff space and μ is a Radon measure, one can choose F compact and extend the restriction to a continuous function g on X with sup|g| ≤ sup|f| (Tietze extension).</p>
+<h4>Proof Outline</h4>
+<p>Approximate f by simple functions, then each simple function by a step function with measurable sets of finite measure. Use regularity to replace each measurable set by a closed subset up to small measure. The union of the exceptional sets has measure < ε. On the remaining closed set the simple function is continuous because each characteristic function is continuous on the closed set where its support is either entirely inside or outside. A diagonal argument yields the result for general measurable f.</p>
+<h4>Applications</h4>
+<ul>
+<li>Density of continuous functions in Lᵖ(μ) for 1 ≤ p < ∞ when μ is a Radon measure on a locally compact space.</li>
+<li>Proof of the existence of a continuous modification for stochastic processes with suitable regularity (Kolmogorov continuity theorem).</li>
+<li>Reduction of convergence almost everywhere to convergence on a compact set (Egorov's theorem combined with Lusin).</li>
+</ul>
+<h4>Examiner Traps</h4>
+<ul>
+<li>Assuming Lusin's theorem holds for arbitrary topological spaces without regularity of the measure.</li>
+<li>Confusing the conclusion “f is continuous on F” with “f is uniformly continuous on F”; compactness of F is needed for uniform continuity.</li>
+<li>Forgetting that the extended continuous function g may not equal f outside F, so ‖f−g‖<sub>Lᵖ</sub> can be large even if μ(XF) is small.</li>
+</ul>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Lusin Approximation in L¹([0,1])</div>
+<div class="ex-text">Let f(x) = 1<sub>ℚ∩[0,1]</sub>(x) be the indicator of rationals in [0,1]. For ε = 0.1, construct a closed set F ⊂ [0,1] with Lebesgue measure > 0.9 on which f is continuous, and a continuous function g on [0,1] with ‖f−g‖₁ < 0.2.</div>
+<div class="ex-soln">The rationals are countable, enumerate them {qₖ}. Choose open intervals Iₖ centered at qₖ with length ε/2ᵏ⁺¹. Let U = ⋃ Iₖ; then |U| < ε. Set F = [0,1] U, which is closed and |F| > 1−ε = 0.9. On F, f ≡ 0 because all rationals are removed, so f|<sub>F</sub> is constant (hence continuous). Define g(x) = 0 for all x ∈ [0,1]; g is continuous and ‖f−g‖₁ = ∫|f| = |ℚ∩[0,1]| = 0 < 0.2. The construction works for any ε > 0.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks to approximate a measurable function by a continuous one, first check whether the measure is Radon (regular Borel on a locally compact space). If yes, invoke Lusin directly and then use Tietze extension to obtain a global continuous function. If the space is not locally compact, you may only get continuity on a closed set of large measure; note this distinction in your answer.</div>
+</div>
+
+<h3>Uniform Integrability and the Dunford–Pettis Compactness Criterion</h3>
+<h4>Definition</h4>
+<p>A family ℱ ⊂ L¹(μ) is uniformly integrable if sup<sub>f∈ℱ</sub> ∫<sub>|f|>M</sub> |f| dμ → 0 as M → ∞. Equivalently, for every ε > 0 there exists δ > 0 such that μ(A) < δ implies ∫<sub>A</sub> |f| dμ < ε for all f ∈ ℱ.</p>
+<h4>Dunford–Pettis Theorem</h4>
+<p>A subset ℱ of L¹(μ) is relatively weakly compact if and only if it is uniformly integrable. The proof uses the fact that the unit ball of L¹ is not weakly compact, but uniform integrability restores compactness by preventing mass escape to sets of small measure. The theorem characterises weak compactness in L¹ and is essential for proving the existence of solutions to optimisation problems in L¹.</p>
+<h4>Applications</h4>
+<ul>
+<li>In probability, a sequence of random variables {Xₙ} is uniformly integrable iff it is bounded in L¹ and for every ε > 0 there exists δ > 0 such that ℙ(A) < δ implies supₙ E[|Xₙ| 1<sub>A</sub>] < ε. This is the standard criterion for convergence in L¹ (Vitali convergence theorem).</li>
+<li>In the calculus of variations, the Dunford–Pettis theorem guarantees the existence of minimisers for integral functionals with linear growth.</li>
+<li>In martingale theory, the family of conditional expectations {E[X|𝒢] : 𝒢 sub‑σ‑algebra} is uniformly integrable for any X ∈ L¹.</li>
+</ul>
+<h4>Examiner Traps</h4>
+<ul>
+<li>Confusing uniform integrability with boundedness in L¹; boundedness alone does not imply uniform integrability (e.g., fₙ = n 1<sub>[0,1/n]</sub> on [0,1]).</li>
+<li>Assuming the Dunford–Pettis theorem holds for Lᵖ with p > 1; there weak compactness is equivalent to boundedness by reflexivity.</li>
+<li>Forgetting that the theorem requires the underlying measure space to be finite or σ‑finite; on infinite measures the characterisation changes.</li>
+</ul>
+
+<h3>The Banach–Tarski Paradox and the Existence of Non‑Measurable Sets</h3>
+<h4>Statement</h4>
+<p>The Banach–Tarski paradox asserts that a solid ball in ℝ³ can be partitioned into finitely many disjoint subsets, which can be reassembled using only rotations and translations to form two balls identical to the original. The construction relies on the axiom of choice to select a non‑measurable set (a Vitali set) and on the free group of rank 2 embedded in SO(3). The pieces are not Lebesgue measurable; therefore the paradox does not contradict the countable additivity of Lebesgue measure.</p>
+<h4>Construction Outline</h4>
+<p>1. Find a free subgroup F₂ of SO(3) generated by two rotations about independent axes. 2. Partition the sphere S² into orbits of F₂; using the axiom of choice, pick one point from each orbit to form a set M. 3. The paradoxical decomposition of F₂ (into four pieces that can be rearranged to form two copies of F₂) transfers to a decomposition of S² D, where D is the countable set of fixed points. 4. Extend radially to the ball. The pieces are equidecomposable by isometries, but they are not Lebesgue measurable because any measurable piece would have a well‑defined measure invariant under rotations, leading to a contradiction.</p>
+<h4>Consequences</h4>
+<ul>
+<li>There is no finitely additive, rotation‑invariant measure defined on all subsets of ℝ³ that normalises the unit ball.</li>
+<li>The paradox fails in ℝ¹ and ℝ² because the group of isometries is amenable; the Banach–Tarski phenomenon is tied to non‑amenability of SO(3).</li>
+<li>It motivates the study of amenable groups and the existence of invariant means.</li>
+</ul>
+<h4>Examiner Traps</h4>
+<ul>
+<li>Claiming the paradox violates conservation of volume; it only shows that volume cannot be extended to all subsets while preserving isometry invariance.</li>
+<li>Thinking the pieces can be physically realised; they are non‑measurable and require the axiom of choice.</li>
+<li>Assuming the paradox holds for the circle or the plane; it does not, because the isometry groups there are amenable.</li>
+</ul>
+
+<h3>Metric Measure Spaces, Ricci Curvature, and the CD(K,N) Condition</h3>
+<h4>Background</h4>
+<p>A metric measure space (X, d, m) consists of a complete separable metric space (X, d) equipped with a locally finite Borel measure m. The curvature‑dimension condition CD(K,N), introduced by Lott–Villani and Sturm, generalises lower Ricci curvature bounds to non‑smooth spaces. For K ∈ ℝ and N ∈ [1,∞], CD(K,N) requires that the relative entropy functional Ent<sub>m</sub>(μ) = ∫ ρ log ρ dm is K‑convex along Wasserstein geodesics in the space of probability measures P₂(X), with a dimension‑dependent distortion coefficient.</p>
+<h4>Key Properties</h4>
+<ul>
+<li>If (M,g) is a smooth Riemannian manifold with Ricci curvature ≥ K and dimension ≤ N, then (M, d<sub>g</sub>, vol<sub>g</sub>) satisfies CD(K,N).</li>
+<li>CD(K,N) implies a local Poincaré inequality, a Bishop–Gromov volume comparison, and a Bonnet–Myers diameter bound when K > 0.</li>
+<li>The condition is stable under measured Gromov–Hausdorff convergence, enabling compactness theorems for sequences of spaces with uniform curvature‑dimension bounds.</li>
+</ul>
+<h4>Applications</h4>
+<ul>
+<li>Generalised Lévy–Gromov isoperimetric inequality on CD(K,N) spaces.</li>
+<li>Heat flow and gradient flow of entropy are well‑posed; the heat kernel satisfies Gaussian upper bounds.</li>
+<li>Splitting theorem: if a CD(0,N) space contains a line, it splits isometrically as a product ℝ × Y.</li>
+</ul>
+<h4>Examiner Traps</h4>
+<ul>
+<li>Confusing CD(K,N) with the stronger RCD(K,N) condition (which adds infinitesimal Hilbertianity and yields a linear heat flow).</li>
+<li>Assuming CD(K,N) implies a pointwise Ricci curvature bound; it is a synthetic, global condition.</li>
+<li>Forgetting that the dimension parameter N can be infinite; CD(K,∞) corresponds to an entropy convexity condition without dimension distortion.</li>
+</ul>
+
+<ul>
+<li>Misapplying the Vitali covering theorem to non‑doubling measures without verifying the covering relation.</li>
+<li>Assuming Lusin's theorem gives uniform continuity on the closed set without compactness.</li>
+<li>Treating boundedness in L¹ as equivalent to uniform integrability.</li>
+<li>Believing the Banach–Tarski paradox constructs measurable pieces.</li>
+<li>Confusing CD(K,N) with pointwise Ricci curvature lower bounds on smooth manifolds.</li>
+<li>Neglecting the role of the axiom of choice in the existence of non‑measurable sets.</li>
+<li>Overlooking that the Dunford–Pettis theorem fails for L¹ on infinite measure spaces without uniform integrability.</li></ul>
+<h3>Orlicz Spaces and the Luxemburg Norm</h3>
+<p>Orlicz spaces generalize the classical L<sup>p</sup> scale by replacing the power function t ↦ t<sup>p</sup> with a convex Young function Φ : [0,∞) → [0,∞) satisfying Φ(0)=0, Φ(t)>0 for t>0, and lim<sub>t→∞</sub> Φ(t)/t = ∞. The Orlicz space L<sup>Φ</sup>(μ) consists of all measurable functions f for which there exists λ>0 with ∫ Φ(|f|/λ) dμ < ∞. The Luxemburg norm ‖f‖<sub>Φ</sub> = inf{ λ>0 : ∫ Φ(|f|/λ) dμ ≤ 1 } makes L<sup>Φ</sup> a Banach space. When Φ satisfies the Δ<sub>2</sub> condition (∃ K>0, t<sub>0</sub> such that Φ(2t) ≤ K Φ(t) for t ≥ t<sub>0</sub>), the space is separable and the norm is equivalent to the Orlicz modular ρ<sub>Φ</sub>(f)=∫ Φ(|f|) dμ. The classical L<sup>p</sup> spaces correspond to Φ(t)=t<sup>p</sup>. Orlicz introduced these spaces in the 1930s to study integral equations; Luxemburg later gave the norm formulation in the 1950s. Important properties include the Hölder‑type inequality ∫ |fg| dμ ≤ 2 ‖f‖<sub>Φ</sub> ‖g‖<sub>Ψ</sub> where Ψ is the complementary Young function defined by Ψ(s)=sup<sub>t≥0</sub>(st−Φ(t)). The dual of L<sup>Φ</sup> can be identified with L<sup>Ψ</sup> when Φ satisfies Δ<sub>2</sub>. Orlicz spaces appear naturally in the study of exponential integrability (e.g. Trudinger–Moser inequalities), in the theory of nonlinear PDEs with nonstandard growth, and in probability where they describe tails heavier than Gaussian but lighter than any power.</p>
+
+<h3>Real and Complex Interpolation of Banach Function Spaces</h3>
+<p>Interpolation theory provides a systematic way to construct intermediate spaces between two given Banach spaces X<sub>0</sub> and X<sub>1</sub> that are both continuously embedded in a Hausdorff topological vector space. The real interpolation method, developed by Lions and Peetre, uses the K‑functional K(t,f)=inf{ ‖f<sub>0</sub>‖<sub>X<sub>0</sub></sub> + t‖f<sub>1</sub>‖<sub>X<sub>1</sub></sub> : f=f<sub>0</sub>+f<sub>1</sub> }. For 0<θ<1 and 1≤q≤∞ the real interpolation space (X<sub>0</sub>,X<sub>1</sub>)<sub>θ,q</sub> consists of those f with finite quasi‑norm ‖f‖<sub>θ,q</sub> = (∫<sub>0</sub><sup>∞</sup> [t<sup>−θ</sup>K(t,f)]<sup>q</sup> dt/t)<sup>1/q</sup> (with the usual sup modification for q=∞). The complex interpolation method, due to Calderón, considers the strip S={z∈ℂ : 0≤Re z≤1} and the space ℱ of bounded continuous functions f : S → X<sub>0</sub>+X<sub>1</sub> that are analytic on the interior and satisfy f(it)∈X<sub>0</sub>, f(1+it)∈X<sub>1</sub> with appropriate bounds. The space [X<sub>0</sub>,X<sub>1</sub>]<sub>θ</sub> is the set of values f(θ) with norm inf ‖f‖<sub>ℱ</sub>. Calderón’s theorem shows that for compatible couples of L<sup>p</sup> spaces, [L<sup>p<sub>0</sub></sup>,L<sup>p<sub>1</sub></sup>]<sub>θ</sub> = L<sup>p</sup> where 1/p = (1−θ)/p<sub>0</sub> + θ/p<sub>1</sub>. The reiteration theorem allows one to interpolate iteratively. These methods are indispensable for proving boundedness of operators (e.g. singular integrals) on a whole scale of spaces once endpoint estimates are known.</p>
+
+<div class="example-box"><div class="ex-title">Technique</div><div class="ex-text">Show that the Hilbert transform H is bounded on L<sup>p</sup>(ℝ) for 1<p>2 and its weak‑type (1,1) estimate.</p></div><div class="ex-soln">The Hilbert transform satisfies ‖Hf‖<sub>2</sub> ≤ C<sub>2</sub>‖f‖<sub>2</sub> and the weak‑type inequality μ({|Hf|>λ}) ≤ C<sub>1</sub>‖f‖<sub>1</sub>/λ. The weak‑type (1,1) bound means H maps L<sup>1</sup> boundedly into the Lorentz space L<sup>1,∞</sup>. By the Marcinkiewicz interpolation theorem (a real‑interpolation result), for any θ∈(0,1) the operator is strong‑type (p,p) with 1/p = (1−θ)/1 + θ/2 = 1−θ/2. As θ runs over (0,1), p runs over (1,2). Duality extends the result to p∈(2,∞). Hence H is bounded on L<sup>p</sup> for all 1<p></p></div>
+
+<div class="tip-box"><div class="tip-title">Exam‑Day Strategy</div><div class="tip-text">When an interpolation problem appears, first identify the endpoint spaces and the corresponding operator bounds. Write the relation 1/p = (1−θ)/p<sub>0</sub> + θ/p<sub>1</sub> explicitly; the parameter θ is the interpolation exponent. Remember that real interpolation yields Lorentz spaces at the endpoints, while complex interpolation gives exact L<sup>p</sup> spaces for the interior.</div></div>
+
+<h3>Hardy–Littlewood Maximal Function and the Lebesgue Differentiation Theorem</h3>
+<p>The Hardy–Littlewood maximal operator M is defined for a locally integrable function f on ℝ<sup>n</sup> by Mf(x) = sup<sub>r>0</sub> (1/|B(x,r)|) ∫<sub>B(x,r)</sub> |f(y)| dy, where B(x,r) is the Euclidean ball. The fundamental weak‑type (1,1) inequality states that there exists a constant C<sub>n</sub> such that |{x : Mf(x) > λ}| ≤ (C<sub>n</sub>/λ) ‖f‖<sub>1</sub> for all λ>0. For 1<p>p ≤ C<sub>p,n</sub> ‖f‖<sub>p</sub>. The proof uses the Vitali covering lemma to select a disjoint subcollection of balls that captures a fixed fraction of the measure of the level set. The Lebesgue differentiation theorem follows: for f∈L<sup>1</sup><sub>loc</sub>(ℝ<sup>n</sup>), the limit lim<sub>r→0</sub> (1/|B(x,r)|) ∫<sub>B(x,r)</sub> f(y) dy = f(x) holds for almost every x. The argument approximates f by continuous functions with compact support, uses the maximal inequality to control the error, and applies the Borel–Cantelli lemma. This theorem is the cornerstone of differentiation of integrals, underpins the fundamental theorem of calculus for absolutely continuous functions, and extends to the ergodic maximal function in dynamical systems.</p>
+
+<h3>BMO Space, John–Nirenberg Inequality, and Duality with H¹</h3>
+<p>The space BMO (bounded mean oscillation) consists of locally integrable functions f on ℝ<sup>n</sup> for which the seminorm ‖f‖<sub>BMO</sub> = sup<sub>Q</sub> (1/|Q|) ∫<sub>Q</sub> |f(x)−f<sub>Q</sub>| dx is finite, where the supremum runs over all cubes Q and f<sub>Q</sub> = (1/|Q|)∫<sub>Q</sub> f. John and Nirenberg proved in 1961 that there exist constants c<sub>1</sub>,c<sub>2</sub>>0 such that for any f∈BMO and any cube Q, |{x∈Q : |f(x)−f<sub>Q</sub>| > λ}| ≤ c<sub>1</sub>|Q| exp(−c<sub>2</sub>λ/‖f‖<sub>BMO</sub>). This exponential integrability implies that BMO functions belong to Orlicz spaces with Young function Φ(t)=e<sup>t</sup>−1. Fefferman and Stein established in 1972 that the dual of the real Hardy space H¹(ℝ<sup>n</sup>) is BMO(ℝ<sup>n</sup>) under the pairing ⟨f,g⟩ = ∫ fg. The Hardy space H¹ admits an atomic decomposition: every f∈H¹ can be written as ∑ λ<sub>k</sub> a<sub>k</sub> with ∑ |λ<sub>k</sub>| ≈ ‖f‖<sub>H¹</sub>, where each atom a is supported in a cube, has zero integral, and satisfies ‖a‖<sub>∞</sub> ≤ |Q|<sup>−1</sup>. This duality is a powerful tool in harmonic analysis, PDEs (e.g. compensated compactness), and the theory of singular integrals on non‑smooth domains.</p>
+
+<h3>Bochner Integral and Vector‑Valued L<sup>p</sup> Spaces</h3>
+<p>Let (Ω,Σ,μ) be a measure space and X a Banach space. A function f : Ω → X is strongly measurable if it is the almost‑everywhere limit of a sequence of simple functions (finite linear combinations of indicator functions with values in X). By Pettis’ theorem, strong measurability is equivalent to weak measurability (x*∘f is measurable for every x*∈X*) together with essential separability of the range. The Bochner integral of a simple function ∑ x<sub>i</sub> 1<sub>E<sub>i</sub></sub> is ∑ μ(E<sub>i</sub>) x<sub>i</sub>. A strongly measurable f is Bochner integrable iff ∫ ‖f‖<sub>X</sub> dμ < ∞, and its integral is defined as the limit of integrals of approximating simple functions. The space L<sup>p</sup>(μ;X) consists of (equivalence classes of) strongly measurable f with finite norm ‖f‖<sub>L<sup>p</sup>(X)</sub> = (∫ ‖f‖<sub>X</sub><sup>p</sup> dμ)<sup>1/p</sup> (with the essential supremum for p=∞). These spaces are Banach; they are reflexive when X is reflexive and 1<p>p(μ;X) can be identified with L<sup>q</sup>(μ;X*) (1/p+1/q=1) if X* has the Radon–Nikodým property. The Pettis integral extends the Bochner integral to weakly measurable functions that are scalarly integrable; it coincides with the Bochner integral when the function is strongly measurable. Vector‑valued L<sup>p</sup> spaces are essential for the study of evolution equations, stochastic integration in Banach spaces, and the theory of operator‑valued Fourier multipliers.</p>
+
+<ul>
+<li>Confusing the Luxemburg norm with the Orlicz modular; they are equivalent only under the Δ<sub>2</sub> condition.</li>
+<li>Assuming complex interpolation works for arbitrary Banach couples without the compatibility condition (both spaces embedded in a common Hausdorff space).</li>
+<li>Applying the Hardy–Littlewood maximal inequality to non‑doubling measures without verifying the covering property.</li>
+<li>Thinking BMO functions are bounded; they can be unbounded but have controlled mean oscillation.</li>
+<li>Neglecting the Radon–Nikodým property when identifying the dual of a vector‑valued L<sup>p</sup> space.</li>
+<li>Using the weak‑type (1,1) bound of the Hilbert transform as a strong‑type bound on L<sup>1</sup>.</li>
+<li>Overlooking that the John–Nirenberg constants depend on dimension and the shape of the averaging sets.</li>
+</ul>
+<p>These advanced topics complete the measure‑theoretic toolkit required for modern analysis examinations.</p></p></p></div>
+<h3>The Lévy Continuity Theorem and Characteristic Functions</h3>
+<p>The Lévy continuity theorem provides the precise bridge between convergence of probability measures and pointwise convergence of their characteristic functions. Let <strong>μₙ</strong> be a sequence of probability measures on ℝᵈ with characteristic functions φₙ(t)=∫ e<sup>i⟨t,x⟩</sup> μₙ(dx). If φₙ(t) converges pointwise to a function φ(t) that is continuous at the origin, then φ is the characteristic function of a probability measure μ and μₙ converges weakly to μ. Conversely, weak convergence μₙ ⇒ μ implies φₙ(t) → φ(t) for every t. The continuity at zero is essential; without it the limit may fail to be a characteristic function (e.g. φₙ(t)=e<sup>-n t²</sup> converges to 1<sub>t=0</sub>, which is not continuous at 0). The proof uses the inversion formula for characteristic functions together with tightness criteria: pointwise convergence plus continuity at zero yields uniform tightness of {μₙ}, and any subsequential limit must have characteristic function φ, forcing uniqueness. This theorem underpins the standard proof of the central limit theorem: the characteristic function of the normalized sum converges to e<sup>-t²/2</sup>, which is continuous at zero, so the limit law is the standard normal distribution. It also yields the Lévy–Khintchine representation for infinitely divisible laws and is the foundation for the method of moments when moments determine the distribution.</p>
+
+<h3>The Skorokhod Representation Theorem for Weak Convergence</h3>
+<p>The Skorokhod representation theorem strengthens weak convergence by constructing a single probability space on which the convergence holds almost surely. Let (S,𝓑) be a Polish space (complete separable metric) and let μₙ, μ be Borel probability measures with μₙ ⇒ μ. Then there exist random variables Xₙ, X defined on a common probability space (Ω,ℱ,ℙ) such that Xₙ has law μₙ, X has law μ, and Xₙ → X ℙ‑almost surely. The construction proceeds by embedding S into the Hilbert cube [0,1]^ℕ via a homeomorphism, using the quantile transform on the unit interval, and applying the almost sure convergence of the empirical distribution functions. The theorem requires separability and completeness; it fails for general metric spaces (e.g. the space of càdlàg functions with the Skorokhod J₁ topology is Polish, so the theorem applies there). A common corollary: if a sequence of stochastic processes converges weakly in the Skorokhod space D[0,1], one can realize them on a single space with almost sure uniform convergence on compacts after a suitable time change. This representation is indispensable for proving the continuous mapping theorem, for establishing almost sure versions of functional limit theorems, and for constructing couplings in Markov chain Monte Carlo analysis.</p>
+
+<div class="example-box">
+<div class="ex-title">Examiner's trap</div>
+<div class="ex-text">A candidate writes: "Since μₙ ⇒ μ, the Skorokhod theorem gives Xₙ → X almost surely, therefore the original sequence of random variables converges almost surely." Explain why this reasoning is flawed.</div>
+<div class="ex-soln">The Skorokhod theorem constructs *new* random variables Xₙ, X on a *new* probability space that have the same laws as the original ones. It does not assert that the original sequence converges almost surely on its original space. Almost sure convergence of the original sequence would be a much stronger statement (it implies convergence in probability, which need not hold under mere weak convergence). The trap is confusing equality in distribution with equality almost sure.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑day strategy</div>
+<div class="tip-text">When a question asks to "use Skorokhod representation", explicitly state the Polish space assumption, construct the common space, and then apply the continuous mapping theorem or almost sure convergence as needed. Do not claim the original variables converge a.s. unless the problem explicitly provides a coupling.</div>
+</div>
+
+<h3>The Donsker Invariance Principle and Functional Central Limit Theorem</h3>
+<p>Donsker's theorem extends the classical central limit theorem to the empirical process. Let X₁,X₂,… be i.i.d. uniform(0,1) random variables and define the empirical distribution function Fₙ(t)=n<sup>-1</sup>∑<sub>i=1</sub>^n 1<sub>X_i ≤ t</sub>. The centered and scaled process αₙ(t)=√n(Fₙ(t)-t) converges weakly in the Skorokhod space D[0,1] to a Brownian bridge B⁰(t), a Gaussian process with covariance Cov(B⁰(s),B⁰(t))=min(s,t)-st. The proof establishes finite‑dimensional convergence via the multivariate CLT and tightness using the modulus of continuity criterion for D[0,1] (the Aldous–Rebolledo condition). The limit Brownian bridge is the pinned Brownian motion B(t)-tB(1). The theorem holds for any i.i.d. sample with continuous distribution function F by the probability integral transform: αₙ∘F<sup>-1</sup> ⇒ B⁰. This functional CLT underlies the Kolmogorov–Smirnov statistic sup_t|αₙ(t)|, whose limit distribution is the supremum of a Brownian bridge, and the Cramér–von Mises statistic ∫ αₙ(t)² dt. Extensions to multivariate empirical processes, weighted empirical processes, and bootstrap versions are standard in modern non‑parametric statistics.</p>
+
+<h3>The Girsanov Theorem for Change of Measure in Stochastic Calculus</h3>
+<p>Girsanov's theorem describes how the drift of a Brownian motion changes under an absolutely continuous change of probability measure. Let (Ω,ℱ,(ℱ_t),ℙ) be a filtered probability space satisfying the usual conditions, and let W be a d‑dimensional ℙ‑Brownian motion. Suppose θ is an ℱ_t‑adapted process satisfying Novikov's condition 𝔼[exp(½∫₀^T ‖θ_s‖² ds)] < ∞. Define the exponential martingale Z_t = exp(∫₀^t θ_s·dW_s - ½∫₀^t ‖θ_s‖² ds). Then Z_T is a Radon–Nikodym derivative dℚ/dℙ on ℱ_T, and the process tilde{W}_t = W_t - ∫₀^t θ_s ds is a ℚ‑Brownian motion. Conversely, any measure ℚ equivalent to ℙ on ℱ_T with ℚ‑Brownian motion tilde{W} arises in this way. The theorem is the rigorous foundation for risk‑neutral pricing in mathematical finance: under the risk‑neutral measure ℚ the discounted asset price becomes a martingale. It also enables the removal of drift in stochastic differential equations, facilitating existence and uniqueness proofs via the martingale problem. The Novikov condition can be relaxed to Kazamaki's condition or to the requirement that Z be a uniformly integrable martingale.</p>
+
+<h3>The Krein–Milman Theorem for Convex Compact Sets of Probability Measures</h3>
+<p>The Krein–Milman theorem states that a non‑empty compact convex subset of a locally convex Hausdorff topological vector space is the closed convex hull of its extreme points. Applied to the space 𝓟(X) of Borel probability measures on a compact metric space X equipped with the weak* topology (the topology of weak convergence), the set 𝓟(X) is compact and convex by Prokhorov's theorem. Its extreme points are precisely the Dirac measures δ_x, x∈X. Consequently every probability measure μ∈𝓟(X) can be approximated in the weak* topology by convex combinations of Dirac masses, i.e. by empirical measures. This representation is the measure‑theoretic analogue of the Choquet theorem: for any μ there exists a probability measure ν on the set of extreme points (which is homeomorphic to X) such that μ = ∫ δ_x ν(dx). In ergodic theory, the set of invariant measures for a continuous transformation T on X is a compact convex subset of 𝓟(X); its extreme points are the ergodic measures. The Krein–Milman theorem then yields the ergodic decomposition: any invariant measure is a barycenter of ergodic measures. The theorem also underpins the moment problem: a sequence (m_k) is a moment sequence of a probability measure on [0,1] iff the linear functional L(p)=∑ a_k m_k is positive on polynomials non‑negative on [0,1]; the representing measure is obtained as a limit of convex combinations of point masses.</p>
+
+<ul>
+<li>Confusing the Lévy continuity theorem's requirement of continuity at zero with mere pointwise convergence; the limit may not be a characteristic function.</li>
+<li>Assuming the Skorokhod representation gives almost sure convergence of the original sequence rather than of a constructed copy.</li>
+<li>Neglecting the Polish space hypothesis when invoking Skorokhod or Prokhorov theorems; counterexamples exist on non‑separable spaces.</li>
+<li>Applying Donsker's theorem to discontinuous distribution functions without the probability integral transform; the limit process is then a Brownian bridge only after composition with the quantile function.</li>
+<li>Using Girsanov's theorem without verifying Novikov's (or Kazamaki's) condition; the exponential martingale may fail to be a true martingale, invalidating the measure change.</li>
+<li>Thinking every invariant measure is ergodic; the Krein–Milman theorem shows invariant measures form a convex set whose extreme points are exactly the ergodic ones.</li>
+<li>Overlooking that the Krein–Milman theorem requires compactness in a locally convex topology; weak* compactness of 𝓟(X) holds only when X is compact.</li>
+</ul>
+
+<p>These advanced topics complete the measure‑theoretic toolkit required for modern analysis examinations.</p>
+<h3>Vitali Convergence Theorem and Uniform Integrability</h3>
+<p>The Vitali convergence theorem gives a necessary and sufficient condition for convergence in <strong>L¹</strong> of a sequence of integrable functions. Let (X,ℱ,μ) be a measure space and {fₙ} a sequence in L¹(μ). The theorem states that fₙ → f in L¹ if and only if three conditions hold: (i) fₙ converges to f in measure; (ii) the family {fₙ} is uniformly integrable; (iii) the measure space is finite or the sequence is tight in the sense that for every ε>0 there exists a set E of finite measure with ∫<sub>XE</sub> |fₙ| dμ < ε for all n. Uniform integrability means supₙ ∫<sub>|fₙ|>M</sub> |fₙ| dμ → 0 as M → ∞. This condition prevents mass from escaping to infinity or concentrating on sets of vanishing measure. The proof uses the decomposition fₙ = fₙ 1<sub>|fₙ|≤M</sub> + fₙ 1<sub>|fₙ|>M</sub> and the dominated convergence theorem on the truncated part. A common corollary: if μ is finite and fₙ → f almost everywhere with {fₙ} uniformly integrable, then fₙ → f in L¹. Examiners often test the distinction between uniform integrability and boundedness in L¹; boundedness alone does not imply uniform integrability (consider fₙ = n 1<sub>[0,1/n]</sub> on [0,1]). The theorem also underlies the Dunford–Pettis compactness criterion for subsets of L¹.</p>
+
+<h3>Egorov's Theorem and Almost Uniform Convergence</h3>
+<p>Egorov's theorem bridges pointwise convergence and uniform convergence on sets of large measure. Let (X,ℱ,μ) be a finite measure space and {fₙ} a sequence of measurable functions converging pointwise almost everywhere to a measurable function f. Then for every δ>0 there exists a measurable set E with μ(E) < δ such that fₙ → f uniformly on XE. The proof constructs sets E<sub>k,m</sub> = ∪<sub>n≥m</sub> {x: |fₙ(x)-f(x)| ≥ 1/k} and uses continuity of measure to choose m_k so that μ(E<sub>k,m_k</sub>) < δ/2^k. The union of these exceptional sets has measure < δ, and on its complement the convergence is uniform because for any ε>0 choose k with 1/k < ε, then for all n ≥ m_k the difference is < ε. The theorem fails for infinite measures unless additional tightness is assumed; a standard counterexample is fₙ = 1<sub>[n,n+1]</sub> on ℝ with Lebesgue measure. Almost uniform convergence implies convergence in measure, and together with uniform integrability it yields L¹ convergence via Vitali's theorem. In examinations, a typical trap is to claim Egorov's theorem holds on σ‑finite spaces without the finite‑measure hypothesis; the correct statement requires either finite measure or an extra condition such as the existence of an integrable majorant.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Applying Egorov and Vitali</div>
+<div class="ex-text">Let fₙ(x) = n 1<sub>[0,1/n]</sub>(x) on [0,1] with Lebesgue measure. Show that fₙ → 0 pointwise a.e., but fₙ does not converge to 0 in L¹. Explain why Egorov's theorem does not give uniform convergence on a set of measure > 0, and why Vitali's theorem fails.</div>
+<div class="ex-soln">Pointwise, for any x>0 there exists N such that 1/N < x, so for n≥N, fₙ(x)=0; thus fₙ(x)→0 for all x∈(0,1]. At x=0, fₙ(0)=n → ∞, but {0} has measure zero, so convergence holds a.e. The L¹ norm is ∫₀¹ n 1<sub>[0,1/n]</sub> dx = n·(1/n)=1 for all n, so ‖fₙ‖₁=1 does not tend to 0. Egorov's theorem: for any δ>0 we can find E with μ(E)<δ where convergence is uniform on [0,1]E. However, any set of positive measure contains points arbitrarily close to 0 where fₙ is large, so uniform convergence cannot hold on a set of measure 1−δ unless δ=1. Vitali's theorem requires uniform integrability; here supₙ ∫<sub>|fₙ|>M</sub> |fₙ| = 1 for M< n, and the limit as M→∞ is 1, not 0. Hence the family is not uniformly integrable, and Vitali's condition fails.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for L¹ convergence, first check pointwise a.e. convergence, then test uniform integrability via the tail condition supₙ ∫<sub>|fₙ|>M</sub> |fₙ| → 0. If the measure space is finite, Egorov's theorem guarantees almost uniform convergence; use it to construct the exceptional set explicitly if the question demands a δ‑ε argument. Remember that boundedness in L¹ is not enough — always verify the uniform integrability criterion.</div>
+</div>
+
+<h3>Doob's Optional Stopping Theorem and Applications</h3>
+<p>Doob's optional stopping theorem (OST) provides conditions under which a martingale evaluated at a stopping time retains its expectation. Let (Ω,ℱ,(ℱₜ),ℙ) be a filtered probability space satisfying the usual conditions, and let (Mₜ) be a right‑continuous martingale (or submartingale). If τ is a bounded stopping time, then 𝔼[M_τ] = 𝔼[M₀]. For unbounded τ, the theorem holds under any of the following: (a) M is uniformly integrable and τ is finite a.s.; (b) τ is bounded by a constant T and M is bounded in L¹; (c) M is non‑negative and τ is finite a.s. (then 𝔼[M_τ] ≤ 𝔼[M₀] for supermartingales). The proof uses the discrete‑time OST on the stopped process M<sup>τ</sup> and passes to the limit via monotone or dominated convergence. A classic application is the gambler's ruin problem: for simple symmetric random walk Sₙ with absorbing boundaries at 0 and N, the stopped process S<sub>n∧τ</sub> is a bounded martingale, so 𝔼[S_τ] = 𝔼[S₀] gives the ruin probabilities. Another is the Wald identity for sums of i.i.d. variables with finite mean: if τ is a stopping time with 𝔼[τ] < ∞ and the increments have mean μ, then 𝔼[∑<sub>i=1</sub>^τ X_i] = μ 𝔼[τ]. Examiners frequently test the necessity of the boundedness or uniform integrability hypotheses by presenting a martingale such as Mₙ = X₁+…+Xₙ with X_i i.i.d. mean zero and τ = inf{n: Mₙ = 1}, where 𝔼[M_τ] = 1 ≠ 0 = 𝔼[M₀] because τ is not integrable.</p>
+
+<h3>Martingale Representation Theorem in Brownian Filtration</h3>
+<p>The martingale representation theorem states that every square‑integrable martingale adapted to the Brownian filtration can be written as a stochastic integral with respect to Brownian motion. Let (Wₜ) be a standard d‑dimensional Brownian motion on (Ω,ℱ,(ℱₜ),ℙ) where ℱₜ = σ(W_s: s≤t) augmented by ℙ‑null sets. If (Mₜ) is an (ℱₜ)‑martingale with 𝔼[M_T²] < ∞ for some T>0, then there exists a predictable process (φₜ) with ∫₀^T ‖φₜ‖² dt < ∞ a.s. such that Mₜ = 𝔼[M₀] + ∫₀^t φ_s·dW_s for all t∈[0,T]. The proof proceeds by first showing the result for martingales of the form Mₜ = 𝔼[f(W_T)|ℱₜ] where f is a smooth cylinder function, using Itô's formula and the Clark–Ocone formula. A density argument in L²(Ω,ℱ_T,ℙ) extends the representation to all square‑integrable martingales. This theorem is the cornerstone of complete markets in mathematical finance: it implies that any contingent claim with square‑integrable payoff can be replicated by a self‑financing portfolio. In examinations, a common pitfall is to assume the representation holds for any filtration; it fails for filtrations generated by Poisson processes or for discontinuous martingales without adding a compensated jump integral. Another trap is to forget the predictability requirement on φ, which is essential for the Itô integral to be well defined.</p>
+
+<h3>Stochastic Integration and Itô's Formula</h3>
+<p>Stochastic integration extends the Riemann–Stieltjes integral to integrators of unbounded variation such as Brownian motion. For a predictable process (Hₜ) satisfying ∫₀^T Hₜ² dt < ∞ a.s., the Itô integral ∫₀^T Hₜ dWₜ is defined as the L²‑limit of integrals of simple processes. The integral is a continuous martingale with quadratic variation ⟨∫ H dW⟩_t = ∫₀^t H_s² ds. Itô's formula (the stochastic chain rule) states that for a C² function f: ℝ → ℝ and a continuous semimartingale Xₜ = Mₜ + Aₜ (M local martingale, A finite variation), f(Xₜ) = f(X₀) + ∫₀^t f'(X_s) dX_s + ½ ∫₀^t f''(X_s) d⟨M⟩_s. In the Brownian case Xₜ = Wₜ, this reduces to f(Wₜ) = f(0) + ∫₀^t f'(W_s) dW_s + ½ ∫₀^t f''(W_s) ds. The extra second‑order term reflects the quadratic variation of Brownian motion and has no analogue in ordinary calculus. Applications include solving stochastic differential equations (SDEs) such as geometric Brownian motion dSₜ = μ Sₜ dt + σ Sₜ dWₜ, whose solution is Sₜ = S₀ exp((μ−σ²/2)t + σ Wₜ). Examiners often test the correct identification of the quadratic variation term, the distinction between Itô and Stratonovich integrals, and the conditions under which the stochastic integral is a true martingale (e.g., Novikov's condition for exponential martingales). A frequent error is to apply the classical chain rule without the ½ f'' term, leading to incorrect SDE solutions.</p>
+
+<ul>
+<li>Assuming uniform integrability follows from L¹ boundedness; a counterexample is fₙ = n 1<sub>[0,1/n]</sub> on [0,1].</li>
+<li>Applying Egorov's theorem on σ‑finite spaces without verifying the finite‑measure hypothesis or an integrable majorant.</li>
+<li>Using Doob's optional stopping theorem with an unbounded stopping time without checking uniform integrability or boundedness of the stopped martingale.</li>
+<li>Claiming the martingale representation theorem holds for arbitrary filtrations; it is specific to the Brownian (or more generally, continuous) filtration.</li>
+<li>Omitting the ½ f'' quadratic variation term in Itô's formula, effectively using the Stratonovich rule instead of Itô's.</li>
+<li>Forgetting that the stochastic integral ∫ H dW is a martingale only when H satisfies the appropriate integrability condition; otherwise it may be merely a local martingale.</li></ul>
+<h3>The Lebesgue Decomposition Theorem and Absolute Continuity</h3>
+<p>The Lebesgue decomposition theorem states that any σ‑finite measure ν on a measurable space (X,ℱ) can be uniquely written as ν = νₐ + νₛ where νₐ is absolutely continuous with respect to a given σ‑finite measure μ and νₛ is singular with respect to μ. Absolute continuity νₐ ≪ μ means μ(E)=0 ⇒ νₐ(E)=0; singularity νₛ ⟂ μ means there exists a measurable set A with μ(A)=0 and νₛ(XA)=0. The proof proceeds by considering the set function λ = ν + μ, applying the Radon–Nikodym theorem to obtain a density f = dν/dλ, and then defining νₐ(E)=∫_E f dμ and νₛ(E)=ν(E)−νₐ(E). Uniqueness follows from the fact that if ν = ν₁+ν₂ with ν₁≪μ and ν₂⟂μ, then ν₁ must coincide with the absolutely continuous part constructed above. A standard corollary is the Lebesgue decomposition of a finite signed measure into its positive and negative variations via the Hahn–Jordan decomposition, followed by applying the theorem to each variation. In probability, the theorem underlies the distinction between a continuous distribution (absolutely continuous part) and a discrete or singular continuous component (singular part). For example, the Cantor distribution is singular with respect to Lebesgue measure, while a mixture of a density and a point mass decomposes accordingly. The theorem also guarantees the existence of the Radon–Nikodym derivative dνₐ/dμ, which is the density used in Bayesian updating and in the definition of conditional expectation.</p>
+
+<h3>The Daniell Integral and Its Equivalence to the Lebesgue Integral</h3>
+<p>The Daniell integral constructs integration directly from a linear functional on a vector lattice of elementary functions, without first defining a measure. Let H be a collection of real‑valued functions on a set X that is closed under addition, scalar multiplication, and the lattice operations f∨g and f∧g. An elementary integral I:H→ℝ is a positive linear functional satisfying the Stone condition: if fₙ↓0 pointwise with fₙ∈H, then I(fₙ)→0. The Daniell extension defines the integral of a larger class of functions as the supremum of I(g) over g∈H with g≤f, and then extends by linearity to differences. The resulting integral satisfies the monotone convergence theorem, Fatou’s lemma, and the dominated convergence theorem. The Daniell–Stone representation theorem asserts that there exists a unique measure μ on the σ‑algebra generated by H such that I(f)=∫ f dμ for all f∈H. Conversely, any measure μ on a σ‑algebra yields an elementary integral on the simple functions, and the Daniell construction recovers the Lebesgue integral. This equivalence shows that the Lebesgue integral is the canonical extension of any positive linear functional satisfying the Stone condition. In practice, the Daniell approach is useful for defining integrals on spaces where a natural measure is not given a priori, such as in the construction of the Wiener measure on path space or in the theory of Dirichlet forms where the energy functional plays the role of the elementary integral.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Daniell Integral of a Simple Function</div>
+<div class="ex-text">Let X=[0,1] and let H be the vector lattice of step functions constant on dyadic intervals of the form [k/2ⁿ,(k+1)/2ⁿ). Define I(f)=∑ c_i·length(I_i) for f=∑ c_i 1<sub>I_i</sub>. Verify that I satisfies the Stone condition and compute the Daniell integral of f(x)=x on [0,1].</div>
+<div class="ex-soln">The functional I is linear and positive. If fₙ↓0 are step functions, each fₙ is a finite linear combination of indicators of dyadic intervals. Since the maximum value of fₙ tends to 0, the coefficients c_i⁽ⁿ⁾ tend to 0, and the sum of lengths is bounded by 1, so I(fₙ)→0. Thus the Stone condition holds. To integrate f(x)=x, approximate from below by dyadic step functions gₙ(x)=∑<sub>k=0</sub><sup>2ⁿ-1</sup> (k/2ⁿ) 1<sub>[k/2ⁿ,(k+1)/2ⁿ)</sub>(x). Then I(gₙ)=∑ (k/2ⁿ)·(1/2ⁿ)= (1/2<sup>2n</sup>)∑ k = (1/2<sup>2n</sup>)·(2ⁿ-1)2ⁿ/2 = 1/2 - 1/2<sup>n+1</sup>. The supremum over n is 1/2, which equals the Lebesgue integral ∫<sub>0</sub><sup>1</sup> x dx = 1/2.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy for Daniell and Decomposition Theorems</div>
+<div class="tip-text">When a question asks to prove uniqueness of the Lebesgue decomposition, invoke the Radon–Nikodym derivative with respect to ν+μ and show that any two absolutely continuous parts must agree μ‑a.e. For Daniell integrals, remember that the Stone condition is equivalent to continuity from above at 0; check it by estimating I(fₙ) ≤ sup fₙ · μ(support). In multiple‑choice items, the Daniell construction is often the correct answer when the problem describes an integral defined by a linear functional on a lattice without mentioning a measure.</div>
+</div>
+
+<h3>Young Measures and Weak Convergence of Nonlinear Sequences</h3>
+<p>Young measures (or parametrized measures) provide a tool to describe the weak‑* limit of nonlinear compositions of oscillating sequences. Let (uₙ) be a bounded sequence in L^p(Ω;ℝ^m) with 1≤p≤∞. There exists a subsequence (still denoted uₙ) and a family of probability measures ν_x on ℝ^m, depending measurably on x∈Ω, such that for every continuous function φ:ℝ^m→ℝ with at most polynomial growth of order p, φ(uₙ) converges weakly in L<sup>1</sup>(Ω) to the function x↦∫ φ(λ) dν_x(λ). The family ν = (ν_x)<sub>x∈Ω</sub> is called the Young measure generated by (uₙ). The fundamental theorem of Young measures states that the mapping uₙ ↦ ν is a compactification of the unit ball of L^p with respect to the weak topology. A key property is that the barycenter of ν_x equals the weak limit of uₙ: ∫ λ dν_x(λ) = u(x) a.e., where u is the weak limit of uₙ in L^p. Young measures are indispensable in the calculus of variations for problems lacking lower semicontinuity; they allow one to relax a non‑convex integral functional by replacing the integrand with its quasiconvex envelope. In the theory of conservation laws, Young measures capture the effect of high‑frequency oscillations in approximate solutions and lead to the concept of measure‑valued solutions. The construction uses the Banach–Alaoglu theorem on the dual of C₀(ℝ^m) and a separability argument to obtain a measurable selection.</p>
+
+<h3>Log‑Sobolev Inequalities, Hypercontractivity, and Concentration of Measure</h3>
+<p>The Gross logarithmic Sobolev inequality on Gaussian space states that for any smooth f:ℝⁿ→ℝ with ∫ f² dγ = 1, where γ is the standard Gaussian measure, one has ∫ f² log f² dγ ≤ 2 ∫ |∇f|² dγ. This inequality is equivalent to the hypercontractivity of the Ornstein–Uhlenbeck semigroup (P_t)<sub>t≥0</sub>: for 1<p>2t ≥ (q-1)/(p-1), the operator norm ‖P_t‖<sub>L^p(γ)→L^q(γ)</sub> ≤ 1. Hypercontractivity implies that the semigroup smooths functions rapidly, and it yields strong concentration estimates via the Herbst argument: for any Lipschitz function F with Lipschitz constant L, γ(F - ∫ F dγ ≥ r) ≤ exp(-r²/(2L²)). This Gaussian concentration inequality extends to product spaces through tensorization of the log‑Sobolev inequality, giving the same sub‑Gaussian tail for functions on the discrete cube {±1}ⁿ with the uniform measure. The log‑Sobolev inequality also controls the entropy production along the heat flow and underlies the proof of the central limit theorem in the sense of convergence in relative entropy. In the context of Markov chains, a modified log‑Sobolev inequality (with the Dirichlet form of the chain) yields exponential convergence to equilibrium in relative entropy, which is stronger than convergence in L². The constants in these inequalities are sharp for the Gaussian and for the symmetric Bernoulli measure, and they play a central role in the analysis of high‑dimensional probability, statistical physics, and the theory of optimal transport.</p>
+
+<ul>
+<li>Confusing the Lebesgue decomposition with the Hahn–Jordan decomposition; the former splits a measure relative to another measure, the latter splits a signed measure into positive and negative parts.</li>
+<li>Assuming the Daniell integral always coincides with the Lebesgue integral without verifying the Stone condition; a functional that is not continuous from above at 0 yields a different extension.</li>
+<li>Treating Young measures as ordinary functions; they are parametrized families of probability measures and must be tested against continuous integrands with appropriate growth.</li>
+<li>Applying the Gaussian log‑Sobolev inequality to non‑Gaussian measures without tensorization or a suitable modification; the constant 2 is specific to the standard Gaussian.</li>
+<li>Neglecting the growth condition on φ in the Young measure representation; if φ grows faster than |λ|^p, the weak convergence of φ(uₙ) may fail.</li>
+<li>Misidentifying the hypercontractivity time relation; the inequality e<sup>2t</sup> ≥ (q-1)/(p-1) is necessary and sufficient for the Ornstein–Uhlenbeck semigroup.</li>
+<li>Overlooking that the Herbst argument requires the log‑Sobolev inequality to hold with a constant independent of dimension; this fails for measures that do not satisfy a dimension‑free log‑Sobolev inequality.</li></ul></p>
+<h3>The Riesz–Thorin Interpolation Theorem and Its Applications</h3>
+<p>The Riesz–Thorin theorem, proved by Marcel Riesz in 1926 and extended by G. O. Thorin in 1948, provides a convexity method for obtaining boundedness of linear operators on intermediate L<sup>p</sup> spaces from known bounds on two endpoint spaces. Let (X,μ) and (Y,ν) be σ‑finite measure spaces and let T be a linear operator defined on simple functions. If T is of strong type (p<sub>0</sub>,q<sub>0</sub>) with norm M<sub>0</sub> and of strong type (p<sub>1</sub>,q<sub>1</sub>) with norm M<sub>1</sub>, where 1 ≤ p<sub>0</sub>,p<sub>1</sub>,q<sub>0</sub>,q<sub>1</sub> ≤ ∞ and p<sub>0</sub> ≠ p<sub>1</sub>, then for every θ ∈ (0,1) the operator extends to a bounded operator from L<sup>p<sub>θ</sub></sup>(μ) to L<sup>q<sub>θ</sub></sup>(ν) with norm at most M<sub>0</sub><sup>1‑θ</sup> M<sub>1</sub><sup>θ</sup>, where 1/p<sub>θ</sub> = (1‑θ)/p<sub>0</sub> + θ/p<sub>1</sub> and 1/q<sub>θ</sub> = (1‑θ)/q<sub>0</sub> + θ/q<sub>1</sub>. The proof uses the three‑lines lemma applied to the analytic family of operators T<sub>z</sub> = |T|<sup>z</sup> acting on carefully chosen simple functions, and the Hadamard three‑lines theorem for the function z ↦ log ‖T<sub>z</sub>‖. A standard application is the Hausdorff–Young inequality: the Fourier transform maps L<sup>p</sup>(ℝ<sup>d</sup>) boundedly into L<sup>p′</sup>(ℝ<sup>d</sup>) for 1 ≤ p ≤ 2, with p′ the Hölder conjugate. Interpolating between the trivial L<sup>1</sup> → L<sup>∞</sup> bound (norm 1) and the Plancherel L<sup>2</sup> → L<sup>2</sup> isometry (norm 1) yields the optimal constant 1 for all intermediate p. Another use is the boundedness of the Hilbert transform on L<sup>p</sup> for 1 < p < ∞, obtained by interpolating the weak‑type (1,1) estimate with the L<sup>2</sup> isometry. The theorem also underlies the Marcinkiewicz interpolation theorem, which replaces strong endpoint bounds by weak‑type bounds at the cost of a larger constant.</p>
+
+<h3>The Calderón–Zygmund Decomposition and Singular Integrals</h3>
+<p>Given f ∈ L<sup>1</sup>(ℝ<sup>d</sup>) and a height λ > 0, the Calderón–Zygmund decomposition writes f = g + b where g is the “good” part satisfying ‖g‖<sub>∞</sub> ≤ C λ and ‖g‖<sub>1</sub> ≤ ‖f‖<sub>1</sub>, while b = Σ b<sub>Q</sub> is a sum of functions supported on a disjoint family of dyadic cubes {Q} with ∫ b<sub>Q</sub> = 0 and ‖b<sub>Q</sub>‖<sub>1</sub> ≤ C λ |Q|. The construction selects the maximal dyadic cubes on which the average of |f| exceeds λ; the good part equals f on the complement and equals the average on each selected cube. This decomposition is the engine behind the weak‑type (1,1) theory of Calderón–Zygmund singular integral operators T with kernel K(x,y) satisfying the size estimate |K(x,y)| ≤ C/|x‑y|<sup>d</sup> and the Hölder regularity |K(x,y)‑K(x′,y)| + |K(y,x)‑K(y,x′)| ≤ C |x‑x′|<sup>δ</sup>/|x‑y|<sup>d+δ</sup> for |x‑x′| < |x‑y|/2. For the good part one uses the L<sup>2</sup> boundedness of T (which follows from the T(1) theorem or from the Calderón–Zygmund theory itself) together with Chebyshev’s inequality. For the bad part the cancellation ∫ b<sub>Q</sub> = 0 allows one to replace K(x,y) by K(x,y)‑K(x,c<sub>Q</sub>) where c<sub>Q</sub> is the centre of Q, and the regularity condition yields the required decay. Summing over the cubes gives μ({|Tf| > λ}) ≤ C ‖f‖<sub>1</sub>/λ. The same decomposition, combined with the Marcinkiewicz interpolation theorem, yields strong L<sup>p</sup> boundedness for 1 < p < ∞. Modern extensions include the non‑homogeneous T(b) theorem of Nazarov–Treil–Volberg, which replaces the doubling condition by a testing condition on accretive functions b.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example</div>
+<div class="ex-text">Let f ∈ L<sup>1</sup>(ℝ) and λ > 0. Describe the Calderón–Zygmund decomposition of f at height λ and explain how it leads to the weak‑type (1,1) estimate for the Hilbert transform Hf(x) = p.v. (1/π) ∫ f(y)/(x‑y) dy.</div>
+<div class="ex-soln">1. Choose the maximal dyadic intervals I such that (1/|I|)∫<sub>I</sub> |f| > λ. Set Ω = ∪ I. Define g = f on ℝ\Ω and g = (1/|I|)∫<sub>I</sub> f on each I. Then ‖g‖<sub>∞</sub> ≤ 2λ and ‖g‖<sub>1</sub> ≤ ‖f‖<sub>1</sub>. 2. For each I set b<sub>I</sub> = (f‑g)1<sub>I</sub>; then ∫ b<sub>I</sub> = 0, supp b<sub>I</sub> ⊂ I, and ‖b<sub>I</sub>‖<sub>1</sub> ≤ 2λ|I|. 3. The Hilbert transform is bounded on L<sup>2</sup> with norm 1, so by Chebyshev μ({|Hg| > λ/2}) ≤ (2/λ)²‖Hg‖<sub>2</sub>² ≤ (4/λ²)‖g‖<sub>2</sub>² ≤ (8λ/λ²)‖g‖<sub>1</sub> ≤ C‖f‖<sub>1</sub>/λ. 4. For the bad part, write Hb = Σ H b<sub>I</sub>. Using the cancellation ∫ b<sub>I</sub> = 0 and the kernel regularity |1/(x‑y)‑1/(x‑c<sub>I</sub>)| ≤ C|y‑c<sub>I</sub>|/|x‑c<sub>I</sub>|² for x ∉ 2I, one obtains ∫<sub>ℝ\2I</sub> |H b<sub>I</sub>| ≤ C‖b<sub>I</sub>‖<sub>1</sub>. Summing over I and using the disjointness of the I gives μ({|Hb| > λ/2}) ≤ C‖f‖<sub>1</sub>/λ. 5. Combining the two estimates yields μ({|Hf| > λ}) ≤ C‖f‖<sub>1</sub>/λ, the desired weak‑type (1,1) bound.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for a weak‑type estimate for a singular integral, first write down the Calderón–Zygmund decomposition at height λ. Treat the good part with the known L<sup>2</sup> bound and Chebyshev; treat the bad part by exploiting the zero‑mean property and the kernel’s Hölder regularity. Remember that the constant in the weak‑type inequality depends only on the kernel constants, not on f or λ.</div>
+</div>
+
+<h3>The De la Vallée Poussin Criterion for Uniform Integrability</h3>
+<p>Uniform integrability of a family {f<sub>α</sub>} ⊂ L<sup>1</sup>(μ) means sup<sub>α</sub> ∫<sub>{|f<sub>α</sub>|>M}</sub> |f<sub>α</sub>| dμ → 0 as M → ∞. Charles de la Vallée Poussin (1915) gave a convenient sufficient condition: there exists a convex, increasing function Φ : [0,∞) → [0,∞) with Φ(t)/t → ∞ as t → ∞ such that sup<sub>α</sub> ∫ Φ(|f<sub>α</sub>|) dμ < ∞. The proof uses the inequality t ≤ (t/M) Φ(M) + Φ(t) for t ≥ M, which after integration yields ∫<sub>{|f|>M}</sub> |f| ≤ (1/M) Φ(M) sup ∫ Φ(|f|) + sup ∫ Φ(|f|). Since Φ(M)/M → ∞, the right‑hand side can be made arbitrarily small uniformly in α by choosing M large. The criterion is sharp in the sense that if a family is uniformly integrable, one can construct such a Φ (e.g., by taking a suitable convex envelope of the function t ↦ sup<sub>α</sub> ∫<sub>{|f<sub>α</sub>|>t}</sub> |f<sub>α</sub>|). A typical choice is Φ(t) = t log⁺ t, which gives the entropy bound sup ∫ |f<sub>α</sub>| log⁺ |f<sub>α</sub>| < ∞. This condition appears in the Dunford–Pettis theorem: a subset of L<sup>1</sup> is relatively weakly compact iff it is uniformly integrable. In probability theory, the de la Vallée Poussin criterion is used to verify tightness of a sequence of random variables in L<sup>1</sup> and to pass to the limit in expectations under convergence in distribution.</p>
+
+<h3>The Vitali–Hahn–Saks Theorem and Nikodym Boundedness</h3>
+<p>Let (Ω,Σ,μ) be a finite measure space and let {ν<sub>n</sub>} be a sequence of signed measures on Σ such that each ν<sub>n</sub> is absolutely continuous with respect to μ (ν<sub>n</sub> ≪ μ). If the pointwise limit ν(E) = lim<sub>n→∞</sub> ν<sub>n</sub>(E) exists for every E ∈ Σ, then the Vitali–Hahn–Saks theorem (Vitali 1907, Hahn 1922, Saks 1933) asserts that ν is a countably additive signed measure, ν ≪ μ, and the convergence ν<sub>n</sub>(E) → ν(E) is uniform on Σ. The proof proceeds by contradiction using the Baire category theorem on the complete metric space (Σ, d) where d(E,F) = μ(E Δ F). One shows that the set of E where convergence fails to be uniform is meagre, while the hypothesis forces it to be comeagre. A closely related result is the Nikodym boundedness theorem (1930): if a family {ν<sub>α</sub>} of signed measures on Σ is pointwise bounded, i.e., sup<sub>α</sub> |ν<sub>α</sub>(E)| < ∞ for each E ∈ Σ, then the family is uniformly bounded in total variation, sup<sub>α</sub> ‖ν<sub>α</sub>‖ < ∞. The proof again uses the Baire category argument on the space of measurable sets modulo null sets. Both theorems are fundamental in the theory of vector measures and in the study of convergence of measures; they guarantee that pointwise limits of absolutely continuous measures remain absolutely continuous and that pointwise bounded families cannot exhibit “hidden” mass. Applications include the proof of the Dunford–Pettis compactness criterion in L<sup>1</sup> and the verification that the limit of a sequence of probability densities is again a probability density.</p>
+
+<h3>The Lévy–Khintchine Formula and Infinitely Divisible Distributions</h3>
+<p>A probability distribution μ on ℝ is infinitely divisible if for every n ∈ ℕ there exists a distribution μ<sub>n</sub> such that μ = μ<sub>n</sub><sup>*n</sup> (n‑fold convolution). Paul Lévy (1934) and Aleksandr Khintchine (1937) characterized the characteristic function φ(t) = ∫ e<sup>itx</sup> μ(dx) of such distributions. The Lévy–Khintchine formula states that φ(t) = exp( i a t − ½ b t² + ∫<sub>ℝ{0}</sub> (e<sup>itx</sup> − 1 − itx 1<sub>{|x|<1}</sub>) ν(dx) ), where a ∈ ℝ, b ≥ 0, and ν is a Lévy measure satisfying ∫ min(1, x²) ν(dx) < ∞. The triplet (a,b,ν) is unique. The term i a t corresponds to a deterministic drift, ½ b t² to a Gaussian component, and the integral to a pure‑jump part. When b = 0 and ν is finite, the distribution is compound Poisson; when ν(dx) = c |x|<sup>‑1‑α</sup> dx with 0 < α < 2, one obtains the symmetric α‑stable laws. The formula is the cornerstone of Lévy process theory: a càdlàg process with stationary independent increments has characteristic function E[e<sup>itX<sub>t</sub></sup>] = e<sup>t ψ(t)</sup> where ψ is the Lévy exponent given by the same triplet. The Lévy–Itô decomposition then splits the process into a drift, a Brownian motion, a compensated sum of small jumps, and a compound Poisson process of large jumps. In finance, the formula underlies exponential Lévy models (e.g., variance‑gamma, CGMY) where the log‑returns are infinitely divisible. The condition ∫<sub>{|x|≥1}</sub> e<sup>θx</sup> ν(dx) < ∞ for some θ > 0 guarantees the existence of exponential moments, which is essential for option pricing via Fourier methods.</p>
+
+<ul>
+<li>Confusing the Riesz–Thorin theorem (strong‑type endpoints) with the Marcinkiewicz theorem (weak‑type endpoints); the latter gives a larger constant and requires the operator to be sublinear.</li>
+<li>Forgetting that the Calderón–Zygmund decomposition requires the underlying space to be a space of homogeneous type (dyadic cubes, doubling measure); on non‑doubling spaces one must use the non‑homogeneous T(b) theorem.</li>
+<li>Applying the de la Vallée Poussin criterion with a function Φ that does not satisfy Φ(t)/t → ∞; such a Φ yields only boundedness in L<sup>1</sup>, not uniform integrability.</li>
+<li>Assuming pointwise convergence of measures implies convergence in total variation; the Vitali–Hahn–Saks theorem gives uniform convergence on sets but not necessarily in variation norm.</li>
+<li>Misidentifying the Lévy measure ν as a probability measure; ν is a σ‑finite measure that may have infinite mass near zero, and the truncation term itx 1<sub>{|x|<1}</sub> is essential for convergence.</li>
+<li>Neglecting the uniqueness of the Lévy triplet (a,b,ν); two different triplets cannot generate the same characteristic function.</li>
+<li>Using the Lévy–Khintchine formula for distributions on ℝ<sup>d</sup> without the appropriate matrix‑valued Gaussian term and vector‑valued drift; the multidimensional version replaces b by a positive semidefinite matrix and a by a vector.</li>
+</ul>
+<p>These advanced topics complete the toolkit needed for rigorous analysis of operators, convergence, and stochastic processes in modern measure theory.</p>
+<h3>The Maharam Classification of Measure Algebras</h3>
+<p>Measure algebras arise from measure spaces by identifying sets that differ by a null set; the resulting Boolean algebra carries a strictly positive measure. Dorothy Maharam proved in 1942 that every complete Boolean algebra equipped with a strictly positive finite measure is isomorphic to a direct sum of homogeneous measure algebras. A homogeneous measure algebra of weight κ is the measure algebra of the product space {0,1}^κ with the usual product measure; its Maharam type is the smallest cardinality of a dense subset. The theorem states that any such algebra decomposes uniquely (up to isomorphism) as a direct sum of homogeneous components, each determined by its Maharam type. This classification reduces the study of abstract measure algebras to the well‑understood product spaces. In particular, a separable measure algebra (Maharam type ℵ₀) is isomorphic to the Lebesgue measure algebra on [0,1]. The result underpins the structure theory of von Neumann algebras of type I and II, and it provides a canonical form for probability spaces used in ergodic theory and stochastic processes. The proof uses transfinite induction on the Maharam type and the Loomis–Sikorski representation theorem to embed the algebra into a measure algebra of a concrete space. A key step is showing that any two homogeneous algebras of the same type are isomorphic, which follows from the existence of a measure‑preserving Boolean isomorphism between the corresponding product spaces. Applications include the classification of stationary processes up to isomorphism of their tail σ‑algebras and the reduction of problems on general probability spaces to problems on standard Borel spaces.</p>
+
+<h3>The Rokhlin Lemma and Periodic Approximation in Ergodic Theory</h3>
+<p>Vladimir Rokhlin's lemma (1948) is a cornerstone of ergodic theory. Let (X, Σ, μ) be a non‑atomic probability space and T : X → X an invertible measure‑preserving transformation. For any integer n ≥ 1 and ε > 0 there exists a measurable set A such that the sets A, T A, …, T<sup>n‑1</sup> A are pairwise disjoint and μ(⋃<sub>k=0</sub><sup>n‑1</sup> T^k A) > 1 − ε. The set A is called a Rokhlin tower of height n. The lemma says that an aperiodic transformation can be approximated arbitrarily well by a periodic transformation of period n on a set of measure arbitrarily close to 1. The proof constructs a maximal family of disjoint towers using Zorn's lemma and then refines the remainder. A quantitative version gives explicit bounds on the measure of the complement in terms of the entropy of T. The Rokhlin lemma is used to prove the Ornstein–Weiss theorem on the equivalence of entropy and the existence of finite generators, to construct finitary isomorphisms between Bernoulli shifts, and to establish the Jewett–Krieger theorem on strictly ergodic models. In smooth ergodic theory, a version for diffeomorphisms (the Katok–Rokhlin lemma) provides periodic approximations that respect the smooth structure, enabling the construction of invariant measures with prescribed Lyapunov exponents. The lemma also underlies the proof of the Sinai factor theorem: any ergodic system with positive entropy has a Bernoulli factor. The periodic approximation viewpoint connects measure‑theoretic dynamics with topological dynamics via the Krieger generator theorem.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Constructing a Rokhlin Tower</div>
+<div class="ex-text">Let T be an irrational rotation on the circle 𝕋 = ℝ/ℤ with Lebesgue measure μ. For n = 5 and ε = 0.01, exhibit a set A satisfying the Rokhlin lemma conditions and estimate μ(⋃<sub>k=0</sub><sup>4</sup> T^k A).</div>
+<div class="ex-soln">Choose a small interval I of length ℓ = (1−ε)/n = 0.198. Let A = I. Since T is an irrational rotation, the intervals I, T I, …, T<sup>4</sup> I are disjoint for sufficiently small ℓ (the minimal distance between distinct iterates of a point is positive). Their union has measure 5ℓ = 0.99 > 1−ε. Thus A works. In general, for any aperiodic T one can take a measurable set B with μ(B) < ε/n and let A be a subset of the complement of ⋃<sub>k=0</sub><sup>n‑1</sup> T^k B on which the first n iterates are disjoint; the maximal ergodic theorem guarantees such A exists with the required measure.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Strategy</div>
+<div class="tip-text">When a question asks to apply the Rokhlin lemma, first verify that the transformation is invertible and the space is non‑atomic. Then state the lemma precisely: for any n and ε there exists a tower of height n covering at least 1−ε. Use the tower to approximate integrals by sums over the tower levels; this is the standard technique to prove convergence of ergodic averages or to construct joinings.</div>
+</div>
+
+<h3>The Ornstein Isomorphism Theorem for Bernoulli Shifts</h3>
+<p>Donald Ornstein proved in 1970 that two Bernoulli shifts are isomorphic as measure‑preserving systems if and only if they have the same entropy. A Bernoulli shift is the transformation on the space of bi‑infinite sequences over a finite alphabet equipped with a product measure; its entropy is the Shannon entropy of the one‑step distribution. Ornstein's theorem shows that entropy is a complete invariant for this class, solving a long‑standing problem of Kolmogorov and Sinai. The proof introduces the notion of very weak Bernoulli (VWB) sequences and the Ornstein coupling (or d‑bar) metric, which measures the distance between two processes by the minimal expected Hamming distance over all joinings. A key lemma states that if a process is VWB and has the same finite‑dimensional distributions as a Bernoulli process up to a small error in d‑bar, then it is isomorphic to that Bernoulli process. The construction proceeds by building a sequence of finite partitions that approximate the given process and then using a combinatorial matching argument (the "Ornstein coupling") to produce an isomorphism. The theorem extends to countable‑state Bernoulli shifts and to random fields (ℤ^d actions). It also implies that any factor of a Bernoulli shift is itself a Bernoulli shift (the factor theorem), and that the class of Bernoulli shifts is closed under taking products and inverses. The isomorphism theorem has profound consequences: it classifies all mixing Markov shifts with the same entropy as Bernoulli, and it provides a model for any ergodic system with a given entropy via the Krieger generator theorem. The techniques developed — especially the d‑bar metric and the VWB condition — have become standard tools in ergodic theory and information theory.</p>
+
+<h3>The Feldman–Hajek Theorem on Equivalence of Gaussian Measures</h3>
+<p>Jacob Feldman and Jaroslav Hájek independently characterized in 1958 when two Gaussian measures on a separable Banach space are equivalent (mutually absolutely continuous) or singular. Let μ₁ = N(m₁, C₁) and μ₂ = N(m₂, C₂) be centered or non‑centered Gaussian measures with covariance operators C₁, C₂ and means m₁, m₂. The theorem states that μ₁ and μ₂ are equivalent iff (i) the Cameron–Martin spaces H₁ and H₂ coincide as sets, (ii) the operator C₁<sup>-1/2</sup> C₂ C₁<sup>-1/2</sup> − I is Hilbert–Schmidt on H₁, and (iii) the difference of means m₁ − m₂ belongs to H₁. If any of these conditions fails, the measures are singular. The proof reduces the problem to the equivalence of product measures via the Karhunen–Loève expansion: the eigenvalues λ_k of C₁<sup>-1/2</sup> C₂ C₁<sup>-1/2</sup> determine the Kakutani–Hellinger distance ∏ (2√{λ_k}/(1+λ_k)). Convergence of this product is equivalent to the Hilbert–Schmidt condition. The theorem is fundamental in stochastic analysis: it gives the precise condition for the Girsanov theorem to hold when changing the drift of a Gaussian process, and it underlies the Feldman–Hajek dichotomy for measures induced by solutions of stochastic differential equations. In Bayesian inverse problems, it tells when a Gaussian prior and posterior are equivalent, which is essential for well‑posedness of the posterior distribution. The result also extends to abstract Wiener spaces and to Gaussian measures on nuclear spaces, where the covariance operators are trace class.</p>
+
+<h3>The Kakutani Representation Theorem for Abstract L Spaces</h3>
+<p>Shizuo Kakutani proved in 1941 that every abstract L space (a Banach lattice whose norm is additive on the positive cone) is isometrically lattice‑isomorphic to an L¹(μ) space for some measure μ. An abstract L space is a Banach lattice X such that ‖x + y‖ = ‖x‖ + ‖y‖ for all x, y ≥ 0. The representation constructs a compact Hausdorff space K (the space of maximal ideals of the lattice) and a regular Borel measure μ on K such that X ≅ L¹(μ) as Banach lattices. The proof uses the Kakutani–Stone representation of the lattice as a lattice of continuous functions on K, then identifies the norm with integration against a measure obtained from the dual space. The dual of an abstract L space is an abstract M space (a Banach lattice with ‖x ∨ y‖ = max(‖x‖, ‖y‖) for positive elements), which by the Kakutani–Bohnenblust theorem is isometrically lattice‑isomorphic to C(K) for some compact K. This duality yields the measure μ as the image of the unit ball of X* under the evaluation map. The theorem shows that the category of L¹ spaces is exactly the category of abstract L spaces, providing a purely lattice‑theoretic characterization of integration spaces. Applications include the identification of the dual of L¹(μ) as L∞(μ) when μ is σ‑finite, the structure theory of order‑continuous Banach lattices, and the classification of von Neumann algebras of type I via their preduals. The representation also underlies the theory of vector measures: the variation of a vector measure of bounded variation defines an abstract L space, which can then be represented as an L¹ space, facilitating the Radon–Nikodym theorem for vector measures.</p>
+
+<ul>
+<li>Confusing the Maharam type with the cardinality of the underlying set; the type is the density character of the measure algebra, not the size of the sample space.</li>
+<li>Assuming the Rokhlin lemma holds for non‑invertible transformations without passing to the natural extension; the lemma requires invertibility.</li>
+<li>Thinking entropy alone classifies all ergodic transformations; Ornstein's theorem applies only to Bernoulli shifts (and their factors), not to arbitrary K‑systems.</li>
+<li>Neglecting the Hilbert–Schmidt condition in the Feldman–Hajek theorem; equality of Cameron–Martin spaces and mean difference in that space are necessary but not sufficient.</li>
+<li>Believing every Banach lattice with additive norm is an L¹ space without verifying the lattice is order‑complete; Kakutani's theorem requires a Dedekind complete lattice.</li>
+<li>Misapplying the Kakutani representation to spaces that are not abstract L spaces (e.g., L^p for p ≠ 1); the additivity of the norm on the positive cone fails for p > 1.</li>
+<li>Overlooking that the Ornstein isomorphism is measure‑theoretic, not topological; two Bernoulli shifts with the same entropy are isomorphic as measure‑preserving systems but need not be topologically conjugate.</li></ul>
+<!-- course-addon:end --></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 18001,
+                text: "📏 A σ-algebra must be closed under:",
+                opts: [
+                    {l: "A", t: "Finite unions", c: false},
+                    {l: "B", t: "Countable unions and complements", c: true},
+                    {l: "C", t: "Arbitrary unions", c: false},
+                    {l: "D", t: "Only complements", c: false}
+                ],
+                sol: "A σ-algebra is closed under <strong>countable unions</strong> and <strong>complements</strong> (and therefore also countable intersections by De Morgan's laws)."
+            },
+            {
+                id: 18002,
+                text: "📏 The Borel σ-algebra on ℝ is generated by:",
+                opts: [
+                    {l: "A", t: "All subsets of ℝ", c: false},
+                    {l: "B", t: "All open intervals", c: true},
+                    {l: "C", t: "All countable sets", c: false},
+                    {l: "D", t: "All closed sets only", c: false}
+                ],
+                sol: "The Borel σ-algebra is the smallest σ-algebra containing all <strong>open intervals (a,b)</strong>. Equivalently, it's generated by open sets, closed sets, or half-lines (−∞, a]."
+            },
+            {
+                id: 18003,
+                text: "📏 The Lebesgue measure of the Cantor set is:",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "0", c: true},
+                    {l: "C", t: "1/2", c: false},
+                    {l: "D", t: "Non-measurable", c: false}
+                ],
+                sol: "The Cantor set has Lebesgue measure <strong>0</strong>. The total length of removed intervals equals 1, so what remains has length 0 — yet it's uncountable."
+            },
+            {
+                id: 18004,
+                text: "∫ The Lebesgue integral of the indicator function of ℚ on [0,1] is:",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "0", c: true},
+                    {l: "C", t: "∞", c: false},
+                    {l: "D", t: "Undefined", c: false}
+                ],
+                sol: "The indicator of ℚ is 1 on the rationals and 0 elsewhere. Since ℚ is <strong>countable</strong>, its Lebesgue measure is 0. The integral is 1·0 + 0·1 = <strong>0</strong>."
+            },
+            {
+                id: 18005,
+                text: "∫ The monotone convergence theorem requires that fₙ is:",
+                opts: [
+                    {l: "A", t: "Decreasing and bounded", c: false},
+                    {l: "B", t: "Non-negative and increasing", c: true},
+                    {l: "C", t: "Positive and decreasing", c: false},
+                    {l: "D", t: "Complex-valued", c: false}
+                ],
+                sol: "The <strong>monotone convergence theorem</strong> requires fₙ to be <strong>non-negative and increasing</strong> (pointwise a.e.) to f. Then ∫ fₙ → ∫ f, even if the limit is infinite."
+            },
+            {
+                id: 18006,
+                text: "∫ The dominated convergence theorem requires a dominating function g that is:",
+                opts: [
+                    {l: "A", t: "Non-negative", c: false},
+                    {l: "B", t: "Integrable", c: true},
+                    {l: "C", t: "Bounded", c: false},
+                    {l: "D", t: "Constant", c: false}
+                ],
+                sol: "The dominating function g must be <strong>integrable</strong> (∫ |g| &lt; ∞). This is the crucial condition — without an integrable bound, swapping limit and integral may fail."
+            },
+            {
+                id: 18007,
+                text: "📊 The L² norm comes from which inner product?",
+                opts: [
+                    {l: "A", t: "∫ |f| dμ", c: false},
+                    {l: "B", t: "∫ f·g dμ", c: true},
+                    {l: "C", t: "sup |f|", c: false},
+                    {l: "D", t: "√∫ f² dμ alone", c: false}
+                ],
+                sol: "The L² inner product is ⟨f,g⟩ = <strong>∫ f·g dμ</strong> (or ∫ f·ḡ for complex). The norm is ‖f‖₂ = √⟨f,f⟩. L² is a Hilbert space."
+            },
+            {
+                id: 18008,
+                text: "📊 The Riesz-Fischer theorem states that Lᵖ spaces are:",
+                opts: [
+                    {l: "A", t: "Finite-dimensional", c: false},
+                    {l: "B", t: "Complete (Banach spaces)", c: true},
+                    {l: "C", t: "Compact", c: false},
+                    {l: "D", t: "Separable for all p", c: false}
+                ],
+                sol: "The <strong>Riesz-Fischer theorem</strong> proves Lᵖ spaces are <strong>complete</strong> — every Cauchy sequence converges to a limit in Lᵖ. This makes them Banach spaces."
+            },
+            {
+                id: 18009,
+                text: "🌌 The Radon-Nikodym theorem says: if ν ≪ μ, then:",
+                opts: [
+                    {l: "A", t: "ν = μ", c: false},
+                    {l: "B", t: "ν(A) = ∫_A f dμ for some f", c: true},
+                    {l: "C", t: "μ(A) = ∫_A f dν for some f", c: false},
+                    {l: "D", t: "ν and μ are unrelated", c: false}
+                ],
+                sol: "If ν is <strong>absolutely continuous</strong> with respect to μ (ν ≪ μ), then ν(A) = ∫_A <strong>f dμ</strong> where f = dν/dμ is the Radon-Nikodym derivative."
+            },
+            {
+                id: 18010,
+                text: "🌌 Fubini's theorem allows us to:",
+                opts: [
+                    {l: "A", t: "Swap the order of integration", c: true},
+                    {l: "B", t: "Differentiate under the integral", c: false},
+                    {l: "C", t: "Integrate by parts", c: false},
+                    {l: "D", t: "Change variables in integration", c: false}
+                ],
+                sol: "<strong>Fubini's theorem</strong> says we can <strong>swap the order of integration</strong> for integrable functions: ∫∫ f(x,y) dy dx = ∫∫ f(x,y) dx dy."
+            },
+            {
+                id: 18011,
+                text: "📏 A set with Lebesgue measure zero is called:",
+                opts: [
+                    {l: "A", t: "Empty", c: false},
+                    {l: "B", t: "A null set", c: true},
+                    {l: "C", t: "A Cantor set", c: false},
+                    {l: "D", t: "Non-measurable", c: false}
+                ],
+                sol: "A set of measure zero is called a <strong>null set</strong>. Properties that hold except on a null set are said to hold <strong>almost everywhere</strong> (a.e.)."
+            },
+            {
+                id: 18012,
+                text: "📊 Hölder's inequality generalizes which familiar inequality?",
+                opts: [
+                    {l: "A", t: "Triangle inequality", c: false},
+                    {l: "B", t: "Cauchy-Schwarz", c: true},
+                    {l: "C", t: "Jensen's inequality", c: false},
+                    {l: "D", t: "Chebyshev's inequality", c: false}
+                ],
+                sol: "Hölder's inequality ∫ |fg| ≤ ‖f‖ₚ·‖g‖₉ generalizes <strong>Cauchy-Schwarz</strong> (which is the special case p=q=2). For p=1, q=∞, it gives ∫ |fg| ≤ ‖f‖₁·‖g‖_∞."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.9em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.9em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

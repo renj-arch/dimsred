@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic-wise PYQ Analysis — DIMSRED</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--bg:#0a0e17;--card:#111827;--border:#1e293b;--accent:#3b82f6;--accent2:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.page-header{margin-bottom:24px}
+.filters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:flex-end}
+select,input{padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .15s}
+.topic-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.topic-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.topic-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.topic-count{font-size:13px;font-weight:700;color:var(--accent2)}
+.year-pill{display:inline-block;background:rgba(59,130,246,.15);color:var(--accent);padding:2px 8px;border-radius:10px;font-size:11px;margin-right:6px;margin-bottom:4px}
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+a.back-link{color:var(--accent);text-decoration:none;font-weight:600}
+a.back-link:hover{text-decoration:underline}
+.question-detail{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:20px;display:none}
+.q-text{font-size:16px;line-height:1.7;margin-bottom:14px;font-weight:600}
+.q-options{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.q-opt{padding:10px 14px;border:2px solid var(--border);border-radius:8px;background:rgba(255,255,255,.03);cursor:pointer;transition:all .15s;font-size:14px}
+.q-opt.correct{border-color:var(--green);background:rgba(16,185,129,.15);color:var(--green)}
+.q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.15);color:var(--red)}
+.q-sol{font-size:13px;color:var(--muted);margin-top:10px;padding:12px;background:rgba(255,255,255,.02);border-radius:8px}
+.close-btn{margin-top:16px;background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:700}
+.close-btn:hover{opacity:.9}
+.year-filter{font-size:13px;color:var(--muted);margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h1>📈 Topic-wise PYQ Analysis</h1>
+        <p>See which topics are asked most frequently in previous year papers, by exam and year.</p>
+      </div>
+      <a href="papers.html" class="back-link">← Browse Papers</a>
+    </div>
+  </div>
+
+  <div class="filters">
+    <select id="examFilter" onchange="applyFilters()">
+      <option value="">All Exams</option>
+    </select>
+    <select id="yearFilter" onchange="applyFilters()">
+      <option value="">All Years</option>
+    </select>
+    <input type="text" id="searchFilter" placeholder="Search topic..." onchange="applyFilters()" style="min-width:200px">
+  </div>
+
+  <div style="font-size:13px;color:var(--muted);margin-bottom:8px" id="filterSummary"></div>
+
+  <div class="topic-grid" id="topicGrid"></div>
+
+  <div class="empty" id="emptyState" style="display:none">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-text">No topics match your filter.</div>
+  </div>
+
+  <div class="question-detail" id="questionDetail"></div>
+
+  <div style="margin-top:24px;text-align:center">
+    <a href="papers.html" class="back-link">← Browse Papers</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Load papers.json (built by scripts/build-papers-index.js) which has questions embedded? No - it only has metadata.
+  // We need to load each paper's questions from papers-data/<paper>.json
+  // But that's 83 files. Instead, load papers.json metadata first, then lazy-load questions per topic card click.
+  
+  var allPapers = [];
+  var topics = {}; // topicKey -> {name, exam, year, count, papers: []}
+  
+  function loadAll(){
+    return fetch('data/papers.json').then(function(r){return r.json();}).then(function(data){
+      allPapers = data.papers || [];
+      // Build exam filter
+      var exSel = document.getElementById('examFilter');
+      var exams = [...new Set(allPapers.map(p=>p.exam))].sort();
+      exams.forEach(function(e){ exSel.innerHTML += '<option value="'+e+'">'+e+'</option>'; });
+      // Build year filter
+      var yrSel = document.getElementById('yearFilter');
+      var years = [...new Set(allPapers.map(p=>p.year).filter(Boolean))].sort().reverse();
+      years.forEach(function(y){ yrSel.innerHTML += '<option value="'+y+'">'+y+'</option>'; });
+      renderTopics();
+    });
+  }
+
+  function renderTopics(){
+    var ex = document.getElementById('examFilter').value;
+    var yr = document.getElementById('yearFilter').value;
+    var q = document.getElementById('searchFilter').value.toLowerCase();
+    
+    var summary = document.getElementById('filterSummary');
+    var activeFilters = [];
+    if(ex) activeFilters.push('Exam: '+ex);
+    if(yr) activeFilters.push('Year: '+yr);
+    if(q) activeFilters.push('Search: '+q);
+    summary.textContent = activeFilters.length ? 'Filtering: '+activeFilters.join(', ') : 'Showing all topics';
+    
+    var grid = document.getElementById('topicGrid');
+    grid.innerHTML = '';
+    
+    // We need to load questions from each paper. To avoid 83 fetches upfront,
+    // build topic list lazily: show paper sections as topics, load questions on click.
+    var filtered = allPapers.filter(function(p){
+      if(ex && p.exam !== ex) return false;
+      if(yr && p.year != yr) return false;
+      return true;
+    });
+    
+    // Group by section within each paper as a "topic"
+    var topicList = [];
+    filtered.forEach(function(p){
+      (p.sections || []).forEach(function(s){
+        topicList.push({
+          name: s.name,
+          exam: p.exam,
+          year: p.year,
+          paper: p.paper,
+          sourceFile: p.sourceFile,
+          count: s.count,
+          type: p.type
+        });
+      });
+    });
+    
+    // Sort by count desc
+    topicList.sort(function(a,b){ return b.count - a.count; });
+    
+    // Apply search
+    if(q){
+      topicList = topicList.filter(function(t){ return t.name.toLowerCase().indexOf(q) >= 0; });
+    }
+    
+    if(topicList.length === 0){
+      grid.innerHTML = '';
+      document.getElementById('emptyState').style.display = 'block';
+      return;
+    }
+    document.getElementById('emptyState').style.display = 'none';
+    
+    topicList.forEach(function(t){
+      var card = document.createElement('div');
+      card.className = 'topic-card';
+      card.innerHTML =
+        '<div class="topic-title">'+t.name+'</div>' +
+        '<div class="topic-meta">'+t.exam + ' · ' + t.year + ' · ' + t.type + '</div>' +
+        '<div class="topic-count">'+t.count+' questions</div>' +
+        '<div style="margin-top:10px">'+t.paper.split('-').slice(0,3).join(' ')+' ...</div>';
+      card.onclick = function(){ loadTopicQuestions(t); };
+      grid.appendChild(card);
+    });
+  }
+
+  function loadTopicQuestions(t){
+    // Load the paper's questions and filter by section
+    fetch('papers-data/' + t.sourceFile).then(function(r){return r.json();}).then(function(d){
+      var qs = (d.questions || d || []).filter(function(q){
+        return (q.section || '') === t.name;
+      });
+      var detail = document.getElementById('questionDetail');
+      detail.style.display = 'block';
+      detail.innerHTML =
+        '<h3 style="margin-bottom:12px">'+t.name+' — '+t.exam+' '+t.year+'</h3>' +
+        '<div class="year-filter">Paper: '+t.paper+' · '+qs.length+' questions</div>';
+      qs.forEach(function(q,i){
+        var correctIdx = -1;
+        (q.options || []).forEach(function(o,j){ if(o.correct) correctIdx = j; });
+        var opts = (q.options || []).map(function(o,j){
+          return '<div class="q-opt'+(j===correctIdx?' correct':'')+'" data-selected="'+j+'" data-correct="'+correctIdx+'">'+String.fromCharCode(65+j)+') '+o.text+'</div>';
+        }).join('');
+        detail.innerHTML +=
+          '<div class="question-detail" style="margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:8px">'+
+          '<div class="q-text">Q'+(i+1)+'. '+q.text+'</div>'+
+          '<div class="q-options">'+opts+'</div>'+
+          (q.solution||q.explain?'<div class="q-sol">Solution: '+(q.solution||q.explain)+'</div>':'')+
+          '</div>';
+      });
+      detail.scrollIntoView({behavior:'smooth'});
+      // Wire up option clicks (functions are inside this IIFE, so inline onclick won't work)
+      detail.querySelectorAll('.q-opt').forEach(function(opt){
+        opt.addEventListener('click', function(){
+          selectOption(this, parseInt(this.dataset.selected), parseInt(this.dataset.correct));
+        });
+      });
+    });
+  }
+  
+  function selectOption(el, selectedIdx, correctIdx) {
+    var parent = el.parentNode;
+    var opts = parent.querySelectorAll('.q-opt');
+    opts.forEach(function(o){
+      o.classList.remove('selected', 'correct', 'wrong');
+      o.onclick = null;
+    });
+    el.classList.add('selected');
+    if (selectedIdx === correctIdx) {
+      el.classList.add('correct');
+    } else {
+      el.classList.add('wrong');
+      if (opts[correctIdx]) opts[correctIdx].classList.add('correct');
+    }
+  }
+  
+  function applyFilters(){ renderTopics(); }
+
+  loadAll();
+})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

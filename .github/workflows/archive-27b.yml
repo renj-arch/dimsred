@@ -1,0 +1,101 @@
+name: Archive Answers (27B quality lane)
+
+# Promoted to the 27B on 2026-10-18 (tiered rollout: one pipeline at a time,
+# user-visible content moves to the quality lane first). The 9b writer step in
+# question-quality.yml is retired: this lane is the SINGLE writer of
+# data/archive-answers.json — the model answers users read in ask.html and as
+# "💡 Explanation" in archive.html. Single-writer on purpose: two writers
+# racing on the sidecar could drop each other's entries (the exact failure
+# class the invented pool hit today, where a merge kept one side and dropped
+# the other). Lower volume than the 9b quota is accepted; quality-first is the
+# point of the promotion.
+#
+# CPU economics (same as invent-27b.yml): ~20-30 min per answer plus a ~34-min
+# 17 GB pull (exceeds the 10 GB repo cache — deliberate re-pull). The writer
+# saves ATOMICALLY after EVERY accepted unit, so even a step-cap kill still
+# publishes everything already written (publish runs with always()).
+#
+# MODEL PINNING + TRIALS: identical pattern to invent-27b.yml — scheduled runs
+# are digest-pinned (upstream re-tags fail LOUD); dispatch with model=<tag> to
+# trial a candidate, then bump PINNED_DIGEST deliberately on evidence.
+on:
+  schedule:
+    - cron: '23 3 * * *'   # daily, off :00; runs parallel to the 01:37 invent lane (disjoint files)
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'TRIAL ONLY: model tag to test instead of the pinned default (scheduled runs ignore this)'
+        required: false
+        default: ''
+      max_write:
+        description: 'Enriched answers this run (default 3)'
+        required: false
+        default: '3'
+
+concurrency:
+  group: archive-27b
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  archive27b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 195
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/questions
+            data/archive-answers.json
+            data/archive-taxonomy.json
+            data/pyq-patterns.json
+            data/agent-log.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Write archive answers (quality budget)
+        # ARCHIVE_DEADLINE_MIN = soft stop between units (clean exit through
+        # the final save + agent log). AGENT_DEADLINE_MIN = hard stop: callLLM
+        # refuses new prompts (site-agent.js). Step cap 125 min sits behind
+        # both; per-unit atomic saves make even that kill publishable.
+        # MAX_WRITE 3: ~20-30 min per answer on the 4-vCPU runner.
+        timeout-minutes: 125
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          ARCHIVE_DEADLINE_MIN: '100'
+          AGENT_DEADLINE_MIN: '105'
+          MAX_WRITE: ${{ inputs.max_write || '3' }}
+          MAX_CREATE: '1'
+        run: node scripts/write-archive-answers.js
+
+      # always(): every accepted unit was saved atomically, so even a capped
+      # or failed step above still gets its partial output published.
+      - name: Publish archive answers
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/archive-answers.json data/archive-taxonomy.json data/agent-log.json data/questions/00-27b-archive.json 2>/dev/null || true
+          bash scripts/ci-push.sh "archive: hosted model wrote archive answers (run #${{ github.run_number }})"

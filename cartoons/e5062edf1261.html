@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Weighted Constraint Optimization in Multi‑Attribute Seating Problems | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.9em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.75em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.9em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Weighted Constraint Optimization in Multi‑Attribute Seating Problems</h1>
+<p class="meta">Logical Reasoning · <a href="/upsc/course/csat/lesson-logical-reasoning">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Seat row -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <rect x="30" y="180" width="70" height="50"/>
+    <rect x="110" y="180" width="70" height="50"/>
+    <rect x="190" y="180" width="70" height="50"/>
+    <rect x="270" y="180" width="70" height="50"/>
+    <rect x="350" y="180" width="70" height="50"/>
+    <rect x="430" y="180" width="70" height="50"/>
+  </g>
+  <!-- Persons (stick figures) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- P1 seat1 center 65 -->
+    <circle cx="65" cy="120" r="10"/>
+    <line x1="65" y1="130" x2="65" y2="170"/>
+    <line x1="50" y1="140" x2="80" y2="140"/>
+    <line x1="65" y1="170" x2="55" y2="190"/>
+    <line x1="65" y1="170" x2="75" y2="190"/>
+    <!-- P2 seat2 center 145 -->
+    <circle cx="145" cy="120" r="10"/>
+    <line x1="145" y1="130" x2="145" y2="170"/>
+    <line x1="130" y1="140" x2="160" y2="140"/>
+    <line x1="145" y1="170" x2="135" y2="190"/>
+    <line x1="145" y1="170" x2="155" y2="190"/>
+    <!-- P3 seat3 center 225 -->
+    <circle cx="225" cy="120" r="10"/>
+    <line x1="225" y1="130" x2="225" y2="170"/>
+    <line x1="210" y1="140" x2="240" y2="140"/>
+    <line x1="225" y1="170" x2="215" y2="190"/>
+    <line x1="225" y1="170" x2="235" y2="190"/>
+    <!-- P4 seat4 center 305 -->
+    <circle cx="305" cy="120" r="10"/>
+    <line x1="305" y1="130" x2="305" y2="170"/>
+    <line x1="290" y1="140" x2="320" y2="140"/>
+    <line x1="305" y1="170" x2="295" y2="190"/>
+    <line x1="305" y1="170" x2="315" y2="190"/>
+    <!-- P5 seat5 center 385 -->
+    <circle cx="385" cy="120" r="10"/>
+    <line x1="385" y1="130" x2="385" y2="170"/>
+    <line x1="370" y1="140" x2="400" y2="140"/>
+    <line x1="385" y1="170" x2="375" y2="190"/>
+    <line x1="385" y1="170" x2="395" y2="190"/>
+    <!-- P6 seat6 center 465 -->
+    <circle cx="465" cy="120" r="10"/>
+    <line x1="465" y1="130" x2="465" y2="170"/>
+    <line x1="450" y1="140" x2="480" y2="140"/>
+    <line x1="465" y1="170" x2="455" y2="190"/>
+    <line x1="465" y1="170" x2="475" y2="190"/>
+  </g>
+  <!-- Hard constraint: P1 left of P2 -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <line x1="65" y1="205" x2="145" y2="205"/>
+    <polygon points="145,205 135,200 135,210"/>
+  </g>
+  <!-- Soft constraints -->
+  <g stroke="#1f2937" stroke-width="1.5" stroke-dasharray="5,5" fill="none">
+    <!-- P4 -> seat3 weight4 -->
+    <line x1="305" y1="120" x2="225" y2="205"/>
+    <!-- P5 - P6 weight3 -->
+    <line x1="385" y1="120" x2="465" y2="120"/>
+    <!-- P2 -> seat6 weight2 -->
+    <line x1="145" y1="120" x2="465" y2="205"/>
+  </g>
+  <!-- Branch-and-bound tree -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <!-- Root -->
+    <circle cx="490" cy="40" r="15"/>
+    <!-- Left child -->
+    <circle cx="430" cy="90" r="15"/>
+    <!-- Right child -->
+    <circle cx="550" cy="90" r="15"/>
+    <!-- Edges -->
+    <line x1="490" y1="55" x2="430" y2="75"/>
+    <line x1="490" y1="55" x2="550" y2="75"/>
+    <line x1="430" y1="105" x2="430" y2="140"/>
+    <line x1="550" y1="105" x2="550" y2="115"/>
+    <line x1="550" y1="125" x2="550" y2="140"/>
+    <!-- Scissors at (550,120) -->
+    <line x1="545" y1="115" x2="555" y2="125"/>
+    <line x1="555" y1="115" x2="545" y2="125"/>
+  </g>
+  <!-- Labels -->
+  <text x="105" y="190" font-size="12" fill="#1f2937" text-anchor="middle">Hard Constraint</text>
+  <text x="300" y="150" font-size="12" fill="#1f2937" text-anchor="middle">Soft Weight</text>
+  <text x="490" y="20" font-size="12" fill="#1f2937" text-anchor="middle">Branch‑and‑Bound</text>
+  <text x="548" y="120" font-size="12" fill="#1f2937" text-anchor="end">Prune</text>
+  <text x="430" y="160" font-size="12" fill="#1f2937" text-anchor="middle">Best Weight</text>
+  <text x="280" y="170" font-size="12" fill="#1f2937" text-anchor="middle">Seat Row</text>
+  <!-- Soft weight numbers -->
+  <text x="265" y="160" font-size="12" fill="#1f2937" text-anchor="middle">4</text>
+  <text x="425" y="110" font-size="12" fill="#1f2937" text-anchor="middle">3</text>
+  <text x="305" y="160" font-size="12" fill="#1f2937" text-anchor="middle">2</text>
+  <!-- Tree node labels -->
+  <text x="490" y="45" font-size="10" fill="#1f2937" text-anchor="middle">Start</text>
+  <text x="430" y="95" font-size="10" fill="#1f2937" text-anchor="middle">P1=1</text>
+  <text x="548" y="95" font-size="10" fill="#1f2937" text-anchor="middle">P1=2</text>
+  <text x="430" y="150" font-size="10" fill="#1f2937" text-anchor="middle">Weight=9</text>
+  <!-- Caption strip -->
+  <rect x="0" y="290" width="560" height="30" fill="none" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="310" font-size="12" fill="#1f2937" text-anchor="middle">Weighted Constraint Optimization in Multi‑Attribute Seating Problems</text>
+</svg></div>
+<p class="meta">Weighted Constraint Optimization in Multi‑Attribute Seating Problems</p></div><!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body></html>

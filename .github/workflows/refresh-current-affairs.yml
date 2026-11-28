@@ -1,0 +1,45 @@
+name: Refresh Current Affairs Lesson
+
+# The news wire refreshes all day, but no lesson carried it. This writes a dated
+# "Recent developments" block (last 14 days, grouped by GS paper, each with its
+# source link) into the Current Affairs lesson page and its source store. No
+# model prose is involved, so nothing can be invented; the block is replaced,
+# not appended, so the page does not grow.
+
+on:
+  schedule:
+    - cron: '37 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-current-affairs
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Write the dated block
+        run: node scripts/refresh-current-affairs.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add upsc/course/gs/lesson-current-affairs.html scripts/course-data.json
+          bash scripts/ci-push.sh "current-affairs: refresh the dated developments block"

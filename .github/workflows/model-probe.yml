@@ -1,0 +1,43 @@
+name: Model Probe
+
+# Dispatch-only: one tiny call per candidate hosted model, printing which
+# answer today. The NVIDIA account returns models it cannot invoke (404) or
+# that are retired (410), so "listed in /v1/models" proves nothing — only a
+# real POST does. Run this before pinning a model into a writing lane.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: model-probe
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Probe hosted model routes
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TOKENHARBOR_API_KEY: ${{ secrets.TOKENHARBOR_API_KEY }}
+          TOKENHARBOR_URL: ${{ vars.TOKENHARBOR_URL }}
+          TOKENHARBOR_MODEL: ${{ vars.TOKENHARBOR_MODEL || 'deepseek-v4.1-flash' }}
+        run: node scripts/probe-models.js

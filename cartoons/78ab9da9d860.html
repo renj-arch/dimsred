@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Advanced Fluid Machinery: Cavitation, Surge, and Control Strategies | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.9em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.75em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.9em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Advanced Fluid Machinery: Cavitation, Surge, and Control Strategies</h1>
+<p class="meta">Mechanical Engineering Optional: Syllabus, Sources &amp;amp; Strategy · <a href="/upsc/course/opt-mechanical-engineering/lesson-overview">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central compressor cross-section -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Casing -->
+    <path d="M140 80 L140 240 Q140 260 160 260 L400 260 Q420 260 420 240 L420 80 Q420 60 400 60 L160 60 Q140 60 140 80"/>
+    <!-- Impeller -->
+    <circle cx="280" cy="160" r="50" stroke-width="2.5"/>
+    <g stroke-width="2">
+      <line x1="280" y1="160" x2="320" y2="130"/>
+      <line x1="280" y1="160" x2="325" y2="160"/>
+      <line x1="280" y1="160" x2="320" y2="190"/>
+      <line x1="280" y1="160" x2="260" y2="120"/>
+      <line x1="280" y1="160" x2="240" y2="160"/>
+      <line x1="280" y1="160" x2="260" y2="200"/>
+    </g>
+    <!-- Shaft -->
+    <line x1="80" y1="160" x2="140" y2="160" stroke-width="4"/>
+    <line x1="420" y1="160" x2="480" y2="160" stroke-width="4"/>
+    <!-- Suction pipe -->
+    <path d="M140 160 L80 160 L80 100" stroke-width="3" fill="none"/>
+    <!-- Discharge pipe -->
+    <path d="M420 160 L480 160 L480 220" stroke-width="3" fill="none"/>
+    <!-- Inducer upstream -->
+    <circle cx="100" cy="160" r="15" stroke-width="2" fill="none"/>
+    <line x1="90" y1="160" x2="110" y2="160" stroke-width="1.5"/>
+    <line x1="100" y1="150" x2="100" y2="170" stroke-width="1.5"/>
+  </g>
+  <!-- Cavitation bubbles (left) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none" opacity="0.7">
+    <circle cx="60" cy="130" r="6"/>
+    <circle cx="50" cy="150" r="4"/>
+    <circle cx="70" cy="165" r="5"/>
+    <circle cx="45" cy="180" r="3"/>
+    <circle cx="65" cy="115" r="4"/>
+    <!-- Collapse lines -->
+    <line x1="55" y1="125" x2="65" y2="135" stroke-width="1"/>
+    <line x1="65" y1="125" x2="55" y2="135" stroke-width="1"/>
+  </g>
+  <!-- Surge cycle arrow loop (right) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+      </marker>
+    </defs>
+    <path d="M440 120 Q480 120 480 160 Q480 200 440 200 Q400 200 400 160 Q400 120 440 120"/>
+    <path d="M440 160 L400 160" stroke-dasharray="6,4"/>
+  </g>
+  <!-- Recycle valve (top right) -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <rect x="380" y="40" width="60" height="30" rx="3"/>
+    <line x1="380" y1="55" x2="440" y2="55" stroke-width="2"/>
+    <line x1="410" y1="40" x2="410" y2="70" stroke-width="2"/>
+    <!-- PID box -->
+    <rect x="450" y="35" width="70" height="40" rx="3" stroke-width="2"/>
+    <text x="485" y="58" font-family="Georgia, serif" font-size="11" text-anchor="middle" fill="#1f2937">PID</text>
+    <text x="485" y="70" font-family="Georgia, serif" font-size="9" text-anchor="middle" fill="#1f2937">0.5s</text>
+  </g>
+  <!-- Stall cells on blades (small rotating arrows) -->
+  <g stroke="#1f2937" stroke-width="1.5" fill="none" opacity="0.8">
+    <path d="M290 130 Q300 125 310 130" marker-end="url(#arrow)"/>
+    <path d="M290 160 Q300 155 310 160" marker-end="url(#arrow)"/>
+    <path d="M290 190 Q300 185 310 190" marker-end="url(#arrow)"/>
+    <path d="M250 140 Q240 135 230 140" marker-end="url(#arrow)"/>
+    <path d="M250 180 Q240 175 230 180" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Performance map sketch (bottom) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <line x1="160" y1="250" x2="380" y2="250"/> <!-- x-axis -->
+    <line x1="160" y1="250" x2="160" y2="180"/> <!-- y-axis -->
+    <!-- Surge line -->
+    <path d="M170 240 Q220 220 280 210 Q330 205 370 210" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="4,3"/>
+    <!-- Operating point -->
+    <circle cx="300" cy="225" r="4" fill="#1f2937"/>
+    <!-- Surge margin arrow -->
+    <line x1="300" y1="225" x2="270" y2="215" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Variable geometry diffuser vanes -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <line x1="420" y1="140" x2="450" y2="130"/>
+    <line x1="420" y1="160" x2="450" y2="160"/>
+    <line x1="420" y1="180" x2="450" y2="190"/>
+  </g>
+  <!-- Labels -->
+  <text x="70.4" y="95" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">Cavitation Bubbles</text>
+  <text x="60" y="215" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">NPSHa &gt; NPSHr</text>
+  <text x="460" y="115" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">Surge Cycle</text>
+  <text x="410" y="30" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">Recycle Valve</text>
+  <text x="280" y="110" font-family="Georgia, serif" font-size="12" text-anchor="middle" fill="#1f2937">Stall Cells</text>
+  <text x="270" y="175" font-family="Georgia, serif" font-size="12" text-anchor="middle" fill="#1f2937">Surge Line</text>
+  <!-- Section title strip -->
+  <rect x="14" y="290" width="532" height="26" fill="#1f2937" rx="2"/>
+  <text x="280" y="283.5" font-family="Georgia, serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#fbf7ec">Advanced Fluid Machinery</text>
+</svg></div>
+<p class="meta">Advanced Fluid Machinery: Cavitation, Surge, and Control Strategies</p></div><!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body></html>

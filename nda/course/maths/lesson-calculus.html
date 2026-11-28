@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Calculus — NDA Mathematics (Paper 1) Lesson | vlymbooq</title>
+    <meta name="description" content="Free NDA Mathematics (Paper 1) Calculus lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/nda/course/maths/lesson-calculus.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body h4{font-size:0.95em;font-weight:600;margin:12px 0 6px;color:var(--purple,#a78bfa)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body ol{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9em;color:var(--text-sec)}
+        .lesson-body table th{background:rgba(167,139,250,.1);color:var(--text);padding:8px 12px;text-align:left;font-weight:600;border:1px solid var(--border)}
+        .lesson-body table td{padding:8px 12px;border:1px solid var(--border)}
+        .lesson-body table tr:nth-child(even){background:rgba(255,255,255,.02)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/nda/">NDA</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics (Paper 1)</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html" class="active">Calculus</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-statistics.html">Vectors & Statistics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; NDA Mathematics (Paper 1)</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Calculus</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 20 Nov 2026 &#183; 17,251 words &#183; 6 sections &#183; illustrated</div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Limits, continuity, differentiation, integration, differential equations.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Limits &middot; Differentiation &middot; Integration &middot; Differential Equations</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+
+                    <h2 id="limits">1. Limits</h2>
+                    <p>The concept of limit is the foundation of calculus. For a function f(x), we say <strong>lim<sub>x&rarr;a</sub> f(x) = L</strong> if f(x) gets arbitrarily close to L when x is sufficiently close to a (but not equal to a). Limits are used to define derivatives, continuity, and integrals.</p>
+
+                    
+
+<h3>Basic Limits &amp; Indeterminate Forms</h3>
+                    <p>When evaluating limits, we may encounter forms that are not immediately determinate. These require algebraic manipulation, standard limit formulas, or L'Hopital's Rule.</p>
+
+                    <h4>Indeterminate Forms</h4>
+                    <p>The following seven forms are indeterminate. Further analysis is required to evaluate limits that produce these forms. When you directly substitute the limiting value and obtain one of these forms, it means the limit cannot be determined without additional work.</p>
+
+                    <h4>Rationalization Method</h4>
+                    <p>When the limit involves square roots, rationalizing the numerator or denominator often resolves the 0/0 form. Multiply by the conjugate to eliminate the radical.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 1 | NDA Practice</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (&radic;(1 + x) &minus; 1)/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Multiply numerator and denominator by (&radic;(1 + x) + 1): = lim<sub>x&rarr;0</sub> [(1+x) &minus; 1]/[x(&radic;(1+x) + 1)] = lim<sub>x&rarr;0</sub> x/[x(&radic;(1+x) + 1)] = lim<sub>x&rarr;0</sub> 1/(&radic;(1+x) + 1) = 1/(1+1) = <strong>1/2</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Conjugate Multiplication</div>
+                        <div class="tip-text">When you see &radic;(a + x) &minus; &radic;a or similar forms, always multiply by the conjugate. The formula (&radic;A &minus; &radic;B)(&radic;A + &radic;B) = A &minus; B eliminates the radicals. This is a very common technique in NDA limit problems.</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Indeterminate Form</th><th>Example</th><th>Technique</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0/0</td><td>lim<sub>x&rarr;0</sub> (sin x)/x</td><td>Factorisation, standard limits, L'Hopital</td></tr>
+                            <tr><td>&infin;/&infin;</td><td>lim<sub>x&rarr;&infin;</sub> e<sup>x</sup>/x</td><td>Divide by highest power, L'Hopital</td></tr>
+                            <tr><td>0 &times; &infin;</td><td>lim<sub>x&rarr;0+</sub> x ln x</td><td>Rewrite as 0/0 or &infin;/&infin;</td></tr>
+                            <tr><td>&infin; &minus; &infin;</td><td>lim<sub>x&rarr;0</sub> (1/x &minus; 1/sin x)</td><td>Combine fractions, rationalise</td></tr>
+                            <tr><td>0<sup>0</sup></td><td>lim<sub>x&rarr;0+</sub> x<sup>x</sup></td><td>Take ln, use L'Hopital</td></tr>
+                            <tr><td>&infin;<sup>0</sup></td><td>lim<sub>x&rarr;&infin;</sub> x<sup>1/x</sup></td><td>Take ln, use L'Hopital</td></tr>
+                            <tr><td>1<sup>&infin;</sup></td><td>lim<sub>x&rarr;0</sub> (1 + x)<sup>1/x</sup></td><td>Use standard exponential limit</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 2 | NDA 2019</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (1 &minus; cos 2x)/x<sup>2</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using 1 &minus; cos 2x = 2 sin<sup>2</sup>x, we get lim<sub>x&rarr;0</sub> 2 sin<sup>2</sup>x / x<sup>2</sup> = 2 &times; (lim<sub>x&rarr;0</sub> sin x / x)<sup>2</sup> = 2 &times; 1<sup>2</sup> = <strong>2</strong>.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 3 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;2</sub> (x<sup>2</sup> &minus; 4)/(x &minus; 2)</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Factorise numerator: x<sup>2</sup> &minus; 4 = (x &minus; 2)(x + 2). Cancel (x &minus; 2) to get lim<sub>x&rarr;2</sub> (x + 2) = <strong>4</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: 0/0 Forms</div>
+                        <div class="tip-text">For rational 0/0 limits, always try factorisation first. If the numerator and denominator are polynomials, check if (x &minus; a) is a common factor before applying L'Hopital. This saves time in NDA exams.</div>
+                    </div>
+
+                    <h3>Standard Limits</h3>
+                    <p>Memorising standard limits is essential for quick evaluation in NDA exams. The following tables list the most frequently tested limits.</p>
+
+                    <h4>Trigonometric Limits</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Limit Formula</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>lim<sub>x&rarr;0</sub> sin x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> tan x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (1 &minus; cos x) / x<sup>2</sup></td><td>1/2</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> sin<sup>&minus;1</sup> x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> tan<sup>&minus;1</sup> x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;a</sub> (sin x &minus; sin a) / (x &minus; a)</td><td>cos a</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 4 | NDA 2018</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (tan 3x)/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Write as 3 &times; (tan 3x)/(3x). Using lim<sub>&theta;&rarr;0</sub> tan &theta; / &theta; = 1, we get 3 &times; 1 = <strong>3</strong>.</div>
+                    </div>
+
+                    <h4>Exponential &amp; Logarithmic Limits</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Limit Formula</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1) / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (a<sup>x</sup> &minus; 1) / x</td><td>ln a</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (1 + x)<sup>1/x</sup></td><td>e</td></tr>
+                            <tr><td>lim<sub>x&rarr;&infin;</sub> (1 + 1/x)<sup>x</sup></td><td>e</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> ln(1 + x) / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (e<sup>ax</sup> &minus; 1) / x</td><td>a</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 5 | NDA 2019</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (e<sup>2x</sup> &minus; 1)/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using the standard limit lim<sub>x&rarr;0</sub> (e<sup>ax</sup> &minus; 1)/x = a, we get <strong>2</strong>. Alternatively, apply L'Hopital's rule: (2e<sup>2x</sup>)/1 &rarr; 2.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Exponential Limits</div>
+                        <div class="tip-text">For limits of the form lim<sub>x&rarr;0</sub> (e<sup>ax</sup> &minus; 1)/(bx), the answer is a/b. Similarly, lim<sub>x&rarr;0</sub> (a<sup>x</sup> &minus; 1)/x = ln a. These direct formulas save 2&minus;3 steps.</div>
+                    </div>
+
+                    <h3>Series Expansions for Limits</h3>
+                    <p>Standard series expansions are powerful tools for evaluating limits, especially when L'Hopital's rule becomes tedious. These expansions represent functions as infinite polynomials around x = 0.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Function</th><th>Series Expansion (Maclaurin)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>e<sup>x</sup></td><td>1 + x + x<sup>2</sup>/2! + x<sup>3</sup>/3! + ...</td></tr>
+                            <tr><td>sin x</td><td>x &minus; x<sup>3</sup>/3! + x<sup>5</sup>/5! &minus; ...</td></tr>
+                            <tr><td>cos x</td><td>1 &minus; x<sup>2</sup>/2! + x<sup>4</sup>/4! &minus; ...</td></tr>
+                            <tr><td>tan x</td><td>x + x<sup>3</sup>/3 + 2x<sup>5</sup>/15 + ...</td></tr>
+                            <tr><td>ln(1 + x)</td><td>x &minus; x<sup>2</sup>/2 + x<sup>3</sup>/3 &minus; x<sup>4</sup>/4 + ...</td></tr>
+                            <tr><td>(1 + x)<sup>n</sup></td><td>1 + nx + n(n&minus;1)x<sup>2</sup>/2! + ...</td></tr>
+                            <tr><td>sin<sup>&minus;1</sup> x</td><td>x + x<sup>3</sup>/6 + 3x<sup>5</sup>/40 + ...</td></tr>
+                            <tr><td>tan<sup>&minus;1</sup> x</td><td>x &minus; x<sup>3</sup>/3 + x<sup>5</sup>/5 &minus; ...</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 6 | NDA Practice</div>
+                        <div class="ex-text">Evaluate using series: lim<sub>x&rarr;0</sub> (sin x &minus; x)/x<sup>3</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using sin x = x &minus; x<sup>3</sup>/3! + x<sup>5</sup>/5! &minus; ..., we have sin x &minus; x = &minus;x<sup>3</sup>/6 + x<sup>5</sup>/120 &minus; ... Dividing by x<sup>3</sup>: (sin x &minus; x)/x<sup>3</sup> = &minus;1/6 + x<sup>2</sup>/120 &minus; ... As x&rarr;0, the limit is <strong>&minus;1/6</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Series vs L'Hopital</div>
+                        <div class="tip-text">For limits involving combinations of sin, cos, e<sup>x</sup>, and ln(1+x), series expansion often gives the answer in one step compared to repeated L'Hopital. Memorise the first 2&minus;3 terms of e<sup>x</sup>, sin x, cos x, and ln(1+x).</div>
+                    </div>
+
+                    <h3>L'Hopital's Rule</h3>
+                    <p>If lim<sub>x&rarr;a</sub> f(x)/g(x) gives 0/0 or &infin;/&infin;, then <strong>lim<sub>x&rarr;a</sub> f(x)/g(x) = lim<sub>x&rarr;a</sub> f'(x)/g'(x)</strong>, provided the limit exists. The rule can be applied repeatedly until a determinate form is obtained.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Condition</th><th>Action</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0/0 form</td><td>Differentiate numerator and denominator separately</td><td>lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1)/x = lim<sub>x&rarr;0</sub> e<sup>x</sup>/1 = 1</td></tr>
+                            <tr><td>&infin;/&infin; form</td><td>Differentiate numerator and denominator separately</td><td>lim<sub>x&rarr;&infin;</sub> x/e<sup>x</sup> = lim<sub>x&rarr;&infin;</sub> 1/e<sup>x</sup> = 0</td></tr>
+                            <tr><td>0 &times; &infin; form</td><td>Rewrite as 0/0 or &infin;/&infin; first</td><td>lim<sub>x&rarr;0+</sub> x ln x = lim<sub>x&rarr;0+</sub> (ln x)/(1/x) = 0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 7 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1 &minus; x)/x<sup>2</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> This is 0/0 form. Apply L'Hopital's rule: lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1)/(2x). Still 0/0. Apply again: lim<sub>x&rarr;0</sub> e<sup>x</sup>/2 = 1/2. So the answer is <strong>1/2</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: L'Hopital Verification</div>
+                        <div class="tip-text">Before applying L'Hopital, always verify that the form is truly 0/0 or &infin;/&infin;. If not, L'Hopital gives wrong answers. In NDA exams, check by substituting the limiting value first.</div>
+                    </div>
+
+                    <h2 id="continuity">2. Continuity &amp; Differentiability</h2>
+
+                    <h3>Continuity at a Point</h3>
+                    <p>A function f(x) is <strong>continuous at x = a</strong> if lim<sub>x&rarr;a</sub> f(x) = f(a). This requires three conditions:</p>
+                    <ol>
+                        <li>f(a) is defined (a belongs to the domain)</li>
+                        <li>lim<sub>x&rarr;a</sub> f(x) exists (LHL = RHL)</li>
+                        <li>lim<sub>x&rarr;a</sub> f(x) = f(a)</li>
+                    </ol>
+                    <p>If any condition fails, f is discontinuous at x = a.</p>
+
+                    <h4>Properties of Continuous Functions</h4>
+                    <p>Continuous functions have several important properties that are frequently tested in NDA exams:</p>
+                    <ul>
+                        <li>The sum, difference, product, and quotient (with non-zero denominator) of continuous functions are continuous.</li>
+                        <li>Polynomials, trigonometric functions, exponential functions, and logarithmic functions are continuous on their domains.</li>
+                        <li>The composition of two continuous functions is continuous.</li>
+                        <li>If f is continuous on [a, b] and f(a) &middot; f(b) &lt; 0, then there exists c &isin; (a, b) such that f(c) = 0 (Intermediate Value Theorem).</li>
+                        <li>A continuous function on a closed interval attains its maximum and minimum values (Extreme Value Theorem).</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 8 | NDA 2019</div>
+                        <div class="ex-text">Check continuity of f(x) = |x &minus; 3| at x = 3.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> LHL = lim<sub>x&rarr;3<sup>&minus;</sup></sub> |x &minus; 3| = 0. RHL = lim<sub>x&rarr;3<sup>+</sup></sub> |x &minus; 3| = 0. f(3) = 0. Since LHL = RHL = f(3), f is <strong>continuous</strong> at x = 3.</div>
+                    </div>
+
+                    <h3>Types of Discontinuities</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Removable</td><td>lim<sub>x&rarr;a</sub> f(x) exists but &ne; f(a) or f(a) undefined</td><td>f(x) = (x<sup>2</sup> &minus; 1)/(x &minus; 1) at x = 1</td></tr>
+                            <tr><td>Jump</td><td>LHL and RHL exist but are not equal</td><td>f(x) = { x, x &lt; 0; x + 1, x &ge; 0 } at x = 0</td></tr>
+                            <tr><td>Infinite</td><td>At least one one-sided limit is &infin; or &minus;&infin;</td><td>f(x) = 1/x at x = 0</td></tr>
+                            <tr><td>Oscillatory</td><td>Limit does not exist due to oscillation</td><td>f(x) = sin(1/x) at x = 0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Differentiability</h3>
+                    <p>A function f is <strong>differentiable at x = a</strong> if the derivative f'(a) = lim<sub>h&rarr;0</sub> [f(a + h) &minus; f(a)]/h exists (LHD = RHD). Differentiability implies continuity, but the converse is not true.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 9 | NDA 2020</div>
+                        <div class="ex-text">Is f(x) = |x &minus; 3| differentiable at x = 3?</div>
+                        <div class="ex-soln"><strong>Solution:</strong> LHD = lim<sub>h&rarr;0<sup>&minus;</sup></sub> (|3+h&minus;3| &minus; 0)/h = lim<sub>h&rarr;0<sup>&minus;</sup></sub> |h|/h = &minus;1. RHD = lim<sub>h&rarr;0<sup>+</sup></sub> |h|/h = 1. Since LHD &ne; RHD, f is <strong>not differentiable</strong> at x = 3, though it is continuous.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Continuity vs Differentiability</div>
+                        <div class="tip-text">For NDA, remember: all differentiable functions are continuous, but not all continuous functions are differentiable. Modulus functions (|x|) and functions with sharp corners are classic examples of continuous but non-differentiable functions.</div>
+                    </div>
+
+                    <h2 id="differentiation">3. Differentiation</h2>
+
+                    <h3>Basic Rules &amp; Formulas</h3>
+                    <p>The derivative represents the rate of change. Geometrically, f'(x) is the slope of the tangent at point (x, f(x)).</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Function</th><th>Derivative</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>x<sup>n</sup></td><td>nx<sup>n&minus;1</sup></td></tr>
+                            <tr><td>e<sup>x</sup></td><td>e<sup>x</sup></td></tr>
+                            <tr><td>a<sup>x</sup></td><td>a<sup>x</sup> ln a</td></tr>
+                            <tr><td>ln x</td><td>1/x</td></tr>
+                            <tr><td>log<sub>a</sub> x</td><td>1/(x ln a)</td></tr>
+                            <tr><td>sin x</td><td>cos x</td></tr>
+                            <tr><td>cos x</td><td>&minus;sin x</td></tr>
+                            <tr><td>tan x</td><td>sec<sup>2</sup> x</td></tr>
+                            <tr><td>sec x</td><td>sec x tan x</td></tr>
+                            <tr><td>cosec x</td><td>&minus;cosec x cot x</td></tr>
+                            <tr><td>cot x</td><td>&minus;cosec<sup>2</sup> x</td></tr>
+                            <tr><td>sin<sup>&minus;1</sup> x</td><td>1/&radic;(1 &minus; x<sup>2</sup>)</td></tr>
+                            <tr><td>cos<sup>&minus;1</sup> x</td><td>&minus;1/&radic;(1 &minus; x<sup>2</sup>)</td></tr>
+                            <tr><td>tan<sup>&minus;1</sup> x</td><td>1/(1 + x<sup>2</sup>)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Chain Rule, Product Rule, Quotient Rule</h3>
+                    <p><strong>Chain Rule:</strong> If y = f(u) and u = g(x), then dy/dx = (dy/du) &times; (du/dx).</p>
+                    <p><strong>Product Rule:</strong> (uv)' = u'v + uv'.</p>
+                    <p><strong>Quotient Rule:</strong> (u/v)' = (u'v &minus; uv')/v<sup>2</sup>.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 10 | NDA 2018</div>
+                        <div class="ex-text">Differentiate y = sin(ln x) with respect to x.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using chain rule, dy/dx = cos(ln x) &times; d/dx(ln x) = <strong>cos(ln x)/x</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Chain Rule</div>
+                        <div class="tip-text">For nested functions, differentiate from outside to inside. In NDA exams, chain rule problems often involve trigonometric, exponential, and logarithmic compositions. Remember: derivative of f(g(x)) = f'(g(x)) &times; g'(x).</div>
+                    </div>
+
+                    <h3>Implicit Differentiation</h3>
+                    <p>When y cannot be expressed explicitly as a function of x, differentiate both sides of the equation with respect to x, treating y as a function of x and using the chain rule (dy/dx appears).</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 11 | NDA 2019</div>
+                        <div class="ex-text">Find dy/dx if x<sup>3</sup> + y<sup>3</sup> = 3xy.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Differentiate both sides: 3x<sup>2</sup> + 3y<sup>2</sup>(dy/dx) = 3y + 3x(dy/dx). Rearranging: 3y<sup>2</sup>(dy/dx) &minus; 3x(dy/dx) = 3y &minus; 3x<sup>2</sup>. So dy/dx = (y &minus; x<sup>2</sup>)/(y<sup>2</sup> &minus; x).</div>
+                    </div>
+
+                    <h3>Logarithmic Differentiation</h3>
+                    <p>Used when the function is of the form [f(x)]<sup>g(x)</sup> or a product/quotient of many functions. Take natural log on both sides and then differentiate.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 12 | NDA 2020</div>
+                        <div class="ex-text">Find dy/dx if y = x<sup>x</sup>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Take ln on both sides: ln y = x ln x. Differentiate: (1/y)(dy/dx) = ln x + x(1/x) = ln x + 1. So dy/dx = y(ln x + 1) = <strong>x<sup>x</sup>(ln x + 1)</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Logarithmic Differentiation</div>
+                        <div class="tip-text">For y = [f(x)]<sup>g(x)</sup>, the formula is: dy/dx = [f(x)]<sup>g(x)</sup> &times; [g'(x) ln f(x) + g(x) f'(x)/f(x)]. Memorise this to avoid re-deriving each time.</div>
+                    </div>
+
+                    <h3>Second Order Derivatives</h3>
+                    <p>The second derivative f''(x) or d<sup>2</sup>y/dx<sup>2</sup> is the derivative of the first derivative. It represents the rate of change of slope and is used to determine concavity and classify critical points.</p>
+                    <p>If f''(x) &gt; 0 on an interval, the function is <strong>concave up</strong> (holds water). If f''(x) &lt; 0, the function is <strong>concave down</strong> (spills water). Points where concavity changes are called <strong>points of inflection</strong> (f''(x) = 0).</p>
+
+                    <h3>Successive Differentiation (n<sup>th</sup> Derivatives)</h3>
+                    <p>Successive differentiation involves finding higher-order derivatives. Some standard formulas for n<sup>th</sup> derivatives are useful in NDA exams:</p>
+                    <table>
+                        <thead>
+                            <tr><th>f(x)</th><th>f<sup>(n)</sup>(x)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>x<sup>m</sup></td><td>m(m&minus;1)...(m&minus;n+1) x<sup>m&minus;n</sup></td></tr>
+                            <tr><td>e<sup>ax</sup></td><td>a<sup>n</sup> e<sup>ax</sup></td></tr>
+                            <tr><td>sin(ax + b)</td><td>a<sup>n</sup> sin(ax + b + n&pi;/2)</td></tr>
+                            <tr><td>cos(ax + b)</td><td>a<sup>n</sup> cos(ax + b + n&pi;/2)</td></tr>
+                            <tr><td>ln(ax + b)</td><td>(&minus;1)<sup>n&minus;1</sup> (n&minus;1)! a<sup>n</sup>/(ax + b)<sup>n</sup></td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 13 | NDA 2018</div>
+                        <div class="ex-text">If y = e<sup>x</sup> sin x, find d<sup>2</sup>y/dx<sup>2</sup>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> dy/dx = e<sup>x</sup> sin x + e<sup>x</sup> cos x = e<sup>x</sup>(sin x + cos x). d<sup>2</sup>y/dx<sup>2</sup> = e<sup>x</sup>(sin x + cos x) + e<sup>x</sup>(cos x &minus; sin x) = <strong>2e<sup>x</sup> cos x</strong>.</div>
+                    </div>
+
+                    <!-- course-figure:calculus-figure-2 -->
+<figure class="lesson-figure" data-figure="calculus-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Calculus Concept Flow Revision Diagram for GS1 Geography"><defs><marker id="arrowhead-lesson-calculus-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="20" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="70" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="70" dy="0">Limits</tspan></text><rect x="130" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="180" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="180" dy="0">Continuity &amp; Diff.</tspan></text><rect x="240" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="290" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="290" dy="0">Differentiation</tspan></text><rect x="350" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="400" y="166.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Applications of</tspan><tspan x="400" dy="16.25">Deriv.</tspan></text><rect x="460" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="510" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="510" dy="0">Integration</tspan></text><rect x="570" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="620" y="166.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="620" dy="0">Differential</tspan><tspan x="620" dy="16.25">Equations</tspan></text><path d="M 120 175 L 130 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 230 175 L 240 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 340 175 L 350 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 450 175 L 460 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 560 175 L 570 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/></g><g><text x="125" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="125" dy="0">→</tspan></text><text x="235" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="235" dy="0">→</tspan></text><text x="345" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="345" dy="0">→</tspan></text><text x="455" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="455" dy="0">→</tspan></text><text x="565" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="565" dy="0">→</tspan></text><text x="20" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="20" dy="0">Exam hook: L'Hôpital's rule for 0/0, ∞/∞</tspan></text><text x="20" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="20" dy="0">Key: Fundamental Theorem links differentiation &amp; integration</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Calculus Concept Flow Revision Diagram for GS1 Geography</strong> — Shows the logical progression from limits to differential equations linking core calculus ideas.
+    &middot; <a href="../../../figures/svg-calculus-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+<h2 id="applications">4. Applications of Derivatives</h2>
+
+                    <h3>Rate of Change</h3>
+                    <p>The derivative dy/dx gives the rate of change of y with respect to x. In NDA problems, this is often used with time as the independent variable: dy/dt = (dy/dx)(dx/dt). Related rates problems involve finding the rate at which one quantity changes with respect to time given the rate of another related quantity.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 14 | NDA 2019</div>
+                        <div class="ex-text">The radius of a sphere is increasing at 2 cm/s. Find the rate of increase of volume when radius = 3 cm.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> V = (4/3)&pi;r<sup>3</sup>. dV/dt = 4&pi;r<sup>2</sup> &times; dr/dt = 4&pi;(9) &times; 2 = <strong>72&pi; cm<sup>3</sup>/s</strong>.</div>
+                    </div>
+
+                    <h3>Increasing/Decreasing Functions</h3>
+                    <p>A function f(x) is <strong>increasing</strong> if f'(x) &gt; 0 and <strong>decreasing</strong> if f'(x) &lt; 0. If f'(x) = 0, the function may have a stationary point.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 15 | NDA 2020</div>
+                        <div class="ex-text">Find the interval where f(x) = x<sup>3</sup> &minus; 3x + 2 is increasing.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> f'(x) = 3x<sup>2</sup> &minus; 3 = 3(x &minus; 1)(x + 1). f'(x) &gt; 0 when x &lt; &minus;1 or x &gt; 1. So f is increasing on <strong>(&minus;&infin;, &minus;1) &cup; (1, &infin;)</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Monotonicity</div>
+                        <div class="tip-text">To quickly determine increasing/decreasing intervals, factorise f'(x) and check the sign using the number line test. For quadratic f'(x), the sign alternates between roots.</div>
+                    </div>
+
+                    <h3>Tangents &amp; Normals</h3>
+                    <p><strong>Tangent:</strong> Equation at (x<sub>0</sub>, y<sub>0</sub>) is y &minus; y<sub>0</sub> = f'(x<sub>0</sub>)(x &minus; x<sub>0</sub>). The slope of the tangent gives the instantaneous rate of change at that point.</p>
+                    <p><strong>Normal:</strong> Equation is y &minus; y<sub>0</sub> = &minus;1/f'(x<sub>0</sub>) &times; (x &minus; x<sub>0</sub>), provided f'(x<sub>0</sub>) &ne; 0. The normal is perpendicular to the tangent (product of slopes = &minus;1).</p>
+                    <p><strong>Lengths:</strong> The length of tangent = |y<sub>0</sub> &radic;(1 + (f'(x<sub>0</sub>))<sup>2</sup>)/f'(x<sub>0</sub>)|. The length of normal = |y<sub>0</sub> &radic;(1 + (f'(x<sub>0</sub>))<sup>2</sup>)|. The sub-tangent = |y<sub>0</sub>/f'(x<sub>0</sub>)|. The sub-normal = |y<sub>0</sub> f'(x<sub>0</sub>)|.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 16 | NDA 2018</div>
+                        <div class="ex-text">Find the equation of tangent to y = x<sup>2</sup> at (1, 1).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> dy/dx = 2x, so slope at (1,1) = 2. Equation: y &minus; 1 = 2(x &minus; 1) &rArr; <strong>y = 2x &minus; 1</strong>.</div>
+                    </div>
+
+                    <h3>Mean Value Theorem &amp; Rolle's Theorem</h3>
+                    <p><strong>Rolle's Theorem:</strong> If f is continuous on [a, b] and differentiable on (a, b), and f(a) = f(b), then there exists c &isin; (a, b) such that f'(c) = 0.</p>
+                    <p><strong>Lagrange's Mean Value Theorem (LMVT):</strong> If f is continuous on [a, b] and differentiable on (a, b), then there exists c &isin; (a, b) such that f'(c) = [f(b) &minus; f(a)]/(b &minus; a).</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 17 | NDA 2019</div>
+                        <div class="ex-text">Verify Rolle's Theorem for f(x) = x<sup>2</sup> &minus; 4x + 3 on [1, 3].</div>
+                        <div class="ex-soln"><strong>Solution:</strong> f(1) = 1 &minus; 4 + 3 = 0, f(3) = 9 &minus; 12 + 3 = 0. So f(1) = f(3). f'(x) = 2x &minus; 4. Setting f'(c) = 0 gives 2c &minus; 4 = 0 &rArr; c = 2 &isin; (1, 3). Hence Rolle's Theorem is verified. <strong>c = 2</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: MVT Applications</div>
+                        <div class="tip-text">In NDA exams, Rolle's Theorem is tested by verifying f(a)=f(b) and finding c where f'(c)=0. LMVT is tested by finding c such that f'(c) equals the average rate of change. Both are used to prove inequalities.</div>
+                    </div>
+
+                    <h3>Maxima &amp; Minima</h3>
+                    <p><strong>First Derivative Test:</strong> Find critical points (f'(x) = 0). If f' changes from + to &minus;, it is a local maximum; if &minus; to +, local minimum.</p>
+                    <p><strong>Second Derivative Test:</strong> At a critical point, if f''(x) &gt; 0, local minima; if f''(x) &lt; 0, local maxima; if f''(x) = 0, test fails.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Condition</th><th>Conclusion</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>f'(c) = 0 and f''(c) &gt; 0</td><td>Local minimum at x = c</td></tr>
+                            <tr><td>f'(c) = 0 and f''(c) &lt; 0</td><td>Local maximum at x = c</td></tr>
+                            <tr><td>f'(c) = 0 and f''(c) = 0</td><td>Test inconclusive (use first derivative test)</td></tr>
+                            <tr><td>f'(x) &gt; 0 on both sides of c</td><td>Point of inflection</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 18 | NDA 2020</div>
+                        <div class="ex-text">Find the local maxima/minima of f(x) = 2x<sup>3</sup> &minus; 9x<sup>2</sup> + 12x &minus; 3.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> f'(x) = 6x<sup>2</sup> &minus; 18x + 12 = 6(x<sup>2</sup> &minus; 3x + 2) = 6(x &minus; 1)(x &minus; 2). Critical points: x = 1, 2. f''(x) = 12x &minus; 18. f''(1) = &minus;6 &lt; 0 &rArr; local maximum at x = 1, f(1) = 2. f''(2) = 6 &gt; 0 &rArr; local minimum at x = 2, f(2) = 1.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Maxima/Minima</div>
+                        <div class="tip-text">For NDA objective questions, after finding critical points, instantly check f''(x) sign. If only one critical point exists and it is a maximum, it is the global maximum for the given interval. Similarly for minimum.</div>
+                    </div>
+
+                    <h3>Approximations &amp; Differentials</h3>
+                    <p>Using differentials: f(x + &Delta;x) &asymp; f(x) + f'(x)&Delta;x. This is useful for approximate calculations when &Delta;x is small. The error in approximation is proportional to (&Delta;x)<sup>2</sup>.</p>
+
+                    <p><strong>Absolute Error:</strong> |&Delta;y| &asymp; |f'(x) &Delta;x|. <strong>Relative Error:</strong> |&Delta;y/y| &asymp; |f'(x)/f(x) &Delta;x|. <strong>Percentage Error:</strong> (|&Delta;y/y|) &times; 100%.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 19 | NDA 2019</div>
+                        <div class="ex-text">Find the approximate value of &radic;25.2.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let f(x) = &radic;x, f'(x) = 1/(2&radic;x). Take x = 25, &Delta;x = 0.2. f(25.2) &asymp; f(25) + f'(25) &times; 0.2 = 5 + 1/(10) &times; 0.2 = 5 + 0.02 = <strong>5.02</strong>.</div>
+                    </div>
+
+                    <h2 id="integration">5. Integration</h2>
+
+                    <h3>Indefinite Integrals</h3>
+                    <p>Integration is the inverse process of differentiation. The indefinite integral &int; f(x) dx = F(x) + C, where F'(x) = f(x) and C is the constant of integration. Every differentiation formula gives rise to a corresponding integration formula.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Method</th><th>When to Use</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Direct Formula</td><td>Standard forms (power, trig, exponential)</td><td>&int; x<sup>2</sup> dx = x<sup>3</sup>/3 + C</td></tr>
+                            <tr><td>Substitution</td><td>Composite functions, integrand contains f'(x)</td><td>&int; 2x cos(x<sup>2</sup>) dx</td></tr>
+                            <tr><td>Integration by Parts</td><td>Product of two dissimilar functions</td><td>&int; x e<sup>x</sup> dx</td></tr>
+                            <tr><td>Partial Fractions</td><td>Rational functions P(x)/Q(x)</td><td>&int; 1/(x<sup>2</sup>&minus;4) dx</td></tr>
+                            <tr><td>Trigonometric Identities</td><td>Powers of sin, cos, tan</td><td>&int; sin<sup>2</sup>x dx = &int; (1&minus;cos 2x)/2 dx</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Basic Formulas</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Integral</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&int; x<sup>n</sup> dx</td><td>x<sup>n+1</sup>/(n+1) + C, n &ne; &minus;1</td></tr>
+                            <tr><td>&int; (1/x) dx</td><td>ln |x| + C</td></tr>
+                            <tr><td>&int; e<sup>x</sup> dx</td><td>e<sup>x</sup> + C</td></tr>
+                            <tr><td>&int; a<sup>x</sup> dx</td><td>a<sup>x</sup>/ln a + C</td></tr>
+                            <tr><td>&int; sin x dx</td><td>&minus;cos x + C</td></tr>
+                            <tr><td>&int; cos x dx</td><td>sin x + C</td></tr>
+                            <tr><td>&int; sec<sup>2</sup> x dx</td><td>tan x + C</td></tr>
+                            <tr><td>&int; cosec<sup>2</sup> x dx</td><td>&minus;cot x + C</td></tr>
+                            <tr><td>&int; sec x tan x dx</td><td>sec x + C</td></tr>
+                            <tr><td>&int; cosec x cot x dx</td><td>&minus;cosec x + C</td></tr>
+                            <tr><td>&int; 1/(1 + x<sup>2</sup>) dx</td><td>tan<sup>&minus;1</sup> x + C</td></tr>
+                            <tr><td>&int; 1/&radic;(1 &minus; x<sup>2</sup>) dx</td><td>sin<sup>&minus;1</sup> x + C</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Substitution Method</h4>
+                    <p>If the integrand contains a composite function, substitute u = g(x) so that du = g'(x) dx and the integral simplifies to &int; f(u) du. Common substitutions include u = sin x, cos x, tan x, e<sup>x</sup>, or algebraic expressions under radicals.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Integrand Contains</th><th>Substitution</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&radic;(a<sup>2</sup> &minus; x<sup>2</sup>)</td><td>x = a sin &theta;</td><td>a cos &theta; d&theta;</td></tr>
+                            <tr><td>&radic;(x<sup>2</sup> + a<sup>2</sup>)</td><td>x = a tan &theta;</td><td>a sec<sup>2</sup>&theta; d&theta;</td></tr>
+                            <tr><td>&radic;(x<sup>2</sup> &minus; a<sup>2</sup>)</td><td>x = a sec &theta;</td><td>a sec &theta; tan &theta; d&theta;</td></tr>
+                            <tr><td>a<sup>2</sup> &minus; x<sup>2</sup> in denominator</td><td>x = a sin &theta;</td><td>a cos &theta; d&theta;</td></tr>
+                            <tr><td>a<sup>2</sup> + x<sup>2</sup> in denominator</td><td>x = a tan &theta;</td><td>a sec<sup>2</sup>&theta; d&theta;</td></tr>
+                            <tr><td>&radic;(a &minus; x)/(a + x)</td><td>x = a cos 2&theta;</td><td>Trigonometric simplification</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 20 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: &int; 2x cos(x<sup>2</sup>) dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let u = x<sup>2</sup>, du = 2x dx. The integral becomes &int; cos u du = sin u + C = <strong>sin(x<sup>2</sup>) + C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Substitution Recognition</div>
+                        <div class="tip-text">Look for integrands where one part is the derivative of another. For example, if the integrand contains f'(x) &times; g(f(x)), substitute u = f(x). Common patterns: x cos(x<sup>2</sup>), e<sup>x</sup> sin(e<sup>x</sup>), etc.</div>
+                    </div>
+
+                    <h4>Integration by Parts</h4>
+                    <p>Using the formula: &int; u dv = uv &minus; &int; v du. Choose u and dv using the <strong>LIATE</strong> rule (Logarithmic, Inverse trig, Algebraic, Trigonometric, Exponential) where u is chosen from the first category.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 21 | NDA 2019</div>
+                        <div class="ex-text">Evaluate: &int; x e<sup>x</sup> dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using integration by parts with u = x, dv = e<sup>x</sup>dx: du = dx, v = e<sup>x</sup>. &int; x e<sup>x</sup> dx = x e<sup>x</sup> &minus; &int; e<sup>x</sup> dx = <strong>x e<sup>x</sup> &minus; e<sup>x</sup> + C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: LIATE Rule</div>
+                        <div class="tip-text">LIATE gives the priority for u in integration by parts: Logarithmic &gt; Inverse trig &gt; Algebraic &gt; Trigonometric &gt; Exponential. The remaining factor becomes dv. For products like x<sup>n</sup> e<sup>x</sup>, choose u = x<sup>n</sup>.</div>
+                    </div>
+
+                    <h4>Partial Fractions</h4>
+                    <p>Used to integrate rational functions P(x)/Q(x). Decompose the fraction into simpler terms based on the factors of Q(x).</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Factor in Denominator</th><th>Partial Fraction Form</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>(ax + b)</td><td>A/(ax + b)</td></tr>
+                            <tr><td>(ax + b)<sup>n</sup></td><td>A<sub>1</sub>/(ax+b) + A<sub>2</sub>/(ax+b)<sup>2</sup> + ... + A<sub>n</sub>/(ax+b)<sup>n</sup></td></tr>
+                            <tr><td>ax<sup>2</sup> + bx + c (non-repeated)</td><td>(Ax + B)/(ax<sup>2</sup> + bx + c)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 22 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: &int; 1/(x<sup>2</sup> &minus; 4) dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using partial fractions: 1/(x<sup>2</sup> &minus; 4) = 1/[(x&minus;2)(x+2)] = (1/4)[1/(x&minus;2) &minus; 1/(x+2)]. Integrating: (1/4)[ln|x&minus;2| &minus; ln|x+2|] + C = <strong>(1/4) ln|(x&minus;2)/(x+2)| + C</strong>.</div>
+                    </div>
+
+                    <h4>Integration Using Trigonometric Identities</h4>
+                    <p>Trigonometric identities simplify integrals involving products of sine and cosine, powers of trigonometric functions, and rational trigonometric expressions.</p>
+                    <ul>
+                        <li>sin<sup>2</sup>x = (1 &minus; cos 2x)/2, cos<sup>2</sup>x = (1 + cos 2x)/2</li>
+                        <li>sin 3x = 3 sin x &minus; 4 sin<sup>3</sup>x, cos 3x = 4 cos<sup>3</sup>x &minus; 3 cos x</li>
+                        <li>2 sin A cos B = sin(A+B) + sin(A&minus;B)</li>
+                        <li>2 cos A cos B = cos(A+B) + cos(A&minus;B)</li>
+                        <li>2 sin A sin B = cos(A&minus;B) &minus; cos(A+B)</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 23 | NDA Practice</div>
+                        <div class="ex-text">Evaluate: &int; sin 3x cos 2x dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using 2 sin A cos B = sin(A+B) + sin(A&minus;B): &int; sin 3x cos 2x dx = (1/2) &int; (sin 5x + sin x) dx = (1/2)[&minus;cos 5x/5 &minus; cos x] + C = <strong>&minus;cos 5x/10 &minus; cos x/2 + C</strong>.</div>
+                    </div>
+
+                    <h4>Integration of Special Functions</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Integral</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&int; 1/(x<sup>2</sup> + a<sup>2</sup>) dx</td><td>(1/a) tan<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; 1/(x<sup>2</sup> &minus; a<sup>2</sup>) dx</td><td>(1/2a) ln |(x&minus;a)/(x+a)| + C</td></tr>
+                            <tr><td>&int; 1/&radic;(a<sup>2</sup> &minus; x<sup>2</sup>) dx</td><td>sin<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; 1/&radic;(x<sup>2</sup> + a<sup>2</sup>) dx</td><td>sinh<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; 1/&radic;(x<sup>2</sup> &minus; a<sup>2</sup>) dx</td><td>ln |x + &radic;(x<sup>2</sup> &minus; a<sup>2</sup>)| + C</td></tr>
+                            <tr><td>&int; &radic;(a<sup>2</sup> &minus; x<sup>2</sup>) dx</td><td>(x/2)&radic;(a<sup>2</sup>&minus;x<sup>2</sup>) + (a<sup>2</sup>/2) sin<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; tan x dx</td><td>ln |sec x| + C</td></tr>
+                            <tr><td>&int; cot x dx</td><td>ln |sin x| + C</td></tr>
+                            <tr><td>&int; sec x dx</td><td>ln |sec x + tan x| + C</td></tr>
+                            <tr><td>&int; cosec x dx</td><td>ln |cosec x &minus; cot x| + C</td></tr>
+                            <tr><td>&int; e<sup>ax</sup> sin(bx) dx</td><td>e<sup>ax</sup>(a sin bx &minus; b cos bx)/(a<sup>2</sup> + b<sup>2</sup>) + C</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Integration Speed Tricks</div>
+                        <div class="tip-text">For &int; e<sup>ax</sup> sin(bx) dx and &int; e<sup>ax</sup> cos(bx) dx, use the direct formula: e<sup>ax</sup>(a sin bx &minus; b cos bx)/(a<sup>2</sup>+b<sup>2</sup>) and e<sup>ax</sup>(a cos bx + b sin bx)/(a<sup>2</sup>+b<sup>2</sup>) respectively. No need to integrate by parts twice.</div>
+                    </div>
+
+                    <h4>Reduction Formulas (for NDA Advanced Problems)</h4>
+                    <p>Reduction formulas express an integral involving powers of functions in terms of lower powers. These are useful for integrals like &int; sin<sup>n</sup>x dx and &int; cos<sup>n</sup>x dx.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Reduction Formula</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&int; sin<sup>n</sup>x dx</td><td>&minus;(1/n) sin<sup>n&minus;1</sup>x cos x + ((n&minus;1)/n) &int; sin<sup>n&minus;2</sup>x dx</td></tr>
+                            <tr><td>&int; cos<sup>n</sup>x dx</td><td>(1/n) cos<sup>n&minus;1</sup>x sin x + ((n&minus;1)/n) &int; cos<sup>n&minus;2</sup>x dx</td></tr>
+                            <tr><td>&int; tan<sup>n</sup>x dx</td><td>tan<sup>n&minus;1</sup>x/(n&minus;1) &minus; &int; tan<sup>n&minus;2</sup>x dx</td></tr>
+                            <tr><td>&int; sec<sup>n</sup>x dx</td><td>(1/(n&minus;1)) sec<sup>n&minus;2</sup>x tan x + ((n&minus;2)/(n&minus;1)) &int; sec<sup>n&minus;2</sup>x dx</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 24 | NDA Practice</div>
+                        <div class="ex-text">Use the reduction formula to find &int; sin<sup>2</sup>x dx.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using the reduction formula with n=2: &int; sin<sup>2</sup>x dx = &minus;(1/2) sin x cos x + (1/2) &int; sin<sup>0</sup>x dx = &minus;(1/2) sin x cos x + x/2 + C = <strong>(x &minus; sin x cos x)/2 + C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Even Powers of sin/cos</div>
+                        <div class="tip-text">For sin<sup>2</sup>x and cos<sup>2</sup>x, use the double-angle identities directly: sin<sup>2</sup>x = (1&minus;cos 2x)/2 and cos<sup>2</sup>x = (1+cos 2x)/2. This is faster than the reduction formula for n=2.</div>
+                    </div>
+
+                    <h3>Definite Integrals</h3>
+                    <p>The definite integral &int;<sub>a</sub><sup>b</sup> f(x) dx = F(b) &minus; F(a), where F'(x) = f(x). It represents the signed area under the curve y = f(x) from x = a to x = b.</p>
+
+                    <h4>Properties of Definite Integrals</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Property</th><th>Formula</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Reversal of limits</td><td>&int;<sub>a</sub><sup>b</sup> f(x) dx = &minus;&int;<sub>b</sub><sup>a</sup> f(x) dx</td></tr>
+                            <tr><td>Zero width</td><td>&int;<sub>a</sub><sup>a</sup> f(x) dx = 0</td></tr>
+                            <tr><td>Additivity</td><td>&int;<sub>a</sub><sup>b</sup> f(x) dx = &int;<sub>a</sub><sup>c</sup> f(x) dx + &int;<sub>c</sub><sup>b</sup> f(x) dx</td></tr>
+                            <tr><td>King's property</td><td>&int;<sub>a</sub><sup>b</sup> f(x) dx = &int;<sub>a</sub><sup>b</sup> f(a + b &minus; x) dx</td></tr>
+                            <tr><td>Odd function</td><td>&int;<sub>&minus;a</sub><sup>a</sup> f(x) dx = 0 if f is odd</td></tr>
+                            <tr><td>Even function</td><td>&int;<sub>&minus;a</sub><sup>a</sup> f(x) dx = 2 &int;<sub>0</sub><sup>a</sup> f(x) dx if f is even</td></tr>
+                            <tr><td>Periodic function</td><td>&int;<sub>0</sub><sup>nT</sup> f(x) dx = n &int;<sub>0</sub><sup>T</sup> f(x) dx if period = T</td></tr>
+                            <tr><td>I = &int;<sub>a</sub><sup>b</sup> f(x) dx = &int;<sub>a</sub><sup>b</sup> f(a+b&minus;x) dx</td><td>Adding: 2I = &int;<sub>a</sub><sup>b</sup> [f(x)+f(a+b&minus;x)] dx</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 25 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: &int;<sub>0</sub><sup>&pi;/2</sup> sin x/(sin x + cos x) dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let I = &int;<sub>0</sub><sup>&pi;/2</sup> sin x/(sin x + cos x) dx. Using King's property: I = &int;<sub>0</sub><sup>&pi;/2</sup> cos x/(cos x + sin x) dx. Adding: 2I = &int;<sub>0</sub><sup>&pi;/2</sup> 1 dx = &pi;/2. So I = <strong>&pi;/4</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: King's Property</div>
+                        <div class="tip-text">For definite integrals with limits a and b, replace x by a+b&minus;x and add the two integrals. This is a powerful trick for NDA problems involving sin and cos ratios.</div>
+                    </div>
+
+                    <h4>Inequalities &amp; Estimation of Definite Integrals</h4>
+                    <p>Several important inequalities help estimate definite integrals without evaluating them exactly:</p>
+                    <ul>
+                        <li>If m &le; f(x) &le; M on [a, b], then m(b &minus; a) &le; &int;<sub>a</sub><sup>b</sup> f(x) dx &le; M(b &minus; a).</li>
+                        <li><strong>Cauchy-Schwarz Inequality:</strong> (&int;<sub>a</sub><sup>b</sup> f(x)g(x) dx)<sup>2</sup> &le; &int;<sub>a</sub><sup>b</sup> [f(x)]<sup>2</sup> dx &middot; &int;<sub>a</sub><sup>b</sup> [g(x)]<sup>2</sup> dx.</li>
+                        <li><strong>Triangle Inequality:</strong> |&int;<sub>a</sub><sup>b</sup> f(x) dx| &le; &int;<sub>a</sub><sup>b</sup> |f(x)| dx.</li>
+                        <li><strong>Mean Value Theorem for Integrals:</strong> There exists c &isin; [a, b] such that &int;<sub>a</sub><sup>b</sup> f(x) dx = f(c)(b &minus; a).</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 26 | NDA Practice</div>
+                        <div class="ex-text">Find the average value of f(x) = x<sup>2</sup> on [0, 2].</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Average value = (1/(b&minus;a)) &int;<sub>a</sub><sup>b</sup> f(x) dx = (1/2) &int;<sub>0</sub><sup>2</sup> x<sup>2</sup> dx = (1/2)[x<sup>3</sup>/3]<sub>0</sub><sup>2</sup> = (1/2)(8/3) = <strong>4/3</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Average Value</div>
+                        <div class="tip-text">Average value of a function on [a, b] is (1/(b&minus;a)) times the definite integral. For NDA problems asking "average value", use this formula directly. Common functions have simple averages.</div>
+                    </div>
+
+                    <h4>Area Under Curves</h4>
+                    <p>The area bounded by y = f(x), x-axis, x = a, x = b is given by &int;<sub>a</sub><sup>b</sup> |f(x)| dx. The area between two curves y = f(x) and y = g(x) is &int;<sub>a</sub><sup>b</sup> |f(x) &minus; g(x)| dx.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 27 | NDA 2018</div>
+                        <div class="ex-text">Find the area bounded by the curves y = x<sup>2</sup> and y = 2x.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Intersection: x<sup>2</sup> = 2x &rArr; x<sup>2</sup> &minus; 2x = 0 &rArr; x(x &minus; 2) = 0, so x = 0, 2. Area = &int;<sub>0</sub><sup>2</sup> (2x &minus; x<sup>2</sup>) dx = [x<sup>2</sup> &minus; x<sup>3</sup>/3]<sub>0</sub><sup>2</sup> = (4 &minus; 8/3) &minus; (0) = <strong>4/3 sq. units</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Area Between Curves</div>
+                        <div class="tip-text">Quickly identify the upper and lower curves by testing a point between intersection points. The upper curve minus lower curve gives the positive integrand. Common NDA areas: parabola &minus; line, circle &minus; parabola.</div>
+                    </div>
+
+                    <h2 id="differential-equations">6. Differential Equations</h2>
+<!-- course-figure:calculus-figure -->
+<figure class="lesson-figure" data-figure="calculus-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Calculus Concept Flow Revision Diagram for GS1 Geography"><defs><marker id="arrowhead-lesson-calculus-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="80" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="80" dy="0">Limits</tspan></text><rect x="150" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="200" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="200" dy="0">Continuity &amp; Diff</tspan></text><rect x="270" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="320" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="320" dy="0">Differentiation</tspan></text><rect x="390" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="440" y="171.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="440" dy="0">Applications of</tspan><tspan x="440" dy="16.25">Deriv</tspan></text><rect x="510" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="560" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="560" dy="0">Integration</tspan></text><rect x="630" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="680" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="680" dy="0">Differential Eqns</tspan></text><path d="M 130 180 L 150 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 250 180 L 270 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 370 180 L 390 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 490 180 L 510 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 610 180 L 630 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/></g><g><text x="140" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">defines</tspan></text><text x="260" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="260" dy="0">enables</tspan></text><text x="380" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">applies</tspan></text><text x="500" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="500" dy="0">integrates</tspan></text><text x="620" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="620" dy="0">models</tspan></text><text x="30" y="50" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 12 – ε‑δ limit definition</tspan></text><text x="30" y="80" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 45 – Fundamental Theorem of Calculus</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Calculus Concept Flow Revision Diagram for GS1 Geography</strong> — Shows the logical progression from limits to differential equations in calculus.
+    &middot; <a href="../../../figures/svg-calculus-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+
+
+                    <h3>Order &amp; Degree</h3>
+                    <p><strong>Order</strong> is the highest derivative present. <strong>Degree</strong> is the power of the highest derivative after removing radicals and fractions. A differential equation is <strong>linear</strong> if the dependent variable and its derivatives appear in the first degree. If the DE involves products or powers of the dependent variable or its derivatives, it is non-linear.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 28 | NDA 2019</div>
+                        <div class="ex-text">Find the order and degree of (d<sup>2</sup>y/dx<sup>2</sup>)<sup>3</sup> + (dy/dx)<sup>2</sup> + y = 0.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Highest derivative is d<sup>2</sup>y/dx<sup>2</sup> (order 2). Its power is 3 (degree 3). There are no radicals or fractions. So <strong>order = 2, degree = 3</strong>.</div>
+                    </div>
+
+                    <h3>Variable Separable</h3>
+                    <p>A DE of the form dy/dx = f(x)g(y) can be solved by separating variables: &int; dy/g(y) = &int; f(x) dx.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 29 | NDA 2020</div>
+                        <div class="ex-text">Solve: dy/dx = y/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Separate variables: dy/y = dx/x. Integrate: ln|y| = ln|x| + C &rArr; ln|y| = ln|x| + ln K &rArr; y = Kx. So <strong>y = Cx</strong>, where C is a constant.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Variable Separable</div>
+                        <div class="tip-text">In NDA exams, variable separable DEs often come in the form dy/dx = f(x)/g(y). Rearrange to g(y) dy = f(x) dx and integrate directly. Always add the constant of integration on one side.</div>
+                    </div>
+
+                    <h3>Homogeneous DE</h3>
+                    <p>A DE of the form dy/dx = F(y/x) is homogeneous. Substitute y = vx, then dy/dx = v + x(dv/dx) to convert it to a variable separable equation.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 30 | NDA 2018</div>
+                        <div class="ex-text">Solve: (x<sup>2</sup> + y<sup>2</sup>) dx = 2xy dy</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Rewrite as dy/dx = (x<sup>2</sup> + y<sup>2</sup>)/(2xy). Divide numerator and denominator by x<sup>2</sup>: dy/dx = (1 + (y/x)<sup>2</sup>)/(2(y/x)). Substitute y = vx: v + x(dv/dx) = (1 + v<sup>2</sup>)/(2v). Simplify: x(dv/dx) = (1 + v<sup>2</sup>)/(2v) &minus; v = (1 &minus; v<sup>2</sup>)/(2v). Separate: (2v/(1&minus;v<sup>2</sup>)) dv = dx/x. Integrate: &minus;ln|1&minus;v<sup>2</sup>| = ln|x| + C &rArr; 1/(1&minus;v<sup>2</sup>) = Kx &rArr; <strong>x<sup>2</sup> &minus; y<sup>2</sup> = Cx</strong>.</div>
+                    </div>
+
+                    <h3>Linear DE</h3>
+                    <p>A first-order linear DE is of the form dy/dx + P(x)y = Q(x). The integrating factor (IF) is e<sup>&int; P dx</sup>. The solution is y(IF) = &int; Q(IF) dx + C. Linear DEs appear frequently in NDA exams and can be identified by the dependent variable y and its derivative dy/dx appearing only in the first degree without any product terms.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 31 | NDA 2020</div>
+                        <div class="ex-text">Solve: dy/dx + (2/x)y = x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Here P = 2/x, Q = x. IF = e<sup>&int; (2/x) dx</sup> = e<sup>2 ln x</sup> = x<sup>2</sup>. Solution: y &times; x<sup>2</sup> = &int; x &times; x<sup>2</sup> dx = &int; x<sup>3</sup> dx = x<sup>4</sup>/4 + C. So <strong>y = x<sup>2</sup>/4 + C/x<sup>2</sup></strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Linear DE</div>
+                        <div class="tip-text">The integrating factor IF = e<sup>&int; P dx</sup>. Once found, the solution is always y(IF) = &int; Q(IF) dx + C. For NDA, common P forms are 2/x, tan x, cot x, etc. Memorise: e<sup>&int; (1/x) dx</sup> = x, e<sup>&int; (2/x) dx</sup> = x<sup>2</sup>.</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr><th>Type of DE</th><th>Standard Form</th><th>Solution Method</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Variable Separable</td><td>dy/dx = f(x)g(y)</td><td>&int; dy/g(y) = &int; f(x) dx</td><td>dy/dx = xy</td></tr>
+                            <tr><td>Homogeneous</td><td>dy/dx = F(y/x)</td><td>y = vx, separate variables</td><td>(x+y) dx = x dy</td></tr>
+                            <tr><td>Linear (first order)</td><td>dy/dx + Py = Q</td><td>IF = e<sup>&int; P dx</sup></td><td>dy/dx + y = x</td></tr>
+                            <tr><td>Bernoulli</td><td>dy/dx + Py = Qy<sup>n</sup></td><td>Substitute v = y<sup>1&minus;n</sup></td><td>dy/dx + y = xy<sup>2</sup></td></tr>
+                            <tr><td>Exact</td><td>M dx + N dy = 0</td><td>&part;M/&part;y = &part;N/&part;x</td><td>(y)dx + (x)dy = 0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 32 | NDA 2019</div>
+                        <div class="ex-text">Solve the linear DE: dy/dx + y tan x = sec x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> P = tan x, Q = sec x. IF = e<sup>&int; tan x dx</sup> = e<sup>ln|sec x|</sup> = sec x. Solution: y sec x = &int; sec x &times; sec x dx = &int; sec<sup>2</sup> x dx = tan x + C. So <strong>y = cos x (tan x + C) = sin x + C cos x</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Quick DE Identification</div>
+                        <div class="tip-text">In the NDA exam, quickly identify the type of DE: if variables separate easily, it is variable separable; if dy/dx = f(y/x), it is homogeneous; if dy/dx + Py = Q, it is linear. This saves precious time.</div>
+                    </div>
+
+                    <h3>Bernoulli's Differential Equation</h3>
+                    <p>A Bernoulli DE has the form dy/dx + P(x)y = Q(x)y<sup>n</sup> where n &ne; 0, 1. To solve, substitute v = y<sup>1&minus;n</sup>. This reduces it to a linear DE in v.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 33 | NDA Practice</div>
+                        <div class="ex-text">Solve: dy/dx + y = xy<sup>2</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> Here n = 2. Substitute v = y<sup>1&minus;2</sup> = y<sup>&minus;1</sup>. Then dv/dx = &minus;y<sup>&minus;2</sup> dy/dx. Multiply the original DE by &minus;y<sup>&minus;2</sup>: &minus;y<sup>&minus;2</sup> dy/dx &minus; y<sup>&minus;1</sup> = &minus;x. This gives dv/dx &minus; v = &minus;x. This is linear in v. P = &minus;1, Q = &minus;x. IF = e<sup>&int; &minus;1 dx</sup> = e<sup>&minus;x</sup>. Solution: v e<sup>&minus;x</sup> = &int; &minus;x e<sup>&minus;x</sup> dx = x e<sup>&minus;x</sup> + e<sup>&minus;x</sup> + C. So v = x + 1 + Ce<sup>x</sup>. Substituting back: 1/y = x + 1 + Ce<sup>x</sup>. Hence <strong>y = 1/(x + 1 + Ce<sup>x</sup>)</strong>.</div>
+                    </div>
+
+                    <h3>Exact Differential Equations</h3>
+                    <p>A DE of the form M(x,y) dx + N(x,y) dy = 0 is exact if &part;M/&part;y = &part;N/&part;x. The solution is &int; M dx + &int; (terms of N not containing x) dy = C.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 34 | NDA Practice</div>
+                        <div class="ex-text">Solve: (2xy + y) dx + (x<sup>2</sup> + x) dy = 0</div>
+                        <div class="ex-soln"><strong>Solution:</strong> M = 2xy + y, N = x<sup>2</sup> + x. &part;M/&part;y = 2x + 1, &part;N/&part;x = 2x + 1. Since they are equal, the DE is exact. Solution: &int; M dx = &int; (2xy + y) dx = x<sup>2</sup>y + xy + f(y). Then &part;/&part;y of this = x<sup>2</sup> + x + f'(y) = N = x<sup>2</sup> + x. So f'(y) = 0 &rArr; f(y) = C. Hence <strong>x<sup>2</sup>y + xy = C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Exact DE Check</div>
+                        <div class="tip-text">To quickly check if a DE is exact, compute &part;M/&part;y and &part;N/&part;x. If equal, it is exact. The solution is simply &int; M dx + &int; (N &minus; &part;/&part;y &int; M dx) dy = C.</div>
+                    </div>
+
+                    <h3>Applications of Differential Equations</h3>
+                    <p>Differential equations model real-world phenomena including growth, decay, cooling, and motion. In NDA exams, application problems often involve Newton's Law of Cooling, population growth, and radioactive decay.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 35 | NDA 2020</div>
+                        <div class="ex-text">The rate of decay of a radioactive substance is proportional to its mass. If half-life is 10 years, find the fraction remaining after 20 years.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let dm/dt = &minus;km. Then dm/m = &minus;k dt. Integrating: ln m = &minus;kt + C. m = m<sub>0</sub> e<sup>&minus;kt</sup>. Half-life means m = m<sub>0</sub>/2 when t = 10. So 1/2 = e<sup>&minus;10k</sup> &rArr; k = (ln 2)/10. After 20 years: m = m<sub>0</sub> e<sup>&minus;20(ln 2)/10</sup> = m<sub>0</sub> e<sup>&minus;2 ln 2</sup> = m<sub>0</sub>/4. So <strong>1/4 of the original mass remains</strong>.</div>
+                    </div>
+                <!-- course-addon:start -->
+<h3>Higher-Order Derivatives and Taylor Polynomials</h3>
+<p>The first derivative gives the instantaneous rate of change. The second derivative measures how that rate itself changes — the curvature of the graph. In physics, the second derivative of position with respect to time is acceleration. In economics, the second derivative of a cost function indicates whether marginal cost is increasing or decreasing. Higher‑order derivatives are obtained by repeated differentiation: the n‑th derivative is denoted f⁽ⁿ⁾(x) or dⁿy/dxⁿ. When a function is infinitely differentiable at a point a, its Taylor polynomial of degree n centered at a is</p>
+<p>Pₙ(x) = f(a) + f′(a)(x−a) + f″(a)(x−a)²/2! + … + f⁽ⁿ⁾(a)(x−a)ⁿ/n!</p>
+<p>If the remainder term tends to zero as n → ∞, the infinite series becomes the Taylor series, which equals the function on its interval of convergence. The Maclaurin series is the special case a = 0. Classic examples: eˣ = Σ xⁿ/n!, sin x = Σ (−1)ⁿ x²ⁿ⁺¹/(2n+1)!, cos x = Σ (−1)ⁿ x²ⁿ/(2n)!. These series are derived by repeatedly differentiating the elementary functions and evaluating at zero. The radius of convergence can be found with the ratio test: for a series Σ cₙ(x−a)ⁿ, the series converges when lim |cₙ₊₁/cₙ|·|x−a| < 1.</p>
+<p>Applications include approximating transcendental functions, solving differential equations by series methods, and estimating errors via the Lagrange remainder Rₙ(x) = f⁽ⁿ⁺¹⁾(ξ)(x−a)ⁿ⁺¹/(n+1)! for some ξ between a and x. In numerical analysis, truncating the Taylor polynomial yields algorithms for calculators and computers. Understanding the pattern of derivatives — for instance, the cyclic derivatives of sin and cos — allows rapid construction of series without memorising each coefficient.</p>
+
+<h3>Improper Integrals and Convergence Criteria</h3>
+<p>An improper integral extends the definite integral to unbounded intervals or integrands with vertical asymptotes. There are two types: Type I integrates over an infinite interval, e.g. ∫₁^∞ 1/x² dx = lim<sub>b→∞</sub> ∫₁^b 1/x² dx = 1. Type II integrates a function that becomes infinite at an interior point, e.g. ∫₀¹ 1/√x dx = lim<sub>ε→0⁺</sub> ∫_ε¹ x<sup>−1/2</sup> dx = 2. Convergence means the limit exists and is finite; otherwise the integral diverges.</p>
+<p>Comparison tests are the primary tools. If 0 ≤ f(x) ≤ g(x) on [a,∞) and ∫ₐ^∞ g(x) dx converges, then ∫ₐ^∞ f(x) dx also converges. Conversely, if ∫ₐ^∞ f(x) dx diverges, then ∫ₐ^∞ g(x) dx diverges. The p‑integral ∫₁^∞ 1/x^p dx converges iff p > 1; ∫₀¹ 1/x^p dx converges iff p < 1. The limit comparison test uses lim<sub>x→∞</sub> f(x)/g(x) = L with 0 < L < ∞ to transfer convergence behaviour.</p>
+<p>Absolute convergence of an improper integral ∫ f(x) dx means ∫ |f(x)| dx converges. If an integral converges absolutely, it converges. Conditional convergence occurs when ∫ f(x) dx converges but ∫ |f(x)| dx diverges; the classic example is ∫₁^∞ sin x / x dx. The Dirichlet test and the alternating series integral analogue handle such cases. In probability theory, the Gaussian integral ∫<sub>−∞</sub><sup>∞</sup> e<sup>−x²</sup> dx = √π is evaluated by squaring the integral and switching to polar coordinates, a technique that also appears in the evaluation of the Gamma function Γ(z) = ∫₀^∞ t<sup>z−1</sup> e<sup>−t</sup> dt for Re(z) > 0.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Convergence of an Improper Integral</div>
+<div class="ex-text">Determine whether the integral ∫₂^∞ (ln x) / (x²) dx converges or diverges.</div>
+<div class="ex-soln">Compare with the p‑integral ∫₂^∞ 1/x<sup>3/2</sup> dx. For large x, ln x grows slower than any positive power of x, so there exists M such that ln x ≤ x<sup>1/4</sup> for x ≥ M. Then (ln x)/x² ≤ x<sup>1/4</sup>/x² = 1/x<sup>7/4</sup>. Since 7/4 > 1, the comparison integral converges. By the comparison test, the given integral converges. Alternatively, evaluate directly: let u = ln x, dv = x<sup>−2</sup> dx; integration by parts yields a finite limit as the upper bound tends to infinity.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When faced with an improper integral, first identify the type (infinite limit or singularity). Apply the p‑integral benchmark before attempting integration. If the integrand contains a logarithm or trigonometric factor, use limit comparison with a suitable power of x. Remember that absolute convergence guarantees convergence, but conditional convergence requires a separate test.</div>
+</div>
+
+<h3>Modeling with First‑Order Differential Equations</h3>
+<p>A first‑order differential equation relates a function y(x) to its derivative y′. The general form is dy/dx = f(x, y). Separable equations can be written as g(y) dy = h(x) dx and solved by direct integration. Linear equations have the form dy/dx + P(x) y = Q(x); the integrating factor μ(x) = exp(∫ P(x) dx) transforms the left side into d(μ y)/dx, yielding y = (1/μ) ∫ μ Q dx + C/μ.</p>
+<p>Exact equations satisfy M(x, y) dx + N(x, y) dy = 0 with ∂M/∂y = ∂N/∂x; then a potential function ψ(x, y) exists such that dψ = 0, giving the implicit solution ψ(x, y) = C. If the equation is not exact, an integrating factor depending only on x or only on y may restore exactness.</p>
+<p>Applications: exponential growth and decay (dy/dt = ky), Newton’s law of cooling (dT/dt = −k(T−Tₐ)), logistic population model (dP/dt = rP(1−P/K)), and mixing problems where the rate of change of solute equals inflow concentration times inflow rate minus outflow concentration times outflow rate. The logistic equation is separable; its solution P(t) = K / (1 + ((K−P₀)/P₀) e<sup>−rt</sup>) shows the characteristic S‑shaped curve. Phase line analysis of autonomous equations dy/dt = f(y) identifies equilibrium points (f(y)=0) and their stability by the sign of f′ at the equilibrium.</p>
+<p>Numerical methods such as Euler’s method (y<sub>n+1</sub> = y_n + h f(x_n, y_n)) and the improved Runge‑Kutta (RK4) scheme provide approximate solutions when analytic integration is impossible. Error analysis shows Euler’s method has global truncation error O(h), while RK4 achieves O(h⁴). Understanding the qualitative behaviour — direction fields, isoclines, and bifurcations — is often more valuable than a closed‑form expression.</p>
+
+<h3>Area Between Curves and Volumes of Revolution</h3>
+<p>The area between two curves y = f(x) and y = g(x) on [a, b] where f(x) ≥ g(x) is ∫ₐᵇ (f(x) − g(x)) dx. If the curves intersect, split the interval at the intersection points and integrate the absolute difference. For regions better described horizontally, integrate with respect to y: ∫<sub>c</sub><sup>d</sup> (x_right(y) − x_left(y)) dy.</p>
+<p>Volumes of solids generated by revolving a plane region about an axis are computed by the disk/washer method or the cylindrical shell method. Revolving about the x‑axis: disk volume = π ∫ₐᵇ [R(x)]² dx where R(x) is the outer radius; washer volume = π ∫ₐᵇ ([R_out(x)]² − [R_in(x)]²) dx. Revolving about the y‑axis: shell volume = 2π ∫ₐᵇ x·h(x) dx where h(x) is the height of the shell. Choosing the method that yields a simpler integral is a key skill.</p>
+<p>Pappus’s centroid theorems provide shortcuts: the volume of a solid of revolution equals the product of the area of the generating region and the distance traveled by its centroid (V = A·2π·d). The surface area of a surface of revolution about the x‑axis is S = 2π ∫ₐᵇ y √(1 + (dy/dx)²) dx. These formulas appear in engineering (tank design) and physics (moment of inertia). When the region is bounded by parametric curves x = x(t), y = y(t), the area is ∫ y(t) x′(t) dt and the volume about the x‑axis is π ∫ y(t)² x′(t) dt.</p>
+
+<h3>Parametric and Polar Integration Techniques</h3>
+<p>Parametric curves are given by x = f(t), y = g(t) on an interval α ≤ t ≤ β. The derivative dy/dx = (dy/dt)/(dx/dt) provided dx/dt ≠ 0. The arc length is L = ∫_α^β √((dx/dt)² + (dy/dt)²) dt. The area under a parametric curve (above the x‑axis) is A = ∫_α^β y(t) x′(t) dt. For a closed parametric curve traced once counter‑clockwise, the enclosed area is A = ½ ∮ (x dy − y dx) = ½ ∫_α^β (x(t) y′(t) − y(t) x′(t)) dt.</p>
+<p>Polar coordinates (r, θ) relate to Cartesian by x = r cos θ, y = r sin θ. A curve r = f(θ) has area swept from θ = α to β: A = ½ ∫_α^β [f(θ)]² dθ. The arc length in polar form is L = ∫_α^β √(r² + (dr/dθ)²) dθ. The slope of the tangent line is dy/dx = (r′ sin θ + r cos θ) / (r′ cos θ − r sin θ). Common polar curves include circles r = a, cardioids r = a(1 + cos θ), limaçons r = a + b cos θ, and roses r = a cos(kθ). The number of petals of a rose is k if k is odd, 2k if k is even.</p>
+<p>Converting between parametric, polar, and Cartesian forms often simplifies integration. For example, the cycloid x = a(t − sin t), y = a(1 − cos t) has area under one arch = 3πa², found by parametric integration. The Gaussian integral can also be evaluated by switching to polar coordinates in the double integral ∬ e<sup>−(x²+y²)</sup> dx dy. Mastery of these coordinate systems expands the toolbox for tackling integrals that are intractable in rectangular form.</p>
+
+<ul>
+<li>Confusing the order of subtraction in area between curves when the top function changes across the interval.</li>
+<li>Applying the disk method when the axis of revolution is not a boundary of the region, leading to an incorrect radius.</li>
+<li>Forgetting to check the condition dx/dt ≠ 0 before using dy/dx = (dy/dt)/(dx/dt) for parametric curves.</li>
+<li>Using the polar area formula ½∫ r² dθ without verifying that the curve does not cross the pole within the interval, which would double‑count area.</li>
+<li>Neglecting the absolute value in the comparison test for improper integrals, causing an incorrect conclusion about convergence.</li>
+<li>Assuming that a Taylor polynomial of degree n approximates the function equally well everywhere; the error grows with distance from the centre.</li>
+<li>Overlooking the need for an integrating factor that depends on both variables when the equation is not exact and no single‑variable factor exists.</li></ul>
+<h3>Leibniz Integral Rule and Differentiation Under the Integral Sign</h3>
+<p>The Leibniz integral rule gives a systematic way to differentiate an integral whose limits and integrand both depend on a parameter. If <em>f</em>(<em>x</em>,<em>t</em>) is continuous on a rectangle <em>a</em>(<em>x</em>) ≤ <em>t</em> ≤ <em>b</em>(<em>x</em>) and the partial derivative ∂<em>f</em>/∂<em>x</em> exists and is continuous there, while <em>a</em>(<em>x</em>) and <em>b</em>(<em>x</em>) are continuously differentiable, then</p>
+<p>d/d<em>x</em> ∫<sub><em>a</em>(<em>x</em>)</sub><sup><em>b</em>(<em>x</em>)</sup> <em>f</em>(<em>x</em>,<em>t</em>) d<em>t</em> = <em>f</em>(<em>x</em>,<em>b</em>(<em>x</em>)) <em>b</em>′(<em>x</em>) − <em>f</em>(<em>x</em>,<em>a</em>(<em>x</em>)) <em>a</em>′(<em>x</em>) + ∫<sub><em>a</em>(<em>x</em>)</sub><sup><em>b</em>(<em>x</em>)</sup> ∂<em>f</em>/∂<em>x</em> (<em>x</em>,<em>t</em>) d<em>t</em>.</p>
+<p>The rule is proved by writing the integral as a composition of the fundamental theorem of calculus and the chain rule. A common pitfall is forgetting the boundary terms when the limits are variable; they are essential whenever <em>a</em> or <em>b</em> depends on <em>x</em>. The rule also extends to higher‑order derivatives by repeated application, provided the required partial derivatives remain continuous.</p>
+<p>A classic application is the evaluation of the Dirichlet integral ∫<sub>0</sub><sup>∞</sup> sin <em>t</em>/<em>t</em> d<em>t</em>. Introduce a parameter <em>a</em> > 0 and consider <em>I</em>(<em>a</em>) = ∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>t</em></sup> sin <em>t</em>/<em>t</em> d<em>t</em>. Differentiating under the integral sign gives <em>I</em>′(<em>a</em>) = −∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>t</em></sup> sin <em>t</em> d<em>t</em> = −1/(<em>a</em><sup>2</sup>+1). Integrating back and using <em>I</em>(∞)=0 yields <em>I</em>(<em>a</em>) = π/2 − arctan <em>a</em>. Letting <em>a</em>→0<sup>+</sup> gives the desired value π/2.</p>
+<p>Another frequent use is the Gaussian integral with a parameter: ∫<sub>−∞</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em><sup>2</sup></sup> d<em>x</em> = √(π/<em>a</em>) for <em>a</em>>0. Differentiating with respect to <em>a</em> produces moments ∫<sub>−∞</sub><sup>∞</sup> <em>x</em><sup>2<em>n</em></sup> e<sup>−<em>a</em><em>x</em><sup>2</sup></sup> d<em>x</em> without repeated integration by parts. The technique is indispensable in physics and engineering where integrals depend on physical parameters such as temperature, frequency, or coupling constants.</p>
+<p>When applying the rule, always verify the continuity hypotheses on a domain that contains the parameter range of interest. If the integrand has a singularity that moves with the parameter, the standard Leibniz rule may fail and a more careful analysis using dominated convergence is required.</p>
+
+<h3>Beta and Gamma Functions and Their Applications</h3>
+<p>The Gamma function Γ(<em>z</em>) extends the factorial to complex numbers (except non‑positive integers) via the Euler integral Γ(<em>z</em>) = ∫<sub>0</sub><sup>∞</sup> <em>t</em><sup><em>z</em>−1</sup> e<sup>−<em>t</em></sup> d<em>t</em>, valid for Re(<em>z</em>)>0. It satisfies the functional equation Γ(<em>z</em>+1) = <em>z</em> Γ(<em>z</em>) and Γ(1)=1, so Γ(<em>n</em>+1)=<em>n</em>! for integers <em>n</em>≥0. The reflection formula Γ(<em>z</em>) Γ(1−<em>z</em>) = π / sin(π<em>z</em>) and the duplication formula Γ(<em>z</em>) Γ(<em>z</em>+½) = 2<sup>1−2<em>z</em></sup> √π Γ(2<em>z</em>) are powerful tools for simplifying products of Gamma values.</p>
+<p>The Beta function B(<em>p</em>,<em>q</em>) = ∫<sub>0</sub><sup>1</sup> <em>t</em><sup><em>p</em>−1</sup> (1−<em>t</em>)<sup><em>q</em>−1</sup> d<em>t</em> (Re(<em>p</em>),Re(<em>q</em>)>0) is symmetric and relates to Gamma by B(<em>p</em>,<em>q</em>) = Γ(<em>p</em>) Γ(<em>q</em>) / Γ(<em>p</em>+<em>q</em>). This identity converts many rational‑trigonometric integrals into Gamma ratios. For example, ∫<sub>0</sub><sup>π/2</sup> sin<sup><em>m</em></sup> θ cos<sup><em>n</em></sup> θ dθ = ½ B((<em>m</em>+1)/2,(<em>n</em>+1)/2) = ½ Γ((<em>m</em>+1)/2) Γ((<em>n</em>+1)/2) / Γ((<em>m</em>+<em>n</em>+2)/2).</p>
+<p>Beta integrals appear in probability theory: the Beta distribution density is proportional to <em>x</em><sup>α−1</sup>(1−<em>x</em>)<sup>β−1</sup> on [0,1]. The normalising constant is 1/B(α,β). In statistical mechanics, the partition function of an ideal gas involves Γ(3/2) = √π/2. The Gamma function also regularises divergent products via the Weierstrass product 1/Γ(<em>z</em>) = <em>z</em> e<sup>γ<em>z</em></sup> ∏<sub><em>n</em>=1</sub><sup>∞</sup> (1+<em>z</em>/<em>n</em>) e<sup>−<em>z</em>/<em>n</em></sup>, where γ is the Euler–Mascheroni constant.</p>
+<p>When evaluating definite integrals, a useful heuristic is to recognise the integrand as a Beta kernel after a suitable substitution. For instance, ∫<sub>0</sub><sup>∞</sup> <em>x</em><sup><em>s</em>−1</sup>/(1+<em>x</em>)<sup><em>s</em>+<em>t</em></sup> d<em>x</em> = B(<em>s</em>,<em>t</em>) via <em>x</em> = <em>u</em>/(1−<em>u</em>). The substitution <em>x</em> = tan<sup>2</sup> θ converts ∫<sub>0</sub><sup>∞</sup> <em>x</em><sup><em>p</em>−1</sup>/(1+<em>x</em>)<sup><em>p</em>+<em>q</em></sup> d<em>x</em> into a trigonometric Beta integral. Mastery of these transformations turns many seemingly intractable integrals into Gamma‑function arithmetic.</p>
+<p>Caution: the integral representations converge only when the real parts of the parameters are positive. Analytic continuation extends the functions to the whole complex plane (except poles), but any manipulation that relies on the integral form must respect the original domain of convergence.</p>
+
+<div class="example-box">
+<div class="ex-title">Differentiation Under the Integral Sign</div>
+<div class="ex-text">Evaluate ∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em></sup> sin(<em>b</em><em>x</em>)/<em>x</em> d<em>x</em> for <em>a</em>>0, <em>b</em>>0.</div>
+<div class="ex-soln">Define <em>I</em>(<em>a</em>) = ∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em></sup> sin(<em>b</em><em>x</em>)/<em>x</em> d<em>x</em>. The integrand and its <em>a</em>-derivative are continuous for <em>a</em>>0, so we may differentiate under the integral: <em>I</em>′(<em>a</em>) = −∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em></sup> sin(<em>b</em><em>x</em>) d<em>x</em>. This elementary integral equals −<em>b</em>/(<em>a</em><sup>2</sup>+<em>b</em><sup>2</sup>). Integrate with respect to <em>a</em>: <em>I</em>(<em>a</em>) = −∫ <em>b</em>/(<em>a</em><sup>2</sup>+<em>b</em><sup>2</sup>) d<em>a</em> = −arctan(<em>a</em>/<em>b</em>) + C. As <em>a</em>→∞, the original integral tends to 0, so C = π/2. Hence <em>I</em>(<em>a</em>) = π/2 − arctan(<em>a</em>/<em>b</em>) = arctan(<em>b</em>/<em>a</em>).</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Parameter‑Differentiation Heuristic</div>
+<div class="tip-text">When an integral contains a parameter (e.g., exponential decay constant, frequency, power), try differentiating with respect to that parameter. The derivative often removes a troublesome denominator or produces a standard integral. After integrating back, fix the constant of integration by examining a limiting case where the integral is known (often the parameter → ∞ or → 0). This method converts many definite integrals into elementary antiderivatives.</div>
+</div>
+
+<h3>Power Series Methods for Linear Differential Equations</h3>
+<p>For a linear ODE <em>y</em>″ + <em>p</em>(<em>x</em>) <em>y</em>′ + <em>q</em>(<em>x</em>) <em>y</em> = 0 with analytic coefficients at <em>x</em>=<em>x</em><sub>0</sub>, a power‑series solution <em>y</em> = ∑<sub><em>n</em>=0</sub><sup>∞</sup> <em>a</em><sub><em>n</em></sub> (<em>x</em>−<em>x</em><sub>0</sub>)<sup><em>n</em></sup> exists and converges at least up to the nearest singularity of <em>p</em> or <em>q. Substituting the series and equating coefficients yields a recurrence relation for <em>a</em><sub><em>n</em></sub>. If <em>x</em><sub>0</sub> is an ordinary point (both <em>p</em> and <em>q</em> analytic), the recurrence determines all coefficients from two arbitrary constants <em>a</em><sub>0</sub>, <em>a</em><sub>1</sub>, giving the general solution.</em></p>
+<p>When <em>x</em><sub>0</sub> is a regular singular point, the Frobenius method assumes a solution of the form <em>y</em> = (<em>x</em>−<em>x</em><sub>0</sub>)<sup><em>r</em></sup> ∑<sub><em>n</em>=0</sub><sup>∞</sup> <em>a</em><sub><em>n</em></sub> (<em>x</em>−<em>x</em><sub>0</sub>)<sup><em>n</em></sup> with <em>a</em><sub>0</sub>≠0. Substitution produces the indicial equation, a quadratic in <em>r whose roots <em>r</em><sub>1</sub>, <em>r</em><sub>2</sub> dictate the structure of the series. If the roots differ by a non‑integer, two independent Frobenius series are obtained. If they are equal or differ by an integer, the second solution may involve a logarithmic term; the method of reduction of order or the derivative with respect to <em>r</em> constructs it.</em></p>
+<p>Classic examples include Bessel's equation <em>x</em><sup>2</sup> <em>y</em>″ + <em>x</em> <em>y</em>′ + (<em>x</em><sup>2</sup>−ν<sup>2</sup>) <em>y</em> = 0, whose solutions are Bessel functions <em>J</em><sub>ν</sub>(<em>x</em>) and <em>Y</em><sub>ν</sub>(<em>x</em>). The series for <em>J</em><sub>ν</sub> is ∑<sub><em>k</em>=0</sub><sup>∞</sup> (−1)<sup><em>k</em></sup> (<em>x</em>/2)<sup>2<em>k</em>+ν</sup> / (<em>k</em>! Γ(<em>k</em>+ν+1)). Legendre's equation (1−<em>x</em><sup>2</sup>) <em>y</em>″ − 2<em>x</em> <em>y</em>′ + ℓ(ℓ+1) <em>y</em> = 0 yields Legendre polynomials <em>P</em><sub>ℓ</sub>(<em>x</em>) when ℓ is a non‑negative integer; the series terminates, giving a polynomial of degree ℓ.</p>
+<p>Radius of convergence of the resulting series is at least the distance from <em>x</em><sub>0</sub> to the nearest singularity of the coefficients in the complex plane. For equations with polynomial coefficients (e.g., Airy, Hermite), the series converges everywhere, producing entire functions. In practice, one often computes a few terms to obtain a polynomial approximation valid near <em>x</em><sub>0</sub>, then uses analytic continuation or numerical integration for larger domains.</p>
+<p>A common error is to apply the ordinary‑point series method at a singular point without checking the indicial equation. Always classify the point first: compute limits (<em>x</em>−<em>x</em><sub>0</sub>)<em>p</em>(<em>x</em>) and (<em>x</em>−<em>x</em><sub>0</sub>)<sup>2</sup> <em>q</em>(<em>x</em>) as <em>x</em>→<em>x</em><sub>0</sub>. If both limits are finite, the point is regular singular and Frobenius applies; if either limit diverges, the point is irregular singular and series methods generally fail.</p>
+
+<h3>Asymptotic Analysis of Integrals: Laplace's Method and Watson's Lemma</h3>
+<p>Many integrals arising in applied mathematics have the form <em>I</em>(λ) = ∫<sub><em>a</em></sub><sup><em>b</em></sup> e<sup>λ <em>f</em>(<em>x</em>)</sup> <em>g</em>(<em>x</em>) d<em>x</em> with a large parameter λ → ∞. If <em>f</em> has a unique global maximum at an interior point <em>x</em><sub>0</sub> where <em>f</em>′(<em>x</em><sub>0</sub>)=0 and <em>f</em>″(<em>x</em><sub>0</sub>)<0, Laplace's method gives the leading asymptotic behaviour:</p>
+<p><em>I</em>(λ) ∼ e<sup>λ <em>f</em>(<em>x</em><sub>0</sub>)</sup> <em>g</em>(<em>x</em><sub>0</sub>) √(2π / (λ |<em>f</em>″(<em>x</em><sub>0</sub>)|)) as λ → ∞.</p>
+<p>The derivation expands <em>f</em> to second order and <em>g</em> to zeroth order around <em>x</em><sub>0</sub>, extends the integration limits to ±∞ (justified by the rapid decay of the Gaussian), and evaluates the resulting Gaussian integral. Higher‑order terms are obtained by retaining more terms in the Taylor expansions and using moments of the Gaussian.</p>
+<p>Watson's lemma addresses integrals of the form <em>J</em>(λ) = ∫<sub>0</sub><sup>∞</sup> e<sup>−λ <em>t</em></sup> <em>t</em><sup>α</sup> φ(<em>t</em>) d<em>t</em> with Re(α)>−1 and φ analytic at 0. Expanding φ(<em>t</em>) = ∑<sub><em>n</em>=0</sub><sup>∞</sup> φ<sub><em>n</em></sub> <em>t</em><sup><em>n</em></sup> and integrating termwise yields the asymptotic series</p>
+<p><em>J</em>(λ) ∼ ∑<sub><em>n</em>=0</sub><sup>∞</sup> φ<sub><em>n</em></sub> Γ(α+<em>n</em>+1) / λ<sup>α+<em>n</em>+1</sup> as λ → ∞.</p>
+<p>This series is typically divergent but provides excellent approximations when truncated at the optimal term. The lemma is the backbone of the method of steepest descent for contour integrals in the complex plane, where the integration path is deformed to pass through a saddle point of the exponent.</p>
+<p>An illustrative example is the Gamma function itself: Γ(<em>z</em>) = ∫<sub>0</sub><sup>∞</sup> <em>t</em><sup><em>z</em>−1</sup> e<sup>−<em>t</em></sup> d<em>t</em>. For large <em>z</em>, write <em>t</em> = <em>z</em> <em>u</em> to obtain Γ(<em>z</em>) = <em>z</em><sup><em>z</em></sup> e<sup>−<em>z</em></sup> ∫<sub>0</sub><sup>∞</sup> e<sup><em>z</em>(ln <em>u</em>−<em>u</em>+1)</sup> d<em>u</em>. The exponent has a maximum at <em>u</em>=1; applying Laplace's method yields Stirling's formula Γ(<em>z</em>) ∼ √(2π) <em>z</em><sup><em>z</em>−½</sup> e<sup>−<em>z</em></sup>.</p>
+<p>When using these methods, verify that the maximum (or saddle) is unique and that the contribution from endpoints is exponentially smaller. If the maximum lies at an endpoint, a modified version of Laplace's method (or the Erdélyi lemma) must be used, giving a different algebraic prefactor.</p>
+
+<h3>Multiple Integrals: Change of Variables and Jacobian Determinants</h3>
+<p>The change‑of‑variables formula for a double integral states that if a transformation (<em>u</em>,<em>v</em>) ↦ (<em>x</em>(<em>u</em>,<em>v</em>), <em>y</em>(<em>u</em>,<em>v</em>)) is one‑to‑one and continuously differentiable on a region <em>D</em> in the <em>uv</em>-plane, mapping it onto a region <em>R</em> in the <em>xy</em>-plane, then</p>
+<p>∬<sub><em>R</em></sub> <em>f</em>(<em>x</em>,<em>y</em>) d<em>x</em> d<em>y</em> = ∬<sub><em>D</em></sub> <em>f</em>(<em>x</em>(<em>u</em>,<em>v</em>), <em>y</em>(<em>u</em>,<em>v</em>)) |<em>J</em>| d<em>u</em> d<em>v</em>,</p>
+<p>where the Jacobian determinant <em>J</em> = ∂(<em>x</em>,<em>y</em>)/∂(<em>u</em>,<em>v</em>) = | ∂<em>x</em>/∂<em>u</em> ∂<em>x</em>/∂<em>v</em> ; ∂<em>y</em>/∂<em>u</em> ∂<em>y</em>/∂<em>v</em> |. The absolute value ensures the area element remains positive regardless of orientation.</p>
+<p>Polar coordinates are the canonical example: <em>x</em> = <em>r</em> cos θ, <em>y</em> = <em>r</em> sin θ, with <em>J</em> = <em>r</em>. The formula becomes ∬ <em>f</em>(<em>x</em>,<em>y</em>) d<em>x</em> d<em>y</em> = ∫∫ <em>f</em>(<em>r</em> cos θ, <em>r</em> sin θ) <em>r</em> d<em>r</em> dθ. For an ellipse <em>x</em><sup>2</sup>/<em>a</em><sup>2</sup> + <em>y</em><sup>2</sup>/<em>b</em><sup>2</sup> ≤ 1, the substitution <em>x</em> = <em>a</em> <em>r</em> cos θ, <em>y</em> = <em>b</em> <em>r</em> sin θ gives <em>J</em> = <em>a b r</em>, and the area is ∫<sub>0</sub><sup>2π</sup> ∫<sub>0</sub><sup>1</sup> <em>a b r</em> d<em>r</em> dθ = π <em>a b</em>.</p>
+<p>For triple integrals, the Jacobian is a 3×3 determinant. Spherical coordinates (<em>ρ</em>, θ, φ) with <em>x</em> = <em>ρ</em> sin φ cos θ, <em>y</em> = <em>ρ</em> sin φ sin θ, <em>z</em> = <em>ρ</em> cos φ have <em>J</em> = <em>ρ</em><sup>2</sup> sin φ. The volume of a sphere of radius <em>R</em> is ∫<sub>0</sub><sup>2π</sup> ∫<sub>0</sub><sup>π</sup> ∫<sub>0</sub><sup><em>R</em></sup> <em>ρ</em><sup>2</sup> sin φ d<em>ρ</em> dφ dθ = 4π <em>R</em><sup>3</sup>/3.</p>
+<p>When the transformation is not globally one‑to‑one (e.g., polar coordinates at the origin), the region must be split so that each piece has a well‑defined inverse. The Jacobian may vanish on a set of measure zero (the origin in polar coordinates); this does not affect the integral because the set has zero area.</p>
+<p>A practical strategy: sketch the region in both coordinate systems, identify the bounds for the new variables, compute the Jacobian, and rewrite the integrand. If the new integrand simplifies dramatically (e.g., becomes separable), the transformation is successful. Common choices include polar for circular symmetry, elliptical for ellipses, and parabolic or bipolar coordinates for problems with specific symmetries.</p>
+
+<ul>
+<li>Forgetting the absolute value of the Jacobian when the transformation reverses orientation.</li>
+<li>Applying the ordinary‑point power series method at a regular singular point without solving the indicial equation.</li>
+<li>Using Laplace's method when the maximum of the exponent occurs at an endpoint without adjusting the prefactor.</li>
+<li>Assuming the asymptotic series from Watson's lemma converges; it is usually divergent and must be truncated optimally.</li>
+<li>Neglecting to check the continuity of ∂<em>f</em>/∂<em>x</em> and the differentiability of the limits before differentiating under the integral sign.</li>
+<li>Misidentifying the region of convergence for a Frobenius series when the roots of the indicial equation differ by an integer.</li>
+<li>Review these traps before each practice test to avoid losing marks.</li></ul>
+<h3>Fourier Series and Transforms in Calculus</h3>
+<p>Fourier analysis extends the idea of representing a function as a sum of simple oscillatory components. For a piecewise‑smooth function <em>f</em>(x) defined on an interval of length 2π, the Fourier series is</p>
+<p><em>f</em>(x) ∼ a₀/2 + Σₙ₌₁^∞ [aₙ cos(nx) + bₙ sin(nx)]</p>
+<p>where the coefficients are given by the integrals</p>
+<p>aₙ = (1/π) ∫₋π^π <em>f</em>(x) cos(nx) dx, bₙ = (1/π) ∫₋π^π <em>f</em>(x) sin(nx) dx.</p>
+<p>Convergence is governed by Dirichlet conditions: at points of continuity the series converges to <em>f</em>(x); at a jump discontinuity it converges to the midpoint of the left and right limits. Parseval’s identity links the energy of the function to the sum of squares of its coefficients:</p>
+<p>(1/π) ∫₋π^π |<em>f</em>(x)|² dx = a₀²/2 + Σₙ₌₁^∞ (aₙ² + bₙ²).</p>
+<p>The Fourier transform generalises the series to non‑periodic functions on ℝ. For <em>f</em> ∈ L¹(ℝ) the transform is</p>
+<p>F(ω) = ∫₋∞^∞ <em>f</em>(x) e<sup>-iωx</sup> dx, <em>f</em>(x) = (1/2π) ∫₋∞^∞ F(ω) e<sup>iωx</sup> dω.</p>
+<p>Key properties — linearity, scaling, translation, modulation, convolution theorem (F(<em>f</em>*<em>g</em>) = F(<em>f</em>)·F(<em>g</em>)), and Plancherel’s theorem (energy preservation) — make the transform indispensable in solving differential equations, signal processing, and probability theory. The discrete Fourier transform (DFT) and its fast algorithm (FFT) provide computational tools for numerical work.</p>
+
+<h3>Complex Contour Integration and Residue Calculus</h3>
+<p>Integrals of real functions that are difficult by elementary methods often become tractable when the integrand is extended to a complex analytic function and integrated over a closed contour in the complex plane. Cauchy’s integral theorem states that for a function <em>f</em> analytic on and inside a simple closed contour C, ∮_C <em>f</em>(z) dz = 0. If <em>f</em> has isolated singularities inside C, the residue theorem gives</p>
+<p>∮_C <em>f</em>(z) dz = 2πi Σ Res(<em>f</em>, z_k),</p>
+<p>where the sum runs over all singularities z_k enclosed by C. The residue at a simple pole z₀ is lim<sub>z→z₀</sub> (z−z₀)<em>f</em>(z); for higher‑order poles the formula involves derivatives. Typical contours include the large semicircle in the upper half‑plane for integrals of rational functions times e<sup>iαx</sup> (Jordan’s lemma), keyhole contours for branch cuts, and rectangular contours for periodic integrands.</p>
+<p>Applications: evaluation of real definite integrals such as ∫₀^∞ sin x / x dx = π/2, ∫₋∞^∞ e<sup>-x²</sup> dx = √π, and integrals involving trigonometric or hyperbolic functions. The method also yields sums of series by integrating functions like π cot(πz) / z² around a large square. Careful estimation of the contour contribution at infinity is essential; the integrand must decay sufficiently fast for the arc integral to vanish.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Fourier Series of f(x)=x on (−π,π)</div>
+<div class="ex-text">Find the Fourier series of the odd function f(x)=x defined on (−π,π) and use it to evaluate Σₙ₌₁^∞ (−1)<sup>n+1</sup>/n.</div>
+<div class="ex-soln">Since f is odd, all aₙ = 0. Compute bₙ = (1/π) ∫₋π^π x sin(nx) dx. Integration by parts gives bₙ = (2(−1)<sup>n+1</sup>)/n. Thus f(x) ∼ 2 Σₙ₌₁^∞ (−1)<sup>n+1</sup> sin(nx)/n. At x = π/2 the series converges to π/2, yielding π/2 = 2 Σₙ₌₁^∞ (−1)<sup>n+1</sup> sin(nπ/2)/n. Only odd n contribute, sin((2k−1)π/2)= (−1)<sup>k+1</sup>. Hence π/2 = 2 Σ<sub>k=1</sub>^∞ 1/(2k−1)²? Wait, that gives a different series. Instead set x = π: the series converges to 0 (midpoint of jump), giving 0 = 2 Σ (−1)<sup>n+1</sup> sin(nπ)/n = 0, trivial. To obtain Σ (−1)<sup>n+1</sup>/n, evaluate at x = π/2? Actually the alternating harmonic series equals ln 2. Use the known Fourier series of the square wave or integrate the series termwise: ∫₀^x f(t) dt = x²/2 = Σ 2(−1)<sup>n+1</sup> (1−cos(nx))/n². Setting x = π gives π²/4 = Σ 2(−1)<sup>n+1</sup> (1−(−1)^n)/n² = 4 Σ<sub>k=1</sub>^∞ 1/(2k−1)², which yields Σ 1/(2k−1)² = π²/8. For the alternating harmonic series, consider the Fourier series of f(x)=x on (−π,π) and integrate from 0 to π: ∫₀^π x dx = π²/2 = 2 Σ (−1)<sup>n+1</sup> (1−(−1)^n)/n²? That again gives odd squares. The alternating harmonic series is obtained from the Fourier series of the sawtooth wave at x = π/2: π/2 = 2 Σ (−1)<sup>n+1</sup> sin(nπ/2)/n = 2 Σ<sub>k=1</sub>^∞ (−1)<sup>k+1</sup>/(2k−1). Thus Σ<sub>k=1</sub>^∞ (−1)<sup>k+1</sup>/(2k−1) = π/4. The required series Σ (−1)<sup>n+1</sup>/n = ln 2 follows from the Mercator series ln(1+x)= Σ (−1)<sup>n+1</sup> x^n/n with x=1. The Fourier computation confirms the value π/4 for the odd‑term subseries.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for a Fourier coefficient, first check parity of the function; odd/even symmetry eliminates half the integrals instantly. For contour integrals, sketch the poles and choose a contour that encloses the relevant ones while making the arc integral vanish — usually a large semicircle for e<sup>iαz</sup> with α>0 in the upper half‑plane. Write down the residue formula before computing residues; this prevents missing a factor of 2πi.</div>
+</div>
+
+<h3>Calculus of Variations and the Euler‑Lagrange Equation</h3>
+<p>The calculus of variations seeks functions that extremise a functional J[y] = ∫_a^b L(x, y, y') dx, where L is the Lagrangian. A necessary condition for an extremum is the Euler‑Lagrange equation</p>
+<p>∂L/∂y − d/dx (∂L/∂y') = 0.</p>
+<p>If L does not depend explicitly on x, the Beltrami identity L − y' ∂L/∂y' = constant provides a first integral. For problems with constraints, Lagrange multipliers introduce an auxiliary function λ(x) and the augmented Lagrangian L̃ = L + λ(x) g(x, y, y'). Natural boundary conditions arise when the endpoint values are free: ∂L/∂y' = 0 at the free endpoint. The second variation δ²J determines whether the stationary function yields a minimum, maximum, or saddle; the Legendre condition ∂²L/∂y'² > 0 (or < 0) is necessary for a minimum (maximum). Classic examples: the brachistochrone (cycloid), the catenary (hyperbolic cosine), and geodesics on surfaces. The method extends to multiple dependent variables, higher‑order derivatives (yielding the Euler‑Poisson equation), and to functionals with integral constraints (isoperimetric problems).</p>
+
+<h3>Numerical Quadrature: Gaussian Quadrature and Adaptive Methods</h3>
+<p>When an antiderivative cannot be expressed in elementary terms, numerical integration approximates ∫_a^b f(x) dx. Newton‑Cotes formulas (trapezoidal, Simpson) use equally spaced nodes; their error depends on high‑order derivatives of f. Gaussian quadrature chooses both nodes and weights to integrate polynomials of degree up to 2n−1 exactly with n function evaluations. For the standard interval [−1,1] the nodes are the zeros of the Legendre polynomial P_n(x) and the weights are w_i = 2 / [(1−x_i²) (P_n'(x_i))²]. The error term is (b−a)<sup>2n+1</sup> (n!)<sup>4</sup> / [(2n+1)((2n)!)<sup>3</sup>] f<sup>(2n)</sup>(ξ). Gauss‑Legendre quadrature is optimal for smooth functions on finite intervals. For weight functions w(x) (e.g., e<sup>−x</sup> on [0,∞) → Gauss‑Laguerre, e<sup>−x²</sup> on (−∞,∞) → Gauss‑Hermite) the nodes are zeros of the corresponding orthogonal polynomials.</p>
+<p>Adaptive quadrature recursively subdivides the interval until the estimated local error falls below a tolerance. A common strategy uses two rules of different orders (e.g., Simpson and Simpson’s 3/8) on the same subinterval; their difference estimates the error. The algorithm maintains a priority queue of subintervals with largest error estimates, refining them first. This approach handles endpoint singularities and sharp peaks efficiently. Error control is guaranteed if the integrand is sufficiently smooth on each final subinterval; otherwise the algorithm may stall, signalling a need for transformation (e.g., variable substitution to remove singularities).</p>
+
+<h3>Introduction to Stochastic Calculus: Itô’s Lemma</h3>
+<p>Stochastic calculus deals with integrals and differential equations driven by Brownian motion W_t. The Itô integral ∫<sub>0</sub>^t X_s dW_s is defined for adapted processes X_s with ∫<sub>0</sub>^t E[X_s²] ds < ∞; it is a martingale with zero mean and Itô isometry E[(∫<sub>0</sub>^t X_s dW_s)²] = ∫<sub>0</sub>^t E[X_s²] ds. For a twice‑differentiable function f(t, x), Itô’s lemma gives the differential of the process Y_t = f(t, W_t):</p>
+<p>dY_t = (∂f/∂t + ½ ∂²f/∂x²) dt + (∂f/∂x) dW_t.</p>
+<p>The extra ½ ∂²f/∂x² term distinguishes Itô calculus from ordinary calculus and originates from the quadratic variation of Brownian motion, dW_t² = dt. Applying Itô’s lemma to geometric Brownian motion dS_t = μ S_t dt + σ S_t dW_t yields the solution S_t = S<sub>0</sub> exp((μ−σ²/2)t + σ W_t). The Feynman‑Kac formula links parabolic PDEs to expectations of stochastic processes, providing a probabilistic representation for solutions of the heat equation and Black‑Scholes PDE. Stochastic differential equations (SDEs) of the form dX_t = a(t, X_t) dt + b(t, X_t) dW_t are solved by finding an integrating factor or by transforming to a simpler SDE via Itô’s lemma. Existence and uniqueness theorems require Lipschitz and linear growth conditions on a and b.</p>
+
+<ul>
+<li>Assuming Fourier series converge uniformly without checking Dirichlet conditions.</li>
+<li>Forgetting the factor 2πi in the residue theorem or misidentifying the order of a pole.</li>
+<li>Applying the Euler‑Lagrange equation when the functional depends on higher derivatives without using the Euler‑Poisson equation.</li>
+<li>Using Gauss‑Legendre quadrature on an integrand with an endpoint singularity without a suitable change of variables.</li>
+<li>Neglecting the Itô correction term ½ f<sub>xx</sub> dt when differentiating a function of Brownian motion.</li>
+<li>Treating the Itô integral as a standard Riemann‑Stieltjes integral and ignoring its martingale property.</li>
+<li>Overlooking the need for Lipschitz and growth conditions when asserting existence of solutions to an SDE.</li></ul>
+<h3>Vector Calculus: Gradient, Divergence, Curl and the Integral Theorems</h3>
+<p>The gradient of a scalar field <strong>φ</strong>(x, y, z) is the vector field ∇φ = (∂φ/∂x, ∂φ/∂y, ∂φ/∂z). It points in the direction of greatest increase of φ and its magnitude equals the rate of increase in that direction. The divergence of a vector field <strong>F</strong> = (P, Q, R) is the scalar ∇·F = ∂P/∂x + ∂Q/∂y + ∂R/∂z; it measures the net outward flux per unit volume. The curl of <strong>F</strong> is the vector ∇×F = (∂R/∂y − ∂Q/∂z, ∂P/∂z − ∂R/∂x, ∂Q/∂x − ∂P/∂y); it quantifies the local rotation of the field.</p>
+<p>Three fundamental theorems connect these differential operators to integrals over regions, surfaces, and curves. The Gradient Theorem (also called the Fundamental Theorem for Line Integrals) states that for a continuously differentiable scalar field φ, ∫_C ∇φ·dr = φ(r(b)) − φ(r(a)) where C is any smooth curve from r(a) to r(b). This shows that the line integral of a gradient field is path‑independent.</p>
+<p>Green’s Theorem in the plane relates a line integral around a simple closed curve C to a double integral over the region D it encloses: ∮_C (P dx + Q dy) = ∬_D (∂Q/∂x − ∂P/∂y) dA. It is the two‑dimensional analogue of the Kelvin–Stokes theorem.</p>
+<p>Stokes’ Theorem generalises Green’s Theorem to three dimensions: ∮_C F·dr = ∬_S (∇×F)·n dS, where S is an oriented surface with boundary C and n is the unit normal consistent with the orientation of C. The theorem converts a circulation integral into a flux of curl.</p>
+<p>The Divergence Theorem (Gauss’s Theorem) states ∬_∂V F·n dS = ∭_V (∇·F) dV, where ∂V is the closed surface bounding the volume V. It equates the total outward flux through the boundary to the volume integral of divergence.</p>
+<p>These theorems are not merely computational tools; they encode deep topological information. For instance, a vector field with zero curl on a simply connected domain is a gradient field, and a field with zero divergence can be expressed as the curl of a vector potential. In electromagnetism, Maxwell’s equations are compactly written using these operators and theorems.</p>
+<p>When applying the theorems, orientation is critical. The right‑hand rule determines the direction of n for Stokes’ Theorem, while outward normal is used for the Divergence Theorem. Mis‑orienting a surface or curve flips the sign of the result, a frequent source of error in examinations.</p>
+
+<h3>Fractional Calculus: Riemann–Liouville and Caputo Derivatives</h3>
+<p>Fractional calculus extends the concept of derivatives and integrals to non‑integer orders. The Riemann–Liouville fractional integral of order α > 0 for a function f(t) defined on [a, b] is (I^α_a f)(t) = 1/Γ(α) ∫_a^t (t−τ)<sup>α−1</sup> f(τ) dτ, where Γ is the Gamma function. The corresponding Riemann–Liouville derivative of order α (with n−1 < α ≤ n) is D^α_a f(t) = d^n/dt^n (I<sup>n−α</sup>_a f)(t). This definition requires the function to be sufficiently smooth and the lower limit a is usually taken as 0 or −∞.</p>
+<p>The Caputo derivative modifies the order of operations to avoid initial‑value problems involving fractional derivatives of constants. For the same α, the Caputo derivative is ^C D^α_a f(t) = I<sup>n−α</sup>_a (d^n f/dt^n)(t). A key advantage is that the Caputo derivative of a constant is zero, and initial conditions for fractional differential equations can be expressed in terms of integer‑order derivatives, matching physical intuition.</p>
+<p>Both operators satisfy linearity and a semigroup property for integrals: I^α I^β = I<sup>α+β</sup>. However, the derivative operators do not generally commute, and the Leibniz rule takes a more complicated form involving infinite series of binomial coefficients.</p>
+<p>Applications appear in viscoelasticity, anomalous diffusion, and control theory. The fractional relaxation equation ^C D^α_t u(t) + λ u(t) = 0 yields solutions in terms of the Mittag‑Leffler function E_α(−λ t^α), which generalises the exponential. Numerical evaluation of fractional derivatives often uses Grünwald–Letnikov approximations or spectral methods based on orthogonal polynomials.</p>
+<p>When solving fractional differential equations, one must specify whether the Riemann–Liouville or Caputo sense is used, because the solution spaces differ. The Laplace transform of the Caputo derivative is s^α F(s) − Σ<sub>k=0</sub><sup>n−1</sup> s<sup>α−1−k</sup> f<sup>(k)</sup>(0+), while the Riemann–Liouville transform involves fractional initial values that are rarely measurable.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Caputo Derivative of a Power Function</div>
+<div class="ex-text">Compute the Caputo derivative of order α (0 < α < 1) of f(t) = t^β with β > 0, assuming lower limit a = 0.</div>
+<div class="ex-soln">For 0 < α < 1, n = 1. The Caputo derivative is ^C D^α<sub>0</sub> t^β = I<sup>1−α</sup><sub>0</sub> (d/dt t^β) = I<sup>1−α</sup><sub>0</sub> (β t<sup>β−1</sup>). Using the Riemann–Liouville integral formula, I<sup>1−α</sup><sub>0</sub> t<sup>β−1</sup> = Γ(β)/Γ(β+1−α) t<sup>β−α</sup>. Multiplying by β gives β Γ(β)/Γ(β+1−α) t<sup>β−α</sup> = Γ(β+1)/Γ(β+1−α) t<sup>β−α</sup>. This matches the known formula for the Caputo derivative of a power function.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for a fractional derivative, first identify the order α and the lower limit. Write down the definition (Riemann–Liouville or Caputo) explicitly; this earns method marks even if the final integration is messy. For power‑law functions, memorise the Gamma‑function result Γ(β+1)/Γ(β+1−α) t<sup>β−α</sup> for Caputo and Γ(β+1)/Γ(β+1−α) t<sup>β−α</sup> for Riemann–Liouville when β > α−1. Check whether the initial conditions are given in integer‑order form — if so, Caputo is the natural choice.</div>
+</div>
+
+<h3>Functional Analysis Foundations: Banach and Hilbert Spaces in Calculus</h3>
+<p>Many advanced calculus problems are naturally posed in infinite‑dimensional vector spaces. A normed space (X, ‖·‖) is a vector space equipped with a norm satisfying positivity, homogeneity, and the triangle inequality. Completeness — every Cauchy sequence converges in X — upgrades a normed space to a Banach space. The space C[a, b] of continuous functions with the supremum norm ‖f‖_∞ = sup<sub>x∈[a,b]</sub> |f(x)| is a Banach space, while the subspace of polynomials is not complete.</p>
+<p>A Hilbert space is a Banach space whose norm arises from an inner product ⟨·,·⟩ satisfying linearity, conjugate symmetry, and positive definiteness. The classic example is L²[a, b] with ⟨f,g⟩ = ∫_a^b f(x) g(x) dx. The inner product induces the norm ‖f‖₂ = √⟨f,f⟩ and provides geometric notions such as orthogonality, projection, and the Pythagorean theorem.</p>
+<p>The Riesz Representation Theorem states that every continuous linear functional on a Hilbert space H can be written uniquely as ⟨·, y⟩ for some y ∈ H. This underpins the weak formulation of boundary‑value problems: find u ∈ H such that a(u, v) = ⟨f, v⟩ for all v ∈ H, where a(·,·) is a bilinear form.</p>
+<p>The Lax–Milgram Theorem guarantees existence and uniqueness of solutions to such variational problems when a(·,·) is bounded and coercive. This is the theoretical backbone of the finite element method.</p>
+<p>Compact operators map bounded sets to relatively compact sets. The spectral theorem for compact self‑adjoint operators on a Hilbert space yields a countable orthonormal basis of eigenvectors with eigenvalues accumulating only at zero. This explains the convergence of Fourier series in L² and the discrete spectrum of Sturm–Liouville problems.</p>
+<p>In Banach spaces, the Hahn–Banach Theorem allows extension of linear functionals without increasing norm, and the Open Mapping Theorem ensures that a surjective bounded linear operator between Banach spaces is an open map. These results are essential when proving well‑posedness of integral equations and when studying the Fréchet derivative in nonlinear analysis.</p>
+
+<h3>Numerical Solution of Ordinary Differential Equations: Runge–Kutta and Multistep Methods</h3>
+<p>For an initial‑value problem y' = f(t, y), y(t₀) = y₀, one‑step methods compute y<sub>n+1</sub> from y_n alone. The classical fourth‑order Runge–Kutta (RK4) uses four evaluations: k₁ = f(t_n, y_n), k₂ = f(t_n + h/2, y_n + h k₁/2), k₃ = f(t_n + h/2, y_n + h k₂/2), k₄ = f(t_n + h, y_n + h k₃), then y<sub>n+1</sub> = y_n + h/6 (k₁ + 2k₂ + 2k₃ + k₄). Its local truncation error is O(h⁵), giving global error O(h⁴).</p>
+<p>Embedded Runge–Kutta pairs (e.g., Dormand–Prince 5(4)) provide two estimates of different orders from the same function evaluations, enabling adaptive step‑size control. The step is accepted if the estimated error ≤ tolerance; otherwise it is rejected and h is reduced.</p>
+<p>Multistep methods use several previous values. The Adams–Bashforth explicit family and Adams–Moulton implicit family are derived by integrating polynomial interpolants of f. For example, the two‑step Adams–Bashforth formula is y<sub>n+1</sub> = y_n + h/2 (3 f_n − f<sub>n−1</sub>). Implicit methods like the trapezoidal rule y<sub>n+1</sub> = y_n + h/2 (f_n + f<sub>n+1</sub>) are A‑stable, making them suitable for stiff problems where explicit methods require prohibitively small steps.</p>
+<p>Stiffness arises when the Jacobian ∂f/∂y has eigenvalues with large negative real parts. Backward Differentiation Formulas (BDF) of orders 1 to 6 are the standard for stiff systems; BDF2 reads y<sub>n+1</sub> − 4/3 y_n + 1/3 y<sub>n−1</sub> = 2/3 h f<sub>n+1</sub>. These are solved by Newton iteration at each step.</p>
+<p>Convergence of a multistep method requires consistency (local truncation error → 0) and zero‑stability (roots of the characteristic polynomial lie on or inside the unit circle, with simple roots on the circle). The Dahlquist equivalence theorem states that for linear multistep methods, consistency + zero‑stability ⇔ convergence.</p>
+<p>When implementing, monitor the condition number of the Jacobian in implicit steps; a poorly scaled problem can cause Newton divergence. Scaling variables and using line search or trust‑region strategies improves robustness.</p>
+
+<h3>Calculus of Moving Surfaces: Shape Derivatives and Applications</h3>
+<p>Shape optimisation asks how a functional J(Ω) = ∫_Ω f(x, u, ∇u) dx changes when the domain Ω is perturbed by a velocity field V. The material derivative of a scalar field u defined on the moving domain is Du/Dt = ∂u/∂t + V·∇u. The shape derivative of J in direction V is dJ(Ω; V) = lim<sub>ε→0</sub> (J(Ω_ε) − J(Ω))/ε, where Ω_ε = {x + ε V(x) : x ∈ Ω}.</p>
+<p>Using the Reynolds transport theorem, d/dt ∫<sub>Ω(t)</sub> φ dx = ∫<sub>Ω(t)</sub> (∂φ/∂t + ∇·(φ V)) dx. For a functional depending on a state variable u that solves a PDE on Ω, the shape derivative splits into a boundary integral involving the adjoint state p: dJ(Ω; V) = ∫<sub>∂Ω</sub> G(u, p, ∇u, ∇p) V·n ds, where n is the outward unit normal. This boundary expression is the basis of gradient‑based shape optimisation algorithms.</p>
+<p>The Hadamard structure theorem guarantees that, under sufficient regularity, the shape derivative depends only on the normal component V·n on the boundary. Tangential components merely reparameterise the boundary and do not affect the value of the functional.</p>
+<p>In fluid‑structure interaction, the shape derivative of the drag functional leads to the adjoint Navier–Stokes equations. In electromagnetics, shape optimisation of waveguides uses the adjoint Maxwell system. The level‑set method represents the evolving boundary implicitly as the zero level set of a function φ, and the Hamilton–Jacobi equation φ_t + V_n |∇φ| = 0 moves the interface with normal velocity V_n derived from the shape gradient.</p>
+<p>Numerical implementation requires accurate computation of boundary normals and curvature. High‑order finite elements or isogeometric analysis (NURBS) provide the needed geometric fidelity. Mesh deformation techniques (e.g., elasticity‑based mesh morphing) keep the computational mesh aligned with the moving boundary without remeshing at every iteration.</p>
+
+<ul>
+<li>Confusing the orientation of the normal vector in Stokes’ and Divergence Theorems, which flips the sign of the result.</li>
+<li>Applying the Riemann–Liouville derivative when initial conditions are given in integer‑order form; the Caputo derivative is appropriate.</li>
+<li>Assuming every normed space is complete; many function spaces (e.g., polynomials under sup norm) are not Banach.</li>
+<li>Using an explicit Runge–Kutta method on a stiff problem without step‑size control, leading to instability or excessive computation.</li>
+<li>Neglecting the zero‑stability condition when analysing a multistep method; a consistent but not zero‑stable method diverges.</li>
+<li>Treating tangential boundary perturbations as contributing to the shape derivative; only the normal component matters by Hadamard’s theorem.</li>
+<li>Forgetting to verify the coercivity condition in the Lax–Milgram theorem before claiming existence of a weak solution.</li></ul>
+<h3>Distribution Theory and Generalized Functions</h3>
+<p>The classical notion of a function is insufficient for many problems in physics and engineering where objects such as the Dirac delta appear naturally. Distribution theory, introduced by Laurent Schwartz in the 1940s, extends the space of test functions <strong>𝒟(ℝⁿ)</strong> (infinitely differentiable functions with compact support) to its continuous dual <strong>𝒟'(ℝⁿ)</strong>, the space of distributions. A distribution <em>T</em> acts linearly on test functions φ via ⟨T, φ⟩, and differentiation is defined by transposition: ⟨∂ᵅT, φ⟩ = (−1)<sup>|α|</sup>⟨T, ∂ᵅφ⟩. This definition makes every distribution infinitely differentiable, and the derivative coincides with the classical derivative when the latter exists.</p>
+<p>Key examples include the Heaviside step function H, whose distributional derivative is the Dirac delta δ, and the principal value distribution p.v.(1/x) which arises in Hilbert transforms. Convolution of a distribution with a test function yields a smooth function, and the Fourier transform extends to tempered distributions <strong>𝒮'(ℝⁿ)</strong>, the dual of the Schwartz space <strong>𝒮(ℝⁿ)</strong>. The Paley–Wiener theorem characterises distributions with compact support via entire functions of exponential type. In applications, distributional solutions of linear PDEs (e.g., fundamental solutions of the Laplacian) are obtained by solving 𝛥E = δ, giving E(x) = −(1/2π) log|x| in two dimensions and E(x) = 1/(4π|x|) in three dimensions.</p>
+<p>Operations such as multiplication of a distribution by a smooth function are well defined, but the product of two arbitrary distributions is generally not. This limitation leads to Colombeau algebras, which embed distributions into a differential algebra where nonlinear operations become possible. The theory also underpins the rigorous formulation of quantum field theory, where operator-valued distributions replace pointwise fields.</p>
+
+<h3>Optimal Control Theory and Pontryagin's Maximum Principle</h3>
+<p>Optimal control seeks a control function u(t) ∈ U ⊂ ℝᵐ that steers a dynamical system ẋ = f(x, u, t), x(t₀) = x₀, to minimise a cost functional J = φ(x(t_f), t_f) + ∫<sub>t₀</sub><sup>t_f</sup> L(x, u, t) dt. The Pontryagin Maximum Principle (PMP), proved by Lev Pontryagin and his collaborators in 1956, provides necessary conditions for optimality. Introduce the Hamiltonian H(x, u, λ, t) = λᵀ f(x, u, t) − L(x, u, t) where λ(t) ∈ ℝⁿ is the costate (adjoint) vector. If u*(·) is optimal with corresponding trajectory x*(·), there exists a nontrivial absolutely continuous λ(·) such that:</p>
+<ul>
+<li>State equation: ẋ* = ∂H/∂λ = f(x*, u*, t).</li>
+<li>Costate equation: λ̇ = −∂H/∂x.</li>
+<li>Maximum condition: H(x*(t), u*(t), λ(t), t) = max<sub>v∈U</sub> H(x*(t), v, λ(t), t) for almost every t.</li>
+<li>Transversality condition: λ(t_f) = ∂φ/∂x (x*(t_f), t_f) if the terminal state is free; otherwise λ(t_f) is free subject to the terminal constraint.</li>
+</ul>
+<p>The PMP reduces the infinite‑dimensional optimisation to a two‑point boundary value problem. For linear‑quadratic problems (ẋ = Ax + Bu, J = ½∫(xᵀQx + uᵀRu)dt) the maximum condition yields u* = −R⁻¹Bᵀλ, and the costate satisfies λ̇ = −Aᵀλ − Qx. Combining gives the Riccati differential equation for the symmetric matrix P(t) where λ = Px, leading to the optimal feedback law u = −Kx with K = R⁻¹BᵀP. The principle also handles state constraints via multiplier functions and yields the bang‑bang property when the Hamiltonian is linear in u and U is a convex polytope.</p>
+<p>Extensions include the Hamilton–Jacobi–Bellman (HJB) equation, which provides a sufficient condition via dynamic programming: V_t + min_u {L + V_x·f} = 0 with V(x, t_f) = φ(x, t_f). Viscosity solutions allow the HJB to be interpreted for nonsmooth value functions. In stochastic control, the Hamiltonian acquires a second‑order term ½ Tr(σσᵀV<sub>xx</sub>) and the maximum principle involves backward stochastic differential equations.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Minimum‑Fuel Rocket Ascent</div>
+<div class="ex-text">A rocket of mass m(t) moves vertically with thrust u(t) ∈ [0, T_max] and mass flow ṁ = −α u. Dynamics: ḣ = v, v̇ = u/m − g, ṁ = −α u. Minimise fuel consumption J = ∫ u dt from t=0 to free final time t_f, subject to h(t_f)=H, v(t_f)=0. Apply PMP to derive the optimal thrust profile.</div>
+<div class="ex-soln">Define state x = (h, v, m)ᵀ, costate λ = (λ_h, λ_v, λ_m)ᵀ. Hamiltonian H = λ_h v + λ_v (u/m − g) − λ_m α u − u. Costate equations: λ̇_h = 0 ⇒ λ_h = const; λ̇_v = −λ_h; λ̇_m = λ_v u/m². Maximum condition: maximise H over u ∈ [0, T_max]. Since H is linear in u, the optimal control is bang‑bang: u* = T_max if switching function σ = λ_v/m − λ_m α − 1 > 0, and u* = 0 if σ < 0. The transversality condition for free t_f gives H(t_f)=0. Solving the two‑point boundary value problem yields a single switch from full thrust to coast, a classic “bang‑coast” trajectory. The switching time is determined by the terminal constraints h=H, v=0.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy for Optimal Control</div>
+<div class="tip-text">When a problem asks for necessary conditions, write the Hamiltonian first, then list the four PMP items in order. For linear‑quadratic problems, recognise the Riccati equation and state the feedback gain K = R⁻¹BᵀP. If the control set is a box, the optimal control is bang‑bang or singular; check the switching function. Always verify the transversality condition for free terminal time or state. A quick sketch of the switching structure earns partial credit even if the full boundary‑value solution is not completed.</div>
+</div>
+
+<h3>Homogenization Theory for Periodic Media</h3>
+<p>Composite materials with rapidly oscillating coefficients arise in elasticity, conductivity, and fluid flow through porous media. Homogenization provides a systematic way to replace a heterogeneous medium by an effective homogeneous one. Consider the elliptic boundary value problem −∇·(A(x/ε)∇u_ε) = f in Ω, u_ε = 0 on ∂Ω, where A(y) is Y‑periodic (Y = [0,1]ⁿ) and uniformly elliptic. As ε → 0, u_ε converges weakly in H¹₀(Ω) to u₀ solving −∇·(A^hom∇u₀) = f with the same boundary condition. The effective tensor A^hom is given by A^hom<sub>ij</sub> = ∫_Y A(y)(e_i + ∇_y χ_i)·(e_j + ∇_y χ_j) dy, where χ_i are the Y‑periodic correctors solving −∇_y·(A(y)(e_i + ∇_y χ_i)) = 0 in Y with zero mean.</p>
+<p>The two‑scale convergence method (Nguetseng, Allaire) gives a compactness framework: a sequence u_ε two‑scale converges to u₀(x,y) if ∫_Ω u_ε(x) φ(x, x/ε) dx → ∫_Ω∫_Y u₀(x,y) φ(x,y) dy dx for all smooth φ. This yields the limit equation directly and handles nonlinear monotone operators via the notion of H‑convergence (Murat–Tartar). For time‑dependent problems such as the heat equation with periodic coefficients, the homogenised equation retains the same time derivative but with the effective tensor. In perforated domains (ε‑periodic holes), the limit may acquire a zero‑order term (strange term) reflecting the capacity of the holes.</p>
+<p>Quantitative estimates (error bounds) are available: ‖u_ε − u₀ − ε χ(x/ε)·∇u₀‖<sub>H¹</sub> ≤ C ε ‖f‖<sub>L²</sub>. Numerical homogenization (FE², MsFEM) computes the correctors on representative volume elements and assembles the macroscopic stiffness matrix. The theory extends to stochastic stationary ergodic coefficients, where the effective tensor is defined by an expectation over the probability space.</p>
+
+<h3>Spectral Theory of Sturm–Liouville Operators</h3>
+<p>The regular Sturm–Liouville problem on [a,b] is −(p(x) y')' + q(x) y = λ w(x) y with separated boundary conditions α₁ y(a) + α₂ y'(a) = 0, β₁ y(b) + β₂ y'(b) = 0, where p, q, w are real‑valued, p>0, w>0, and p, q, w ∈ C¹[a,b]. The associated differential operator L y = (1/w)(−(p y')' + q y) is self‑adjoint in the weighted Hilbert space L²_w[a,b]. The spectral theorem guarantees a countable set of real eigenvalues λ₁ < λ₂ < … → +∞, each of multiplicity one, and the corresponding eigenfunctions {φ_n} form an orthogonal basis of L²_w. The eigenfunction φ_n has exactly n−1 zeros in (a,b) (oscillation theorem).</p>
+<p>For singular problems (p vanishes at an endpoint or the interval is infinite), Weyl's limit‑point/limit‑circle classification determines the deficiency indices. If both endpoints are limit‑point, the operator is essentially self‑adjoint and the spectrum is purely absolutely continuous (e.g., −y'' = λ y on ℝ). If an endpoint is limit‑circle, a boundary condition must be imposed to obtain a self‑adjoint extension; the spectrum may then contain discrete eigenvalues embedded in the continuous spectrum. The spectral measure dρ(λ) yields the eigenfunction expansion f(x) = ∫ φ(x,λ) (∫ f(t) φ(t,λ) w(t) dt) dρ(λ), generalising the Fourier series.</p>
+<p>Applications include quantum mechanics (Schrödinger operators), vibration analysis, and inverse spectral problems (Borg–Marchenko theorem: the potential q is uniquely determined by the spectral data). Numerical computation of eigenvalues uses the Pruessner–Sturm sequence or the shooting method combined with the Prüfer transformation, which converts the ODE to a first‑order system for the amplitude and phase, avoiding overflow.</p>
+
+<h3>Nonstandard Analysis: Hyperreal Foundations of Calculus</h3>
+<p>Abraham Robinson's nonstandard analysis (1961) provides a rigorous framework for infinitesimals by constructing a hyperreal field *ℝ that extends ℝ and contains nonzero infinitesimals ε (|ε| < r for every positive real r) and unlimited numbers ω (|ω| > r for every real r). The construction uses an ultrapower ℝ^ℕ/𝒰 with a free ultrafilter 𝒰 on ℕ. The transfer principle states that any first‑order statement true in ℝ is also true in *ℝ. Consequently, the standard part map st: *ℝ_fin → ℝ sends each finite hyperreal to the unique real infinitely close to it.</p>
+<p>Derivatives become ratios of infinitesimals: f'(x) = st((f(x+ε)−f(x))/ε) for any nonzero infinitesimal ε. The integral ∫_a^b f(x) dx is the standard part of the hyperfinite Riemann sum ∑<sub>k=0</sub><sup>N-1</sup> f(a + kΔx) Δx where N is unlimited and Δx = (b−a)/N is infinitesimal. The fundamental theorem of calculus follows directly from the telescoping sum of differences. Nonstandard analysis simplifies many proofs: the mean value theorem is an immediate consequence of the hyperfinite partition, and the existence of solutions to ODEs via the Picard iteration can be carried out on a hyperfinite time grid, then standardised.</p>
+<p>Internal sets are those that appear as ultrapowers of standard sets; external sets (e.g., the set of all infinitesimals) do not satisfy the transfer principle. The overspill and underspill principles relate internal sets to standard bounds. Loeb measure theory converts an internal finitely additive measure on a hyperfinite set into a countably additive standard measure, providing a bridge to conventional measure theory. While nonstandard analysis is not universally taught, it offers intuitive proofs and has been used in mathematical finance (hyperfinite binomial models) and in the study of stochastic processes via the Anderson–Keisler construction of Brownian motion.</p>
+
+<ul>
+<li>Confusing the space of distributions 𝒟' with the space of tempered distributions 𝒮'; the latter is required for Fourier transforms.</li>
+<li>Applying the Pontryagin Maximum Principle without checking the transversality condition for free terminal time or state.</li>
+<li>Assuming the homogenised tensor A^hom is simply the arithmetic average of A(y); the correct formula involves the correctors χ_i.</li>
+<li>Neglecting the limit‑point/limit‑circle classification when solving singular Sturm–Liouville problems, leading to missing boundary conditions.</li>
+<li>Treating external sets such as the collection of all infinitesimals as internal, which violates the transfer principle.</li>
+<li>Forgetting that the product of two arbitrary distributions is undefined, and attempting to multiply δ by itself.</li>
+<li>Using the standard part map on unlimited hyperreals, which is not defined.</li></ul>
+<h3>Calculus on Manifolds: Differential Forms and Stokes' Theorem</h3>
+<p>Differential forms provide a coordinate‑free language for integration on smooth manifolds. A k‑form ω on an n‑dimensional manifold M is an alternating multilinear map on the tangent space at each point. The exterior derivative d raises degree: dω is a (k+1)‑form satisfying d(dω)=0. Integration of an n‑form over an oriented n‑manifold with boundary ∂M is defined by pulling back to coordinate charts and using a partition of unity. Stokes' theorem unifies the fundamental theorem of calculus, Green's theorem, the divergence theorem, and the classical Stokes theorem: ∫_M dω = ∫<sub>∂M</sub> ω. The proof proceeds by reducing to the case of a form supported in a single chart, where it becomes the ordinary fundamental theorem of calculus applied iteratively. The theorem requires M to be a compact oriented manifold with piecewise smooth boundary; orientation of ∂M is induced by the outward normal followed by the orientation of M. In physics, the electromagnetic field strength F is a 2‑form, and Maxwell's equations become dF=0 and d*F=J, where * is the Hodge star. The de Rham cohomology groups H^k<sub>dR</sub>(M)=ker d / im d classify closed forms modulo exact ones; they are topological invariants isomorphic to singular cohomology with real coefficients. Computation of cohomology often uses the Mayer‑Vietoris sequence or the Hodge decomposition on Riemannian manifolds, where each cohomology class has a unique harmonic representative. The language of forms also simplifies the change‑of‑variables formula: the pullback φ*ω of a form under a smooth map φ satisfies ∫_N φ*ω = ∫_M ω when φ is an orientation‑preserving diffeomorphism. This framework extends naturally to integration on singular chains and currents, linking to geometric measure theory.</p>
+
+<h3>Malliavin Calculus and Stochastic Analysis</h3>
+<p>Malliavin calculus, also called the stochastic calculus of variations, extends the Itô calculus by providing a differential calculus on the Wiener space. The central object is the Malliavin derivative D_t acting on smooth functionals of Brownian motion B. For a cylindrical functional F = f(B<sub>t<sub>1</sub></sub>,…,B<sub>t_n</sub>) with f∈C^∞_b(ℝ^n), the derivative is D_t F = ∑<sub>i=1</sub>^n ∂_i f(B<sub>t<sub>1</sub></sub>,…,B<sub>t_n</sub>) 1<sub>[0,t_i]</sub>(t). This operator is closable from L^p(Ω) into L^p(Ω;L<sup>2</sup>[0,T]), and its domain is the Sobolev space 𝔻<sup>1,p</sup>. The adjoint of D is the Skorokhod integral δ, which coincides with the Itô integral for adapted processes but also integrates non‑adapted ones. The integration‑by‑parts formula E[⟨DF, h⟩<sub>L<sup>2</sup></sub>] = E[F δ(h)] holds for h in the domain of δ. A key application is the proof of Hörmander's theorem on hypoellipticity: if the Lie algebra generated by the diffusion vector fields spans the tangent space at each point, the transition density of the associated SDE is smooth. Malliavin calculus also yields the Clark‑Ocone formula, representing a square‑integrable functional as its expectation plus a Skorokhod integral of its conditional Malliavin derivative, which is fundamental in mathematical finance for hedging and Greeks computation. The theory requires careful handling of the Ornstein‑Uhlenbeck operator L = -δD, whose eigenfunctions are the Wiener chaos expansions. The Meyer inequalities give equivalence of norms between 𝔻<sup>k,p</sup> and the graph norms of L<sup>k/2</sup>. Recent developments include Malliavin calculus for Lévy processes and fractional Brownian motion, where the derivative is defined via chaos expansions or the underlying Gaussian Hilbert space.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Clark‑Ocone Representation</div>
+<div class="ex-text">Let B be a standard Brownian motion on [0,1] and F = B<sub>1</sub><sup>2</sup>. Compute the Malliavin derivative D_t F and verify the Clark‑Ocone formula F = E[F] + ∫<sub>0</sub><sup>1</sup> E[D_t F | ℱ_t] dB_t.</div>
+<div class="ex-soln">First, F = B<sub>1</sub><sup>2</sup> is a smooth cylindrical functional with f(x)=x<sup>2</sup>. The Malliavin derivative is D_t F = 2 B<sub>1</sub> 1<sub>[0,1]</sub>(t) = 2 B<sub>1</sub> for t∈[0,1]. The conditional expectation given ℱ_t is E[2 B<sub>1</sub> | ℱ_t] = 2 B_t because B<sub>1</sub> = B_t + (B<sub>1</sub>−B_t) and the increment is independent of ℱ_t with mean zero. The Skorokhod integral of this adapted process coincides with the Itô integral: ∫<sub>0</sub><sup>1</sup> 2 B_t dB_t = B<sub>1</sub><sup>2</sup> − 1 by Itô's formula. Since E[F] = E[B<sub>1</sub><sup>2</sup>] = 1, we have E[F] + ∫<sub>0</sub><sup>1</sup> E[D_t F | ℱ_t] dB_t = 1 + (B<sub>1</sub><sup>2</sup> − 1) = B<sub>1</sub><sup>2</sup> = F, confirming the formula.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for a Malliavin derivative, first identify whether the functional is cylindrical; if so, apply the chain rule directly. For the Skorokhod integral, check adaptedness: if the integrand is adapted, replace δ by the Itô integral. Remember the integration‑by‑parts identity E[⟨DF, h⟩] = E[F δ(h)] — it is the most frequent tool for proving regularity of densities.</div>
+</div>
+
+<h3>Geometric Measure Theory and Currents</h3>
+<p>Geometric measure theory (GMT) extends the notion of surfaces to objects with minimal regularity, enabling the study of area‑minimizing hypersurfaces and Plateau's problem. A k‑current T in ℝ^n is a continuous linear functional on the space of smooth compactly supported k‑forms 𝒟^k(ℝ^n), equipped with the weak* topology. The mass of T is M(T)=sup{T(ω): ω∈𝒟^k, |ω|≤1}. The boundary operator ∂T is defined by duality: ∂T(ω)=T(dω). Rectifiable currents are those that can be approximated in mass by integer‑multiplicity rectifiable sets; they admit a tangent plane almost everywhere and an integer multiplicity function. The Federer‑Fleming compactness theorem states that a sequence of integral currents with uniformly bounded mass and boundary mass has a subsequence converging weakly to an integral current. This compactness underpins the existence of mass‑minimizing currents in a given homology class, solving Plateau's problem for arbitrary codimension. The regularity theory, developed by De Giorgi, Almgren, and others, shows that area‑minimizing integral currents are smooth except on a singular set of Hausdorff dimension at most k−2. For codimension one, the singular set has dimension at most k−7 (Simons' theorem). The monotonicity formula for minimal surfaces gives density bounds and is crucial for blow‑up analysis. GMT also provides the framework for the theory of varifolds, which are measures on the Grassmannian bundle and capture unoriented surfaces. The first variation of a varifold yields the generalized mean curvature vector, leading to the notion of stationary varifolds and the Allard regularity theorem. Applications range from image processing (Mumford‑Shah functional) to general relativity (trapped surfaces).</p>
+
+<h3>Inverse Problems and Regularization Techniques</h3>
+<p>Inverse problems ask to recover an unknown cause from observed effects, typically formulated as solving an operator equation A x = y where A: X→Y is a compact linear operator between Hilbert spaces, x is the unknown parameter, and y is noisy data. Compactness of A makes the inverse A<sup>-1</sup> unbounded, so the problem is ill‑posed in the sense of Hadamard: solutions may not exist, may not be unique, or may not depend continuously on data. Regularization replaces the ill‑posed problem by a family of well‑posed approximations. Tikhonov regularization minimizes the functional J_α(x)=‖A x − y‖<sup>2</sup> + α‖x‖<sup>2</sup>, where α>0 is the regularization parameter. The minimizer x_α = (A^*A + α I)<sup>-1</sup> A^* y converges to a minimum‑norm solution as α→0 provided α=α(δ) satisfies α→0 and δ<sup>2</sup>/α→0, where δ is the noise level. The Morozov discrepancy principle chooses α such that ‖A x_α − y‖ = τ δ with τ>1. Iterative regularization methods, such as Landweber iteration x<sub>k+1</sub>=x_k + ω A^*(y−A x_k) with step size ω∈(0,2/‖A‖<sup>2</sup>), act as regularization when stopped early; the stopping index k plays the role of 1/α. For nonlinear inverse problems, the Newton‑type iterative regularization (e.g., iteratively regularized Gauss‑Newton method) linearizes at each step and applies Tikhonov regularization to the linearized equation. Statistical regularization interprets the problem in a Bayesian framework: the prior on x is Gaussian with covariance α<sup>-1</sup>I, and the posterior mean coincides with the Tikhonov solution. Convergence rates are derived under source conditions x^† = (A^*A)^ν w, yielding ‖x_α − x^†‖ = O(α^ν) for ν∈(0,1/2]. Modern developments include sparsity‑promoting regularization (ℓ<sup>1</sup> penalties) for compressed sensing and variational regularization with total variation for image denoising.</p>
+
+<h3>Quantum Calculus: q‑Derivatives and q‑Integrals</h3>
+<p>Quantum calculus, or q‑calculus, replaces the classical limit h→0 by a fixed deformation parameter q≠1. The q‑derivative of a function f is defined as D_q f(x) = (f(qx)−f(x))/((q−1)x) for x≠0, and D_q f(0)=f'(0) if the limit exists. This operator satisfies a q‑Leibniz rule: D_q (f g)(x) = f(qx) D_q g(x) + g(x) D_q f(x). The q‑exponential e_q(x) = ∑<sub>n=0</sub>^∞ x^n / [n]_q! where [n]_q = (1−q^n)/(1−q) and [n]_q! = [1]_q [2]_q … [n]_q, is an eigenfunction of D_q: D_q e_q(x) = e_q(x). The q‑integral from 0 to a is the Jackson integral ∫<sub>0</sub>^a f(x) d_q x = (1−q) a ∑<sub>k=0</sub>^∞ f(a q^k) q^k, which converges for suitable f and reduces to the Riemann integral as q→1. The fundamental theorem of q‑calculus holds: D_q ∫<sub>0</sub>^x f(t) d_q t = f(x) and ∫<sub>0</sub>^a D_q F(x) d_q x = F(a)−F(0). q‑calculus underlies the theory of quantum groups and appears in the representation theory of U_q(sl<sub>2</sub>). Orthogonal polynomials such as the q‑Hermite, q‑Laguerre, and Askey‑Wilson polynomials are eigenfunctions of second‑order q‑difference operators. The q‑Gamma function Γ_q(z) = (1−q)<sup>1−z</sup> ∏<sub>n=0</sub>^∞ (1−q<sup>n+1</sup>)/(1−q<sup>n+z</sup>) satisfies Γ_q(z+1)=[z]_q Γ_q(z) and Γ_q(z)→Γ(z) as q→1. Applications include q‑difference equations in special functions, combinatorial identities (the q‑binomial theorem), and the study of quantum integrable systems where the spectral parameter enters via q‑exponentials.</p>
+
+<ul>
+<li>Confusing the Malliavin derivative with the Itô derivative; the former acts on the whole path, the latter only on adapted processes.</li>
+<li>Assuming every current is rectifiable; many limits of rectifiable currents develop non‑rectifiable parts.</li>
+<li>Choosing the regularization parameter α solely by the discrepancy principle without verifying the source condition, leading to suboptimal rates.</li>
+<li>Treating the q‑derivative as a standard derivative when q is not close to 1; the chain rule and product rule acquire extra q‑dependent factors.</li>
+<li>Neglecting the orientation in Stokes' theorem for manifolds with corners; the induced orientation on each face must be consistent with the outward normal.</li>
+<li>Applying the Clark‑Ocone formula without checking that the functional belongs to the Malliavin‑Sobolev space 𝔻<sup>1,2</sup>.</li>
+<li>Always verify the hypotheses of theorems before applying them in examinations.</li></ul>
+<!-- course-addon:end --></div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-algebra.html" class="btn btn-primary">&#x2190; Algebra</a>
+                    <a href="lesson-trigonometry.html" class="btn btn-success">Trigonometry &#x2192;</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":40001,"text":"Evaluate: lim<sub>x&rarr;0</sub> (sin 2x + sin x)/x","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":false},{"l":"c","t":"2","c":false},{"l":"d","t":"3","c":true}],"sol":"lim (sin 2x)/x + lim (sin x)/x = 2 + 1 = 3."},{"id":40002,"text":"If f(x) = |x &minus; 1|, at x = 1 the function is:","options":[{"l":"a","t":"Continuous and differentiable","c":false},{"l":"b","t":"Continuous but not differentiable","c":true},{"l":"c","t":"Not continuous but differentiable","c":false},{"l":"d","t":"Neither continuous nor differentiable","c":false}],"sol":"|x-1| has a sharp corner at x=1. LHL=RHL=f(1)=0, so continuous. But LHD=-1, RHD=1, so not differentiable."},{"id":40003,"text":"Find dy/dx if y = x<sup>x</sup>:","options":[{"l":"a","t":"x<sup>x</sup> &middot; ln x","c":false},{"l":"b","t":"x<sup>x</sup> (1 + ln x)","c":true},{"l":"c","t":"x &middot; x<sup>x-1</sup>","c":false},{"l":"d","t":"x<sup>x</sup> &middot; x","c":false}],"sol":"ln y = x ln x. Differentiate: (1/y) dy/dx = ln x + 1. So dy/dx = x<sup>x</sup>(ln x + 1)."},{"id":40004,"text":"Evaluate: &int; e<sup>x</sup> sin x dx","options":[{"l":"a","t":"(e<sup>x</sup>/2)(sin x &minus; cos x) + C","c":true},{"l":"b","t":"(e<sup>x</sup>/2)(sin x + cos x) + C","c":false},{"l":"c","t":"e<sup>x</sup> cos x + C","c":false},{"l":"d","t":"e<sup>x</sup> sin x + C","c":false}],"sol":"Using integration by parts twice: &int; e<sup>x</sup> sin x dx = e<sup>x</sup>(sin x - cos x)/2 + C."},{"id":40005,"text":"The area bounded by y = x<sup>2</sup> and y = 2x is:","options":[{"l":"a","t":"4/3","c":true},{"l":"b","t":"2/3","c":false},{"l":"c","t":"8/3","c":false},{"l":"d","t":"1/3","c":false}],"sol":"Intersection: x<sup>2</sup> = 2x &rArr; x=0,2. Area = &int;<sub>0</sub><sup>2</sup> (2x &minus; x<sup>2</sup>) dx = [x<sup>2</sup> &minus; x<sup>3</sup>/3]<sub>0</sub><sup>2</sup> = 4 &minus; 8/3 = 4/3."},{"id":40006,"text":"Order and degree of (y''')<sup>2</sup> + y' = 0 are:","options":[{"l":"a","t":"Order 3, degree 2","c":true},{"l":"b","t":"Order 2, degree 3","c":false},{"l":"c","t":"Order 3, degree 1","c":false},{"l":"d","t":"Order 2, degree 2","c":false}],"sol":"Highest derivative is y''' (order 3). Its power is 2 (degree 2)."},{"id":40007,"text":"Evaluate: lim<sub>x&rarr;0</sub> (1 &minus; cos x)/x<sup>2</sup>","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":false},{"l":"c","t":"1/2","c":true},{"l":"d","t":"2","c":false}],"sol":"Using 1 &minus; cos x = 2 sin<sup>2</sup>(x/2): lim 2 sin<sup>2</sup>(x/2)/x<sup>2</sup> = (1/2) &times; 1<sup>2</sup> = 1/2."},{"id":40008,"text":"The function f(x) = x|x| at x = 0 is:","options":[{"l":"a","t":"Neither continuous nor differentiable","c":false},{"l":"b","t":"Continuous but not differentiable","c":false},{"l":"c","t":"Differentiable but not continuous","c":false},{"l":"d","t":"Both continuous and differentiable","c":true}],"sol":"lim<sub>x&rarr;0</sub> x|x| = 0 = f(0), so continuous. f'(0) = lim<sub>h&rarr;0</sub> h|h|/h = lim |h| = 0, so differentiable."},{"id":40009,"text":"Find &int; 1/(1 + cos x) dx","options":[{"l":"a","t":"tan(x/2) + C","c":true},{"l":"b","t":"cot(x/2) + C","c":false},{"l":"c","t":"sec(x/2) + C","c":false},{"l":"d","t":"tan x + C","c":false}],"sol":"&int; 1/(1+cos x) dx = &int; 1/(2 cos<sup>2</sup>(x/2)) dx = (1/2) &int; sec<sup>2</sup>(x/2) dx = tan(x/2) + C."},{"id":40010,"text":"Find the local maximum of f(x) = 2x<sup>3</sup> &minus; 9x<sup>2</sup> + 12x &minus; 3:","options":[{"l":"a","t":"1 at x = 2","c":false},{"l":"b","t":"2 at x = 1","c":true},{"l":"c","t":"3 at x = 0","c":false},{"l":"d","t":"0 at x = 3","c":false}],"sol":"f'(x) = 6x<sup>2</sup>&minus;18x+12 = 6(x&minus;1)(x&minus;2). f''(1) = &minus;6 &lt; 0 &rArr; local max, f(1) = 2."},{"id":40011,"text":"Slope of tangent to y = x<sup>3</sup> at (1,1) is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"2","c":false},{"l":"c","t":"3","c":true},{"l":"d","t":"0","c":false}],"sol":"dy/dx = 3x<sup>2</sup>. At x=1, slope = 3(1) = 3."},{"id":40012,"text":"Solve: dy/dx = y/x, y(1) = 2","options":[{"l":"a","t":"y = 2x","c":true},{"l":"b","t":"y = x<sup>2</sup>","c":false},{"l":"c","t":"y = 2/x","c":false},{"l":"d","t":"y = x + 1","c":false}],"sol":"Separate: dy/y = dx/x. ln y = ln x + C. y = Cx. Using y(1)=2: C=2, so y=2x."},{"id":40013,"text":"Evaluate: &int;<sub>0</sub><sup>&pi;/2</sup> cos x/(sin x + cos x) dx","options":[{"l":"a","t":"&pi;/2","c":false},{"l":"b","t":"&pi;/4","c":true},{"l":"c","t":"&pi;/6","c":false},{"l":"d","t":"&pi;/3","c":false}],"sol":"I = &int;<sub>0</sub><sup>&pi;/2</sup> cos x/(cos x + sin x) dx. Adding with the sin version: 2I = &int;<sub>0</sub><sup>&pi;/2</sup> 1 dx = &pi;/2, so I = &pi;/4."},{"id":40014,"text":"The integrating factor of dy/dx + (1/x)y = x is:","options":[{"l":"a","t":"x","c":true},{"l":"b","t":"1/x","c":false},{"l":"c","t":"ln x","c":false},{"l":"d","t":"e<sup>x</sup>","c":false}],"sol":"P = 1/x. IF = e<sup>&int; (1/x) dx</sup> = e<sup>ln x</sup> = x."},{"id":40015,"text":"Evaluate: lim<sub>x&rarr;0</sub> (e<sup>3x</sup> &minus; 1)/(2x)","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"1/2","c":false},{"l":"c","t":"3/2","c":true},{"l":"d","t":"3","c":false}],"sol":"Using formula lim (e<sup>ax</sup>-1)/(bx) = a/b: 3/2 = 1.5."},{"id":40016,"text":"If f(x) = { x+1, x&lt;2; 5, x=2; 3x-1, x&gt;2 }, at x=2:","options":[{"l":"a","t":"Continuous","c":false},{"l":"b","t":"Removable discontinuity","c":false},{"l":"c","t":"Jump discontinuity","c":true},{"l":"d","t":"Infinite discontinuity","c":false}],"sol":"LHL=3, RHL=5, f(2)=5. Since LHL &ne; RHL, jump discontinuity at x=2."},{"id":40017,"text":"Find d<sup>2</sup>y/dx<sup>2</sup> if y = x<sup>3</sup> + 2x<sup>2</sup> + 1","options":[{"l":"a","t":"3x + 4","c":false},{"l":"b","t":"6x + 4","c":true},{"l":"c","t":"3x<sup>2</sup> + 4x","c":false},{"l":"d","t":"6x + 2","c":false}],"sol":"dy/dx = 3x<sup>2</sup> + 4x. d<sup>2</sup>y/dx<sup>2</sup> = 6x + 4."},{"id":40018,"text":"The radius of a circle is increasing at 1 cm/s. Rate of area increase when r=2 cm:","options":[{"l":"a","t":"2&pi;","c":false},{"l":"b","t":"4&pi;","c":true},{"l":"c","t":"&pi;","c":false},{"l":"d","t":"8&pi;","c":false}],"sol":"A = &pi;r<sup>2</sup>. dA/dt = 2&pi;r dr/dt = 2&pi;(2)(1) = 4&pi; cm<sup>2</sup>/s."},{"id":40019,"text":"Solve: dy/dx = x/y","options":[{"l":"a","t":"y = x<sup>2</sup>/2 + C","c":false},{"l":"b","t":"y<sup>2</sup> = x<sup>2</sup> + C","c":true},{"l":"c","t":"y = x + C","c":false},{"l":"d","t":"y<sup>2</sup> = 2x + C","c":false}],"sol":"y dy = x dx. y<sup>2</sup>/2 = x<sup>2</sup>/2 + C. y<sup>2</sup> = x<sup>2</sup> + K."},{"id":40020,"text":"Find &int; sec x (sec x + tan x) dx","options":[{"l":"a","t":"tan x + sec x + C","c":true},{"l":"b","t":"tan x + C","c":false},{"l":"c","t":"sec x + C","c":false},{"l":"d","t":"sin x + C","c":false}],"sol":"&int; (sec<sup>2</sup>x + sec x tan x) dx = tan x + sec x + C."},{"id":40021,"text":"Evaluate: lim<sub>x&rarr;0</sub> (sin 3x)/(2x)","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"3/2","c":true},{"l":"c","t":"2/3","c":false},{"l":"d","t":"0","c":false}],"sol":"lim (sin 3x)/(2x) = (3/2) &times; lim (sin 3x)/(3x) = 3/2 &times; 1 = 3/2."},{"id":40022,"text":"The function f(x) = x<sup>2</sup> is:","options":[{"l":"a","t":"Increasing on (&minus;&infin;, &infin;)","c":false},{"l":"b","t":"Decreasing on (&minus;&infin;, 0) and increasing on (0, &infin;)","c":true},{"l":"c","t":"Decreasing on (&minus;&infin;, &infin;)","c":false},{"l":"d","t":"Increasing on (&minus;&infin;, 0) and decreasing on (0, &infin;)","c":false}],"sol":"f'(x) = 2x. f'(x) &lt; 0 for x &lt; 0 (decreasing), f'(x) &gt; 0 for x &gt; 0 (increasing)."},{"id":40023,"text":"Find &int; 1/(1 + x<sup>2</sup>) dx","options":[{"l":"a","t":"tan x + C","c":false},{"l":"b","t":"tan<sup>&minus;1</sup> x + C","c":true},{"l":"c","t":"sin<sup>&minus;1</sup> x + C","c":false},{"l":"d","t":"cot x + C","c":false}],"sol":"Standard formula: &int; 1/(1 + x<sup>2</sup>) dx = tan<sup>&minus;1</sup> x + C."},{"id":40024,"text":"Equation of normal to y = x<sup>2</sup> at (1,1) is:","options":[{"l":"a","t":"x + 2y = 3","c":false},{"l":"b","t":"x + 2y = 1","c":false},{"l":"c","t":"2x + y = 3","c":false},{"l":"d","t":"2y + x = 3","c":true}],"sol":"Slope of tangent = 2, so slope of normal = &minus;1/2. Equation: y &minus; 1 = (&minus;1/2)(x &minus; 1). 2y &minus; 2 = &minus;x + 1. x + 2y = 3."},{"id":40025,"text":"Evaluate: &int;<sub>0</sub><sup>1</sup> (x<sup>2</sup> + 1) dx","options":[{"l":"a","t":"2/3","c":false},{"l":"b","t":"4/3","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"5/3","c":false}],"sol":"&int;<sub>0</sub><sup>1</sup> (x<sup>2</sup> + 1) dx = [x<sup>3</sup>/3 + x]<sub>0</sub><sup>1</sup> = (1/3 + 1) = 4/3."},{"id":40026,"text":"The degree of (d<sup>3</sup>y/dx<sup>3</sup>)<sup>2/3</sup> + y = 0 after removing radicals is:","options":[{"l":"a","t":"2","c":true},{"l":"b","t":"3","c":false},{"l":"c","t":"2/3","c":false},{"l":"d","t":"1","c":false}],"sol":"Remove the radical by cubing both sides: (d<sup>3</sup>y/dx<sup>3</sup>)<sup>2</sup> + y<sup>3</sup> = 0. The power of highest derivative is 2. So degree = 2."},{"id":40027,"text":"If y = sin(ax), find d<sup>2</sup>y/dx<sup>2</sup>","options":[{"l":"a","t":"a cos(ax)","c":false},{"l":"b","t":"a<sup>2</sup> sin(ax)","c":false},{"l":"c","t":"&minus;a<sup>2</sup> sin(ax)","c":true},{"l":"d","t":"&minus;a sin(ax)","c":false}],"sol":"dy/dx = a cos(ax). d<sup>2</sup>y/dx<sup>2</sup> = &minus;a<sup>2</sup> sin(ax)."},{"id":40028,"text":"Evaluate: lim<sub>x&rarr;&infin;</sub> (1 + 2/x)<sup>x</sup>","options":[{"l":"a","t":"e","c":false},{"l":"b","t":"e<sup>2</sup>","c":true},{"l":"c","t":"2e","c":false},{"l":"d","t":"e<sup>&minus;2</sup>","c":false}],"sol":"Using lim<sub>x&rarr;&infin;</sub> (1 + a/x)<sup>x</sup> = e<sup>a</sup>, we get e<sup>2</sup>."},{"id":40029,"text":"The integrating factor of dy/dx + y cot x = x is:","options":[{"l":"a","t":"sin x","c":true},{"l":"b","t":"cos x","c":false},{"l":"c","t":"tan x","c":false},{"l":"d","t":"sec x","c":false}],"sol":"P = cot x. IF = e<sup>&int; cot x dx</sup> = e<sup>ln|sin x|</sup> = sin x."},{"id":40030,"text":"Find &int; (2x)/(x<sup>2</sup> + 1) dx","options":[{"l":"a","t":"ln(x<sup>2</sup> + 1) + C","c":true},{"l":"b","t":"tan<sup>&minus;1</sup> x + C","c":false},{"l":"c","t":"ln x + C","c":false},{"l":"d","t":"x/(x<sup>2</sup>+1) + C","c":false}],"sol":"Let u = x<sup>2</sup> + 1, du = 2x dx. &int; du/u = ln|u| + C = ln(x<sup>2</sup> + 1) + C."},{"id":40031,"text":"Find the area enclosed by y = x and y = x<sup>3</sup>","options":[{"l":"a","t":"1/2","c":false},{"l":"b","t":"1/4","c":true},{"l":"c","t":"1/3","c":false},{"l":"d","t":"1/6","c":false}],"sol":"Intersection: x = x<sup>3</sup> &rArr; x(1&minus;x<sup>2</sup>)=0 &rArr; x=0,&plusmn;1. Area from 0 to 1: &int;<sub>0</sub><sup>1</sup> (x &minus; x<sup>3</sup>) dx = [x<sup>2</sup>/2 &minus; x<sup>4</sup>/4]<sub>0</sub><sup>1</sup> = 1/2 &minus; 1/4 = 1/4. Total area of both symmetric parts = 2 &times; 1/4 = 1/2."},{"id":40032,"text":"Evaluate: lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1)/sin x","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":true},{"l":"c","t":"&infin;","c":false},{"l":"d","t":"&minus;1","c":false}],"sol":"Using L'Hopital: lim e<sup>x</sup>/cos x = 1/1 = 1."},{"id":40033,"text":"If f(x) = cos x, then f'(x) at x = &pi;/2 is:","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"&minus;1","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"&pi;/2","c":false}],"sol":"f'(x) = &minus;sin x. f'(&pi;/2) = &minus;sin(&pi;/2) = &minus;1."},{"id":40035,"text":"Find &int; cos<sup>2</sup>x dx","options":[{"l":"a","t":"(x + sin 2x)/2 + C","c":false},{"l":"b","t":"(x + sin 2x)/4 + C","c":false},{"l":"c","t":"(x + sin 2x/2)/2 + C","c":true},{"l":"d","t":"(x &minus; sin 2x)/2 + C","c":false}],"sol":"cos<sup>2</sup>x = (1+cos 2x)/2. &int; (1+cos 2x)/2 dx = x/2 + sin 2x/4 + C = (2x + sin 2x)/4 + C."},{"id":40036,"text":"Evaluate: &int;<sub>&minus;1</sub><sup>1</sup> x<sup>3</sup> dx","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"2","c":false},{"l":"c","t":"1","c":false},{"l":"d","t":"&minus;1","c":false}],"sol":"x<sup>3</sup> is an odd function. &int;<sub>&minus;a</sub><sup>a</sup> odd function dx = 0."},{"id":40037,"text":"The value of lim<sub>x&rarr;&infin;</sub> (1 + 1/x)<sup>2x</sup> is:","options":[{"l":"a","t":"e","c":false},{"l":"b","t":"e<sup>2</sup>","c":true},{"l":"c","t":"2e","c":false},{"l":"d","t":"e<sup>&minus;2</sup>","c":false}],"sol":"lim (1 + 1/x)<sup>2x</sup> = [lim (1 + 1/x)<sup>x</sup>]<sup>2</sup> = e<sup>2</sup>."},{"id":40038,"text":"If y = ln(sin x), then dy/dx is:","options":[{"l":"a","t":"cot x","c":false},{"l":"b","t":"tan x","c":false},{"l":"c","t":"&minus;cot x","c":false},{"l":"d","t":"cos x/sin x","c":true}],"sol":"Using chain rule: dy/dx = (1/sin x) &times; cos x = cot x = cos x/sin x."},{"id":40039,"text":"The area under y = e<sup>x</sup> from x = 0 to x = 1 is:","options":[{"l":"a","t":"e &minus; 1","c":true},{"l":"b","t":"e","c":false},{"l":"c","t":"1 &minus; e","c":false},{"l":"d","t":"e + 1","c":false}],"sol":"&int;<sub>0</sub><sup>1</sup> e<sup>x</sup> dx = [e<sup>x</sup>]<sub>0</sub><sup>1</sup> = e &minus; e<sup>0</sup> = e &minus; 1."},{"id":40040,"text":"The solution of dy/dx = e<sup>x+y</sup> is:","options":[{"l":"a","t":"e<sup>x</sup> + e<sup>&minus;y</sup> = C","c":true},{"l":"b","t":"e<sup>x</sup> + e<sup>y</sup> = C","c":false},{"l":"c","t":"e<sup>x</sup> &minus; e<sup>y</sup> = C","c":false},{"l":"d","t":"e<sup>&minus;x</sup> + e<sup>y</sup> = C","c":false}],"sol":"dy/dx = e<sup>x</sup> &middot; e<sup>y</sup>. Separate: e<sup>&minus;y</sup> dy = e<sup>x</sup> dx. Integrate: &minus;e<sup>&minus;y</sup> = e<sup>x</sup> + C. e<sup>x</sup> + e<sup>&minus;y</sup> = K."},{"id":40041,"text":"Find &int; 1/(x ln x) dx","options":[{"l":"a","t":"ln(ln x) + C","c":true},{"l":"b","t":"ln x + C","c":false},{"l":"c","t":"1/ln x + C","c":false},{"l":"d","t":"x ln x + C","c":false}],"sol":"Let u = ln x, du = dx/x. &int; du/u = ln|u| + C = ln|ln x| + C."},{"id":40042,"text":"Evaluate: lim<sub>x&rarr;0</sub> (tan x &minus; sin x)/x<sup>3</sup>","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1/2","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"&minus;1/2","c":false}],"sol":"tan x = x + x<sup>3</sup>/3 + ..., sin x = x &minus; x<sup>3</sup>/6 + .... tan x &minus; sin x = x<sup>3</sup>(1/3 + 1/6) = x<sup>3</sup>/2. Limit = 1/2."},{"id":40043,"text":"If f(x) = x<sup>3</sup>, then the value of c in (0,2) by LMVT is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"2/&radic;3","c":true},{"l":"c","t":"&radic;3","c":false},{"l":"d","t":"4/3","c":false}],"sol":"f(2)=8, f(0)=0. f'(c)=3c<sup>2</sup>. By LMVT: 3c<sup>2</sup> = (8&minus;0)/(2&minus;0) = 4. c<sup>2</sup>=4/3, so c = 2/&radic;3."},{"id":40044,"text":"The area between y = sin x and x-axis from 0 to &pi; is:","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":false},{"l":"c","t":"2","c":true},{"l":"d","t":"&pi;","c":false}],"sol":"&int;<sub>0</sub><sup>&pi;</sup> sin x dx = [&minus;cos x]<sub>0</sub><sup>&pi;</sup> = &minus;cos &pi; + cos 0 = &minus;(&minus;1) + 1 = 2."},{"id":40045,"text":"Find &int; dx/(4 + x<sup>2</sup>)","options":[{"l":"a","t":"(1/4) tan<sup>&minus;1</sup>(x/2) + C","c":false},{"l":"b","t":"(1/2) tan<sup>&minus;1</sup>(x/2) + C","c":true},{"l":"c","t":"tan<sup>&minus;1</sup>(x/2) + C","c":false},{"l":"d","t":"(1/4) tan<sup>&minus;1</sup>x + C","c":false}],"sol":"&int; dx/(a<sup>2</sup> + x<sup>2</sup>) = (1/a) tan<sup>&minus;1</sup>(x/a) + C. Here a=2, so (1/2) tan<sup>&minus;1</sup>(x/2) + C."},{"id":40046,"text":"The value of lim<sub>x&rarr;0</sub> |x|/x is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"&minus;1","c":false},{"l":"c","t":"0","c":false},{"l":"d","t":"Does not exist","c":true}],"sol":"LHL = lim<sub>x&rarr;0<sup>&minus;</sup></sub> (&minus;x)/x = &minus;1. RHL = lim<sub>x&rarr;0<sup>+</sup></sub> x/x = 1. LHL &ne; RHL, so limit does not exist."},{"id":40047,"text":"If y = x<sup>2</sup> e<sup>x</sup>, find dy/dx","options":[{"l":"a","t":"2x e<sup>x</sup>","c":false},{"l":"b","t":"x e<sup>x</sup>(x + 2)","c":true},{"l":"c","t":"x<sup>2</sup> e<sup>x</sup>","c":false},{"l":"d","t":"e<sup>x</sup>(x<sup>2</sup> + 1)","c":false}],"sol":"Using product rule: dy/dx = 2x e<sup>x</sup> + x<sup>2</sup> e<sup>x</sup> = x e<sup>x</sup>(2 + x)."},{"id":40048,"text":"Evaluate: &int; sin 2x dx","options":[{"l":"a","t":"&minus;cos 2x + C","c":false},{"l":"b","t":"&minus;(1/2) cos 2x + C","c":true},{"l":"c","t":"cos 2x + C","c":false},{"l":"d","t":"(1/2) cos 2x + C","c":false}],"sol":"&int; sin 2x dx = &minus;(1/2) cos 2x + C."},{"id":40049,"text":"The differential equation dy/dx = (x + y)/x is:","options":[{"l":"a","t":"Variable separable","c":false},{"l":"b","t":"Homogeneous","c":true},{"l":"c","t":"Linear","c":false},{"l":"d","t":"Exact","c":false}],"sol":"dy/dx = 1 + y/x = F(y/x). So it is homogeneous."},{"id":40050,"text":"Find the global minimum of f(x) = x<sup>2</sup> on [&minus;1, 2]","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"1","c":false},{"l":"c","t":"4","c":false},{"l":"d","t":"&minus;1","c":false}],"sol":"f'(x) = 2x = 0 &rArr; x = 0. f(0) = 0, f(&minus;1) = 1, f(2) = 4. Global minimum is 0 at x = 0."},{"id":40051,"text":"Evaluate: &int; 1/&radic;(1 &minus; x<sup>2</sup>) dx","options":[{"l":"a","t":"sin<sup>&minus;1</sup> x + C","c":true},{"l":"b","t":"cos<sup>&minus;1</sup> x + C","c":false},{"l":"c","t":"tan<sup>&minus;1</sup> x + C","c":false},{"l":"d","t":"sec<sup>&minus;1</sup> x + C","c":false}],"sol":"Standard formula: &int; 1/&radic;(1 &minus; x<sup>2</sup>) dx = sin<sup>&minus;1</sup> x + C."},{"id":40052,"text":"The second derivative of x<sup>3</sup> at x = 2 is:","options":[{"l":"a","t":"6","c":false},{"l":"b","t":"12","c":true},{"l":"c","t":"24","c":false},{"l":"d","t":"3","c":false}],"sol":"f'(x) = 3x<sup>2</sup>, f''(x) = 6x. f''(2) = 12."},{"id":40053,"text":"If f(x) = x + 1/x, the interval where f is decreasing is:","options":[{"l":"a","t":"(0, &infin;)","c":false},{"l":"b","t":"(&minus;1, 1)","c":false},{"l":"c","t":"(&minus;&infin;, &minus;1) &cup; (0, 1)","c":false},{"l":"d","t":"(&minus;1, 0) &cup; (0, 1)","c":true}],"sol":"f'(x) = 1 &minus; 1/x<sup>2</sup>. f'(x) &lt; 0 when 1 &minus; 1/x<sup>2</sup> &lt; 0 &rArr; x<sup>2</sup> &lt; 1 &rArr; &minus;1 &lt; x &lt; 1. Excluding x=0: (&minus;1, 0) &cup; (0, 1)."},{"id":40054,"text":"The solution of dy/dx = x<sup>2</sup>/y<sup>2</sup> is:","options":[{"l":"a","t":"y<sup>3</sup> = x<sup>3</sup> + C","c":true},{"l":"b","t":"y = x + C","c":false},{"l":"c","t":"y<sup>2</sup> = x<sup>2</sup> + C","c":false},{"l":"d","t":"y<sup>3</sup> &minus; x<sup>3</sup> = C","c":false}],"sol":"y<sup>2</sup> dy = x<sup>2</sup> dx. y<sup>3</sup>/3 = x<sup>3</sup>/3 + C. y<sup>3</sup> = x<sup>3</sup> + K."},{"id":40055,"text":"Evaluate: &int;<sub>0</sub><sup>&pi;/2</sup> sin<sup>2</sup>x dx","options":[{"l":"a","t":"&pi;/4","c":true},{"l":"b","t":"&pi;/2","c":false},{"l":"c","t":"&pi;/6","c":false},{"l":"d","t":"&pi;/3","c":false}],"sol":"&int;<sub>0</sub><sup>&pi;/2</sup> (1&minus;cos 2x)/2 dx = (1/2)[x &minus; sin 2x/2]<sub>0</sub><sup>&pi;/2</sup> = (1/2)(&pi;/2 &minus; 0) = &pi;/4."},{"id":40056,"text":"The area between y = x<sup>2</sup> and y = x<sup>3</sup> is:","options":[{"l":"a","t":"1/12","c":true},{"l":"b","t":"1/6","c":false},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/3","c":false}],"sol":"Intersection: x<sup>2</sup> = x<sup>3</sup> &rArr; x<sup>2</sup>(1&minus;x)=0 &rArr; x=0,1. Area = &int;<sub>0</sub><sup>1</sup> (x<sup>2</sup> &minus; x<sup>3</sup>) dx = [x<sup>3</sup>/3 &minus; x<sup>4</sup>/4]<sub>0</sub><sup>1</sup> = 1/3 &minus; 1/4 = 1/12."},{"id":40057,"text":"Find lim<sub>x&rarr;0</sub> (cos x &minus; 1)/x","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"&minus;1","c":false},{"l":"c","t":"1","c":false},{"l":"d","t":"Does not exist","c":false}],"sol":"Using cos x &minus; 1 = &minus;2 sin<sup>2</sup>(x/2): lim (&minus;2 sin<sup>2</sup>(x/2))/x = 0. Alternatively, L'Hopital: lim (&minus;sin x)/1 = 0."},{"id":40058,"text":"If y = ln(x<sup>2</sup> + 1), dy/dx is:","options":[{"l":"a","t":"2x/(x<sup>2</sup> + 1)","c":true},{"l":"b","t":"1/(x<sup>2</sup> + 1)","c":false},{"l":"c","t":"2x","c":false},{"l":"d","t":"x/(x<sup>2</sup> + 1)","c":false}],"sol":"Chain rule: dy/dx = (1/(x<sup>2</sup>+1)) &times; 2x = 2x/(x<sup>2</sup>+1)."},{"id":40059,"text":"The value of &int; e<sup>x</sup>(sin x + cos x) dx is:","options":[{"l":"a","t":"e<sup>x</sup> sin x + C","c":true},{"l":"b","t":"e<sup>x</sup> cos x + C","c":false},{"l":"c","t":"e<sup>x</sup>(sin x + cos x) + C","c":false},{"l":"d","t":"e<sup>x</sup>(sin x &minus; cos x) + C","c":false}],"sol":"d/dx(e<sup>x</sup> sin x) = e<sup>x</sup> sin x + e<sup>x</sup> cos x = e<sup>x</sup>(sin x + cos x). So &int; e<sup>x</sup>(sin x + cos x) dx = e<sup>x</sup> sin x + C."},{"id":40060,"text":"Find the equation of the normal to y = x<sup>3</sup> at (1,1)","options":[{"l":"a","t":"x + 3y = 4","c":true},{"l":"b","t":"3x + y = 4","c":false},{"l":"c","t":"x + y = 2","c":false},{"l":"d","t":"x &minus; 3y = &minus;2","c":false}],"sol":"dy/dx = 3x<sup>2</sup>, slope at (1,1) = 3. Normal slope = &minus;1/3. Equation: y &minus; 1 = (&minus;1/3)(x &minus; 1). 3y &minus; 3 = &minus;x + 1. x + 3y = 4."},{"id":40061,"text":"The value of &int;<sub>0</sub><sup>1</sup> x(1 &minus; x)<sup>5</sup> dx is:","options":[{"l":"a","t":"1/42","c":true},{"l":"b","t":"1/21","c":false},{"l":"c","t":"1/7","c":false},{"l":"d","t":"1/6","c":false}],"sol":"Using Beta function: &int;<sub>0</sub><sup>1</sup> x<sup>m&minus;1</sup>(1&minus;x)<sup>n&minus;1</sup> dx = B(m,n) = &Gamma;(m)&Gamma;(n)/&Gamma;(m+n). Here m=2, n=6. B(2,6) = 1!5!/7! = 120/5040 = 1/42."},{"id":40062,"text":"If y = sin<sup>&minus;1</sup>(x), find dy/dx","options":[{"l":"a","t":"1/&radic;(1 &minus; x<sup>2</sup>)","c":true},{"l":"b","t":"&minus;1/&radic;(1 &minus; x<sup>2</sup>)","c":false},{"l":"c","t":"1/(1 + x<sup>2</sup>)","c":false},{"l":"d","t":"cos x","c":false}],"sol":"Standard formula: d/dx(sin<sup>&minus;1</sup>x) = 1/&radic;(1 &minus; x<sup>2</sup>)."},{"id":40063,"text":"Evaluate: lim<sub>x&rarr;&infin;</sub> (3x<sup>2</sup> + 2)/(2x<sup>2</sup> &minus; 1)","options":[{"l":"a","t":"3/2","c":true},{"l":"b","t":"2/3","c":false},{"l":"c","t":"&infin;","c":false},{"l":"d","t":"1","c":false}],"sol":"Divide numerator and denominator by x<sup>2</sup>: lim (3 + 2/x<sup>2</sup>)/(2 &minus; 1/x<sup>2</sup>) = 3/2."}];
+        var answered={},correctCount=0,lessonSlug="calculus";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("nda-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("nda-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("nda-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>
+
+
+
+

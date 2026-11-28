@@ -1,0 +1,45 @@
+name: Course Freshness
+
+# data/course-freshness.json answers "when was this lesson last updated?" with
+# the last commit that actually touched the file. That needs full history, so it
+# cannot be built on the shallow deploy clone — it runs here, weekly, and the
+# deploy stamps every lesson from the committed map.
+
+on:
+  schedule:
+    - cron: '37 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: course-freshness
+  cancel-in-progress: false
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # the whole point: per-file commit dates
+          filter: blob:none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build the freshness map
+        run: node scripts/build-course-freshness.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/course-freshness.json
+          bash scripts/ci-push.sh "course-freshness: last-updated map refreshed"

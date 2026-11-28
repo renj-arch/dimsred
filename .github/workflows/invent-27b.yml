@@ -1,0 +1,106 @@
+name: Invent Questions (27B quality lane)
+
+# The slow, high-quality lane. Trial evidence (invent run 39136862076,
+# 2026-10-18): batiai/qwen3.8-27b:iq3 (~17 GB, iq3 quant) invented and
+# published 3 accepted questions in the 110-min deadline — 4 slots attempted,
+# 1 rejected as unparseable JSON, each accepted item an exam-grade question
+# with a full worked solution (e.g. sequential-discount equivalence, 23.5%).
+# The 9b bulk lane (invent-questions.yml, 3x/day) carries volume; this lane
+# adds a few premium items per day. Pools union across runs (ci-push unions
+# the questions arrays), so neither lane can drop the other's questions.
+#
+# CPU economics, measured: ~20 min per accepted question plus a ~34-min
+# 17 GB pull. The weights do not fit the 10 GB repo cache — re-pulling every
+# run is accepted on purpose for a once-a-day lane whose point is quality.
+# The shared concurrency group keeps it serialized with the 9b lane.
+#
+# MODEL PINNING (upgrade safety, added 2026-10-18): scheduled runs are
+# DIGEST-PINNED — the pull step refuses to run if the upstream tag's manifest
+# digest moved, so a vendor re-tag can never silently change the weights a
+# scheduled run uses. To pilot an upgrade, dispatch this workflow with
+# model=<candidate tag> (trials skip the digest check on purpose); evidence
+# from the trial (acceptance / parse failures / wall time) is what justifies
+# bumping PINNED_DIGEST deliberately.
+on:
+  schedule:
+    - cron: '37 1 * * *'   # once daily, off :00 and off the busy evening block
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'TRIAL ONLY: model tag to test instead of the pinned default (scheduled runs ignore this)'
+        required: false
+        default: ''
+
+concurrency:
+  group: invent-questions   # shared with the 9b lane: never run concurrently
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  invent27b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 195
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/invented
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Invent questions (quality budget — model chosen by the pull step)
+        # 110-min graceful deadline (env) and a 125-min step cap behind it.
+        # num_ctx 4096 halves CPU prompt-eval vs the default 8192 (the briefs
+        # fit); num_predict 1200 still covers a full worked solution. KV-cache
+        # quantization is deliberately NOT set: at 4k context the f16 cache is
+        # small, and q8_0 KV depends on flash-attention support the CPU build
+        # is inconsistent about — not worth risking a load failure for ~0.25 GB.
+        timeout-minutes: 125
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INVENT_PER_SLOT: '1'
+          INVENT_DEADLINE_MIN: '110'
+          INVENT_NUM_CTX: '4096'
+          INVENT_NUM_PREDICT: '1200'
+          # This is the premium-quality lane: only fully gated items are ever
+          # published, so a run where the model's candidates all fail the
+          # checks has produced nothing to publish — a no-op, not a corrupt
+          # corpus. Keep the run green (with the full reject breakdown in the
+          # log) instead of failing daily on model-quality variance. The bulk
+          # 9B lane (invent-questions.yml) stays fail-closed.
+          INVENT_ALLOW_EMPTY: '1'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
+
+      # Revalidate the pool before it is ever committed. The generator's own
+      # checks cannot prove that the key follows from the stem; this gate
+      # catches the class of confident-but-wrong items that previously shipped.
+      - name: Revalidate invented pool (gate)
+        run: node scripts/revalidate-invented.js --quarantine
+
+      # Incremental saves mean even a timeout keeps every question invented
+      # so far — publish whatever landed. Nothing staged -> ci-push exits 0.
+      - name: Publish invented questions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/invented/
+          bash scripts/ci-push.sh "invent: hosted model invented fresh exam questions (run #${{ github.run_number }})"

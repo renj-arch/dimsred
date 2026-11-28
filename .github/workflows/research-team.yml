@@ -1,0 +1,164 @@
+name: Research Team (original solutions)
+
+# A scientist solves each exam question, an inventor finds the fastest valid
+# method, and a verifier solves it again. A method is published only when the
+# two independent solves agree. Novelty is stated as "original to this lab";
+# no world-first claim is made.
+on:
+  schedule:
+    # Four investigations a day build a real corpus quickly; the lane has its
+    # own concurrency group and does not block the paper runs.
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Questions to investigate this run'
+        required: false
+        default: '12'
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'qwen3.5:9b'
+      exams:
+        description: 'Comma-separated exam folders (blank = all)'
+        required: false
+        default: ''
+
+concurrency:
+  group: research-team
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Investigate questions
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS="--limit=${{ inputs.limit || '12' }} --max-minutes=110"
+          if [ -n "${{ inputs.exams }}" ]; then ARGS="$ARGS --exams=${{ inputs.exams }}"; fi
+          node scripts/research-run.js $ARGS
+
+      - name: Research the invented pool
+        if: always()
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RESEARCH_INVENT_COUNT: '12'
+          RESEARCH_INVENT_DEADLINE_MIN: '25'
+        run: node scripts/research-invented.js || true
+
+      - name: Rebuild the research page
+        if: always()
+        run: node scripts/build-research-page.js
+
+      - name: Rebuild affected paper pages
+        if: always()
+        run: |
+          if [ -f data/research-build-targets.json ]; then
+            node -e "const t=require('./data/research-build-targets.json');console.log((t.slugs||[]).join('\n'))" | while read -r slug; do
+              [ -n "$slug" ] || continue
+              echo "rebuilding $slug"
+              node scripts/build-full-papers.js --slug="$slug" || true
+              node scripts/build-papers.js --slug="$slug" || true
+            done
+          fi
+          node scripts/generate-sitemap.js || true
+
+      - name: Commit and push
+        if: always()
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/research-solutions.json data/research-build-targets.json research-team.html
+          git add data/research-invented.json 2>/dev/null || true
+          git add -f data/research-solutions.json data/research-build-targets.json data/research-invented.json
+          git add -A -- '*mock-tests/*.html' sitemap.xml 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No new research to publish"
+            exit 0
+          fi
+          git commit -m "research: original methods $(date +'%Y-%m-%d')"
+          pushed=""
+          for i in 1 2 3; do
+            # The build step leaves regenerated mock-test HTML and sitemap.xml
+            # unstaged; a plain `pull --rebase` refuses to run with a dirty
+            # tree (2026-11-07 run 42373324262). Autostash carries them
+            # across the rebase instead of losing the publish.
+            timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            git add -A 2>/dev/null || true
+            git commit --no-edit 2>/dev/null || true
+            if git push origin HEAD:main; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+          done
+
+      - name: Final publish fallback (merge-with-ours only, no rebase)
+        if: always()
+        run: |
+          # `pushed` is a shell variable from the previous step and does not
+          # survive into this one, so the old `[ -z "$pushed" ]` test failed
+          # every run even when the push had succeeded (run 43031735754 pushed
+          # 4b8b5c84..4405e5dc, then this step reported "could not be pushed").
+          # Check the remote state instead of a variable we cannot see.
+          timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
+          if git merge-base --is-ancestor HEAD origin/main 2>/dev/null; then
+            echo "Already published to main"
+            exit 0
+          fi
+          git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+          git add -A 2>/dev/null || true
+          git commit --no-edit 2>/dev/null || true
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Published on attempt $i"
+              exit 0
+            fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+            timeout 180 git fetch --depth=100 --no-tags origin main 2>/dev/null || echo "shallow fetch timed out - using last-known origin/main"
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+          done
+          echo "::error::research methods could not be pushed to main"
+          exit 1
+
+      - name: Report
+        if: always()
+        run: |
+          node -e "const s=require('./data/research-solutions.json');const a=(s.solutions||[]);console.log('entries='+a.length+' published='+a.filter(x=>x.status==='published').length+' review='+a.filter(x=>x.status==='review').length)" 2>/dev/null || echo "no research data yet"

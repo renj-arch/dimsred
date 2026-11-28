@@ -1,0 +1,83 @@
+name: Paper Shape Questions
+
+# The audit found the question bank is fill-in-the-blank recall: of 12,000
+# sampled questions, zero multi-statement, zero match-the-following, zero
+# chronology. Covering a topic is not the same as being ready for how it is
+# asked, so this lane writes questions in the shapes a modern prelims paper
+# uses and refuses anything that fails validation.
+#
+# It works from the thinnest topics upward (scripts/audit-upsc-syllabus.js
+# ranking), so the weakest material is strengthened first.
+
+on:
+  schedule:
+    - cron: '17 */2 * * *'
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'Questions to add this run'
+        required: false
+        default: '3'
+      shape:
+        description: 'One shape id, or blank for all (multi-statement, match-the-following, chronology, assertion-reason, application, map-place)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-shape
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Write paper-shape questions
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COUNT: ${{ github.event.inputs.count || '12' }}
+          SHAPE: ${{ github.event.inputs.shape || '' }}
+        run: |
+          if [ -n "$SHAPE" ]; then
+            node scripts/invent-paper-shape.js --count "$COUNT" --shape "$SHAPE"
+          else
+            node scripts/invent-paper-shape.js --count "$COUNT"
+          fi
+
+      - name: Refresh the coverage report
+        run: node scripts/audit-upsc-syllabus.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -f data/upsc-format-questions.json
+          git add upsc/coverage.html
+          git add -f data/upsc-syllabus-coverage.json
+          bash scripts/ci-push.sh "paper-shape: questions written in the paper's forms"

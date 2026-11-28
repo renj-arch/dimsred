@@ -1,0 +1,100 @@
+name: Deepen Schedule
+
+# Paced model drafting. The free routes are rate-limited per hour, so bursting
+# wastes windows: this runs the chapter-depth audit, takes the worst remaining
+# pages, and dispatches ONE small deepen-model.yml run. The route alternates by
+# the hour (even -> NVIDIA Mistral Large 4, odd -> Token Harbor) so a rate limit
+# on one route does not stall the other.
+#
+# deepen-model.yml still only proposes a review pull request; nothing is
+# published without review.
+
+on:
+  schedule:
+    - cron: '13,43 * * * *'
+  workflow_dispatch:
+    inputs:
+      pages:
+        description: 'Override: comma-separated lesson keys (default: audit picks)'
+        required: false
+        default: ''
+
+concurrency:
+  group: deepen-schedule
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out main (minimal)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            upsc/course
+            data/chapter-map.json
+            data/handwritten-lessons.json
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Pick the worst pages
+        id: pick
+        run: |
+          if [ -n "${{ inputs.pages }}" ]; then
+            echo "keys=${{ inputs.pages }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node scripts/audit-chapter-depth.js --json > /tmp/audit.json
+          node -e '
+            const a = require("/tmp/audit.json");
+            let hw = [];
+            try { hw = require("./data/handwritten-lessons.json").lessons || []; } catch (e) {}
+            const rows = a.chapters.filter(c => c.status !== "ok");
+            const keys = [];
+            for (const c of rows) {
+              for (const l of (c.lessons || [])) {
+                if (!l.exists || hw.indexOf(l.file) !== -1) continue;
+                const m = l.file.match(/course\/([^/]+)\/lesson-(.+)\.html$/);
+                if (!m) continue;
+                const k = m[1] + "/" + m[2];
+                if (keys.indexOf(k) === -1) keys.push(k);
+              }
+            }
+            console.log(keys.slice(0, 3).join(","));
+          ' > /tmp/keys.txt
+          echo "keys=$(cat /tmp/keys.txt)" >> "$GITHUB_OUTPUT"
+          echo "picked: $(cat /tmp/keys.txt)"
+
+      - name: Dispatch one small deepen run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          KEYS="${{ steps.pick.outputs.keys }}"
+          if [ -z "$KEYS" ]; then echo "::notice::nothing thin is left"; exit 0; fi
+          # Route by what actually answers on this account (probed 2026-11-16):
+          # nemotron-3.5-super-vl (~5s) and nemotron-3.5-lightning. Token Harbor
+          # 402s ("no active plan") for real generations and mistral-large-4
+          # hangs, so neither is dispatched here.
+          HOUR=$(date -u +%H)
+          if [ $((HOUR % 2)) -eq 0 ]; then MODEL=nemotron-3.5-super-vl; else MODEL=nemotron-3.5-lightning; fi
+          echo "dispatching route=nvidia model=$MODEL keys=$KEYS"
+          for i in 1 2 3; do
+            if gh workflow run deepen-model.yml --ref main -f keys="$KEYS" -f max_chapters=2 -f floor=600 -f route=nvidia -f model="$MODEL"; then
+              echo "queued"; exit 0
+            fi
+            echo "dispatch attempt $i failed; retrying"
+            sleep 10
+          done
+          echo "::error::could not dispatch deepen-model.yml"
+          exit 1

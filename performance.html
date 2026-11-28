@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Dashboard — DIMSRED</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--bg:#0a0e17;--card:#111827;--border:#1e293b;--accent:#3b82f6;--accent2:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1000px;margin:0 auto;padding:20px}
+.page-header{margin-bottom:24px}
+.grid-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.stat-big{font-size:32px;font-weight:800}
+.stat-label{font-size:12px;color:var(--muted);text-transform:uppercase}
+.stat-trend{font-size:13px;margin-top:4px}
+.trend-up{color:var(--green)}.trend-down{color:var(--red)}.trend-neutral{color:var(--muted)}
+.chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px}
+.chart-title{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:16px;text-transform:uppercase}
+canvas{max-width:100%;height:260px !important}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:12px 16px;border-bottom:1px solid var(--border);text-align:left}
+th{background:rgba(255,255,255,.03);font-size:12px;color:var(--muted);text-transform:uppercase}
+tr:hover{background:rgba(255,255,255,.03)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.badge-green{background:rgba(16,185,129,.2);color:var(--green)}
+.badge-red{background:rgba(239,68,68,.2);color:var(--red)}
+.badge-yellow{background:rgba(245,158,11,.2);color:var(--yellow)}
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+a.btn{color:var(--accent);text-decoration:none;font-weight:600}
+a.btn:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <h1>📊 Performance Dashboard</h1>
+    <p>Track your mock test accuracy, percentile, and progress across exams.</p>
+  </div>
+
+  <div class="grid-stats" id="statsGrid"></div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Accuracy Trend (last 10 attempts)</div>
+    <canvas id="accuracyChart"></canvas>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Percentile Trend</div>
+    <canvas id="percentileChart"></canvas>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Exam</th><th>Paper</th><th>Date</th><th>Score</th><th>Accuracy</th><th>Percentile</th><th>Time</th></tr></thead>
+      <tbody id="historyTable"></tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:24px;text-align:center">
+    <a href="papers.html" class="btn">← Browse Papers & Take Tests</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function(){
+  // Gather all performance keys from localStorage
+  var keys = [];
+  for (var i = 0; i < localStorage.length; i++) {
+    var k = localStorage.key(i);
+    if (k && k.indexOf('perf_') === 0) keys.push(k);
+  }
+
+  var allAttempts = [];
+  keys.forEach(function(k){
+    try {
+      var p = JSON.parse(localStorage.getItem(k) || '{}');
+      var parts = k.slice(5).split('_');
+      var exam = parts[0];
+      var paper = parts.slice(1).join('_');
+      (p.history || []).forEach(function(a){
+        allAttempts.push({
+          exam: exam,
+          paper: paper,
+          date: a.date,
+          correct: a.correct,
+          attempted: a.attempted,
+          wrong: a.wrong,
+          accuracy: a.accuracy,
+          percentile: a.percentile,
+          timeTaken: a.timeTaken,
+          totalTime: a.totalTime
+        });
+      });
+    } catch(e){}
+  });
+
+  allAttempts.sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
+
+  // Stats
+  var totalTests = allAttempts.length;
+  var bestAcc = 0, bestPct = 0, avgAcc = 0;
+  if (totalTests) {
+    bestAcc = Math.max.apply(null, allAttempts.map(function(a){return a.accuracy;}));
+    bestPct = Math.max.apply(null, allAttempts.map(function(a){return a.percentile;}));
+    avgAcc = Math.round(allAttempts.reduce(function(s,a){return s+a.accuracy;},0)/totalTests);
+  }
+
+  var statsGrid = document.getElementById('statsGrid');
+  statsGrid.innerHTML =
+    '<div class="stat-card"><div class="stat-big">'+totalTests+'</div><div class="stat-label">Tests Taken</div></div>' +
+    '<div class="stat-card"><div class="stat-big">'+bestAcc+'%</div><div class="stat-label">Best Accuracy</div></div>' +
+    '<div class="stat-card"><div class="stat-big">'+bestPct+'</div><div class="stat-label">Best Percentile</div></div>' +
+    '<div class="stat-card"><div class="stat-big">'+avgAcc+'%</div><div class="stat-label">Avg Accuracy</div></div>';
+
+  // History table (latest 20)
+  var tbody = document.getElementById('historyTable');
+  var latest = allAttempts.slice(-20).reverse();
+  if (latest.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:30px">No test attempts yet. Take a mock test from the papers page.</td></tr>';
+  } else {
+    latest.forEach(function(a){
+      var date = new Date(a.date).toLocaleDateString();
+      var timeStr = Math.floor(a.timeTaken/60) + 'm ' + (a.timeTaken%60) + 's';
+      tbody.innerHTML +=
+        '<tr>' +
+        '<td>'+a.exam+'</td>' +
+        '<td>'+a.paper+'</td>' +
+        '<td>'+date+'</td>' +
+        '<td><span class="badge '+(a.accuracy>=70?'badge-green':a.accuracy>=40?'badge-yellow':'badge-red')+'">'+a.correct+'/'+a.attempted+'</span></td>' +
+        '<td><span class="badge '+(a.accuracy>=70?'badge-green':a.accuracy>=40?'badge-yellow':'badge-red')+'">'+a.accuracy+'%</span></td>' +
+        '<td>'+a.percentile+'</td>' +
+        '<td>'+timeStr+'</td>' +
+        '</tr>';
+    });
+  }
+
+  // Charts
+  var accCtx = document.getElementById('accuracyChart');
+  var pctCtx = document.getElementById('percentileChart');
+  var recent = allAttempts.slice(-10);
+  if (recent.length) {
+    var labels = recent.map(function(a){ return new Date(a.date).toLocaleDateString(); });
+    new Chart(accCtx, {
+      type: 'line',
+      data: { labels: labels, datasets: [{ label: 'Accuracy %', data: recent.map(function(a){return a.accuracy;}), borderColor: varGet('--accent'), backgroundColor: 'rgba(59,130,246,.1)', fill: true, tension: 0.3, pointRadius: 4 }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100, ticks: { stepSize: 20 } } } }
+    });
+    new Chart(pctCtx, {
+      type: 'line',
+      data: { labels: labels, datasets: [{ label: 'Percentile', data: recent.map(function(a){return a.percentile;}), borderColor: varGet('--accent2'), backgroundColor: 'rgba(139,92,246,.1)', fill: true, tension: 0.3, pointRadius: 4 }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100, ticks: { stepSize: 20 } } } }
+    });
+  } else {
+    accCtx.parentNode.innerHTML = '<div style="padding:60px;text-align:center;color:var(--muted)">Take tests to see your accuracy trend.</div>';
+    pctCtx.parentNode.innerHTML = '<div style="padding:60px;text-align:center;color:var(--muted)">Take tests to see your percentile trend.</div>';
+  }
+
+  function varGet(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

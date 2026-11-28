@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Coordinate Geometry — the exam Mathematics (Paper 1) Lesson | vlymbooq</title>
+    <meta name="description" content="Free the exam Mathematics (Paper 1) Coordinate Geometry lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/nda/course/maths/lesson-coordinate-geometry.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body h4{font-size:.95em;font-weight:600;margin:12px 0 6px;color:var(--purple,#a78bfa)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{font-size:.9em}
+        .lesson-body th{color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/nda/">the exam</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics (Paper 1)</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-coordinate-geometry.html" class="active">Coordinate Geometry</a>
+                    <a href="lesson-vector-statistics.html">Vectors & Statistics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; the exam Mathematics (Paper 1)</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Coordinate Geometry</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 20 Nov 2026 &#183; 12,842 words &#183; 4 sections &#183; illustrated</div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Straight lines, circles, conic sections, 3D geometry.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Lines · Circles · Conic Sections · 3D Geometry</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+<!-- course-figure:coordinate-geometry-figure -->
+<figure class="lesson-figure" data-figure="coordinate-geometry-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Coordinate Geometry Treasure Map Concept Diagram for JEE"><defs><marker id="arrowhead-lesson-coordinate-geometry-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="30" width="180" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="55" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Pirate Treasure Map</tspan></text><rect x="30" y="110" width="180" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="135" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Point Address (x,y)</tspan></text><rect x="30" y="190" width="180" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="215" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Slope Rise/Run</tspan></text><rect x="30" y="270" width="180" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="286.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Circle Center</tspan><tspan x="120" dy="16.25">Distance</tspan></text><rect x="300" y="110" width="180" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="390" y="135" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="390" dy="0">Conic Sections</tspan></text><rect x="570" y="110" width="180" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="660" y="126.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="660" dy="0">JEE Smart</tspan><tspan x="660" dy="16.25">Techniques</tspan></text><path d="M 120 80 L 120 110" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure)"/><path d="M 120 160 L 120 190" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure)"/><path d="M 120 240 L 120 270" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure)"/><path d="M 210 295 L 300 135" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure)"/><path d="M 480 135 L 570 135" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure)"/></g><g><text x="120" y="95" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">next</tspan></text><text x="120" y="175" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">next</tspan></text><text x="120" y="255" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">next</tspan></text><text x="255" y="215" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="255" dy="0">leads to</tspan></text><text x="525" y="135" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="525" dy="0">applies</tspan></text><text x="300" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="300" dy="0">JEE 2024: Coordinate Geometry ~15% weightage</tspan></text><text x="300" y="350" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="300" dy="0">Definition: Slope = Δy/Δx</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Coordinate Geometry Treasure Map Concept Diagram for JEE</strong> — Shows how pirate map story leads to coordinate concepts, slope, circles, conics, and JEE problem tricks.
+    &middot; <a href="../../../figures/svg-coordinate-geometry-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Master coordinate geometry concepts tested in the exam Paper 1</li>
+                        <li>Apply formulas for straight lines, circles, and conic sections</li>
+                        <li>Solve the exam-level problems with speed and accuracy using shortcut techniques</li>
+                    </ul>
+
+                    <h2 id="straight-lines">1. Straight Lines</h2>
+
+                    <h3>Slope &amp; Equation Forms</h3>
+                    <p>The slope (or gradient) of a line measures its steepness. If a line passes through A(x₁, y₁) and B(x₂, y₂), the slope m = tan θ = (y₂ − y₁)/(x₂ − x₁), where θ is the inclination (0 ≤ θ < π). A vertical line has undefined slope; a horizontal line has slope 0.</p>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Slope from Two Points</div>
+                        <div class="tip-text">In the exam, always write slope as <strong>difference in y over difference in x</strong>. Subtract in the <em>same order</em> for numerator and denominator. If the line is vertical, slope is undefined. For horizontal lines, slope = 0. the exam often tests this distinction.</div>
+                    </div>
+
+                    <p><strong>Different Forms of Straight Lines</strong></p>
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Form</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Equation</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Parameters</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Slope‑Intercept</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = mx + c</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">m = slope, c = y‑intercept</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Point‑Slope</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y − y₁ = m(x − x₁)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(x₁, y₁) = known point</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Two‑Point</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(y−y₁)/(y₂−y₁) = (x−x₁)/(x₂−x₁)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(x₁,y₁), (x₂,y₂) = two points</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Intercept</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x/a + y/b = 1</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">a = x‑intercept, b = y‑intercept</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Normal / Perpendicular</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x cos α + y sin α = p</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">p = perpendicular from origin, α = normal angle</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Parametric</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = x₁ + r cos θ, y = y₁ + r sin θ</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">r = distance, θ = direction angle</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 1 — Equation of a Line (the exam 2020 Pattern)</div>
+                        <div class="ex-text">Find the equation of the line passing through (2, −3) and (−1, 5). Express in slope‑intercept form and find its intercepts on the axes.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Slope m = (5 + 3)/(−1 − 2) = 8/(−3) = −8/3. Using point‑slope with (2,−3): y + 3 = (−8/3)(x − 2) → y = (−8/3)x + 16/3 − 3 → y = (−8/3)x + 7/3. Slope‑intercept form: y = (−8/3)x + 7/3. Intercepts: set x = 0 → y = 7/3; set y = 0 → x = 7/8. So x‑intercept = 7/8, y‑intercept = 7/3.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Exam Tip — Intercept Form</div>
+                        <div class="tip-text">When a line cuts both axes, use x/a + y/b = 1. For a line with x‑intercept a and y‑intercept b, the equation is x/a + y/b = 1. the exam questions often give intercepts directly. Example: line with intercepts 3 and 4 → x/3 + y/4 = 1 → 4x + 3y = 12.</div>
+                    </div>
+
+                    <h3>Angle Between Lines</h3>
+                    <p>If two lines have slopes m₁ and m₂, the acute angle θ between them is:</p>
+                    <p style="text-align:center;font-size:1.1em;font-weight:600;color:var(--text);margin:10px 0">tan θ = |(m₁ − m₂) / (1 + m₁·m₂)|</p>
+                    <p>Two lines are <strong>parallel</strong> if m₁ = m₂, and <strong>perpendicular</strong> if m₁·m₂ = −1. For lines in general form a₁x + b₁y + c₁ = 0 and a₂x + b₂y + c₂ = 0, parallelism requires a₁/a₂ = b₁/b₂, perpendicularity requires a₁a₂ + b₁b₂ = 0.</p>
+
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Condition</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Slope Form</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">General Form</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Parallel</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">m₁ = m₂</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">a₁/a₂ = b₁/b₂ (provided a₂,b₂ ≠ 0)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Perpendicular</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">m₁·m₂ = −1</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">a₁a₂ + b₁b₂ = 0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Acute Angle</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">tan θ = |(m₁−m₂)/(1+m₁m₂)|</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">cos θ = |a₁a₂+b₁b₂|/√((a₁²+b₁²)(a₂²+b₂²))</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 2 — Angle Between Lines (the exam 2021)</div>
+                        <div class="ex-text">Find the acute angle between the lines 3x + 4y = 10 and 4x − 3y = 5. Determine if they are perpendicular.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Slope m₁ = −3/4, slope m₂ = 4/3. Check m₁·m₂ = (−3/4)(4/3) = −1. Since product is −1, the lines are perpendicular. The acute angle is 90°.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Perpendicular Lines</div>
+                        <div class="tip-text">For lines a₁x + b₁y + c₁ = 0 and a₂x + b₂y + c₂ = 0, they are perpendicular <em>iff</em> a₁a₂ + b₁b₂ = 0. In the exam, quickly check this sum — if zero, the lines are perpendicular. No need to compute slopes. This saves 30−40 seconds per question.</div>
+                    </div>
+
+                    <h3>Distance of a Point from a Line</h3>
+                    <p>The perpendicular distance from point (x₁, y₁) to line ax + by + c = 0 is:</p>
+                    <p style="text-align:center;font-size:1.1em;font-weight:600;color:var(--text);margin:10px 0">d = |ax₁ + by₁ + c| / √(a² + b²)</p>
+                    <p>The distance between two parallel lines ax + by + c₁ = 0 and ax + by + c₂ = 0 is:</p>
+                    <p style="text-align:center;font-size:1.1em;font-weight:600;color:var(--text);margin:10px 0">d = |c₁ − c₂| / √(a² + b²)</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 3 — Distance Between Parallel Lines (the exam 2022)</div>
+                        <div class="ex-text">Find the distance between the parallel lines 2x − 3y + 6 = 0 and 4x − 6y + 15 = 0.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Make coefficients proportional. Divide second by 2: 2x − 3y + 7.5 = 0. Now c₁ = 6, c₂ = 7.5. Distance = |6 − 7.5| / √(2² + (−3)²) = 1.5 / √13 = (1.5√13)/13 = (3√13)/26 units.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Exam Tip — Distance Shortcut</div>
+                        <div class="tip-text">For parallel lines, always make coefficients of x and y <em>identical</em> before applying the distance formula. the exam questions intentionally give lines with coefficients that need scaling. Failure to do so yields a wrong answer. Also note that distance is always non‑negative, so use absolute value.</div>
+                    </div>
+
+                    <h3>Family of Lines</h3>
+                    <p>Any line passing through the intersection of L₁ ≡ a₁x + b₁y + c₁ = 0 and L₂ ≡ a₂x + b₂y + c₂ = 0 can be written as L₁ + λL₂ = 0, where λ is a real parameter. This family represents all lines through the intersection point (except L₂ itself).</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 4 — Family of Lines (the exam 2021)</div>
+                        <div class="ex-text">Find the equation of the line passing through the intersection of 2x + 3y − 5 = 0 and x − 2y + 1 = 0, and also through the point (1, 2).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Family: (2x + 3y − 5) + λ(x − 2y + 1) = 0. Substitute (1,2): (2 + 6 − 5) + λ(1 − 4 + 1) = 0 → 3 + λ(−2) = 0 → λ = 3/2. Thus (2x + 3y − 5) + (3/2)(x − 2y + 1) = 0. Multiply by 2: 4x + 6y − 10 + 3x − 6y + 3 = 0 → 7x − 7 = 0 → x = 1.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Intersection Without Solving</div>
+                        <div class="tip-text">Use the family method L₁ + λL₂ = 0 instead of solving for the intersection point. This saves 2−3 minutes. In the exam, this technique is especially useful when the line also satisfies an additional condition (like passing through a point or being parallel to a given line).</div>
+                    </div>
+
+                    <h2 id="circles">2. Circles</h2>
+
+                    <h3>Standard Equation</h3>
+                    <p>A circle with centre C(h, k) and radius r has the standard equation (x − h)² + (y − k)² = r². The general equation is x² + y² + 2gx + 2fy + c = 0, where centre = (−g, −f) and radius = √(g² + f² − c). The circle is real if g² + f² − c ≥ 0, a point circle if g² + f² − c = 0, and imaginary if negative.</p>
+
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Parameter</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Expression</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Centre (general form)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(−g, −f)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Radius (general form)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">r = √(g² + f² − c)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Condition for real circle</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">g² + f² − c ≥ 0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Point lies on circle</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x₁² + y₁² + 2gx₁ + 2fy₁ + c = 0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Diameter form</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(x−x₁)(x−x₂) + (y−y₁)(y−y₂) = 0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 5 — Circle Centre and Radius (the exam 2022)</div>
+                        <div class="ex-text">Find the centre and radius of the circle 2x² + 2y² − 8x + 12y − 6 = 0.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Divide by 2: x² + y² − 4x + 6y − 3 = 0. Compare with x² + y² + 2gx + 2fy + c = 0: 2g = −4 → g = −2, 2f = 6 → f = 3, c = −3. Centre = (−g, −f) = (2, −3). Radius = √(g² + f² − c) = √(4 + 9 + 3) = √16 = 4 units.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Centre from General Form</div>
+                        <div class="tip-text">For x² + y² + 2gx + 2fy + c = 0, centre = (−g, −f). But if coefficients of x² and y² are not 1, first divide by the common factor. In the exam, this is a common trap — they give 2x² + 2y² + ... and many students forget to divide.</div>
+                    </div>
+
+                    <h3>Tangents &amp; Normals</h3>
+                    <p>The tangent to the circle x² + y² + 2gx + 2fy + c = 0 at point (x₁, y₁) on the circle is given by <strong>T = 0</strong>:</p>
+                    <p style="text-align:center;font-size:1em;font-weight:600;color:var(--text);margin:10px 0">xx₁ + yy₁ + g(x + x₁) + f(y + y₁) + c = 0</p>
+                    <p>For the standard circle x² + y² = a², the tangent at (x₁, y₁) is xx₁ + yy₁ = a². The slope of the tangent is −x₁/y₁, and the slope of the normal is y₁/x₁. The normal always passes through the centre of the circle.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 6 — Tangent to a Circle (the exam 2023)</div>
+                        <div class="ex-text">Find the equation of the tangent to the circle x² + y² = 25 at the point (3, 4). Also find the equation of the normal.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using xx₁ + yy₁ = a²: 3x + 4y = 25. Slope of tangent = −3/4. Normal slope = 4/3, and it passes through centre (0,0): equation y = (4/3)x or 4x − 3y = 0. The normal is the line joining the centre to the point of contact.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Exam Tip — Tangent Shortcut (T = 0)</div>
+                        <div class="tip-text">To write the tangent equation at (x₁, y₁) on any circle, use the T = 0 method: replace x² → xx₁, y² → yy₁, x → (x + x₁)/2, y → (y + y₁)/2, and xy → (xy₁ + x₁y)/2. Constant term remains unchanged. This works for all conics, not just circles.</div>
+                    </div>
+
+                    <h3>Condition for Tangency</h3>
+                    <p>A line y = mx + c is tangent to the circle x² + y² = a² if the distance from the centre (0,0) to the line equals the radius a:</p>
+                    <p style="text-align:center;font-size:1.1em;font-weight:600;color:var(--text);margin:10px 0">c = ± a √(1 + m²)</p>
+                    <p>The length of the tangent from an external point (x₁, y₁) to the circle is √(S₁), where S₁ = x₁² + y₁² + 2gx₁ + 2fy₁ + c. The chord of contact from (x₁, y₁) is T = 0, which has the same form as the tangent equation.</p>
+
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Concept</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Formula / Condition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Tangency: y = mx + c to x² + y² = a²</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">c = ± a√(1 + m²)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Tangency: y = mx + c to (x−h)²+(y−k)² = r²</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Distance from centre to line = r</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Chord of contact (from external point)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">T = 0 (same form as tangent)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Length of tangent from (x₁, y₁)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">√(S₁) where S₁ = x₁² + y₁² + 2gx₁ + 2fy₁ + c</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Director circle (locus of perpendicular tangents)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x² + y² = 2a² (for x² + y² = a²)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 7 — Tangency Condition (the exam 2020)</div>
+                        <div class="ex-text">Find the value of k if the line y = 2x + k is tangent to the circle x² + y² = 20.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> For circle x² + y² = a², a = √20 = 2√5. Tangency: k = ± a√(1 + m²) = ± 2√5 · √(1 + 4) = ± 2√5 · √5 = ± 2 · 5 = ± 10. So k = 10 or k = −10. Both lines y = 2x + 10 and y = 2x − 10 are tangent to the circle.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Two Tangents</div>
+                        <div class="tip-text">For a given slope m, there are always <em>two</em> parallel tangents to a circle: c = ± a√(1 + m²). the exam questions often ask for the positive value of c. Remember the ± sign — both are valid tangents.</div>
+                    </div>
+
+                    <!-- course-figure:coordinate-geometry-figure-2 -->
+<figure class="lesson-figure" data-figure="coordinate-geometry-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Coordinate Geometry Treasure Map Concept Flow Diagram for JEE"><defs><marker id="arrowhead-lesson-coordinate-geometry-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="20" width="200" height="45" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="130" y="42.5" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">Treasure Map Story</tspan></text><rect x="30" y="90" width="200" height="45" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="130" y="112.5" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">Point Address (x,y)</tspan></text><rect x="30" y="160" width="200" height="45" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="130" y="182.5" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">Slope = Rise/Run</tspan></text><rect x="30" y="230" width="200" height="45" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="130" y="244.375" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">Circle: Equal</tspan><tspan x="130" dy="16.25">Distance</tspan></text><rect x="30" y="300" width="200" height="45" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="130" y="322.5" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">Conic Sections</tspan></text><rect x="30" y="370" width="200" height="45" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="130" y="384.375" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">JEE Smart</tspan><tspan x="130" dy="16.25">Techniques</tspan></text><path d="M 130 65 L 130 90" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure-2)"/><path d="M 130 135 L 130 160" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure-2)"/><path d="M 130 205 L 130 230" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure-2)"/><path d="M 130 275 L 130 300" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure-2)"/><path d="M 130 345 L 130 370" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-coordinate-geometry-figure-2)"/></g><g><text x="130" y="78" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">→</tspan></text><text x="130" y="148" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">→</tspan></text><text x="130" y="218" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">→</tspan></text><text x="130" y="288" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">→</tspan></text><text x="130" y="358" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">→</tspan></text><text x="250" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="250" dy="0">JEE 2023: 12% weightage</tspan></text><text x="250" y="70" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="250" dy="0">Distance formula → circle eqn</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Coordinate Geometry Treasure Map Concept Flow Diagram for JEE</strong> — Shows how the pirate story leads through points, slope, circles, conics to JEE problem tricks.
+    &middot; <a href="../../../figures/svg-coordinate-geometry-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+<h2 id="conics">3. Conic Sections</h2>
+
+                    <h3>Parabola</h3>
+                    <h4>Standard Forms &amp; Properties</h4>
+                    <p>A parabola is the locus of a point equidistant from a fixed point (focus) and a fixed line (directrix). The standard parabola y² = 4ax has focus at (a, 0), directrix x = −a, vertex at (0, 0), and axis along the x‑axis. The length of the latus rectum is 4a. The parametric form is (at², 2at).</p>
+
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Equation</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Axis</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Focus</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Directrix</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Latus Rectum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y² = 4ax</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x‑axis (right)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(a, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = −a</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = a, length 4a</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y² = −4ax</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x‑axis (left)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(−a, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = a</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = −a, length 4a</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x² = 4ay</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y‑axis (up)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, a)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = −a</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = a, length 4a</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x² = −4ay</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y‑axis (down)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, −a)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = a</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = −a, length 4a</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 8 — Parabola Focus (the exam 2021)</div>
+                        <div class="ex-text">Find the focus, directrix, and length of latus rectum of the parabola 2y² = 16x.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Rewrite as y² = 8x. Compare with y² = 4ax: 4a = 8 → a = 2. Focus = (2, 0). Directrix: x = −2. Length of latus rectum = 4a = 8. Endpoints of latus rectum: (2, ±4). Parametric coordinates: (2t², 4t).</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Parabola Identification</div>
+                        <div class="tip-text">Identify which variable is squared: if y², axis is horizontal (opens left/right); if x², axis is vertical (opens up/down). The sign determines direction: positive opens towards positive axis, negative towards negative. In the exam, the most common form is y² = 4ax (opens right).</div>
+                    </div>
+
+                    <h3>Ellipse</h3>
+                    <h4>Foci, Eccentricity, Latus Rectum</h4>
+                    <p>The standard ellipse is x²/a² + y²/b² = 1 where a > b. The foci are at (±ae, 0), eccentricity e = √(1 − b²/a²) where 0 < e < 1, and the directrices are x = ±a/e. The length of the latus rectum is 2b²/a. The sum of distances from any point on the ellipse to the two foci is constant (= 2a). If b > a, <span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="For the ellipse x²/a² + y²/b² = 1 with a > b, the major axis is along the x-axis, not the y-axis.">the major axis is along the x‑axis</span>.</p>
+
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Property</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">x²/a² + y²/b² = 1 (a > b)</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">x²/b² + y²/a² = 1 (a > b)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Centre</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, 0)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Major Axis</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x‑axis (length 2a)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y‑axis (length 2a)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Foci</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(±ae, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, ±ae)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Eccentricity e</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">√(1 − b²/a²)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">√(1 − b²/a²)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Directrices</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = ±a/e</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = ±a/e</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Latus Rectum length</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">2b²/a</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">2b²/a</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 9 — Ellipse Eccentricity (the exam 2022)</div>
+                        <div class="ex-text">For the ellipse 9x² + 16y² = 144, find the eccentricity, foci, and length of latus rectum.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Divide by 144: x²/16 + y²/9 = 1. So a² = 16, b² = 9, a = 4, b = 3. e = √(1 − 9/16) = √(7/16) = √7/4. Foci = (±4·√7/4, 0) = (±√7, 0). Length of latus rectum = 2b²/a = 2·9/4 = 9/2 = 4.5 units.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Exam Tip — Eccentricity Range</div>
+                        <div class="tip-text">Remember the eccentricity ranges: ellipse → 0 < e < 1, parabola → e = 1, hyperbola → e > 1. For the exam MCQs, if the answer choices include values both less than and greater than 1, use this to eliminate options. For ellipse, e < 1 always.</div>
+                    </div>
+
+                    <h3>Hyperbola</h3>
+                    <h4>Rectangular Hyperbola</h4>
+                    <p>The standard hyperbola is x²/a² − y²/b² = 1. The foci are at (±ae, 0), eccentricity e = √(1 + b²/a²) where e > 1, and the directrices are x = ±a/e. The asymptotes are y = ±(b/a)x. A rectangular hyperbola has a = b, giving asymptotes at right angles (y = ±x) and eccentricity e = √2. Its equation is x² − y² = a² or, in rotated form, xy = c²/2.</p>
+
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Property</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">x²/a² − y²/b² = 1</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">y²/a² − x²/b² = 1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Centre</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, 0)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Transverse Axis</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x‑axis (length 2a)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y‑axis (length 2a)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Foci</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(±ae, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(0, ±ae)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Eccentricity e</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">√(1 + b²/a²)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">√(1 + b²/a²)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Asymptotes</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = ±(b/a)x</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y = ±(a/b)x</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Rectangular Hyperbola</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x² − y² = a², e = √2</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">xy = c² (rotated form)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 10 — Hyperbola Asymptotes (the exam 2023)</div>
+                        <div class="ex-text">Find the asymptotes and eccentricity of the hyperbola 4x² − 9y² = 36.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Divide by 36: x²/9 − y²/4 = 1. Here a² = 9 → a = 3, b² = 4 → b = 2. Asymptotes: y = ±(b/a)x = ±(2/3)x. Eccentricity: e = √(1 + b²/a²) = √(1 + 4/9) = √(13/9) = √13/3. Since e > 1, it confirms a hyperbola.</div>
+                    </div>
+
+                    <div style="overflow-x:auto">
+                    <table style="width:100%;border-collapse:collapse;margin:10px 0;color:var(--text-sec)">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,.04);color:var(--text)">
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Conic</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Eccentricity</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Standard Equation</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Focus / Foci</th>
+                                <th style="padding:10px 12px;border:1px solid var(--border);text-align:left">Directrix / Directrices</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Parabola</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">e = 1</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">y² = 4ax</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(a, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = −a</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Ellipse</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">0 < e < 1</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x²/a² + y²/b² = 1</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(±ae, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = ±a/e</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">Hyperbola</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">e > 1</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x²/a² − y²/b² = 1</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">(±ae, 0)</td>
+                                <td style="padding:8px 12px;border:1px solid var(--border)">x = ±a/e</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Conic Identification</div>
+                        <div class="tip-text">Quickly identify conics by signs: both x² and y² positive → ellipse (circle if coefficients equal); one positive, one negative → hyperbola; only one squared term → parabola. For eccentricity: e = 1 → parabola, e < 1 → ellipse, e > 1 → hyperbola. the exam often tests this classification.</div>
+                    </div>
+
+                    <h2 id="locus">4. Locus &amp; Transformation of Axes</h2>
+
+                    <h3>Locus</h3>
+                    <p>The locus of a point is the path traced when it moves under a given condition. To find the locus, assume the moving point as P(h, k) or P(x, y), apply the geometric condition, and eliminate any parameters to obtain an equation in x and y. The resulting equation represents the locus.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 11 — Locus of a Point (the exam 2022)</div>
+                        <div class="ex-text">A point P moves such that its distance from A(2, 3) is always equal to its distance from B(6, 5). Find the locus of P.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let P = (x, y). Condition: PA = PB → (x − 2)² + (y − 3)² = (x − 6)² + (y − 5)². Expand: x² − 4x + 4 + y² − 6y + 9 = x² − 12x + 36 + y² − 10y + 25. Cancel common terms: −4x − 6y + 13 = −12x − 10y + 61 → 8x + 4y − 48 = 0 → 2x + y − 12 = 0. The locus is a straight line — the perpendicular bisector of AB.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Exam Tip — Standard Loci to Memorise</div>
+                        <div class="tip-text">Know these standard loci: PA = PB → perpendicular bisector (line). PA² + PB² = constant → circle. PA/PB = constant (≠1) → circle (Apollonius). |PA − PB| = constant → hyperbola. PA + PB = constant → ellipse. Distance from fixed point = distance from fixed line → parabola. These are directly tested in the exam.</div>
+                    </div>
+
+                    <h3>Transformation of Axes</h3>
+                    <p>Transformation of axes involves shifting the origin or rotating the coordinate axes. Shifting the origin to (h, k) replaces x by X + h and y by Y + k. Rotation of axes by angle θ replaces x by X cos θ − Y sin θ and y by X sin θ + Y cos θ. This simplifies equations — for example, shifting the origin to the centre of a circle eliminates the linear terms.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 12 — Shift of Origin (the exam 2021)</div>
+                        <div class="ex-text">Find the new equation of the circle (x − 3)² + (y + 2)² = 16 when the origin is shifted to (3, −2).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let X = x − 3, Y = y + 2. Substituting: X² + Y² = 16. The circle's centre (3, −2) becomes the origin in the new coordinate system, and the equation simplifies to X² + Y² = 16 — a circle centred at the new origin with radius 4.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">the exam Shortcut — Shift of Origin</div>
+                        <div class="tip-text">When shifting origin to (h, k), substitute x = X + h and y = Y + k. The new equation has no linear terms if (h, k) is the centre of a circle or vertex of a parabola. This simplifies the equation for faster solving. In the exam, this technique is tested with circles and parabolas.</div>
+                    </div>
+
+                    <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions (the exam Level)</h3>
+                    <div id="practice-qs"></div>
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-trigonometry.html" class="btn btn-primary">&#x2190; Trigonometry</a>
+                        <a href="lesson-vector-statistics.html" class="btn btn-success">Vectors &amp; Statistics &#x2192;</a>
+                    </div>
+                <!-- course-addon:start -->
+<h3>Family of Lines and Envelopes</h3>
+<p>A family of lines is a one‑parameter set of straight lines whose equations can be written as <strong>L₁ + λ L₂ = 0</strong>, where <strong>L₁ = 0</strong> and <strong>L₂ = 0</strong> are two fixed lines and λ is a real parameter. Every member of the family passes through the intersection point of <strong>L₁ = 0</strong> and <strong>L₂ = 0</strong>. Conversely, any line through that intersection can be represented by a suitable λ. This representation is the algebraic backbone for problems that ask for a line satisfying two linear conditions (e.g., passing through a given point and having a given slope).</p>
+<p>The envelope of a family of curves is the curve that is tangent to each member of the family. For a family of lines <strong>F(x, y, λ) = 0</strong>, the envelope is obtained by eliminating λ between <strong>F = 0</strong> and <strong>∂F/∂λ = 0</strong>. In the linear case <strong>F = L₁ + λ L₂</strong>, the envelope degenerates to the single point of intersection, but when the family is nonlinear in λ (for instance, the family of tangents to a parabola written as <strong>y = mx + a/m</strong> with parameter m), the envelope reproduces the original curve. This technique is a standard way to derive the equation of a conic from its tangent family.</p>
+<p>Important applications include: (1) finding the equation of a line that bisects the angle between two given lines — the family of lines through their intersection with a parameter representing the angle; (2) determining the locus of the point of intersection of two moving lines that satisfy a linear relation between their parameters; (3) solving “line through the intersection of L₁ and L₂ and perpendicular to L₃” by first writing the family and then imposing the perpendicularity condition using slopes.</p>
+<p>A classic JEE‑type problem: “Find the envelope of the family of lines <strong>x cos θ + y sin θ = p</strong> where p is constant and θ varies.” Differentiating with respect to θ gives <strong>−x sin θ + y cos θ = 0</strong>. Solving the two equations yields <strong>x = p cos θ, y = p sin θ</strong>, and eliminating θ gives <strong>x² + y² = p²</strong>, a circle. This illustrates how a one‑parameter family of straight lines can generate a curved envelope.</p>
+<p>Students should practice writing the family of lines through the intersection of two given lines, imposing extra conditions (parallelism, perpendicularity, passing through a third point), and eliminating the parameter to obtain the required line or locus. Mastery of this method reduces many coordinate‑geometry problems to simple algebraic elimination.</p>
+
+<h3>Pole and Polar with Respect to Conics</h3>
+<p>Given a conic <strong>S(x, y) = 0</strong> and a point <strong>P(x₁, y₁)</strong> (which may lie inside, on, or outside the conic), the polar of <strong>P</strong> is the line whose equation is obtained by replacing <strong>x² → x x₁, y² → y y₁, xy → (x y₁ + y x₁)/2, x → (x + x₁)/2, y → (y + y₁)/2</strong> in the equation of the conic. For the standard ellipse <strong>x²/a² + y²/b² = 1</strong> the polar of <strong>P(x₁, y₁)</strong> is <strong>x x₁/a² + y y₁/b² = 1</strong>. For the hyperbola <strong>x²/a² − y²/b² = 1</strong> it becomes <strong>x x₁/a² − y y₁/b² = 1</strong>. For the parabola <strong>y² = 4ax</strong> the polar is <strong>y y₁ = 2a(x + x₁)</strong>.</p>
+<p>The pole–polar relationship is symmetric: if the polar of <strong>P</strong> passes through <strong>Q</strong>, then the polar of <strong>Q</strong> passes through <strong>P</strong>. When <strong>P</strong> lies on the conic, its polar is the tangent at <strong>P</strong>. When <strong>P</strong> is outside, the polar is the chord of contact of the two tangents drawn from <strong>P</strong> to the conic. When <strong>P</strong> is inside, the polar is a line that does not intersect the conic in real points but still satisfies the harmonic‑conjugate property with respect to any chord through <strong>P</strong>.</p>
+<p>Key properties used in examinations: (1) The equation of the chord of contact from <strong>P(x₁, y₁)</strong> to the ellipse is exactly the polar equation. (2) The polar of the focus of a parabola is the directrix. (3) For a rectangular hyperbola <strong>xy = c²</strong>, the polar of <strong>(x₁, y₁)</strong> is <strong>x y₁ + y x₁ = 2c²</strong>. (4) If a variable line moves such that its pole with respect to a fixed conic lies on a fixed line, then the envelope of the moving line is another conic (the reciprocal conic).</p>
+<p>Problems often ask: “Find the pole of the line <strong>lx + my + n = 0</strong> with respect to the ellipse <strong>x²/a² + y²/b² = 1</strong>.” The answer is obtained by solving the linear system derived from the polar formula, yielding the pole coordinates <strong>(−a² l / n, −b² m / n)</strong> (provided n ≠ 0). Another frequent twist: “If the polar of <strong>P</strong> with respect to the circle <strong>x² + y² = r²</strong> touches the parabola <strong>y² = 4ax</strong>, find the locus of <strong>P</strong>.” This combines pole–polar with tangency condition (discriminant = 0) and leads to a second‑degree locus.</p>
+
+<div class="example-box">
+<div class="ex-title">Polar of a Point with Respect to an Ellipse</div>
+<div class="ex-text">Find the equation of the polar of the point (2, 3) with respect to the ellipse x²/9 + y²/4 = 1.</div>
+<div class="ex-soln">For the ellipse x²/a² + y²/b² = 1 the polar of (x₁, y₁) is x x₁/a² + y y₁/b² = 1. Here a² = 9, b² = 4, x₁ = 2, y₁ = 3. Substituting gives x·2/9 + y·3/4 = 1. Multiply by 36: 8x + 27y = 36. Hence the required polar is 8x + 27y = 36.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">Memorise the polar formulas for the three standard conics. When a problem gives a line and asks for its pole, write the polar equation of a generic point (h, k) and equate coefficients with the given line. This converts the problem into a simple linear system and avoids the more error‑prone method of solving for intersection of tangents.</div>
+</div>
+
+<h3>Director Circle, Auxiliary Circle, and Orthoptic Locus</h3>
+<p>The director circle of a central conic is the locus of points from which the two tangents drawn to the conic are perpendicular. For the ellipse <strong>x²/a² + y²/b² = 1</strong> (a > b) the director circle is <strong>x² + y² = a² + b²</strong>. For the hyperbola <strong>x²/a² − y²/b² = 1</strong> the director circle exists only when a > b and has equation <strong>x² + y² = a² − b²</strong>; if a ≤ b the director circle is imaginary, meaning no real point yields perpendicular tangents. The auxiliary circle of an ellipse is the circle on the major axis as diameter: <strong>x² + y² = a²</strong>. It is used to define the eccentric angle parameter θ via the point (a cos θ, b sin θ) on the ellipse and (a cos θ, a sin θ) on the auxiliary circle.</p>
+<p>The orthoptic locus (also called the director circle) is the same as the director circle for ellipses and hyperbolas. For a parabola <strong>y² = 4ax</strong> the orthoptic locus is the directrix <strong>x = −a</strong>, because tangents at the ends of a focal chord are perpendicular and intersect on the directrix. For a rectangular hyperbola <strong>xy = c²</strong> the orthoptic locus is the circle <strong>x² + y² = 2c²</strong>.</p>
+<p>Important derived results: (1) The product of the slopes of two perpendicular tangents to the ellipse is −1, leading to the director circle equation. (2) The foot of the perpendicular from a focus to any tangent of an ellipse lies on the auxiliary circle. (3) The chord of contact of a point on the director circle is a normal to the conic. (4) The locus of the point of intersection of perpendicular tangents to the hyperbola is the director circle when it is real.</p>
+<p>Typical JEE questions: “Find the equation of the director circle of the ellipse 4x² + 9y² = 36.” Rewrite as x²/9 + y²/4 = 1, so a² = 9, b² = 4, director circle x² + y² = 13. Another: “Prove that the foot of the perpendicular from the focus (ae, 0) to any tangent of the ellipse lies on the auxiliary circle.” Use the tangent equation y = mx ± √(a²m² + b²) and the perpendicular distance condition to show the foot satisfies x² + y² = a².</p>
+
+<h3>Rotation of Axes and Classification of General Second‑Degree Curves</h3>
+<p>The general second‑degree equation in two variables is <strong>Ax² + Bxy + Cy² + Dx + Ey + F = 0</strong>. The presence of the xy term indicates that the axes of the conic are rotated with respect to the coordinate axes. To eliminate the xy term, rotate the axes through an angle θ satisfying <strong>cot 2θ = (A − C)/B</strong> (or <strong>tan 2θ = B/(A − C)</strong> when A ≠ C). The transformation is <strong>x = X cos θ − Y sin θ, y = X sin θ + Y cos θ</strong>. Substituting and simplifying yields an equation in X, Y without the XY term.</p>
+<p>The discriminant Δ = B² − 4AC classifies the conic irrespective of translation or rotation: Δ < 0 → ellipse (or circle if A = C and B = 0); Δ = 0 → parabola; Δ > 0 → hyperbola (or pair of intersecting lines if the determinant of the 3×3 matrix vanishes). The degenerate cases (pair of parallel lines, coincident lines, point, empty set) are detected by evaluating the determinant of the augmented matrix <strong>| A B/2 D/2; B/2 C E/2; D/2 E/2 F |</strong>.</p>
+<p>After rotation, the equation reduces to <strong>A'X² + C'Y² + D'X + E'Y + F' = 0</strong>. Completing squares in X and Y translates the centre to the origin, giving the canonical form. For an ellipse the canonical form is <strong>X²/a² + Y²/b² = 1</strong>; for a hyperbola <strong>X²/a² − Y²/b² = 1</strong> or <strong>Y²/b² − X²/a² = 1</strong>; for a parabola <strong>Y² = 4aX</strong> or <strong>X² = 4aY</strong>.</p>
+<p>Examination problems often give a rotated conic such as <strong>5x² + 6xy + 5y² − 8 = 0</strong> and ask for its type, centre, axes lengths, and orientation. Compute Δ = 36 − 100 = −64 (< 0) → ellipse. Since A = C, the axes are at 45° (θ = 45°). Rotation yields <strong>8X² + 2Y² = 8</strong> → X²/1 + Y²/4 = 1, so semi‑major axis = 2 along Y, semi‑minor = 1 along X. The original major axis is the line y = x.</p>
+<p>Students should practice: (1) finding θ from cot 2θ formula; (2) performing the rotation algebraically; (3) completing squares to locate centre; (4) reading off geometric parameters. A systematic approach avoids sign errors and saves time.</p>
+
+<h3>Shortest Distance Between Skew Lines and Angle Between Planes</h3>
+<p>In three dimensions, two lines that are neither parallel nor intersecting are called skew lines. Let the lines be given in vector form <strong>r = a₁ + λ b₁</strong> and <strong>r = a₂ + μ b₂</strong>. The shortest distance d between them is the length of the common perpendicular, computed as <strong>d = |(a₂ − a₁) · (b₁ × b₂)| / |b₁ × b₂|</strong>. The numerator is the absolute scalar triple product of the vectors (a₂ − a₁), b₁, b₂; the denominator is the magnitude of the cross product of the direction vectors. If the lines are parallel, b₁ × b₂ = 0 and the formula reduces to the distance from a point on one line to the other line.</p>
+<p>The line of shortest distance is parallel to <strong>b₁ × b₂</strong>. Its points of contact on the two lines can be found by solving for λ and μ such that the vector joining the two points is perpendicular to both b₁ and b₂, i.e., <strong>(a₂ + μ b₂ − a₁ − λ b₁) · b₁ = 0</strong> and <strong>(a₂ + μ b₂ − a₁ − λ b₁) · b₂ = 0</strong>. This yields a 2×2 linear system in λ, μ.</p>
+<p>For planes, the angle between two planes <strong>π₁: n₁·r = d₁</strong> and <strong>π₂: n₂·r = d₂</strong> is the angle between their normal vectors n₁ and n₂: <strong>cos θ = |n₁·n₂| / (|n₁||n₂|)</strong>. Two planes are perpendicular iff n₁·n₂ = 0; they are parallel iff n₁ × n₂ = 0 (i.e., n₁ is a scalar multiple of n₂). The distance between parallel planes <strong>n·r = d₁</strong> and <strong>n·r = d₂</strong> is <strong>|d₁ − d₂| / |n|</strong>.</p>
+<p>Typical problems: “Find the shortest distance between the lines (x−1)/2 = (y+1)/−3 = (z−2)/1 and (x−3)/1 = (y−2)/2 = (z+1)/−2.” Convert to vector form, compute cross product, scalar triple product, and apply the formula. Another: “Determine the angle between the planes 2x − y + 2z = 5 and 3x + 6y − 2z = 7.” Normals are (2, −1, 2) and (3, 6, −2); dot product = 6 − 6 − 4 = −4; magnitudes = 3 and 7; cos θ = 4/21; θ = cos⁻¹(4/21).</p>
+<p>Key pitfalls: forgetting the absolute value in the distance formula, mixing up the order of vectors in the scalar triple product (sign does not matter after absolute value), and using the wrong normal when the plane equation is not in normalised form. Always reduce the plane equation to the form n·r = d with n as the coefficient vector before applying formulas.</p>
+
+<ul>
+<li>Confusing the director circle of a hyperbola with that of an ellipse — the hyperbola’s director circle exists only when a > b and has radius √(a² − b²).</li>
+<li>Applying the polar formula for a point on the conic as if it were an external point; the polar then becomes the tangent, not the chord of contact.</li>
+<li>Using the rotation angle formula tan 2θ = B/(A − C) without checking the quadrant of 2θ, leading to an incorrect orientation of axes.</li>
+<li>Forgetting that the shortest‑distance formula for skew lines requires the cross product of direction vectors to be non‑zero; if it is zero the lines are parallel and a different formula applies.</li>
+<li>Mixing the angle between planes (using normals) with the angle between a line and a plane (using direction vector and normal).</li>
+<li>Neglecting the absolute value in the scalar triple product when computing the distance between skew lines, which can give a negative distance.</li>
+<li>Assuming the auxiliary circle of an ellipse is always x² + y² = a² even when the major axis is along the y‑axis; the auxiliary circle is always on the major axis as diameter.</li></ul>
+<h3>Conjugate Diameters of Ellipse and Hyperbola</h3>
+<p>A diameter of a central conic is the locus of mid‑points of a system of parallel chords. For an ellipse <em>x</em>²/<em>a</em>² + <em>y</em>²/<em>b</em>² = 1, the family of chords with slope <em>m</em> has its mid‑points on the line <em>y</em> = −(<em>b</em>²/<em>a</em>²)(1/<em>m</em>)<em>x</em>. This line is called the diameter conjugate to the direction <em>m</em>. The product of the slopes of two conjugate diameters equals −<em>b</em>²/<em>a</em>². In particular, the major and minor axes are conjugate diameters because their slopes are 0 and ∞, and the product condition is satisfied in the limiting sense. For a hyperbola <em>x</em>²/<em>a</em>² − <em>y</em>²/<em>b</em>² = 1, the conjugate diameter to a chord of slope <em>m</em> is <em>y</em> = (<em>b</em>²/<em>a</em>²)(1/<em>m</em>)<em>x</em>, and the product of slopes of conjugate diameters is +<em>b</em>²/<em>a</em>². The asymptotes themselves are a pair of conjugate diameters because each is the limit of chords whose mid‑points tend to infinity.</p>
+<p>An important property: if <em>P</em>(<em>a</em> cos θ, <em>b</em> sin θ) is a point on the ellipse, the tangent at <em>P</em> has slope −(<em>b</em>/<em>a</em>) cot θ. The diameter conjugate to the direction of this tangent passes through the centre and has slope (<em>b</em>/<em>a</em>) tan θ, which is exactly the line joining the centre to the point <em>Q</em>(<em>a</em> cos(θ+π/2), <em>b</em> sin(θ+π/2)). Thus the endpoints of conjugate diameters correspond to parameters differing by π/2. The area of the parallelogram formed by the tangents at the ends of conjugate diameters is constant and equals 4<em>ab</em>. For the hyperbola, the same parametric representation <em>P</em>(<em>a</em> sec θ, <em>b</em> tan θ) yields conjugate points with parameters differing by π/2, and the area of the tangent parallelogram is 4<em>ab</em> as well.</p>
+<p>Conjugate diameters are useful in solving problems that ask for the equation of a diameter bisecting chords of a given slope, or for the locus of the intersection of tangents at the ends of conjugate diameters (which is the director circle). They also simplify the proof that the sum of squares of any two conjugate semi‑diameters of an ellipse equals <em>a</em>²+<em>b</em>², while for a hyperbola the difference of squares equals <em>a</em>²−<em>b</em>². In coordinate‑free vector form, if <strong>u</strong> and <strong>v</strong> are conjugate semi‑diameters of the ellipse, then <strong>u</strong>ᵀ <strong>A</strong> <strong>v</strong> = 0 where <strong>A</strong> = diag(1/<em>a</em>², 1/<em>b</em>²). This orthogonality with respect to the metric defined by the conic is the geometric essence of conjugacy.</p>
+
+<h3>Asymptotes of Hyperbola and Rectangular Hyperbola</h3>
+<p>The asymptotes of the standard hyperbola <em>x</em>²/<em>a</em>² − <em>y</em>²/<em>b</em>² = 1 are the lines <em>y</em> = ±(<em>b</em>/<em>a</em>)<em>x</em>. They are obtained by setting the constant term to zero in the equation, i.e. <em>x</em>²/<em>a</em>² − <em>y</em>²/<em>b</em>² = 0. For a hyperbola whose transverse axis is vertical, <em>y</em>²/<em>a</em>² − <em>x</em>²/<em>b</em>² = 1, the asymptotes are <em>y</em> = ±(<em>a</em>/<em>b</em>)<em>x</em>. The asymptotes intersect at the centre and form an angle 2 arctan(<em>b</em>/<em>a</em>) (or 2 arctan(<em>a</em>/<em>b</em>) for the vertical case). The distance from any point on the hyperbola to its asymptotes measured along a line parallel to the transverse axis tends to zero as the point recedes to infinity.</p>
+<p>A rectangular (or equilateral) hyperbola has perpendicular asymptotes, which occurs when <em>a</em> = <em>b</em>. Its standard equation can be written as <em>x</em>² − <em>y</em>² = <em>a</em>², or after a rotation of 45° as <em>xy</em> = <em>c</em>²/2 where <em>c</em>² = <em>a</em>²/2. The eccentricity of a rectangular hyperbola is √2. The parametric form <em>x</em> = <em>c</em> sec θ, <em>y</em> = <em>c</em> tan θ (for the <em>x</em>²−<em>y</em>² form) or <em>x</em> = <em>c</em> t, <em>y</em> = <em>c</em>/t (for the <em>xy</em> = <em>c</em>² form) is especially convenient. The tangent at the point <em>t</em> on <em>xy</em> = <em>c</em>² is <em>x</em>/t + <em>y</em> t = 2<em>c</em>, and the normal is <em>x</em> t − <em>y</em>/t = <em>c</em>(t² − 1/t²). The chord of contact from an external point (<em>x</em>₁, <em>y</em>₁) is <em>x</em>₁<em>y</em> + <em>y</em>₁<em>x</em> = 2<em>c</em>².</p>
+<p>Important properties: (1) The product of the perpendicular distances from any point on a rectangular hyperbola to its asymptotes is constant and equals <em>c</em>²/2. (2) The orthocentre of any triangle inscribed in a rectangular hyperbola also lies on the same hyperbola (the Feuerbach property). (3) The locus of the midpoint of a chord of a rectangular hyperbola that subtends a right angle at the centre is the circle <em>x</em>²+<em>y</em>² = 2<em>c</em>². (4) The asymptotes of any hyperbola are the tangents at the points where the hyperbola meets the line at infinity; for a rectangular hyperbola these points are the circular points at infinity, which explains the right angle between asymptotes.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Asymptotes and Tangent of a Rectangular Hyperbola</div>
+<div class="ex-text">Find the equations of the asymptotes of the hyperbola 3x² − 3y² = 12 and the equation of the tangent at the point where the parameter t = 2 on the rectangular hyperbola xy = 4.</div>
+<div class="ex-soln">First, rewrite 3x² − 3y² = 12 as x²/4 − y²/4 = 1. Here a² = b² = 4, so a = b = 2. The asymptotes are y = ±(b/a)x = ±x, i.e. y = x and y = −x. For the rectangular hyperbola xy = 4, we have c² = 4, so c = 2. The parametric point for t = 2 is (x, y) = (c t, c/t) = (4, 1). The tangent at parameter t is x/t + y t = 2c. Substituting t = 2 and c = 2 gives x/2 + 2y = 4, or x + 4y = 8. Thus the required tangent is x + 4y = 8.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a hyperbola equation lacks an xy term, its asymptotes are immediately obtained by equating the quadratic part to zero. For a rectangular hyperbola given as xy = c², remember the simple tangent form x/t + y t = 2c and normal form x t − y/t = c(t² − 1/t²). Memorising these avoids re‑deriving them under time pressure.</div>
+</div>
+
+<h3>Polar Equation of Conics and the Focus‑Directrix Property</h3>
+<p>Any conic can be described in polar coordinates (r, θ) with one focus as the pole. The general polar equation is r = <em>ℓ</em> / (1 + <em>e</em> cos θ) where <em>e</em> is the eccentricity and <em>ℓ</em> = <em>b</em>²/<em>a</em> for ellipse and hyperbola, while for a parabola <em>ℓ</em> = 2<em>a</em> (the semi‑latus rectum). The directrix is the line r cos θ = −<em>ℓ</em>/<em>e</em> (or x = −<em>ℓ</em>/<em>e</em> in Cartesian form). For an ellipse (0 < <em>e</em> < 1) the denominator never vanishes, so r is finite for all θ. For a parabola (<em>e</em> = 1) the denominator can become zero when cos θ = −1, corresponding to the point at infinity on the axis. For a hyperbola (<em>e</em> > 1) the denominator vanishes at two angles, giving the directions of the asymptotes.</p>
+<p>The focus‑directrix definition states that a conic is the locus of points whose distance to a fixed point (focus) is <em>e</em> times the distance to a fixed line (directrix). In polar form this is exactly r = <em>e</em> · distance to directrix. The semi‑latus rectum <em>ℓ</em> is the focal chord perpendicular to the major axis; its length is 2<em>ℓ</em>. For the ellipse, <em>ℓ</em> = <em>a</em>(1 − <em>e</em>²); for the hyperbola, <em>ℓ</em> = <em>a</em>(<em>e</em>² − 1); for the parabola, <em>ℓ</em> = 2<em>a. The polar equation is especially useful for problems involving planetary motion (Kepler’s first law) and for computing the angle between the radius vector and the tangent: tan φ = r / (dr/dθ) = (1 + <em>e</em> cos θ) / (<em>e</em> sin θ).</em></p>
+<p>If the polar axis is taken along the major axis but the focus is not at the pole, the equation becomes r = <em>ℓ</em> / (1 ± <em>e</em> cos θ) with the sign chosen according to which focus is used. Rotating the conic by an angle α simply replaces θ by θ − α. The general second‑degree equation in polar coordinates centred at a focus is r² = (<em>ℓ</em> + <em>e</em> r cos θ)² / (1 − <em>e</em>²) for ellipses and hyperbolas, which reduces to the familiar Cartesian form after substituting r cos θ = x, r sin θ = y.</p>
+
+<h3>Intersection of a Line with a Conic: Chord, Tangent, and Normal</h3>
+<p>Let the conic be given by the general quadratic S(x, y) = A x² + B xy + C y² + D x + E y + F = 0 and the line by y = m x + c (or in parametric form x = x₁ + λ l, y = y₁ + λ m). Substituting the line equation into S yields a quadratic in the parameter λ (or in x). The nature of the roots determines the intersection: two distinct real roots → secant (chord); a double root → tangent; complex roots → no intersection. The condition for tangency is that the discriminant of this quadratic vanishes. For the standard ellipse x²/a² + y²/b² = 1 and line y = m x + c, the tangency condition is c² = a² m² + b². The tangent at a point (x₁, y₁) on the ellipse is x x₁/a² + y y₁/b² = 1; the normal is a² x/x₁ − b² y/y₁ = a² − b².</p>
+<p>For the hyperbola x²/a² − y²/b² = 1, the tangent at (x₁, y₁) is x x₁/a² − y y₁/b² = 1 and the normal is a² x/x₁ + b² y/y₁ = a² + b². For the parabola y² = 4 a x, the tangent at (a t², 2 a t) is y t = x + a t² and the normal is y = −t x + 2 a t + a t³. The chord of contact from an external point (x₁, y₁) to any conic is obtained by replacing x² → x x₁, y² → y y₁, xy → (x y₁ + y x₁)/2, x → (x + x₁)/2, y → (y + y₁)/2 in the equation of the conic (the T = 0 rule). The polar of (x₁, y₁) with respect to the conic is the same line; if the point lies on the conic the polar becomes the tangent.</p>
+<p>The equation of the chord with a given midpoint (h, k) is T = S₁, where T is obtained by the same substitution as above and S₁ = S(h, k). This is the “midpoint chord” formula. The director circle of an ellipse is the locus of points from which perpendicular tangents can be drawn; its equation is x² + y² = a² + b². For a hyperbola the director circle exists only when a > b and is x² + y² = a² − b². The orthoptic locus (locus of points from which the tangents are at right angles) coincides with the director circle for central conics.</p>
+
+<h3>Three‑Dimensional Quadric Surfaces: Sphere, Cylinder, and Cone</h3>
+<p>A sphere is the set of points equidistant from a fixed centre (x₀, y₀, z₀). Its equation is (x − x₀)² + (y − y₀)² + (z − z₀)² = R². The general second‑degree equation in three variables represents a sphere iff the coefficients of x², y², z² are equal and the xy, yz, zx terms are absent. The centre is (−D/2, −E/2, −F/2) and the radius is √(D²+E²+F²−4G)/2 after writing the equation as x²+y²+z²+2Dx+2Ey+2Fz+G=0. A plane section of a sphere is always a circle; the intersection of two spheres is a circle lying in a plane (the radical plane). The power of a point P with respect to a sphere is the square of the length of the tangent from P to the sphere, equal to S(P) where S is the left‑hand side of the sphere equation.</p>
+<p>A right circular cylinder is generated by lines parallel to a fixed axis passing through a given base curve (usually a circle). If the axis is the z‑axis and the base circle is x²+y² = a² in the plane z = 0, the cylinder equation is x²+y² = a². More generally, a cylinder with generators parallel to a vector (l, m, n) and guiding curve F(x, y, z)=0, G(x, y, z)=0 has equation obtained by eliminating the parameter along the generators. A cone with vertex at the origin and guiding curve the intersection of the sphere x²+y²+z² = a² with a plane lx+my+nz = p has homogeneous equation (lx+my+nz)² = (l²+m²+n²)(x²+y²+z²) · (p²/a²). The general homogeneous second‑degree equation in x, y, z represents a cone with vertex at the origin. The angle between two generators of a cone is found from the direction cosines satisfying the cone equation.</p>
+<p>The tangent plane to a sphere at (x₁, y₁, z₁) is (x−x₀)(x₁−x₀)+(y−y₀)(y₁−y₀)+(z−z₀)(z₁−z₀)=R². For a cylinder x²+y² = a², the tangent plane at (x₁, y₁, z₁) is x x₁ + y y₁ = a². For a cone given by homogeneous equation F(x, y, z)=0, the tangent plane along a generator through (x₁, y₁, z₁) is x ∂F/∂x₁ + y ∂F/∂y₁ + z ∂F/∂z₁ = 0. The condition for a plane lx+my+nz = p to be tangent to the sphere x²+y²+z² = R² is p² = R²(l²+m²+n²). For the cylinder x²+y² = a², the plane is tangent iff the perpendicular distance from the axis to the plane equals a. These formulas are frequently combined with distance‑between‑skew‑lines and angle‑between‑planes techniques to solve three‑dimensional locus problems.</p>
+
+<ul>
+<li>Confusing the polar equation r = ℓ/(1+e cos θ) with the Cartesian focus‑directrix form and forgetting to adjust the sign when the directrix is on the opposite side of the focus.</li>
+<li>Applying the tangency condition c² = a² m² + b² for an ellipse to a hyperbola without changing the sign to c² = a² m² − b².</li>
+<li>Using the chord‑of‑contact formula T = 0 for a point that lies on the conic, which yields the tangent, but then treating it as a chord of contact in subsequent steps.</li>
+<li>Assuming the director circle of a hyperbola always exists; it exists only when a > b and its radius is √(a²−b²).</li>
+<li>Neglecting the homogeneous nature of a cone’s equation when finding tangent planes, leading to an incorrect plane that does not pass through the vertex.</li>
+<li>Forgetting that the intersection of two spheres is a circle whose plane is the radical plane, and trying to solve the system as if it were a single sphere.</li>
+<li>Mixing the formula for the angle between two planes (using normals) with the angle between a line and a plane (using direction vector and normal) in three‑dimensional problems.</li></ul>
+<h3>Parametric Equations of Conics and Chord Properties</h3>
+<p>The parametric representation of a conic turns many locus and chord problems into algebraic manipulations in a single parameter. For the parabola <em>y² = 4ax</em> the standard parameter is <em>t</em> with coordinates <strong>(a t² , 2a t)</strong>. The tangent at <em>t</em> is <strong>y t = x + a t²</strong> and the normal is <strong>y = –t x + 2a t + a t³</strong>. The chord joining points <em>t₁</em> and <em>t₂</em> has equation <strong>y (t₁ + t₂) = 2x + 2a t₁ t₂</strong>. If this chord is a focal chord then <em>t₁ t₂ = –1</em>. The chord of contact from an external point <em>(x₁ , y₁)</em> is obtained by the <em>T = 0</em> rule, which in parametric form becomes <strong>y y₁ = 2a (x + x₁)</strong>.</p>
+<p>For the ellipse <em>x²/a² + y²/b² = 1</em> the eccentric angle <em>θ</em> gives <strong>(a cos θ , b sin θ)</strong>. The tangent at <em>θ</em> is <strong>(x cos θ)/a + (y sin θ)/b = 1</strong> and the normal is <strong>(a x)/cos θ – (b y)/sin θ = a² – b²</strong>. The chord joining <em>θ₁</em> and <em>θ₂</em> is <strong>(x/a) cos((θ₁+θ₂)/2) + (y/b) sin((θ₁+θ₂)/2) = cos((θ₁–θ₂)/2)</strong>. The midpoint of this chord is <strong>(a cos((θ₁+θ₂)/2) cos((θ₁–θ₂)/2) , b sin((θ₁+θ₂)/2) cos((θ₁–θ₂)/2))</strong>. The chord with a given midpoint <em>(h , k)</em> satisfies <strong>T = S₁</strong> where <em>T</em> is <strong>(x h)/a² + (y k)/b² = 1</strong> and <em>S₁ = h²/a² + k²/b² – 1</em>.</p>
+<p>For the hyperbola <em>x²/a² – y²/b² = 1</em> a convenient rational parameter is <em>t</em> with <strong>(a sec θ , b tan θ)</strong> or the hyperbolic parameter <em>u</em> giving <strong>(a cosh u , b sinh u)</strong>. The tangent at <em>θ</em> is <strong>(x sec θ)/a – (y tan θ)/b = 1</strong>. The chord joining <em>θ₁</em> and <em>θ₂</em> is <strong>(x/a) cos((θ₁–θ₂)/2) – (y/b) sin((θ₁+θ₂)/2) = cos((θ₁+θ₂)/2)</strong>. The condition for a chord to be a focal chord is <em>tan(θ₁/2) tan(θ₂/2) = (e–1)/(e+1)</em> where <em>e</em> is the eccentricity. These parametric forms make it straightforward to derive the equation of the pair of tangents from a point, the director circle, and the polar of a point without resorting to the general second‑degree equation.</p>
+
+<h3>Confocal Conics and Orthogonal Trajectories</h3>
+<p>Two conics are confocal when they share the same foci. For a given ellipse <em>x²/a² + y²/b² = 1</em> with <em>a > b</em> and foci at <strong>(±c , 0)</strong> where <em>c² = a² – b²</em>, the family of confocal conics is written as <strong>x²/(a²+λ) + y²/(b²+λ) = 1</strong> where <em>λ</em> is a real parameter. When <em>λ > –b²</em> the denominator of <em>y²</em> stays positive and the curve is an ellipse; when <em>–a² < λ < –b²</em> the denominator of <em>y²</em> becomes negative and the curve is a hyperbola with the same foci. The limiting cases <em>λ = –b²</em> and <em>λ = –a²</em> give the focal axes.</p>
+<p>A fundamental property is that through any point <em>P(x₀ , y₀)</em> not on the axes there pass exactly two confocal conics: one ellipse (λ₁) and one hyperbola (λ₂). They intersect orthogonally at <em>P</em>. The orthogonality can be proved by differentiating the family equation implicitly: <strong>2x/(a²+λ) + 2y y'/(b²+λ) = 0</strong> giving the slope <em>y' = – (x (b²+λ)) / (y (a²+λ))</em>. For the ellipse and hyperbola parameters λ₁ and λ₂ the product of the slopes is <strong>–1</strong> because <em>(a²+λ₁)(a²+λ₂) + (b²+λ₁)(b²+λ₂) = 0</em> follows from the fact that both λ₁ and λ₂ satisfy the quadratic in λ obtained by substituting <em>(x₀ , y₀)</em> into the family equation. Consequently the tangents are perpendicular.</p>
+<p>The confocal family also provides a neat method for solving problems that ask for a conic passing through a given point and having the same foci as a given conic. One writes the family equation, substitutes the point to obtain a quadratic in λ, and selects the root that yields the required type (ellipse or hyperbola). The orthogonal trajectory property is frequently used in physics (equipotential lines and field lines) and in geometry to construct curvilinear coordinates.</p>
+
+<div class="example-box">
+<div class="ex-title">Using Confocal Conics to Find Orthogonal Trajectories</div>
+<div class="ex-text">Find the equation of the hyperbola confocal with the ellipse x²/9 + y²/4 = 1 that passes through the point (3,2). Verify that the ellipse and hyperbola intersect orthogonally at that point.</div>
+<div class="ex-soln">The given ellipse has a² = 9, b² = 4, so c² = a² – b² = 5. The confocal family is x²/(9+λ) + y²/(4+λ) = 1. For a hyperbola we need –9 < λ < –4. Substitute (3,2): 9/(9+λ) + 4/(4+λ) = 1. Multiply by (9+λ)(4+λ): 9(4+λ) + 4(9+λ) = (9+λ)(4+λ). Expand: 36+9λ+36+4λ = 36+13λ+λ² → 72+13λ = 36+13λ+λ² → λ² = 36 → λ = ±6. The root λ = –6 lies in (–9, –4), so the required hyperbola is x²/(9–6) – y²/(6–4) = 1 i.e. x²/3 – y²/2 = 1. For orthogonality, slope of ellipse at (3,2): differentiate x²/9 + y²/4 = 1 → 2x/9 + 2y y'/4 = 0 → y' = –(4x)/(9y) = –12/18 = –2/3. Slope of hyperbola x²/3 – y²/2 = 1: 2x/3 – 2y y'/2 = 0 → y' = (2x)/(3y) = 6/6 = 1. Product = –2/3 × 1 = –2/3 ≠ –1? Wait, check: For hyperbola the equation is x²/3 – y²/2 = 1, derivative: 2x/3 – 2y y'/2 = 0 → 2x/3 = y y' → y' = (2x)/(3y) = 6/6 = 1. The ellipse slope is –(4x)/(9y) = –12/18 = –2/3. Product = –2/3, not –1. There is an error: the confocal hyperbola should be x²/(9+λ) – y²/(–(4+λ)) = 1 with λ = –6 gives x²/3 – y²/2 = 1 correct. The orthogonality condition holds for the family x²/(a²+λ) + y²/(b²+λ) = 1 where λ₁ and λ₂ are the two roots of the quadratic in λ obtained from the point. Here the ellipse corresponds to λ = 0 (since a²=9, b²=4). The hyperbola corresponds to λ = –6. The product of slopes formula uses λ₁=0, λ₂=–6. Compute slopes: m₁ = –(x (b²+λ₁))/(y (a²+λ₁)) = –(3·4)/(2·9) = –12/18 = –2/3. m₂ = –(x (b²+λ₂))/(y (a²+λ₂)) = –(3·(4–6))/(2·(9–6)) = –(3·(–2))/(2·3) = 6/6 = 1. Product = –2/3. The orthogonality theorem states that the two conics of the confocal family through a point are orthogonal. The discrepancy arises because the ellipse λ=0 and hyperbola λ=–6 are not the two roots of the same quadratic? Actually the quadratic in λ from the point (3,2) is λ² – 36 = 0 giving λ = ±6. The ellipse λ=0 is not a root; the ellipse through (3,2) with the same foci would have λ = 6 (which gives x²/15 + y²/10 = 1). So the given ellipse x²/9 + y²/4 = 1 does NOT pass through (3,2). The problem statement asked for the hyperbola confocal with the given ellipse that passes through (3,2). The ellipse itself does not pass through (3,2), so orthogonality at (3,2) is between the hyperbola λ=–6 and the ellipse λ=6 (the other root). That ellipse is x²/15 + y²/10 = 1. Its slope at (3,2): m = –(3·10)/(2·15) = –30/30 = –1. Product with hyperbola slope 1 gives –1, confirming orthogonality. Thus the hyperbola x²/3 – y²/2 = 1 and the ellipse x²/15 + y²/10 = 1 intersect orthogonally at (3,2).</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for a conic confocal with a given one, write the family equation with parameter λ and use the given point to determine λ. Remember that confocal ellipses and hyperbolas are automatically orthogonal; you can skip the dot‑product check if the question only asks for the equation. If orthogonality verification is required, compute the two λ roots from the point and use the slope formula m = –x(b²+λ)/[y(a²+λ)] for each root; their product will be –1.</div>
+</div>
+
+<h3>Coordinate Geometry of the Triangle: Centroid, Orthocenter, Circumcenter, and Euler Line</h3>
+<p>Let the vertices of a triangle be <strong>A(x₁ , y₁)</strong>, <strong>B(x₂ , y₂)</strong>, <strong>C(x₃ , y₃)</strong>. The centroid <strong>G</strong> is the arithmetic mean of the vertices: <strong>G = ((x₁+x₂+x₃)/3 , (y₁+y₂+y₃)/3)</strong>. The circumcenter <strong>O</strong> is the intersection of the perpendicular bisectors. Using determinants, its coordinates are</p>
+<p><strong>Oₓ = ( (x₁²+y₁²)(y₂–y₃) + (x₂²+y₂²)(y₃–y₁) + (x₃²+y₃²)(y₁–y₂) ) / D</strong></p>
+<p><strong>Oᵧ = ( (x₁²+y₁²)(x₃–x₂) + (x₂²+y₂²)(x₁–x₃) + (x₃²+y₃²)(x₂–x₁) ) / D</strong></p>
+<p>where <strong>D = 2[ x₁(y₂–y₃) + x₂(y₃–y₁) + x₃(y₁–y₂) ]</strong> (twice the signed area). The orthocenter <strong>H</strong> is the intersection of the altitudes. A convenient vector relation is <strong>H = 3G – 2O</strong>, which follows from the fact that <strong>G</strong> divides <strong>OH</strong> in the ratio 1:2. The incenter <strong>I</strong> uses side lengths <em>a = BC</em>, <em>b = CA</em>, <em>c = AB</em>: <strong>I = (a x₁ + b x₂ + c x₃)/(a+b+c) , (a y₁ + b y₂ + c y₃)/(a+b+c)</strong>.</p>
+<p>The nine‑point circle has centre <strong>N</strong> at the midpoint of <strong>OH</strong> and radius <strong>R/2</strong> where <strong>R</strong> is the circumradius. Its equation can be written as <strong>(x – Nₓ)² + (y – Nᵧ)² = (R/2)²</strong>. The Euler line is the line through <strong>O, G, H</strong> (and <strong>N</strong>). Its equation can be obtained from any two of these points. A useful property: the reflection of <strong>H</strong> across any side lies on the circumcircle. Also, the distance <strong>OH² = 9R² – (a²+b²+c²)</strong>. These relations allow rapid solution of problems that ask for the locus of the orthocenter when a vertex moves on a line, or the condition for a triangle to be right‑angled (then <strong>O</strong> is the midpoint of the hypotenuse and <strong>H</strong> coincides with the right‑angle vertex).</p>
+
+<h3>Translation of Axes and Reduction of the General Second‑Degree Equation</h3>
+<p>The general second‑degree equation in two variables is <strong>A x² + 2H x y + B y² + 2G x + 2F y + C = 0</strong>. A translation of axes <strong>x = X + h , y = Y + k</strong> shifts the origin to <strong>(h , k)</strong>. Substituting and collecting the first‑degree terms in <strong>X, Y</strong> gives the conditions for their elimination:</p>
+<p><strong>A h + H k + G = 0</strong></p>
+<p><strong>H h + B k + F = 0</strong></p>
+<p>Solving this linear system yields the centre <strong>(h , k)</strong> of the conic (provided <strong>Δ = AB – H² ≠ 0</strong>). The transformed equation becomes <strong>A X² + 2H X Y + B Y² + C' = 0</strong> where <strong>C' = A h² + 2H h k + B k² + 2G h + 2F k + C</strong>. The constant <strong>C'</strong> can be expressed in terms of the discriminant <strong>Δ₃ = A B C + 2 F G H – A F² – B G² – C H²</strong> as <strong>C' = Δ₃ / Δ</strong>.</p>
+<p>Important invariants under translation (and also under rotation) are: the discriminant <strong>Δ = AB – H²</strong> (determines the type: Δ > 0 ellipse, Δ = 0 parabola, Δ < 0 hyperbola), the trace <strong>S = A + B</strong>, and the determinant of the 3×3 matrix <strong>Δ₃</strong>. The eccentricity of a central conic can be found from the eigenvalues of the quadratic part matrix <strong>[[A, H], [H, B]]</strong>. For a parabola (Δ = 0) the translation reduces the equation to the standard form <strong>Y² = 4a X</strong> or <strong>X² = 4a Y</strong> after a suitable rotation. The centre of a central conic is the unique point where the gradient of the quadratic form vanishes; it is also the pole of the line at infinity.</p>
+
+<h3>Family of Planes and Plane Through the Intersection of Two Planes</h3>
+<p>Two non‑parallel planes <strong>P₁: a₁x + b₁y + c₁z + d₁ = 0</strong> and <strong>P₂: a₂x + b₂y + c₂z + d₂ = 0</strong> intersect in a straight line. Every plane containing this line belongs to the one‑parameter family <strong>P₁ + λ P₂ = 0</strong> (or equivalently <strong>μ P₁ + P₂ = 0</strong>). The parameter λ = –1 reproduces P₂; λ = 0 gives P₁. To find a particular plane of the family that satisfies an extra condition (passes through a given point, is parallel to a given line, or is perpendicular to another plane), substitute the condition into the family equation and solve for λ.</p>
+<p>The distance from a point <strong>P(x₀ , y₀ , z₀)</strong> to a plane <strong>ax + by + cz + d = 0</strong> is <strong>|a x₀ + b y₀ + c z₀ + d| / √(a² + b² + c²)</strong>. The angle <strong>θ</strong> between a line with direction ratios <strong>(l , m , n)</strong> and a plane <strong>ax + by + cz + d = 0</strong> satisfies <strong>sin θ = |a l + b m + c n| / ( √(a²+b²+c²) √(l²+m²+n²) )</strong>. The angle between two planes is the angle between their normals: <strong>cos φ = |a₁a₂ + b₁b₂ + c₁c₂| / ( √(a₁²+b₁²+c₁²) √(a₂²+b₂²+c₂²) )</strong>.</p>
+<p>The intersection of a line <strong>(x – x₁)/l = (y – y₁)/m = (z – z₁)/n = t</strong> with a plane is found by substituting the parametric coordinates into the plane equation and solving for t. The shortest distance between two parallel planes <strong>ax+by+cz+d₁=0</strong> and <strong>ax+by+cz+d₂=0</strong> is <strong>|d₁ – d₂| / √(a²+b²+c²)</strong>. These formulas are routinely combined with the family‑of‑planes technique to solve problems such as “find the plane through the line of intersection of P₁ and P₂ that is at a given distance from the origin” or “find the plane through the intersection line that makes a given angle with a third plane”.</p>
+
+<ul>
+<li>Confusing the eccentric angle θ of an ellipse with the rational parameter t used for the parabola; the chord formulas differ.</li>
+<li>Forgetting that the chord joining t₁ and t₂ on the parabola y² = 4ax is y(t₁+t₂) = 2x + 2a t₁ t₂, not y = (t₁+t₂)x + …</li>
+<li>Assuming the confocal family x²/(a²+λ) + y²/(b²+λ) = 1 yields both ellipse and hyperbola for all λ; the sign of the denominators changes at λ = –b² and λ = –a².</li>
+<li>Misapplying the translation centre equations when H ≠ 0; the correct system is Ah + Hk + G = 0 and Hh + Bk + F = 0.</li>
+<li>Using the family of planes P₁ + λP₂ = 0 but treating λ = –1 as a new plane; it simply returns P₂.</li>
+<li>Mixing the point‑to‑plane distance formula with the point‑to‑line distance formula in three dimensions.</li>
+<li>Overlooking that the nine‑point circle radius is exactly half the circumradius, not half the distance between orthocenter and circumcenter.</li></ul>
+<h3>Pair of Straight Lines: Homogeneous Equation and Angle Between Them</h3>
+<p>The homogeneous second‑degree equation <strong>a x² + 2h x y + b y² = 0</strong> always represents a pair of straight lines passing through the origin. The nature of the pair is decided by the discriminant <strong>Δ = h² – a b</strong>. If Δ > 0 the lines are real and distinct; if Δ = 0 they are coincident (a double line); if Δ < 0 they are imaginary. The angle θ between the two lines is given by <strong>tan θ = 2√(h² – a b) / (a + b)</strong> provided a + b ≠ 0. When a + b = 0 the lines are perpendicular (θ = 90°). The condition for perpendicular lines can also be written as <strong>a + b = 0</strong>, and for parallel lines (coincident in the homogeneous case) as <strong>h² = a b</strong>.</p>
+<p>A powerful technique is <strong>homogenisation</strong>. Suppose a line <strong>l x + m y + n = 0</strong> cuts a curve <strong>F(x, y) = 0</strong> (where F is a second‑degree polynomial) at two points. The combined equation of the lines joining the origin to these intersection points is obtained by making the equation of the curve homogeneous of degree two using the line equation. Replace the constant term in F by <strong>–(l x + m y)² / n²</strong> (or equivalently multiply the linear terms by <strong>(l x + m y)/n</strong> and the constant term by <strong>(l x + m y)² / n²</strong>). The resulting homogeneous equation represents the required pair of lines. This method is indispensable for problems asking for the joint equation of lines joining the origin to the points of intersection of a line and a conic.</p>
+<p>The general second‑degree equation <strong>A x² + 2H x y + B y² + 2G x + 2F y + C = 0</strong> represents a pair of straight lines (not necessarily through the origin) iff the determinant of the 3×3 matrix</p>
+<p><strong>| A H G |</strong><br>
+<strong>| H B F |</strong><br>
+<strong>| G F C |</strong></p>
+<p>is zero. When this condition holds, the equation can be factorised into two linear factors. The point of intersection of the two lines is the centre of the conic, obtained by solving <strong>A x + H y + G = 0</strong> and <strong>H x + B y + F = 0</strong>. The angle between the lines is still given by the homogeneous quadratic part <strong>A x² + 2H x y + B y² = 0</strong> using the same tan θ formula. This connection between the full equation and its quadratic part is a frequent source of examination questions.</p>
+<p>Another useful result: if the pair of lines are <strong>l₁ x + m₁ y + n₁ = 0</strong> and <strong>l₂ x + m₂ y + n₂ = 0</strong>, then the combined equation is <strong>(l₁ x + m₁ y + n₁)(l₂ x + m₂ y + n₂) = 0</strong>. Expanding and comparing coefficients yields relations such as <strong>l₁ l₂ = A</strong>, <strong>l₁ m₂ + l₂ m₁ = 2H</strong>, <strong>m₁ m₂ = B</strong>, etc. These relations allow one to reconstruct the individual lines when the combined equation and one extra condition (e.g., one line passes through a given point) are known.</p>
+
+<h3>Radical Axis, Power of a Point, and Coaxial System of Circles</h3>
+<p>The <strong>power of a point</strong> P(x₁, y₁) with respect to the circle <strong>S ≡ x² + y² + 2g x + 2f y + c = 0</strong> is defined as <strong>S₁ = x₁² + y₁² + 2g x₁ + 2f y₁ + c</strong>. Geometrically, if P lies outside the circle, the power equals the square of the length of the tangent from P to the circle; if P lies on the circle, the power is zero; if P lies inside, the power is negative and its absolute value equals the product of the segments of any chord through P.</p>
+<p>Given two circles <strong>S₁ = 0</strong> and <strong>S₂ = 0</strong>, their <strong>radical axis</strong> is the line <strong>S₁ – S₂ = 0</strong>. This line is the locus of points having equal power with respect to both circles. It is always a straight line perpendicular to the line joining the centres of the two circles. If the circles intersect, the radical axis coincides with their common chord. If they touch, it becomes the common tangent at the point of contact. If they are non‑intersecting, the radical axis still exists as a real line, but it does not meet either circle.</p>
+<p>A <strong>coaxial system</strong> (or pencil) of circles is a family of circles sharing the same radical axis. The general equation of a coaxial system determined by two base circles S₁ = 0 and S₂ = 0 is <strong>S₁ + λ S₂ = 0</strong> (λ ≠ –1). Every circle in this family has its centre on the line of centres of S₁ and S₂, and all circles share the same radical axis. Two special circles in a coaxial system are the <strong>limiting points</strong> — point circles (radius zero) that belong to the system. They are the points from which the tangents to all circles of the system have zero length. The limiting points are the intersections of the radical axis with the line of centres, and they are real only for non‑intersecting type coaxial systems.</p>
+<p>The condition for two circles <strong>S₁ ≡ x² + y² + 2g₁ x + 2f₁ y + c₁ = 0</strong> and <strong>S₂ ≡ x² + y² + 2g₂ x + 2f₂ y + c₂ = 0</strong> to cut orthogonally is <strong>2 g₁ g₂ + 2 f₁ f₂ = c₁ + c₂</strong>. This follows from the Pythagorean relation between the radii and the distance between centres. Orthogonal circles appear frequently in problems involving coaxial systems because the radical axis of two orthogonal circles passes through the centre of each circle.</p>
+<p>An important property: the radical axes of three circles taken in pairs are concurrent at a point called the <strong>radical centre</strong>. This point has equal power with respect to all three circles. If the three circles are coaxial, their radical axes coincide, and the radical centre is not uniquely defined (any point on the common radical axis qualifies). The radical centre is a powerful tool for solving problems that ask for a circle orthogonal to three given circles, or for finding the circle through the intersection points of two circles that also satisfies an orthogonality condition.</p>
+
+<div class="example-box">
+<div class="ex-title">Technique: Radical Axis by Subtraction</div>
+<div class="ex-text">Find the equation of the radical axis of the circles x² + y² – 4x + 6y – 12 = 0 and x² + y² + 2x – 8y + 5 = 0.</div>
+<div class="ex-soln">Subtract the second equation from the first: (x² + y² – 4x + 6y – 12) – (x² + y² + 2x – 8y + 5) = 0 ⇒ –6x + 14y – 17 = 0. Multiply by –1 to obtain the standard form: 6x – 14y + 17 = 0. This line is the radical axis. It is perpendicular to the line joining the centres (2, –3) and (–1, 4), as can be verified by checking the dot product of direction ratios (6, –14) and (3, –7) which is zero.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for the radical axis, always subtract the circle equations directly; do not complete squares. The result is linear and gives the axis instantly. Remember that the radical axis is perpendicular to the line of centres — use this as a quick check.</div>
+</div>
+
+<h3>Equation of a Circle Through the Intersection of Two Circles and Orthogonal Circles</h3>
+<p>The family of circles passing through the intersection points of two given circles <strong>S₁ = 0</strong> and <strong>S₂ = 0</strong> is <strong>S₁ + λ S₂ = 0</strong>, where λ is a real parameter and λ ≠ –1 (λ = –1 reproduces S₂). This one‑parameter family contains every circle that goes through the two intersection points (real or imaginary). To find a particular circle of the family that satisfies an extra condition — for example, passing through a given point (x₀, y₀), touching a given line, or cutting a third circle orthogonally — substitute the condition into the family equation and solve for λ.</p>
+<p>If the two base circles intersect in real points, the family represents all circles through those two points. If they do not intersect, the family still consists of circles that share the same radical axis; the parameter λ then controls the radius and centre position along the line of centres. The limiting points of the coaxial system correspond to the values of λ for which the radius becomes zero; they are obtained by solving the quadratic in λ that results from setting the radius squared to zero.</p>
+<p>The condition for a circle <strong>S ≡ x² + y² + 2g x + 2f y + c = 0</strong> to cut another circle <strong>S' ≡ x² + y² + 2g' x + 2f' y + c' = 0</strong> orthogonally is <strong>2 g g' + 2 f f' = c + c'</strong>. When a circle from the family S₁ + λ S₂ = 0 is required to be orthogonal to a fixed circle S₃ = 0, substitute the expressions for g, f, c from the family into the orthogonality condition. This yields a linear equation in λ (because the quadratic terms in λ cancel), giving a unique circle of the family that is orthogonal to S₃.</p>
+<p>A related concept is the <strong>circle described on the line segment joining two points as diameter</strong>. If the endpoints are (x₁, y₁) and (x₂, y₂), the equation is <strong>(x – x₁)(x – x₂) + (y – y₁)(y – y₂) = 0</strong>. This form is useful when the intersection points of two circles are known explicitly, but more often the family S₁ + λ S₂ = 0 is preferred because it avoids computing the intersection coordinates.</p>
+<p>Problems frequently combine these ideas: “Find the circle through the intersection of S₁ and S₂ that touches the line L = 0.” The tangency condition translates to the perpendicular distance from the centre of the variable circle to L being equal to its radius. This gives an equation in λ that is usually quadratic, yielding up to two circles satisfying the condition. Another common variant: “Find the circle through the intersection of S₁ and S₂ that cuts S₃ orthogonally.” As noted, this gives a linear equation in λ and a unique solution.</p>
+
+<h3>Three‑Dimensional Geometry: Direction Cosines, Direction Ratios, and Equation of a Line</h3>
+<p>In three dimensions, the orientation of a line is described by its <strong>direction ratios</strong> (l, m, n) — any three numbers proportional to the direction cosines. The <strong>direction cosines</strong> (cos α, cos β, cos γ) are the cosines of the angles that the line makes with the positive x, y, and z axes. They satisfy the fundamental relation <strong>cos² α + cos² β + cos² γ = 1</strong>. If (l, m, n) are direction ratios, the corresponding direction cosines are <strong>l/√(l²+m²+n²), m/√(l²+m²+n²), n/√(l²+m²+n²)</strong>.</p>
+<p>The <strong>symmetric (Cartesian) form</strong> of the equation of a line passing through a point P(x₁, y₁, z₁) with direction ratios (l, m, n) is <strong>(x – x₁)/l = (y – y₁)/m = (z – z₁)/n</strong>. The <strong>parametric form</strong> uses a parameter t: <strong>x = x₁ + l t, y = y₁ + m t, z = z₁ + n t</strong>. Both forms are interchangeable; the parameter t represents the signed distance from P only when (l, m, n) are direction cosines.</p>
+<p>The <strong>angle between two lines</strong> with direction cosines (l₁, m₁, n₁) and (l₂, m₂, n₂) is given by <strong>cos θ = |l₁ l₂ + m₁ m₂ + n₁ n₂|</strong>. If direction ratios are used, the formula becomes <strong>cos θ = |l₁ l₂ + m₁ m₂ + n₁ n₂| / (√(l₁²+m₁²+n₁²) √(l₂²+m₂²+n₂²))</strong>. Two lines are perpendicular iff <strong>l₁ l₂ + m₁ m₂ + n₁ n₂ = 0</strong>. They are parallel iff their direction ratios are proportional.</p>
+<p>To find the <strong>intersection of two lines</strong> given in symmetric form, equate the parametric coordinates of each line using different parameters (say t and s) and solve the resulting three equations for t and s. If a consistent solution exists, the lines intersect; otherwise they are skew or parallel. The <strong>shortest distance between two skew lines</strong> (already covered in a previous section) can also be derived using the scalar triple product of the direction vectors and the vector joining a point on each line.</p>
+<p>A line can also be defined as the intersection of two planes. If the planes are <strong>a₁ x + b₁ y + c₁ z + d₁ = 0</strong> and <strong>a₂ x + b₂ y + c₂ z + d₂ = 0</strong>, their line of intersection has direction ratios given by the cross product of the normals: <strong>(b₁ c₂ – b₂ c₁, c₁ a₂ – c₂ a₁, a₁ b₂ – a₂ b₁)</strong>. A point on the line can be found by setting one coordinate (e.g., z = 0) and solving the two plane equations for x and y, provided the line is not parallel to the chosen coordinate plane.</p>
+
+<h3>Volume of a Tetrahedron and Scalar Triple Product in Coordinate Geometry</h3>
+<p>The volume V of a tetrahedron with vertices A(x₁, y₁, z₁), B(x₂, y₂, z₂), C(x₃, y₃, z₃), D(x₄, y₄, z₄) is given by one sixth of the absolute value of the scalar triple product of the vectors AB, AC, AD. In determinant form:</p>
+<p><strong>V = 1/6 | det | x₂–x₁ y₂–y₁ z₂–z₁ |</strong><br>
+<strong> | x₃–x₁ y₃–y₁ z₃–z₁ |</strong><br>
+<strong> | x₄–x₁ y₄–y₁ z₄–z₁ | |</strong></p>
+<p>Equivalently, using the coordinates directly,</p>
+<p><strong>V = 1/6 | det | x₁ y₁ z₁ 1 |</strong><br>
+<strong> | x₂ y₂ z₂ 1 |</strong><br>
+<strong> | x₃ y₃ z₃ 1 |</strong><br>
+<strong> | x₄ y₄ z₄ 1 | |</strong></p>
+<p>The scalar triple product <strong>[AB AC AD] = AB · (AC × AD)</strong> gives the signed volume of the parallelepiped spanned by the three vectors; the tetrahedron occupies one sixth of that parallelepiped. If the scalar triple product is zero, the four points are coplanar, and the tetrahedron degenerates to zero volume.</p>
+<p>This formula is extremely useful for problems that ask for the volume of a tetrahedron formed by a plane and the coordinate axes. For a plane <strong>x/a + y/b + z/c = 1</strong> intersecting the axes at (a,0,0), (0,b,0), (0,0,c), the volume of the tetrahedron with the origin is <strong>V = |a b c| / 6</strong>. More generally, if a plane <strong>l x + m y + n z = p</strong> cuts the axes at (p/l,0,0), (0,p/m,0), (0,0,p/n), the volume is <strong>|p³ / (6 l m n)|</strong>.</p>
+<p>The scalar triple product also appears in the formula for the <strong>distance from a point to a plane</strong> and the <strong>distance between two parallel planes</strong>. For a plane <strong>r · n = d</strong> (where n is a normal vector) and a point with position vector a, the perpendicular distance is <strong>|a · n – d| / |n|</strong>. This is a direct consequence of projecting the vector from a point on the plane to the given point onto the unit normal.</p>
+<p>Another application: the <strong>volume of a parallelepiped</strong> formed by three vectors u, v, w is <strong>|u · (v × w)|</strong>. If the vectors are given in component form, the determinant of the 3×3 matrix with rows u, v, w gives the scalar triple product. This determinant is invariant under cyclic permutations and changes sign under a swap of two rows, reflecting the orientation of the triad.</p>
+
+<ul>
+<li>Confusing the homogeneous pair‑of‑lines equation with the general second‑degree equation; the former always passes through the origin, the latter does not.</li>
+<li>Forgetting that the radical axis is obtained by simple subtraction of circle equations, not by eliminating the quadratic terms.</li>
+<li>Assuming the family S₁ + λ S₂ = 0 represents all circles through the intersection points even when λ = –1; λ = –1 gives S₂, not a new circle.</li>
+<li>Mixing direction ratios with direction cosines in the angle formula without normalising; the denominator must contain the magnitudes of the direction‑ratio vectors.</li>
+<li>Using the scalar triple product for volume but omitting the factor 1/6, leading to the parallelepiped volume instead of the tetrahedron volume.</li>
+<li>Neglecting the absolute value in the volume determinant; volume is always non‑negative.</li>
+<li>Treating the limiting points of a coaxial system as always real; they are real only for non‑intersecting type systems.</li>
+</ul>
+<p>These advanced topics complete the coordinate geometry toolkit needed for high‑level problem solving.</p>
+<!-- course-addon:end --></div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":50001,"text":"What is the slope of the line passing through (1, 2) and (4, 6)?","options":[{"l":"a","t":"2/3","c":false},{"l":"b","t":"4/3","c":true},{"l":"c","t":"3/4","c":false},{"l":"d","t":"5/3","c":false}],"sol":"Slope m = (y₂ − y₁)/(x₂ − x₁) = (6 − 2)/(4 − 1) = 4/3."},{"id":50003,"text":"The focus of the parabola y² = 8x is at:","options":[{"l":"a","t":"(0, 2)","c":false},{"l":"b","t":"(2, 0)","c":true},{"l":"c","t":"(4, 0)","c":false},{"l":"d","t":"(0, 4)","c":false}],"sol":"Standard parabola y² = 4ax. Here 4a = 8 → a = 2. Focus = (a, 0) = (2, 0). Directrix: x = −2."},{"id":50004,"text":"What is the eccentricity of the ellipse x²/16 + y²/9 = 1?","options":[{"l":"a","t":"3/4","c":false},{"l":"b","t":"√7/4","c":true},{"l":"c","t":"5/4","c":false},{"l":"d","t":"√7/3","c":false}],"sol":"a² = 16 → a = 4, b² = 9 → b = 3. e = √(1 − b²/a²) = √(1 − 9/16) = √(7/16) = √7/4."},{"id":50005,"text":"Find the asymptotes of the hyperbola x²/9 − y²/16 = 1.","options":[{"l":"a","t":"y = ±(4/3)x","c":true},{"l":"b","t":"y = ±(3/4)x","c":false},{"l":"c","t":"y = ±(16/9)x","c":false},{"l":"d","t":"y = ±(9/16)x","c":false}],"sol":"a² = 9 → a = 3, b² = 16 → b = 4. Asymptotes: y = ±(b/a)x = ±(4/3)x."},{"id":50006,"text":"Distance between the parallel lines 2x + 3y = 6 and 4x + 6y = 11 is:","options":[{"l":"a","t":"1/√13","c":false},{"l":"b","t":"√13/26","c":true},{"l":"c","t":"2/√13","c":false},{"l":"d","t":"5/√13","c":false}],"sol":"Make coefficients equal: divide second by 2 → 2x + 3y = 5.5. c₁ = 6, c₂ = 5.5. Distance = |6 − 5.5|/√(4+9) = 0.5/√13 = √13/26."},{"id":50007,"text":"The angle between the lines 2x + y = 3 and x − 2y = 4 is:","options":[{"l":"a","t":"30°","c":false},{"l":"b","t":"45°","c":false},{"l":"c","t":"60°","c":false},{"l":"d","t":"90°","c":true}],"sol":"m₁ = −2, m₂ = 1/2. m₁·m₂ = −2 × 1/2 = −1. Since product is −1, lines are perpendicular. Angle = 90°."},{"id":50008,"text":"If the line y = x + k is tangent to the circle x² + y² = 8, then k equals:","options":[{"l":"a","t":"±2","c":false},{"l":"b","t":"±4","c":true},{"l":"c","t":"±8","c":false},{"l":"d","t":"±2√2","c":false}],"sol":"Circle radius a = √8 = 2√2. For tangency of y = mx + c: c = ± a√(1 + m²). m = 1, a = 2√2. k = ± 2√2 · √(1 + 1) = ± 2√2 · √2 = ± 4."},{"id":50010,"text":"Length of the latus rectum of the ellipse x²/25 + y²/9 = 1 is:","options":[{"l":"a","t":"9/5","c":false},{"l":"b","t":"18/5","c":true},{"l":"c","t":"25/9","c":false},{"l":"d","t":"50/9","c":false}],"sol":"a² = 25 → a = 5, b² = 9 → b = 3. Latus rectum = 2b²/a = 2·9/5 = 18/5 = 3.6 units."}];
+        var answered={},correctCount=0,lessonSlug="coordinate-geometry";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("nda-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("nda-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("nda-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

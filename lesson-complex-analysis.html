@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Complex Analysis — The Magic of Imaginary Numbers | vlymbooq</title>
+    <meta name="description" content="Deep dive into Complex Analysis — the complex plane, Euler's formula, Cauchy's theorem, residues, contour integration, and the Riemann Hypothesis.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-complex-analysis.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.75em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.9em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.75em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.9em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.9em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.75em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.9em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.75em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.75em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.9em;color:var(--text-muted);margin-top:6px}
+    </style>
+</head>
+<body id="main">
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html" class="active" style="color:var(--text);font-weight:600">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-info-theory.html">Info Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-measure-theory.html">Measure Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-category-theory.html">Category Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-set-theory.html">Set Theory &amp; Logic <span class="s-tag">🔬</span></a>
+                    <a href="lesson-functional-analysis.html">Functional Analysis <span class="s-tag">🔬</span></a>
+                    <a href="#">Algebra <span class="s-tag">📖</span></a>
+                    <a href="#">Calculus <span class="s-tag">📖</span></a>
+                    <a href="#">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="#">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="#">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="#">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="#">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="#">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.9em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Complex Analysis — The Magic of Imaginary Numbers</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Complex analysis is often called the most beautiful subject in mathematics. By taking the "imaginary" number i = √(−1) seriously, we unlock a world where differentiation and integration become almost magically simple, where infinite series converge in surprising ways, and where a single formula — Euler's identity — connects the five most important constants in mathematics. It is the hidden language behind quantum mechanics, fluid dynamics, and the deepest unsolved problem in math: the Riemann Hypothesis.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"The shortest path between two truths in the real domain passes through the complex domain."</div>
+                    <div class="attribution">— Jacques Hadamard</div>
+                </div>
+
+                <!-- ========== PART 1: THE COMPLEX PLANE ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🌀 The Complex Plane — A New Dimension of Numbers</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Invention of i</div>
+                    <div class="story-title">Why Mathematicians Needed a Number That Doesn't Exist</div>
+                    <div class="story-text">For centuries, equations like x² + 1 = 0 had no solution — no real number squared gives −1. So mathematicians did something audacious: they invented a new number i such that i² = −1. A complex number z = x + iy has a real part x and an imaginary part y. The <strong>complex plane</strong> (Argand diagram) plots these as coordinates: the x-axis is real, the y-axis is imaginary. Just like that, every quadratic equation has two solutions. What started as a convenient fiction became the foundation of modern physics and mathematics.</div>
+                    <div class="story-moral">"Imaginary" is a terrible name — complex numbers are no less real than real numbers. They just live in a plane instead of on a line.</div>
+                </div>
+
+                <h3>Polar Form — The Magic of e</h3>
+                <p>A complex number z = x + iy can also be written in <strong>polar form</strong> using its distance from the origin r = |z| and its angle θ (the argument): z = r(cos θ + i sin θ). But the real shock comes from Euler's formula:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Euler's Formula</div>
+                    <div class="insight-text">e^{iθ} = cos θ + i sin θ</div>
+                    <div class="insight-sub">The most beautiful formula in mathematics: e^{iπ} + 1 = 0 (Euler's identity).</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.9em;font-weight:600">Why e^{iθ} = cos θ + i sin θ Makes Sense</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Write e^{iθ} as its Taylor series:<br><br>
+                        e^{iθ} = 1 + iθ + (iθ)²/2! + (iθ)³/3! + (iθ)⁴/4! + ...<br>
+                        = 1 + iθ − θ²/2! − iθ³/3! + θ⁴/4! + iθ⁵/5! − ...<br><br>
+                        Group real and imaginary terms:<br>
+                        Real: 1 − θ²/2! + θ⁴/4! − θ⁶/6! + ... = cos θ<br>
+                        Imag: θ − θ³/3! + θ⁵/5! − θ⁷/7! + ... = sin θ<br><br>
+                        So e^{iθ} = cos θ + i sin θ. When θ = π: e^{iπ} = cos π + i sin π = −1 + 0 = −1.<br>
+                        Thus e^{iπ} + 1 = 0 — one equation linking e, π, i, 1, and 0.
+                    </div>
+                </div>
+
+                <h3>Multiplication Is Rotation</h3>
+                <p>In polar form, multiplication becomes stunningly simple: multiply the radii, add the angles. (r₁e^{iθ₁})(r₂e^{iθ₂}) = r₁r₂ e^{i(θ₁+θ₂)}. Geometrically, multiplying by e^{iθ} rotates by angle θ. Multiplying by i = e^{iπ/2} rotates by 90°. This is the deep truth: complex numbers encode rotation algebraically.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Addition</div><div class="f-math">(x+iy)+(u+iv) = (x+u)+i(y+v)</div></div>
+                    <div class="formula-card"><div class="f-label">Multiplication</div><div class="f-math">(x+iy)(u+iv) = (xu−yv)+i(xv+yu)</div></div>
+                    <div class="formula-card"><div class="f-label">Polar Form</div><div class="f-math">z = re^{iθ}</div></div>
+                    <div class="formula-card"><div class="f-label">Complex Conjugate</div><div class="f-math">z̄ = x − iy = re^{−iθ}</div></div>
+                </div>
+
+                <h3>Roots of Unity</h3>
+                <p>The equation zⁿ = 1 has n solutions — the n-th roots of unity. They lie equally spaced on the unit circle at angles 2πk/n. For n = 4: 1, i, −1, −i. These form a <strong>cyclic group</strong> — the foundation of discrete Fourier transforms, signal processing, and modern number theory.</p>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: COMPLEX FUNCTIONS & CAUCHY ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🎯 Analytic Functions — Differentiability in the Complex World</h2>
+
+                <div class="story-card">
+                    <div class="story-label">A Stricter Kind of Smooth</div>
+                    <div class="story-title">Complex Differentiability Is Real Differentiability on Steroids</div>
+                    <div class="story-text">A complex function f(z) is <strong>analytic</strong> (or holomorphic) if it's complex-differentiable at every point. The definition looks like the real one: f'(z) = lim_{h→0} (f(z+h) − f(z))/h. But here h is a <strong>complex</strong> number — it can approach zero from any direction in the plane. This seemingly small change makes complex differentiability incredibly restrictive. If a function is complex-differentiable once, it's automatically infinitely differentiable and can be expanded as a power series. Real functions are not this well-behaved — a real function can be differentiable but not twice differentiable, or smooth but not analytic.</div>
+                    <div class="story-moral">Complex differentiability is real differentiability in every direction at once — and that extra constraint makes everything beautiful.</div>
+                </div>
+
+                <h3>Cauchy-Riemann Equations</h3>
+                <p>Write f(z) = u(x,y) + iv(x,y). For f to be analytic, the partial derivatives must satisfy:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cauchy-Riemann Equations</div>
+                    <div class="insight-text">∂u/∂x = ∂v/∂y, &nbsp; ∂u/∂y = −∂v/∂x</div>
+                    <div class="insight-sub">These ensure that the derivative is the same from every direction.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Check: Is f(z) = z² = (x² − y²) + i(2xy) analytic?</div>
+                    <div class="ex-text">u = x² − y², v = 2xy.<br>
+                    ∂u/∂x = 2x, ∂v/∂y = 2x ✓<br>
+                    ∂u/∂y = −2y, −∂v/∂x = −2y ✓<br>
+                    Yes! f'(z) = 2z everywhere. Every polynomial is analytic.</div>
+                </div>
+
+                <h3>Cauchy's Integral Theorem</h3>
+                <p>The most remarkable result in complex analysis: if f is analytic inside and on a closed curve C, then the integral around C is zero.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cauchy's Integral Theorem</div>
+                    <div class="insight-text">∮_C f(z) dz = 0</div>
+                    <div class="insight-sub">The contour integral of an analytic function around any closed loop is zero.</div>
+                </div>
+
+                <p>This is deeply connected to the idea that analytic functions have <strong>antiderivatives</strong>. Think of a gravitational field: the work done going around a closed path is zero if the field is conservative. Analytic functions are "conservative" in this sense.</p>
+
+                <h3>Cauchy's Integral Formula — The Crown Jewel</h3>
+                <p>If f is analytic inside and on a closed curve C, then the value of f at any point a inside C is determined entirely by its values on the boundary:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cauchy's Integral Formula</div>
+                    <div class="insight-text">f(a) = (1/2πi) ∮_C f(z)/(z−a) dz</div>
+                    <div class="insight-sub">The value inside is the average of the values on the boundary — a kind of magic averaging property.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.9em;font-weight:600">Why This Is So Powerful</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Cauchy's formula means that the entire function inside a region is determined by its values on the boundary. More incredibly, differentiating under the integral gives:<br><br>
+                        f<sup>(n)</sup>(a) = (n!/2πi) ∮_C f(z)/(z−a)^{n+1} dz<br><br>
+                        This proves that analytic functions are <strong>infinitely differentiable</strong> and that all derivatives can be computed from boundary values. In the real world, differentiability once doesn't even guarantee twice. In the complex world, once = infinitely many times.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: POWER SERIES & RESIDUES ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🔍 Singularities and Residues — Taming Infinity</h2>
+
+                <div class="story-card">
+                    <div class="story-label">When Functions Explode</div>
+                    <div class="story-title">Singularities: The Holes Where Everything Goes Wrong</div>
+                    <div class="story-text">Not every complex function is analytic everywhere. The function f(z) = 1/z is analytic everywhere except at z = 0, where it has a <strong>singularity</strong>. The type of singularity tells you how badly the function behaves there. A <strong>pole</strong> is like a 1/x² blow-up — the function goes to infinity but in a controlled way. An <strong>essential singularity</strong> is wilder — near e^{1/z} at z = 0, the function oscillates so violently it approaches every possible value. Near essential singularities, functions behave so chaotically that Picard's theorem says they take every complex value (with at most one exception) in any neighborhood.</div>
+                    <div class="story-moral">Singularities are not just problems — they're where the interesting information lives.</div>
+                </div>
+
+                <h3>Power Series — Taylor and Laurent</h3>
+                <p>Analytic functions have power series expansions. Around a point where the function is analytic, it has a <strong>Taylor series</strong>. Around a singularity, it has a <strong>Laurent series</strong> that includes negative powers:</p>
+
+                <div class="math-block">f(z) = Σ_{n=−∞}^{∞} aₙ (z−a)ⁿ</div>
+
+                <p>The coefficient a₋₁ — the one multiplying 1/(z−a) — is called the <strong>residue</strong>. It captures the "strength" of the singularity, and it's the key to evaluating integrals.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Simple Pole (order 1)</div><div class="f-math">Res(f, a) = lim(z−a)f(z)</div></div>
+                    <div class="formula-card"><div class="f-label">Pole of order n</div><div class="f-math">Res = 1/(n−1)! lim d^{n−1}/dz^{n−1} (z−a)ⁿf(z)</div></div>
+                    <div class="formula-card"><div class="f-label">Residue at ∞</div><div class="f-math">Res(f, ∞) = −Res(f(1/z)/z², 0)</div></div>
+                    <div class="formula-card"><div class="f-label">Sum of all residues</div><div class="f-math">Σ Res(f) + Res(f,∞) = 0</div></div>
+                </div>
+
+                <h3>The Residue Theorem — The Grand Unification</h3>
+                <p>The Residue Theorem is the most powerful tool in complex analysis. It says that the contour integral of a function around a closed curve is 2πi times the sum of residues inside:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Residue Theorem</div>
+                    <div class="insight-text">∮_C f(z) dz = 2πi × Σ Res(f, aₖ)</div>
+                    <div class="insight-sub">The integral around a closed curve depends only on the singularities inside — not on the exact shape of the curve.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.9em;font-weight:600">Computing a Real Integral Using Residues</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        The real integral ∫₋∞^∞ 1/(1+x²) dx = π. Let's prove it using residues.<br><br>
+                        Consider ∮ 1/(1+z²) dz around a semicircle of radius R in the upper half-plane.<br>
+                        Factor: 1/(1+z²) = 1/((z−i)(z+i)). Only z = i (in the upper half-plane) is inside.<br>
+                        Residue at z = i: lim (z−i) × 1/((z−i)(z+i)) = 1/(2i).<br>
+                        By the residue theorem: ∮ = 2πi × 1/(2i) = π.<br>
+                        As R → ∞, the semicircle arc contributes 0, so the real line integral = π.<br><br>
+                        This technique works for a vast class of real integrals that would be nearly impossible otherwise.
+                    </div>
+                </div>
+
+                <h3>Contour Integration — Strategic Paths</h3>
+                <p>By choosing clever contours (keyhole, rectangular, wedge, dogbone), you can evaluate seemingly impossible real integrals. The strategy: extend the real integral to a complex contour, apply the residue theorem, and extract the real answer. This is how many integrals in physics and engineering are computed.</p>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: APPLICATIONS & DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌍 Complex Analysis in the Real World</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Unreasonable Power</div>
+                    <div class="story-title">Why Imaginary Numbers Describe Real Physics</div>
+                    <div class="story-text">Complex analysis seems like pure abstraction — studying functions of an "imaginary" variable. Yet it describes the real world with uncanny accuracy. Quantum mechanics uses complex wavefunctions (Schrödinger's equation has i built in). Fluid dynamics uses complex potentials to describe ideal flow. Electrical engineering uses complex impedance. Signal processing uses the Fourier transform, which is fundamentally complex. Conformal mapping — the study of angle-preserving transformations — solves problems in electrostatics, heat flow, and aerodynamics. The "imaginary" turned out to be more real than we thought.</div>
+                    <div class="story-moral">Complex analysis is the language nature uses to describe waves, fields, and quantum reality.</div>
+                </div>
+
+                <h3>Conformal Mapping — Angle-Preserving Magic</h3>
+                <p>Analytic functions are <strong>conformal</strong>: they preserve angles between curves (except at critical points where f'(z) = 0). This means you can transform a complicated shape into a simple one while keeping the physics intact. The <strong>Joukowski transformation</strong> maps circles to airfoil shapes — used to design airplane wings. The <strong>Möbius transformation</strong> maps lines and circles to lines and circles — the basis of hyperbolic geometry and special relativity.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Möbius Transformation: f(z) = (az + b)/(cz + d)</div>
+                    <div class="ex-text">These are the most important conformal maps. They map circles/lines to circles/lines, preserve angles, and form a group under composition. The condition ad − bc ≠ 0 ensures the map is invertible. In relativity, the Lorentz transformations are essentially Möbius transformations on the Riemann sphere.</div>
+                </div>
+
+                <h3>The Riemann Sphere — Adding a Point at Infinity</h3>
+                <p>The <strong>Riemann sphere</strong> adds a single point "∞" to the complex plane, turning it into a sphere via stereographic projection. On this sphere, every rational function becomes a smooth map from the sphere to itself. The point at infinity is where 1/z is analytic (since 1/z → 0 as z → ∞). This compactification makes complex analysis even more elegant — there are no "missing" points.</p>
+
+                <h3>The Riemann Hypothesis — The $1M Connection</h3>
+                <p>The <strong>Riemann zeta function</strong> ζ(s) is defined for complex s with Re(s) > 1 by the series Σ 1/nˢ. Riemann showed that ζ(s) can be <strong>analytically continued</strong> to all complex numbers (except s = 1, where it has a simple pole). The zeta function is deeply connected to prime numbers through the Euler product: ζ(s) = Π (1 − p⁻ˢ)⁻¹.</p>
+
+                <p>Riemann conjectured that all non-trivial zeros of ζ(s) lie on the critical line Re(s) = 1/2. This is the <strong>Riemann Hypothesis</strong> — the most important unsolved problem in mathematics. Its proof would reveal the deepest structure of prime numbers. Complex analysis is the only language in which this problem even makes sense.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Riemann Zeta Function</div>
+                    <div class="insight-text">ζ(s) = Σ_{n=1}^{∞} 1/nˢ (for Re(s) > 1)</div>
+                    <div class="insight-sub">Analytically continued to the whole complex plane. Zeros at negative even integers are "trivial." The non-trivial zeros are conjectured to all have Re(s) = 1/2.</div>
+                </div>
+
+                <h3>Quantum Mechanics</h3>
+                <p>In quantum mechanics, the state of a particle is a complex-valued wavefunction ψ(x,t). The Schrödinger equation iℏ ∂ψ/∂t = Ĥψ has i built directly into its foundation. Probability amplitudes are complex numbers — the actual probability is |ψ|² = ψψ̄. The Fourier transform between position and momentum space is a complex integral. Without complex analysis, quantum mechanics would be impossible to formulate.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"The imaginary number is a fine and wonderful recourse of the divine spirit, almost an amphibian between being and non-being."</div>
+                    <div class="attribution">— Gottfried Wilhelm Leibniz</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Complex Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build intuition about complex numbers and their properties.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                <!-- course-addon:start -->
+<h3>Analytic Continuation and Monodromy</h3>
+<p>Analytic continuation extends a holomorphic function beyond its original domain via overlapping power‑series discs. From a germ at <strong>z₀</strong>, one chooses a path and recenters the series; if continuation is possible along every path in a domain, the result is a single‑valued analytic function. Obstructions arise when continuation along homotopically distinct paths yields different values — the monodromy phenomenon. The Monodromy Theorem guarantees single‑valued continuation on simply connected domains. On multiply connected domains, continuation may yield multi‑valued functions (e.g., logarithm, square root); branches are organized on a Riemann surface by gluing copies along branch cuts. This concept is essential for the global behavior of solutions to differential equations (e.g., hypergeometric equation) and for defining special functions like the Gamma function via continuation of the Euler integral.</p>
+<p>Analytic continuation is often computed via functional equations. The Riemann zeta function's functional equation <strong>ζ(s) = 2ˢ πˢ⁻¹ sin(πs/2) Γ(1−s) ζ(1−s)</strong> continues it to ℂ except for a simple pole at <strong>s = 1</strong>. The same method applies to Dirichlet L‑functions and modular forms. In physics, Wick rotation — analytic continuation from Euclidean to Minkowski signature — converts path integrals into convergent Gaussian integrals, a cornerstone of quantum field theory.</p>
+
+<h3>Schwarz Lemma and the Hyperbolic Metric</h3>
+<p>The Schwarz Lemma is a rigidity result: if <strong>f</strong> is holomorphic on <strong>𝔻</strong> with <strong>f(0) = 0</strong> and <strong>|f(z)| ≤ 1</strong>, then <strong>|f(z)| ≤ |z|</strong> and <strong>|f'(0)| ≤ 1</strong>. Equality at any non‑zero point forces <strong>f(z) = e<sup>iθ</sup> z</strong>. The proof applies the maximum modulus principle to <strong>g(z) = f(z)/z</strong> (with <strong>g(0) = f'(0)</strong>). The lemma generalizes to the Schwarz‑Pick theorem: any holomorphic self‑map of <strong>𝔻</strong> contracts the Poincaré hyperbolic metric <strong>ds = 2|dz|/(1−|z|²)</strong>. Thus the hyperbolic distance <strong>ρ(z,w) = arctanh |(z−w)/(1−bar w z)|</strong> satisfies <strong>ρ(f(z),f(w)) ≤ ρ(z,w)</strong>, with equality only for Möbius automorphisms. This shows <strong>𝔻</strong> is a model of the hyperbolic plane, and holomorphic maps are distance‑non‑increasing. The lemma also yields the Lindelöf principle and underlies the Little Picard Theorem: a non‑constant entire function omits at most one value.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example — Schwarz Lemma Application</div>
+<div class="ex-text">Let f be holomorphic on the unit disc with f(0)=0 and |f(z)| ≤ 1. Prove that |f'(0)| ≤ 1 and that if |f'(0)| = 1 then f(z)=e<sup>iθ</sup>z for some real θ.</div>
+<div class="ex-soln">Define g(z)=f(z)/z for z≠0 and g(0)=f'(0). Since f is holomorphic, g is holomorphic on the disc. For 0<|z|<1 we have |g(z)| = |f(z)|/|z| ≤ 1/|z|. By the maximum modulus principle, the supremum of |g| on the closed disc of radius r<1 is attained on the boundary |z|=r, giving |g(z)| ≤ 1/r. Letting r→1 yields |g(z)| ≤ 1 for all z, hence |f'(0)| = |g(0)| ≤ 1. If |f'(0)| = 1 then |g| attains its maximum 1 at an interior point, so g is constant of modulus 1: g(z)=e<sup>iθ</sup>. Therefore f(z)=e<sup>iθ</sup>z.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for a bound on a derivative at the origin of a disc‑bounded holomorphic function, immediately check whether the hypotheses of Schwarz Lemma are satisfied. If the function does not fix the origin, compose with a Möbius automorphism of the disc that sends f(0) to 0; the Schwarz‑Pick theorem then gives the sharp estimate. Remember that equality cases are always rotations or Möbius maps — this is a frequent source of “find all functions” questions.</div>
+</div>
+
+<h3>Argument Principle and Rouché's Theorem</h3>
+<p>The Argument Principle relates zeros and poles of a meromorphic function inside a positively oriented simple closed contour <strong>γ</strong> to the winding number of its image: <strong>(1/2πi) ∮_γ f'(z)/f(z) dz = Z − P</strong>, where <strong>Z,P</strong> count multiplicities. Geometrically, this measures how many times <strong>f(γ)</strong> winds around the origin. Rouché's Theorem follows: if <strong>|f(z)−g(z)| < |f(z)|</strong> on <strong>γ</strong>, then <strong>f</strong> and <strong>g</strong> have the same number of zeros inside <strong>γ</strong>. The proof notes that the perturbation <strong>g−f</strong> never crosses the origin, so winding numbers coincide. This is the standard tool for locating zeros of polynomials and entire functions. For example, to show all zeros of <strong>p(z)=z⁵+3z+1</strong> lie in <strong>1<|z|<2</strong>, apply Rouché on <strong>|z|=2</strong> with <strong>f(z)=z⁵</strong> (five zeros) and on <strong>|z|=1</strong> with <strong>f(z)=3z+1</strong> (one zero). The argument principle also underlies the Fundamental Theorem of Algebra and the Jensen formula linking zeros to growth.</p>
+
+<h3>Hardy Spaces and Boundary Values</h3>
+<p>Hardy spaces <strong>Hᵖ(𝔻)</strong> consist of holomorphic functions on <strong>𝔻</strong> with uniformly bounded <strong>p</strong>-th power means on circles: <strong>sup<sub>0&lt;r&lt;1</sub> (1/2π) ∫₀<sup>2π</sup> |f(re<sup>iθ</sup>)|ᵖ dθ < ∞</strong>. For <strong>p≥1</strong> these are Banach spaces; <strong>H²</strong> is a Hilbert space with reproducing kernel <strong>k_w(z)=1/(1−bar w z)</strong>. Fatou's theorem states that every <strong>f∈Hᵖ</strong> has non‑tangential boundary limits <strong>f*(e<sup>iθ</sup>)</strong> a.e., and the boundary function lies in <strong>Lᵖ(∂𝔻)</strong>. Conversely, a function in <strong>Lᵖ(∂𝔻)</strong> with vanishing negative Fourier coefficients Poisson‑integrates to an <strong>Hᵖ</strong> function. The inner‑outer factorization writes <strong>f=I·O</strong> where <strong>I</strong> is inner (<strong>|I*|=1</strong> a.e., built from Blaschke products and singular inner factors) and <strong>O</strong> is outer (determined by <strong>|f*|</strong>). This factorization solves the Nevanlinna‑Pick interpolation problem and underpins <strong>H∞</strong> control theory. The dual of <strong>H¹</strong> is <strong>BMOA</strong>, the space of analytic functions of bounded mean oscillation, linking complex and harmonic analysis.</p>
+
+<h3>Elliptic Functions and Modular Forms</h3>
+<p>An elliptic function is a meromorphic function on <strong>ℂ</strong> doubly periodic with periods <strong>ω₁,ω₂</strong> linearly independent over <strong>ℝ</strong>. The quotient <strong>ℂ/Λ</strong> (<strong>Λ=ℤω₁+ℤω₂</strong>) is a torus; elliptic functions correspond to meromorphic functions on this compact Riemann surface. The Weierstrass <strong>℘</strong>-function, <strong>℘(z)=1/z²+∑_{ω∈Λ{0}} (1/(z-ω)²-1/ω²)</strong>, generates the field of elliptic functions with its derivative <strong>℘'</strong>. They satisfy <strong>(℘')²=4℘³-g₂℘-g₃</strong>, where <strong>g₂,g₃</strong> are Eisenstein series of weights 4 and 6. The modular invariant <strong>j(τ)=1728 g₂³/(g₂³-27g₃²)</strong> (<strong>τ=ω₂/ω₁</strong> in the upper half‑plane) classifies complex tori up to isomorphism. Modular forms are holomorphic functions on the upper half‑plane satisfying <strong>f((aτ+b)/(cτ+d))=(cτ+d)^k f(τ)</strong> for all <strong>(a b; c d)∈SL₂(ℤ)</strong> with a growth condition at the cusp. The space of modular forms of weight <strong>k</strong> is finite‑dimensional; its structure underpins the proof of Fermat's Last Theorem via the modularity theorem. The Dedekind <strong>η</strong>-function <strong>η(τ)=q<sup>1/24</sup>∏<sub>n≥1</sub>(1−qⁿ)</strong> (<strong>q=e<sup>2πiτ</sup></strong>) is a modular form of weight 1/2 with a multiplier system, encoding arithmetic information such as the partition function.</p>
+
+<ul>
+<li>Confusing the conditions of Schwarz Lemma with those of Schwarz‑Pick; the latter requires only a self‑map of the disc, not f(0)=0.</li>
+<li>Forgetting that Rouché's inequality must be strict on the entire contour; a single point of equality invalidates the conclusion.</li>
+<li>Assuming analytic continuation along a single path defines a global single‑valued function; monodromy may produce multiple branches.</li>
+<li>Treating Hardy space boundary values as pointwise limits everywhere; they exist only almost everywhere and in the non‑tangential sense.</li>
+<li>Misidentifying the weight of a modular form when applying the transformation law; the factor (cτ+d)^k must match the declared weight.</li>
+<li>Overlooking that the Weierstrass ℘‑function has a double pole at each lattice point, not a simple pole.</li>
+<li>Neglecting the role of the cusp condition in the definition of modular forms; a function satisfying the transformation law but growing exponentially at the cusp is not a modular form.</li>
+</ul>
+
+<p>These topics form a core toolkit for research‑level complex analysis and demanding competitive exams.</p>
+<h3>Normal Families and Montel's Theorem</h3>
+<p>A family ℱ of holomorphic functions on a domain Ω ⊂ ℂ is called <strong>normal</strong> if every sequence in ℱ contains a subsequence that converges uniformly on compact subsets of Ω (the limit may be holomorphic or identically ∞). Montel's theorem gives a simple criterion: if ℱ is <strong>locally bounded</strong> — that is, for each compact K ⊂ Ω there exists M_K such that |f(z)| ≤ M_K for all f ∈ ℱ and z ∈ K — then ℱ is normal. The proof uses Cauchy estimates to obtain equicontinuity on compact sets and then applies the Arzelà–Ascoli theorem. A complementary version states that a family of holomorphic functions omitting two fixed values in ℂ is normal (Montel's fundamental normality test). This result is closely linked to Picard's great theorem and underlies many compactness arguments in geometric function theory.</p>
+<p>Normal families appear naturally when studying sequences of iterates, solutions to differential equations, or families of conformal maps. For instance, the family of all holomorphic maps from the unit disc 𝔻 into itself is normal by Montel's theorem because it is uniformly bounded by 1. This fact supports the proof of the Riemann mapping theorem via extremal length methods. In several complex variables, the notion extends to normal families of holomorphic maps into complex manifolds, where the target must be Kobayashi hyperbolic.</p>
+<h4>Key Consequences</h4>
+<ul>
+<li>If a sequence of holomorphic functions converges uniformly on compact sets, the limit is holomorphic (Weierstrass convergence theorem).</li>
+<li>Derivatives also converge uniformly on compact sets: f_n' → f' on compacts.</li>
+<li>Hurwitz's theorem: if each f_n is non‑vanishing and f_n → f uniformly on compacts, then either f ≡ 0 or f is non‑vanishing.</li>
+</ul>
+<h4>Applications in Examinations</h4>
+<p>Typical problems ask to prove that a given family is normal by exhibiting a uniform bound on compact subsets, or to deduce the existence of a subsequential limit with prescribed properties (e.g., a limit function that attains a supremum). Another common pattern: given a sequence f_n with f_n(0)=0 and |f_n(z)| ≤ 1 on 𝔻, extract a subsequence converging to a holomorphic limit and use Schwarz lemma to bound the derivative at 0.</p>
+
+<h3>Picard Theorems and Value Distribution</h3>
+<p>The <strong>Little Picard Theorem</strong> states that a non‑constant entire function omits at most one complex value. The <strong>Great Picard Theorem</strong> strengthens this: near an essential singularity, a holomorphic function attains every complex value, with at most one exception, infinitely often. Both results follow from the fact that the universal covering of ℂ{0,1} is the unit disc, and any holomorphic map from ℂ (or a punctured neighbourhood of an essential singularity) into ℂ{0,1} lifts to a bounded entire function, which must be constant by Liouville's theorem. The exceptional value in the little theorem corresponds to the omitted value of the exponential map exp: ℂ → ℂ{0}.</p>
+<p>Value distribution theory (Nevanlinna theory) quantifies how often a meromorphic function takes a given value. The <strong>Nevanlinna characteristic</strong> T(r,f) measures the growth of f, and the <strong>First Main Theorem</strong> relates T(r,f) to the counting function N(r,a) of a‑points and the proximity function m(r,a). The <strong>Second Main Theorem</strong> gives an inequality T(r,f) ≤ N(r,∞) + Σ<sub>j=1</sub>^q N(r,a_j) − N<sub>1</sub>(r) + S(r,f), where a_j are distinct values and N<sub>1</sub> counts multiple points. This yields Picard's theorems as corollaries and provides defect relations: the sum of deficiencies δ(a,f) over all a ∈ ℂ̂ is at most 2.</p>
+<h4>Typical Exam Questions</h4>
+<ul>
+<li>Show that an entire function omitting two values is constant (direct application of Little Picard).</li>
+<li>Given an entire function f with f(z) ≠ 0,1 for all z, prove f is constant using the covering map ℂ → ℂ{0,1}.</li>
+<li>Use Nevanlinna's Second Main Theorem to bound the number of distinct values a meromorphic function of finite order can omit.</li>
+</ul>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Applying Montel's Theorem</div>
+<div class="ex-text">Let ℱ = { f_n(z) = (z^n)/(1+z^n) : n ∈ ℕ } on the unit disc 𝔻. Determine whether ℱ is normal.</div>
+<div class="ex-soln">For |z| ≤ r < 1, we have |z^n| ≤ r^n. Then |f_n(z)| = |z^n|/|1+z^n| ≤ r^n/(1−r^n) ≤ r/(1−r) for all n ≥ 1 (since r^n ≤ r). Thus ℱ is uniformly bounded on each compact subset of 𝔻. By Montel's theorem, ℱ is normal. Indeed, f_n → 0 uniformly on compact subsets, and the limit is holomorphic.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks whether a family is normal, first check for a uniform bound on compact sets. If the family is given by explicit formulas, estimate the modulus using geometric series or maximum modulus on circles |z|=r. If no bound is obvious, look for omitted values: a family of holomorphic maps into ℂ{a,b} with a≠b is automatically normal by Montel's fundamental test. Remember that normality is a local property — it suffices to verify the condition on a neighbourhood of each point.</div>
+</div>
+
+<h3>Riemann Mapping Theorem and Uniformization</h3>
+<p>The <strong>Riemann Mapping Theorem</strong> asserts that any simply connected proper subdomain Ω ⊂ ℂ is conformally equivalent to the unit disc 𝔻. The proof constructs a holomorphic injection f: Ω → 𝔻 that maximizes |f'(z<sub>0</sub>)| at a chosen base point z<sub>0</sub> ∈ Ω; the existence of such an extremal function follows from the normality of the family of all holomorphic injections Ω → 𝔻 with f(z<sub>0</sub>)=0 (Montel's theorem) and a compactness argument. Uniqueness up to rotation is a consequence of the Schwarz lemma.</p>
+<p>The <strong>Uniformization Theorem</strong> generalizes this to Riemann surfaces: every simply connected Riemann surface is conformally equivalent to one of three models — the Riemann sphere ℂ̂, the complex plane ℂ, or the unit disc 𝔻. For a compact Riemann surface of genus g, the universal cover is ℂ̂ (g=0), ℂ (g=1), or 𝔻 (g≥2). This classification underlies the theory of Fuchsian groups and the construction of canonical metrics of constant curvature (+1, 0, −1 respectively). In the language of complex analysis, the theorem says that any simply connected domain in ℂ̂ other than ℂ̂ itself is conformally 𝔻.</p>
+<h4>Consequences for Examinations</h4>
+<ul>
+<li>Any simply connected domain Ω ≠ ℂ admits a conformal map to 𝔻; boundary correspondence is not guaranteed unless ∂Ω is a Jordan curve (Carathéodory's theorem).</li>
+<li>The Riemann mapping is unique up to three real parameters (a point mapped to 0 and the argument of its derivative).</li>
+<li>For multiply connected domains, the uniformization yields a conformal map onto a circular slit domain or an annulus; the modulus of the annulus is a conformal invariant.</li>
+</ul>
+
+<h3>Boundary Behavior of Conformal Maps</h3>
+<p>Carathéodory's theorem states that if Ω is a simply connected domain whose boundary is a Jordan curve (a homeomorphic image of the circle), then any conformal map f: 𝔻 → Ω extends to a homeomorphism f̄: 𝔻̄ → Ω̄. The extension is continuous on the closed disc and maps the unit circle onto ∂Ω in a one‑to‑one fashion. If ∂Ω is not a Jordan curve, the boundary behavior can be wild: the cluster set of f at a boundary point may be an arc or even the whole boundary.</p>
+<p>For domains with analytic boundary, the Schwarz reflection principle gives an analytic continuation of f across the boundary. If ∂Ω is piecewise analytic with interior angles α_k π at corners, the map f extends continuously to the closed disc and behaves like (z−z_k)<sup>α_k</sup> near each corner point z_k on the unit circle. This is the basis of the Schwarz–Christoffel formula, which maps 𝔻 (or the upper half‑plane) onto a polygon by an explicit integral involving powers of (z−z_k).</p>
+<h4>Research Context</h4>
+<p>Deep connections exist between boundary behavior of conformal maps, spectral theory, and the distribution of zeros of the Riemann zeta function. These topics lie at the research frontier and are not standard examination material; exam questions typically focus on identifying the type of boundary extension (continuous, analytic, or merely radial limits) given geometric conditions on Ω.</p>
+
+<h3>Complex Dynamics — Julia and Mandelbrot Sets</h3>
+<p>For a rational map R: ℂ̂ → ℂ̂ of degree ≥ 2, the <strong>Fatou set</strong> F(R) is the set of points where the iterates R^n form a normal family; its complement is the <strong>Julia set</strong> J(R). The Fatou set is open and completely invariant; the Julia set is closed, perfect, and completely invariant. For polynomials, the Julia set is the boundary of the basin of infinity. The <strong>Mandelbrot set</strong> M is the set of parameters c ∈ ℂ for which the Julia set of f_c(z)=z²+c is connected; equivalently, the critical orbit 0, c, c²+c, … remains bounded.</p>
+<p>Key structural results: (1) J(R) is the closure of the set of repelling periodic points. (2) If J(R) is not the whole sphere, then F(R) consists of finitely many components, each eventually periodic; periodic components are either attracting basins, parabolic basins, Siegel disks, or Herman rings. (3) The Mandelbrot set is compact, connected, and its boundary has Hausdorff dimension 2. The Douady–Hubbard theorem gives a conformal isomorphism between the complement of M and the complement of the closed unit disc, parametrizing external rays that land at points of ∂M.</p>
+<h4>Exam‑Relevant Facts</h4>
+<ul>
+<li>For f_c(z)=z²+c, the filled Julia set K_c = { z : f_c^n(z) bounded } is connected iff c ∈ M.</li>
+<li>If |c| > 2, then J(f_c) is a Cantor set and the dynamics on it is conjugate to the shift on two symbols.</li>
+<li>The main cardioid of M corresponds to parameters where f_c has an attracting fixed point; bulbs attached to it correspond to attracting cycles of higher period.</li>
+</ul>
+
+<ul>
+<li>Confusing normality of a family with uniform convergence of the whole sequence; Montel only guarantees a subsequence.</li>
+<li>Assuming Picard's theorems apply to meromorphic functions on ℂ without considering the value ∞; the theorems are for holomorphic maps into ℂ or ℂ̂.</li>
+<li>Forgetting that the Riemann mapping theorem requires simple connectivity; a doubly connected domain is conformally an annulus, not a disc.</li>
+<li>Believing Carathéodory's theorem holds for all simply connected domains; a Jordan curve boundary is essential.</li>
+<li>Thinking the Mandelbrot set is the set of c for which the Julia set is a Cantor set; actually Cantor Julia sets occur for c outside M.</li>
+<li>Overlooking that the Fatou set can contain Siegel disks only for irrational rotation numbers satisfying a Diophantine condition.</li>
+<li>Remember to review these traps before the exam.</li></ul>
+<h3>Nevanlinna Theory — Value Distribution of Meromorphic Functions</h3>
+<p>Nevanlinna theory quantifies how often a meromorphic function takes a given value in the complex plane. The central objects are the characteristic function T(r, f), the counting function N(r, a) for a‑points, and the proximity function m(r, a). For a meromorphic function f on ℂ, the First Main Theorem states T(r, f) = N(r, a) + m(r, a) + O(1) for any a ∈ ℂ̂, showing that the growth of f is split between the frequency of a‑values and the average proximity to a. The Second Main Theorem gives a quantitative defect relation: for distinct values a₁,…,a_q, ∑<sub>j=1</sub>^q δ(a_j, f) ≤ 2, where the defect δ(a, f) = 1 − limsup<sub>r→∞</sub> N(r, a)/T(r, f). A value with δ > 0 is called a deficient value; Picard’s Great Theorem follows as a corollary because a non‑constant meromorphic function can have at most two totally omitted values (defect 1). The error term in the Second Main Theorem is S(r, f) = o(T(r, f)) outside a set of finite logarithmic measure. Applications in examinations often ask to compute the order ρ = limsup (log T(r, f))/log r, to identify deficient values of explicit functions such as f(z) = e^z (defect 1 at 0 and ∞) or f(z) = tan z (defect 0 at all finite values), and to use the lemma on the logarithmic derivative m(r, f'/f) = S(r, f) when estimating growth of solutions to differential equations.</p>
+
+<h3>Bergman Spaces — Reproducing Kernels and Hilbert Space Methods</h3>
+<p>The Bergman space A²(Ω) consists of holomorphic functions on a domain Ω ⊂ ℂ that are square‑integrable with respect to area measure: ∫_Ω |f(z)|² dA(z) < ∞. It is a closed subspace of L²(Ω), hence a Hilbert space with inner product ⟨f, g⟩ = ∫_Ω f(z) g(z) dA(z). The reproducing kernel K_Ω(z, w) satisfies f(z) = ⟨f, K_Ω(·, z)⟩ for all f ∈ A²(Ω). For the unit disc 𝔻, K_𝔻(z, w) = (1/π)(1 − zw)⁻²; for the upper half‑plane ℍ, K_ℍ(z, w) = (1/π)(z − w)⁻². The Bergman projection P: L²(Ω) → A²(Ω) is an orthogonal projection given by (Pf)(z) = ∫_Ω f(w) K_Ω(z, w) dA(w). Boundedness of P on L^p(Ω) for 1 < p < ∞ is a deep result (characterized by the Bekollé–Bonami condition for weights). In exam problems, one frequently computes the kernel for simple domains via conformal mapping: if φ: Ω → 𝔻 is a biholomorphism, then K_Ω(z, w) = K_𝔻(φ(z), φ(w)) φ'(z) φ'(w). The Bergman metric ds² = ∂∂̄ log K_Ω(z, z) provides a Kähler metric invariant under biholomorphisms; its curvature is negative for bounded domains. Typical questions ask to prove that the monomials zⁿ form an orthogonal basis of A²(𝔻) with norms √(π/(n+1)), to derive the kernel from this basis, or to compute the Bergman kernel for an annulus via conformal mapping.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example — Defect of e^z</div>
+<div class="ex-text">Determine the Nevanlinna defects δ(0, e^z) and δ(∞, e^z) and verify the Second Main Theorem for f(z)=e^z with the three values 0, 1, ∞.</div>
+<div class="ex-soln">For f(z)=e^z, T(r, f) = r/π + O(1). The function never attains 0, so N(r, 0) ≡ 0 and m(r, 0) = T(r, f) + O(1); thus δ(0, f)=1. Since e^z is entire, it has no poles, so N(r, ∞) ≡ 0 and m(r, ∞) = O(1); hence δ(∞, f)=1. For a=1, the equation e^z=1 has solutions z=2πik, k∈ℤ. The counting function N(r, 1) ~ r/π (zeros lie on the imaginary axis with spacing 2π). Then m(r, 1) = T(r, f) − N(r, 1) + O(1) = O(1), giving δ(1, f)=0. The sum of defects is 1+1+0=2, exactly the bound in the Second Main Theorem.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for the Bergman kernel of a simply connected domain, first find a conformal map to the disc or half‑plane, then apply the transformation rule K_Ω(z,w)=K_𝔻(φ(z),φ(w)) φ'(z)φ'(w). Memorise the kernels for 𝔻 and ℍ; they generate all others via this rule.</div>
+</div>
+
+<h3>Several Complex Variables — Hartogs Phenomenon and Domains of Holomorphy</h3>
+<p>In several complex variables, the Hartogs phenomenon shows that holomorphic functions on a domain Ω ⊂ ℂⁿ (n ≥ 2) cannot have isolated singularities: if f is holomorphic on Ω K with K compact, then f extends holomorphically to all of Ω. Consequently, the natural domains for holomorphic functions are not arbitrary open sets but domains of holomorphy — those for which there exists a holomorphic function that cannot be extended across any boundary point. Equivalently, a domain Ω is a domain of holomorphy iff it is holomorphically convex: for every compact K ⊂ Ω, its holomorphic hull hat K_Ω = {z ∈ Ω : |f(z)| ≤ sup_K |f| for all f ∈ O(Ω)} is also compact in Ω. The Levi problem, solved by Oka, Bremermann, and Norguet, states that a domain is a domain of holomorphy iff it is pseudoconvex, i.e., it admits a plurisubharmonic exhaustion function. For a smoothly bounded domain, pseudoconvexity is equivalent to the Levi form being positive semidefinite on the complex tangent space. In examinations, typical tasks include: (1) proving that the Hartogs figure H = {(z₁,z₂) ∈ ℂ² : |z₁| < 1, |z₂| < 1} { |z₁| ≤ 1/2, |z₂| ≤ 1/2 } is not a domain of holomorphy because any f ∈ O(H) extends to the full bidisc; (2) showing that the unit ball in ℂⁿ is a domain of holomorphy by exhibiting the plurisubharmonic exhaustion φ(z) = −log(1−‖z‖²); (3) computing the holomorphic hull of a compact set in a Reinhardt domain using power series expansions.</p>
+
+<h3>Quasiconformal Mappings — Teichmüller Theory and Moduli Spaces</h3>
+<p>A homeomorphism f: Ω → Ω' between planar domains is K‑quasiconformal if it belongs to the Sobolev class W<sup>1,2</sup><sub>loc</sub> and satisfies |f<sub>bar z</sub>| ≤ k |f_z| almost everywhere with k = (K−1)/(K+1) < 1. The complex dilatation μ_f = f<sub>bar z</sub>/f_z satisfies ‖μ_f‖_∞ ≤ k. The measurable Riemann mapping theorem asserts that for any measurable μ with ‖μ‖_∞ < 1 there exists a quasiconformal homeomorphism f of ℂ̂ solving the Beltrami equation f<sub>bar z</sub> = μ f_z, unique up to post‑composition with a Möbius transformation. Teichmüller theory studies the space of marked Riemann surfaces modulo isotopy. For a closed surface S of genus g ≥ 2, Teichmüller space T_g is the set of equivalence classes of pairs (X, φ) where X is a Riemann surface and φ: S → X a marking; two markings are equivalent if the change of marking is isotopic to a conformal map. T_g is a complex manifold of dimension 3g−3, homeomorphic to ℝ<sup>6g−6</sup>. The Teichmüller metric is defined by the infimum of log K over all quasiconformal maps in the homotopy class; Teichmüller's theorem guarantees a unique extremal map whose dilatation is of the form μ = k φ/|φ| for a holomorphic quadratic differential φ. The mapping class group Mod(S) acts properly discontinuously on T_g, and the quotient M_g = T_g/Mod(S) is the moduli space of Riemann surfaces. In competitive exams, one may be asked to: (a) verify that a given Beltrami coefficient yields a K‑quasiconformal map; (b) compute the Teichmüller distance between two tori using their period matrices; (c) explain why the extremal quasiconformal map for a given quadratic differential is unique up to conformal automorphisms.</p>
+
+<h3>Potential Theory — Subharmonic Functions and the Dirichlet Problem</h3>
+<p>A function u: Ω → [−∞, ∞) is subharmonic if it is upper semicontinuous and satisfies the sub‑mean value property: for every closed disc D(a, r) ⊂ Ω, u(a) ≤ (1/2π) ∫<sub>0</sub><sup>2π</sup> u(a+re<sup>iθ</sup>) dθ. Equivalently, Δu ≥ 0 in the sense of distributions. The Perron method solves the Dirichlet problem on a bounded domain Ω with continuous boundary data f: define the upper envelope U(z) = sup{ v(z) : v subharmonic on Ω, limsup<sub>ζ→ξ</sub> v(ζ) ≤ f(ξ) for all ξ ∈ ∂Ω }. If Ω is regular (every boundary point admits a barrier), then U is harmonic on Ω and extends continuously to f on ∂Ω. The Green function G_Ω(z, w) is the fundamental solution of the Laplacian with pole at w, vanishing on ∂Ω; it satisfies G_Ω(z, w) = G_Ω(w, z) and G_Ω(z, w) = log|z−w| + h(z) with h harmonic. For the unit disc, G_𝔻(z, w) = log| (z−w)/(1−wz) |. The Poisson kernel P_𝔻(z, e<sup>iθ</sup>) = (1−|z|²)/|e<sup>iθ</sup>−z|² gives the solution u(z) = (1/2π) ∫<sub>0</sub><sup>2π</sup> P_𝔻(z, e<sup>iθ</sup>) f(e<sup>iθ</sup>) dθ. In examinations, common questions are: (i) prove that the maximum principle holds for subharmonic functions; (ii) construct a barrier at a corner of angle απ to show regularity when α ≤ 1; (iii) compute the Green function for an annulus using the method of images or conformal mapping to a rectangle; (iv) relate the harmonic measure ω(z, E, Ω) to the Poisson integral and use it to estimate the growth of bounded holomorphic functions via the Littlewood subordination principle.</p>
+
+<ul>
+<li>Confusing the Nevanlinna characteristic T(r, f) with the maximum modulus M(r, f); they are related by T(r, f) ≤ log⁺ M(r, f) + O(1) but not equal.</li>
+<li>Assuming the Bergman projection is bounded on L¹ or L^∞; it is only bounded on L^p for 1 < p < ∞ (for unweighted spaces on smooth domains) and characterized by the Bekollé–Bonami condition for weights.</li>
+<li>Thinking every domain in ℂⁿ (n≥2) is a domain of holomorphy; the Hartogs phenomenon shows many are not.</li>
+<li>Believing quasiconformal maps are always differentiable everywhere; they are only differentiable almost everywhere and belong to W<sup>1,2</sup><sub>loc</sub>.</li>
+<li>Neglecting the barrier condition in the Perron method; without a barrier at a boundary point the solution may fail to attain the prescribed data.</li>
+<li>Mixing up the Levi form (complex Hessian of a defining function) with the real Hessian; pseudoconvexity requires positivity only on complex tangent vectors.</li>
+<li>Using the Poisson kernel for the disc on a non‑disc domain without a conformal map; the kernel transforms by the Jacobian of the map.</li>
+</ul>
+
+<p>These advanced topics complete the core toolkit needed for high‑level complex analysis examinations.</p>
+<h3>Carathéodory's Theorem and Prime Ends</h3>
+<p>Carathéodory's theorem describes the boundary behaviour of a conformal map from the unit disc onto a simply connected domain with a Jordan curve boundary. If <strong>f</strong> : 𝔻 → Ω is a conformal equivalence and ∂Ω is a Jordan curve, then <strong>f</strong> extends to a homeomorphism from the closed disc <strong>𝔻̅</strong> onto <strong>Ω̅</strong>. The proof uses the Jordan curve theorem and the fact that the cluster set of <strong>f</strong> at each boundary point is a single point. For more general boundaries the extension may fail; Carathéodory's prime ends compactify such domains, restoring a bijection between boundary points of the disc and accessible boundary points of Ω. A prime end is an equivalence class of cross‑cut chains whose diameters tend to zero. The set of prime ends carries a natural topology homeomorphic to the circle, and every conformal map extends to a homeomorphism between the prime‑end compactifications. In examinations, typical tasks are: (1) prove that a conformal map onto a Jordan domain extends continuously to the boundary; (2) construct the prime‑end compactification for a slit disc or a spiral domain; (3) show the Carathéodory extension is unique and that the inverse map also extends. A frequent twist asks whether the theorem holds if ∂Ω is only locally connected — yes, by the Carathéodory–Torhorst theorem, provided Ω is bounded by a locally connected continuum.</p>
+
+<h3>Mergelyan's Theorem and Polynomial Approximation</h3>
+<p>Mergelyan's theorem is the cornerstone of uniform polynomial approximation of holomorphic functions on compact sets in ℂ. Let <strong>K</strong> ⊂ ℂ be compact with connected complement ℂ ∖ <strong>K</strong>. If <strong>f</strong> is continuous on <strong>K</strong> and holomorphic on the interior of <strong>K</strong>, then for every ε > 0 there exists a polynomial <strong>p</strong> such that |<strong>f</strong>(z) − <strong>p</strong>(z)| < ε for all z ∈ <strong>K</strong>. The connected complement condition is essential; if ℂ ∖ <strong>K</strong> has several components, Runge's theorem gives approximation by rational functions with poles in each component, but polynomials alone may not suffice. The proof approximates <strong>f</strong> on a slightly larger smooth domain via convolution, uses the Cauchy integral to obtain a rational approximant, then applies Mergelyan's lemma to remove the poles. In competitive examinations, candidates are often asked to: (a) state the theorem precisely and give a counterexample when the complement is disconnected (e.g., an annulus); (b) prove that the uniform limit of polynomials on a compact set with connected complement is holomorphic on the interior; (c) apply the theorem to show that polynomials are dense in the disc algebra A(𝔻) under the supremum norm. A subtle trap is confusing Mergelyan's theorem with the Stone–Weierstrass theorem; the former requires holomorphy on the interior, while the latter applies to arbitrary continuous functions but does not preserve holomorphy.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example — Polynomial Approximation on a Slit Disc</div>
+<div class="ex-text">Let K = { z ∈ ℂ : |z| ≤ 1, z ∉ (−1, 0] } be the closed unit disc with a radial slit removed. Show that every function continuous on K and holomorphic on its interior can be uniformly approximated by polynomials on K.</div>
+<div class="ex-soln">The set K is compact and its complement ℂ ∖ K is connected (the slit does not disconnect the plane). The interior of K is the open unit disc minus the slit, a domain. By Mergelyan's theorem, since K has connected complement, any f ∈ C(K) ∩ H(int K) can be uniformly approximated by polynomials. No additional work is needed; the theorem applies directly. A common mistake is to think the slit creates a hole that disconnects the complement — it does not, because the slit lies inside the disc and the complement remains a single connected region containing ∞.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for polynomial approximation on a compact set, first check whether the complement is connected. If it is, invoke Mergelyan immediately. If not, fall back to Runge's theorem and specify where the poles of the approximating rational functions must lie. Write the logical steps: (1) state the theorem, (2) verify hypotheses, (3) conclude. This structure earns full marks even if the proof is not required.</div>
+</div>
+
+<h3>The Corona Problem and Carleson's Solution</h3>
+<p>The corona problem asks whether the maximal ideal space of the Hardy algebra H^∞(𝔻) coincides with the closed unit disc, or equivalently, whether the disc is dense in that space. Concretely: given bounded holomorphic functions f₁, …, fₙ on 𝔻 satisfying |f₁(z)| + … + |fₙ(z)| ≥ δ > 0 for all z ∈ 𝔻, do there exist g₁, …, gₙ ∈ H^∞(𝔻) such that f₁g₁ + … + fₙgₙ = 1? Lennart Carleson proved the corona theorem in 1962. His proof introduced Carleson measures and a corona decomposition of the disc into Carleson squares. The theorem implies the maximal ideal space of H^∞ is the closure of the disc in the Gelfand topology and yields bounded analytic solutions to the Bézout equation. In examinations, typical questions are: (1) state the corona theorem and explain its equivalence to the density of the disc in the maximal ideal space; (2) define a Carleson measure and show that μ(E) = ∫_E (1−|z|)⁻¹ dA(z) is a Carleson measure; (3) outline the main steps of Carleson's proof, emphasizing the corona decomposition and the interpolating Blaschke product. A frequent twist asks whether the corona theorem holds for the polydisc 𝔻ⁿ (n ≥ 2) — the answer is negative (Varopoulos), related to non‑trivial Gleason parts.</p>
+
+<h3>The Loewner Equation and Schramm‑Loewner Evolution</h3>
+<p>The Loewner (Loewner‑Kufarev) equation describes the evolution of conformal maps g_t : 𝔻 ∖ γ[0,t] → 𝔻 driven by a continuous real‑valued function λ(t) on the unit circle. For a simple curve γ starting at the boundary, the maps satisfy ∂_t g_t(z) = g_t(z) (λ(t) + g_t(z)) / (λ(t) − g_t(z)) with g<sub>0</sub>(z) = z. In 1999 Oded Schramm introduced a stochastic version with λ(t) = √κ B_t (B_t standard Brownian motion); the resulting random curves are Schramm‑Loewner Evolution (SLE_κ). The parameter κ determines the geometry: κ ∈ (0,4] gives simple curves, κ ∈ (4,8) gives self‑touching curves, and κ ≥ 8 gives space‑filling curves. SLE<sub>6</sub> is the scaling limit of critical percolation; SLE<sub>8</sub>/3 and SLE<sub>3</sub> correspond to self‑avoiding walks and Ising interfaces. The Loewner equation provides a powerful tool for proving conformal invariance of these limits. In competitive examinations, candidates may be asked to: (a) derive the Loewner differential equation for a slit map; (b) explain why the driving function must be continuous for a simple curve; (c) state the relationship between κ and the fractal dimension of the SLE trace (dimension = 1 + κ/8 for κ ≤ 8); (d) discuss the domain Markov property and conformal invariance characterizing SLE. A common trap is confusing the chordal Loewner equation in the upper half‑plane (driving function on ℝ) with the radial version in the disc; the two are related by a conformal map but the driving functions transform via a non‑linear Möbius transformation.</p>
+
+<h3>The Bieberbach Conjecture and de Branges' Proof</h3>
+<p>The Bieberbach conjecture (1916) concerns coefficients of univalent (schlicht) functions f(z) = z + a₂z² + a₃z³ + … on the unit disc. Bieberbach proved |a₂| ≤ 2 and conjectured |aₙ| ≤ n for all n ≥ 2. The conjecture resisted proof for nearly 70 years. Partial results included Loewner's proof for n = 3 (1923), Garabedian and Schiffer's proof for n = 4 (1955), and the Milin conjecture which implied the full conjecture. In 1984 Louis de Branges proved the Milin conjecture using Hilbert spaces of entire functions and positivity of certain logarithmic integrals, establishing |aₙ| ≤ n for all n. De Branges' proof introduced de Branges spaces ℋ(E) associated with Hermite‑Biehler functions E and showed the Robertson conjecture (a stronger statement on odd univalent functions) holds. The proof is highly technical but the statement is elementary and frequently examined: (1) state the Bieberbach conjecture and the sharp bound; (2) give the extremal Koebe function f(z) = z/(1−z)² achieving equality for all n; (3) explain why rotations f(z) = e<sup>iθ</sup> z/(1−e<sup>iθ</sup>z)² also attain the bound; (4) outline the role of the Loewner differential equation in Loewner's proof for n = 3. A typical examiner twist asks whether |aₙ| ≤ n holds for merely locally univalent functions — the answer is no; the Koebe 1/4 theorem and growth theorems require global univalence.</p>
+
+<ul>
+<li>Assuming Carathéodory's theorem applies to any simply connected domain; it requires the boundary to be a Jordan curve (or at least locally connected).</li>
+<li>Using Mergelyan's theorem on a compact set with disconnected complement; polynomials are insufficient and Runge's theorem must be used.</li>
+<li>Confusing the corona theorem with polynomial density in H^∞; the corona theorem concerns the maximal ideal space, not polynomial approximation.</li>
+<li>Treating the Loewner driving function as arbitrary; for a simple curve it must be continuous, and for SLE it is specifically √κ times Brownian motion.</li>
+<li>Believing the Bieberbach bound |aₙ| ≤ n holds for all holomorphic functions with f(0)=0, f'(0)=1; univalence is essential.</li>
+<li>Neglecting the distinction between radial and chordal Loewner equations when mapping between the disc and the half‑plane.</li>
+<li>Overlooking the connected complement hypothesis in Mergelyan's theorem; a slit disc has connected complement, but an annulus does not.</li></ul>
+<h3>The Phragmén–Lindelöf Principle and Growth Estimates</h3>
+<p>The Phragmén–Lindelöf principle extends the maximum modulus principle to unbounded domains by imposing a growth condition on the analytic function. In its simplest form, let f be analytic in a sector S = {z : α < arg z < β} with opening angle π/λ (λ > 0) and continuous on the closure. If |f(z)| ≤ M on the boundary of S and |f(z)| ≤ exp(|z|^ρ) for some ρ < λ, then |f(z)| ≤ M throughout S. The exponent λ = π/(β−α) is critical: if the growth order equals or exceeds λ, the conclusion can fail, as shown by f(z) = exp(z^λ) in a sector of opening π/λ. This principle is indispensable for estimating entire functions of finite order in angular regions and for proving uniqueness theorems for the Laplace transform. A standard corollary applies to a strip {z : 0 < Re z < 1}: if f is bounded on the boundary lines and grows at most exponentially with exponent < π, then f is bounded in the whole strip. In examinations, candidates are often asked to verify the growth condition for a given function, to determine the maximal sector where a bound holds, or to apply the principle to prove that a function satisfying a functional equation and a growth bound must be constant. The proof uses a family of auxiliary functions f_ε(z) = f(z) exp(ε z^λ) and lets ε → 0, exploiting the maximum modulus principle on large truncated sectors.</p>
+
+<h3>The Hadamard Factorization Theorem and Entire Functions of Finite Order</h3>
+<p>Hadamard's factorization theorem gives a complete description of entire functions of finite order in terms of their zeros. Let f be an entire function of order ρ (the infimum of all λ such that |f(z)| ≤ exp(|z|^λ) for large |z|). If ρ is not an integer, the genus p = ⌊ρ⌋; if ρ is an integer, the genus is either ρ or ρ−1 depending on the convergence of ∑ |a_n|<sup>-ρ-1</sup>. The theorem states that f(z) = z^m e<sup>Q(z)</sup> ∏<sub>n=1</sub>^∞ E_p(z/a_n), where m is the multiplicity of the zero at the origin, Q is a polynomial of degree ≤ ρ, {a_n} are the non‑zero zeros, and E_p(u) = (1−u) exp(u + u<sup>2</sup>/2 + … + u^p/p) are the Weierstrass primary factors. The canonical product converges uniformly on compact sets and has the same zeros as f. For example, sin(πz) = πz ∏<sub>n≠0</sub> (1−z/n) e<sup>z/n</sup> has order 1 and genus 1; the exponential factor e<sup>z/n</sup> ensures convergence. The theorem also yields the relation between the zero counting function n(r) and the order: if f has finite order ρ, then n(r) = O(r^ρ). Conversely, if the zeros satisfy ∑ |a_n|<sup>-ρ-ε</sup> < ∞ for some ε > 0, the canonical product defines an entire function of order ≤ ρ. In competitive examinations, typical tasks include: (1) compute the order and genus of a given canonical product; (2) given the zeros and growth data, construct the Hadamard factorization; (3) prove that an entire function of order < 1 with no zeros must be of the form e<sup>az+b</sup>. A frequent twist asks whether the factorization remains valid for functions of infinite order — the answer is no; one must use the Weierstrass factorization theorem with appropriately chosen convergence exponents.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Hadamard Factorization of an Entire Function</div>
+<div class="ex-text">Let f be an entire function of order 2 with simple zeros at z = n<sup>2</sup> for n ∈ ℕ and a double zero at z = 0. Suppose f(z) = O(exp(|z|<sup>2</sup>)) as |z| → ∞. Write down the Hadamard factorization of f, identifying the polynomial Q(z) and the genus.</div>
+<div class="ex-soln">The distinct non-zero zeros are a_n = n<sup>2</sup> (n ≥ 1), each simple. The zero at the origin has multiplicity 2. The order ρ = 2. The exponent of convergence of the zeros is 1/2, so the canonical product converges with genus p = 0 (since ∑ 1/n<sup>2</sup> < ∞). We may write f(z) = z<sup>2</sup> e<sup>Q(z)</sup> ∏<sub>n=1</sub><sup>∞</sup> (1 − z/n<sup>2</sup>), where Q is a polynomial of degree ≤ 2. Because the zeros are positive and f is real on the real axis, Q(z) has real coefficients. The growth condition |f(z)| ≤ exp(|z|<sup>2</sup>) forces deg Q = 2; write Q(z) = Az<sup>2</sup> + Bz + C. The product ∏ (1 − z/n<sup>2</sup>) equals sin(π√z)/(π√z) after adjusting for the branch, but it is standard to leave it as a canonical product. The constants A, B, C are determined by the precise asymptotic behaviour of f; if f(z) ∼ exp(z<sup>2</sup>) as z → +∞, then A = 1, B = C = 0. The genus of the entire function f is max(deg Q, p) = 2.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for the Hadamard factorization, first compute the order from the given growth estimate. Then determine the genus: if the order is non‑integer, genus = floor(order); if integer, check convergence of ∑ |a_n|<sup>-order-1</sup> to decide between order and order−1. Write the primary factors explicitly, and remember that the polynomial Q(z) has degree at most the order. Use symmetry of zeros to restrict the form of Q(z). Finally, verify that the product converges by comparing the exponent of convergence of zeros with the genus.</div>
+</div>
+
+<h3>The Nevanlinna–Pick Interpolation Problem and the Schur Algorithm</h3>
+<p>The Nevanlinna–Pick problem asks: given distinct points z<sub>1</sub>,…,z_n in the unit disc 𝔻 and target values w<sub>1</sub>,…,w_n in the closed unit disc, does there exist an analytic function f : 𝔻 → 𝔻 such that f(z_k) = w_k for all k? The classical Pick theorem (1916) states that such an f exists if and only if the Pick matrix P with entries P<sub>jk</sub> = (1−w_j w_k)/(1−z_j z_k) is positive semidefinite. If the matrix is positive definite, there are infinitely many solutions; if it is singular, the solution is unique and is a Blaschke product of degree at most n−1. The Schur algorithm provides a constructive method to find all solutions. Starting with the data, one forms the Schur parameters γ_k = f_k(0) where f<sub>0</sub> = f and f<sub>k+1</sub>(z) = (f_k(z)−γ_k)/(z(1−γ_k f_k(z))). The process terminates when a function becomes constant of modulus 1, yielding a finite Blaschke product, or continues indefinitely, producing an infinite Schur sequence. The algorithm also gives a parametrization of all solutions via a free Schur function (analytic 𝔻 → 𝔻). In examinations, candidates may be asked to: (1) compute the Pick matrix for given data and decide solvability; (2) perform one or two steps of the Schur algorithm; (3) explain why the positivity of the Pick matrix is equivalent to the existence of a contractive analytic function; (4) relate the problem to the theory of Hardy spaces H^∞ and the commutant lifting theorem. A common trap is to forget that the target values must lie in the closed disc; if any |w_k| > 1 the problem has no solution regardless of the Pick matrix.</p>
+
+<h3>The Hilbert Transform on the Unit Circle and Boundary Values of Hardy Functions</h3>
+<p>The Hilbert transform H on the unit circle 𝕋 maps a real‑valued integrable function u(e<sup>iθ</sup>) to its harmonic conjugate v(e<sup>iθ</sup>) (up to an additive constant) via the principal value integral H u(e<sup>iθ</sup>) = (1/2π) p.v. ∫<sub>-π</sub><sup>π</sup> u(e<sup>iφ</sup>) cot((θ−φ)/2) dφ. If f ∈ H^p(𝔻) for 1 ≤ p ≤ ∞, its radial boundary values f*(e<sup>iθ</sup>) exist almost everywhere and belong to L^p(𝕋). The real and imaginary parts of f* are Hilbert transforms of each other: Re f* = H(Im f*) and Im f* = −H(Re f*). This relationship is the boundary manifestation of the Cauchy–Riemann equations. The Plemelj–Sokhotski formulas describe the jump of the Cauchy integral across the circle: for f ∈ H^p, the Cauchy integral C[f*](z) = (1/2πi) ∫<sub>𝕋</sub> f*(ζ)/(ζ−z) dζ equals f(z) for z ∈ 𝔻 and equals (1/2)f*(e<sup>iθ</sup>) + (i/2) H f*(e<sup>iθ</sup>) for boundary points. The Hilbert transform is a bounded linear operator on L^p(𝕋) for 1 < p < ∞, but fails at p = 1 and p = ∞; instead it maps L<sup>1</sup> to weak‑L<sup>1</sup> and L^∞ to BMO. In competitive examinations, typical questions include: (1) state the Plemelj formulas and derive the relation between a function and its Hilbert transform; (2) prove that if u ∈ L^p(𝕋) and H u ∈ L^p(𝕋), then u is the boundary value of a harmonic function in 𝔻 whose harmonic conjugate also has L^p boundary values; (3) compute the Hilbert transform of simple functions such as cos(nθ) or the characteristic function of an arc. A frequent twist asks whether the Hilbert transform of an L^∞ function is again L^∞ — the answer is no; it belongs to BMO, and the John–Nirenberg inequality gives exponential integrability.</p>
+
+<h3>The Wiener–Hopf Factorization and Toeplitz Operators</h3>
+<p>The Wiener–Hopf factorization decomposes a sufficiently regular function φ on the unit circle into a product φ = φ_- φ_+, where φ_+ extends analytically to the interior of the disc with no zeros, φ_- extends analytically to the exterior (including ∞) with no zeros, and both have continuous boundary values. For φ ∈ C(𝕋) with winding number zero, such a factorization exists and is unique up to a constant factor. The factorization is central to the study of Toeplitz operators T_φ on the Hardy space H<sup>2</sup>(𝔻), defined by T_φ f = P_+(φ f) where P_+ is the orthogonal projection from L<sup>2</sup>(𝕋) onto H<sup>2</sup>. The Fredholm index of T_φ equals minus the winding number of φ around the origin. If φ admits a Wiener–Hopf factorization with φ_+, φ_- invertible in H^∞, then T_φ is invertible and its inverse is T<sub>φ_+<sup>-1</sup></sub> T<sub>φ_-<sup>-1</sup></sub>. The theory extends to matrix‑valued symbols, where the factorization involves outer and inner matrix functions. In examinations, candidates may be asked to: (1) compute the winding number of a given symbol and deduce the index of the associated Toeplitz operator; (2) perform a scalar Wiener–Hopf factorization for a rational function with no zeros on 𝕋; (3) explain why the Toeplitz operator with symbol φ(z) = z is the unilateral shift and has index −1; (4) discuss the connection between the factorization and the solution of integral equations on the half‑line via the Fourier transform. A common trap is to assume that every continuous symbol admits a Wiener–Hopf factorization; the winding number must be zero, otherwise one must include a factor z^κ to adjust the index.</p>
+
+<ul>
+<li>Confusing the Phragmén–Lindelöf growth condition with the maximum modulus principle; the principle requires a specific growth bound relative to the opening angle.</li>
+<li>Assuming the Hadamard factorization holds for infinite order functions without using the Weierstrass theorem with variable convergence exponents.</li>
+<li>Neglecting to check that all target values lie in the closed unit disc before applying the Pick matrix criterion.</li>
+<li>Forgetting that the Hilbert transform is not bounded on L^∞; its image lies in BMO, not L^∞.</li>
+<li>Believing every continuous symbol on the circle admits a Wiener–Hopf factorization; the winding number must vanish or be compensated by a power of z.</li>
+<li>Misapplying the Schur algorithm by not normalizing the free parameter at each step, leading to incorrect Blaschke products.</li>
+<li>These traps highlight the subtle points examiners often test.</li></ul>
+<h3>Beurling's Theorem and Invariant Subspaces of the Shift</h3>
+<p>The unilateral shift operator S on the Hardy space H²(𝔻) defined by (Sf)(z)=zf(z) is the canonical model for an isometry. Beurling's theorem classifies all closed subspaces of H² that are invariant under S: every non‑trivial invariant subspace has the form θH² where θ is an inner function, i.e. a bounded analytic function on the disc whose radial boundary values have modulus one almost everywhere on the unit circle. The proof uses the factorization of H² functions into inner and outer parts and the fact that the orthogonal complement of an invariant subspace is a model space K_θ = H² ⊖ θH². This result shows that the lattice of invariant subspaces is isomorphic to the lattice of inner functions ordered by divisibility, and it describes the commutant of S as the algebra H^∞ of bounded analytic functions acting by multiplication. In examinations, candidates are often asked to (1) prove that if M is a non‑zero invariant subspace then there exists an inner function θ with M=θH²; (2) show that the inner function is unique up to a unimodular constant; (3) apply the theorem to describe the invariant subspaces of the backward shift S* on H². A typical twist is to ask whether the same classification holds for the Bergman space A²(𝔻); the answer is no — the invariant subspace structure there is far more complicated and not fully understood.</p>
+
+<h3>Nehari's Theorem and Hankel Operators</h3>
+<p>A Hankel operator H_φ on H²(𝔻) with symbol φ ∈ L^∞(𝕋) is defined by H_φ f = P_-(φ f) where P_- is the orthogonal projection onto the orthogonal complement of H² in L²(𝕋). Nehari's theorem characterizes bounded Hankel operators: H_φ is bounded if and only if φ can be written as φ = ψ + h where ψ ∈ H^∞ and h ∈ L^∞ with ‖h‖_∞ = ‖H_φ‖. Equivalently, the norm of H_φ equals the distance from φ to H^∞ in the L^∞ norm. The proof uses the Hahn–Banach theorem and the duality (H¹)* = BMO. The theorem also yields a description of the essential norm of H_φ as the distance from φ to H^∞ + C(𝕋). In competitive examinations, typical questions include: (1) state Nehari's theorem and prove the equivalence of boundedness and the distance formula; (2) compute the norm of the Hankel operator with symbol φ(e<sup>iθ</sup>) = e<sup>-iθ</sup> (the answer is 1); (3) explain why the Hankel operator with a continuous symbol is compact if and only if the symbol belongs to H^∞ + C(𝕋) (Hartman's theorem). A common trap is to confuse the Hankel matrix (constant on anti‑diagonals) with the Toeplitz matrix (constant on diagonals); the boundedness criteria are completely different.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Norm of a Hankel Operator</div>
+<div class="ex-text">Let φ(e<sup>iθ</sup>) = e<sup>-2iθ</sup> + 2e<sup>-iθ</sup>. Determine the operator norm of the Hankel operator H_φ on H²(𝔻).</div>
+<div class="ex-soln">The symbol φ has only negative Fourier coefficients: φ<sub>-2</sub>=1, φ<sub>-1</sub>=2, and φ_k=0 for k≥0. The Hankel operator H_φ acts on the orthonormal basis {z^n} by H_φ(z^n) = P_-(φ z^n). Since φ has only negative frequencies, φ z^n has Fourier coefficients only for indices ≤ n-1. The projection P_- removes all non‑negative frequencies, so H_φ(z^n) = φ z^n itself. The matrix of H_φ in the basis {z^n} is therefore a Hankel matrix with entries (H_φ)<sub>m,n</sub> = φ<sub>-(m+n+1)</sub>. The only non‑zero entries occur when m+n+1 = 1 or 2, i.e. (m,n) = (0,0) gives φ<sub>-1</sub>=2, and (m,n) = (0,1) or (1,0) gives φ<sub>-2</sub>=1. The matrix is [[2,1,0,…],[1,0,0,…],[0,0,0,…],…]. Its operator norm equals the largest singular value. The non‑zero block is [[2,1],[1,0]] whose eigenvalues are 1±√2. The spectral radius is 1+√2 ≈ 2.414. Hence ‖H_φ‖ = 1+√2.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Strategy</div>
+<div class="tip-text">When a problem asks for the norm of a Hankel operator with a trigonometric polynomial symbol, write the finite Hankel matrix explicitly and compute its largest singular value. Remember that Nehari's theorem guarantees the norm equals the distance to H^∞, but for polynomial symbols the matrix method is faster and less error‑prone.</div>
+</div>
+
+<h3>The Corona Theorem for H^∞ on the Unit Disc</h3>
+<p>The corona problem asks whether the maximal ideal space of H^∞(𝔻) coincides with the closure of the disc in the weak‑* topology. Carleson's corona theorem (1962) states that if f₁,…,f_n ∈ H^∞ satisfy |f₁(z)|+…+|f_n(z)| ≥ δ > 0 for all z ∈ 𝔻, then there exist g₁,…,g_n ∈ H^∞ such that f₁g₁+…+f_ng_n = 1 and ‖g_k‖_∞ ≤ C/δ where C is a universal constant. The proof uses a construction of a Carleson measure and a stopping‑time argument. The theorem shows that the maximal ideal space of H^∞ is connected and that the disc is dense in it. In examinations, candidates may be asked to (1) state the corona theorem precisely; (2) explain why the condition δ > 0 is necessary — functions with no common zero in 𝔻 may still violate it if their moduli can simultaneously approach zero at the boundary; (3) sketch the main ideas of Carleson's proof, emphasizing the role of the Carleson measure condition ∫_𝔻 |f'(z)|² (1−|z|) dA(z) < ∞. A frequent twist is to ask whether the corona theorem holds for the polydisc 𝔻^n with n≥2; the answer is unknown for n≥3 and false for n=2 (the corona problem fails in the bidisc).</p>
+
+<h3>The Adamyan–Arov–Krein Theory and Optimal Approximation</h3>
+<p>The Adamyan–Arov–Krein (AAK) theory solves the problem of best approximation of a bounded analytic function by rational functions of bounded degree in the H^∞ norm. Given φ ∈ L^∞(𝕋) and an integer n ≥ 0, the AAK theorem states that the distance from φ to H^∞ plus rational functions of degree at most n equals the (n+1)-st singular value s<sub>n+1</sub> of the Hankel operator H_φ. Moreover, there exists an optimal approximant which is a Blaschke product of degree at most n multiplied by an inner function. The proof uses the spectral theory of compact Hankel operators and the Schmidt decomposition. This theory connects Nehari's theorem (the case n=0) with the theory of model spaces and the Schur algorithm. In competitive examinations, typical questions include: (1) state the AAK theorem and explain the role of singular values; (2) given a symbol φ with known Hankel singular values, compute the best H^∞ approximation by a rational function of degree 1; (3) discuss the relationship between the AAK theorem and the Nevanlinna–Pick interpolation problem. A common trap is to assume that the optimal approximant is unique; it is unique only when the (n+1)-st singular value is strictly greater than the (n+2)-nd singular value.</p>
+
+<h3>The Theory of Model Spaces and Clark Measures</h3>
+<p>For an inner function θ, the model space K_θ = H² ⊖ θH² is a closed subspace of H² invariant under the backward shift S*. These spaces play a central role in the spectral theory of contractions and in the functional model of Sz.-Nagy and Foias. The Clark measure μ_α associated with a unimodular constant α is the positive singular measure on the unit circle that appears in the Herglotz representation of the function (α+θ)/(α−θ). The family {μ_α} provides a spectral decomposition of the unitary operator U_α on K_θ defined by U_α f = α S* f + (1−α) P<sub>K_θ</sub>(f(0)). The Clark theory yields a complete description of the spectral measures of rank‑one perturbations of the shift. In examinations, candidates may be asked to (1) define K_θ and prove that it is invariant under S*; (2) derive the Clark measure for θ(z)=z^n; (3) explain how the Clark measures give a spectral representation of the compressed shift S*|<sub>K_θ</sub>. A typical twist is to ask whether every model space is a reproducing kernel Hilbert space; the answer is yes, with reproducing kernel k_θ(w,z) = (1−θ(w)θ(z))/(1−wz).</p>
+
+<ul>
+<li>Confusing the corona condition (sum of moduli bounded below) with the condition that the functions have no common zero; the latter is necessary but not sufficient.</li>
+<li>Assuming the AAK optimal approximant is always unique; uniqueness fails when singular values coincide.</li>
+<li>Misidentifying the Clark measure as an absolutely continuous measure; it is typically singular with respect to Lebesgue measure.</li>
+<li>Applying Beurling's theorem to the Bergman space; the invariant subspace structure there is not classified by inner functions.</li>
+<li>Forgetting that Nehari's theorem gives the distance to H^∞, not to the space of continuous functions; the essential norm involves H^∞+C(𝕋).</li>
+<li>Believing the corona theorem holds for the bidisc; it fails, and the problem remains open for higher polydiscs.</li>
+<li>Neglecting to verify that the symbol of a Hankel operator belongs to L^∞ before invoking Nehari's theorem; unbounded symbols lead to unbounded operators.</li></ul>
+<h3>Carleson Measures and Interpolating Sequences</h3>
+<p>A Carleson measure on the unit disc 𝔻 is a positive Borel measure μ such that the embedding H²(𝔻) → L²(μ) is bounded. Equivalently, there exists a constant C with ∫_𝔻 |f(z)|² dμ(z) ≤ C ‖f‖²<sub>H²</sub> for every f ∈ H². Carleson proved that μ is a Carleson measure iff sup<sub>I⊂∂𝔻</sub> μ(S(I))/|I| < ∞, where S(I) = {re<sup>iθ</sup>: e<sup>iθ</sup>∈I, 1−|I| ≤ r < 1} is the Carleson square over the arc I and |I| denotes its normalized length. This geometric condition replaces analytic estimates with a simple boundary‑size test.</p>
+<p>An interpolating sequence {z_n} ⊂ 𝔻 is a set for which every bounded sequence {w_n} ∈ ℓ^∞ admits f ∈ H^∞ with f(z_n)=w_n. Carleson characterized such sequences by two conditions: (i) the Blaschke condition ∑ (1−|z_n|) < ∞, and (ii) the separation condition inf_n ∏<sub>m≠n</sub> |(z_n−z_m)/(1−z_mz_n)| > 0. The product is the pseudohyperbolic distance; the condition says the points are uniformly separated in the hyperbolic metric. Equivalently, the measure μ = ∑ (1−|z_n|) δ<sub>z_n</sub> is a Carleson measure. This equivalence links interpolation to the boundedness of the evaluation functional on H^∞.</p>
+<p>In examinations, the typical twist is to give a sequence that satisfies the Blaschke condition but fails the separation condition, for instance z_n = 1−1/n². Students must recognise that the pseudohyperbolic distances tend to zero, so the sequence is not interpolating. Another common question asks to prove that a finite union of interpolating sequences is interpolating, which follows from the Carleson measure criterion because the sum of Carleson measures is Carleson. The converse — that a subsequence of an interpolating sequence is interpolating — is immediate from the separation condition.</p>
+<p>Advanced applications include the description of the maximal ideal space of H^∞ via interpolating sequences and the construction of peak functions. The Carleson embedding theorem also underpins the proof of the corona theorem: the condition |f₁|+…+|f_n| ≥ δ implies the measure ∑ |f_k'|² (1−|z|) dA is Carleson, which yields the required bounded solutions g_k.</p>
+
+<h3>Zero Sets of Hardy Spaces and the Blaschke Condition</h3>
+<p>For f ∈ H^p(𝔻) with 0 < p ≤ ∞, the zero set Z(f) = {z∈𝔻: f(z)=0} (counting multiplicities) satisfies the Blaschke condition ∑<sub>z∈Z(f)</sub> (1−|z|) < ∞. This is a necessary condition; it is also sufficient for p > 0 in the sense that given any sequence {z_n} satisfying the Blaschke condition, there exists an f ∈ H^p with exactly those zeros. The canonical construction is the Blaschke product B(z) = ∏<sub>n</sub> (|z_n|/z_n) (z_n−z)/(1−z_nz), which converges uniformly on compact subsets of 𝔻 and belongs to H^∞ with ‖B‖_∞ = 1.</p>
+<p>The Blaschke condition is sharp: if ∑ (1−|z_n|) = ∞, no non‑zero H^p function can vanish on that set. The proof uses the subharmonicity of log|f| and the Poisson–Jensen formula. For p = ∞ the condition is the same, but the zero set of an H^∞ function must also be a finite union of interpolating sequences (by the Chang–Marshall theorem). This extra restriction does not appear for p < ∞.</p>
+<p>Examiners often ask to distinguish between zero sets of H^p for different p. A classic trap: the sequence z_n = 1−1/n satisfies the Blaschke condition (∑ 1/n diverges? Actually ∑ 1/n diverges, so it fails). Wait: 1−|z_n| = 1/n, sum diverges, so not a zero set. A correct example is z_n = 1−1/n², where ∑ 1/n² converges. Students must compute the sum correctly. Another twist: given a zero set that satisfies the Blaschke condition, construct an outer function with no zeros that multiplies the Blaschke product to produce a function with prescribed boundary values. This uses the canonical factorization f = B·O where O is outer and |O| = |f| a.e. on ∂𝔻.</p>
+<p>The factorization theorem extends to the Smirnov class N⁺ (functions of bounded characteristic). There, every f ∈ N⁺ can be written f = B·S·O where S is a singular inner function (associated with a singular measure on ∂𝔻) and O is outer. The singular factor accounts for boundary singularities that are not captured by zeros. In exams, a question may present a function with a known singular measure and ask to identify the singular inner factor.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Interpolating Sequence Test</div>
+<div class="ex-text">Determine whether the sequence z_n = 1 − 2<sup>−n</sup> is an interpolating sequence for H^∞(𝔻).</div>
+<div class="ex-soln">Compute 1−|z_n| = 2<sup>−n</sup>. The Blaschke sum ∑ 2<sup>−n</sup> = 1 < ∞, so the Blaschke condition holds. For separation, evaluate the pseudohyperbolic distance ρ(z_n, z<sub>n+1</sub>) = |z_n−z<sub>n+1</sub>| / |1−overline{z<sub>n+1</sub>}z_n|. Since z_n are real and positive, ρ = (2<sup>−n</sup>−2<sup>−(n+1)</sup>) / (1−(1−2<sup>−n</sup>)(1−2<sup>−(n+1)</sup>)) = 2<sup>−(n+1)</sup> / (2<sup>−n</sup>+2<sup>−(n+1)</sup>−2<sup>−(2n+1)</sup>) ≈ 1/3 for large n. The infimum over all pairs is positive (the minimum occurs for adjacent terms). Hence the separation condition holds. Both Carleson conditions are satisfied, so {z_n} is an interpolating sequence.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks to verify an interpolating sequence, first check the Blaschke sum; if it diverges you can stop immediately. If it converges, estimate the pseudohyperbolic distance for adjacent terms only — uniform separation is equivalent to a positive lower bound on adjacent distances for sequences ordered by modulus. Write the Carleson measure μ = ∑ (1−|z_n|) δ<sub>z_n</sub> and cite the Carleson embedding theorem; this often earns full credit even if the explicit product estimate is omitted.</div>
+</div>
+
+<h3>Outer Functions and Canonical Factorization in Hardy Spaces</h3>
+<p>An outer function in H^p(𝔻) (0 < p ≤ ∞) is a function of the form O(z) = α exp( ∫<sub>0</sub><sup>2π</sup> (e<sup>iθ</sup>+z)/(e<sup>iθ</sup>−z) log φ(θ) dθ/2π ) where |α| = 1 and φ ∈ L^p(∂𝔻) is non‑negative with log φ ∈ L¹. The modulus of O on the boundary equals φ almost everywhere, and O has no zeros in 𝔻. Every f ∈ H^p admits a unique factorization f = B·O where B is the Blaschke product formed from the zeros of f (with multiplicities) and O is outer with |O| = |f| a.e. on ∂𝔻. This is the canonical factorization; it separates the zero information from the boundary magnitude.</p>
+<p>The outer factor can be constructed explicitly from the boundary values: if f ∈ H^p and f ≠ 0, define log|f(e<sup>iθ</sup>)| ∈ L¹ (by the F. and M. Riesz theorem). Then O(z) = exp( ∫ (e<sup>iθ</sup>+z)/(e<sup>iθ</sup>−z) log|f(e<sup>iθ</sup>)| dθ/2π ). The argument of O is determined up to a constant by the Hilbert transform of log|f|. In H^∞ the factorization is f = B·S·O where S is a singular inner function S(z) = exp( −∫ (e<sup>iθ</sup>+z)/(e<sup>iθ</sup>−z) dμ(θ) ) for a singular positive measure μ on ∂𝔻. The singular factor captures boundary behaviour that is not reflected in zeros or in the absolutely continuous part of log|f|.</p>
+<p>Examination questions frequently test the ability to identify the outer factor from a given boundary function. For instance, given φ(θ) = |1−e<sup>iθ</sup>|^α with α > −1, the outer function is O(z) = (1−z)^α (up to a unimodular constant). Students must recognise the Poisson integral of log φ yields the exponent α. Another common task: prove that the product of two outer functions is outer, and that the quotient of an H^p function by its Blaschke product is outer. The latter follows directly from the definition because the quotient has the same boundary modulus as the original function.</p>
+<p>A subtle point: the outer factor is not necessarily in H^∞ even if f ∈ H^∞; it belongs to H^p for all p < ∞ but may fail to be bounded. This occurs when log|f| ∉ L^∞. The canonical factorization in H^∞ therefore requires the extra singular inner factor to keep the product bounded. In the Nevanlinna class N (functions of bounded characteristic) the factorization f = B·S·O holds with O outer and S singular inner, but O may not be in any H^p.</p>
+
+<h3>Toeplitz Operators and the Brown–Halmos Theorem</h3>
+<p>For a symbol φ ∈ L^∞(∂𝔻), the Toeplitz operator T_φ on H²(𝔻) is defined by T_φ f = P(φ f) where P is the orthogonal projection from L² onto H². The matrix of T_φ with respect to the standard orthonormal basis {z^n} has entries φ(j−k) (Fourier coefficients). Toeplitz operators are not normal in general; T_φ* = T<sub>φ</sub>. The commutator [T_φ, T_ψ] = T_φ T_ψ − T_ψ T_φ is compact iff φ, ψ ∈ H^∞ + C(∂𝔻) and the symbols satisfy a certain winding condition.</p>
+<p>The Brown–Halmos theorem (1963) characterises when the product of two Toeplitz operators is again a Toeplitz operator: T_φ T_ψ = T<sub>φψ</sub> holds for all φ, ψ ∈ L^∞ iff either φ ∈ H^∞ or ψ ∈ H^∞. In other words, the Toeplitz map φ ↦ T_φ is a homomorphism on the subalgebra H^∞ and on its conjugate, but not on the whole L^∞. The proof uses the fact that T_φ T_ψ − T<sub>φψ</sub> = H<sub>φ</sub>^* H_ψ where H_φ is the Hankel operator with symbol φ. Since Hankel operators are compact exactly when the symbol lies in H^∞ + C, the product is Toeplitz precisely when one of the Hankel operators vanishes.</p>
+<p>In competitive examinations, a typical question gives two symbols, e.g. φ(z)=z̄ and ψ(z)=z, and asks whether T_φ T_ψ is Toeplitz. Here φ ∉ H^∞, ψ=z̄ ∉ H^∞, so the product is not Toeplitz; indeed T<sub>z̄</sub> T_z = I − P<sub>0</sub> where P<sub>0</sub> projects onto constants. Another common trap: assuming T_φ is invertible iff φ is invertible in L^∞. The correct criterion (Coburn, Douglas) is that T_φ is Fredholm with index −wind(φ) when φ ∈ C(∂𝔻) and φ ≠ 0; for general L^∞ symbols the spectrum can be much larger.</p>
+<p>The Brown–Halmos theorem also leads to the description of the C*‑algebra generated by Toeplitz operators with continuous symbols: it is the Toeplitz algebra, an extension of C(∂𝔻) by the compact operators. The associated exact sequence 0 → K → 𝒯 → C(∂𝔻) → 0 is the Toeplitz extension, whose index map recovers the winding number. This algebraic viewpoint is often tested in advanced papers.</p>
+
+<h3>Commutant Lifting and the Sarason Theorem</h3>
+<p>Let S be the unilateral shift on H² (multiplication by z). A contraction T on a Hilbert space ℋ is said to have a unitary dilation if there exists a unitary U on a larger space 𝒦 ⊃ ℋ such that T^n = P_ℋ U^n|_ℋ for all n ≥ 0. Sz.-Nagy's dilation theorem guarantees such a dilation for every contraction. The commutant lifting theorem (Foias–Sz.-Nagy, 1970) strengthens this: if X ∈ ℬ(ℋ) commutes with T (XT = TX), then there exists Y ∈ ℬ(𝒦) commuting with U (YU = UY) such that X = P_ℋ Y|_ℋ and ‖Y‖ = ‖X‖. This allows one to lift intertwining relations from the contraction to its minimal unitary dilation.</p>
+<p>Sarason's theorem (1967) is a concrete operator‑theoretic formulation for the shift. Let θ be an inner function and K_θ = H² ⊖ θ H² the model space. The compressed shift S_θ = P<sub>K_θ</sub> S|<sub>K_θ</sub> is a completely non‑unitary contraction. Sarason proved that every operator X on K_θ that commutes with S_θ has the form X = P<sub>K_θ</sub> T_φ|<sub>K_θ</sub> for some φ ∈ H^∞ with ‖φ‖_∞ = ‖X‖. Moreover, the map φ ↦ P<sub>K_θ</sub> T_φ|<sub>K_θ</sub> is a completely isometric isomorphism from H^∞/θ H^∞ onto the commutant {S_θ}'. This identifies the commutant algebra with the quotient algebra and shows that every intertwining operator lifts to a Toeplitz operator with H^∞ symbol of the same norm.</p>
+<p>Examination problems often ask to prove that the commutant of S_θ is isometrically isomorphic to H^∞/θ H^∞. The key steps: (1) show that any φ ∈ H^∞ gives a commuting operator via compression; (2) use the commutant lifting theorem to lift an arbitrary commutant X to an operator Y commuting with the minimal unitary dilation of S_θ, which is multiplication by z on L²(μ) for a suitable measure μ; (3) identify Y as a Toeplitz operator with symbol in H^∞; (4) prove the norm equality. A common twist is to ask for the commutant of the Jordan block J_n(λ) (a finite‑dimensional nilpotent shift); the answer is the algebra of upper‑triangular Toeplitz matrices, which corresponds to polynomials modulo z^n.</p>
+<p>The Sarason theorem also yields a proof of the Nevanlinna–Pick interpolation theorem: given nodes z_k and values w_k with the Pick matrix positive, the interpolation problem has a solution in the unit ball of H^∞ iff there exists a contraction X on the model space K_B (B the Blaschke product with zeros z_k) that commutes with S_B and satisfies X k<sub>z_k</sub> = w_k k<sub>z_k</sub>. The commutant lifting theorem then produces the required H^∞ function. This connection between operator theory and function theory is a favourite source of high‑difficulty questions.</p>
+
+<ul>
+<li>Confusing the Carleson measure condition for interpolating sequences with the Blaschke condition alone; the separation condition is essential.</li>
+<li>Assuming every zero set satisfying the Blaschke condition is a zero set for H^∞; the Chang–Marshall theorem adds the interpolating‑sequence requirement.</li>
+<li>Thinking the outer factor of an H^∞ function is always bounded; it belongs to H^p for all p < ∞ but may be unbounded.</li>
+<li>Believing T_φ T_ψ = T<sub>φψ</sub> for arbitrary L^∞ symbols; the Brown–Halmos theorem restricts this to analytic or co‑analytic symbols.</li>
+<li>Neglecting the singular inner factor in the canonical factorization of H^∞ functions; it accounts for boundary singular measures.</li>
+<li>Applying the commutant lifting theorem without verifying that the contraction is completely non‑unitary; the minimal unitary dilation must be used.</li>
+<li>Forgetting that the Sarason isomorphism identifies the commutant with H^∞/θ H^∞, not with H^∞ itself; the quotient norm is essential.</li></ul>
+<h3>Composition Operators on Hardy and Bergman Spaces</h3>
+<p>Let φ be a holomorphic self-map of the unit disc 𝔻. The composition operator C_φ acts by C_φ f = f ∘ φ. On the Hardy space H², C_φ is always bounded; for an automorphism φ, ‖C_φ‖ = (1 − |φ(0)|²)^(-1/2). The general norm formula involves the Nevanlinna counting function N_φ(w) = ∑<sub>φ(z)=w</sub> log(1/|z|). The Littlewood subordination principle gives ‖C_φ‖² = sup<sub>|w|<1</sub> N_φ(w)/(1−|w|²). Compactness on H² is characterized by lim<sub>|w|→1</sub> N_φ(w)/(1−|w|²) = 0 (Shapiro). On the Bergman space A², boundedness is equivalent to the pullback measure μ_φ(E) = ∫<sub>φ⁻¹(E)</sub> (1−|z|²)² dA(z) being a Carleson measure for A². The essential norm on A² equals limsup<sub>|w|→1</sub> (N_φ(w)/(1−|w|²))^(1/2) (MacCluer). The adjoint on H² satisfies C_φ* k_w = k<sub>φ(w)</sub> for the reproducing kernel k_w(z) = (1−w̄z)⁻¹, yielding the Cowen formula C_φ* = T<sub>g</sub> C_σ T_h where σ is the Krein adjoint of φ. On A² the adjoint involves the Bergman kernel K(z,w) = (1−w̄z)⁻² and has no simple closed form. The spectrum of C_φ is tied to the Denjoy–Wolff point: if φ has a fixed point a ∈ 𝔻, the spectrum is the closure of {φ'(a)^n : n ≥ 0}; if the Denjoy–Wolff point lies on ∂𝔻, the spectrum is the closed unit disc. The commutant is trivial for generic φ, but for inner functions it contains Toeplitz operators with symbols in H^∞ ∘ φ. Examination questions often test the distinction between H² and A² compactness criteria, the Cowen adjoint formula, and the spectral mapping theorem for composition operators.</p>
+
+<h3>The Julia–Carathéodory Theorem and Angular Derivatives</h3>
+<p>Let f : 𝔻 → 𝔻 be holomorphic. The Julia–Carathéodory theorem gives a boundary analogue of the Schwarz–Pick lemma. For ζ ∈ ∂𝔻, the non-tangential limit f(ζ) exists and lies in ∂𝔻 iff (1−|f(z)|)/(1−|z|) stays bounded as z → ζ non-tangentially. When this holds, the angular derivative f'(ζ) = ∠lim<sub>z→ζ</sub> (f(z)−f(ζ))/(z−ζ) exists finitely, and the Julia–Carathéodory inequality states |f'(ζ)| ≥ liminf<sub>z→ζ</sub> (1−|f(z)|)/(1−|z|). If f(ζ)=ζ, the angular derivative is real and positive, and f'(ζ) ≥ liminf<sub>z→ζ</sub> (1−|f(z)|)/(1−|z|). The theorem extends to the Carathéodory class (positive real part): if f(ζ) ∈ iℝ, then Re f'(ζ) ≥ 0. The Julia lemma gives the quantitative estimate |f(z)−f(ζ)|²/(1−|f(z)|²) ≤ |f'(ζ)| · |z−ζ|²/(1−|z|²), a boundary version of the Schwarz–Pick contraction. For boundary fixed points: if f(ζ)=ζ with angular derivative λ < 1, ζ is attractive and iterates converge non-tangentially; if λ = 1, convergence is parabolic (Leau–Fatou); if λ > 1, ζ is repulsive. The angular derivative controls horodisc mapping: D(ζ, r) = {z : |z−ζ|²/(1−|z|²) < r} maps into D(f(ζ), |f'(ζ)| r). In examinations, a typical problem gives a Blaschke product B(z) = z (z−a)/(1−āz) (|a|<1) and asks for the angular derivative at z=1. The correct value is B'(1) = 1 + (1−|a|²)/|1−a|² > 1 (for real a, 2/(1−a)), showing 1 is repulsive. Another common question: if f : 𝔻 → 𝔻 has angular derivative 1 at ζ with f(ζ)=ζ, prove the iterates converge tangentially and the Abel equation α(f(z)) = α(z) + 1 has a solution α holomorphic on a Stolz angle.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Problem: Angular Derivative of a Blaschke Product</div>
+<div class="ex-text">Let B(z) = z (z − 1/2) / (1 − z/2). Compute the angular derivative B'(1) and classify the boundary fixed point at z = 1.</div>
+<div class="ex-soln">First verify B(1) = 1 · (1 − 1/2) / (1 − 1/2) = 1, so 1 is a boundary fixed point. Compute the non-tangential limit of (B(z)−1)/(z−1): B(z)−1 = [z(z−1/2) − (1−z/2)]/(1−z/2) = (z²−1)/(1−z/2) = (z−1)(z+1)/(1−z/2). Hence (B(z)−1)/(z−1) = (z+1)/(1−z/2) → 2/(1/2) = 4 as z→1 non-tangentially. Thus B'(1) = 4. Alternatively, use the sum formula for a finite Blaschke product with B(1)=1: if B(z) = ∏ b<sub>a_k</sub>(z) where b<sub>0</sub>(z)=z and b<sub>a</sub>(z) = (|a|/a)(a−z)/(1−āz) for a≠0, then B'(1) = ∑ b<sub>a_k</sub>'(1). Each b<sub>a</sub>'(1) = (1−|a|²)/|1−a|². Here zeros are 0 and 1/2, so B'(1) = 1 + (1−1/4)/|1−1/2|² = 1 + 3 = 4. Since 4 > 1, z=1 is a repulsive boundary fixed point; iterates B^∘n(z) move away from 1 for z near 1 in 𝔻.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Strategy: Boundary Fixed Points</div>
+<div class="tip-text">When a problem asks for the angular derivative of a finite Blaschke product at a boundary fixed point ζ, do not default to the product formula ∏ (1−|a_k|²)/|ζ−a_k|² — that formula gives the modulus of the derivative only when the Blaschke product is written in the standard form with all factors satisfying b<sub>a_k</sub>(ζ)=ζ. The safe method: compute the non-tangential limit of (B(z)−ζ)/(z−ζ) algebraically, or use the sum formula B'(ζ) = ∑ b<sub>a_k</sub>'(ζ) for factors with b<sub>a_k</sub>(ζ)=ζ. For ζ=1, b<sub>a</sub>'(1) = (1−|a|²)/|1−a|². A constant unimodular factor e<sup>iθ</sup> does not affect the angular derivative at a fixed point. Always verify that ζ is actually a fixed point before computing the angular derivative.</div>
+</div>
+
+<h3>The Denjoy–Wolff Theorem and Iteration of Holomorphic Self-Maps</h3>
+<p>The Denjoy–Wolff theorem is the fundamental result on iteration of holomorphic self-maps of 𝔻. Let φ : 𝔻 → 𝔻 be holomorphic, not an elliptic automorphism. There exists a unique point a ∈ 𝔻̅, the Denjoy–Wolff point, such that φ^∘n → a uniformly on compact subsets. If a ∈ 𝔻, then φ(a)=a, |φ'(a)| ≤ 1, and convergence is geometric with rate |φ'(a)|. If a ∈ ∂𝔻, the angular derivative φ'(a) exists with 0 < φ'(a) ≤ 1; convergence is non-tangential, geometric when φ'(a) < 1 and of order 1/n when φ'(a) = 1 (parabolic case). The theorem extends to ℍ and to the ball in ℂⁿ (Burns–Krantz). The proof uses the hyperbolic metric: ρ(φ(z), φ(w)) ≤ ρ(z, w), so φ^∘n(z) is Cauchy in the hyperbolic compactification. Fixed points are classified as elliptic (a ∈ 𝔻, |φ'(a)| < 1), hyperbolic (a ∈ ∂𝔻, φ'(a) < 1), or parabolic (a ∈ ∂𝔻, φ'(a) = 1). For a hyperbolic point, the Koenigs function h(z) = lim (φ^∘n(z)−a)/φ'(a)^n satisfies h(φ(z)) = φ'(a) h(z). For a parabolic point, the Abel equation α(φ(z)) = α(z) + 1 has a solution α on a Stolz angle, giving φ^∘n(z) = α⁻¹(α(z)+n). The Denjoy–Wolff point is the unique fixed point in 𝔻 or the boundary fixed point with minimal angular derivative. If φ has no fixed point in 𝔻, the Denjoy–Wolff point lies on ∂𝔻 and equals the limit of the hyperbolic centers of the iterates. A typical exam problem: φ(z) = (z+1/2)/(1+z/2). Fixed points satisfy z²=1 ⇒ z=±1. Angular derivatives: φ'(1)=1/3, φ'(−1)=3. The Denjoy–Wolff point is 1 (derivative ≤1), convergence rate 1/3. Another common question: if φ(0)=0 and φ'(0)=1, then φ is the identity (Schwarz lemma); if |φ'(0)|=1, φ is a rotation. The theorem fails for elliptic automorphisms (rotations), where iterates are dense on circles.</p>
+
+<h3>The Corona Problem in Several Complex Variables</h3>
+<p>The corona problem asks whether the maximal ideal space of H^∞(Ω) coincides with the closure of Ω for a domain Ω ⊂ ℂⁿ. For the unit disc (n=1), Carleson proved the corona theorem: given f<sub>1</sub>,…,f_N ∈ H^∞(𝔻) with ∑ |f_k| ≥ δ > 0, there exist g<sub>1</sub>,…,g_N ∈ H^∞(𝔻) such that ∑ f_k g_k = 1 and ∑ ‖g_k‖_∞ ≤ C/δ, with C independent of N. For the unit ball 𝔹_n (n ≥ 2), the corona theorem also holds (Amar; Costea), proved via the ∂-equation and Hörmander's L² estimates; the optimal constant grows with dimension. For the polydisc 𝔻ⁿ (n ≥ 2), the corona theorem fails: Varopoulos constructed three functions in H^∞(𝔻²) with ∑ |f_k|² ≥ δ > 0 having no bounded solution to ∑ f_k g_k = 1. The obstruction is topological: the maximal ideal space of H^∞(𝔻ⁿ) contains the Šilov boundary (∂𝔻)ⁿ plus additional corona points. For n=2 the corona is non-empty; for n≥3 the structure is more complex. The failure relates to the polydisc not being a domain of holomorphy in the same sense as the ball. Current status: the corona theorem holds for strictly pseudoconvex domains with smooth boundary (Catlin; McNeal), for the ball, and for the polydisc with two functions (Treil). For three or more functions on the polydisc it fails. The corona problem is equivalent to the Bézout equation in H^∞. In operator theory, the disc corona theorem is equivalent to connectedness of the joint spectrum of a commuting tuple of contractions; the polydisc failure implies existence of commuting contractions with disconnected joint spectrum. Examination questions often test the ball vs. polydisc distinction, the role of the ∂-Neumann problem, and the Toeplitz corona theorem (which holds for the polydisc: if ∑ T<sub>f_k</sub>^* T<sub>f_k</sub> ≥ δ I on H²(𝔻ⁿ), there exist bounded operators X_k with ∑ T<sub>f_k</sub> X_k = I). The Toeplitz version is easier because it allows operator solutions.</p>
+
+<h3>The Theory of Analytic Capacity and the Vitushkin–Tolsa Theorem</h3>
+<p>Analytic capacity γ(E) of a compact set E ⊂ ℂ is γ(E) = sup{|f'(∞)| : f ∈ H^∞(ℂ̅ E), ‖f‖_∞ ≤ 1, f(∞)=0}, where f'(∞) = lim<sub>z→∞</sub> z(f(z)−f(∞)). It measures the size of E from the perspective of bounded analytic functions. Painlevé's problem asks for a geometric characterization of removable sets: E is removable (every bounded analytic function on ℂ E extends to an entire function) iff γ(E) = 0. Vitushkin introduced the semi-additivity conjecture γ(E ∪ F) ≤ C(γ(E)+γ(F)), proved it for sets of finite length, and gave a sufficient condition for γ(E)=0 via Menger curvature c(z<sub>1</sub>,z<sub>2</sub>,z<sub>3</sub>) = 1/R. The curvature integral c²(E) = ∫∫∫_E c² dℋ¹ dℋ¹ dℋ¹ controls analytic capacity. Melnikov and Verdera showed the Cauchy integral is bounded on L²(E) iff c²(E) < ∞ for 1-rectifiable sets. Tolsa solved Painlevé's problem: a compact set E with ℋ¹(E) < ∞ is removable iff it is purely unrectifiable (ℋ¹(E ∩ Γ) = 0 for every rectifiable curve Γ), i.e., γ(E) = 0 iff E is purely unrectifiable. The proof uses the T(b) theorem for non-homogeneous Calderón–Zygmund operators and a corona decomposition. Analytic capacity is comparable to γ(E) ≈ sup{μ(E) : μ ≥ 0, supp μ ⊂ E, ‖C_μ‖<sub>L²(μ)→L²(μ)</sub> ≤ 1}. For σ-finite length, γ(E) = 0 iff the Cauchy transform is unbounded on L²(E). Vitushkin's semi-additivity was proved by Tolsa: γ(E ∪ F) ≤ 1000(γ(E)+γ(F)) (constant improved). The theory connects to the Cauchy integral, the ∂-equation, and set geometry. Typical exam questions: show a line segment has γ([0,1]) = 1/4 while a zero-length Cantor set has γ=0; prove that if ℋ¹(E) < ∞ and γ(E)=0, then C_μ is unbounded on L²(μ) for any μ supported on E with linear growth. The corona theorem for H^∞(ℂ E) holds iff γ(E) > 0 for the complement. Analytic capacity is central in geometric function theory and appears in advanced qualifying exams.</p>
+
+<ul>
+<li>Confusing the angular derivative with the ordinary derivative at a boundary point; the angular derivative requires non-tangential approach and may exist when the ordinary derivative does not.</li>
+<li>Assuming the Denjoy–Wolff theorem applies to all holomorphic self-maps; it fails for elliptic automorphisms (rotations) where iterates do not converge.</li>
+<li>Believing the corona theorem holds for the polydisc in several variables; it fails for n ≥ 2 with three or more functions (Varopoulos counterexample).</li>
+<li>Thinking the product formula for angular derivatives of Blaschke products is ∏ (1−|a_k|²)/|ζ−a_k|²; the correct formula for a fixed point ζ is the sum of the angular derivatives of the factors.</li>
+<li>Assuming compactness criteria for composition operators are the same on H² and A²; they differ because the pullback measure involves different weights.</li>
+<li>Confusing analytic capacity with Hausdorff measure; a set can have positive length but zero analytic capacity (purely unrectifiable sets), and positive analytic capacity implies positive length but not conversely.</li>
+<li>Forgetting that the Julia–Carathéodory theorem requires the quotient (1−|f(z)|)/(1−|z|) to be bounded; mere existence of a non-tangential limit f(ζ) ∈ ∂𝔻 is not sufficient for the angular derivative to exist.</li></ul>
+<h3>The Koebe Quarter Theorem and Univalent Function Theory</h3>
+<p>The class <strong>S</strong> of univalent (injective holomorphic) functions on the unit disc 𝔻 normalized by f(0)=0 and f'(0)=1 is the central object of geometric function theory. The Koebe quarter theorem (1907) states that every f∈S satisfies f(𝔻) ⊃ { w : |w| < 1/4 }. The extremal function is the Koebe function k(z)=z/(1−z)², which maps 𝔻 onto the complex plane slit along the negative real axis from −1/4 to −∞. The proof uses the area theorem of Gronwall (1914) applied to the inverse function, yielding the sharp bound |a₂| ≤ 2 for the second Taylor coefficient. This coefficient estimate was the first step toward the Bieberbach conjecture |a_n| ≤ n, proved by de Branges in 1985 using the Loewner differential equation and the theory of Loewner chains. The distortion theorem (1916) gives precise bounds for |f'(z)| and |f(z)| in terms of |z|, while the growth theorem bounds |f(z)| between |z|/(1+|z|)² and |z|/(1−|z|)². Rotation invariance shows that if f∈S then e<sup>−iθ</sup>f(e<sup>iθ</sup>z)∈S, so the class is closed under rotations. Subordination, introduced by Littlewood (1925), provides a powerful tool: f≺g means f(z)=g(ω(z)) for some Schwarz function ω with ω(0)=0, |ω(z)|<1. The Koebe function is the universal majorant for S in the sense of subordination. Modern developments include the theory of quasiconformal extensions (Ahlfors–Weill), the Brennan conjecture on integrability of |f'|^p (proved for p<4 by Astala et al.), and the connection with Schramm–Loewner evolution (SLE) where the Loewner driving function is √κ times Brownian motion. These results illustrate how a single geometric normalization generates a rich hierarchy of analytic, geometric, and probabilistic structures.</p>
+
+<h3>The Riemann–Hilbert Problem and Its Role in Integrable Systems</h3>
+<p>The Riemann–Hilbert problem asks for a piecewise holomorphic matrix function M(z) on ℂ\Σ, where Σ is an oriented contour, satisfying a jump condition M_+(z)=M_-(z)V(z) for z∈Σ and a normalization M(z)→I as z→∞. Here V(z) is a given jump matrix. Hilbert's 21st problem (1900) concerned the existence of linear differential equations with prescribed monodromy; the modern formulation by Birkhoff (1913) and later by Gakhov (1966) turned it into a boundary value problem for analytic functions. The solution of the Riemann–Hilbert problem is equivalent to the inverse scattering transform for integrable nonlinear PDEs such as the Korteweg–de Vries equation, the nonlinear Schrödinger equation, and the sine‑Gordon equation. In the isomonodromic deformation method (Jimbo–Miwa–Ueno, 1981), the compatibility condition of a Lax pair yields Painlevé equations, which appear as the monodromy‑preserving deformations of a Riemann–Hilbert problem with rational jump matrices. The Deift–Zhou steepest descent method (1993) provides rigorous asymptotics for oscillatory Riemann–Hilbert problems, enabling the analysis of long‑time behavior of solutions to integrable PDEs and the derivation of Tracy–Widom distributions in random matrix theory. The Fokas unified transform (1997) extends the method to boundary value problems for linear and integrable nonlinear PDEs on finite intervals. In all these contexts, the Riemann–Hilbert problem serves as a nonlinear Fourier transform: the jump matrix encodes the spectral data, and solving the factorization problem reconstructs the solution. The theory also connects to the theory of orthogonal polynomials, where the Riemann–Hilbert characterization of the polynomials (Fokas–Its–Kitaev, 1992) yields strong asymptotics via the same steepest descent machinery.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Riemann–Hilbert Problem for the Airy Equation</div>
+<div class="ex-text">Find a 2×2 matrix M(z) analytic in ℂ\ℝ with jump M_+(x)=M_-(x) ( 1 1 ; 0 1 ) for x>0 and M_+(x)=M_-(x) ( 1 0 ; 1 1 ) for x<0, normalized by M(z)→I as z→∞. Show that the (1,1) entry satisfies the Airy equation y''=zy.</div>
+<div class="ex-soln">Define M(z) by the standard Airy parametrix: for Im z>0 set M(z)= ( Ai(z) Ai(ωz) ; Ai'(z) ω Ai'(ωz) ) with ω=e<sup>2πi/3</sup>, and for Im z<0 use the conjugate. The jump matrices follow from the Airy function connection formulas Ai(ωz)+Ai(ω²z)=Ai(z) and the Wronskian Ai(z)Ai'(ωz)−Ai'(z)Ai(ωz)=1/(2πi). One verifies directly that the jumps match the prescribed upper‑triangular and lower‑triangular matrices. The first column of M solves the first‑order system d/dz ( y ; y' ) = ( 0 1 ; z 0 ) ( y ; y' ), hence y=Ai(z) satisfies y''=zy. The normalization at infinity follows from the known asymptotics Ai(z)∼(1/2√π) z<sup>−1/4</sup> e<sup>−2/3 z<sup>3/2</sup></sup>. Thus the constructed M solves the Riemann–Hilbert problem and its (1,1) entry is the Airy function.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam Strategy</div>
+<div class="tip-text">When a question asks to set up a Riemann–Hilbert problem for a given Lax pair, first write the associated linear system Ψ_x=UΨ, Ψ_t=VΨ. The jump matrix is the scattering matrix S(λ) obtained from the Jost solutions. Remember the normalization Ψ→I as λ→∞. The steepest descent steps are: (1) factorize the jump matrix, (2) open lenses to move oscillatory exponentials off the real axis, (3) construct a global parametrix (often a model Riemann–Hilbert problem solvable in closed form), (4) build local parametrices near stationary phase points using Airy or Bessel functions, (5) estimate the error matrix. Memorize the Airy and Bessel model problems; they appear in virtually every asymptotic analysis.</div>
+</div>
+
+<h3>The ∂‑Neumann Problem and Regularity on Pseudoconvex Domains</h3>
+<p>The ∂‑Neumann problem asks for a solution u∈L²(Ω) to ∂*∂u=f with the side condition ∂u∈Dom(∂*) for a given (0,1)‑form f on a bounded domain Ω⊂ℂⁿ. Here ∂* is the Hilbert space adjoint of the Cauchy–Riemann operator ∂. Kohn (1963) proved that on a smoothly bounded strictly pseudoconvex domain the ∂‑Neumann operator N is compact on L², which yields global regularity: if f∈C^∞(Ω̅) then u∈C^∞(Ω̅). Hörmander's L² estimates (1965) give a weighted solution with ∫|u|²e<sup>−φ</sup> ≤ ∫|f|²<sub>i∂∂φ</sub> e<sup>−φ</sup> for any plurisubharmonic weight φ, providing a flexible tool for solving ∂ on Stein manifolds. Catlin (1984) introduced the multitype to measure the order of contact of complex varieties with the boundary; domains of finite type in ℂ² enjoy subelliptic estimates of order ε=1/m, where m is the type. D'Angelo (1982) defined the type for higher dimensions. The worm domain (Diederich–Fornaess, 1977) is a smoothly bounded pseudoconvex domain in ℂ² on which the ∂‑Neumann operator fails to be compact, showing that pseudoconvexity alone does not guarantee compactness. Later, Barrett (1984) proved that on any smoothly bounded pseudoconvex domain in ℂ² the ∂‑Neumann operator is compact in the Sobolev space W^s for s<1/2, but not necessarily on L². The ∂‑Neumann problem is also linked to the Bergman projection: the Bergman kernel is the integral kernel of the orthogonal projection onto the space of square‑integrable holomorphic functions, and its regularity properties mirror those of the ∂‑Neumann operator via the Kohn–Morrey formula. Recent work by Straube (2010) and others has characterized compactness in terms of the geometry of the boundary, leading to the notion of property (P) and the equivalence between compactness of the ∂‑Neumann operator and the existence of a bounded plurisubharmonic exhaustion function with certain Hessian bounds.</p>
+
+<h3>The Szegő Kernel and Hardy Spaces on Smoothly Bounded Domains</h3>
+<p>For a bounded domain Ω⊂ℂⁿ with C^∞ boundary, the Hardy space H²(∂Ω) consists of boundary values of holomorphic functions f on Ω such that the non‑tangential maximal function belongs to L²(∂Ω, dσ). The Szegő kernel S(z,ζ) is the reproducing kernel of H²(∂Ω): for each fixed ζ∈Ω, S(·,ζ)∈H²(∂Ω) and f(ζ)=∫<sub>∂Ω</sub> f(ζ') S(ζ',ζ) dσ(ζ'). The Cauchy–Szegő projection C: L²(∂Ω)→H²(∂Ω) is the orthogonal projection with kernel S. Fefferman (1974) proved that on a strictly pseudoconvex domain the Bergman kernel K(z,ζ) has an asymptotic expansion K(z,ζ)∼φ(z,ζ)/ρ(z,ζ)<sup>n+1</sup>+ψ(z,ζ) log ρ(z,ζ), where ρ is a defining function. The Szegő kernel inherits a similar expansion with exponent n. Bell and Ligocka (1980) showed that the biholomorphic mapping between two smoothly bounded domains extends smoothly to the closure if and only if the Szegő kernels transform according to the classical transformation law. This result is a cornerstone of the boundary regularity theory for proper holomorphic mappings. The Szegő projection is a singular integral operator of Calderón–Zygmund type; its L^p boundedness for 1<p>
+
+<h3>The Theory of Dirichlet Spaces and the Carleson Embedding Theorem</h3>
+<p>The Dirichlet space D on the unit disc consists of holomorphic functions f(z)=∑<sub>n≥0</sub> a_n z^n with finite Dirichlet integral D(f)=∑<sub>n≥1</sub> n|a_n|² = (1/π)∫_𝔻 |f'(z)|² dA(z). It is a reproducing kernel Hilbert space with kernel k_w(z)= (1/ wz) log(1/(1−wz)). The Carleson embedding theorem (1962) characterizes positive Borel measures μ on 𝔻 for which the identity map D→L²(μ) is bounded: sup<sub>a∈𝔻</sub> μ(S(a))/ (1−|a|) < ∞, where S(a)={z∈𝔻: |1−az| < 1−|a|} is a Carleson square. The measure is called a Carleson measure for D. Stegenga (1980) proved that the embedding is compact iff lim<sub>|a|→1</sub> μ(S(a))/(1−|a|)=0. The Dirichlet space is invariant under the Möbius automorphisms of the disc, and the norm satisfies ‖f∘φ_a‖_D² = ‖f‖_D² + |f(a)|²/(1−|a|²). This invariance underlies the theory of composition operators C_φ f = f∘φ on D. The Carleson embedding theorem also governs the boundedness of Toeplitz operators T_μ f = P_D(μ f) where P_D is the orthogonal projection onto D. The zero sets of D are characterized by the Blaschke condition ∑ (1−|z_n|) < ∞ together with a logarithmic capacity condition (Carleson, 1962). Outer functions in D are those with no singular inner factor; the canonical factorization f = B S F holds with B a Blaschke product, S a singular inner function, and F outer in D. The theory extends to the Dirichlet space on the unit ball in ℂⁿ (Arcozzi–Rochberg–Sawyer, 2001) where the Carleson condition involves the invariant metric. Recent work connects Dirichlet spaces to the theory of complete Pick kernels (Agler–McCarthy, 2000) and to the study of multipliers of D, which coincide with the intersection H^∞∩BMOA.</p>
+
+<ul>
+<li>Confusing the Koebe quarter theorem constant 1/4 with the Bieberbach coefficient bound |a₂|≤2; the former is a geometric covering result, the latter a coefficient estimate.</li>
+<li>Assuming every Riemann–Hilbert problem has a unique solution; solvability requires the jump matrix to satisfy a normalization and a factorization condition (e.g., the Birkhoff factorization).</li>
+<li>Believing the ∂‑Neumann operator is compact on all smoothly bounded pseudoconvex domains; the worm domain provides a counterexample in ℂ².</li>
+<li>Thinking the Szegő kernel on a strictly pseudoconvex domain has the same singularity as the Bergman kernel; the Szegő kernel singularity is of order n, the Bergman kernel of order n+1.</li>
+<li>Applying the one‑variable Carleson measure condition μ(S(I))/|I| to the Dirichlet space without the extra factor (1−|a|) in the denominator; the Dirichlet Carleson condition is μ(S(a))/(1−|a|).</li>
+<li>Neglecting the logarithmic factor in the Dirichlet space reproducing kernel; the kernel is not the standard Cauchy kernel but contains a log term.</li>
+<li>Overlooking that the Deift–Zhou steepest descent method requires the jump matrix to be analytic in a neighborhood of the contour; non‑analytic jumps break the factorization step.</li>
+</ul>
+<p>These advanced topics illustrate the depth and interconnectedness of modern complex analysis and its applications to integrable systems, several complex variables, and operator theory.</p></p></p>
+<!-- course-addon:end --></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 11001,
+                text: "🌀 What is (2 + 3i) + (4 − i)?",
+                opts: [
+                    {l: "A", t: "6 + 2i", c: true},
+                    {l: "B", t: "8 − 3i", c: false},
+                    {l: "C", t: "6 + 4i", c: false},
+                    {l: "D", t: "2 + 4i", c: false}
+                ],
+                sol: "(2+3i)+(4−i) = (2+4) + (3−1)i = <strong>6 + 2i</strong>. Add real parts and imaginary parts separately."
+            },
+            {
+                id: 11002,
+                text: "🌀 What is (1 + i)(2 − 3i)?",
+                opts: [
+                    {l: "A", t: "5 − i", c: true},
+                    {l: "B", t: "−1 − i", c: false},
+                    {l: "C", t: "2 − 3i", c: false},
+                    {l: "D", t: "5 + i", c: false}
+                ],
+                sol: "(1+i)(2−3i) = 1×2 + 1×(−3i) + i×2 + i×(−3i) = 2 − 3i + 2i − 3i² = 2 − i + 3 = <strong>5 − i</strong>. (Since i² = −1)"
+            },
+            {
+                id: 11003,
+                text: "🌀 What is the complex conjugate of 3 − 4i?",
+                opts: [
+                    {l: "A", t: "−3 + 4i", c: false},
+                    {l: "B", t: "3 + 4i", c: true},
+                    {l: "C", t: "−3 − 4i", c: false},
+                    {l: "D", t: "4 − 3i", c: false}
+                ],
+                sol: "The complex conjugate flips the sign of the imaginary part: 3 − 4i → <strong>3 + 4i</strong>. The product zz̄ = |z|² = 9 + 16 = 25."
+            },
+            {
+                id: 11004,
+                text: "🌀 What is (1 + i)⁴?",
+                opts: [
+                    {l: "A", t: "4", c: false},
+                    {l: "B", t: "−4", c: true},
+                    {l: "C", t: "4i", c: false},
+                    {l: "D", t: "−4i", c: false}
+                ],
+                sol: "Polar form: 1+i = √2 e^{iπ/4}. (1+i)⁴ = (√2)⁴ e^{iπ} = 4 × (−1) = <strong>−4</strong>. Much easier in polar form!"
+            },
+            {
+                id: 11005,
+                text: "🌀 How many solutions does z⁵ = 1 have?",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "2", c: false},
+                    {l: "C", t: "5", c: true},
+                    {l: "D", t: "Infinite", c: false}
+                ],
+                sol: "The equation z⁵ = 1 has <strong>5</strong> solutions — the 5th roots of unity. They are equally spaced on the unit circle at angles 2πk/5 for k = 0,1,2,3,4."
+            },
+            {
+                id: 11006,
+                text: "🎯 If f(z) = u + iv is analytic, which equations must hold?",
+                opts: [
+                    {l: "A", t: "uₓ = vᵧ, uᵧ = vₓ", c: false},
+                    {l: "B", t: "uₓ = vᵧ, uᵧ = −vₓ", c: true},
+                    {l: "C", t: "uₓ = −vᵧ, uᵧ = vₓ", c: false},
+                    {l: "D", t: "uₓ = uᵧ, vₓ = vᵧ", c: false}
+                ],
+                sol: "The <strong>Cauchy-Riemann equations</strong>: ∂u/∂x = ∂v/∂y and ∂u/∂y = −∂v/∂x. These guarantee the derivative is the same from every direction."
+            },
+            {
+                id: 11007,
+                text: "🎯 What is the value of ∮_C 1/z dz where C is the unit circle?",
+                opts: [
+                    {l: "A", t: "0", c: false},
+                    {l: "B", t: "πi", c: false},
+                    {l: "C", t: "2πi", c: true},
+                    {l: "D", t: "2π", c: false}
+                ],
+                sol: "1/z has a simple pole at z = 0 with residue 1. By the residue theorem: ∮ = 2πi × 1 = <strong>2πi</strong>. This is the fundamental contour integral."
+            },
+            {
+                id: 11008,
+                text: "🔍 What type of singularity does f(z) = e^{1/z} have at z = 0?",
+                opts: [
+                    {l: "A", t: "Removable", c: false},
+                    {l: "B", t: "Pole", c: false},
+                    {l: "C", t: "Essential", c: true},
+                    {l: "D", t: "Branch point", c: false}
+                ],
+                sol: "e^{1/z} has an <strong>essential singularity</strong> at z = 0. Its Laurent series has infinitely many negative powers. By Picard's theorem, it takes every complex value (except 0) in any neighborhood of 0."
+            },
+            {
+                id: 11009,
+                text: "🔍 What is the residue of f(z) = 1/(z²−1) at z = 1?",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "1/2", c: true},
+                    {l: "C", t: "−1/2", c: false},
+                    {l: "D", t: "0", c: false}
+                ],
+                sol: "Factor: 1/(z²−1) = 1/((z−1)(z+1)). At z = 1 (simple pole): Res = lim (z−1)×1/((z−1)(z+1)) = 1/(1+1) = <strong>1/2</strong>."
+            },
+            {
+                id: 11010,
+                text: "🌀 What is e^{iπ/2} equal to?",
+                opts: [
+                    {l: "A", t: "−1", c: false},
+                    {l: "B", t: "i", c: true},
+                    {l: "C", t: "−i", c: false},
+                    {l: "D", t: "1", c: false}
+                ],
+                sol: "By Euler's formula: e^{iπ/2} = cos(π/2) + i sin(π/2) = 0 + i×1 = <strong>i</strong>. This is why multiplying by i rotates by 90°."
+            },
+            {
+                id: 11011,
+                text: "🌀 |3 + 4i| = ?",
+                opts: [
+                    {l: "A", t: "3", c: false},
+                    {l: "B", t: "4", c: false},
+                    {l: "C", t: "5", c: true},
+                    {l: "D", t: "7", c: false}
+                ],
+                sol: "|3 + 4i| = √(3² + 4²) = √(9 + 16) = √25 = <strong>5</strong>. The modulus is the distance from the origin in the complex plane."
+            },
+            {
+                id: 11012,
+                text: "🌍 Which function is central to the Riemann Hypothesis?",
+                opts: [
+                    {l: "A", t: "The Gamma function", c: false},
+                    {l: "B", t: "The Riemann zeta function ζ(s)", c: true},
+                    {l: "C", t: "The exponential function", c: false},
+                    {l: "D", t: "The sine function", c: false}
+                ],
+                sol: "The <strong>Riemann zeta function</strong> ζ(s) is central. The Riemann Hypothesis states that all non-trivial zeros of ζ(s) have real part 1/2. Its proof would unlock the deepest secrets of prime numbers."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.9em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.9em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

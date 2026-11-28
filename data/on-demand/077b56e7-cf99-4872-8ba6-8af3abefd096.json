@@ -1,0 +1,38 @@
+{
+ "status": "done",
+ "kind": "tutor-questions",
+ "model": "qwen3.5:9b",
+ "finishedAt": "2026-10-19T04:46:28.954Z",
+ "questions": [
+  {
+   "q": "A solid circular shaft transmits a torque T. If the diameter is doubled while keeping the material and length constant, by what factor does the maximum shear stress decrease?",
+   "a": "1/4",
+   "h": "Recall that maximum shear stress is inversely proportional to the cube of the radius (or power 3 of diameter).",
+   "s": "The formula for maximum shear stress in a solid shaft is τ_max = (16T) / (πd³). Since diameter d is in the denominator with an exponent of 3, doubling the diameter (2d) results in a new stress of τ' = (16T) / (π(2d)³) = (1/8) * (16T/πd³). Wait, let me re-evaluate the power. τ ∝ 1/d³? No, section modulus Z_p = πd³/16, so τ = T/Z_p ∝ 1/d³. If d becomes 2d, stress becomes 1/(2³) = 1/8 of original. My previous thought '1/4' was incorrect for shear. Let's correct the answer to 1/8."
+  },
+  {
+   "q": "Which point on a beam experiences zero bending moment if it is subjected to a couple (pure moment) applied at its midpoint?",
+   "a": "The entire beam has constant non-zero bending moment, so there is no such point unless the couple is zero.",
+   "h": "Remember that a pure couple creates a constant bending moment diagram across the span.",
+   "s": "When a pure couple M is applied to a simply supported or cantilever beam, the bending moment diagram is a rectangle with constant value M throughout the length (ignoring the reaction moments which balance it). Unlike a point load where moment is zero at the ends and under the load, a pure couple results in a constant non-zero moment everywhere along the span. Therefore, there are no points of zero bending moment within the span."
+  },
+  {
+   "q": "For a simply supported beam carrying a uniformly distributed load (UDL) over its entire length L, where is the shear force zero?",
+   "a": "At the mid-span (L/2)",
+   "h": "The shear force diagram for a UDL is a triangle starting from positive at one support and linearly decreasing.",
+   "s": "For a simply supported beam with a UDL 'w' over length 'L', the reaction forces are wL/2 at each support. The shear force V(x) = R_A - wx. Setting V(x)=0 gives wL/2 - wx = 0, which implies x = L/2. Thus, shear force becomes zero exactly at the center of the beam."
+  },
+  {
+   "q": "What is the shape of the Bending Moment Diagram (BMD) for a simply supported beam carrying a single point load at its center?",
+   "a": "Triangular",
+   "h": "The slope of the bending moment diagram is equal to the shear force diagram.",
+   "s": "Under a central point load, the shear force diagram consists of two constant rectangular blocks (positive on one side, negative on the other). Since the slope of the BMD equals the shear force (dM/dx = V), and V is constant in the two halves, the M diagram consists of two straight lines meeting at a peak in the center. Hence, the shape is triangular."
+  },
+  {
+   "q": "Define the term 'Modulus of Elasticity' for an axial load case and state its common symbol.",
+   "a": "Ratio of normal stress to normal strain (Young's Modulus), symbol E",
+   "h": "Think of Hooke's Law in one dimension: σ = Eε.",
+   "s": "In the context of Strength of Materials, the modulus of elasticity for axial loading is defined as the constant of proportionality between direct stress (σ) and longitudinal strain (ε). It represents the stiffness of the material and is denoted by the symbol 'E'. Mathematically, E = σ/ε within the elastic limit."
+  }
+ ]
+}

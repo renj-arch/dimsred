@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Recursive Constraint Networks in Multi‑Stage Seating Puzzles | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.9em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.75em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.9em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Recursive Constraint Networks in Multi‑Stage Seating Puzzles</h1>
+<p class="meta">Logical Reasoning · <a href="/upsc/course/csat/lesson-logical-reasoning">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+
+  <!-- Round table -->
+  <circle cx="280" cy="160" r="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+
+  <!-- Seats (8) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <circle cx="280" cy="40" r="6"/>   <!-- N -->
+    <circle cx="365" cy="75" r="6"/>   <!-- NE -->
+    <circle cx="400" cy="160" r="6"/>  <!-- E -->
+    <circle cx="365" cy="245" r="6"/>  <!-- SE -->
+    <circle cx="280" cy="280" r="6"/>  <!-- S -->
+    <circle cx="195" cy="245" r="6"/>  <!-- SW -->
+    <circle cx="160" cy="160" r="6"/>  <!-- W -->
+    <circle cx="195" cy="75" r="6"/>   <!-- NW -->
+  </g>
+
+  <!-- Stage 1 constraints -->
+  <!-- Opposite A-D -->
+  <line x1="280" y1="40" x2="280" y2="280" stroke="#1f2937" stroke-width="3" stroke-dasharray="8,4"/>
+  <!-- Adjacent B-C (clockwise) -->
+  <path d="M365,75 C380,100 390,130 400,160" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/>
+    </marker>
+  </defs>
+
+  <!-- Stage 2 box (right side) -->
+  <rect x="420" y="40" width="120" height="160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Hyper-edge nodes -->
+  <circle cx="450" cy="80" r="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="510" cy="80" r="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="480" cy="140" r="10" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Hyper-edge triangle -->
+  <polygon points="450,80 510,80 480,140" stroke="#1f2937" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
+
+  <!-- Arrow from Stage 1 to Stage 2 -->
+  <path d="M400,160 C410,160 415,140 420,120" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Labels (key terms) -->
+  <text x="280" y="30" text-anchor="middle" font-size="16" fill="#1f2937">Stage 1</text>
+  <text x="480" y="30" text-anchor="middle" font-size="16" fill="#1f2937">Stage 2</text>
+  <text x="280" y="160" text-anchor="middle" font-size="14" fill="#1f2937">Domain</text>
+  <text x="280" y="190" text-anchor="middle" font-size="14" fill="#1f2937">Path-consistency</text>
+  <text x="410" y="130" text-anchor="end" font-size="14" fill="#1f2937">Macro-value</text>
+  <text x="480" y="210" text-anchor="middle" font-size="14" fill="#1f2937">Hyper-edge</text>
+  <text x="480" y="230" text-anchor="middle" font-size="14" fill="#1f2937">Backtrack</text>
+
+  <!-- Caption strip -->
+  <line x1="20" y1="295" x2="540" y2="295" stroke="#1f2937" stroke-width="2"/>
+  <text x="280" y="312" text-anchor="middle" font-size="14" fill="#1f2937">Recursive Constraint Networks in Multi‑Stage Seating Puzzles</text>
+</svg></div>
+<p class="meta">Recursive Constraint Networks in Multi‑Stage Seating Puzzles</p></div><!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body></html>

@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Limits & Derivatives — The No-Formula Intuitive Way | vlymbooq</title>
+    <meta name="description" content="Learn Limits & Derivatives through stories, animated visuals, and real-life analogies. Zero formula memorization required — build intuition first.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-calculus.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        /* ========== STORY CARDS ========== */
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.75em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.9em;color:var(--emerald);font-weight:600}
+
+        /* ========== INSIGHT BOX ========== */
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.75em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.9em;color:var(--text-muted);margin-top:4px}
+
+        /* ========== ANIMATED DIAGRAM ========== */
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.9em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .diagram-box .diagram-controls{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .diagram-box .ctrl-btn{padding:6px 16px;border-radius:100px;font-size:.9em;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text-sec);cursor:pointer;transition:all .2s}
+        .diagram-box .ctrl-btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+        .diagram-box .ctrl-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .diagram-box .slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;justify-content:center}
+        .diagram-box .slider-wrap input[type=range]{width:200px;max-width:60%;-webkit-appearance:none;background:var(--border);height:4px;border-radius:4px;outline:none}
+        .diagram-box .slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple);cursor:pointer}
+        .diagram-box .slider-wrap .slider-val{font-size:.9em;color:var(--purple);font-weight:700;min-width:30px}
+
+        /* ========== STEP REVEAL ========== */
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.9em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.75em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        /* ========== PRACTICE CARDS ========== */
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.9em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.75em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        /* ========== KEYFRAME ANIMATIONS ========== */
+        @keyframes breathe{0%,100%{opacity:.4}50%{opacity:.8}}
+        @keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 4px rgba(167,139,250,.3))}50%{filter:drop-shadow(0 0 12px rgba(167,139,250,.6))}}
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes bounce-dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+        .stagger-1{animation-delay:.1s}
+        .stagger-2{animation-delay:.2s}
+        .stagger-3{animation-delay:.3s}
+
+        /* ========== PROGRESS TRACKER ========== */
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        /* Interactive graph hover effect */
+        .graph-hover-area{cursor:crosshair}
+        .graph-point{transition:all .3s}
+        .graph-point:hover{r:6;fill:var(--amber)}
+
+        /* Math display */
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+
+        /* Interactive playground */
+        .playground{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .playground .pg-title{font-size:.9em;font-weight:700;margin-bottom:4px}
+        .playground .pg-desc{font-size:.9em;color:var(--text-muted);margin-bottom:12px}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/jee/">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Mathematics</div>
+                    <a href="../../../lesson-arithmetic.html">Arithmetic</a>
+                    <a href="../../../lesson-geometry.html">Geometry</a>
+                    <a href="../../../lesson-number-theory.html">Number Theory</a>
+                    <a href="../../../lesson-linear-algebra.html">Linear Algebra</a>
+                    <a href="../../../lesson-complex-analysis.html">Complex Analysis</a>
+                    <a href="../../../lesson-abstract-algebra.html">Abstract Algebra</a>
+                    <a href="../../../lesson-graph-theory.html">Graph Theory</a>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html" class="active">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-sets-relations-functions.html">Sets, Relations & Functions</a>
+                    <a href="lesson-inverse-trigonometry.html">Inverse Trigonometry</a>
+                    <a href="lesson-application-derivatives.html">Application of Derivatives</a>
+                    <a href="lesson-integration.html">Integration</a>
+                    <a href="lesson-differential-equations.html">Differential Equations</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Limits & Derivatives</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 20 Nov 2026 &#183; 12,615 words &#183; 6 sections &#183; illustrated</div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">No formulas. No memorization. Just stories, animations, and "AHA!" moments.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
+                    </div>
+                </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>🎭</span> Zeno's Puzzle</span>
+                    <span class="p-step" id="p2"><span>📈</span> See Limits</span>
+                    <span class="p-step" id="p3"><span>🕳️</span> The Hole</span>
+                    <span class="p-step" id="p4"><span>⛰️</span> Slope = Speed</span>
+                    <span class="p-step" id="p5"><span>🎯</span> Practice</span>
+                </div>
+
+                <div class="lesson-body">
+<!-- course-figure:calculus-figure -->
+<figure class="lesson-figure" data-figure="calculus-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Calculus Concept Flow Revision Diagram for GS1 Geography"><defs><marker id="arrowhead-lesson-calculus-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="30" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="80" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="80" dy="0">Limits</tspan></text><rect x="150" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="200" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="200" dy="0">Continuity &amp; Diff</tspan></text><rect x="270" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="320" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="320" dy="0">Differentiation</tspan></text><rect x="390" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="440" y="171.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="440" dy="0">Applications of</tspan><tspan x="440" dy="16.25">Deriv</tspan></text><rect x="510" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="560" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="560" dy="0">Integration</tspan></text><rect x="630" y="150" width="100" height="60" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="680" y="180" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="680" dy="0">Differential Eqns</tspan></text><path d="M 130 180 L 150 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 250 180 L 270 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 370 180 L 390 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 490 180 L 510 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/><path d="M 610 180 L 630 180" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure)"/></g><g><text x="140" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">defines</tspan></text><text x="260" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="260" dy="0">enables</tspan></text><text x="380" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">applies</tspan></text><text x="500" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="500" dy="0">integrates</tspan></text><text x="620" y="165" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="620" dy="0">models</tspan></text><text x="30" y="50" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 12 – ε‑δ limit definition</tspan></text><text x="30" y="80" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="30" dy="0">Art. 45 – Fundamental Theorem of Calculus</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Calculus Concept Flow Revision Diagram for GS1 Geography</strong> — Shows the logical progression from limits to differential equations in calculus.
+    &middot; <a href="../../../figures/svg-calculus-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+                    <!-- ============================================================ -->
+                    <!-- PART 1: ZENO'S PARADOX — WHY LIMITS EXIST -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🎭 Part 1: The Story That Invented Calculus</span>
+                    <h2>Story Time: The Arrow That Never Reaches the Wall</h2>
+
+                    <p>Imagine an archer shoots an arrow at a wall <strong>2 meters away</strong>.</p>
+
+                    <p>Before the arrow reaches the wall, it must first travel <strong>half the distance</strong> (1 meter). Then from there, it must travel <strong>half of the remaining</strong> distance (0.5 meters). Then half of what's left (0.25 meters). Then half of THAT (0.125 meters)...</p>
+
+                    <p><strong>The puzzle:</strong> The arrow keeps covering half of whatever distance is left. It never actually reaches the wall in finite time — there's always another half to go! So... <em>does the arrow ever reach the wall?</em></p>
+
+                    <div class="story-card">
+                        <div class="story-label">🐢 Ancient Puzzle (Zeno's Paradox, 450 BC)</div>
+                        <div class="story-title">The Arrow & The Wall</div>
+                        <div class="story-text">
+                            <strong>Zeno said:</strong> "Motion is impossible, because to reach any point, you must first reach the halfway point — and there are infinitely many halfway points!"<br><br>
+                            <strong>Reality says:</strong> Arrows DO reach walls. So our thinking is wrong. We need a better way to think about "getting closer and closer."
+                        </div>
+                        <div class="story-moral">💡 The "almost there" idea is the KEY to calculus. When something gets closer and closer to a value, we call that value the <strong>LIMIT</strong>.</div>
+                    </div>
+
+                    <!-- Animated Zeno Diagram -->
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎯 Watch the Arrow Get "Almost There"</div>
+                        <svg viewBox="0 0 700 180" width="700" height="180">
+                            <defs>
+                                <marker id="arrowHead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#a78bfa"/></marker>
+                                <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#ef4444"/>
+                                    <stop offset="100%" stop-color="#dc2626"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Arrow path -->
+                            <line x1="50" y1="100" x2="650" y2="100" stroke="rgba(255,255,255,.08)" stroke-width="2"/>
+                            <!-- Distance markers -->
+                            <line x1="50" y1="85" x2="50" y2="115" stroke="var(--text-muted)" stroke-width="1.5"/>
+                            <text x="45" y="80" fill="var(--text-muted)" font-size="11" font-weight="600">Start</text>
+                            <!-- Wall -->
+                            <rect x="640" y="50" width="12" height="100" rx="2" fill="url(#wallGrad)" opacity=".8"/>
+                            <text x="658" y="55" fill="var(--text-muted)" font-size="11" font-weight="600">Wall</text>
+                            <!-- Distance labels on top -->
+                            <text x="180" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".6">½</text>
+                            <text x="320" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".5">½</text>
+                            <text x="430" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".4">½</text>
+                            <text x="510" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".3">½</text>
+                            <text x="560" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".2">½</text>
+                            <text x="595" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".1">½</text>
+                            <!-- Arrow (animated) -->
+                            <g>
+                                <polygon points="0,-8 14,0 0,8" fill="var(--amber)" opacity=".9">
+                                    <animateTransform attributeName="transform" type="translate" 
+                                        values="50,100;160,100;160,100;280,100;280,100;370,100;370,100;440,100;440,100;490,100;490,100;530,100;530,100;560,100;560,100;585,100;585,100;605,100;605,100;620,100;620,100;632,100;632,100;638,100"
+                                        dur="10s" repeatCount="indefinite" keyTimes="0;0.05;0.1;0.15;0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7;0.75;0.8;0.85;0.9;0.95;1" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>
+                                </polygon>
+                                <!-- Trailing dots showing past positions -->
+                                <circle cx="160" cy="100" r="2" fill="var(--amber)" opacity=".15"/>
+                                <circle cx="280" cy="100" r="2" fill="var(--amber)" opacity=".12"/>
+                                <circle cx="370" cy="100" r="2" fill="var(--amber)" opacity=".1"/>
+                                <circle cx="440" cy="100" r="2" fill="var(--amber)" opacity=".08"/>
+                                <circle cx="490" cy="100" r="2" fill="var(--amber)" opacity=".06"/>
+                                <circle cx="530" cy="100" r="2" fill="var(--amber)" opacity=".04"/>
+                            </g>
+                            <!-- Distance traveled counter -->
+                            <text x="350" y="148" fill="var(--text-sec)" font-size="12" text-anchor="middle">
+                                Distance traveled:
+                                <tspan fill="var(--amber)" font-weight="800">
+                                    <animate attributeName="textContent" values="0m;1m;1.5m;1.75m;1.875m;1.9375m;1.96875m;1.984375m;1.9921875m;1.99609375m;1.998046875m;1.9990234375m;1.99951171875m;1.999755859375m;1.9998779296875m;1.99993896484375m;1.999969482421875m;1.9999847412109375m;1.9999923706054688m;1.9999961853027344m;1.9999980926513672m" dur="10s" repeatCount="indefinite"/>
+                                </tspan>
+                            </text>
+                            <!-- "Limit = 2" label -->
+                            <text x="350" y="165" fill="var(--emerald)" font-size="13" font-weight="800" text-anchor="middle" opacity=".8">Limit = 2 meters  ✨</text>
+                        </svg>
+                        <div class="diagram-caption">The arrow covers half of what's left each time. After 10 steps, it's at 1.999998 meters. It NEVER reaches 2... but it gets <strong>so close</strong> that for all practical purposes, it IS 2. The <strong>limit</strong> of this journey is 2.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 First Big Idea</div>
+                        <div class="insight-text">A <strong>limit</strong> is the number you get closer and closer to, even if you never quite arrive.</div>
+                        <div class="insight-sub">Like the arrow approaching the wall — the limit is 2 meters, the actual target.</div>
+                    </div>
+
+                    <p><strong>Real-life example:</strong> When you walk toward a door, you cover half the remaining distance with each step. You never mathematically "reach" it, but you walk right through. The <strong>limit</strong> fixes Zeno's puzzle — it's the number your journey is <em>approaching</em>.</p>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: SEEING LIMITS ON GRAPHS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📈 Part 2: Watching Numbers "Get Close" on a Graph</span>
+                    <h2>What Does "Approaching 4" Look Like?</h2>
+
+                    <p>Let's take the world's simplest function: \(f(x) = x + 2\).</p>
+                    <p>When x is 1, f(x) = 3. When x is 1.5, f(x) = 3.5. When x is 1.9, f(x) = 3.9.</p>
+                    <p>As x gets closer and closer to <strong>2</strong>, what does f(x) get closer to?</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">👆 Watch the Point Approach x=2</div>
+                        <svg viewBox="0 0 500 400" width="500" height="400">
+                            <!-- Grid -->
+                            <defs>
+                                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+                                </pattern>
+                                <marker id="arrowAx" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4 Z" fill="rgba(255,255,255,.3)"/></marker>
+                            </defs>
+                            <rect width="500" height="400" fill="url(#grid)"/>
+                            <!-- Axes -->
+                            <line x1="40" y1="360" x2="480" y2="360" stroke="rgba(255,255,255,.2)" stroke-width="1.5" marker-end="url(#arrowAx)"/>
+                            <line x1="40" y1="360" x2="40" y2="30" stroke="rgba(255,255,255,.2)" stroke-width="1.5" marker-end="url(#arrowAx)"/>
+                            <!-- Labels -->
+                            <text x="475" y="378" fill="rgba(255,255,255,.4)" font-size="13" font-weight="600" text-anchor="end">x</text>
+                            <text x="30" y="38" fill="rgba(255,255,255,.4)" font-size="13" font-weight="600" text-anchor="middle">y</text>
+                            <!-- Axis numbers -->
+                            <text x="120" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">1</text>
+                            <text x="200" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">2</text>
+                            <text x="280" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">3</text>
+                            <text x="360" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">4</text>
+                            <text x="25" y="280" fill="var(--text-muted)" font-size="11" text-anchor="end">1</text>
+                            <text x="25" y="200" fill="var(--text-muted)" font-size="11" text-anchor="end">2</text>
+                            <text x="25" y="120" fill="var(--text-muted)" font-size="11" text-anchor="end">3</text>
+                            <text x="25" y="55" fill="var(--text-muted)" font-size="11" text-anchor="end">4</text>
+                            <!-- The line f(x) = x + 2 -->
+                            <line x1="40" y1="320" x2="440" y2="40" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="8,4"/>
+                            <!-- Target x=2 vertical dashed line -->
+                            <line x1="200" y1="360" x2="200" y2="40" stroke="rgba(167,139,250,.2)" stroke-width="1.5" stroke-dasharray="4,4"/>
+                            <!-- Target y=4 horizontal dashed line -->
+                            <line x1="40" y1="200" x2="480" y2="200" stroke="rgba(167,139,250,.2)" stroke-width="1.5" stroke-dasharray="4,4"/>
+                            <!-- Label at intersection -->
+                            <text x="210" y="195" fill="var(--purple)" font-size="12" font-weight="700">(2, 4)</text>
+                            <!-- Animated point moving along the line -->
+                            <circle r="8" fill="var(--amber)" filter="url(#glow)">
+                                <animate attributeName="cx" values="60;80;100;120;140;160;180;195;199;200;199;195;180;160;140;120;100;80;60" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="310;290;270;250;230;210;195;182;178;177.5;178;182;195;210;230;250;270;290;310" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="r" values="8;8;8;8;8;8;8;8;8;10;8;8;8;8;8;8;8;8;8" dur="8s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Coordinate display -->
+                            <text x="390" y="330" fill="var(--text-sec)" font-size="12" font-family="monospace">
+                                x = <tspan fill="var(--amber)" font-weight="800">
+                                    <animate attributeName="textContent" values="1.0;1.0;1.5;1.5;1.9;1.9;1.99;1.99;2.0;2.0;1.99;1.99;1.9;1.9;1.5;1.5;1.0;1.0" dur="8s" repeatCount="indefinite"/>
+                                </tspan>
+                            </text>
+                            <text x="390" y="348" fill="var(--text-sec)" font-size="12" font-family="monospace">
+                                y = <tspan fill="var(--emerald)" font-weight="800">
+                                    <animate attributeName="textContent" values="3.0;3.0;3.5;3.5;3.9;3.9;3.99;3.99;4.0;4.0;3.99;3.99;3.9;3.9;3.5;3.5;3.0;3.0" dur="8s" repeatCount="indefinite"/>
+                                </tspan>
+                            </text>
+                        </svg>
+                        <div class="diagram-caption">The orange dot moves along the line y = x+2. Watch the coordinates as it approaches x=2 — y gets closer and closer to <strong>4</strong>. The <strong>limit</strong> of f(x) as x approaches 2 is 4.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" onclick="document.querySelector('#anim1 circle').setAttribute('dur','8s')">▶ Play</button>
+                            <button class="ctrl-btn" onclick="document.querySelector('#anim1 circle').setAttribute('dur','20s')">🐢 Slow</button>
+                            <button class="ctrl-btn" onclick="document.querySelector('#anim1 circle').setAttribute('dur','3s')">⚡ Fast</button>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Second Big Idea</div>
+                        <div class="insight-text">The limit answers: "Where is the y-value <em>headed</em> as x gets close to some number?"</div>
+                        <div class="insight-sub">You don't care what happens AT x=2. You care what happens NEAR x=2.</div>
+                    </div>
+
+                    <!-- ========== LEFT vs RIGHT ========== -->
+                    <h3>The Two-Way Street: Left and Right</h3>
+                    <p>Imagine you're walking toward a streetlamp. You can approach it from the <strong>left side</strong> of the street or the <strong>right side</strong>. If the lamp is on, both paths lead to the same bright spot.</p>
+
+                    <p>In calculus, we call these <strong>one-sided limits</strong>:</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🚶 Left-Hand Limit vs Right-Hand Limit</div>
+                        <svg viewBox="0 0 500 320" width="500" height="320">
+                            <!-- Graph of f(x) = x² for x<2, f(x)=5-x for x>2 -->
+                            <!-- Axes -->
+                            <line x1="40" y1="280" x2="480" y2="280" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="40" y1="280" x2="40" y2="30" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <!-- Left curve: x² from x=0 to x=2 -->
+                            <path d="M40,280 Q80,240 120,200 Q160,140 180,100 Q190,80 198,60" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Right curve: 5-x from x=2 to x=4 -->
+                            <path d="M202,60 Q220,80 240,100 Q280,140 320,180 Q360,220 400,260 Q420,275 440,280" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Point at (2,4) from left -->
+                            <circle cx="200" cy="58" r="6" fill="var(--cyan)"/>
+                            <!-- Point at (2,3) from right -->
+                            <circle cx="200" cy="62" r="6" fill="var(--amber)"/>
+                            <!-- Labels -->
+                            <text x="120" y="160" fill="var(--cyan)" font-size="13" font-weight="700">From Left → y approaches 4</text>
+                            <text x="120" y="180" fill="var(--amber)" font-size="13" font-weight="700">From Right → y approaches 3</text>
+                            <text x="200" y="45" fill="var(--text-muted)" font-size="12" text-anchor="middle">x = 2</text>
+                            <line x1="200" y1="280" x2="200" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <!-- Left arrow approaching -->
+                            <text x="140" y="90" fill="var(--cyan)" font-size="16" opacity=".8">←</text>
+                            <!-- Right arrow approaching -->
+                            <text x="260" y="90" fill="var(--amber)" font-size="16" opacity=".8">→</text>
+                            <!-- Result -->
+                            <rect x="130" y="280" width="240" height="34" rx="8" fill="rgba(239,68,68,.08)" stroke="rgba(239,68,68,.2)" stroke-width="1"/>
+                            <text x="250" y="302" fill="var(--red)" font-size="13" font-weight="700" text-anchor="middle">⚠️ Left says 4, Right says 3 → <strong>No single limit!</strong></text>
+                        </svg>
+                        <div class="diagram-caption">When the left and right paths lead to DIFFERENT y-values, the limit does NOT exist. Like two people giving different answers — you can't trust either!</div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🔑</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Golden Rule of Limits</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p>A limit exists <strong>only if</strong> the left-hand limit <strong>equals</strong> the right-hand limit.</p>
+                            <p style="margin-top:6px">Think of it like a bridge: if both sides meet in the middle, you can cross. If they don't match, the bridge is broken — no limit!</p>
+                            <p style="margin-top:6px;color:var(--emerald);font-weight:600">Formula (just a label for what you already understand):</p>
+                            <div class="math-block">lim_{x→a} f(x) = L &nbsp;⟺&nbsp; lim_{x→a⁻} f(x) = lim_{x→a⁺} f(x) = L</div>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: THE HOLE — WHEN THE FUNCTION DOESN'T EXIST -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🕳️ Part 3: The Missing Point</span>
+                    <h2>What If the Point Disappears?</h2>
+
+                    <p>Here's the mind-bending part: <strong>The limit has NOTHING to do with what happens AT the point.</strong></p>
+
+                    <p>Imagine a function with a "hole" — like a graph where there's a missing dot at x=2. Maybe the function isn't defined there, or the point jumped somewhere else.</p>
+
+                    <p>Here's the magic: <strong>The limit can still exist!</strong> Because the limit only cares about the <em>journey</em>, not the <em>destination</em>.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🕳️ Same Journey, Different Destination</div>
+                        <svg viewBox="0 0 500 350" width="500" height="350">
+                            <defs>
+                                <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="500" height="350" fill="url(#grid2)"/>
+                            <!-- Axes -->
+                            <line x1="50" y1="310" x2="480" y2="310" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="50" y1="310" x2="50" y2="30" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <!-- x=2 marker -->
+                            <line x1="210" y1="310" x2="210" y2="30" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="210" y="328" fill="var(--text-muted)" font-size="11" text-anchor="middle">x=2</text>
+                            <!-- The line y = x+1 approaching from left -->
+                            <line x1="90" y1="270" x2="200" y2="130" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- The line y = x+1 from right (same) -->
+                            <line x1="220" y1="130" x2="440" y2="50" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- HOLE at x=2, y=3 -->
+                            <circle cx="210" cy="128" r="7" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="2,2"/>
+                            <text x="235" y="120" fill="var(--red)" font-size="11" font-weight="700">🧀 Hole! f(2) is gone!</text>
+                            <!-- Animated point approaching from left -->
+                            <circle r="7" fill="var(--amber)">
+                                <animate attributeName="cx" values="100;130;160;185;200;200;200;200;185;160;130;100" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="265;235;205;180;165;128;128;128;165;180;205;235" dur="6s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Point jumping to a different value -->
+                            <circle cx="210" cy="80" r="7" fill="var(--red)" opacity=".7">
+                                <animate attributeName="opacity" values="0;0;0;0;0;1;1;0;0;0;0;0" dur="6s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="225" y="75" fill="var(--red)" font-size="11" font-weight="700" opacity=".7">But f(2)=1 (different!)</text>
+                            <!-- Limit label -->
+                            <rect x="140" y="310" width="220" height="34" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+                            <text x="250" y="332" fill="var(--emerald)" font-size="13" font-weight="700" text-anchor="middle">Limit = 3 (the journey says 3!)</text>
+                        </svg>
+                        <div class="diagram-caption">The function f(2) might be undefined, or f(2) might equal 1. But the <strong>limit</strong> as x→2 is still 3, because from both sides, the y-values approach 3. Limit = the journey, not the destination.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Third Big Idea (Most Important!)</div>
+                        <div class="insight-text">Limit ≠ Function Value. The limit is about <strong>where you're going</strong>, not <strong>where you are</strong>.</div>
+                        <div class="insight-sub">You can have a limit even at a point where the function doesn't exist!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🎪 Real-Life Analogy</div>
+                        <div class="story-title">The GPS That Lost Your House</div>
+                        <div class="story-text">
+                            Imagine your GPS is guiding you to a friend's house. As you drive, the GPS says "Arriving at 42 Maple Street." But when you get there... the house number is 41! The house burned down and was replaced!<br><br>
+                            The <strong>limit</strong> is what the GPS predicted (42 Maple Street — the journey was pointing there). The <strong>function value</strong> is what's actually there now (41 — different!). Both can be different!
+                        </div>
+                        <div class="story-moral">🧠 Calculus students who only memorize formulas get confused here. Students who understand the <strong>journey vs destination</strong> idea never forget.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: DERIVATIVE = SPEEDOMETER -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">⛰️ Part 4: The Slope That Changes</span>
+                    <!-- course-figure:calculus-figure-2 -->
+<figure class="lesson-figure" data-figure="calculus-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Calculus Concept Flow Revision Diagram for GS1 Geography"><defs><marker id="arrowhead-lesson-calculus-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="20" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="70" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="70" dy="0">Limits</tspan></text><rect x="130" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="180" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="180" dy="0">Continuity &amp; Diff.</tspan></text><rect x="240" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="290" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="290" dy="0">Differentiation</tspan></text><rect x="350" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="400" y="166.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Applications of</tspan><tspan x="400" dy="16.25">Deriv.</tspan></text><rect x="460" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="510" y="175" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="510" dy="0">Integration</tspan></text><rect x="570" y="150" width="100" height="50" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="620" y="166.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="620" dy="0">Differential</tspan><tspan x="620" dy="16.25">Equations</tspan></text><path d="M 120 175 L 130 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 230 175 L 240 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 340 175 L 350 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 450 175 L 460 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/><path d="M 560 175 L 570 175" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-calculus-figure-2)"/></g><g><text x="125" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="125" dy="0">→</tspan></text><text x="235" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="235" dy="0">→</tspan></text><text x="345" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="345" dy="0">→</tspan></text><text x="455" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="455" dy="0">→</tspan></text><text x="565" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="565" dy="0">→</tspan></text><text x="20" y="30" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="20" dy="0">Exam hook: L'Hôpital's rule for 0/0, ∞/∞</tspan></text><text x="20" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="20" dy="0">Key: Fundamental Theorem links differentiation &amp; integration</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Calculus Concept Flow Revision Diagram for GS1 Geography</strong> — Shows the logical progression from limits to differential equations linking core calculus ideas.
+    &middot; <a href="../../../figures/svg-calculus-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+<h2>From Average Speed to Instant Speed</h2>
+
+                    <p>You're in a car. Your dad asks: <strong>"How fast are we going RIGHT NOW?"</strong></p>
+                    <p>You look at the speedometer. It says 60 km/h.</p>
+                    <p>But wait — "right now" is an <strong>instant</strong>. In zero time, you travel zero distance. So how can the speedometer possibly know your speed at a single instant?</p>
+
+                    <p>This is the exact same problem as Zeno's arrow! And the answer is the same: <strong>limits</strong>.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🚗 From "Average Speed" to "Instant Speed"</div>
+                        <svg viewBox="0 0 550 380" width="550" height="380">
+                            <!-- Background -->
+                            <rect width="550" height="380" fill="var(--bg-elevated)" rx="12"/>
+                            <!-- The distance curve -->
+                            <line x1="50" y1="330" x2="520" y2="330" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="50" y1="330" x2="50" y2="40" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <!-- Curve: s(t) = t² (distance vs time) -->
+                            <path d="M50,330 Q100,310 150,280 Q200,240 250,190 Q300,130 350,90 Q380,60 420,50" fill="none" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Car icon -->
+                            <text x="390" y="55" font-size="22" opacity=".9">🚗</text>
+                            <!-- Tangent line at t=3 (slope = 6) -->
+                            <line x1="260" y1="210" x2="330" y2="80" stroke="var(--emerald)" stroke-width="2" stroke-dasharray="6,3" opacity=".8"/>
+                            <!-- Secant lines (animated) -->
+                            <line x1="200" y1="260" x2="350" y2="90" stroke="var(--amber)" stroke-width="1.5" opacity=".5">
+                                <animate attributeName="x1" values="150;180;210;240;260;260;260;240;210;180;150" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="280;255;225;195;180;180;180;195;225;255;280" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values=".1;.2;.3;.4;.5;0;.5;.4;.3;.2;.1" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <!-- Labels -->
+                            <text x="400" y="340" fill="var(--text-muted)" font-size="12" text-anchor="middle">Time (t) →</text>
+                            <text x="30" y="190" fill="var(--text-muted)" font-size="12" text-anchor="middle" transform="rotate(-90,30,190)">Distance (s) →</text>
+                            <!-- Speedometer display -->
+                            <rect x="180" y="340" width="200" height="34" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+                            <text x="280" y="362" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle">
+                                Speed at this instant = 
+                                <tspan fill="var(--amber)">6 m/s</tspan>
+                            </text>
+                            <!-- Explanation -->
+                            <text x="280" y="280" fill="var(--text-sec)" font-size="11" text-anchor="middle" opacity=".7">As the secant line gets closer... it becomes the tangent (dashed green)</text>
+                        </svg>
+                        <div class="diagram-caption">The purple curve is your distance over time. The dashed green line is the <strong>tangent</strong> — it touches the curve at exactly one point. The <strong>slope</strong> of this tangent line = your instantaneous speed.</div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🚀</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Simple Secret of Derivatives</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p><strong>Step 1:</strong> To find average speed between two times, you do: (distance difference) / (time difference). That's the slope of the <strong>secant</strong> line connecting two points.</p>
+                            <p><strong>Step 2:</strong> To find INSTANT speed, make the time difference smaller and smaller. Like Zeno's arrow, shrink the window.</p>
+                            <p><strong>Step 3:</strong> As the time difference approaches ZERO, the secant line approaches the <strong>tangent</strong> line. The slope of the tangent = the derivative = your speed RIGHT NOW.</p>
+                            <p style="color:var(--emerald);font-weight:600;margin-top:8px">That's ALL a derivative is: the limit of slopes as the two points get infinitely close together.</p>
+                            <div class="math-block">Derivative = Slope of Tangent = lim_{h→0} (f(x+h) - f(x)) / h</div>
+                            <p style="color:var(--text-muted);font-size:.9em;margin-top:4px">Don't memorize this formula. Understand it: "As the gap h shrinks to zero, the secant becomes the tangent."</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 The Fourth Big Idea</div>
+                        <div class="insight-text">A <strong>derivative</strong> is just answering: "If I zoom in REALLY close, what's the slope at this exact point?"</div>
+                        <div class="insight-sub">Speedometer, hill steepness, stock market change — ALL are derivatives. One idea, infinite uses.</div>
+                    </div>
+
+                    <!-- ========== INTERACTIVE PLAYGROUND ========== -->
+                    <div class="playground">
+                        <div class="pg-title">🎮 Interactive: See the Secant Become the Tangent</div>
+                        <div class="pg-desc">Drag the slider to move the second point closer to the first. Watch the secant line (orange) become the tangent (green)!</div>
+                        <div style="text-align:center">
+                            <svg viewBox="0 0 500 350" width="100%" style="max-width:500px">
+                                <defs>
+                                    <pattern id="grid3" width="30" height="30" patternUnits="userSpaceOnUse">
+                                        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="500" height="320" fill="url(#grid3)"/>
+                                <line x1="40" y1="290" x2="480" y2="290" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                                <line x1="40" y1="290" x2="40" y2="30" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                                <!-- f(x) = x²/10 curve (scaled) -->
+                                <path d="M40,240 Q80,220 120,190 Q160,150 200,100 Q240,68 280,58 Q320,68 360,100 Q400,150 440,210" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round"/>
+                                <!-- Point at x=3 (fixed) -->
+                                <circle cx="250" cy="65" r="6" fill="var(--cyan)"/>
+                                <text x="250" y="55" fill="var(--cyan)" font-size="11" font-weight="700" text-anchor="middle">P (fixed)</text>
+                                <!-- Secant point (moving) -->
+                                <circle cx="180" cy="135" r="6" fill="var(--amber)" id="secantPoint"/>
+                                <text x="180" y="155" fill="var(--amber)" font-size="10" font-weight="600" text-anchor="middle" id="secantLabel">Q (far)</text>
+                                <!-- Secant line (orange) -->
+                                <line x1="180" y1="135" x2="250" y2="65" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5,3" id="secantLine"/>
+                                <!-- Tangent line (green) when close -->
+                                <line x1="180" y1="175" x2="320" y2="10" stroke="var(--emerald)" stroke-width="2" opacity="0" id="tangentLine"/>
+                                <!-- Labels -->
+                                <text x="250" y="305" fill="var(--text-muted)" font-size="11" text-anchor="middle">x →</text>
+                                <text x="20" y="170" fill="var(--text-muted)" font-size="11" text-anchor="middle" transform="rotate(-90,20,170)">y →</text>
+                                <!-- Slope display -->
+                                <rect x="300" y="300" width="180" height="20" rx="6" fill="rgba(255,255,255,.03)"/>
+                                <text x="390" y="314" fill="var(--text-sec)" font-size="11" text-anchor="middle" id="slopeDisplay">Secant slope: 7.0</text>
+                            </svg>
+                            <div class="slider-wrap">
+                                <span style="font-size:.9em;color:var(--text-muted)">Far apart</span>
+                                <input type="range" min="80" max="240" value="180" id="secantSlider" oninput="updateSecant(this.value)">
+                                <span style="font-size:.9em;color:var(--text-muted)">Very close</span>
+                                <span class="slider-val" id="sliderVal">x=2.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 5: STANDARD LIMITS (VISUAL FIRST) -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📐 Part 5: The Three Magic Limits (Without Memorizing)</span>
+                    <h2>Watch the Pattern, Don't Memorize the Formula</h2>
+
+                    <p>There are three limits that show up everywhere. Instead of memorizing them, let's <strong>see</strong> them.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎭 The Three Famous Limits (Watch the Pattern!)</div>
+                        <svg viewBox="0 0 700 300" width="700" height="300">
+                            <!-- Limit 1: sin x / x -->
+                            <rect x="20" y="20" width="200" height="260" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="120" y="50" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">① sin x / x</text>
+                            <!-- Graph -->
+                            <line x1="40" y1="200" x2="200" y2="200" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="120" y1="200" x2="120" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <!-- sin x / x curve approaching 1 -->
+                            <path d="M45,200 Q60,195 80,185 Q100,175 115,150 Q118,140 120,120 Q122,100 125,90" fill="none" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round"/>
+                            <!-- Animated point -->
+                            <circle r="6" fill="var(--amber)">
+                                <animate attributeName="cx" values="200;180;160;140;128;125;123;122;121;121;120" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;185;165;145;130;120;110;105;103;102;100" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="120" y="230" fill="var(--text-sec)" font-size="10" text-anchor="middle">→ 1 as x → 0</text>
+                            <text x="120" y="245" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Limit = 1</text>
+
+                            <!-- Limit 2: (e^x - 1) / x -->
+                            <rect x="250" y="20" width="200" height="260" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="350" y="50" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">② (eˣ - 1) / x</text>
+                            <line x1="270" y1="200" x2="430" y2="200" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="350" y1="200" x2="350" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <path d="M275,200 Q290,195 310,185 Q330,170 345,140 Q348,130 350,115 Q352,100 355,90" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle r="6" fill="var(--amber)">
+                                <animate attributeName="cx" values="430;410;390;370;358;355;353;352;351;351;350" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;185;165;145;130;120;110;105;103;102;100" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="350" y="230" fill="var(--text-sec)" font-size="10" text-anchor="middle">→ 1 as x → 0</text>
+                            <text x="350" y="245" fill="var(--cyan)" font-size="11" font-weight="700" text-anchor="middle">Limit = 1</text>
+
+                            <!-- Limit 3: (1+x)^(1/x) -->
+                            <rect x="480" y="20" width="200" height="260" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="580" y="50" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">③ (1+x)^(1/x)</text>
+                            <line x1="500" y1="200" x2="660" y2="200" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="580" y1="200" x2="580" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <path d="M505,200 Q520,195 540,185 Q560,170 575,145 Q578,130 580,115 Q582,100 585,92" fill="none" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle r="6" fill="var(--cyan)">
+                                <animate attributeName="cx" values="660;640;620;600;588;585;583;582;581;581;580" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;185;165;145;130;120;110;105;103;102;100" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="580" y="230" fill="var(--text-sec)" font-size="10" text-anchor="middle">→ e ≈ 2.718 as x → 0</text>
+                            <text x="580" y="245" fill="var(--amber)" font-size="11" font-weight="700" text-anchor="middle">Limit = e</text>
+
+                            <!-- Common insight -->
+                            <rect x="80" y="265" width="540" height="28" rx="8" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.1)" stroke-width="1"/>
+                            <text x="350" y="284" fill="var(--purple)" font-size="12" font-weight="600" text-anchor="middle">💡 All three → 0/0 form, but each approaches a DIFFERENT number!</text>
+                        </svg>
+                        <div class="diagram-caption">Watch all three graphs as x→0. They all start at 0/0 (undefined!), but each settles at a different y-value. The limit tells us which value each one approaches.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🍕 The Pizza Slice Analogy</div>
+                        <div class="story-title">Why sin x / x → 1</div>
+                        <div class="story-text">
+                            Imagine a pizza slice with a very small angle. The arc length (sin of the angle) and the straight-line length (the angle itself in radians) are <strong>almost the same</strong>. As the angle gets tiny, they're identical!<br><br>
+                            That's why sin x / x → 1 as x → 0. They become the same length. No formula needed — just picture a very thin pizza slice!
+                        </div>
+                        <div class="story-moral">🧠 Every limit has a <strong>visual story</strong>. Find the story, and you'll never need to memorize.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Part 6: Test Your Understanding (No Formulas!)</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> the ideas. No calculation needed — just reasoning!</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-algebra.html" class="btn btn-primary">← Algebra</a>
+                        <a href="lesson-coordinate-geometry.html" class="btn btn-success">Coordinate Geometry →</a>
+                    </div>
+                <!-- course-addon:start -->
+<h3>Higher-Order Derivatives and Taylor Polynomials</h3>
+<p>The first derivative gives the instantaneous rate of change. The second derivative measures how that rate itself changes — the curvature of the graph. In physics, the second derivative of position with respect to time is acceleration. In economics, the second derivative of a cost function indicates whether marginal cost is increasing or decreasing. Higher‑order derivatives are obtained by repeated differentiation: the n‑th derivative is denoted f⁽ⁿ⁾(x) or dⁿy/dxⁿ. When a function is infinitely differentiable at a point a, its Taylor polynomial of degree n centered at a is</p>
+<p>Pₙ(x) = f(a) + f′(a)(x−a) + f″(a)(x−a)²/2! + … + f⁽ⁿ⁾(a)(x−a)ⁿ/n!</p>
+<p>If the remainder term tends to zero as n → ∞, the infinite series becomes the Taylor series, which equals the function on its interval of convergence. The Maclaurin series is the special case a = 0. Classic examples: eˣ = Σ xⁿ/n!, sin x = Σ (−1)ⁿ x²ⁿ⁺¹/(2n+1)!, cos x = Σ (−1)ⁿ x²ⁿ/(2n)!. These series are derived by repeatedly differentiating the elementary functions and evaluating at zero. The radius of convergence can be found with the ratio test: for a series Σ cₙ(x−a)ⁿ, the series converges when lim |cₙ₊₁/cₙ|·|x−a| < 1.</p>
+<p>Applications include approximating transcendental functions, solving differential equations by series methods, and estimating errors via the Lagrange remainder Rₙ(x) = f⁽ⁿ⁺¹⁾(ξ)(x−a)ⁿ⁺¹/(n+1)! for some ξ between a and x. In numerical analysis, truncating the Taylor polynomial yields algorithms for calculators and computers. Understanding the pattern of derivatives — for instance, the cyclic derivatives of sin and cos — allows rapid construction of series without memorising each coefficient.</p>
+
+<h3>Improper Integrals and Convergence Criteria</h3>
+<p>An improper integral extends the definite integral to unbounded intervals or integrands with vertical asymptotes. There are two types: Type I integrates over an infinite interval, e.g. ∫₁^∞ 1/x² dx = lim<sub>b→∞</sub> ∫₁^b 1/x² dx = 1. Type II integrates a function that becomes infinite at an interior point, e.g. ∫₀¹ 1/√x dx = lim<sub>ε→0⁺</sub> ∫_ε¹ x<sup>−1/2</sup> dx = 2. Convergence means the limit exists and is finite; otherwise the integral diverges.</p>
+<p>Comparison tests are the primary tools. If 0 ≤ f(x) ≤ g(x) on [a,∞) and ∫ₐ^∞ g(x) dx converges, then ∫ₐ^∞ f(x) dx also converges. Conversely, if ∫ₐ^∞ f(x) dx diverges, then ∫ₐ^∞ g(x) dx diverges. The p‑integral ∫₁^∞ 1/x^p dx converges iff p > 1; ∫₀¹ 1/x^p dx converges iff p < 1. The limit comparison test uses lim<sub>x→∞</sub> f(x)/g(x) = L with 0 < L < ∞ to transfer convergence behaviour.</p>
+<p>Absolute convergence of an improper integral ∫ f(x) dx means ∫ |f(x)| dx converges. If an integral converges absolutely, it converges. Conditional convergence occurs when ∫ f(x) dx converges but ∫ |f(x)| dx diverges; the classic example is ∫₁^∞ sin x / x dx. The Dirichlet test and the alternating series integral analogue handle such cases. In probability theory, the Gaussian integral ∫<sub>−∞</sub><sup>∞</sup> e<sup>−x²</sup> dx = √π is evaluated by squaring the integral and switching to polar coordinates, a technique that also appears in the evaluation of the Gamma function Γ(z) = ∫₀^∞ t<sup>z−1</sup> e<sup>−t</sup> dt for Re(z) > 0.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Convergence of an Improper Integral</div>
+<div class="ex-text">Determine whether the integral ∫₂^∞ (ln x) / (x²) dx converges or diverges.</div>
+<div class="ex-soln">Compare with the p‑integral ∫₂^∞ 1/x<sup>3/2</sup> dx. For large x, ln x grows slower than any positive power of x, so there exists M such that ln x ≤ x<sup>1/4</sup> for x ≥ M. Then (ln x)/x² ≤ x<sup>1/4</sup>/x² = 1/x<sup>7/4</sup>. Since 7/4 > 1, the comparison integral converges. By the comparison test, the given integral converges. Alternatively, evaluate directly: let u = ln x, dv = x<sup>−2</sup> dx; integration by parts yields a finite limit as the upper bound tends to infinity.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When faced with an improper integral, first identify the type (infinite limit or singularity). Apply the p‑integral benchmark before attempting integration. If the integrand contains a logarithm or trigonometric factor, use limit comparison with a suitable power of x. Remember that absolute convergence guarantees convergence, but conditional convergence requires a separate test.</div>
+</div>
+
+<h3>Modeling with First‑Order Differential Equations</h3>
+<p>A first‑order differential equation relates a function y(x) to its derivative y′. The general form is dy/dx = f(x, y). Separable equations can be written as g(y) dy = h(x) dx and solved by direct integration. Linear equations have the form dy/dx + P(x) y = Q(x); the integrating factor μ(x) = exp(∫ P(x) dx) transforms the left side into d(μ y)/dx, yielding y = (1/μ) ∫ μ Q dx + C/μ.</p>
+<p>Exact equations satisfy M(x, y) dx + N(x, y) dy = 0 with ∂M/∂y = ∂N/∂x; then a potential function ψ(x, y) exists such that dψ = 0, giving the implicit solution ψ(x, y) = C. If the equation is not exact, an integrating factor depending only on x or only on y may restore exactness.</p>
+<p>Applications: exponential growth and decay (dy/dt = ky), Newton’s law of cooling (dT/dt = −k(T−Tₐ)), logistic population model (dP/dt = rP(1−P/K)), and mixing problems where the rate of change of solute equals inflow concentration times inflow rate minus outflow concentration times outflow rate. The logistic equation is separable; its solution P(t) = K / (1 + ((K−P₀)/P₀) e<sup>−rt</sup>) shows the characteristic S‑shaped curve. Phase line analysis of autonomous equations dy/dt = f(y) identifies equilibrium points (f(y)=0) and their stability by the sign of f′ at the equilibrium.</p>
+<p>Numerical methods such as Euler’s method (y<sub>n+1</sub> = y_n + h f(x_n, y_n)) and the improved Runge‑Kutta (RK4) scheme provide approximate solutions when analytic integration is impossible. Error analysis shows Euler’s method has global truncation error O(h), while RK4 achieves O(h⁴). Understanding the qualitative behaviour — direction fields, isoclines, and bifurcations — is often more valuable than a closed‑form expression.</p>
+
+<h3>Area Between Curves and Volumes of Revolution</h3>
+<p>The area between two curves y = f(x) and y = g(x) on [a, b] where f(x) ≥ g(x) is ∫ₐᵇ (f(x) − g(x)) dx. If the curves intersect, split the interval at the intersection points and integrate the absolute difference. For regions better described horizontally, integrate with respect to y: ∫<sub>c</sub><sup>d</sup> (x_right(y) − x_left(y)) dy.</p>
+<p>Volumes of solids generated by revolving a plane region about an axis are computed by the disk/washer method or the cylindrical shell method. Revolving about the x‑axis: disk volume = π ∫ₐᵇ [R(x)]² dx where R(x) is the outer radius; washer volume = π ∫ₐᵇ ([R_out(x)]² − [R_in(x)]²) dx. Revolving about the y‑axis: shell volume = 2π ∫ₐᵇ x·h(x) dx where h(x) is the height of the shell. Choosing the method that yields a simpler integral is a key skill.</p>
+<p>Pappus’s centroid theorems provide shortcuts: the volume of a solid of revolution equals the product of the area of the generating region and the distance traveled by its centroid (V = A·2π·d). The surface area of a surface of revolution about the x‑axis is S = 2π ∫ₐᵇ y √(1 + (dy/dx)²) dx. These formulas appear in engineering (tank design) and physics (moment of inertia). When the region is bounded by parametric curves x = x(t), y = y(t), the area is ∫ y(t) x′(t) dt and the volume about the x‑axis is π ∫ y(t)² x′(t) dt.</p>
+
+<h3>Parametric and Polar Integration Techniques</h3>
+<p>Parametric curves are given by x = f(t), y = g(t) on an interval α ≤ t ≤ β. The derivative dy/dx = (dy/dt)/(dx/dt) provided dx/dt ≠ 0. The arc length is L = ∫_α^β √((dx/dt)² + (dy/dt)²) dt. The area under a parametric curve (above the x‑axis) is A = ∫_α^β y(t) x′(t) dt. For a closed parametric curve traced once counter‑clockwise, the enclosed area is A = ½ ∮ (x dy − y dx) = ½ ∫_α^β (x(t) y′(t) − y(t) x′(t)) dt.</p>
+<p>Polar coordinates (r, θ) relate to Cartesian by x = r cos θ, y = r sin θ. A curve r = f(θ) has area swept from θ = α to β: A = ½ ∫_α^β [f(θ)]² dθ. The arc length in polar form is L = ∫_α^β √(r² + (dr/dθ)²) dθ. The slope of the tangent line is dy/dx = (r′ sin θ + r cos θ) / (r′ cos θ − r sin θ). Common polar curves include circles r = a, cardioids r = a(1 + cos θ), limaçons r = a + b cos θ, and roses r = a cos(kθ). The number of petals of a rose is k if k is odd, 2k if k is even.</p>
+<p>Converting between parametric, polar, and Cartesian forms often simplifies integration. For example, the cycloid x = a(t − sin t), y = a(1 − cos t) has area under one arch = 3πa², found by parametric integration. The Gaussian integral can also be evaluated by switching to polar coordinates in the double integral ∬ e<sup>−(x²+y²)</sup> dx dy. Mastery of these coordinate systems expands the toolbox for tackling integrals that are intractable in rectangular form.</p>
+
+<ul>
+<li>Confusing the order of subtraction in area between curves when the top function changes across the interval.</li>
+<li>Applying the disk method when the axis of revolution is not a boundary of the region, leading to an incorrect radius.</li>
+<li>Forgetting to check the condition dx/dt ≠ 0 before using dy/dx = (dy/dt)/(dx/dt) for parametric curves.</li>
+<li>Using the polar area formula ½∫ r² dθ without verifying that the curve does not cross the pole within the interval, which would double‑count area.</li>
+<li>Neglecting the absolute value in the comparison test for improper integrals, causing an incorrect conclusion about convergence.</li>
+<li>Assuming that a Taylor polynomial of degree n approximates the function equally well everywhere; the error grows with distance from the centre.</li>
+<li>Overlooking the need for an integrating factor that depends on both variables when the equation is not exact and no single‑variable factor exists.</li></ul>
+<h3>Leibniz Integral Rule and Differentiation Under the Integral Sign</h3>
+<p>The Leibniz integral rule gives a systematic way to differentiate an integral whose limits and integrand both depend on a parameter. If <em>f</em>(<em>x</em>,<em>t</em>) is continuous on a rectangle <em>a</em>(<em>x</em>) ≤ <em>t</em> ≤ <em>b</em>(<em>x</em>) and the partial derivative ∂<em>f</em>/∂<em>x</em> exists and is continuous there, while <em>a</em>(<em>x</em>) and <em>b</em>(<em>x</em>) are continuously differentiable, then</p>
+<p>d/d<em>x</em> ∫<sub><em>a</em>(<em>x</em>)</sub><sup><em>b</em>(<em>x</em>)</sup> <em>f</em>(<em>x</em>,<em>t</em>) d<em>t</em> = <em>f</em>(<em>x</em>,<em>b</em>(<em>x</em>)) <em>b</em>′(<em>x</em>) − <em>f</em>(<em>x</em>,<em>a</em>(<em>x</em>)) <em>a</em>′(<em>x</em>) + ∫<sub><em>a</em>(<em>x</em>)</sub><sup><em>b</em>(<em>x</em>)</sup> ∂<em>f</em>/∂<em>x</em> (<em>x</em>,<em>t</em>) d<em>t</em>.</p>
+<p>The rule is proved by writing the integral as a composition of the fundamental theorem of calculus and the chain rule. A common pitfall is forgetting the boundary terms when the limits are variable; they are essential whenever <em>a</em> or <em>b</em> depends on <em>x</em>. The rule also extends to higher‑order derivatives by repeated application, provided the required partial derivatives remain continuous.</p>
+<p>A classic application is the evaluation of the Dirichlet integral ∫<sub>0</sub><sup>∞</sup> sin <em>t</em>/<em>t</em> d<em>t</em>. Introduce a parameter <em>a</em> > 0 and consider <em>I</em>(<em>a</em>) = ∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>t</em></sup> sin <em>t</em>/<em>t</em> d<em>t</em>. Differentiating under the integral sign gives <em>I</em>′(<em>a</em>) = −∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>t</em></sup> sin <em>t</em> d<em>t</em> = −1/(<em>a</em><sup>2</sup>+1). Integrating back and using <em>I</em>(∞)=0 yields <em>I</em>(<em>a</em>) = π/2 − arctan <em>a</em>. Letting <em>a</em>→0<sup>+</sup> gives the desired value π/2.</p>
+<p>Another frequent use is the Gaussian integral with a parameter: ∫<sub>−∞</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em><sup>2</sup></sup> d<em>x</em> = √(π/<em>a</em>) for <em>a</em>>0. Differentiating with respect to <em>a</em> produces moments ∫<sub>−∞</sub><sup>∞</sup> <em>x</em><sup>2<em>n</em></sup> e<sup>−<em>a</em><em>x</em><sup>2</sup></sup> d<em>x</em> without repeated integration by parts. The technique is indispensable in physics and engineering where integrals depend on physical parameters such as temperature, frequency, or coupling constants.</p>
+<p>When applying the rule, always verify the continuity hypotheses on a domain that contains the parameter range of interest. If the integrand has a singularity that moves with the parameter, the standard Leibniz rule may fail and a more careful analysis using dominated convergence is required.</p>
+
+<h3>Beta and Gamma Functions and Their Applications</h3>
+<p>The Gamma function Γ(<em>z</em>) extends the factorial to complex numbers (except non‑positive integers) via the Euler integral Γ(<em>z</em>) = ∫<sub>0</sub><sup>∞</sup> <em>t</em><sup><em>z</em>−1</sup> e<sup>−<em>t</em></sup> d<em>t</em>, valid for Re(<em>z</em>)>0. It satisfies the functional equation Γ(<em>z</em>+1) = <em>z</em> Γ(<em>z</em>) and Γ(1)=1, so Γ(<em>n</em>+1)=<em>n</em>! for integers <em>n</em>≥0. The reflection formula Γ(<em>z</em>) Γ(1−<em>z</em>) = π / sin(π<em>z</em>) and the duplication formula Γ(<em>z</em>) Γ(<em>z</em>+½) = 2<sup>1−2<em>z</em></sup> √π Γ(2<em>z</em>) are powerful tools for simplifying products of Gamma values.</p>
+<p>The Beta function B(<em>p</em>,<em>q</em>) = ∫<sub>0</sub><sup>1</sup> <em>t</em><sup><em>p</em>−1</sup> (1−<em>t</em>)<sup><em>q</em>−1</sup> d<em>t</em> (Re(<em>p</em>),Re(<em>q</em>)>0) is symmetric and relates to Gamma by B(<em>p</em>,<em>q</em>) = Γ(<em>p</em>) Γ(<em>q</em>) / Γ(<em>p</em>+<em>q</em>). This identity converts many rational‑trigonometric integrals into Gamma ratios. For example, ∫<sub>0</sub><sup>π/2</sup> sin<sup><em>m</em></sup> θ cos<sup><em>n</em></sup> θ dθ = ½ B((<em>m</em>+1)/2,(<em>n</em>+1)/2) = ½ Γ((<em>m</em>+1)/2) Γ((<em>n</em>+1)/2) / Γ((<em>m</em>+<em>n</em>+2)/2).</p>
+<p>Beta integrals appear in probability theory: the Beta distribution density is proportional to <em>x</em><sup>α−1</sup>(1−<em>x</em>)<sup>β−1</sup> on [0,1]. The normalising constant is 1/B(α,β). In statistical mechanics, the partition function of an ideal gas involves Γ(3/2) = √π/2. The Gamma function also regularises divergent products via the Weierstrass product 1/Γ(<em>z</em>) = <em>z</em> e<sup>γ<em>z</em></sup> ∏<sub><em>n</em>=1</sub><sup>∞</sup> (1+<em>z</em>/<em>n</em>) e<sup>−<em>z</em>/<em>n</em></sup>, where γ is the Euler–Mascheroni constant.</p>
+<p>When evaluating definite integrals, a useful heuristic is to recognise the integrand as a Beta kernel after a suitable substitution. For instance, ∫<sub>0</sub><sup>∞</sup> <em>x</em><sup><em>s</em>−1</sup>/(1+<em>x</em>)<sup><em>s</em>+<em>t</em></sup> d<em>x</em> = B(<em>s</em>,<em>t</em>) via <em>x</em> = <em>u</em>/(1−<em>u</em>). The substitution <em>x</em> = tan<sup>2</sup> θ converts ∫<sub>0</sub><sup>∞</sup> <em>x</em><sup><em>p</em>−1</sup>/(1+<em>x</em>)<sup><em>p</em>+<em>q</em></sup> d<em>x</em> into a trigonometric Beta integral. Mastery of these transformations turns many seemingly intractable integrals into Gamma‑function arithmetic.</p>
+<p>Caution: the integral representations converge only when the real parts of the parameters are positive. Analytic continuation extends the functions to the whole complex plane (except poles), but any manipulation that relies on the integral form must respect the original domain of convergence.</p>
+
+<div class="example-box">
+<div class="ex-title">Differentiation Under the Integral Sign</div>
+<div class="ex-text">Evaluate ∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em></sup> sin(<em>b</em><em>x</em>)/<em>x</em> d<em>x</em> for <em>a</em>>0, <em>b</em>>0.</div>
+<div class="ex-soln">Define <em>I</em>(<em>a</em>) = ∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em></sup> sin(<em>b</em><em>x</em>)/<em>x</em> d<em>x</em>. The integrand and its <em>a</em>-derivative are continuous for <em>a</em>>0, so we may differentiate under the integral: <em>I</em>′(<em>a</em>) = −∫<sub>0</sub><sup>∞</sup> e<sup>−<em>a</em><em>x</em></sup> sin(<em>b</em><em>x</em>) d<em>x</em>. This elementary integral equals −<em>b</em>/(<em>a</em><sup>2</sup>+<em>b</em><sup>2</sup>). Integrate with respect to <em>a</em>: <em>I</em>(<em>a</em>) = −∫ <em>b</em>/(<em>a</em><sup>2</sup>+<em>b</em><sup>2</sup>) d<em>a</em> = −arctan(<em>a</em>/<em>b</em>) + C. As <em>a</em>→∞, the original integral tends to 0, so C = π/2. Hence <em>I</em>(<em>a</em>) = π/2 − arctan(<em>a</em>/<em>b</em>) = arctan(<em>b</em>/<em>a</em>).</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Parameter‑Differentiation Heuristic</div>
+<div class="tip-text">When an integral contains a parameter (e.g., exponential decay constant, frequency, power), try differentiating with respect to that parameter. The derivative often removes a troublesome denominator or produces a standard integral. After integrating back, fix the constant of integration by examining a limiting case where the integral is known (often the parameter → ∞ or → 0). This method converts many definite integrals into elementary antiderivatives.</div>
+</div>
+
+<h3>Power Series Methods for Linear Differential Equations</h3>
+<p>For a linear ODE <em>y</em>″ + <em>p</em>(<em>x</em>) <em>y</em>′ + <em>q</em>(<em>x</em>) <em>y</em> = 0 with analytic coefficients at <em>x</em>=<em>x</em><sub>0</sub>, a power‑series solution <em>y</em> = ∑<sub><em>n</em>=0</sub><sup>∞</sup> <em>a</em><sub><em>n</em></sub> (<em>x</em>−<em>x</em><sub>0</sub>)<sup><em>n</em></sup> exists and converges at least up to the nearest singularity of <em>p</em> or <em>q. Substituting the series and equating coefficients yields a recurrence relation for <em>a</em><sub><em>n</em></sub>. If <em>x</em><sub>0</sub> is an ordinary point (both <em>p</em> and <em>q</em> analytic), the recurrence determines all coefficients from two arbitrary constants <em>a</em><sub>0</sub>, <em>a</em><sub>1</sub>, giving the general solution.</em></p>
+<p>When <em>x</em><sub>0</sub> is a regular singular point, the Frobenius method assumes a solution of the form <em>y</em> = (<em>x</em>−<em>x</em><sub>0</sub>)<sup><em>r</em></sup> ∑<sub><em>n</em>=0</sub><sup>∞</sup> <em>a</em><sub><em>n</em></sub> (<em>x</em>−<em>x</em><sub>0</sub>)<sup><em>n</em></sup> with <em>a</em><sub>0</sub>≠0. Substitution produces the indicial equation, a quadratic in <em>r whose roots <em>r</em><sub>1</sub>, <em>r</em><sub>2</sub> dictate the structure of the series. If the roots differ by a non‑integer, two independent Frobenius series are obtained. If they are equal or differ by an integer, the second solution may involve a logarithmic term; the method of reduction of order or the derivative with respect to <em>r</em> constructs it.</em></p>
+<p>Classic examples include Bessel's equation <em>x</em><sup>2</sup> <em>y</em>″ + <em>x</em> <em>y</em>′ + (<em>x</em><sup>2</sup>−ν<sup>2</sup>) <em>y</em> = 0, whose solutions are Bessel functions <em>J</em><sub>ν</sub>(<em>x</em>) and <em>Y</em><sub>ν</sub>(<em>x</em>). The series for <em>J</em><sub>ν</sub> is ∑<sub><em>k</em>=0</sub><sup>∞</sup> (−1)<sup><em>k</em></sup> (<em>x</em>/2)<sup>2<em>k</em>+ν</sup> / (<em>k</em>! Γ(<em>k</em>+ν+1)). Legendre's equation (1−<em>x</em><sup>2</sup>) <em>y</em>″ − 2<em>x</em> <em>y</em>′ + ℓ(ℓ+1) <em>y</em> = 0 yields Legendre polynomials <em>P</em><sub>ℓ</sub>(<em>x</em>) when ℓ is a non‑negative integer; the series terminates, giving a polynomial of degree ℓ.</p>
+<p>Radius of convergence of the resulting series is at least the distance from <em>x</em><sub>0</sub> to the nearest singularity of the coefficients in the complex plane. For equations with polynomial coefficients (e.g., Airy, Hermite), the series converges everywhere, producing entire functions. In practice, one often computes a few terms to obtain a polynomial approximation valid near <em>x</em><sub>0</sub>, then uses analytic continuation or numerical integration for larger domains.</p>
+<p>A common error is to apply the ordinary‑point series method at a singular point without checking the indicial equation. Always classify the point first: compute limits (<em>x</em>−<em>x</em><sub>0</sub>)<em>p</em>(<em>x</em>) and (<em>x</em>−<em>x</em><sub>0</sub>)<sup>2</sup> <em>q</em>(<em>x</em>) as <em>x</em>→<em>x</em><sub>0</sub>. If both limits are finite, the point is regular singular and Frobenius applies; if either limit diverges, the point is irregular singular and series methods generally fail.</p>
+
+<h3>Asymptotic Analysis of Integrals: Laplace's Method and Watson's Lemma</h3>
+<p>Many integrals arising in applied mathematics have the form <em>I</em>(λ) = ∫<sub><em>a</em></sub><sup><em>b</em></sup> e<sup>λ <em>f</em>(<em>x</em>)</sup> <em>g</em>(<em>x</em>) d<em>x</em> with a large parameter λ → ∞. If <em>f</em> has a unique global maximum at an interior point <em>x</em><sub>0</sub> where <em>f</em>′(<em>x</em><sub>0</sub>)=0 and <em>f</em>″(<em>x</em><sub>0</sub>)<0, Laplace's method gives the leading asymptotic behaviour:</p>
+<p><em>I</em>(λ) ∼ e<sup>λ <em>f</em>(<em>x</em><sub>0</sub>)</sup> <em>g</em>(<em>x</em><sub>0</sub>) √(2π / (λ |<em>f</em>″(<em>x</em><sub>0</sub>)|)) as λ → ∞.</p>
+<p>The derivation expands <em>f</em> to second order and <em>g</em> to zeroth order around <em>x</em><sub>0</sub>, extends the integration limits to ±∞ (justified by the rapid decay of the Gaussian), and evaluates the resulting Gaussian integral. Higher‑order terms are obtained by retaining more terms in the Taylor expansions and using moments of the Gaussian.</p>
+<p>Watson's lemma addresses integrals of the form <em>J</em>(λ) = ∫<sub>0</sub><sup>∞</sup> e<sup>−λ <em>t</em></sup> <em>t</em><sup>α</sup> φ(<em>t</em>) d<em>t</em> with Re(α)>−1 and φ analytic at 0. Expanding φ(<em>t</em>) = ∑<sub><em>n</em>=0</sub><sup>∞</sup> φ<sub><em>n</em></sub> <em>t</em><sup><em>n</em></sup> and integrating termwise yields the asymptotic series</p>
+<p><em>J</em>(λ) ∼ ∑<sub><em>n</em>=0</sub><sup>∞</sup> φ<sub><em>n</em></sub> Γ(α+<em>n</em>+1) / λ<sup>α+<em>n</em>+1</sup> as λ → ∞.</p>
+<p>This series is typically divergent but provides excellent approximations when truncated at the optimal term. The lemma is the backbone of the method of steepest descent for contour integrals in the complex plane, where the integration path is deformed to pass through a saddle point of the exponent.</p>
+<p>An illustrative example is the Gamma function itself: Γ(<em>z</em>) = ∫<sub>0</sub><sup>∞</sup> <em>t</em><sup><em>z</em>−1</sup> e<sup>−<em>t</em></sup> d<em>t</em>. For large <em>z</em>, write <em>t</em> = <em>z</em> <em>u</em> to obtain Γ(<em>z</em>) = <em>z</em><sup><em>z</em></sup> e<sup>−<em>z</em></sup> ∫<sub>0</sub><sup>∞</sup> e<sup><em>z</em>(ln <em>u</em>−<em>u</em>+1)</sup> d<em>u</em>. The exponent has a maximum at <em>u</em>=1; applying Laplace's method yields Stirling's formula Γ(<em>z</em>) ∼ √(2π) <em>z</em><sup><em>z</em>−½</sup> e<sup>−<em>z</em></sup>.</p>
+<p>When using these methods, verify that the maximum (or saddle) is unique and that the contribution from endpoints is exponentially smaller. If the maximum lies at an endpoint, a modified version of Laplace's method (or the Erdélyi lemma) must be used, giving a different algebraic prefactor.</p>
+
+<h3>Multiple Integrals: Change of Variables and Jacobian Determinants</h3>
+<p>The change‑of‑variables formula for a double integral states that if a transformation (<em>u</em>,<em>v</em>) ↦ (<em>x</em>(<em>u</em>,<em>v</em>), <em>y</em>(<em>u</em>,<em>v</em>)) is one‑to‑one and continuously differentiable on a region <em>D</em> in the <em>uv</em>-plane, mapping it onto a region <em>R</em> in the <em>xy</em>-plane, then</p>
+<p>∬<sub><em>R</em></sub> <em>f</em>(<em>x</em>,<em>y</em>) d<em>x</em> d<em>y</em> = ∬<sub><em>D</em></sub> <em>f</em>(<em>x</em>(<em>u</em>,<em>v</em>), <em>y</em>(<em>u</em>,<em>v</em>)) |<em>J</em>| d<em>u</em> d<em>v</em>,</p>
+<p>where the Jacobian determinant <em>J</em> = ∂(<em>x</em>,<em>y</em>)/∂(<em>u</em>,<em>v</em>) = | ∂<em>x</em>/∂<em>u</em> ∂<em>x</em>/∂<em>v</em> ; ∂<em>y</em>/∂<em>u</em> ∂<em>y</em>/∂<em>v</em> |. The absolute value ensures the area element remains positive regardless of orientation.</p>
+<p>Polar coordinates are the canonical example: <em>x</em> = <em>r</em> cos θ, <em>y</em> = <em>r</em> sin θ, with <em>J</em> = <em>r</em>. The formula becomes ∬ <em>f</em>(<em>x</em>,<em>y</em>) d<em>x</em> d<em>y</em> = ∫∫ <em>f</em>(<em>r</em> cos θ, <em>r</em> sin θ) <em>r</em> d<em>r</em> dθ. For an ellipse <em>x</em><sup>2</sup>/<em>a</em><sup>2</sup> + <em>y</em><sup>2</sup>/<em>b</em><sup>2</sup> ≤ 1, the substitution <em>x</em> = <em>a</em> <em>r</em> cos θ, <em>y</em> = <em>b</em> <em>r</em> sin θ gives <em>J</em> = <em>a b r</em>, and the area is ∫<sub>0</sub><sup>2π</sup> ∫<sub>0</sub><sup>1</sup> <em>a b r</em> d<em>r</em> dθ = π <em>a b</em>.</p>
+<p>For triple integrals, the Jacobian is a 3×3 determinant. Spherical coordinates (<em>ρ</em>, θ, φ) with <em>x</em> = <em>ρ</em> sin φ cos θ, <em>y</em> = <em>ρ</em> sin φ sin θ, <em>z</em> = <em>ρ</em> cos φ have <em>J</em> = <em>ρ</em><sup>2</sup> sin φ. The volume of a sphere of radius <em>R</em> is ∫<sub>0</sub><sup>2π</sup> ∫<sub>0</sub><sup>π</sup> ∫<sub>0</sub><sup><em>R</em></sup> <em>ρ</em><sup>2</sup> sin φ d<em>ρ</em> dφ dθ = 4π <em>R</em><sup>3</sup>/3.</p>
+<p>When the transformation is not globally one‑to‑one (e.g., polar coordinates at the origin), the region must be split so that each piece has a well‑defined inverse. The Jacobian may vanish on a set of measure zero (the origin in polar coordinates); this does not affect the integral because the set has zero area.</p>
+<p>A practical strategy: sketch the region in both coordinate systems, identify the bounds for the new variables, compute the Jacobian, and rewrite the integrand. If the new integrand simplifies dramatically (e.g., becomes separable), the transformation is successful. Common choices include polar for circular symmetry, elliptical for ellipses, and parabolic or bipolar coordinates for problems with specific symmetries.</p>
+
+<ul>
+<li>Forgetting the absolute value of the Jacobian when the transformation reverses orientation.</li>
+<li>Applying the ordinary‑point power series method at a regular singular point without solving the indicial equation.</li>
+<li>Using Laplace's method when the maximum of the exponent occurs at an endpoint without adjusting the prefactor.</li>
+<li>Assuming the asymptotic series from Watson's lemma converges; it is usually divergent and must be truncated optimally.</li>
+<li>Neglecting to check the continuity of ∂<em>f</em>/∂<em>x</em> and the differentiability of the limits before differentiating under the integral sign.</li>
+<li>Misidentifying the region of convergence for a Frobenius series when the roots of the indicial equation differ by an integer.</li>
+<li>Review these traps before each practice test to avoid losing marks.</li></ul>
+<h3>Fourier Series and Transforms in Calculus</h3>
+<p>Fourier analysis extends the idea of representing a function as a sum of simple oscillatory components. For a piecewise‑smooth function <em>f</em>(x) defined on an interval of length 2π, the Fourier series is</p>
+<p><em>f</em>(x) ∼ a₀/2 + Σₙ₌₁^∞ [aₙ cos(nx) + bₙ sin(nx)]</p>
+<p>where the coefficients are given by the integrals</p>
+<p>aₙ = (1/π) ∫₋π^π <em>f</em>(x) cos(nx) dx, bₙ = (1/π) ∫₋π^π <em>f</em>(x) sin(nx) dx.</p>
+<p>Convergence is governed by Dirichlet conditions: at points of continuity the series converges to <em>f</em>(x); at a jump discontinuity it converges to the midpoint of the left and right limits. Parseval’s identity links the energy of the function to the sum of squares of its coefficients:</p>
+<p>(1/π) ∫₋π^π |<em>f</em>(x)|² dx = a₀²/2 + Σₙ₌₁^∞ (aₙ² + bₙ²).</p>
+<p>The Fourier transform generalises the series to non‑periodic functions on ℝ. For <em>f</em> ∈ L¹(ℝ) the transform is</p>
+<p>F(ω) = ∫₋∞^∞ <em>f</em>(x) e<sup>-iωx</sup> dx, <em>f</em>(x) = (1/2π) ∫₋∞^∞ F(ω) e<sup>iωx</sup> dω.</p>
+<p>Key properties — linearity, scaling, translation, modulation, convolution theorem (F(<em>f</em>*<em>g</em>) = F(<em>f</em>)·F(<em>g</em>)), and Plancherel’s theorem (energy preservation) — make the transform indispensable in solving differential equations, signal processing, and probability theory. The discrete Fourier transform (DFT) and its fast algorithm (FFT) provide computational tools for numerical work.</p>
+
+<h3>Complex Contour Integration and Residue Calculus</h3>
+<p>Integrals of real functions that are difficult by elementary methods often become tractable when the integrand is extended to a complex analytic function and integrated over a closed contour in the complex plane. Cauchy’s integral theorem states that for a function <em>f</em> analytic on and inside a simple closed contour C, ∮_C <em>f</em>(z) dz = 0. If <em>f</em> has isolated singularities inside C, the residue theorem gives</p>
+<p>∮_C <em>f</em>(z) dz = 2πi Σ Res(<em>f</em>, z_k),</p>
+<p>where the sum runs over all singularities z_k enclosed by C. The residue at a simple pole z₀ is lim<sub>z→z₀</sub> (z−z₀)<em>f</em>(z); for higher‑order poles the formula involves derivatives. Typical contours include the large semicircle in the upper half‑plane for integrals of rational functions times e<sup>iαx</sup> (Jordan’s lemma), keyhole contours for branch cuts, and rectangular contours for periodic integrands.</p>
+<p>Applications: evaluation of real definite integrals such as ∫₀^∞ sin x / x dx = π/2, ∫₋∞^∞ e<sup>-x²</sup> dx = √π, and integrals involving trigonometric or hyperbolic functions. The method also yields sums of series by integrating functions like π cot(πz) / z² around a large square. Careful estimation of the contour contribution at infinity is essential; the integrand must decay sufficiently fast for the arc integral to vanish.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Fourier Series of f(x)=x on (−π,π)</div>
+<div class="ex-text">Find the Fourier series of the odd function f(x)=x defined on (−π,π) and use it to evaluate Σₙ₌₁^∞ (−1)<sup>n+1</sup>/n.</div>
+<div class="ex-soln">Since f is odd, all aₙ = 0. Compute bₙ = (1/π) ∫₋π^π x sin(nx) dx. Integration by parts gives bₙ = (2(−1)<sup>n+1</sup>)/n. Thus f(x) ∼ 2 Σₙ₌₁^∞ (−1)<sup>n+1</sup> sin(nx)/n. At x = π/2 the series converges to π/2, yielding π/2 = 2 Σₙ₌₁^∞ (−1)<sup>n+1</sup> sin(nπ/2)/n. Only odd n contribute, sin((2k−1)π/2)= (−1)<sup>k+1</sup>. Hence π/2 = 2 Σ<sub>k=1</sub>^∞ 1/(2k−1)²? Wait, that gives a different series. Instead set x = π: the series converges to 0 (midpoint of jump), giving 0 = 2 Σ (−1)<sup>n+1</sup> sin(nπ)/n = 0, trivial. To obtain Σ (−1)<sup>n+1</sup>/n, evaluate at x = π/2? Actually the alternating harmonic series equals ln 2. Use the known Fourier series of the square wave or integrate the series termwise: ∫₀^x f(t) dt = x²/2 = Σ 2(−1)<sup>n+1</sup> (1−cos(nx))/n². Setting x = π gives π²/4 = Σ 2(−1)<sup>n+1</sup> (1−(−1)^n)/n² = 4 Σ<sub>k=1</sub>^∞ 1/(2k−1)², which yields Σ 1/(2k−1)² = π²/8. For the alternating harmonic series, consider the Fourier series of f(x)=x on (−π,π) and integrate from 0 to π: ∫₀^π x dx = π²/2 = 2 Σ (−1)<sup>n+1</sup> (1−(−1)^n)/n²? That again gives odd squares. The alternating harmonic series is obtained from the Fourier series of the sawtooth wave at x = π/2: π/2 = 2 Σ (−1)<sup>n+1</sup> sin(nπ/2)/n = 2 Σ<sub>k=1</sub>^∞ (−1)<sup>k+1</sup>/(2k−1). Thus Σ<sub>k=1</sub>^∞ (−1)<sup>k+1</sup>/(2k−1) = π/4. The required series Σ (−1)<sup>n+1</sup>/n = ln 2 follows from the Mercator series ln(1+x)= Σ (−1)<sup>n+1</sup> x^n/n with x=1. The Fourier computation confirms the value π/4 for the odd‑term subseries.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for a Fourier coefficient, first check parity of the function; odd/even symmetry eliminates half the integrals instantly. For contour integrals, sketch the poles and choose a contour that encloses the relevant ones while making the arc integral vanish — usually a large semicircle for e<sup>iαz</sup> with α>0 in the upper half‑plane. Write down the residue formula before computing residues; this prevents missing a factor of 2πi.</div>
+</div>
+
+<h3>Calculus of Variations and the Euler‑Lagrange Equation</h3>
+<p>The calculus of variations seeks functions that extremise a functional J[y] = ∫_a^b L(x, y, y') dx, where L is the Lagrangian. A necessary condition for an extremum is the Euler‑Lagrange equation</p>
+<p>∂L/∂y − d/dx (∂L/∂y') = 0.</p>
+<p>If L does not depend explicitly on x, the Beltrami identity L − y' ∂L/∂y' = constant provides a first integral. For problems with constraints, Lagrange multipliers introduce an auxiliary function λ(x) and the augmented Lagrangian L̃ = L + λ(x) g(x, y, y'). Natural boundary conditions arise when the endpoint values are free: ∂L/∂y' = 0 at the free endpoint. The second variation δ²J determines whether the stationary function yields a minimum, maximum, or saddle; the Legendre condition ∂²L/∂y'² > 0 (or < 0) is necessary for a minimum (maximum). Classic examples: the brachistochrone (cycloid), the catenary (hyperbolic cosine), and geodesics on surfaces. The method extends to multiple dependent variables, higher‑order derivatives (yielding the Euler‑Poisson equation), and to functionals with integral constraints (isoperimetric problems).</p>
+
+<h3>Numerical Quadrature: Gaussian Quadrature and Adaptive Methods</h3>
+<p>When an antiderivative cannot be expressed in elementary terms, numerical integration approximates ∫_a^b f(x) dx. Newton‑Cotes formulas (trapezoidal, Simpson) use equally spaced nodes; their error depends on high‑order derivatives of f. Gaussian quadrature chooses both nodes and weights to integrate polynomials of degree up to 2n−1 exactly with n function evaluations. For the standard interval [−1,1] the nodes are the zeros of the Legendre polynomial P_n(x) and the weights are w_i = 2 / [(1−x_i²) (P_n'(x_i))²]. The error term is (b−a)<sup>2n+1</sup> (n!)<sup>4</sup> / [(2n+1)((2n)!)<sup>3</sup>] f<sup>(2n)</sup>(ξ). Gauss‑Legendre quadrature is optimal for smooth functions on finite intervals. For weight functions w(x) (e.g., e<sup>−x</sup> on [0,∞) → Gauss‑Laguerre, e<sup>−x²</sup> on (−∞,∞) → Gauss‑Hermite) the nodes are zeros of the corresponding orthogonal polynomials.</p>
+<p>Adaptive quadrature recursively subdivides the interval until the estimated local error falls below a tolerance. A common strategy uses two rules of different orders (e.g., Simpson and Simpson’s 3/8) on the same subinterval; their difference estimates the error. The algorithm maintains a priority queue of subintervals with largest error estimates, refining them first. This approach handles endpoint singularities and sharp peaks efficiently. Error control is guaranteed if the integrand is sufficiently smooth on each final subinterval; otherwise the algorithm may stall, signalling a need for transformation (e.g., variable substitution to remove singularities).</p>
+
+<h3>Introduction to Stochastic Calculus: Itô’s Lemma</h3>
+<p>Stochastic calculus deals with integrals and differential equations driven by Brownian motion W_t. The Itô integral ∫<sub>0</sub>^t X_s dW_s is defined for adapted processes X_s with ∫<sub>0</sub>^t E[X_s²] ds < ∞; it is a martingale with zero mean and Itô isometry E[(∫<sub>0</sub>^t X_s dW_s)²] = ∫<sub>0</sub>^t E[X_s²] ds. For a twice‑differentiable function f(t, x), Itô’s lemma gives the differential of the process Y_t = f(t, W_t):</p>
+<p>dY_t = (∂f/∂t + ½ ∂²f/∂x²) dt + (∂f/∂x) dW_t.</p>
+<p>The extra ½ ∂²f/∂x² term distinguishes Itô calculus from ordinary calculus and originates from the quadratic variation of Brownian motion, dW_t² = dt. Applying Itô’s lemma to geometric Brownian motion dS_t = μ S_t dt + σ S_t dW_t yields the solution S_t = S<sub>0</sub> exp((μ−σ²/2)t + σ W_t). The Feynman‑Kac formula links parabolic PDEs to expectations of stochastic processes, providing a probabilistic representation for solutions of the heat equation and Black‑Scholes PDE. Stochastic differential equations (SDEs) of the form dX_t = a(t, X_t) dt + b(t, X_t) dW_t are solved by finding an integrating factor or by transforming to a simpler SDE via Itô’s lemma. Existence and uniqueness theorems require Lipschitz and linear growth conditions on a and b.</p>
+
+<ul>
+<li>Assuming Fourier series converge uniformly without checking Dirichlet conditions.</li>
+<li>Forgetting the factor 2πi in the residue theorem or misidentifying the order of a pole.</li>
+<li>Applying the Euler‑Lagrange equation when the functional depends on higher derivatives without using the Euler‑Poisson equation.</li>
+<li>Using Gauss‑Legendre quadrature on an integrand with an endpoint singularity without a suitable change of variables.</li>
+<li>Neglecting the Itô correction term ½ f<sub>xx</sub> dt when differentiating a function of Brownian motion.</li>
+<li>Treating the Itô integral as a standard Riemann‑Stieltjes integral and ignoring its martingale property.</li>
+<li>Overlooking the need for Lipschitz and growth conditions when asserting existence of solutions to an SDE.</li></ul>
+<h3>Vector Calculus: Gradient, Divergence, Curl and the Integral Theorems</h3>
+<p>The gradient of a scalar field <strong>φ</strong>(x, y, z) is the vector field ∇φ = (∂φ/∂x, ∂φ/∂y, ∂φ/∂z). It points in the direction of greatest increase of φ and its magnitude equals the rate of increase in that direction. The divergence of a vector field <strong>F</strong> = (P, Q, R) is the scalar ∇·F = ∂P/∂x + ∂Q/∂y + ∂R/∂z; it measures the net outward flux per unit volume. The curl of <strong>F</strong> is the vector ∇×F = (∂R/∂y − ∂Q/∂z, ∂P/∂z − ∂R/∂x, ∂Q/∂x − ∂P/∂y); it quantifies the local rotation of the field.</p>
+<p>Three fundamental theorems connect these differential operators to integrals over regions, surfaces, and curves. The Gradient Theorem (also called the Fundamental Theorem for Line Integrals) states that for a continuously differentiable scalar field φ, ∫_C ∇φ·dr = φ(r(b)) − φ(r(a)) where C is any smooth curve from r(a) to r(b). This shows that the line integral of a gradient field is path‑independent.</p>
+<p>Green’s Theorem in the plane relates a line integral around a simple closed curve C to a double integral over the region D it encloses: ∮_C (P dx + Q dy) = ∬_D (∂Q/∂x − ∂P/∂y) dA. It is the two‑dimensional analogue of the Kelvin–Stokes theorem.</p>
+<p>Stokes’ Theorem generalises Green’s Theorem to three dimensions: ∮_C F·dr = ∬_S (∇×F)·n dS, where S is an oriented surface with boundary C and n is the unit normal consistent with the orientation of C. The theorem converts a circulation integral into a flux of curl.</p>
+<p>The Divergence Theorem (Gauss’s Theorem) states ∬_∂V F·n dS = ∭_V (∇·F) dV, where ∂V is the closed surface bounding the volume V. It equates the total outward flux through the boundary to the volume integral of divergence.</p>
+<p>These theorems are not merely computational tools; they encode deep topological information. For instance, a vector field with zero curl on a simply connected domain is a gradient field, and a field with zero divergence can be expressed as the curl of a vector potential. In electromagnetism, Maxwell’s equations are compactly written using these operators and theorems.</p>
+<p>When applying the theorems, orientation is critical. The right‑hand rule determines the direction of n for Stokes’ Theorem, while outward normal is used for the Divergence Theorem. Mis‑orienting a surface or curve flips the sign of the result, a frequent source of error in examinations.</p>
+
+<h3>Fractional Calculus: Riemann–Liouville and Caputo Derivatives</h3>
+<p>Fractional calculus extends the concept of derivatives and integrals to non‑integer orders. The Riemann–Liouville fractional integral of order α > 0 for a function f(t) defined on [a, b] is (I^α_a f)(t) = 1/Γ(α) ∫_a^t (t−τ)<sup>α−1</sup> f(τ) dτ, where Γ is the Gamma function. The corresponding Riemann–Liouville derivative of order α (with n−1 < α ≤ n) is D^α_a f(t) = d^n/dt^n (I<sup>n−α</sup>_a f)(t). This definition requires the function to be sufficiently smooth and the lower limit a is usually taken as 0 or −∞.</p>
+<p>The Caputo derivative modifies the order of operations to avoid initial‑value problems involving fractional derivatives of constants. For the same α, the Caputo derivative is ^C D^α_a f(t) = I<sup>n−α</sup>_a (d^n f/dt^n)(t). A key advantage is that the Caputo derivative of a constant is zero, and initial conditions for fractional differential equations can be expressed in terms of integer‑order derivatives, matching physical intuition.</p>
+<p>Both operators satisfy linearity and a semigroup property for integrals: I^α I^β = I<sup>α+β</sup>. However, the derivative operators do not generally commute, and the Leibniz rule takes a more complicated form involving infinite series of binomial coefficients.</p>
+<p>Applications appear in viscoelasticity, anomalous diffusion, and control theory. The fractional relaxation equation ^C D^α_t u(t) + λ u(t) = 0 yields solutions in terms of the Mittag‑Leffler function E_α(−λ t^α), which generalises the exponential. Numerical evaluation of fractional derivatives often uses Grünwald–Letnikov approximations or spectral methods based on orthogonal polynomials.</p>
+<p>When solving fractional differential equations, one must specify whether the Riemann–Liouville or Caputo sense is used, because the solution spaces differ. The Laplace transform of the Caputo derivative is s^α F(s) − Σ<sub>k=0</sub><sup>n−1</sup> s<sup>α−1−k</sup> f<sup>(k)</sup>(0+), while the Riemann–Liouville transform involves fractional initial values that are rarely measurable.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Caputo Derivative of a Power Function</div>
+<div class="ex-text">Compute the Caputo derivative of order α (0 < α < 1) of f(t) = t^β with β > 0, assuming lower limit a = 0.</div>
+<div class="ex-soln">For 0 < α < 1, n = 1. The Caputo derivative is ^C D^α<sub>0</sub> t^β = I<sup>1−α</sup><sub>0</sub> (d/dt t^β) = I<sup>1−α</sup><sub>0</sub> (β t<sup>β−1</sup>). Using the Riemann–Liouville integral formula, I<sup>1−α</sup><sub>0</sub> t<sup>β−1</sup> = Γ(β)/Γ(β+1−α) t<sup>β−α</sup>. Multiplying by β gives β Γ(β)/Γ(β+1−α) t<sup>β−α</sup> = Γ(β+1)/Γ(β+1−α) t<sup>β−α</sup>. This matches the known formula for the Caputo derivative of a power function.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a problem asks for a fractional derivative, first identify the order α and the lower limit. Write down the definition (Riemann–Liouville or Caputo) explicitly; this earns method marks even if the final integration is messy. For power‑law functions, memorise the Gamma‑function result Γ(β+1)/Γ(β+1−α) t<sup>β−α</sup> for Caputo and Γ(β+1)/Γ(β+1−α) t<sup>β−α</sup> for Riemann–Liouville when β > α−1. Check whether the initial conditions are given in integer‑order form — if so, Caputo is the natural choice.</div>
+</div>
+
+<h3>Functional Analysis Foundations: Banach and Hilbert Spaces in Calculus</h3>
+<p>Many advanced calculus problems are naturally posed in infinite‑dimensional vector spaces. A normed space (X, ‖·‖) is a vector space equipped with a norm satisfying positivity, homogeneity, and the triangle inequality. Completeness — every Cauchy sequence converges in X — upgrades a normed space to a Banach space. The space C[a, b] of continuous functions with the supremum norm ‖f‖_∞ = sup<sub>x∈[a,b]</sub> |f(x)| is a Banach space, while the subspace of polynomials is not complete.</p>
+<p>A Hilbert space is a Banach space whose norm arises from an inner product ⟨·,·⟩ satisfying linearity, conjugate symmetry, and positive definiteness. The classic example is L²[a, b] with ⟨f,g⟩ = ∫_a^b f(x) g(x) dx. The inner product induces the norm ‖f‖₂ = √⟨f,f⟩ and provides geometric notions such as orthogonality, projection, and the Pythagorean theorem.</p>
+<p>The Riesz Representation Theorem states that every continuous linear functional on a Hilbert space H can be written uniquely as ⟨·, y⟩ for some y ∈ H. This underpins the weak formulation of boundary‑value problems: find u ∈ H such that a(u, v) = ⟨f, v⟩ for all v ∈ H, where a(·,·) is a bilinear form.</p>
+<p>The Lax–Milgram Theorem guarantees existence and uniqueness of solutions to such variational problems when a(·,·) is bounded and coercive. This is the theoretical backbone of the finite element method.</p>
+<p>Compact operators map bounded sets to relatively compact sets. The spectral theorem for compact self‑adjoint operators on a Hilbert space yields a countable orthonormal basis of eigenvectors with eigenvalues accumulating only at zero. This explains the convergence of Fourier series in L² and the discrete spectrum of Sturm–Liouville problems.</p>
+<p>In Banach spaces, the Hahn–Banach Theorem allows extension of linear functionals without increasing norm, and the Open Mapping Theorem ensures that a surjective bounded linear operator between Banach spaces is an open map. These results are essential when proving well‑posedness of integral equations and when studying the Fréchet derivative in nonlinear analysis.</p>
+
+<h3>Numerical Solution of Ordinary Differential Equations: Runge–Kutta and Multistep Methods</h3>
+<p>For an initial‑value problem y' = f(t, y), y(t₀) = y₀, one‑step methods compute y<sub>n+1</sub> from y_n alone. The classical fourth‑order Runge–Kutta (RK4) uses four evaluations: k₁ = f(t_n, y_n), k₂ = f(t_n + h/2, y_n + h k₁/2), k₃ = f(t_n + h/2, y_n + h k₂/2), k₄ = f(t_n + h, y_n + h k₃), then y<sub>n+1</sub> = y_n + h/6 (k₁ + 2k₂ + 2k₃ + k₄). Its local truncation error is O(h⁵), giving global error O(h⁴).</p>
+<p>Embedded Runge–Kutta pairs (e.g., Dormand–Prince 5(4)) provide two estimates of different orders from the same function evaluations, enabling adaptive step‑size control. The step is accepted if the estimated error ≤ tolerance; otherwise it is rejected and h is reduced.</p>
+<p>Multistep methods use several previous values. The Adams–Bashforth explicit family and Adams–Moulton implicit family are derived by integrating polynomial interpolants of f. For example, the two‑step Adams–Bashforth formula is y<sub>n+1</sub> = y_n + h/2 (3 f_n − f<sub>n−1</sub>). Implicit methods like the trapezoidal rule y<sub>n+1</sub> = y_n + h/2 (f_n + f<sub>n+1</sub>) are A‑stable, making them suitable for stiff problems where explicit methods require prohibitively small steps.</p>
+<p>Stiffness arises when the Jacobian ∂f/∂y has eigenvalues with large negative real parts. Backward Differentiation Formulas (BDF) of orders 1 to 6 are the standard for stiff systems; BDF2 reads y<sub>n+1</sub> − 4/3 y_n + 1/3 y<sub>n−1</sub> = 2/3 h f<sub>n+1</sub>. These are solved by Newton iteration at each step.</p>
+<p>Convergence of a multistep method requires consistency (local truncation error → 0) and zero‑stability (roots of the characteristic polynomial lie on or inside the unit circle, with simple roots on the circle). The Dahlquist equivalence theorem states that for linear multistep methods, consistency + zero‑stability ⇔ convergence.</p>
+<p>When implementing, monitor the condition number of the Jacobian in implicit steps; a poorly scaled problem can cause Newton divergence. Scaling variables and using line search or trust‑region strategies improves robustness.</p>
+
+<h3>Calculus of Moving Surfaces: Shape Derivatives and Applications</h3>
+<p>Shape optimisation asks how a functional J(Ω) = ∫_Ω f(x, u, ∇u) dx changes when the domain Ω is perturbed by a velocity field V. The material derivative of a scalar field u defined on the moving domain is Du/Dt = ∂u/∂t + V·∇u. The shape derivative of J in direction V is dJ(Ω; V) = lim<sub>ε→0</sub> (J(Ω_ε) − J(Ω))/ε, where Ω_ε = {x + ε V(x) : x ∈ Ω}.</p>
+<p>Using the Reynolds transport theorem, d/dt ∫<sub>Ω(t)</sub> φ dx = ∫<sub>Ω(t)</sub> (∂φ/∂t + ∇·(φ V)) dx. For a functional depending on a state variable u that solves a PDE on Ω, the shape derivative splits into a boundary integral involving the adjoint state p: dJ(Ω; V) = ∫<sub>∂Ω</sub> G(u, p, ∇u, ∇p) V·n ds, where n is the outward unit normal. This boundary expression is the basis of gradient‑based shape optimisation algorithms.</p>
+<p>The Hadamard structure theorem guarantees that, under sufficient regularity, the shape derivative depends only on the normal component V·n on the boundary. Tangential components merely reparameterise the boundary and do not affect the value of the functional.</p>
+<p>In fluid‑structure interaction, the shape derivative of the drag functional leads to the adjoint Navier–Stokes equations. In electromagnetics, shape optimisation of waveguides uses the adjoint Maxwell system. The level‑set method represents the evolving boundary implicitly as the zero level set of a function φ, and the Hamilton–Jacobi equation φ_t + V_n |∇φ| = 0 moves the interface with normal velocity V_n derived from the shape gradient.</p>
+<p>Numerical implementation requires accurate computation of boundary normals and curvature. High‑order finite elements or isogeometric analysis (NURBS) provide the needed geometric fidelity. Mesh deformation techniques (e.g., elasticity‑based mesh morphing) keep the computational mesh aligned with the moving boundary without remeshing at every iteration.</p>
+
+<ul>
+<li>Confusing the orientation of the normal vector in Stokes’ and Divergence Theorems, which flips the sign of the result.</li>
+<li>Applying the Riemann–Liouville derivative when initial conditions are given in integer‑order form; the Caputo derivative is appropriate.</li>
+<li>Assuming every normed space is complete; many function spaces (e.g., polynomials under sup norm) are not Banach.</li>
+<li>Using an explicit Runge–Kutta method on a stiff problem without step‑size control, leading to instability or excessive computation.</li>
+<li>Neglecting the zero‑stability condition when analysing a multistep method; a consistent but not zero‑stable method diverges.</li>
+<li>Treating tangential boundary perturbations as contributing to the shape derivative; only the normal component matters by Hadamard’s theorem.</li>
+<li>Forgetting to verify the coercivity condition in the Lax–Milgram theorem before claiming existence of a weak solution.</li></ul>
+<h3>Distribution Theory and Generalized Functions</h3>
+<p>The classical notion of a function is insufficient for many problems in physics and engineering where objects such as the Dirac delta appear naturally. Distribution theory, introduced by Laurent Schwartz in the 1940s, extends the space of test functions <strong>𝒟(ℝⁿ)</strong> (infinitely differentiable functions with compact support) to its continuous dual <strong>𝒟'(ℝⁿ)</strong>, the space of distributions. A distribution <em>T</em> acts linearly on test functions φ via ⟨T, φ⟩, and differentiation is defined by transposition: ⟨∂ᵅT, φ⟩ = (−1)<sup>|α|</sup>⟨T, ∂ᵅφ⟩. This definition makes every distribution infinitely differentiable, and the derivative coincides with the classical derivative when the latter exists.</p>
+<p>Key examples include the Heaviside step function H, whose distributional derivative is the Dirac delta δ, and the principal value distribution p.v.(1/x) which arises in Hilbert transforms. Convolution of a distribution with a test function yields a smooth function, and the Fourier transform extends to tempered distributions <strong>𝒮'(ℝⁿ)</strong>, the dual of the Schwartz space <strong>𝒮(ℝⁿ)</strong>. The Paley–Wiener theorem characterises distributions with compact support via entire functions of exponential type. In applications, distributional solutions of linear PDEs (e.g., fundamental solutions of the Laplacian) are obtained by solving 𝛥E = δ, giving E(x) = −(1/2π) log|x| in two dimensions and E(x) = 1/(4π|x|) in three dimensions.</p>
+<p>Operations such as multiplication of a distribution by a smooth function are well defined, but the product of two arbitrary distributions is generally not. This limitation leads to Colombeau algebras, which embed distributions into a differential algebra where nonlinear operations become possible. The theory also underpins the rigorous formulation of quantum field theory, where operator-valued distributions replace pointwise fields.</p>
+
+<h3>Optimal Control Theory and Pontryagin's Maximum Principle</h3>
+<p>Optimal control seeks a control function u(t) ∈ U ⊂ ℝᵐ that steers a dynamical system ẋ = f(x, u, t), x(t₀) = x₀, to minimise a cost functional J = φ(x(t_f), t_f) + ∫<sub>t₀</sub><sup>t_f</sup> L(x, u, t) dt. The Pontryagin Maximum Principle (PMP), proved by Lev Pontryagin and his collaborators in 1956, provides necessary conditions for optimality. Introduce the Hamiltonian H(x, u, λ, t) = λᵀ f(x, u, t) − L(x, u, t) where λ(t) ∈ ℝⁿ is the costate (adjoint) vector. If u*(·) is optimal with corresponding trajectory x*(·), there exists a nontrivial absolutely continuous λ(·) such that:</p>
+<ul>
+<li>State equation: ẋ* = ∂H/∂λ = f(x*, u*, t).</li>
+<li>Costate equation: λ̇ = −∂H/∂x.</li>
+<li>Maximum condition: H(x*(t), u*(t), λ(t), t) = max<sub>v∈U</sub> H(x*(t), v, λ(t), t) for almost every t.</li>
+<li>Transversality condition: λ(t_f) = ∂φ/∂x (x*(t_f), t_f) if the terminal state is free; otherwise λ(t_f) is free subject to the terminal constraint.</li>
+</ul>
+<p>The PMP reduces the infinite‑dimensional optimisation to a two‑point boundary value problem. For linear‑quadratic problems (ẋ = Ax + Bu, J = ½∫(xᵀQx + uᵀRu)dt) the maximum condition yields u* = −R⁻¹Bᵀλ, and the costate satisfies λ̇ = −Aᵀλ − Qx. Combining gives the Riccati differential equation for the symmetric matrix P(t) where λ = Px, leading to the optimal feedback law u = −Kx with K = R⁻¹BᵀP. The principle also handles state constraints via multiplier functions and yields the bang‑bang property when the Hamiltonian is linear in u and U is a convex polytope.</p>
+<p>Extensions include the Hamilton–Jacobi–Bellman (HJB) equation, which provides a sufficient condition via dynamic programming: V_t + min_u {L + V_x·f} = 0 with V(x, t_f) = φ(x, t_f). Viscosity solutions allow the HJB to be interpreted for nonsmooth value functions. In stochastic control, the Hamiltonian acquires a second‑order term ½ Tr(σσᵀV<sub>xx</sub>) and the maximum principle involves backward stochastic differential equations.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Minimum‑Fuel Rocket Ascent</div>
+<div class="ex-text">A rocket of mass m(t) moves vertically with thrust u(t) ∈ [0, T_max] and mass flow ṁ = −α u. Dynamics: ḣ = v, v̇ = u/m − g, ṁ = −α u. Minimise fuel consumption J = ∫ u dt from t=0 to free final time t_f, subject to h(t_f)=H, v(t_f)=0. Apply PMP to derive the optimal thrust profile.</div>
+<div class="ex-soln">Define state x = (h, v, m)ᵀ, costate λ = (λ_h, λ_v, λ_m)ᵀ. Hamiltonian H = λ_h v + λ_v (u/m − g) − λ_m α u − u. Costate equations: λ̇_h = 0 ⇒ λ_h = const; λ̇_v = −λ_h; λ̇_m = λ_v u/m². Maximum condition: maximise H over u ∈ [0, T_max]. Since H is linear in u, the optimal control is bang‑bang: u* = T_max if switching function σ = λ_v/m − λ_m α − 1 > 0, and u* = 0 if σ < 0. The transversality condition for free t_f gives H(t_f)=0. Solving the two‑point boundary value problem yields a single switch from full thrust to coast, a classic “bang‑coast” trajectory. The switching time is determined by the terminal constraints h=H, v=0.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy for Optimal Control</div>
+<div class="tip-text">When a problem asks for necessary conditions, write the Hamiltonian first, then list the four PMP items in order. For linear‑quadratic problems, recognise the Riccati equation and state the feedback gain K = R⁻¹BᵀP. If the control set is a box, the optimal control is bang‑bang or singular; check the switching function. Always verify the transversality condition for free terminal time or state. A quick sketch of the switching structure earns partial credit even if the full boundary‑value solution is not completed.</div>
+</div>
+
+<h3>Homogenization Theory for Periodic Media</h3>
+<p>Composite materials with rapidly oscillating coefficients arise in elasticity, conductivity, and fluid flow through porous media. Homogenization provides a systematic way to replace a heterogeneous medium by an effective homogeneous one. Consider the elliptic boundary value problem −∇·(A(x/ε)∇u_ε) = f in Ω, u_ε = 0 on ∂Ω, where A(y) is Y‑periodic (Y = [0,1]ⁿ) and uniformly elliptic. As ε → 0, u_ε converges weakly in H¹₀(Ω) to u₀ solving −∇·(A^hom∇u₀) = f with the same boundary condition. The effective tensor A^hom is given by A^hom<sub>ij</sub> = ∫_Y A(y)(e_i + ∇_y χ_i)·(e_j + ∇_y χ_j) dy, where χ_i are the Y‑periodic correctors solving −∇_y·(A(y)(e_i + ∇_y χ_i)) = 0 in Y with zero mean.</p>
+<p>The two‑scale convergence method (Nguetseng, Allaire) gives a compactness framework: a sequence u_ε two‑scale converges to u₀(x,y) if ∫_Ω u_ε(x) φ(x, x/ε) dx → ∫_Ω∫_Y u₀(x,y) φ(x,y) dy dx for all smooth φ. This yields the limit equation directly and handles nonlinear monotone operators via the notion of H‑convergence (Murat–Tartar). For time‑dependent problems such as the heat equation with periodic coefficients, the homogenised equation retains the same time derivative but with the effective tensor. In perforated domains (ε‑periodic holes), the limit may acquire a zero‑order term (strange term) reflecting the capacity of the holes.</p>
+<p>Quantitative estimates (error bounds) are available: ‖u_ε − u₀ − ε χ(x/ε)·∇u₀‖<sub>H¹</sub> ≤ C ε ‖f‖<sub>L²</sub>. Numerical homogenization (FE², MsFEM) computes the correctors on representative volume elements and assembles the macroscopic stiffness matrix. The theory extends to stochastic stationary ergodic coefficients, where the effective tensor is defined by an expectation over the probability space.</p>
+
+<h3>Spectral Theory of Sturm–Liouville Operators</h3>
+<p>The regular Sturm–Liouville problem on [a,b] is −(p(x) y')' + q(x) y = λ w(x) y with separated boundary conditions α₁ y(a) + α₂ y'(a) = 0, β₁ y(b) + β₂ y'(b) = 0, where p, q, w are real‑valued, p>0, w>0, and p, q, w ∈ C¹[a,b]. The associated differential operator L y = (1/w)(−(p y')' + q y) is self‑adjoint in the weighted Hilbert space L²_w[a,b]. The spectral theorem guarantees a countable set of real eigenvalues λ₁ < λ₂ < … → +∞, each of multiplicity one, and the corresponding eigenfunctions {φ_n} form an orthogonal basis of L²_w. The eigenfunction φ_n has exactly n−1 zeros in (a,b) (oscillation theorem).</p>
+<p>For singular problems (p vanishes at an endpoint or the interval is infinite), Weyl's limit‑point/limit‑circle classification determines the deficiency indices. If both endpoints are limit‑point, the operator is essentially self‑adjoint and the spectrum is purely absolutely continuous (e.g., −y'' = λ y on ℝ). If an endpoint is limit‑circle, a boundary condition must be imposed to obtain a self‑adjoint extension; the spectrum may then contain discrete eigenvalues embedded in the continuous spectrum. The spectral measure dρ(λ) yields the eigenfunction expansion f(x) = ∫ φ(x,λ) (∫ f(t) φ(t,λ) w(t) dt) dρ(λ), generalising the Fourier series.</p>
+<p>Applications include quantum mechanics (Schrödinger operators), vibration analysis, and inverse spectral problems (Borg–Marchenko theorem: the potential q is uniquely determined by the spectral data). Numerical computation of eigenvalues uses the Pruessner–Sturm sequence or the shooting method combined with the Prüfer transformation, which converts the ODE to a first‑order system for the amplitude and phase, avoiding overflow.</p>
+
+<h3>Nonstandard Analysis: Hyperreal Foundations of Calculus</h3>
+<p>Abraham Robinson's nonstandard analysis (1961) provides a rigorous framework for infinitesimals by constructing a hyperreal field *ℝ that extends ℝ and contains nonzero infinitesimals ε (|ε| < r for every positive real r) and unlimited numbers ω (|ω| > r for every real r). The construction uses an ultrapower ℝ^ℕ/𝒰 with a free ultrafilter 𝒰 on ℕ. The transfer principle states that any first‑order statement true in ℝ is also true in *ℝ. Consequently, the standard part map st: *ℝ_fin → ℝ sends each finite hyperreal to the unique real infinitely close to it.</p>
+<p>Derivatives become ratios of infinitesimals: f'(x) = st((f(x+ε)−f(x))/ε) for any nonzero infinitesimal ε. The integral ∫_a^b f(x) dx is the standard part of the hyperfinite Riemann sum ∑<sub>k=0</sub><sup>N-1</sup> f(a + kΔx) Δx where N is unlimited and Δx = (b−a)/N is infinitesimal. The fundamental theorem of calculus follows directly from the telescoping sum of differences. Nonstandard analysis simplifies many proofs: the mean value theorem is an immediate consequence of the hyperfinite partition, and the existence of solutions to ODEs via the Picard iteration can be carried out on a hyperfinite time grid, then standardised.</p>
+<p>Internal sets are those that appear as ultrapowers of standard sets; external sets (e.g., the set of all infinitesimals) do not satisfy the transfer principle. The overspill and underspill principles relate internal sets to standard bounds. Loeb measure theory converts an internal finitely additive measure on a hyperfinite set into a countably additive standard measure, providing a bridge to conventional measure theory. While nonstandard analysis is not universally taught, it offers intuitive proofs and has been used in mathematical finance (hyperfinite binomial models) and in the study of stochastic processes via the Anderson–Keisler construction of Brownian motion.</p>
+
+<ul>
+<li>Confusing the space of distributions 𝒟' with the space of tempered distributions 𝒮'; the latter is required for Fourier transforms.</li>
+<li>Applying the Pontryagin Maximum Principle without checking the transversality condition for free terminal time or state.</li>
+<li>Assuming the homogenised tensor A^hom is simply the arithmetic average of A(y); the correct formula involves the correctors χ_i.</li>
+<li>Neglecting the limit‑point/limit‑circle classification when solving singular Sturm–Liouville problems, leading to missing boundary conditions.</li>
+<li>Treating external sets such as the collection of all infinitesimals as internal, which violates the transfer principle.</li>
+<li>Forgetting that the product of two arbitrary distributions is undefined, and attempting to multiply δ by itself.</li>
+<li>Using the standard part map on unlimited hyperreals, which is not defined.</li></ul>
+<h3>Calculus on Manifolds: Differential Forms and Stokes' Theorem</h3>
+<p>Differential forms provide a coordinate‑free language for integration on smooth manifolds. A k‑form ω on an n‑dimensional manifold M is an alternating multilinear map on the tangent space at each point. The exterior derivative d raises degree: dω is a (k+1)‑form satisfying d(dω)=0. Integration of an n‑form over an oriented n‑manifold with boundary ∂M is defined by pulling back to coordinate charts and using a partition of unity. Stokes' theorem unifies the fundamental theorem of calculus, Green's theorem, the divergence theorem, and the classical Stokes theorem: ∫_M dω = ∫<sub>∂M</sub> ω. The proof proceeds by reducing to the case of a form supported in a single chart, where it becomes the ordinary fundamental theorem of calculus applied iteratively. The theorem requires M to be a compact oriented manifold with piecewise smooth boundary; orientation of ∂M is induced by the outward normal followed by the orientation of M. In physics, the electromagnetic field strength F is a 2‑form, and Maxwell's equations become dF=0 and d*F=J, where * is the Hodge star. The de Rham cohomology groups H^k<sub>dR</sub>(M)=ker d / im d classify closed forms modulo exact ones; they are topological invariants isomorphic to singular cohomology with real coefficients. Computation of cohomology often uses the Mayer‑Vietoris sequence or the Hodge decomposition on Riemannian manifolds, where each cohomology class has a unique harmonic representative. The language of forms also simplifies the change‑of‑variables formula: the pullback φ*ω of a form under a smooth map φ satisfies ∫_N φ*ω = ∫_M ω when φ is an orientation‑preserving diffeomorphism. This framework extends naturally to integration on singular chains and currents, linking to geometric measure theory.</p>
+
+<h3>Malliavin Calculus and Stochastic Analysis</h3>
+<p>Malliavin calculus, also called the stochastic calculus of variations, extends the Itô calculus by providing a differential calculus on the Wiener space. The central object is the Malliavin derivative D_t acting on smooth functionals of Brownian motion B. For a cylindrical functional F = f(B<sub>t<sub>1</sub></sub>,…,B<sub>t_n</sub>) with f∈C^∞_b(ℝ^n), the derivative is D_t F = ∑<sub>i=1</sub>^n ∂_i f(B<sub>t<sub>1</sub></sub>,…,B<sub>t_n</sub>) 1<sub>[0,t_i]</sub>(t). This operator is closable from L^p(Ω) into L^p(Ω;L<sup>2</sup>[0,T]), and its domain is the Sobolev space 𝔻<sup>1,p</sup>. The adjoint of D is the Skorokhod integral δ, which coincides with the Itô integral for adapted processes but also integrates non‑adapted ones. The integration‑by‑parts formula E[⟨DF, h⟩<sub>L<sup>2</sup></sub>] = E[F δ(h)] holds for h in the domain of δ. A key application is the proof of Hörmander's theorem on hypoellipticity: if the Lie algebra generated by the diffusion vector fields spans the tangent space at each point, the transition density of the associated SDE is smooth. Malliavin calculus also yields the Clark‑Ocone formula, representing a square‑integrable functional as its expectation plus a Skorokhod integral of its conditional Malliavin derivative, which is fundamental in mathematical finance for hedging and Greeks computation. The theory requires careful handling of the Ornstein‑Uhlenbeck operator L = -δD, whose eigenfunctions are the Wiener chaos expansions. The Meyer inequalities give equivalence of norms between 𝔻<sup>k,p</sup> and the graph norms of L<sup>k/2</sup>. Recent developments include Malliavin calculus for Lévy processes and fractional Brownian motion, where the derivative is defined via chaos expansions or the underlying Gaussian Hilbert space.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Clark‑Ocone Representation</div>
+<div class="ex-text">Let B be a standard Brownian motion on [0,1] and F = B<sub>1</sub><sup>2</sup>. Compute the Malliavin derivative D_t F and verify the Clark‑Ocone formula F = E[F] + ∫<sub>0</sub><sup>1</sup> E[D_t F | ℱ_t] dB_t.</div>
+<div class="ex-soln">First, F = B<sub>1</sub><sup>2</sup> is a smooth cylindrical functional with f(x)=x<sup>2</sup>. The Malliavin derivative is D_t F = 2 B<sub>1</sub> 1<sub>[0,1]</sub>(t) = 2 B<sub>1</sub> for t∈[0,1]. The conditional expectation given ℱ_t is E[2 B<sub>1</sub> | ℱ_t] = 2 B_t because B<sub>1</sub> = B_t + (B<sub>1</sub>−B_t) and the increment is independent of ℱ_t with mean zero. The Skorokhod integral of this adapted process coincides with the Itô integral: ∫<sub>0</sub><sup>1</sup> 2 B_t dB_t = B<sub>1</sub><sup>2</sup> − 1 by Itô's formula. Since E[F] = E[B<sub>1</sub><sup>2</sup>] = 1, we have E[F] + ∫<sub>0</sub><sup>1</sup> E[D_t F | ℱ_t] dB_t = 1 + (B<sub>1</sub><sup>2</sup> − 1) = B<sub>1</sub><sup>2</sup> = F, confirming the formula.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy</div>
+<div class="tip-text">When a question asks for a Malliavin derivative, first identify whether the functional is cylindrical; if so, apply the chain rule directly. For the Skorokhod integral, check adaptedness: if the integrand is adapted, replace δ by the Itô integral. Remember the integration‑by‑parts identity E[⟨DF, h⟩] = E[F δ(h)] — it is the most frequent tool for proving regularity of densities.</div>
+</div>
+
+<h3>Geometric Measure Theory and Currents</h3>
+<p>Geometric measure theory (GMT) extends the notion of surfaces to objects with minimal regularity, enabling the study of area‑minimizing hypersurfaces and Plateau's problem. A k‑current T in ℝ^n is a continuous linear functional on the space of smooth compactly supported k‑forms 𝒟^k(ℝ^n), equipped with the weak* topology. The mass of T is M(T)=sup{T(ω): ω∈𝒟^k, |ω|≤1}. The boundary operator ∂T is defined by duality: ∂T(ω)=T(dω). Rectifiable currents are those that can be approximated in mass by integer‑multiplicity rectifiable sets; they admit a tangent plane almost everywhere and an integer multiplicity function. The Federer‑Fleming compactness theorem states that a sequence of integral currents with uniformly bounded mass and boundary mass has a subsequence converging weakly to an integral current. This compactness underpins the existence of mass‑minimizing currents in a given homology class, solving Plateau's problem for arbitrary codimension. The regularity theory, developed by De Giorgi, Almgren, and others, shows that area‑minimizing integral currents are smooth except on a singular set of Hausdorff dimension at most k−2. For codimension one, the singular set has dimension at most k−7 (Simons' theorem). The monotonicity formula for minimal surfaces gives density bounds and is crucial for blow‑up analysis. GMT also provides the framework for the theory of varifolds, which are measures on the Grassmannian bundle and capture unoriented surfaces. The first variation of a varifold yields the generalized mean curvature vector, leading to the notion of stationary varifolds and the Allard regularity theorem. Applications range from image processing (Mumford‑Shah functional) to general relativity (trapped surfaces).</p>
+
+<h3>Inverse Problems and Regularization Techniques</h3>
+<p>Inverse problems ask to recover an unknown cause from observed effects, typically formulated as solving an operator equation A x = y where A: X→Y is a compact linear operator between Hilbert spaces, x is the unknown parameter, and y is noisy data. Compactness of A makes the inverse A<sup>-1</sup> unbounded, so the problem is ill‑posed in the sense of Hadamard: solutions may not exist, may not be unique, or may not depend continuously on data. Regularization replaces the ill‑posed problem by a family of well‑posed approximations. Tikhonov regularization minimizes the functional J_α(x)=‖A x − y‖<sup>2</sup> + α‖x‖<sup>2</sup>, where α>0 is the regularization parameter. The minimizer x_α = (A^*A + α I)<sup>-1</sup> A^* y converges to a minimum‑norm solution as α→0 provided α=α(δ) satisfies α→0 and δ<sup>2</sup>/α→0, where δ is the noise level. The Morozov discrepancy principle chooses α such that ‖A x_α − y‖ = τ δ with τ>1. Iterative regularization methods, such as Landweber iteration x<sub>k+1</sub>=x_k + ω A^*(y−A x_k) with step size ω∈(0,2/‖A‖<sup>2</sup>), act as regularization when stopped early; the stopping index k plays the role of 1/α. For nonlinear inverse problems, the Newton‑type iterative regularization (e.g., iteratively regularized Gauss‑Newton method) linearizes at each step and applies Tikhonov regularization to the linearized equation. Statistical regularization interprets the problem in a Bayesian framework: the prior on x is Gaussian with covariance α<sup>-1</sup>I, and the posterior mean coincides with the Tikhonov solution. Convergence rates are derived under source conditions x^† = (A^*A)^ν w, yielding ‖x_α − x^†‖ = O(α^ν) for ν∈(0,1/2]. Modern developments include sparsity‑promoting regularization (ℓ<sup>1</sup> penalties) for compressed sensing and variational regularization with total variation for image denoising.</p>
+
+<h3>Quantum Calculus: q‑Derivatives and q‑Integrals</h3>
+<p>Quantum calculus, or q‑calculus, replaces the classical limit h→0 by a fixed deformation parameter q≠1. The q‑derivative of a function f is defined as D_q f(x) = (f(qx)−f(x))/((q−1)x) for x≠0, and D_q f(0)=f'(0) if the limit exists. This operator satisfies a q‑Leibniz rule: D_q (f g)(x) = f(qx) D_q g(x) + g(x) D_q f(x). The q‑exponential e_q(x) = ∑<sub>n=0</sub>^∞ x^n / [n]_q! where [n]_q = (1−q^n)/(1−q) and [n]_q! = [1]_q [2]_q … [n]_q, is an eigenfunction of D_q: D_q e_q(x) = e_q(x). The q‑integral from 0 to a is the Jackson integral ∫<sub>0</sub>^a f(x) d_q x = (1−q) a ∑<sub>k=0</sub>^∞ f(a q^k) q^k, which converges for suitable f and reduces to the Riemann integral as q→1. The fundamental theorem of q‑calculus holds: D_q ∫<sub>0</sub>^x f(t) d_q t = f(x) and ∫<sub>0</sub>^a D_q F(x) d_q x = F(a)−F(0). q‑calculus underlies the theory of quantum groups and appears in the representation theory of U_q(sl<sub>2</sub>). Orthogonal polynomials such as the q‑Hermite, q‑Laguerre, and Askey‑Wilson polynomials are eigenfunctions of second‑order q‑difference operators. The q‑Gamma function Γ_q(z) = (1−q)<sup>1−z</sup> ∏<sub>n=0</sub>^∞ (1−q<sup>n+1</sup>)/(1−q<sup>n+z</sup>) satisfies Γ_q(z+1)=[z]_q Γ_q(z) and Γ_q(z)→Γ(z) as q→1. Applications include q‑difference equations in special functions, combinatorial identities (the q‑binomial theorem), and the study of quantum integrable systems where the spectral parameter enters via q‑exponentials.</p>
+
+<ul>
+<li>Confusing the Malliavin derivative with the Itô derivative; the former acts on the whole path, the latter only on adapted processes.</li>
+<li>Assuming every current is rectifiable; many limits of rectifiable currents develop non‑rectifiable parts.</li>
+<li>Choosing the regularization parameter α solely by the discrepancy principle without verifying the source condition, leading to suboptimal rates.</li>
+<li>Treating the q‑derivative as a standard derivative when q is not close to 1; the chain rule and product rule acquire extra q‑dependent factors.</li>
+<li>Neglecting the orientation in Stokes' theorem for manifolds with corners; the induced orientation on each face must be consistent with the outward normal.</li>
+<li>Applying the Clark‑Ocone formula without checking that the functional belongs to the Malliavin‑Sobolev space 𝔻<sup>1,2</sup>.</li>
+<li>Always verify the hypotheses of theorems before applying them in examinations.</li></ul>
+<!-- course-addon:end --></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ========== INTERACTIVE SLIDER ==========
+    function updateSecant(val) {
+        var x = parseInt(val);
+        var y = 0.01 * (x - 80) * (x - 80) + 60; // quadratic
+        document.getElementById('secantPoint').setAttribute('cx', x);
+        document.getElementById('secantPoint').setAttribute('cy', y);
+        document.getElementById('secantLine').setAttribute('x1', x);
+        document.getElementById('secantLine').setAttribute('y1', y);
+
+        // Distance between points
+        var dist = Math.abs(x - 250);
+        var slope = (65 - y) / (250 - x);
+
+        document.getElementById('sliderVal').textContent = 'Δx=' + dist.toFixed(0);
+
+        // Tangent appears when close enough
+        var tangentOpacity = Math.max(0, 1 - dist / 100);
+        var tangentEl = document.getElementById('tangentLine');
+        if (dist < 80) {
+            tangentEl.setAttribute('opacity', tangentOpacity);
+            // Calculate tangent slope at x=250 (using derivative of x^2/10 = x/5 at x=250... but our curve is scaled)
+            var actualSlope = 2 * 250 / 100; // f(x)=x^2/100 => f'(x)=2x/100 = x/50
+            // Adjust for our coordinate system
+            var tangentSlope = 0.35;
+            tangentEl.setAttribute('x1', x);
+            tangentEl.setAttribute('y1', y + 30);
+            tangentEl.setAttribute('x2', 320);
+            tangentEl.setAttribute('y2', 10);
+
+            document.getElementById('slopeDisplay').textContent = 'Secant slope: ' + slope.toFixed(2) + (dist < 20 ? ' ≈ Tangent!' : ' → approaching tangent');
+        } else {
+            tangentEl.setAttribute('opacity', 0);
+            document.getElementById('slopeDisplay').textContent = 'Secant slope: ' + slope.toFixed(2) + ' (far from tangent)';
+        }
+
+        // Update Q label
+        if (dist < 20) {
+            document.getElementById('secantLabel').textContent = 'Q (very close!)';
+        } else if (dist < 50) {
+            document.getElementById('secantLabel').textContent = 'Q (closer)';
+        } else {
+            document.getElementById('secantLabel').textContent = 'Q (far)';
+        }
+    }
+
+    // ========== PRACTICE QUESTIONS ==========
+    var practiceQs = [
+        {
+            id: 4001,
+            text: "🧒 Zeno's arrow gets halfway to the wall, then half of what's left, then half again... What number does the total distance approach?",
+            opts: [
+                {l: "A", t: "It never approaches any number — there are infinite steps", c: false},
+                {l: "B", t: "The full distance to the wall (the limit is the target)", c: true},
+                {l: "C", t: "Half the distance to the wall", c: false},
+                {l: "D", t: "Infinity — the steps go on forever", c: false}
+            ],
+            sol: "The arrow approaches the full distance (the wall). Even though there are infinite steps, the STEPS get so small that the SUM approaches the wall. The <strong>limit</strong> is the wall's distance — the target."
+        },
+        {
+            id: 4002,
+            text: "📈 Look at the graph of y = x+2. As x gets closer to 2 from EITHER side, what does y approach?",
+            opts: [
+                {l: "A", t: "0", c: false},
+                {l: "B", t: "2", c: false},
+                {l: "C", t: "4", c: true},
+                {l: "D", t: "It depends on which side you approach from", c: false}
+            ],
+            sol: "When x=1.9, y=3.9. When x=2.1, y=4.1. Both sides approach y=4. The left and right agree, so the limit is <strong>4</strong>."
+        },
+        {
+            id: 4003,
+            text: "🕳️ A function has a hole at x=3. The function isn't defined there. From the left, y approaches 7. From the right, y also approaches 7. What is the limit as x→3?",
+            opts: [
+                {l: "A", t: "7 — both sides agree on the journey", c: true},
+                {l: "B", t: "Does not exist — the function has a hole", c: false},
+                {l: "C", t: "0 — undefined means limit is 0", c: false},
+                {l: "D", t: "There's not enough information", c: false}
+            ],
+            sol: "<strong>7!</strong> The limit is about the JOURNEY, not the destination. Both sides approach 7, so the limit is 7, even though f(3) doesn't exist."
+        },
+        {
+            id: 4004,
+            text: "🚗 A car's distance over time is shown on a graph. At exactly t=5 seconds, you draw a line that just touches the curve at one point. The slope of this line is 20 m/s. What does 20 m/s represent?",
+            opts: [
+                {l: "A", t: "The car's average speed over the whole trip", c: false},
+                {l: "B", t: "The car's speed at EXACTLY t=5 seconds (instantaneous speed)", c: true},
+                {l: "C", t: "The total distance traveled at t=5", c: false},
+                {l: "D", t: "The acceleration of the car", c: false}
+            ],
+            sol: "The line that just touches at one point is the <strong>tangent</strong>. Its slope = the derivative = the instantaneous speed at that exact moment. This is what your car's speedometer shows!"
+        },
+        {
+            id: 4005,
+            text: "🎢 A hill's shape is given by a curve. At the very top of the hill, the tangent line is flat (horizontal). What is the slope (derivative) at the top?",
+            opts: [
+                {l: "A", t: "1", c: false},
+                {l: "B", t: "Infinity", c: false},
+                {l: "C", t: "0 — a flat line has zero slope", c: true},
+                {l: "D", t: "It depends on how steep the hill is", c: false}
+            ],
+            sol: "A horizontal line has slope = 0. At the top of a hill (or bottom of a valley), the tangent is horizontal, so the derivative is <strong>0</strong>. This is how you find maximums and minimums!"
+        },
+        {
+            id: 4006,
+            text: "🧮 A function has f(2) = 5, but as x approaches 2 from both sides, y approaches 3. Which is true?",
+            opts: [
+                {l: "A", t: "Limit = 5 (because f(2) = 5)", c: false},
+                {l: "B", t: "Limit = 3 (the journey), function value = 5 (the destination)", c: true},
+                {l: "C", t: "No limit exists because they're different", c: false},
+                {l: "D", t: "The function must be wrong", c: false}
+            ],
+            sol: "The <strong>limit is 3</strong> (both sides approach 3), even though <strong>f(2) = 5</strong>. The limit cares about the journey, not the destination. They CAN be different!"
+        },
+        {
+            id: 4007,
+            text: "🍕 As a pizza slice angle gets very tiny, the arc length and the straight-line length become almost equal. This explains why:",
+            opts: [
+                {l: "A", t: "sin x / x → 1 as x → 0", c: true},
+                {l: "B", t: "cos x → 0 as x → 0", c: false},
+                {l: "C", t: "tan x → ∞ as x → 0", c: false},
+                {l: "D", t: "All limits equal 1", c: false}
+            ],
+            sol: "When the angle is tiny, the arc (sin) and the straight line (the angle in radians) are nearly identical. So their ratio → 1. This is the <strong>visual reason</strong> behind the famous limit!"
+        },
+        {
+            id: 4008,
+            text: "✨ If the left-hand limit of a function at x=a is 4, but the right-hand limit is -2, what is the limit as x→a?",
+            opts: [
+                {l: "A", t: "1 (the average of 4 and -2)", c: false},
+                {l: "B", t: "4 (left is usually more important)", c: false},
+                {l: "C", t: "Does not exist — the two sides disagree", c: true},
+                {l: "D", t: "Depends on the function value at a", c: false}
+            ],
+            sol: "If left and right disagree, the limit <strong>does not exist</strong>. Like two witnesses giving different accounts — you can't trust either!"
+        }
+    ];
+
+    // ========== RENDER & INTERACT ==========
+    var answered = {}, correctCount = 0, lessonSlug = "calculus";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            var badges = ['🧒 Easy','📈 Medium','🕳️ Medium','🚗 Easy','🎢 Easy','🧮 Medium','🍕 Easy','✨ Easy'];
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.9em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.9em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

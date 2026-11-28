@@ -1,0 +1,1303 @@
+{
+ "updatedAt": "2026-11-28T20:11:35.225Z",
+ "note": "Original alternative methods for invented questions. Each is checked against the key by an independent call.",
+ "methods": {
+  "choose the most appropriate sentence that improves the one given below original the stock market crash was a real eye waterer for the traders a the stock market": {
+   "name": "Semantic Feature Matching",
+   "seconds": 10,
+   "steps": [
+    "List semantic features of 'stock market crash': sudden, negative, financial, severe impact.",
+    "Compare with features of each option: eye-opener (surprising, informative), heart-breaker (devastating, personal loss), tear-jerker (sad, narrative), eye-waterer (physically irritating).",
+    "Select the option with maximum feature overlap: heart-breaker (negative, severe impact, personal loss)."
+   ],
+   "answer": "The stock market crash was a real heart-breaker for the traders.",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:54:51.314Z",
+   "model": "hosted"
+  },
+  "a shopkeeper sells a cricket bat with a marked price of 5 000 he offers two alternatives scheme a 15 discount followed by a further 10 discount on the reduced p": {
+   "name": "Absolute Discount Summation",
+   "seconds": 10,
+   "steps": [
+    "Calculate total discount amount: 15% of 5000 + 10% of (85% of 5000) = 750 + 425 = 1175",
+    "Divide total discount by marked price: 1175 / 5000 = 0.235",
+    "Convert to percentage: 0.235 × 100 = 23.5%"
+   ],
+   "answer": "23.5%",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:55:29.453Z",
+   "model": "hosted"
+  },
+  "identify the next number in the series 2 6 12 20 30": {
+   "name": "Quadratic Difference Method",
+   "seconds": 10,
+   "steps": [
+    "Compute first differences: 4, 6, 8, 10",
+    "Compute second differences: constant 2",
+    "Apply quadratic formula n² + n for n=6 → 42"
+   ],
+   "answer": "42",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:55:57.208Z",
+   "model": "hosted"
+  },
+  "which word is opposite in meaning to mortal": {
+   "name": "Prefix Negation Scan",
+   "seconds": 10,
+   "steps": [
+    "Identify the root 'mort-' (Latin for death) in the question word",
+    "Scan options for a negation prefix (im-, un-, in-) attached to same root",
+    "Select 'Immortal' as only option with 'im-' + 'mortal' structure"
+   ],
+   "answer": "Immortal",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:56:13.590Z",
+   "model": "hosted"
+  },
+  "arrange the following words in dictionary order 1 apple 2 apricot 3 ant 4 arm": {
+   "name": "Second Letter Sort Method",
+   "seconds": 10,
+   "steps": [
+    "Observe all words start with 'A', so first letter gives no distinction.",
+    "List second letters: Ant→n, Apple→p, Apricot→p, Arm→r.",
+    "Sort by second letter: n (Ant), p (Apple, Apricot), r (Arm).",
+    "For the two with 'p', compare third letters: Apple→p, Apricot→r → Apple before Apricot."
+   ],
+   "answer": "3, 1, 2, 4",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:56:44.063Z",
+   "model": "hosted"
+  },
+  "a spy starts at a secure point x facing north his mission requires him to execute the following sequence of commands relative to his current direction where eve": {
+   "name": "Net Rotation Calculation",
+   "seconds": 10,
+   "steps": [
+    "Determine net rotation per command: Move=+90°, Left=+90°, Right=+180°",
+    "Sum rotations: 90+90+180+90=450°",
+    "Modulo 360°: 450°≡90° (East)",
+    "Final direction from North is East"
+   ],
+   "answer": "East",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:58:44.536Z",
+   "model": "hosted"
+  },
+  "the rbi governor announced that the newly issued sovereign bonds offer a financial instrument specifically designed to protect investors principal value against": {
+   "name": "Elimination by Definition",
+   "seconds": 10,
+   "steps": [
+    "Identify core need: instrument protecting principal against rising CPI (inflation).",
+    "Test Option 1: Deflationary Hedges guard against falling prices, not rising.",
+    "Test Option 3: Zero-Coupon Securities lack periodic inflation adjustment mechanism.",
+    "Test Option 4: Treasury Bills are short-term nominal debt, not inflation-linked.",
+    "Confirm Option 2: Inflation-Indexed Bonds explicitly tie principal to CPI."
+   ],
+   "answer": "Inflation-Indexed Bonds",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:59:36.636Z",
+   "model": "hosted"
+  },
+  "select the most appropriate word to fill the blank the departmental inquiry concluded that the official was guilty of severe negligence he had been completely b": {
+   "name": "Trap Metaphor Elimination",
+   "seconds": 10,
+   "steps": [
+    "Identify the metaphor: red tape and bureaucratic delays depict a trap.",
+    "Select the option meaning caught in a trap: ensnared.",
+    "Confirm other choices (deluded, distracted, obsessed) lack trap sense."
+   ],
+   "answer": "ensnared",
+   "verified": true,
+   "generatedAt": "2026-11-21T18:59:47.711Z",
+   "model": "hosted"
+  },
+  "in a recent press briefing regarding the rising cost of living the minister stated that inflation hedging schemes must be restructured to account for administra": {
+   "name": "Metaphor Decoding Method",
+   "seconds": 10,
+   "steps": [
+    "Interpret 'hidden tax' as a metaphor for compliance costs imposed by excessive procedures.",
+    "Identify which option is a known metaphor for such procedural burden: 'red tape'.",
+    "Eliminate others (freneticism, bureaucracy, nepotism) as they denote behavior, structure, or corruption, not metaphorical waste.",
+    "Conclude the term is Red Tapeism."
+   ],
+   "answer": "A]Red Tapeism",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:00:39.551Z",
+   "model": "hosted"
+  },
+  "the district magistrate s decision to delay the release of flood relief funds by invoking a complex non existent circular was described by senior officers as a ": {
+   "name": "Antonym Elimination Method",
+   "seconds": 10,
+   "steps": [
+    "Detect the critical tone implying inefficiency and false procedure.",
+    "Eliminate options with positive/neutral connotations (pragmatic, visionary, expedient) as they contradict the described lethargy.",
+    "Select the only option with a negative administrative connotation: bureaucratic."
+   ],
+   "answer": "B. bureaucratic",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:01:17.824Z",
+   "model": "hosted"
+  },
+  "select the most appropriate word to complete the sentence with logical consistency the central board of direct taxes cbdt announced a on the new e filing format": {
+   "name": "Semantic Contrast Elimination",
+   "seconds": 10,
+   "steps": [
+    "First blank needs a word meaning temporary suspension; only \"moratorium\" fits.",
+    "Second blank needs a term for coexisting contradictory actions; \"paradox\" matches.",
+    "All other option pairs fail at least one blank."
+   ],
+   "answer": "moratorium, paradox",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:01:46.666Z",
+   "model": "hosted"
+  },
+  "in the recent parliamentary debate on railway safety a junior bureaucrat argued that while new surveillance cameras were installed across stations the silent wi": {
+   "name": "Metaphorical Contrast Analysis",
+   "seconds": 10,
+   "steps": [
+    "Contrast 'digital one' (cameras) with 'silent witness' to identify a pre-digital observer.",
+    "List entities that continuously monitor a station without human speech: nature, structures, or abstract concepts.",
+    "Eliminate options requiring human intent (A, D) or legal abstraction (C); only natural environment fits as a passive, historic witness."
+   ],
+   "answer": "The natural environment (wind, weather) that historically observed the station without human intervention.",
+   "verified": true,
+   "generatedAt": "2026-11-21T19:02:00.930Z",
+   "model": "hosted"
+  },
+  "identify the odd one out": {
+   "name": "Unique Letter Z Method",
+   "seconds": 10,
+   "steps": [
+    "List the spellings of all four words",
+    "Check each word for the letter 'z'",
+    "Note only Breeze contains 'z'",
+    "Select Breeze as the odd one out"
+   ],
+   "answer": "Breeze",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:46:18.973Z",
+   "model": "hosted"
+  },
+  "the minister expressed deep concern regarding the delay in releasing the funds stating that the bureaucratic hurdle prevented him from proceeding his scheduled ": {
+   "name": "Synonym Substitution Test",
+   "seconds": 10,
+   "steps": [
+    "Replace 'proceeding' with synonym 'going' to simplify the phrase.",
+    "Test each option: 'going to', 'going onto', 'going into', 'going upon' the visit.",
+    "Only 'going to' naturally collocates with a scheduled event; select A) to."
+   ],
+   "answer": "A) to",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:46:30.574Z",
+   "model": "hosted"
+  },
+  "a bank offers a special festival savings scheme where the interest rate for the first year is 5 per annum on the principal however the interest earned in the fi": {
+   "name": "Fractional Interest Method",
+   "seconds": 10,
+   "steps": [
+    "Express 5% as fraction 1/20.",
+    "Calculate interest: ₹10,000 × 1/20 = ₹500.",
+    "Add interest to principal: ₹10,000 + ₹500 = ₹10,500."
+   ],
+   "answer": "A) ₹10,500",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:46:40.044Z",
+   "model": "hosted"
+  },
+  "in the bustling mumbai tea stall amidst the chaotic noise of commuters and hawkers old manohar sat quietly he observed the frantic crowd but remained utterly to": {
+   "name": "Semantic Category Elimination",
+   "seconds": 10,
+   "steps": [
+    "Identify the required meaning: a mental state of unawareness.",
+    "Classify each option by domain: deaf (physical sensory), immune (biological), blind (physical sensory), oblivious (mental).",
+    "Eliminate options not denoting a mental state.",
+    "Select the only mental-state adjective: oblivious."
+   ],
+   "answer": "D] oblivious",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:46:59.274Z",
+   "model": "hosted"
+  },
+  "the prime minister s speech on the national infrastructure project concluded exactly as the first train departed from new delhi that the new high speed line wou": {
+   "name": "Non-finite Modifier Check",
+   "seconds": 10,
+   "steps": [
+    "Find the main clause subject (The Prime Minister's speech).",
+    "Note the blank follows a comma without a conjunction, so it needs a non-finite verb.",
+    "Only 'stating' is a present participle that correctly modifies the subject."
+   ],
+   "answer": "A) stating",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:47:11.255Z",
+   "model": "hosted"
+  },
+  "a new high speed rail project was announced with a projected completion date of december however due to unexpected land acquisition delays and budget re allocat": {
+   "name": "Cause-Effect Magnitude Matching",
+   "seconds": 10,
+   "steps": [
+    "Identify cause phrases: 'unexpected land acquisition delays and budget re-allocations' indicate major disruption but not project termination.",
+    "Assess effect magnitude: delays and re-allocations typically cause schedule changes, not total collapse or disappearance.",
+    "Select option matching magnitude: 'shifted significantly' reflects a major schedule change while project continues; eliminate 'remained intact' (no change), 'crumbled' and 'vanished' (total failure)."
+   ],
+   "answer": "shifted significantly",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:47:20.358Z",
+   "model": "hosted"
+  },
+  "select the option that best replaces the phrase to bring the debate to an end temporarily with a promise to resume later a to adjourn b to recess c to prorogue ": {
+   "name": "Parliamentary Term Differentiation",
+   "seconds": 10,
+   "steps": [
+    "Recognize that 'prorogue' and 'dissolve' permanently end a legislative session.",
+    "Distinguish 'recess' as a brief pause without formal closure of debate.",
+    "Conclude 'adjourn' specifically means to suspend debate temporarily with a promise to resume."
+   ],
+   "answer": "A. To adjourn",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:47:36.010Z",
+   "model": "hosted"
+  },
+  "select the word that best completes the sentence if the monsoon onset had been delayed by three weeks the resulting drought would have triggered a scenario desc": {
+   "name": "Contextual Collocation Check",
+   "seconds": 10,
+   "steps": [
+    "Extract the defining clause: \"sudden, overwhelming scarcity caused specifically by a lack of rain during the critical agricultural window.\"",
+    "Match each option to this definition: famine = severe food shortage from crop failure; calamity = any disaster; scarcity = general shortage; misery = suffering.",
+    "Select the term that precisely matches the agricultural drought‑induced food crisis: famine."
+   ],
+   "answer": "B. Famine",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:47:44.282Z",
+   "model": "hosted"
+  },
+  "a retailer marks up a commodity by 25 above its cost price he then offers a discount of x on this marked price if the final selling price equals the original co": {
+   "name": "Fraction Shortcut",
+   "seconds": 10,
+   "steps": [
+    "Take cost price as 8 (since 25% = 1/4). Marked price = 8 + 2 = 10.",
+    "Initial profit = 2, half profit = 1. Selling price = 8 + 1 = 9.",
+    "Discount = 10 - 9 = 1. Discount% = (1/10)×100 = 10%."
+   ],
+   "answer": "10",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:48:01.128Z",
+   "model": "hosted"
+  },
+  "in a complex administrative dispute the chief administrative officer issued a directive to ensure compliance all departmental heads must submit their quarterly ": {
+   "name": "Semantic Exclusion Method",
+   "seconds": 10,
+   "steps": [
+    "Identify keywords indicating enforced stoppage: 'violation', 'subject to a specific procedural status until rectified', 'prevents them from proceeding'.",
+    "Eliminate options that denote passive states or processes: 'Audited' (process), 'Categorized' (classification), 'Stagnant' (descriptive, not imposed).",
+    "Select 'Suspended' as the only term meaning an official temporary halt imposed due to non-compliance."
+   ],
+   "answer": "Suspended",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:48:13.734Z",
+   "model": "hosted"
+  },
+  "in a newly formed administrative zone the governor issued an order to prevent the duplication of duties among officials who are already working in the same depa": {
+   "name": "Etymological Elimination Approach",
+   "seconds": 10,
+   "steps": [
+    "Break down key term: 'plural' indicates multiple.",
+    "Eliminate unrelated options: Embezzlement (theft), Congruence (agreement), Accumulation (gathering).",
+    "Select Pluralism as the only term meaning multiple responsibilities."
+   ],
+   "answer": "Pluralism",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:48:44.936Z",
+   "model": "hosted"
+  },
+  "a suburban train covers a distance of 120 km in 2 hours at its scheduled speed on the return journey due to signal disruptions at exactly 5 platforms encountere": {
+   "name": "Delay-Distance Equivalence",
+   "seconds": 10,
+   "steps": [
+    "Scheduled speed = 120 km / 120 min = 1 km/min",
+    "Each 4-min delay equals 4 km extra distance; 5 delays add 20 km",
+    "Effective distance = 140 km; time = 140 min = 2 hours 20 minutes"
+   ],
+   "answer": "2 hours 20 minutes",
+   "verified": true,
+   "generatedAt": "2026-11-22T05:49:48.979Z",
+   "model": "hosted"
+  },
+  "in a family a is the father of b c is the brother of d e is the sister of f g is the son of h if a b and c are all deceased and only their direct descendants ch": {
+   "name": "Disjoint Set Analysis",
+   "seconds": 10,
+   "steps": [
+    "List all given relations as independent pairs: (A father of B), (C brother of D), (E sister of F), (G son of H).",
+    "Observe that the inheritance condition only involves A, B, C and their children; no statement connects D, F, or G to A, B, or C as parent-child.",
+    "Since D, F, G belong to separate unrelated groups, no sibling relationship can be inferred between D and F or G."
+   ],
+   "answer": "D. Neither F nor G is a sibling of D.",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:31:07.509Z",
+   "model": "hosted"
+  },
+  "in a family a is the brother of b c is the father of a and d if e is the daughter of d who is the grandfather of e": {
+   "name": "Elimination by Generational Role",
+   "seconds": 10,
+   "steps": [
+    "E's parent is D (given).",
+    "Grandfather of E must be father of D.",
+    "Only C is stated as father of D."
+   ],
+   "answer": "C",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:31:30.575Z",
+   "model": "hosted"
+  },
+  "a fixed deposit scheme offers simple interest si calculated on a daily basis if the interest for one full year is rs 4 800 what will be the interest earned if t": {
+   "name": "Daily Interest Calculation",
+   "seconds": 10,
+   "steps": [
+    "Daily interest = 4800 ÷ 365",
+    "Days in 1/3 year = 365 ÷ 3",
+    "Interest = Daily interest × Days = 1600"
+   ],
+   "answer": "₹1,600",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:32:01.101Z",
+   "model": "hosted"
+  },
+  "select the option that correctly completes the sentence after years of meticulous preparation and a promising career start his sudden decision to quit mid proje": {
+   "name": "Cost Responsibility Inference",
+   "seconds": 10,
+   "steps": [
+    "Spot 'financial mess' signaling monetary loss.",
+    "Realize quitting mid-project transfers cost to the quitter.",
+    "Pick the idiom meaning 'left to pay': 'stuck with the bill'."
+   ],
+   "answer": "B) stuck with the bill",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:32:20.747Z",
+   "model": "hosted"
+  },
+  "select the most appropriate sentence to complete the following statement the director has ordered that all staff members must ensure strict adherence to safety ": {
+   "name": "Formal Register Alignment",
+   "seconds": 10,
+   "steps": [
+    "Identify the formal administrative tone of the opening sentence (e.g., \"ordered\", \"strict adherence\", \"protocols\").",
+    "Scan each option for matching formal vocabulary (e.g., \"shall\", \"incur\", \"disciplinary action\").",
+    "Select the option that mirrors the same level of formality and specificity: Option B."
+   ],
+   "answer": "violations shall incur severe disciplinary action, and",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:32:51.333Z",
+   "model": "hosted"
+  },
+  "in the chaotic final minutes of the cricket match when team a was winning by 4 wickets with only one ball remaining they were struck by a sudden collapse and lo": {
+   "name": "Etymological Polarity Filter",
+   "seconds": 10,
+   "steps": [
+    "Observe the passage depicts a sharp reversal from dominance to defeat.",
+    "Infer the missing term must represent the absolute low point of a cycle.",
+    "Match \"nadir\" (astronomical term for the point opposite the zenith) as the only option denoting a lowest point."
+   ],
+   "answer": "Nadir",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:37:39.033Z",
+   "model": "hosted"
+  },
+  "read the sentence below carefully the blank requires an idiom that describes a state of affairs contrary to its literal meaning specifically where a lack of off": {
+   "name": "Traffic Light Metaphor Mapping",
+   "seconds": 10,
+   "steps": [
+    "Map each option to its traffic-light literal meaning: green=go, red=stop, blank cheque/free pass unrelated.",
+    "Note the sentence requires a term for official approval (a 'go' signal) in administrative jargon.",
+    "Only 'green signal' matches both the metaphor and the collocation 'formal green signal'."
+   ],
+   "answer": "green signal",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:38:00.195Z",
+   "model": "hosted"
+  },
+  "in the latest bureaucratic memo the director accused the department of walking on eggshells however upon reviewing the attached data showing a 150 increase in r": {
+   "name": "Data-Driven Antonym Selection",
+   "seconds": 10,
+   "steps": [
+    "Read the data: a 150% increase in reckless spending.",
+    "The committee's conclusion must reflect this data, not the idiom.",
+    "Pick the option that directly describes the data: reckless."
+   ],
+   "answer": "Reckless",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:38:23.417Z",
+   "model": "hosted"
+  },
+  "if today is monday what was the day 473 days ago": {
+   "name": "Nearest Multiple Method",
+   "seconds": 10,
+   "steps": [
+    "Find the smallest multiple of 7 greater than 473: 7 × 68 = 476.",
+    "Since 476 is a multiple of 7, 476 days ago was also a Monday.",
+    "473 days ago is 3 days after that Monday (476 - 473 = 3), which is Thursday."
+   ],
+   "answer": "Thursday",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:39:22.059Z",
+   "model": "hosted"
+  },
+  "in a government procurement tender for project yogi the contractor declares that the total estimated cost price cp for a batch of uniforms was calculated as 80 ": {
+   "name": "Direct SP Ratio Method",
+   "seconds": 10,
+   "steps": [
+    "Combine percentages: Overheads = 25% of CP = 25% of (80% of SP) = 20% of SP.",
+    "Calculate 20% of Rs. 240,000 = Rs. 48,000.",
+    "Match with option 1: Rs. 48,000."
+   ],
+   "answer": "Rs. 48,000",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:40:09.774Z",
+   "model": "hosted"
+  },
+  "point a is at 12 o clock on a clock face if you start walking from the center towards a then make a sharp right turn 90 degrees which direction are you now faci": {
+   "name": "Coordinate Rotation Method",
+   "seconds": 10,
+   "steps": [
+    "Place the clock center at the origin with 12 o'clock on the positive y-axis.",
+    "The initial walking direction is the vector (0,1).",
+    "Rotate this vector 90° clockwise to obtain (1,0).",
+    "The vector (1,0) points to the 3 o'clock position."
+   ],
+   "answer": "3 o'clock position",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:40:39.464Z",
+   "model": "hosted"
+  },
+  "select the option that correctly completes the sentence the committee a have decided to delay the meeting b have decided on delaying the meeting c has decided o": {
+   "name": "Auxiliary Participle Check",
+   "seconds": 10,
+   "steps": [
+    "Check that the verb following 'has/have' is the past participle 'decided'; eliminate option D ('has decide').",
+    "Apply singular subject-verb agreement: 'committee' takes 'has', eliminating options A and B ('have').",
+    "The only remaining option is C: 'has decided on delaying the meeting.'"
+   ],
+   "answer": "has decided on delaying the meeting.",
+   "verified": true,
+   "generatedAt": "2026-11-22T14:43:31.866Z",
+   "model": "hosted"
+  },
+  "select the most appropriate option to complete the sentence among the various schemes by the ministry of rural development has received mixed reactions from the": {
+   "name": "Subject-Verb-Modifier Fit",
+   "seconds": 10,
+   "steps": [
+    "Identify the main verb \"has received\" and note it requires a singular subject before it.",
+    "Test each option in the subject slot: only \"the one\" can be modified by the following \"by the Ministry...\" phrase and agree with the verb.",
+    "Eliminate \"that which\" (archaic), \"which is\" (creates a fragment), and \"it\" (causes a comma splice).",
+    "Confirm the completed sentence is grammatical and meaningful."
+   ],
+   "answer": "the one",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:27:46.884Z",
+   "model": "hosted"
+  },
+  "which one word substitution correctly completes the sentence the is an official responsible for collecting revenue and managing finances in a local government o": {
+   "name": "Revenue Role Etymology",
+   "seconds": 10,
+   "steps": [
+    "Identify the core action: collecting revenue from the sentence.",
+    "Analyze each option's etymological root: Registrar (register), Treasurer (treasure), Collector (collect), Clerk (clerical).",
+    "Match the root 'collect' to the action; choose Collector."
+   ],
+   "answer": "Collector",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:31:01.748Z",
+   "model": "hosted"
+  },
+  "find the next term in the series 5 9 13 17 25 where digits are values in base 10 but the pattern follows base 12 arithmetic rules where any digit exceeding 9 wr": {
+   "name": "Modulo 12 Cycle Detection",
+   "seconds": 10,
+   "steps": [
+    "Compute remainders of given terms modulo 12: 5, 9, 1, 5, 1",
+    "Identify the repeating pattern 5, 9, 1; the missing term must have remainder 9",
+    "Test options: only 21 ≡ 9 (mod 12), so answer is 21"
+   ],
+   "answer": "A) 21",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:33:03.884Z",
+   "model": "hosted"
+  },
+  "in a certain community all kartars are also yogis no yogi is a vedantist some vedantists are brahmins what must be true i all kartars are brahmins ii no kartar ": {
+   "name": "Contradiction and Counterexample",
+   "seconds": 10,
+   "steps": [
+    "Assume a Kartar is a Vedantist; then that Kartar is a Yogi (all Kartars are Yogis), contradicting 'No Yogi is a Vedantist'. Hence II must be true.",
+    "Construct a model: one Kartar (also Yogi), one Vedantist (also Brahmin), with Yogis and Vedantists disjoint. All premises hold but Kartar is not a Brahmin, so I does not follow.",
+    "Therefore only statement II follows."
+   ],
+   "answer": "Only II follows",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:33:33.829Z",
+   "model": "hosted"
+  },
+  "in a certain code language words are encoded based on the sum of their digits the rule is if a number s digit sum repeatedly adding digits until a single digit ": {
+   "name": "Modulo 9 Digital Root",
+   "seconds": 10,
+   "steps": [
+    "Compute 29 modulo 9 to get digital root 2",
+    "Check parity: 2 is even",
+    "Apply rule: even digital root yields 'EVE'"
+   ],
+   "answer": "EVE",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:33:43.302Z",
+   "model": "hosted"
+  },
+  "a retailer marks up a festive gift item by 40 over its cost price to sell it at a premium however due to post festival inflation and supply chain delays the fin": {
+   "name": "Assumption and Scaling Method",
+   "seconds": 10,
+   "steps": [
+    "Assume Cost Price = 100",
+    "Selling Price at 15% profit = 115",
+    "Scaling factor = 230 / 115 = 2",
+    "Actual Cost Price = 100 × 2 = 200"
+   ],
+   "answer": "Rs. 200.00",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:34:05.396Z",
+   "model": "hosted"
+  },
+  "a trader marks up the cost price cp of a commodity by 25 to get the marked price mp he then offers a 10 discount on this mp if the final selling price sp is rs ": {
+   "name": "Successive Percentage Method",
+   "seconds": 10,
+   "steps": [
+    "Compute net percentage change: 25% markup then 10% discount gives 25 - 10 - (25*10)/100 = 12.5% increase.",
+    "Profit percentage on CP equals this net change, so answer is 12.5%."
+   ],
+   "answer": "12.5%",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:34:20.321Z",
+   "model": "hosted"
+  },
+  "complete the series 24 36 54 81 121 5": {
+   "name": "Difference Ratio Method",
+   "seconds": 10,
+   "steps": [
+    "Find differences: 12, 18, 27, 40.5",
+    "Notice each difference is 1.5 times previous",
+    "Next difference = 40.5 × 1.5 = 60.75",
+    "Add to last term: 121.5 + 60.75 = 182.25"
+   ],
+   "answer": "182.25",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:34:35.313Z",
+   "model": "hosted"
+  },
+  "a confectioner sells assorted box x cost 220 kg and premium box y cost 320 kg to reduce inventory of y he mixes 2 kg of x with 1 kg of y to create box z if box ": {
+   "name": "Cost Identity Method",
+   "seconds": 10,
+   "steps": [
+    "Box Z's cost price equals the total cost of 2 kg X and 1 kg Y (original ingredients).",
+    "Selling at 10% profit on Box Z's cost price means profit = 10% of total ingredient cost.",
+    "Therefore, profit percentage on original ingredient cost is exactly 10%."
+   ],
+   "answer": "B: 10%",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:34:54.487Z",
+   "model": "hosted"
+  },
+  "a spy agent x starts at point o facing north he moves 20m forward turns 90 left walks 15m then turns 90 left again and walks 20m finally he turns 90 left one mo": {
+   "name": "Net Rotation Method",
+   "seconds": 10,
+   "steps": [
+    "Three 90° left turns total 270° left, equivalent to a single 90° right turn",
+    "Starting from North, a 90° right turn points East",
+    "Thus the last segment is walked facing East"
+   ],
+   "answer": "D) East",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:35:46.127Z",
+   "model": "hosted"
+  },
+  "in a government office there are 5 files of pending cases and 3 files of closed cases a junior officer must select exactly two files for review the rule is if t": {
+   "name": "Rule-Based Deduction Method",
+   "seconds": 10,
+   "steps": [
+    "Identify the rule: if first file is Pending, second must be Closed.",
+    "Given first is Pending, the rule forces second to be Closed.",
+    "Thus probability second is Pending is 0."
+   ],
+   "answer": "0",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:35:56.955Z",
+   "model": "hosted"
+  },
+  "in the context of the recent digital india initiative a government report stated that in rural governance involves moving from reactive aid to proactive plannin": {
+   "name": "Contrast Clue Method",
+   "seconds": 10,
+   "steps": [
+    "Spot the phrase 'reactive aid to proactive planning' indicating a shift from reactive to proactive",
+    "Recognize the blank must describe the proactive approach",
+    "Choose the option meaning proactive action: Proactivity"
+   ],
+   "answer": "Proactivity",
+   "verified": true,
+   "generatedAt": "2026-11-22T23:37:54.615Z",
+   "model": "hosted"
+  },
+  "in a high stakes corporate restructuring the chairman delivered a speech that was widely regarded as a for morale as his sudden resignation announcement turned ": {
+   "name": "Contrastive Collocation Check",
+   "seconds": 10,
+   "steps": [
+    "Note the phrase \"turned hopeful anticipation into deep despair\" signals a drastic negative shift.",
+    "Recognize that \"a ______ for morale\" typically collocates with strong positive or negative nouns.",
+    "Check each option's typical collocation: blessing/boon (positive), nuisance (weak negative), curse (strong negative).",
+    "Match magnitude: only \"curse\" aligns with the extreme downturn described."
+   ],
+   "answer": "curse",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:30:41.594Z",
+   "model": "hosted"
+  },
+  "select the option that best completes the idiom based on the provided context after months of rigorous preparation for the upsc civil services rahul felt to see": {
+   "name": "Sentiment-Based Idiom Selection",
+   "seconds": 10,
+   "steps": [
+    "Detect disappointment in the context (name missing from merit list).",
+    "Classify each idiom's emotional tone: feather in cap (positive), bitter pill (negative), cat among pigeons (chaotic), dark horse (neutral).",
+    "Select the idiom with a negative tone that matches the feeling of unpleasant acceptance."
+   ],
+   "answer": "a bitter pill to swallow",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:34:49.226Z",
+   "model": "hosted"
+  },
+  "identify the sentence that is most appropriate for a formal letter of appointment from a government department a you are hereby appointed as a junior assistant ": {
+   "name": "Formal Appointment Language Test",
+   "seconds": 10,
+   "steps": [
+    "Check for official markers such as \"hereby\" and \"effective from\" that signal legal authority.",
+    "Verify the sentence uses passive construction and precise date format typical of government orders.",
+    "Discard any option with colloquial pronouns, vague timing, or imperative tone."
+   ],
+   "answer": "You are hereby appointed as a Junior Assistant, effective from 1st July 2024.",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:34:56.193Z",
+   "model": "hosted"
+  },
+  "read the following instruction found in a formal circular issued by the ministry of railways identify the sentence that best completes the paragraph while maint": {
+   "name": "Directive Keyword Filtering",
+   "seconds": 10,
+   "steps": [
+    "Extract formal directive keywords: imperative, hence, ensure",
+    "Identify railway-specific term: traction",
+    "Select option containing both sets"
+   ],
+   "answer": "It is imperative that no train delays occur; hence, extra traction must be ensured.",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:35:25.112Z",
+   "model": "hosted"
+  },
+  "identify the option that corrects the sentence to ensure formal register suitable for an official bank statement the current balance shows a debit entry of fift": {
+   "name": "Banking Collocation Match",
+   "seconds": 10,
+   "steps": [
+    "Recall the fixed phrase used in Indian bank statements for debits: \"A deduction of X made from the account\"",
+    "Compare each option to this standard collocation",
+    "Select the option that matches exactly"
+   ],
+   "answer": "B: A deduction of fifty rupees made from the account",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:36:47.645Z",
+   "model": "hosted"
+  },
+  "identify the sentence that correctly uses formal vocabulary suitable for an official audit report a the bank needs to sort out the discrepancies in the ledgers ": {
+   "name": "Formal Lexicon Filter",
+   "seconds": 10,
+   "steps": [
+    "List phrasal verbs and colloquial terms (sort out, get rid of, fix up) used in options A, C, D.",
+    "Eliminate any option containing those informal expressions.",
+    "Choose the remaining option that uses nominalized verbs (rectification, variances) and passive voice."
+   ],
+   "answer": "The bank requires rectification of the variances observed in the accounts.",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:36:55.639Z",
+   "model": "hosted"
+  },
+  "in a recent village assembly meeting the sarpanch expressed strong disapproval of the proposal to use public funds for personal gain he stated that such an acti": {
+   "name": "Constitutional Language Recall",
+   "seconds": 10,
+   "steps": [
+    "Recall that the Indian Constitution uses 'inimical' in formal provisions (e.g., 'inimical to the sovereignty and integrity of India').",
+    "Note the sentence's formal official tone mirrors constitutional language about democratic principles.",
+    "Choose 'inimical' as the word that fits this register."
+   ],
+   "answer": "inimical",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:37:13.249Z",
+   "model": "hosted"
+  },
+  "identify the option that best completes the sentence by shifting the tone to formal administrative register suitable for a government report correcting the erro": {
+   "name": "Formality Gradient Scoring",
+   "seconds": 10,
+   "steps": [
+    "Assign formality scores to each option using a register lexicon",
+    "Rank options by descending formality score",
+    "Select the highest-scoring option as the formal administrative choice"
+   ],
+   "answer": "exhausted",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:37:32.234Z",
+   "model": "hosted"
+  },
+  "in the context of a formal government audit report which single word best replaces the phrase the act of speaking with unnecessary detail and verbosity to obscu": {
+   "name": "Connotation Elimination Method",
+   "seconds": 10,
+   "steps": [
+    "Eliminate Loquacious (mere talkativeness) and Effusive (emotional gushing) as they lack the sense of obscuring meaning.",
+    "Contrast Verbose (wordy) with Prolix (tediously lengthy to the point of obscurity); Prolix carries the specific nuance of obscuring clarity.",
+    "Select Prolix as the precise fit for a formal audit report describing verbosity that obscures meaning."
+   ],
+   "answer": "Prolix",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:37:45.748Z",
+   "model": "hosted"
+  },
+  "in the quarterly review of a district cooperative bank s accounts the chairman noted that the financial statements failed to balance due to unrecorded entries w": {
+   "name": "Contextual Antonym Elimination",
+   "seconds": 10,
+   "steps": [
+    "Identify the core defect: 'failed to balance' indicates a state of mismatch or inconsistency.",
+    "Evaluate options for resolution vs. error state: 'Audited', 'Conciliatory', 'Rectified' describe processes or resolved states.",
+    "Select 'Discrepant' as the only term directly defining the condition of being out of balance."
+   ],
+   "answer": "B. Discrepant",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:37:50.738Z",
+   "model": "hosted"
+  },
+  "in the latest policy draft issued by the central vigilance commission a clause was added stating that whistleblower protection applies to all government employe": {
+   "name": "Hierarchical Scope Clarification",
+   "seconds": 10,
+   "steps": [
+    "Map the regulatory hierarchy: CVC → Central Government → Ministries (including DoD).",
+    "Interpret 'government employees' in CVC drafts as referring only to central government employees.",
+    "Since DoD contractors are not government employees, the exclusion must be rephrased to exclude only those central government employees classified under defense contracts, yielding option B."
+   ],
+   "answer": "B. The clause should be corrected to: 'whistleblower protection applies to all central government employees, excluding only those classified under defense contracts,' to resolve the ambiguity of inclusion.",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:38:23.586Z",
+   "model": "hosted"
+  },
+  "read the following extract from a high level administrative circular regarding the reclassification of state forest land in light of the supreme court s directi": {
+   "name": "Morphological Derivation Test",
+   "seconds": 10,
+   "steps": [
+    "Locate the key noun \"zone\" implied by \"protective buffer zones\" and \"eco-corridors\".",
+    "The blank requires a verb meaning \"to assign a new zone\".",
+    "Form the verb by adding \"re-\" to \"zone\" → \"rezone\".",
+    "Match with option C."
+   ],
+   "answer": "Rezone",
+   "verified": true,
+   "generatedAt": "2026-11-23T06:38:43.926Z",
+   "model": "hosted"
+  },
+  "a class has 30 boys avg 60 kg and 20 girls avg 50 kg find overall average weight": {
+   "name": "Gap-shift (alligation)",
+   "seconds": 6,
+   "steps": [
+    "The overall average must lie between the two group averages: 50 and 60 kg.",
+    "The groups are in the ratio 30:20 = 3:2, so the mean sits 3/5 of the way from 50 towards 60.",
+    "Shift = (3/5) × 10 = 6, so the average is 56 kg. Any option outside 50–60 is automatically wrong."
+   ],
+   "answer": "56 kg",
+   "verified": true,
+   "generatedAt": "2026-11-23T16:21:54.636Z",
+   "model": "seeded"
+  },
+  "in a specific code language used for railway safety alerts dates are encoded such that the letter corresponds to the sum of the day s position in the month and ": {
+   "name": "Reverse Alphabetic Sum",
+   "seconds": 12,
+   "steps": [
+    "Let the target letter be Q (17th in alphabet). Set up equation: day + monthAlphabetValue ≡ 17 (mod 26) with result ≥ 13 (M).",
+    "For each month, use its alphabetical position (January=1, February=2, …). Compute required day = 17 – monthValue; if negative add 26.",
+    "Check which computed day falls within that month’s possible days and also yields a letter ≥ M. Only April (value 4) gives day = 13, which is valid.",
+    "Thus the date is 13th April."
+   ],
+   "answer": "A) 13th April",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:46:39.323Z",
+   "model": "hosted"
+  },
+  "select the sentence that correctly completes the logic of the statement the indian railways new e ticketing initiative is blank successful context clues in a sp": {
+   "name": "Contrast Conjunction Scan",
+   "seconds": 10,
+   "steps": [
+    "Note the context shows a contrast: digital sales grew significantly but remain a minority (15%) while manual counters handle the majority during peak hours.",
+    "The blank must express partial success with a contrasting conjunction.",
+    "Scan the options for a phrase containing a contrast word like \"yet\" or \"but\". Only option B (\"largely yet not fully\") includes \"yet\".",
+    "Verify that \"largely yet not fully\" matches the meaning: significant progress (largely) but not complete (not fully). Select B."
+   ],
+   "answer": "largely yet not fully",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:46:58.967Z",
+   "model": "hosted"
+  },
+  "in a secret code used by the railway safety wing words are encoded based on their reverse causal function for example stop is encoded as go the opposite action ": {
+   "name": "Antonym Pair Recognition",
+   "seconds": 10,
+   "steps": [
+    "Extract the relationship from given pairs: each second word is the direct antonym of the first.",
+    "Recall the standard antonym for 'sleep' is 'wake'.",
+    "Select option 2 (Wake) as the encoded form."
+   ],
+   "answer": "Wake",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:47:21.200Z",
+   "model": "hosted"
+  },
+  "in a corporate hierarchy where rank is determined by strict rules 1 no employee of grade x can supervise an employee of grade y unless they are in the same depa": {
+   "name": "Contradiction via Project Difference",
+   "seconds": 10,
+   "steps": [
+    "Assume A and B work on different projects.",
+    "Rule 2 forces them into different departments.",
+    "This violates Rule 1 (supervision requires same department), so they must share project and department."
+   ],
+   "answer": "They are in the same department and work on the same project.",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:49:44.981Z",
+   "model": "hosted"
+  },
+  "select the most appropriate preposition to complete the sentence while maintaining a formal bureaucratic register often used in official indian government circu": {
+   "name": "Verb-Noun Pair Substitution",
+   "seconds": 10,
+   "steps": [
+    "Replace the noun phrase 'issued a directive' with its verbal equivalent 'directed' to test preposition governance: 'The Ministry directed _____ all regional offices'.",
+    "Only 'to' fits the verbal frame ('directed to'), as 'directed towards/for/about' are ungrammatical or change meaning in this bureaucratic context.",
+    "Nominalization preserves prepositional government: 'directive to' inherits the same complement structure as 'directed to'."
+   ],
+   "answer": "to",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:50:00.325Z",
+   "model": "hosted"
+  },
+  "in a recent public sector audit the department s performance review matrix was found to be that it could not account for the 15 reduction in operational efficie": {
+   "name": "Adjective Complement Test",
+   "seconds": 10,
+   "steps": [
+    "Identify that 'was found to be' requires an adjective complement.",
+    "Test each option: 'so' (adverb), 'such' (adjective), 'as' (preposition), 'that' (determiner).",
+    "Only 'such' fits grammatically and forms the idiomatic 'such that' result clause."
+   ],
+   "answer": "such",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:50:31.237Z",
+   "model": "hosted"
+  },
+  "a government circular has been issued regarding the swachh bharat abhiyan the text states citizens are advised to adhere strictly to the hygiene protocols the p": {
+   "name": "Contextual Tone Elimination",
+   "seconds": 10,
+   "steps": [
+    "Identify the authoritative tone of a government circular using keywords: 'advised', 'strictly', 'protocols'",
+    "Eliminate options contradicting mandatory compliance: A (casual), C (ignore), D (modify)",
+    "Select the only remaining option B as it matches the required formal adherence"
+   ],
+   "answer": "To comply fully with the requirements",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:50:40.118Z",
+   "model": "hosted"
+  },
+  "a rashtriya karmayogi portal has launched to digitise the administration during the inauguration the prime minister noted that bureaucratic delays are often cau": {
+   "name": "Etymological Speed Filter",
+   "seconds": 10,
+   "steps": [
+    "Break each option into its Latin root: procrastination (crastinus), expedition (expedire), negligence (neglegere), stagnation (stagnare).",
+    "Identify the root meaning 'haste' or 'speed': expedire.",
+    "Select the option derived from that root: Expedition."
+   ],
+   "answer": "Expedition",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:51:00.630Z",
+   "model": "hosted"
+  },
+  "read the following official notification excerpt to ensure compliance all district collectors must submit their quarterly progress reports before the 30th which": {
+   "name": "Date Specific Formal Equivalence",
+   "seconds": 10,
+   "steps": [
+    "Note the explicit date 'the 30th' in the original phrase.",
+    "Eliminate options that do not mention the 30th (A, B, D).",
+    "Choose the remaining option that uses formal bureaucratic deadline phrasing."
+   ],
+   "answer": "C) no later than the 30th",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:51:19.512Z",
+   "model": "hosted"
+  },
+  "a retailer purchases a smartwatch with a manufacturer s list price mlp of rs 2 000 he receives a trade discount of 12 on the mlp he then marks the price at 25 a": {
+   "name": "Fractional Multiplier Method",
+   "seconds": 10,
+   "steps": [
+    "Compute selling price as fraction of MLP: 0.88 × 1.25 × 0.9 = 0.99 MLP",
+    "Compute cost price as fraction of MLP: 0.88 MLP",
+    "Profit % on selling price = ((0.99 - 0.88) / 0.99) × 100 = 11.11% ≈ 11%"
+   ],
+   "answer": "11%",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:51:32.666Z",
+   "model": "hosted"
+  },
+  "a prudent investor splits a total sum of rs 20 000 into two parts part a is invested at 6 simple interest per annum and part b is invested at 8 simple interest ": {
+   "name": "Weighted Average Method",
+   "seconds": 10,
+   "steps": [
+    "Observe that the blended rate 7% is exactly the average of 6% and 8%.",
+    "In a weighted average, if the average equals the midpoint, the weights (amounts) must be equal.",
+    "Therefore each part is half of Rs. 20,000, i.e., Rs. 10,000."
+   ],
+   "answer": "Rs. 10,000",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:51:53.554Z",
+   "model": "hosted"
+  },
+  "in the formal register of indian bureaucracy specific verbs denote official actions with strict procedural connotations sanction is to approval as cognizance is": {
+   "name": "Statutory Definition Mapping",
+   "seconds": 10,
+   "steps": [
+    "Locate 'cognizance' in CrPC Section 190",
+    "Note it means magistrate accepts a case for trial",
+    "Select option a) Accepting a legal case for trial"
+   ],
+   "answer": "a) Accepting a legal case for trial",
+   "verified": true,
+   "generatedAt": "2026-11-23T23:56:25.584Z",
+   "model": "hosted"
+  },
+  "a merchant has 500 l of a solution containing 8 salt he removes 50 l of the mixture and replaces it with water then he adds 30 l of a 20 salt solution after tha": {
+   "name": "Carry salt mass, not %",
+   "seconds": 25,
+   "steps": [
+    "Track only the mass of salt; every removal takes salt in proportion to the volume removed.",
+    "Start 40 kg salt in 500 L. Remove 50 L -> salt x (1 - 50/500) = 40 x 0.9 = 36 kg, then top up to 500 L.",
+    "Add 30 L of 20% (6 kg) -> 42 kg in 530 L.",
+    "Remove 40 L -> 42 x (1 - 40/530) = 42 x 490/530 = 38.83 kg in 530 L after topping up.",
+    "Final % = 38.83 / 530 x 100 = 7.33%. Never recompute the concentration mid-way; one salt column avoids every rounding slip."
+   ],
+   "answer": "7.33%",
+   "verified": true,
+   "generatedAt": "2026-11-24T02:55:14.012Z",
+   "model": "seeded"
+  },
+  "in a specific logic gate language the symbols represent operations as follows means is less than or equal to means is greater than means is not equal to means i": {
+   "name": "Proof by Contradiction",
+   "seconds": 10,
+   "steps": [
+    "Assume the negation of option 3: either D < C or E = A.",
+    "If D < C, then from III (D = B) we get B < C, contradicting II (B > C).",
+    "If E = A, it directly contradicts IV (E != A). Therefore option 3 must be true."
+   ],
+   "answer": "D >= C and E != A",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:21:56.511Z",
+   "model": "hosted"
+  },
+  "a and b are siblings c is the father of b d is the mother of a e is the son of d who is e to c": {
+   "name": "Generational Option Elimination",
+   "seconds": 10,
+   "steps": [
+    "Identify generations: C (father of B) and D (mother of A) are parental generation; A, B (siblings) and E (son of D) are children generation.",
+    "Evaluate options: Son (child of C) fits child generation; Grandson is two generations below; Brother is same generation as parents; Nephew requires C's sibling, not given.",
+    "Only Son satisfies all relational constraints."
+   ],
+   "answer": "Son",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:28:49.130Z",
+   "model": "hosted"
+  },
+  "choose the word that is most nearly opposite in meaning to obstinate": {
+   "name": "Synonym Elimination Method",
+   "seconds": 10,
+   "steps": [
+    "Identify that options 2, 3, and 4 (Stubborn, Rigid, Persistent) are synonyms of 'Obstinate'.",
+    "The remaining option, 'Flexible', is not a synonym and therefore must be the antonym."
+   ],
+   "answer": "Flexible",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:31:13.980Z",
+   "model": "hosted"
+  },
+  "in a certain code language cat is written as 3120 what is the code for dog": {
+   "name": "ASCII subtraction method",
+   "seconds": 10,
+   "steps": [
+    "Get ASCII values: C=67, A=65, T=84",
+    "Subtract 64 from each: 3, 1, 20 → matches 3120",
+    "For DOG: D=68, O=79, G=71 → subtract 64 → 4, 15, 7 → code 4157"
+   ],
+   "answer": "4157",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:32:17.752Z",
+   "model": "hosted"
+  },
+  "a basket contains 50 apples if 20 are rotten how many good apples are left": {
+   "name": "Grouping Method",
+   "seconds": 10,
+   "steps": [
+    "Express 20% as 1/5, so 1 rotten apple per 5 apples.",
+    "Divide 50 apples into groups of 5: 50 ÷ 5 = 10 groups.",
+    "Each group has 4 good apples, so total good = 10 × 4 = 40."
+   ],
+   "answer": "40",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:36:17.645Z",
+   "model": "hosted"
+  },
+  "arrange the following words in a logical sequence 1 egg 2 chicken 3 bird 4 baby": {
+   "name": "Sentence Construction Method",
+   "seconds": 10,
+   "steps": [
+    "Form a cause-effect sentence: \"An egg hatches into a baby, which grows into a chicken, a type of bird.\"",
+    "Extract the key nouns in order of appearance: Egg, Baby, Chicken, Bird.",
+    "Map to given numbers (1=Egg, 4=Baby, 2=Chicken, 3=Bird) to obtain sequence 1,4,2,3."
+   ],
+   "answer": "1, 4, 2, 3",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:36:56.051Z",
+   "model": "hosted"
+  },
+  "a contractor promises to complete a project in 40 days he employs 60 men however due to supply shortages the work rate of every single man drops by 25 immediate": {
+   "name": "Half-Work Inverse Rate Method",
+   "seconds": 10,
+   "steps": [
+    "Remaining work equals first half (1200 man-days) with 20 days left, so at full rate 60 men would suffice.",
+    "With 25% rate drop, each man is 75% efficient; required men = 60 / 0.75 = 80.",
+    "Additional men = 80 - 60 = 20."
+   ],
+   "answer": "20",
+   "verified": true,
+   "generatedAt": "2026-11-24T22:37:18.839Z",
+   "model": "hosted"
+  },
+  "the word success has how many vowels": {
+   "name": "Consonant Subtraction Method",
+   "seconds": 10,
+   "steps": [
+    "Count total letters in 'Success' (7)",
+    "Count consonants: S, c, c, s, s (5)",
+    "Subtract consonants from total: 7 - 5 = 2 vowels"
+   ],
+   "answer": "2",
+   "verified": true,
+   "generatedAt": "2026-11-25T07:54:36.940Z",
+   "model": "hosted"
+  },
+  "to boost the stand up india initiative for female entrepreneurs the central bank announced a soft lending policy requiring banks to extend credit at rates below": {
+   "name": "Contrast Policy Intent",
+   "seconds": 10,
+   "steps": [
+    "Identify the policy goal: affordable credit for women entrepreneurs.",
+    "Recognize that 'avoid any practice that implies charging exorbitant fees or hidden costs' describes a harmful action.",
+    "Match the harmful action to the option meaning 'take unfair advantage': Exploit."
+   ],
+   "answer": "B) Exploit",
+   "verified": true,
+   "generatedAt": "2026-11-25T07:58:40.067Z",
+   "model": "hosted"
+  },
+  "in a frantic rush to fix the broken bridge before the monsoon the village engineer shouted at the contractors stop you are trying to by using these temporary ba": {
+   "name": "Imagery Contrast Method",
+   "seconds": 10,
+   "steps": [
+    "Identify the core metaphor: making a river flow through a solid wall of wood depicts an impossible construction.",
+    "Map each idiom to its literal imagery: A – painting a town red (color), B – building castles in the air (impossible structure), C – counting chickens (premature expectation), D – throwing money (financial loss).",
+    "Select the idiom whose literal image mirrors an impossible building effort: building castles in the air.",
+    "Confirm the engineer’s frustration targets unrealistic planning, so option B fits."
+   ],
+   "answer": "B. build castles in the air: Engage in unrealistic planning or hope.",
+   "verified": true,
+   "generatedAt": "2026-11-25T07:58:58.055Z",
+   "model": "hosted"
+  },
+  "select the option that best completes the sentence the new government policy is a for small businesses as it provides essential financial support to keep them f": {
+   "name": "Positive Connotation Filter",
+   "seconds": 10,
+   "steps": [
+    "Identify that the sentence describes essential financial support preventing collapse, indicating a rescuing, positive role.",
+    "Eliminate options with negative or neutral connotations: \"tightrope\" (risky), \"stepping-stone\" (progressive), \"dead-end\" (hopeless).",
+    "Select the remaining option \"lifeline,\" which directly conveys a vital rescue mechanism."
+   ],
+   "answer": "A) A lifeline",
+   "verified": true,
+   "generatedAt": "2026-11-25T07:59:38.791Z",
+   "model": "hosted"
+  },
+  "while inspecting the railway tracks the senior engineer noted that the contractor had managed to save costs by not using high grade steel in the sleepers howeve": {
+   "name": "Cost-Quality Idiom Matching",
+   "seconds": 10,
+   "steps": [
+    "Note the contractor saved costs by using inferior steel.",
+    "Infer the action describes sacrificing quality for economy.",
+    "Select the idiom meaning \"do something cheaply by omitting essential steps\" → cutting corners."
+   ],
+   "answer": "cutting corners",
+   "verified": true,
+   "generatedAt": "2026-11-25T08:03:16.248Z",
+   "model": "hosted"
+  },
+  "the manager announced the project delay a sudden software crash had occurred in the server room": {
+   "name": "Fact-Mode Filter",
+   "seconds": 10,
+   "steps": [
+    "Identify the server crash as a confirmed past fact, not a hypothesis, purpose, or fear.",
+    "Test each option: 'assuming that'=hypothetical, 'lest'=fear, 'in order to'=purpose, 'given that'=factual premise.",
+    "Select the only option whose semantic mode matches 'confirmed fact causing the announcement'."
+   ],
+   "answer": "B] given that",
+   "verified": true,
+   "generatedAt": "2026-11-25T08:04:17.085Z",
+   "model": "hosted"
+  },
+  "a financial scheme offers a simple interest rate of r ext extperthousand per annum for the first t years and switches to a compound interest mechanism compounde": {
+   "name": "Dual‑Equation Substitution",
+   "seconds": 10,
+   "steps": [
+    "Let P be the principal and T the simple‑interest years. Write total interest for the original scheme: \\(I_1 = P\\cdot r\\cdot T/1000 + P\\big[(1+\\frac{20-r}{1000})^{12-T}-1\\big]\\). Set \\(I_1=6480\\).",
+    "For the modified scheme (rate r+2 for T+1 years, then compound at 20-(r+2) = 18‑r for the remaining 11‑T years) write \\(I_2 = P\\cdot (r+2)(T+1)/1000 + P\\big[(1+\\frac{18-r}{1000})^{11-T}-1\\big]\\). Set \\(I_2=6480\\).",
+    "Subtract the two equations to eliminate P, giving a relation solely in r and T. Simplify using the fact that r is an integer (per‑thousand) and T is an integer ≤12. Test the few integer T values (4‑7) that keep the exponents small; only T=5 satisfies the relation, yielding a consistent integer P."
+   ],
+   "answer": "B: 5",
+   "verified": true,
+   "generatedAt": "2026-11-25T21:38:14.504Z",
+   "model": "hosted"
+  },
+  "in the city of varanasi a new digital tax rule applies to vehicle license numbers for any digit in the even positions 2nd 4th etc that is greater than 5 swap it": {
+   "name": "Early Even-Digit Filter",
+   "seconds": 10,
+   "steps": [
+    "Inspect even-position digits (2nd=2, 4th=4); both are ≤5",
+    "Since no digit qualifies for mirroring, exception condition is irrelevant",
+    "Output original number 5274"
+   ],
+   "answer": "5274",
+   "verified": true,
+   "generatedAt": "2026-11-25T21:39:35.521Z",
+   "model": "hosted"
+  },
+  "in the context of a heated debate on urban planning where architects insisted that greenery should be treated as concrete infrastructure to ensure survival whic": {
+   "name": "Equivalence Idiom Filter",
+   "seconds": 10,
+   "steps": [
+    "Identify the speaker's equation of greenery with concrete infrastructure.",
+    "Scan the options for an idiom that asserts identity (X is X).",
+    "Select the only option matching that pattern: 'Green is green'."
+   ],
+   "answer": "A) Green is green",
+   "verified": true,
+   "generatedAt": "2026-11-25T21:42:57.998Z",
+   "model": "hosted"
+  },
+  "a cooperative society s annual budget allocation for a specific project follows a strict policy every fiscal year the allocated amount is increased by 20 over t": {
+   "name": "Fractional Growth Method",
+   "seconds": 10,
+   "steps": [
+    "Convert 20% increase to fraction 6/5",
+    "Square fraction for two years: (6/5)^2 = 36/25",
+    "Multiply Rs. 18,000 by 36/25 = Rs. 25,920"
+   ],
+   "answer": "Rs. 25,920",
+   "verified": true,
+   "generatedAt": "2026-11-26T07:50:03.239Z",
+   "model": "hosted"
+  },
+  "in a specific government office protocol the code for an action is derived by taking the literal physical direction mentioned in the sentence and applying it to": {
+   "name": "ASCII Shift Decoding",
+   "seconds": 10,
+   "steps": [
+    "Find ASCII value of 'O' (79)",
+    "Subtract 4 for North direction",
+    "Convert result 75 to character 'K'"
+   ],
+   "answer": "K",
+   "verified": true,
+   "generatedAt": "2026-11-26T07:51:49.072Z",
+   "model": "hosted"
+  },
+  "complete the sentence with the most appropriate idiom that matches the irony of the situation described the new regulation was hailed as a breakthrough but for ": {
+   "name": "Irony Contrast Elimination",
+   "seconds": 10,
+   "shortcut": "Praised breakthrough harms vendors → curse in disguise",
+   "steps": [
+    "Spot the positive label “breakthrough” vs. negative impact on vendors",
+    "Select idiom meaning something seeming good but actually harmful",
+    "Eliminate A (solution), B (mixed), D (costly win) → only C fits"
+   ],
+   "answer": "C) Curse in disguise",
+   "verified": true,
+   "generatedAt": "2026-11-26T21:24:13.383Z",
+   "model": "hosted"
+  },
+  "in a certain village every single resident who owns a goat also owns a sheep furthermore there is at least one person in the village who owns a goat which of th": {
+   "name": "Intersection Existence Reasoning",
+   "seconds": 10,
+   "shortcut": "If ∃G and G⊆S, then ∃(G∧S).",
+   "steps": [
+    "Translate: \"Every goat‑owner also owns a sheep\" as set inclusion G ⊆ S.",
+    "Given: there exists at least one goat‑owner, i.e., G is non‑empty.",
+    "From G ⊆ S and G ≠ ∅, conclude that the intersection G ∩ S is non‑empty.",
+    "Thus at least one person owns both a goat and a sheep, which matches option 2."
+   ],
+   "answer": "At least one person in the village owns both a goat and a sheep.",
+   "verified": true,
+   "generatedAt": "2026-11-26T21:31:21.653Z",
+   "model": "hosted"
+  },
+  "even though the committee members insisted that the report before the monsoon floods submerged the village no one could decide which of them to sign first": {
+   "name": "Timeline Tense Alignment",
+   "seconds": 10,
+   "shortcut": "Match past markers: insisted, submerged, could → past verbs.",
+   "steps": [
+    "Identify past time markers: insisted, submerged, could decide.",
+    "First blank after insisted that → past indicative was finished (not subjunctive be finished).",
+    "Second blank which of them → past tense dared matches timeline."
+   ],
+   "answer": "was finished / dared",
+   "verified": true,
+   "generatedAt": "2026-11-28T07:26:21.107Z",
+   "model": "hosted"
+  },
+  "read the following sentence and identify the part containing the error marked as a b c d if no error is found select e the project manager decided to launch the": {
+   "name": "Time Marker Alignment Test",
+   "seconds": 10,
+   "shortcut": "Match 'next week' (future) with 'had signed' (past) -> clash.",
+   "steps": [
+    "Identify main verb 'decided' (past) and future marker 'next week'.",
+    "Check subordinate clause: 'had already signed' is past perfect (before past).",
+    "Spot logical mismatch: launch is future, but signing placed before decision; error in B."
+   ],
+   "answer": "B",
+   "verified": true,
+   "generatedAt": "2026-11-28T07:27:27.373Z",
+   "model": "hosted"
+  },
+  "read the following sentence and select the most appropriate idiom to fill the blank ensuring the phrase s figurative meaning aligns with the context of a sudden": {
+   "name": "Temporal Semantic Matching",
+   "seconds": 10,
+   "shortcut": "Overnight crash demands instant cessation idiom; only 'folded its tents' fits.",
+   "steps": [
+    "Spot the time marker 'overnight' signaling abrupt stop, not gradual decline.",
+    "Rate each option's inherent speed: blew up (sudden but often positive), folded its tents (immediate packing up), hit bottom (process), turned sour (gradual).",
+    "Choose the idiom that denotes instantaneous closure: folded its tents."
+   ],
+   "answer": "B) folded its tents",
+   "verified": true,
+   "generatedAt": "2026-11-28T07:28:02.096Z",
+   "model": "hosted"
+  },
+  "in a hypothetical economic scenario where the government s primary goal is to maximize rural employment immediately following a drought which phrase best comple": {
+   "name": "Concession Logic Test",
+   "seconds": 10,
+   "shortcut": "Only 'even if' keeps priority despite uncertainty.",
+   "steps": [
+    "Identify the logical relationship: the clause after the blank expresses a condition that does NOT prevent the main action.",
+    "Substitute each option; only \"even if\" yields a sensible meaning: \"even if forecasts uncertain, they still prioritize labor.\"",
+    "Eliminate others: \"as long as\" and \"provided that\" require certainty; \"unless\" reverses the logic."
+   ],
+   "answer": "B] even if",
+   "verified": true,
+   "generatedAt": "2026-11-28T07:28:18.197Z",
+   "model": "hosted"
+  }
+ }
+}

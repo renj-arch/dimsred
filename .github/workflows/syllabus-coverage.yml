@@ -1,0 +1,50 @@
+name: Syllabus Coverage
+
+# Rewrites upsc/coverage.html and data/upsc-syllabus-coverage.json from the
+# corpus, so "is anything missing?" always has a current answer instead of a
+# memory of one. Reports topic coverage and the question shapes present in the
+# bank; it never generates content.
+
+on:
+  schedule:
+    - cron: '47 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: syllabus-coverage
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Audit the syllabus
+        run: node scripts/audit-upsc-syllabus.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add upsc/coverage.html
+          git add -f data/upsc-syllabus-coverage.json
+          bash scripts/ci-push.sh "syllabus-coverage: refresh the coverage report"

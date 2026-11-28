@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Global Constraints in Constraint Satisfaction: AllDifferent, Cumulative, and Table Constraints | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.9em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.75em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.9em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Global Constraints in Constraint Satisfaction: AllDifferent, Cumulative, and Table Constraints</h1>
+<p class="meta">Logical Reasoning · <a href="/upsc/course/csat/lesson-logical-reasoning">Read the lesson →</a></p>
+<div class="hero"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Left panel: AllDifferent -->
+  <text x="120" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">AllDifferent</text>
+  <circle cx="60" cy="70" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="60" cy="100" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="60" cy="130" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="180" cy="70" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="180" cy="100" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="180" cy="130" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="70" y1="70" x2="170" y2="70" stroke="#1f2937" stroke-width="3"/>
+  <line x1="70" y1="100" x2="170" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <line x1="70" y1="130" x2="170" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <text x="120" y="155" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">GAC</text>
+  <text x="120" y="170" font-size="11" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Hall’s theorem</text>
+  <!-- Middle panel: Cumulative -->
+  <text x="280" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Cumulative</text>
+  <line x1="200" y1="120" x2="360" y2="120" stroke="#1f2937" stroke-width="3"/>
+  <line x1="200" y1="100" x2="360" y2="100" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,4"/>
+  <rect x="210" y="80" width="30" height="40" fill="#1f2937"/>
+  <rect x="250" y="70" width="20" height="50" fill="#1f2937"/>
+  <rect x="280" y="90" width="40" height="30" fill="#1f2937"/>
+  <text x="280" y="180" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Energy reasoning</text>
+  <!-- Right panel: Table -->
+  <text x="440" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Table</text>
+  <rect x="380" y="70" width="80" height="100" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <line x1="420" y1="70" x2="420" y2="170" stroke="#1f2937" stroke-width="2"/>
+  <line x1="380" y1="95" x2="460" y2="95" stroke="#1f2937" stroke-width="2"/>
+  <line x1="380" y1="120" x2="460" y2="120" stroke="#1f2937" stroke-width="2"/>
+  <line x1="380" y1="145" x2="460" y2="145" stroke="#1f2937" stroke-width="2"/>
+  <polyline points="390,85 400,95 415,75" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <polyline points="390,110 400,120 415,100" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <polyline points="390,135 400,145 415,125" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <polyline points="390,160 400,170 415,150" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="440" y="180" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Allowed tuples</text>
+  <!-- Central search space box -->
+  <rect x="230" y="220" width="100" height="40" stroke="#1f2937" stroke-width="2" stroke-dasharray="5,5" fill="none"/>
+  <!-- Arrows from panels to central box -->
+  <line x1="180" y1="100" x2="230" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="230,240 222,232 231,229" fill="#1f2937"/>
+  <line x1="280" y1="180" x2="280" y2="220" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="280,220 275,210 285,210" fill="#1f2937"/>
+  <line x1="380" y1="100" x2="330" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="330,240 329,229 338,232" fill="#1f2937"/>
+  <!-- Caption strip -->
+  <line x1="20" y1="295" x2="540" y2="295" stroke="#1f2937" stroke-width="2"/>
+  <text x="280" y="295" font-size="10" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Global Constraints in Constraint Satisfaction:</text>
+  <text x="280" y="308.5" font-size="10" font-family="sans-serif" fill="#1f2937" text-anchor="middle">AllDifferent, Cumulative, and Table Constraints</text>
+</svg></div>
+<p class="meta">Global Constraints in Constraint Satisfaction: AllDifferent, Cumulative, and Table Constraints</p></div><!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body></html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Concentric Circular Seating with Variable Facing and Radial Constraints | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.9em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.75em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.9em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Concentric Circular Seating with Variable Facing and Radial Constraints</h1>
+<p class="meta">Logical Reasoning · <a href="/upsc/course/csat/lesson-logical-reasoning">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Outer circle -->
+  <circle cx="280" cy="150" r="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Inner circle -->
+  <circle cx="280" cy="150" r="70" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Outer seats (8) -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <circle cx="400" cy="150" r="6"/><!-- 0° -->
+    <circle cx="365" cy="235" r="6"/><!-- 45° -->
+    <circle cx="280" cy="270" r="6"/><!-- 90° -->
+    <circle cx="195" cy="235" r="6"/><!-- 135° -->
+    <circle cx="160" cy="150" r="6"/><!-- 180° -->
+    <circle cx="195" cy="65" r="6"/><!-- 225° -->
+    <circle cx="280" cy="30" r="6"/><!-- 270° -->
+    <circle cx="365" cy="65" r="6"/><!-- 315° -->
+  </g>
+  <!-- Inner seats (6) -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <circle cx="350" cy="150" r="5"/><!-- 0° -->
+    <circle cx="315" cy="210" r="5"/><!-- 60° -->
+    <circle cx="245" cy="210" r="5"/><!-- 120° -->
+    <circle cx="210" cy="150" r="5"/><!-- 180° -->
+    <circle cx="245" cy="90" r="5"/><!-- 240° -->
+    <circle cx="315" cy="90" r="5"/><!-- 300° -->
+  </g>
+  <!-- Radial alignment lines (outer 0 & 4, inner 0 & 3) -->
+  <g stroke="#1f2937" stroke-width="2" stroke-dasharray="6,4">
+    <line x1="280" y1="150" x2="400" y2="150"/><!-- outer 0 -->
+    <line x1="280" y1="150" x2="160" y2="150"/><!-- outer 4 -->
+    <line x1="280" y1="150" x2="350" y2="150"/><!-- inner 0 -->
+    <line x1="280" y1="150" x2="210" y2="150"/><!-- inner 3 -->
+  </g>
+  <!-- Person P on outer seat 0 -->
+  <g transform="translate(400,150)">
+    <circle cx="0" cy="-18" r="8" stroke="#1f2937" stroke-width="2" fill="none"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-8" y1="10" x2="-8" y2="25" stroke="#1f2937" stroke-width="2"/>
+    <line x1="8" y1="10" x2="8" y2="25" stroke="#1f2937" stroke-width="2"/>
+  </g>
+  <!-- Person Q on inner seat 0 -->
+  <g transform="translate(350,150)">
+    <circle cx="0" cy="-18" r="8" stroke="#1f2937" stroke-width="2" fill="none"/>
+    <line x1="0" y1="-10" x2="0" y2="10" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-10" y1="0" x2="10" y2="0" stroke="#1f2937" stroke-width="2"/>
+    <line x1="-8" y1="10" x2="-8" y2="25" stroke="#1f2937" stroke-width="2"/>
+    <line x1="8" y1="10" x2="8" y2="25" stroke="#1f2937" stroke-width="2"/>
+  </g>
+  <!-- Facing arrows -->
+  <g stroke="#1f2937" stroke-width="3" fill="#1f2937">
+    <!-- P faces centre (left) -->
+    <line x1="380" y1="150" x2="300" y2="150"/>
+    <polygon points="300,150 310,140 310,160"/>
+    <!-- Q faces outward (right) -->
+    <line x1="370" y1="150" x2="450" y2="150"/>
+    <polygon points="450,150 440,140 440,160"/>
+  </g>
+  <!-- Line of sight double arrow -->
+  <g stroke="#1f2937" stroke-width="2" fill="#1f2937">
+    <line x1="350" y1="150" x2="400" y2="150"/>
+    <polygon points="350,150 360,140 360,160"/>
+    <polygon points="400,150 390,140 390,160"/>
+  </g>
+  <!-- Labels -->
+  <text x="420" y="155.4" font-size="14" fill="#1f2937" font-family="sans-serif">Outer Circle</text>
+  <text x="360" y="137.7" font-size="14" fill="#1f2937" font-family="sans-serif">Inner Circle</text>
+  <text x="280" y="100" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Radial Alignment</text>
+  <text x="380" y="120" font-size="14" fill="#1f2937" font-family="sans-serif">Facing Center</text>
+  <text x="370" y="170" font-size="14" fill="#1f2937" font-family="sans-serif">Facing Outward</text>
+  <text x="375" y="190" font-size="14" fill="#1f2937" font-family="sans-serif">Sees</text>
+  <text x="280" y="260" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Modulo Eq</text>
+  <!-- Caption strip -->
+  <rect x="0" y="280" width="560" height="40" fill="#e8e0d0"/>
+  <text x="280" y="274" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Concentric Circular Seating with Variable Facing and Radial Constraints</text>
+</svg></div>
+<p class="meta">Concentric Circular Seating with Variable Facing and Radial Constraints</p></div><!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body></html>

@@ -1,0 +1,166 @@
+name: Full-Length Paper (model lane)
+
+# Builds one real full-length paper per run, in the exam's own pattern, inside
+# the mock-test section. Questions are written by the hosted model lane
+# (qwen 9B default, 27B optional) on the runner. If any section is short the
+# lane refuses to publish a padded paper; the generated questions are still
+# committed so the next run can finish the job.
+on:
+  schedule:
+    # Four slots a day: the rotation below advances by four each day, so all 22
+    # real papers cycle in ~5.5 days instead of ~22. A paper that comes up
+    # "short" is finished on a later slot.
+    - cron: '0 3,9,15,21 * * *'
+  workflow_dispatch:
+    inputs:
+      exam:
+        description: 'Exam key (cgl, rbi, jee, neet, gate, agniveer, upsc, ibps-po, sbi-clerk, ssc-gd, ctet, nda, cds, clat, apfc)'
+        required: true
+        default: 'cgl'
+      paper:
+        description: 'Paper id (blank = first paper in the blueprint)'
+        required: false
+        default: ''
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'qwen3.5:9b'
+      budget:
+        description: 'Maximum questions the model may add in this run'
+        required: false
+        default: '100'
+
+concurrency:
+  # Serialize paper builds: every run rebuilds shared PDF/HTML artifacts, so
+  # two runs pushing at once conflict on binaries. Each run is now ~10 min.
+  group: full-paper
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    # Checkout + model warm-up + fill + build. The 9 GB data/questions corpus
+    # is excluded below; the paper lane never reads it.
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Choose today's exam (scheduled runs)
+        id: target
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "exam=${{ inputs.exam }}" >> $GITHUB_OUTPUT
+            echo "paper=${{ inputs.paper }}" >> $GITHUB_OUTPUT
+          else
+            # Rotate over every real MCQ paper, not just the first paper of each
+            # exam: UPSC (GS1 + CSAT), NDA (Maths + GAT) and CDS (English +
+            # GK + Maths) each have more than one paper. Tier-II, CTET Paper II
+            # and JEE Paper 2B are the Paper 2 additions; descriptive/mixed
+            # papers (UPSC Mains, RBI Phase II, JEE Paper 2A) stay out.
+            PAPERS=(cgl:tier1 cgl:tier2 rbi:phase1 ibps-po:prelims sbi-clerk:prelims ssc-gd:cbt ctet:paper1 ctet:paper2 jee:paper1 jee:paper2b neet:paper1 gate:paper1 agniveer:cee upsc:gs1 upsc:csat nda:maths nda:gat cds:english cds:gk cds:maths clat:paper1 apfc:rt)
+            IDX=$(( (10#$(date +%j) * 4 + 10#$(date +%H) / 6) % ${#PAPERS[@]} ))
+            PAIR=${PAPERS[$IDX]}
+            echo "exam=${PAIR%%:*}" >> $GITHUB_OUTPUT
+            echo "paper=${PAIR##*:}" >> $GITHUB_OUTPUT
+          fi
+
+      # Exit 3 means "short, refused to publish". The job must end red so a
+      # short paper is visible; the bank fill and status file are still
+      # committed by the always() step below.
+      - name: Assemble full paper
+        id: lane
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS="--fill --budget=${{ inputs.budget || '60' }} --date=$(date +%Y-%m-%d)"
+          if [ -n "${{ steps.target.outputs.paper }}" ]; then ARGS="$ARGS --paper=${{ steps.target.outputs.paper }}"; fi
+          node scripts/full-paper-lane.js "${{ steps.target.outputs.exam }}" $ARGS
+
+      - name: Resolve published paper slug
+        id: slug
+        if: steps.lane.outcome == 'success'
+        run: |
+          SLUG=$(node -e "
+            const s = require('./data/full-paper-status.json');
+            const exam = process.argv[1];
+            const date = process.argv[2];
+            const p = (s.papers || []).find(function (x) {
+              return x.exam === exam && x.date === date && x.status === 'published';
+            });
+            process.stdout.write(p && p.slug ? p.slug : '');
+          " "${{ steps.target.outputs.exam }}" "$(date +%Y-%m-%d)")
+          echo "slug=$SLUG" >> $GITHUB_OUTPUT
+          echo "resolved slug: $SLUG"
+
+      - name: Clean question banks (repair corruption, drop junk)
+        if: steps.lane.outcome == 'success'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/bank-cleanup.js --fix --strict=cgl
+
+      - name: Build mock-test pages and PDF
+        if: steps.lane.outcome == 'success'
+        run: |
+          SLUG="${{ steps.slug.outputs.slug }}"
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-full-papers.js ${SLUG:+--slug="$SLUG"}
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-paper-pdf.js ${SLUG:+--slug="$SLUG"}
+
+      - name: Update sitemap
+        if: steps.lane.outcome == 'success'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-sitemap.js || true
+
+      - name: Commit generated papers
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          git add -f question-bank/*.json
+          if git diff --staged --quiet; then
+            echo "No changes to publish"
+            exit 0
+          fi
+          # ci-push.sh owns the commit, the deepen, the rebase/merge retry and
+          # the PAT -> GITHUB_TOKEN fallback.
+          #
+          # The custom loop that used to live here retried three times with a
+          # fixed 5s sleep and merged a depth-1 FETCH_HEAD that had no common
+          # ancestor with the local commit. The branch stayed diverged, so
+          # every push was rejected -- after the paper had been built. Five of
+          # the last eight runs died on exactly that and threw the paper away.
+          # daily-papers.yml was moved onto ci-push.sh for the same reason; this
+          # lane was left behind.
+          git fetch --depth=100 --no-tags origin main 2>/dev/null || true
+          bash scripts/ci-push.sh "full-paper: ${{ steps.target.outputs.exam }} ${{ steps.target.outputs.paper }} $(date +'%Y-%m-%d')"
+
+      - name: Report
+        if: always()
+        run: |
+          echo "exam=${{ steps.target.outputs.exam }} lane=${{ steps.lane.outcome }}"
+          cat data/full-paper-status.json 2>/dev/null | head -60 || true

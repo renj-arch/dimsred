@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Electrical Engineering Paper II: Core Topics — UPSC Optional: Electrical Engineering Lesson | vlymbooq</title>
+    <meta name="description" content="Free UPSC Optional: Electrical Engineering Electrical Engineering Paper II: Core Topics lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/upsc/course/opt-electrical-engineering/lesson-paper2.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.9em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.9em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.9em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:1.02em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:1.02em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95em}
+        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}
+        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.9em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.9em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.9em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.9em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.9em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.9em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.9em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.9em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.9em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.9em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.9em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/upsc/">UPSC</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.75em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Optional: Electrical Engineering</div>
+                    <a href="lesson-overview.html">Electrical Engineering Optional: Syllabus, Sources & Strategy</a>
+                    <a href="lesson-paper1.html">Electrical Engineering Paper I: Core Topics</a>
+                    <a href="lesson-paper2.html" class="active">Electrical Engineering Paper II: Core Topics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 19 &middot; UPSC Optional: Electrical Engineering</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Electrical Engineering Paper II: Core Topics</h1>
+<!-- lesson-freshness --><div style="margin:6px 0 18px;font-size:.76em;letter-spacing:.04em;color:var(--muted,#9aa0a6)">Updated 23 Nov 2026 &#183; 9,504 words &#183; illustrated</div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.75em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 25 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="79a6158886a2" data-updated="2026-11-25" data-updated-label="25 Nov 2026" data-headings="[&quot;Electrical Engineering Paper II — Control Systems, Electrical Machines &amp; Power Systems&quot;,&quot;Control Systems&quot;,&quot;Electrical Machines&quot;,&quot;Memory Tricks&quot;,&quot;Power Electronics: The DC Chopper Circuit Family&quot;,&quot;Communication Systems: Modulation Indices and Bandwidth&quot;,&quot;State-Space Modeling and Controllability Analysis&quot;,&quot;Digital Control Implementation and Quantization Effects&quot;,&quot;Resonant and Soft‑Switching Power Converter Topologies&quot;,&quot;Orthogonal Frequency Division Multiplexing and MIMO Fundamentals&quot;,&quot;Electromagnetic Compatibility and Filter Design in Power Electronics&quot;,&quot;Power System Stability and FACTS Devices&quot;,&quot;Advanced Digital Modulation and Coding Techniques&quot;,&quot;Predictive and Sliding Mode Control of Power Converters&quot;,&quot;Electrical Drives: Vector Control and Sensorless Operation&quot;,&quot;High Voltage Engineering: Insulation Coordination and Surge Protection&quot;]"></div>
+                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.9em;color:#dbeafe"></div>
+                    <div style="color:var(--text-sec);font-size:.9em;margin-top:4px">Electrical Engineering Paper II: core syllabus areas, key concepts, standard references and answer-writing practice.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Control Systems · Electronics · Communication Systems · Power Electronics</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+<!-- course-figure:environment-ecology-figure -->
+<figure class="lesson-figure" data-figure="environment-ecology-figure" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Comprehensive Flow of Core Ecology Topics for GS3 Environment"><defs><marker id="arrowhead-lesson-environment-ecology-figure" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="50" y="30" width="140" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="50" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Ecology Basics</tspan></text><rect x="50" y="110" width="140" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="130" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Population Ecology</tspan></text><rect x="50" y="190" width="140" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="201.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Biodiversity</tspan><tspan x="120" dy="16.25">Conservation</tspan></text><rect x="50" y="270" width="140" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="290" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Climate Change</tspan></text><rect x="50" y="350" width="140" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="120" y="361.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="120" dy="0">Environmental</tspan><tspan x="120" dy="16.25">Pollution</tspan></text><rect x="250" y="30" width="160" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="330" y="41.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="330" dy="0">Environmental</tspan><tspan x="330" dy="16.25">Policies &amp; Acts</tspan></text><rect x="250" y="110" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="340" y="121.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="340" dy="0">International Orgs</tspan><tspan x="340" dy="16.25">(UNEP, WHO)</tspan></text><rect x="250" y="190" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="340" y="201.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="340" dy="0">India Initiatives</tspan><tspan x="340" dy="16.25">(Swachh, NAPCC)</tspan></text><path d="M 120 70 L 120 110" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-environment-ecology-figure)"/><path d="M 120 150 L 120 190" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-environment-ecology-figure)"/><path d="M 120 230 L 120 270" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-environment-ecology-figure)"/><path d="M 120 310 L 120 350" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-environment-ecology-figure)"/><path d="M 190 50 L 250 50" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-environment-ecology-figure)"/><path d="M 340 150 L 340 190" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-environment-ecology-figure)"/><path d="M 340 230 L 340 270" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arrowhead-lesson-environment-ecology-figure)"/></g><g><text x="130" y="90" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">supports</tspan></text><text x="130" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">drives</tspan></text><text x="130" y="250" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">impacts</tspan></text><text x="130" y="330" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="130" dy="0">exacerbates</tspan></text><text x="210" y="30" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="210" dy="0">regulates</tspan></text><text x="350" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="350" dy="0">guides</tspan></text><text x="350" y="250" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="350" dy="0">implements</tspan></text><text x="400" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Ecosystem = biotic + abiotic</tspan></text><text x="400" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="400" dy="0">Key policy hooks: NGT Act, Paris Accord</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Comprehensive Flow of Core Ecology Topics for GS3 Environment</strong> — Shows the logical progression of key ecology concepts and their policy links for quick revision.
+    &middot; <a href="../../../figures/svg-environment-ecology-figure.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+<!-- course-figure:opt-geography-paper1-figure-2 -->
+<figure class="lesson-figure" data-figure="opt-geography-paper1-figure-2" style="margin:18px 0 22px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.03)">
+  <div style="background:#fbf7ec;border-radius:8px;padding:10px;overflow-x:auto">
+    <svg viewBox="0 0 760 420" role="img" aria-label="Geography Paper I Core Topics: Three-Pillar Comparison"><defs><marker id="arrowhead-lesson-opt-geography-paper1-figure-2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#1f2937"/></marker></defs><rect x="0" y="0" width="100%" height="100%" fill="#fffdf7"/><g><rect x="50" y="80" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="140" y="100" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">Geomorphology</tspan></text><rect x="50" y="130" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="140" y="150" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">Climatology</tspan></text><rect x="50" y="180" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="140" y="200" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">Oceanography</tspan></text><rect x="50" y="230" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="140" y="250" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">Biogeography</tspan></text><rect x="280" y="80" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="370" y="91.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="370" dy="0">Population &amp;</tspan><tspan x="370" dy="16.25">Migration</tspan></text><rect x="280" y="130" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="370" y="141.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="370" dy="0">Settlement</tspan><tspan x="370" dy="16.25">Geography</tspan></text><rect x="280" y="180" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="370" y="200" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="370" dy="0">Economic Activities</tspan></text><rect x="280" y="230" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="370" y="250" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="370" dy="0">Models &amp; Theories</tspan></text><rect x="510" y="80" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="600" y="91.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="600" dy="0">Physiographic</tspan><tspan x="600" dy="16.25">Divisions</tspan></text><rect x="510" y="130" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="600" y="150" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="600" dy="0">Climate &amp; Monsoon</tspan></text><rect x="510" y="180" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="600" y="200" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="600" dy="0">Natural Resources</tspan></text><rect x="510" y="230" width="180" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2"/><text x="600" y="241.875" text-anchor="middle" font-size="13" font-weight="650" fill="#1f2937" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="600" dy="0">Agriculture &amp;</tspan><tspan x="600" dy="16.25">Industry</tspan></text></g><g><text x="140" y="30" text-anchor="middle" font-size="14" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="140" dy="0">Physical Geography</tspan></text><text x="370" y="30" text-anchor="middle" font-size="14" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="370" dy="0">Human Geography</tspan></text><text x="600" y="30" text-anchor="middle" font-size="14" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="600" dy="0">Indian Geography</tspan></text><text x="380" y="380" text-anchor="middle" font-size="11" font-weight="600" fill="#334155" font-family="'Segoe Print','Bradley Hand','Chalkboard SE','Comic Sans MS',cursive"><tspan x="380" dy="0">GS1 Geography: 3-pillar syllabus — master each pillar's sub-topics</tspan></text></g><text class="vlymbooq-svg" x="752" y="414" text-anchor="end" font-size="9" fill="#1f2937" fill-opacity="0.42" font-family="'Segoe Print','Bradley Hand',cursive">vlymbooq</text></svg>
+  </div>
+  <figcaption style="margin-top:10px;font-size:.9em;color:var(--text-sec,#c8ccd2)">
+    <strong>Geography Paper I Core Topics: Three-Pillar Comparison</strong> — Compares the three main pillars of GS1 Geography syllabus with their key sub-topics for quick revision.
+    &middot; <a href="../../../figures/svg-opt-geography-paper1-figure-2.html" style="color:var(--emerald,#34d399)">Open the full diagram &rarr;</a>
+  </figcaption>
+</figure>
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Electrical Engineering Paper II: Core Topics</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+
+<h3>Electrical Engineering Paper II — Control Systems, Electrical Machines & Power Systems</h3>
+<h3>Control Systems</h3>
+<!-- passage-cartoon:a10f089eda42 -->
+<figure class="passage-cartoon" data-cartoon="a10f089eda42">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central Control System block -->
+  <rect x="230" y="110" width="100" height="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Root Locus icon (top-left) -->
+  <path d="M 120 80 L 100 60 M 120 80 L 120 60 M 120 80 L 140 60" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Bode Plot icon (top-right) -->
+  <path d="M 420 80 L 460 80 M 460 80 L 480 60" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- State Space icon (bottom-left) -->
+  <path d="M 100 220 L 140 220 L 140 260 L 100 260 Z M 120 220 L 120 260 M 100 240 L 140 240" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- PID Control icon (bottom-right) three knobs -->
+  <circle cx="420" cy="240" r="8" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="440" cy="240" r="8" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="460" cy="240" r="8" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Arrows from center to icons -->
+  <line x1="280" y1="160" x2="120" y2="80" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="280" y1="160" x2="440" y2="80" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="280" y1="160" x2="120" y2="240" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="280" y1="160" x2="440" y2="240" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Caption strip line -->
+  <line x1="14" y1="300" x2="546" y2="300" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="280" y="100" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Control System</text>
+  <text x="120" y="50" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Root Locus</text>
+  <text x="440" y="50" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Bode Plot</text>
+  <text x="120" y="270" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">State Space</text>
+  <text x="440" y="270" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">PID Control</text>
+  <text x="280" y="295" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Control Systems</text>
+</svg></div>
+  <figcaption>Control Systems</figcaption>
+</figure>
+
+<ul>
+<li><strong>Control System Components:</strong> Open loop vs closed loop control systems, feedback and feedforward control, servo mechanisms, synchros, synchro transmitters and receivers, synchro torque differential systems, synchro capacitor, synchro applications.</li>
+<li><strong>Block Diagrams &amp; Signal Flow Graphs:</strong> Block diagram reduction rules, block diagram algebra, Mason's gain formula, signal flow graphs, Mason's gain formula, Mason's gain formula applications.</li>
+<li><strong>Time Domain Analysis:</strong> Standard test signals (step, step, ramp, parabolic, impulse), transient response of first order and second order systems, rise time, peak time, peak overshoot, settling time, steady state error, steady state error for step, ramp, parabolic inputs, static error constants (Kp, Kv, Kv).</li>
+<li><strong>Stability Analysis:</strong> Routh-Hurwitz criterion, necessary and sufficient conditions for stability, special cases (zero row in Routh array, zero row in auxiliary polynomial), relative stability, root locus (root locus construction rules, angle condition, magnitude condition, angle of departure, angle of arrival, centroid, asymptotes, breakaway points, intersection with imaginary axis), root locus applications.</li>
+<li><strong>Frequency Response Analysis:</strong> Bode plots (magnitude plot, phase plot), corner frequencies, phase margin, gain margin, gain crossover frequency, phase crossover frequency, gain margin, phase margin, Bode plot stability criteria, Nyquist plot (Nyquist stability criterion, Nyquist stability criterion, encirclements of -1 point, Nyquist criterion), Nyquist plot construction.</li>
+<li><strong>Compensators:</strong> Lead compensator, lag compensator, lag-lead compensator, PID controller, PID tuning (Ziegler-Nichols rules), cascade control, feedforward control, cascade control.</li>
+<li><strong>State Space Analysis:</strong> State space representation, state space models (controllable canonical form, observable canonical form, diagonal form, Jordan canonical form), state transition matrix, properties of state transition matrix, solution of state equation, controllability (Kalman's test), observability (duality principle), pole placement (pole placement by state feedback), Ackermann's formula.</li>
+</ul>
+<h3>Electrical Machines</h3>
+<!-- passage-cartoon:b10ef2e1d881 -->
+<figure class="passage-cartoon" data-cartoon="b10ef2e1d881">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central metaphor: unified machine heart -->
+  <circle cx="280" cy="150" r="90" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="150" r="60" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="8 4"/>
+  <!-- Four quadrant dividers -->
+  <line x1="280" y1="60" x2="280" y2="240" stroke="#1f2937" stroke-width="2"/>
+  <line x1="190" y1="150" x2="370" y2="150" stroke="#1f2937" stroke-width="2"/>
+  <!-- Magnetic flux lines radiating -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <path d="M280 60 C320 80 340 120 370 150"/>
+    <path d="M280 60 C240 80 220 120 190 150"/>
+    <path d="M280 240 C320 220 340 180 370 150"/>
+    <path d="M280 240 C240 220 220 180 190 150"/>
+    <path d="M190 150 C170 120 170 80 190 60"/>
+    <path d="M370 150 C390 120 390 80 370 60"/>
+    <path d="M190 150 C170 180 170 220 190 240"/>
+    <path d="M370 150 C390 180 390 220 370 240"/>
+  </g>
+  <!-- NW: DC Machine commutator -->
+  <g transform="translate(110, 60)">
+    <rect x="0" y="0" width="60" height="40" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+    <line x1="10" y1="10" x2="50" y2="30" stroke="#1f2937" stroke-width="2"/>
+    <line x1="50" y1="10" x2="10" y2="30" stroke="#1f2937" stroke-width="2"/>
+    <circle cx="30" cy="20" r="8" fill="none" stroke="#1f2937" stroke-width="1.5"/>
+    <line x1="30" y1="0" x2="30" y2="-12" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+    <line x1="30" y1="40" x2="30" y2="52" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <!-- NE: Transformer core -->
+  <g transform="translate(410, 60)">
+    <rect x="0" y="5" width="50" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+    <rect x="5" y="0" width="15" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+    <rect x="30" y="0" width="15" height="40" fill="none" stroke="#1f2937" stroke-width="2"/>
+    <path d="M12 5 Q25 5 25 20 Q25 35 12 35" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <path d="M38 5 Q25 5 25 20 Q25 35 38 35" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="3 2"/>
+  </g>
+  <!-- SW: Squirrel cage rotor -->
+  <g transform="translate(110, 220)">
+    <circle cx="30" cy="20" r="22" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+    <circle cx="30" cy="20" r="14" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="4 2"/>
+    <g stroke="#1f2937" stroke-width="2">
+      <line x1="30" y1="8" x2="30" y2="32"/>
+      <line x1="16" y1="20" x2="44" y2="20"/>
+      <line x1="12" y1="12" x2="48" y2="28"/>
+      <line x1="48" y1="12" x2="12" y2="28"/>
+    </g>
+    <rect x="25" y="42" width="10" height="12" fill="none" stroke="#1f2937" stroke-width="2"/>
+  </g>
+  <!-- SE: Salient pole synchronous -->
+  <g transform="translate(410, 220)">
+    <circle cx="30" cy="20" r="22" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+    <g stroke="#1f2937" stroke-width="2.5">
+      <line x1="30" y1="0" x2="30" y2="40"/>
+      <line x1="8" y1="20" x2="52" y2="20"/>
+      <line x1="12" y1="8" x2="48" y2="32"/>
+      <line x1="48" y1="8" x2="12" y2="32"/>
+    </g>
+    <rect x="20" y="42" width="20" height="10" fill="none" stroke="#1f2937" stroke-width="2"/>
+    <text x="30" y="58" text-anchor="middle" font-size="11" fill="#1f2937" font-family="sans-serif">V-curves</text>
+  </g>
+  <!-- Labels in empty regions -->
+  <text x="140" y="40" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">DC Machines</text>
+  <text x="435" y="40" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">Transformers</text>
+  <text x="140" y="290" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">Induction Motors</text>
+  <text x="435" y="290" text-anchor="middle" font-size="13" fill="#1f2937" font-family="sans-serif">Synchronous Machines</text>
+  <text x="280" y="35" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif" font-weight="bold">EMF &amp; Torque Equations</text>
+  <text x="280" y="285" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif" font-weight="bold">Speed Control Methods</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="292" width="532" height="18" fill="#1f2937"/>
+  <text x="280" y="305" text-anchor="middle" font-size="12" fill="#fbf7ec" font-family="sans-serif" font-weight="bold">Electrical Machines</text>
+</svg></div>
+  <figcaption>Electrical Machines</figcaption>
+</figure>
+
+<ul>
+<li><strong>DC Machines:</strong> DC machine construction (stator, rotor, armature, field poles, interpoles, compensating windings), EMF equation (E = PNZ/(60A) × φN/60), torque equation (T = (PZ/2πa) × φIa), DC generator characteristics (open circuit characteristic, external characteristics of shunt, series, compound generators), DC motor characteristics (torque-speed characteristics, speed-torque characteristics), speed control of DC motors (armature control, field control, Ward-Leonard system), DC motor starters (3-point starter, 4-point starter).</li>
+<li><strong>Transformers:</strong> Transformer construction (core type, shell type), ideal transformer equations, practical transformer (equivalent circuit, equivalent circuit parameters - R1, X1, R2', X2', R0, X0), equivalent circuit parameters determination (open circuit test, short circuit test), voltage regulation, efficiency, all day efficiency, parallel operation of transformers (conditions for parallel operation, load sharing), autotransformer (advantages, disadvantages, applications), Scott connection (3-phase to 2-phase conversion), Scott connection applications.</li>
+<li><strong>Induction Motors:</strong> 3-phase induction motor construction (stator, rotor - squirrel cage, wound rotor), rotating magnetic field, principle of operation, slip (s = (Ns - N)/Ns), rotor EMF, rotor current, rotor frequency, torque equation (T ∝ φI₂cosφ₂), maximum torque condition (R₂ = X₂), maximum torque at starting (R₂ = X₂), torque-slip characteristics, speed control methods (stator voltage control, rotor resistance control, frequency control, pole changing, cascade control), induction generator, induction generator operation (self-excited induction generator, grid-connected induction generator).</li>
+<li><strong>Synchronous Machines:</strong> Synchronous machine construction (salient pole, cylindrical pole), EMF equation (E₄ = 4.44fNΦK_w), synchronous impedance method (open circuit test, short circuit test), voltage regulation (EMF method, MMF method, ZPF method, Potier method), synchronous motor (starting methods, V-curves, inverted V-curves, power factor control), synchronous condenser, hunting (hunting oscillations, damping windings), synchronous condenser applications.</li>
+</ul>
+<div class="example-box"><div class="ex-title">Technique: Thevenin's Theorem</div><div class="ex-text">Question: Find Thevenin equivalent across terminals A-B of a circuit with 12V source, 4Ω resistor in series with parallel combination of 4Ω and 8Ω resistors.</div><div class="ex-soln">Answer: V_th = open circuit voltage across A-B = voltage across 4Ω resistor = (4/(4+4))×12 = 6V. R_th = 4Ω || 4Ω = 2Ω. Thevenin equivalent: 6V source in series with 2Ω resistor.</div></div>
+<h3>Memory Tricks</h3>
+<ul>
+<li><strong>Kirchhoff's Laws:</strong> KCL - algebraic sum of currents at node = 0 (charge conservation); KVL - algebraic sum of voltages around loop = 0 (energy conservation).</li>
+<li><strong>Thevenin's Theorem:</strong> V_th = V_oc (open circuit voltage), R_th = V_oc/I_sc (short circuit current), R_th = V_oc/I_sc.</li>
+<li><strong>Maximum Power Transfer:</strong> Maximum power transferred when load resistance equals Thevenin resistance (R_L = R_th), maximum power P_max = V_th²/(4R_th).</li>
+<li><strong>Resonance:</strong> Series resonance - impedance minimum, current maximum, power factor = 1; Parallel resonance - impedance maximum, current minimum, power factor = 1.</li>
+</ul>
+<div class="tip-box"><div class="tip-title">Mains strategy</div><div class="tip-text">Electrical Engineering answers: draw circuit diagrams, show step-by-step derivation of circuit equations, state assumptions clearly, quote IS codes (IS 456 for RCC, IS 800 for steel, IS 1893 for seismic design, IS 10262 for mix design), quote standard values (electrical resistivity of copper 1.72×10⁻⁸ Ω·m, copper density 8.96 g/cm³, electrical resistivity of aluminium 2.83×10⁻⁸ Ω·m, aluminium density 2.7 g/cm³).</div></div>
+<h3>Power Electronics: The DC Chopper Circuit Family</h3>
+<!-- passage-cartoon:fb88f4a55f01 -->
+<figure class="passage-cartoon" data-cartoon="fb88f4a55f01">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- DC source line -->
+  <path d="M60 100 H500" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="40" y="85" width="20" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="45" y1="85" x2="45" y2="115" stroke="#1f2937" stroke-width="4"/>
+  <line x1="55" y1="85" x2="55" y2="95" stroke="#1f2937" stroke-width="4"/>
+  <!-- Chopper switch (knife) -->
+  <path d="M280 60 L280 140" stroke="#1f2937" stroke-width="4" stroke-linecap="round"/>
+  <path d="M265 60 L295 60 L280 45 Z" stroke="#1f2937" stroke-width="3" fill="#1f2937"/>
+  <!-- Pulsed output -->
+  <path d="M280 140 H320 V120 H360 V140 H400 V120 H440 V140 H480" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="square"/>
+  <!-- Inductive load -->
+  <path d="M480 140 L500 140 M500 140 Q510 130 520 140 Q530 150 540 140 Q550 130 560 140" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Flyback diode -->
+  <path d="M500 120 L520 100 L500 80 M520 100 L540 100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="540" y1="95" x2="540" y2="105" stroke="#1f2937" stroke-width="3"/>
+  <!-- Four topology icons -->
+  <!-- Buck (step-down) -->
+  <path d="M140 190 V210 M130 210 L150 210 M140 190 L130 200 L150 200" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Boost (step-up) -->
+  <path d="M420 210 V190 M410 190 L430 190 M420 210 L410 200 L430 200" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Buck-Boost -->
+  <path d="M140 250 V230 M130 230 L150 230 M140 250 L130 240 L150 240 M140 250 V270 M130 270 L150 270" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Cuk (capacitor transfer) -->
+  <rect x="405" y="235" width="15" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="425" y="235" width="15" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="420" y1="250" x2="425" y2="250" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Inverter H-bridge -->
+  <rect x="220" y="265" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="260" y="265" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="220" y="300" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <rect x="260" y="300" width="30" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="235" y1="265" x2="235" y2="250" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="275" y1="265" x2="275" y2="250" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- PWM sine wave -->
+  <path d="M320 265 Q330 250 340 265 Q350 280 360 265 Q370 250 380 265 Q390 280 400 265" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="40" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">DC Chopper</text>
+  <text x="280" y="70" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Duty Cycle δ</text>
+  <text x="280" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Buck Boost Buck-Boost Cuk</text>
+  <text x="510" y="115" text-anchor="start" font-family="sans-serif" font-size="12" fill="#1f2937">Flyback Diode</text>
+  <text x="280" y="260" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">PWM Inverter</text>
+  <!-- Caption strip -->
+  <rect x="14" y="292" width="532" height="18" fill="#1f2937"/>
+  <text x="280" y="305" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#fbf7ec">Power Electronics: The DC Chopper Circuit Family</text>
+</svg></div>
+  <figcaption>Power Electronics: The DC Chopper Circuit Family</figcaption>
+</figure>
+
+<p>The study of power electronics in Paper II shifts focus from linear control (amplifiers, analog circuits) to switching devices that convert energy at high frequencies. The core syllabus area here is the <strong>DC Chopper</strong>, which acts as a variable DC voltage source. Unlike a transformer which changes AC voltage levels, a chopper chops a fixed DC input into a varying average output using semiconductor switches (BJT, MOSFET, IGBT). The fundamental operation relies on the concept of duty cycle (δ = t<sub>on</sub>/T), where T is the switching period.</p>
+<p>The standard reference for this domain is <em>Bernard K. Bose, Power Electronics</em>, which details the topologies extensively. A student must master four primary chopper configurations: Step-down (Buck), Step-up (Boost), Step-up-Step-down (Buck-Boost), and Cuk converters. Each has distinct voltage transfer ratios and polarity characteristics. For instance, in a Buck converter, the output voltage V_o is given by V_o = δ V_s, where V_s is the source voltage. Crucially, the load current must be continuous for these simple topologies to function as intended; if the load is highly resistive and frequency low, discontinuous conduction mode (DCM) occurs, altering the transfer ratio.</p>
+<p>A critical mechanism often tested is the <strong>flyback diode</strong> (or freewheeling diode). When the switch opens, the inductive load tries to maintain current flow. The voltage across the inductor reverses polarity, forward-biasing the diode. Current then circulates through the load and diode, bypassing the switch. This prevents high-voltage spikes that would destroy the switch (arcing). In modern designs using IGBTs or MOSFETs, this diode is often an intrinsic body diode or a fast recovery Schottky diode to minimize switching losses.</p>
+<p>The <strong>Inverter</strong> section complements this by converting DC to AC. The basic single-phase full-bridge inverter uses four switches (typically IGBTs) arranged in legs. By controlling the firing angles, one can generate square waves, quasi-square waves, or stepped waveforms. The harmonic content of these waveforms is a key analysis topic. A pure sine wave requires complex PWM (Pulse Width Modulation) control. The <strong>Stevedore's Inverter</strong> or specific industrial inverters often use phase-angle control to regulate output voltage by varying the conduction angle of thyristors, though this introduces significant harmonics.</p>
+<p>Another advanced topic is the <strong>Cycloconverter</strong>, which converts fixed-frequency AC to variable-frequency AC directly without an intermediate DC link. This is used in large motor drives (like rolling mills). The control logic here involves overlapping firing sequences of thyristors to synthesize a lower frequency output from a higher frequency input. <span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="Cycloconverters can operate in regenerative (inversion) mode; they do have regenerative capability.">Efficiency drops significantly due to high harmonic distortion and complex commutation</span> and high harmonic distortion, limiting its use to low-speed, high-torque applications.</p>
+<div class="example-box"><div class="ex-title">Examiner's trap</div><div class="ex-text">Question: In a step-down chopper with continuous load current, if the duty cycle is 0.5 and input voltage is 100V, what is the output voltage? Answer: 50V. Trap: Students often forget that in discontinuous conduction mode (DCM), V_o depends on the load resistance and switching frequency, not just duty cycle. Another trap: Confusing the polarity of Buck-Boost (output opposite to input) with Cuk or SEPIC (output same polarity). Always check the diode orientation in the schematic.</div></div>
+<div class="tip-box"><div class="tip-title">Exam-day strategy</div><div class="tip-text">When solving numerical problems on choppers, always state your assumption regarding continuous vs. discontinuous conduction mode first. If the problem does not specify, assume Continuous Conduction Mode (CCM) for standard textbook answers, but mention DCM if the load is purely resistive and frequency is low. Always draw the voltage waveform across the switch and the diode to justify your calculation of average voltage.</div></div>
+
+<h3>Communication Systems: Modulation Indices and Bandwidth</h3>
+<!-- passage-cartoon:76aab29a8d4b -->
+<figure class="passage-cartoon" data-cartoon="76aab29a8d4b">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central carrier wave -->
+  <path d="M 100,160 C 120,120 140,120 160,160 C 180,200 200,200 220,160 C 240,120 260,120 280,160 C 300,200 320,200 340,160 C 360,120 380,120 400,160 C 420,200 440,200 460,160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-left bandwidth icon -->
+  <path d="M 100,80 H 180" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 100,70 V 90" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 180,70 V 90" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Top-right Carson's rule triangle -->
+  <path d="M 460,80 L 540,80 L 460,120 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-left noise zigzag -->
+  <path d="M 100,240 L 110,220 L 120,240 L 130,220 L 140,240 L 150,220 L 160,240 L 170,220 L 180,240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom-right Shannon curve -->
+  <path d="M 460,240 Q 500,200 540,200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption line -->
+  <path d="M 14,300 H 546" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="120" text-anchor="middle" font-size="14" fill="#1f2937">Modulation Types</text>
+  <text x="100" y="60" font-size="14" fill="#1f2937">AM Bandwidth 2fm</text>
+  <text x="460" y="60" font-size="14" fill="#1f2937">FM Carson's Rule</text>
+  <text x="100" y="270" font-size="14" fill="#1f2937">Noise &amp; SNR</text>
+  <text x="460" y="270" font-size="14" fill="#1f2937">Shannon Capacity</text>
+  <text x="280" y="295" text-anchor="middle" font-size="13" fill="#1f2937">Communication Systems: Modulation Indices and Bandwidth</text>
+</svg></div>
+  <figcaption>Communication Systems: Modulation Indices and Bandwidth</figcaption>
+</figure>
+
+<p>The communication systems syllabus focuses on the transmission of information over a channel. The core concept is <strong>Modulation</strong>: varying a carrier parameter (amplitude, frequency, or phase) in accordance with the message signal. Amplitude Modulation (AM) varies the envelope amplitude; Frequency Modulation (FM) varies instantaneous frequency; Phase Modulation (PM) varies instantaneous phase.</p>
+<p>A critical distinction lies in <strong>Analog vs. Digital</strong> modulation. Analog systems (AM, FM, PM) are susceptible to noise accumulation. Digital systems (ASK, FSK, PSK, QAM) offer better noise immunity but require higher bandwidth and complex coding. The <strong>Bandwidth</strong> requirement is a frequent calculation point. For AM, BW = 2f_m (twice the highest modulating frequency). For FM, Carson's rule applies: BW ≈ 2(Δ f + f_m), where Δ f is the peak frequency deviation. This explains why FM radio occupies more spectrum than AM but offers superior audio quality and noise rejection.</p>
+<p>The <strong>Noise</strong> aspect is vital. Thermal noise (Johnson-Nyquist noise) is inherent in all resistive components. Shot noise arises from discrete charge carriers. The signal-to-noise ratio (SNR) determines the fidelity of transmission. In FM, the "capture effect" and "threshold effect" are unique phenomena where a stronger signal suppresses a weaker one on the same frequency, or where SNR degrades rapidly below a certain threshold level.</p>
+<p><strong>Digital Communication</strong> introduces concepts like <strong>Error Control Coding</strong> (Hamming codes, Reed-Solomon) and <strong>Synchronization</strong>. Without synchronization between transmitter and receiver, data bits cannot be aligned. Techniques like Manchester encoding ensure self-clocking in the signal. The <strong>Shannon-Hartley theorem</strong> (C = B log<sub>2</sub>(1 + S/N)) defines the theoretical maximum channel capacity. Students must understand that increasing bandwidth or SNR increases capacity, but practical constraints (filtering, non-ideal components) limit real-world performance.</p>
+<p>The <strong>Satellite Communication</strong> section involves uplink/downlink frequencies, polarization (linear vs. circular), and path loss calculations involving free-space attenuation and atmospheric absorption. The concept of <strong>FDMA, TDMA, CDMA</strong> multiple access techniques is essential for understanding cellular networks. FDMA divides frequency spectrum; TDMA divides time slots; CDMA uses spreading codes to share the same frequency band simultaneously.</p>
+<div class="example-box"><div class="ex-title">Examiner's trap</div><div class="ex-text">Question: If a carrier of 10 MHz is modulated by a 5 kHz sine wave, calculate bandwidth. Answer: 10 kHz (2 × 5 kHz). Trap: Students often add the carrier frequency to the bandwidth or confuse f_m with the carrier frequency. Another trap: In FM, calculating deviation ratio (β = Δ f / f_m) and forgetting that modulation index affects sideband amplitude distribution (Bessel functions), not just bandwidth.</div></div>
+<div class="tip-box"><div class="tip-title">Exam-day strategy</div><div class="tip-text">In communication questions, always define your variables (f_c, f_m, Δ f) clearly before substituting values. If asked about noise figure, recall that it is defined as the ratio of input SNR to output SNR (F = (SNR)<sub>in</sub> / (SNR)<sub>out</sub>). Remember that a lower noise figure is better.</div></div>
+<h3>State-Space Modeling and Controllability Analysis</h3>
+<!-- passage-cartoon:4d435feaef5c -->
+<figure class="passage-cartoon" data-cartoon="4d435feaef5c">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="180" y="80" width="200" height="160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="60" cy="130" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="60" y1="145" x2="60" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <line x1="60" y1="155" x2="30" y2="170" stroke="#1f2937" stroke-width="3"/>
+  <line x1="60" y1="155" x2="90" y2="170" stroke="#1f2937" stroke-width="3"/>
+  <rect x="20" y="160" width="40" height="50" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <circle cx="90" cy="170" r="12" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <line x1="100" y1="180" x2="120" y2="200" stroke="#1f2937" stroke-width="2"/>
+  <line x1="180" y1="260" x2="380" y2="260" stroke="#1f2937" stroke-width="2"/>
+  <rect x="260" y="240" width="40" height="20" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <line x1="280" y1="260" x2="280" y2="300" stroke="#1f2937" stroke-width="2"/>
+  <path d="M 380 80 L 420 80 L 420 120 L 400 120 L 400 100 L 380 100 Z" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="14" y="280" width="532" height="26" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <text x="280" y="70" font-size="14" fill="#1f2937" text-anchor="middle">State-Space</text>
+  <text x="14" y="140" font-size="14" fill="#1f2937" text-anchor="start">Controllability</text>
+  <text x="130" y="170" font-size="14" fill="#1f2937" text-anchor="start">Observability</text>
+  <text x="280" y="235" font-size="14" fill="#1f2937" text-anchor="middle">Pole Placement</text>
+  <text x="400" y="50" font-size="14" fill="#1f2937" text-anchor="middle">Jordan Block</text>
+  <text x="280" y="295" font-size="12" fill="#1f2937" text-anchor="middle">State-Space Modeling and Controllability Analysis</text>
+</svg></div>
+  <figcaption>State-Space Modeling and Controllability Analysis</figcaption>
+</figure>
+
+<!-- passage-image:f8e2d896987f -->
+<figure class="passage-photo" data-image="f8e2d896987f">
+  <a href="https://commons.wikimedia.org/wiki/File:Flag_of_Jordan.svg" target="_blank" rel="noopener">
+    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Flag_of_Jordan.svg/960px-Flag_of_Jordan.svg.png" alt="Jordan" loading="lazy" referrerpolicy="no-referrer">
+  </a>
+  <figcaption>Jordan — Unknown · Public domain · <a href="https://commons.wikimedia.org/wiki/File:Flag_of_Jordan.svg" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption>
+</figure>
+
+<p>State-space representation converts an n‑th order differential equation into a first‑order matrix form <strong>ẋ = A x + B u</strong>, <strong>y = C x + D u</strong>. The matrix <strong>A</strong> captures system dynamics, <strong>B</strong> maps inputs to states, <strong>C</strong> selects measured outputs, and <strong>D</strong> represents direct feed‑through. For a linear time‑invariant (LTI) system, controllability is determined by the rank of the controllability matrix <strong>𝒞 = [B, A B, A² B, …, Aⁿ⁻¹ B]</strong>. If rank(𝒞) = n, every state can be driven to any desired value in finite time using an appropriate input. Observability follows the dual test with the observability matrix <strong>𝒪 = [Cᵀ, (Aᵀ) Cᵀ, …, (Aᵀ)ⁿ⁻¹ Cᵀ]ᵀ</strong>. A system that is both controllable and observable admits a minimal realization; otherwise pole‑zero cancellations hide internal modes that cannot be influenced or measured.</p>
+<p>Canonical forms simplify analysis. The controllable canonical form places the characteristic polynomial coefficients in the last row of <strong>A</strong> and uses a companion‑type <strong>B</strong> = [0 … 0 1]ᵀ. The observable canonical form is its transpose. The diagonal (modal) form decouples states when <strong>A</strong> is diagonalizable, revealing each mode’s eigenvalue directly. However, repeated eigenvalues with defective eigenvectors require Jordan blocks, which affect the structure of <strong>B</strong> and <strong>C</strong> and may render certain modes uncontrollable or unobservable even if the overall rank test passes.</p>
+<p>Pole placement via state feedback <strong>u = –K x + r</strong> assigns closed‑loop eigenvalues to desired locations provided the pair (A, B) is controllable. Ackermann’s formula gives <strong>K = [0 … 0 1] 𝒞⁻¹ φ(A)</strong> where φ(s) is the desired characteristic polynomial. For multi‑input systems, the solution is not unique; parametric approaches (e.g., using the controllability subspace) allow additional design freedom such as minimizing control effort or shaping transient response. Observer design mirrors pole placement: a Luenberger observer <strong>ẋ̂ = A x̂ + B u + L (y – C x̂)</strong> places observer poles via <strong>L</strong> using the dual system (Aᵀ, Cᵀ). The separation principle guarantees that controller and observer poles can be chosen independently.</p>
+<p>In examinations, a typical twist is to provide a transfer function with a hidden pole‑zero cancellation and ask whether the resulting state‑space model is controllable. The correct approach: construct a minimal realization (e.g., via controllable canonical form after cancelling common factors) and then test rank. Another common trap is to assume that a diagonalizable <strong>A</strong> guarantees controllability; the input matrix <strong>B</strong> must have non‑zero entries in every modal direction. Always verify the rank of 𝒞 explicitly.</p>
+
+<h3>Digital Control Implementation and Quantization Effects</h3>
+<!-- passage-cartoon:a0ae9d5bcc00 -->
+<figure class="passage-cartoon" data-cartoon="a0ae9d5bcc00">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central Digital Controller -->
+  <rect x="220" y="130" width="120" height="60" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Sampling Period Wave (top-left) -->
+  <polyline points="80,100 100,80 120,100 140,80 160,100" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Quantization Step Staircase (top-right) -->
+  <polyline points="400,100 420,100 420,80 440,80 440,60 460,60 460,40 480,40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Unit Circle with Poles (bottom-left) -->
+  <circle cx="120" cy="240" r="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="100" cy="240" r="5" fill="#1f2937"/>
+  <circle cx="140" cy="240" r="5" fill="#1f2937"/>
+  <!-- Biquad Cascade (bottom-right) -->
+  <rect x="400" y="220" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="470" y="220" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="460" y1="235" x2="470" y2="235" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption Strip -->
+  <line x1="20" y1="280" x2="540" y2="280" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="30" y="30" font-size="14" fill="#1f2937" font-family="sans-serif">Sampling Period</text>
+  <text x="460" y="50" font-size="14" fill="#1f2937" font-family="sans-serif">Quantization Step</text>
+  <text x="30" y="250" font-size="14" fill="#1f2937" font-family="sans-serif">Pole Sensitivity</text>
+  <text x="460" y="270" font-size="14" fill="#1f2937" font-family="sans-serif">Biquad Cascade</text>
+  <text x="280" y="100" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Limit Cycle</text>
+  <text x="280" y="295" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Digital Control Implementation and Quantization Effects</text>
+</svg></div>
+  <figcaption>Digital Control Implementation and Quantization Effects</figcaption>
+</figure>
+
+<p>Digital controllers operate on sampled‑data signals with a zero‑order hold (ZOH) equivalent discrete‑time model <strong>x[k+1] = A_d x[k] + B_d u[k]</strong>, where <strong>A_d = e<sup>A T_s</sup></strong> and <strong>B_d = ∫₀<sup>T_s</sup> e<sup>A τ</sup> dτ B</strong>. The sampling period <strong>T_s</strong> must satisfy the Nyquist criterion relative to the closed‑loop bandwidth; a common rule of thumb is <strong>T_s ≤ 0.1 / ω_c</strong> where <strong>ω_c</strong> is the desired crossover frequency. Faster sampling reduces discretization error but increases computational load and quantization noise.</p>
+<p>Quantization arises from finite word‑length arithmetic in the processor. Fixed‑point representation introduces a quantization step <strong>Δ = 2<sup>–(b–1)</sup></strong> for a b‑bit signed integer (assuming full‑scale ±1). The quantization error is often modeled as an additive white noise source with variance <strong>σ_q² = Δ² / 12</strong>. In a feedback loop, this noise is shaped by the closed‑loop transfer function; high‑gain loops amplify low‑frequency quantization noise, potentially causing limit cycles — sustained oscillations of small amplitude even with zero reference. Dithering (adding a small pseudo‑random signal) or using a higher‑precision accumulator for the integrator term mitigates limit cycles.</p>
+<p>Coefficient quantization affects pole locations. A pole at <strong>z = r e<sup>jθ</sup></strong> implemented with quantized coefficients may shift outside the unit circle, causing instability. Sensitivity analysis uses the derivative <strong>∂z/∂a_i</strong> where <strong>a_i</strong> are denominator coefficients. Poles near the unit circle or with high multiplicity are most sensitive. A robust design practice is to keep closed‑loop poles well inside the unit circle (e.g., |z| ≤ 0.8) and to verify stability after coefficient rounding using the Jury test or root locus on the quantized polynomial.</p>
+<p>Implementation structures matter. Direct Form I and II realize the difference equation directly but suffer from coefficient sensitivity. Cascade of second‑order sections (biquads) reduces sensitivity because each section handles a conjugate pole pair. Parallel form further isolates quantization effects. In exams, you may be asked to compare the signal‑to‑quantization‑noise ratio (SQNR) of a 12‑bit fixed‑point PID versus a 32‑bit floating‑point implementation; the answer hinges on the dynamic range of the integrator state and the scaling strategy (e.g., block floating‑point). Always state the assumed scaling and overflow handling.</p>
+
+<div class="example-box">
+<div class="ex-title">Worked Example: Quantization‑Induced Limit Cycle</div>
+<div class="ex-text">A digital PI controller with transfer function C(z) = K_p + K_i T_s / (1 – z⁻¹) is implemented in 12‑bit fixed‑point arithmetic (Δ = 2⁻¹¹). The plant is G(z) = 0.1 / (1 – 0.9 z⁻¹). The closed‑loop is stable with poles at 0.6 ± 0.2j. Estimate whether a limit cycle can appear and suggest a remedy.</div>
+<div class="ex-soln">The integrator state accumulates the error multiplied by K_i T_s. With 12‑bit resolution, the smallest representable increment is Δ. If the steady‑state error is less than Δ / (K_i T_s), the integrator cannot update and the output stalls, producing a limit cycle of amplitude ≈ Δ / (K_i T_s). For typical gains K_p = 2, K_i = 5, T_s = 0.001 s, the increment is 5×0.001 = 0.005. Δ = 4.88×10⁻⁴, so the minimum error to move the integrator is 0.097. Since the plant gain is 0.1, a steady‑state error of 0.1 yields an output change of 0.01, well below the quantization step. Hence a limit cycle is likely. Remedy: increase word length to 16 bits (Δ ≈ 1.5×10⁻⁵) or use a 32‑bit accumulator for the integrator while keeping 12‑bit storage for other variables. Dithering with a ±Δ/2 pseudo‑random signal also breaks the dead‑zone.</div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">Exam‑Day Strategy for Digital Control</div>
+<div class="tip-text">When a problem asks for the discrete‑time equivalent of a continuous plant, write the ZOH formulas explicitly and compute A_d, B_d using the matrix exponential or the Laplace‑domain step‑invariant method. For quantization questions, state the word length, compute Δ, and model quantization noise as additive white noise with variance Δ²/12. Always check pole locations after coefficient rounding; a quick Jury test on the rounded denominator saves marks. If a limit‑cycle analysis is required, compare the integrator step size with the quantization step and mention accumulator widening or dithering as standard fixes.</div>
+</div>
+
+<h3>Resonant and Soft‑Switching Power Converter Topologies</h3>
+<!-- passage-cartoon:a37388cf46c9 -->
+<figure class="passage-cartoon" data-cartoon="a37388cf46c9">
+  <div class="pc-frame"><svg viewBox='0 0 560 320' xmlns='http://www.w3.org/2000/svg'>
+  <rect x='0' y='0' width='560' height='320' fill='#fbf7ec'/>
+  <!-- Central converter -->
+  <rect x='200' y='100' width='160' height='120' fill='none' stroke='#1f2937' stroke-width='3' rx='8'/>
+  <path d='M200 160 L140 160 M140 140 L140 180 M150 140 L150 180 M160 140 L160 180 M170 140 L170 180 M180 140 L180 180 M190 140 L190 180' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <path d='M360 160 C370 140 380 180 390 160 C400 140 410 180 420 160' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <path d='M280 100 L280 70 M270 80 L290 80 M280 220 L280 250 M270 240 L290 240' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <!-- LC tank inside central -->
+  <path d='M240 140 L240 130 Q240 120 250 120 Q260 120 260 130 L260 140' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <path d='M280 140 L280 130 Q280 120 290 120 Q300 120 300 130 L300 140' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <path d='M320 140 L320 130 Q320 120 330 120 Q340 120 340 130 L340 140' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <line x1='250' y1='170' x2='250' y2='190' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='290' y1='170' x2='290' y2='190' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='330' y1='170' x2='330' y2='190' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='240' y1='190' x2='340' y2='190' stroke='#1f2937' stroke-width='2.5'/>
+  <!-- Top-left: Hard switching -->
+  <path d='M60 50 L60 40 Q60 30 70 30 Q80 30 80 40 L80 50' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <line x1='70' y1='50' x2='70' y2='70' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='50' y1='70' x2='90' y2='70' stroke='#1f2937' stroke-width='2.5'/>
+  <path d='M100 50 L110 50 L110 60 L120 60 L120 50 L130 50' stroke='#1f2937' stroke-width='2' fill='none' stroke-dasharray='4 2'/>
+  <path d='M60 80 Q65 75 70 80 Q75 85 80 80' stroke='#1f2937' stroke-width='2' fill='none'/>
+  <path d='M60 85 Q65 80 70 85 Q75 90 80 85' stroke='#1f2937' stroke-width='2' fill='none'/>
+  <!-- Top-right: Series resonant -->
+  <path d='M420 50 L420 40 Q420 30 430 30 Q440 30 440 40 L440 50' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <line x1='430' y1='50' x2='430' y2='70' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='410' y1='70' x2='450' y2='70' stroke='#1f2937' stroke-width='2.5'/>
+  <path d='M460 50 L470 50 L470 60 L480 60 L480 50 L490 50' stroke='#1f2937' stroke-width='2' fill='none'/>
+  <path d='M430 80 L430 90 Q430 100 440 100 Q450 100 450 90 L450 80' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <line x1='440' y1='80' x2='440' y2='65' stroke='#1f2937' stroke-width='2.5'/>
+  <!-- Bottom-left: Parallel resonant -->
+  <path d='M60 240 L60 230 Q60 220 70 220 Q80 220 80 230 L80 240' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <line x1='70' y1='240' x2='70' y2='260' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='50' y1='260' x2='90' y2='260' stroke='#1f2937' stroke-width='2.5'/>
+  <path d='M100 240 L110 240 L110 250 L120 250 L120 240 L130 240' stroke='#1f2937' stroke-width='2' fill='none'/>
+  <line x1='70' y1='270' x2='70' y2='290' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='50' y1='290' x2='90' y2='290' stroke='#1f2937' stroke-width='2.5'/>
+  <!-- Bottom-right: LLC gain curve -->
+  <path d='M420 240 L420 230 Q420 220 430 220 Q440 220 440 230 L440 240' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <line x1='430' y1='240' x2='430' y2='260' stroke='#1f2937' stroke-width='2.5'/>
+  <line x1='410' y1='260' x2='450' y2='260' stroke='#1f2937' stroke-width='2.5'/>
+  <path d='M460 240 L470 240 L470 250 L480 250 L480 240 L490 240' stroke='#1f2937' stroke-width='2' fill='none'/>
+  <path d='M430 270 L430 280 Q430 290 440 290 Q450 290 450 280 L450 270' stroke='#1f2937' stroke-width='2.5' fill='none'/>
+  <line x1='440' y1='270' x2='440' y2='255' stroke='#1f2937' stroke-width='2.5'/>
+  <path d='M470 270 L500 250' stroke='#1f2937' stroke-width='2' fill='none' stroke-dasharray='3 3'/>
+  <path d='M470 280 L500 270' stroke='#1f2937' stroke-width='2' fill='none' stroke-dasharray='3 3'/>
+  <!-- Labels -->
+  <text x='80' y='25' font-family='sans-serif' font-size='13' fill='#1f2937' text-anchor='middle'>Hard Switching Losses</text>
+  <text x='440' y='25' font-family='sans-serif' font-size='13' fill='#1f2937' text-anchor='middle'>Series Resonant ZVS</text>
+  <text x='80' y='285' font-family='sans-serif' font-size='13' fill='#1f2937' text-anchor='middle'>Parallel Resonant ZCS</text>
+  <text x='440' y='285' font-family='sans-serif' font-size='13' fill='#1f2937' text-anchor='middle'>LLC Wide Gain Range</text>
+  <text x='150' y='80' font-family='sans-serif' font-size='13' fill='#1f2937' text-anchor='middle'>Active Clamp Recycles</text>
+  <text x='410' y='80' font-family='sans-serif' font-size='13' fill='#1f2937' text-anchor='middle'>Synchronous Rectifier</text>
+  <!-- Bottom caption strip -->
+  <rect x='14' y='292' width='532' height='14' fill='#1f2937'/>
+  <text x='280' y='302' font-family='sans-serif' font-size='14' fill='#fbf7ec' text-anchor='middle'>Resonant &amp; Soft-Switching Converters</text>
+</svg></div>
+  <figcaption>Resonant and Soft‑Switching Power Converter Topologies</figcaption>
+</figure>
+
+<p>Hard‑switching converters (buck, boost, buck‑boost) force semiconductor devices to turn on and off under full voltage and current, incurring switching losses proportional to frequency. Resonant converters introduce an LC tank that shapes voltage and current waveforms into sinusoids, enabling zero‑voltage switching (ZVS) or zero‑current switching (ZCS). In a series resonant converter (SRC), the resonant inductor <strong>L_r</strong> and capacitor <strong>C_r</strong> are placed in series with the load; the switch operates at a frequency <strong>f_s</strong> near the resonant frequency <strong>f_r = 1 / (2π √(L_r C_r))</strong>. When <strong>f_s > f_r</strong>, the tank current lags the voltage, providing ZVS for MOSFETs. The voltage gain is <strong>M = V_o / V_in = (1 / (1 – (f_s/f_r)²))</strong> for a half‑bridge SRC, allowing both step‑up and step‑down operation.</p>
+<p>Parallel resonant converters (PRC) place the tank in parallel with the load, yielding ZCS for diodes. The gain expression becomes <strong>M = (f_s/f_r)² / (1 – (f_s/f_r)²)</strong>. A widely used hybrid is the LLC resonant converter, which adds a magnetizing inductance <strong>L_m</strong> in parallel with the transformer primary. The three‑element tank (L_r, C_r, L_m) provides a wide gain range with ZVS across the entire load range, making it a common choice for high‑efficiency offline adapters and server power supplies. The normalized gain curves are plotted against the frequency ratio <strong>f_n = f_s / f_r</strong> and the quality factor <strong>Q = √(L_r/C_r) / R_ac</strong>, where <strong>R_ac</strong> is the reflected load resistance.</p>
+<p>Soft‑switching techniques also include active clamp and synchronous rectification. An active clamp forward converter recycles the leakage inductance energy into a clamp capacitor, resetting the transformer and achieving ZVS for the main switch. Synchronous rectifiers replace output diodes with MOSFETs driven by the secondary winding voltage, reducing conduction loss at low output voltages. The control challenge is to maintain ZVS/ZCS under varying load and line conditions; adaptive frequency control or phase‑shift modulation (in phase‑shifted full‑bridge) adjusts the switching instant to keep the resonant current sufficient for commutation.</p>
+<p>Examiners often ask for the design of an LLC converter given input voltage range, output power, and desired efficiency. The steps: (1) select resonant frequency <strong>f_r</strong> (typically 100–200 kHz), (2) choose <strong>L_r</strong> and <strong>C_r</strong> to set <strong>Q</strong> for the required gain range, (3) determine <strong>L_m</strong> to set the no‑load gain, (4) verify ZVS condition <strong>I<sub>Lr,peak</sub> > I<sub>magnetizing</sub></strong> at minimum load, (5) calculate component stresses (peak voltage on switches, RMS current in L_r). A common trap is to ignore the effect of transformer parasitic capacitance on the resonant frequency; always include the effective <strong>C_r</strong> = C_r,external + C_oss,primary + C_oss,secondary reflected.</p>
+
+<h3>Orthogonal Frequency Division Multiplexing and MIMO Fundamentals</h3>
+<!-- passage-cartoon:716557ac1259 -->
+<figure class="passage-cartoon" data-cartoon="716557ac1259">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central OFDM symbol -->
+  <rect x="220" y="120" width="120" height="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Subcarriers -->
+  <line x1="240" y1="125" x2="240" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="260" y1="125" x2="260" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="280" y1="125" x2="280" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="300" y1="125" x2="300" y2="195" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- High-rate stream arrow -->
+  <line x1="50" y1="160" x2="220" y2="160" stroke="#1f2937" stroke-width="4"/>
+  <!-- MIMO antennas -->
+  <circle cx="460" cy="130" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="460" cy="190" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="520" cy="130" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="520" cy="190" r="10" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Spatial streams -->
+  <line x1="470" y1="130" x2="510" y2="130" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="470" y1="190" x2="510" y2="190" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Cyclic prefix -->
+  <rect x="220" y="90" width="120" height="25" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="5,5"/>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="280" y="80" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">OFDM Symbol</text>
+  <text x="280" y="55" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Cyclic Prefix</text>
+  <text x="360" y="160" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="start">Subcarriers</text>
+  <text x="460" y="110" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">MIMO Antennas</text>
+  <text x="280" y="215" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">PAPR Challenge</text>
+  <!-- Section title -->
+  <text x="280" y="300" font-size="12" fill="white" font-family="sans-serif" text-anchor="middle">Orthogonal Frequency Division Multiplexing and MIMO Fundamentals</text>
+</svg></div>
+  <figcaption>Orthogonal Frequency Division Multiplexing and MIMO Fundamentals</figcaption>
+</figure>
+
+<p>Orthogonal Frequency Division Multiplexing (OFDM) splits a high‑rate data stream into <strong>N</strong> parallel low‑rate subcarriers spaced by <strong>Δf = 1 / T_u</strong>, where <strong>T_u</strong> is the useful symbol duration. Orthogonality is maintained because each subcarrier completes an integer number of cycles over <strong>T_u</strong>, making the inner product of different subcarriers zero. A cyclic prefix (CP) of length <strong>T_cp</strong> ≥ channel delay spread converts linear convolution into circular convolution, eliminating inter‑symbol interference (ISI) and inter‑carrier interference (ICI) provided the channel is time‑invariant over one OFDM symbol. The overhead factor is <strong>η = T_u / (T_u + T_cp)</strong>; typical values are 1/4 or 1/8.</p>
+<p>Peak‑to‑Average Power Ratio (PAPR) is a major drawback: the time‑domain OFDM signal is the sum of many independent subcarriers, leading to a high PAPR (≈ 10–12 dB for large N). This forces the power amplifier to operate with large back‑off, reducing efficiency. Techniques to reduce PAPR include clipping and filtering, selected mapping (SLM), partial transmit sequences (PTS), and tone reservation. In exams, you may be asked to compute the complementary cumulative distribution function (CCDF) of PAPR for a given N and compare the reduction achieved by SLM with <strong>U</strong> phase sequences.</p>
+<p>Multiple‑Input Multiple‑Output (MIMO) exploits spatial diversity and multiplexing. For a narrowband flat‑fading channel with <strong>N_t</strong> transmit and <strong>N_r</strong> receive antennas, the channel matrix <strong>H</strong> (size N_r × N_t) has singular values <strong>σ_i</strong>. The capacity with perfect channel state information at the receiver (CSIR) and equal power allocation is <strong>C = Σ<sub>i=1</sub><sup>r</sup> log₂ (1 + (ρ / N_t) σ_i²)</strong> where <strong>r = rank(H)</strong> and <strong>ρ</strong> is the average SNR. With channel state information at the transmitter (CSIT), water‑filling across eigenmodes maximizes capacity. Spatial multiplexing transmits independent streams on the strongest eigenmodes; diversity schemes (e.g., Alamouti space‑time block code for 2×1) achieve full diversity order <strong>N_t N_r</strong> without CSIT.</p>
+<p>In OFDM‑MIMO (e.g., LTE, Wi‑Fi 802.11n/ac), each subcarrier experiences a flat MIMO channel. The receiver performs per‑subcarrier channel estimation using pilot symbols, then applies linear equalizers (Zero‑Forcing, MMSE) or maximum‑likelihood detection. The cyclic prefix must be longer than the maximum excess delay across all transmit‑receive paths. A typical exam question: given a 4×4 MIMO‑OFDM system with 64 subcarriers, CP length 16 samples, and a channel with 8‑tap impulse response, determine whether ISI/ICI is avoided and compute the spectral efficiency if 16‑QAM is used on all spatial streams with coding rate 3/4. The answer: CP ≥ delay spread ⇒ no ISI/ICI; spectral efficiency = (N_data / N_total) × (bits per symbol) × (coding rate) × (spatial streams) = (48/64) × 4 × 0.75 × 4 = 9 bits/s/Hz.</p>
+
+<h3>Electromagnetic Compatibility and Filter Design in Power Electronics</h3>
+<!-- passage-cartoon:958a7bde48ab -->
+<figure class="passage-cartoon" data-cartoon="958a7bde48ab">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central filter chain -->
+  <polyline points="200,50 220,30 240,50 260,30 280,50 300,30 320,50 340,30 360,50" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- CM Choke: coupled inductors -->
+  <path d="M240,90 Q250,80 260,90 Q270,100 280,90 Q290,80 300,90 M240,110 Q250,120 260,110 Q270,100 280,110 Q290,120 300,110" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="260" y1="90" x2="260" y2="110" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <line x1="280" y1="90" x2="280" y2="110" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <!-- X/Y Capacitors -->
+  <line x1="240" y1="140" x2="300" y2="140" stroke="#1f2937" stroke-width="3"/>
+  <line x1="240" y1="160" x2="300" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <line x1="240" y1="140" x2="240" y2="180" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2"/>
+  <line x1="300" y1="140" x2="300" y2="180" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2"/>
+  <!-- DM Inductor -->
+  <path d="M240,200 Q250,190 260,200 Q270,210 280,200 Q290,190 300,200" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Clean output -->
+  <path d="M200,250 Q220,245 240,250 Q260,255 280,250 Q300,245 320,250 Q340,255 360,250" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left: PCB minimized loop -->
+  <path d="M80,120 L160,120" stroke="#1f2937" stroke-width="3"/>
+  <path d="M80,160 L160,160" stroke="#1f2937" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="120" y1="120" x2="120" y2="160" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="2,2"/>
+  <!-- Right: Shielding can -->
+  <rect x="400" y="100" width="60" height="80" fill="none" stroke="#1f2937" stroke-width="2" stroke-dasharray="6,3"/>
+  <!-- Top: Spread spectrum clock -->
+  <path d="M240,40 Q250,30 260,40 Q270,50 280,40 Q290,30 300,40 Q310,50 320,40" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <path d="M250,30 L250,20 M270,30 L270,20 M290,30 L290,20 M310,30 L310,20" stroke="#1f2937" stroke-width="1.5"/>
+  <path d="M250,20 L245,25 M250,20 L255,25 M270,20 L265,25 M270,20 L275,25 M290,20 L285,25 M290,20 L295,25 M310,20 L305,25 M310,20 L315,25" stroke="#1f2937" stroke-width="1.5"/>
+  <!-- Bottom: Parasitic resonance -->
+  <path d="M240,270 Q250,260 260,270 Q270,280 280,270 Q290,260 300,270" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <line x1="270" y1="270" x2="270" y2="290" stroke="#1f2937" stroke-width="2"/>
+  <line x1="250" y1="290" x2="290" y2="290" stroke="#1f2937" stroke-width="2"/>
+  <!-- Labels -->
+  <text x="180" y="100" font-size="14" fill="#1f2937" text-anchor="end">CM Choke</text>
+  <text x="360" y="155" font-size="14" fill="#1f2937" text-anchor="start">X/Y Capacitors</text>
+  <text x="180" y="200" font-size="14" fill="#1f2937" text-anchor="end">DM Inductor</text>
+  <text x="60" y="145" font-size="13" fill="#1f2937" text-anchor="end">Min Loop Area</text>
+  <text x="280" y="20" font-size="14" fill="#1f2937" text-anchor="middle">Spread Spectrum</text>
+  <text x="280" y="255" font-size="13" fill="#1f2937" text-anchor="middle">Parasitic Resonance</text>
+  <!-- Section title strip -->
+  <text x="280" y="306" font-size="14" fill="#1f2937" text-anchor="middle">Electromagnetic Compatibility and Filter Design</text>
+</svg></div>
+  <figcaption>Electromagnetic Compatibility and Filter Design in Power Electronics</figcaption>
+</figure>
+
+<p>Power converters generate conducted and radiated emissions due to fast voltage and current transitions (high dv/dt, di/dt). Conducted emissions on the AC mains are regulated by standards such as CISPR 32 / EN 55032 (superseding CISPR 22), which define limits for quasi‑peak and average detectors in the 150 kHz – 30 MHz band. The primary mitigation is an input EMI filter comprising a common‑mode (CM) choke, differential‑mode (DM) inductors, X‑capacitors (line‑to‑line) and Y‑capacitors (line‑to‑ground). The CM choke presents high impedance to common‑mode currents while presenting low impedance to differential currents; its inductance <strong>L_cm</strong> is chosen so that the CM corner frequency <strong>f_cm = 1 / (2π √(L_cm C_y))</strong> lies well below the lowest regulated frequency (typically < 10 kHz).</p>
+<p>Differential‑mode attenuation relies on the DM inductance <strong>L_dm</strong> and X‑capacitance <strong>C_x</strong>. The DM corner frequency <strong>f_dm = 1 / (2π √(L_dm C_x))</strong> should be placed near the switching frequency to attenuate the dominant switching harmonics. However, excessive <strong>L_dm</strong> degrades transient response and can cause instability in the control loop due to added phase lag. A practical design uses a two‑stage filter: a first stage with a small <strong>L_dm1</strong> and large <strong>C_x1</strong> for high‑frequency attenuation, and a second stage with larger <strong>L_dm2</strong> for low‑frequency compliance.</p>
+<p>Radiated emissions are addressed by PCB layout: minimizing loop areas of high‑di/dt paths, using ground planes, and placing decoupling capacitors close to semiconductor pins. The near‑field magnetic field from a current loop of area <strong>A</strong> carrying a harmonic current <strong>I_h</strong> at frequency <strong>f</strong> is <strong>H ≈ (I_h A) / (2π r³)</strong> for distance <strong>r</strong> ≪ λ. Reducing <strong>A</strong> by routing the return path directly under the forward trace (microstrip) cuts radiated fields dramatically. Shielding cans over the switching node and using spread‑spectrum frequency modulation (dithering the switching clock) spread the spectral energy, lowering peak quasi‑peak readings.</p>
+<p>Filter component non‑idealities matter. Real inductors have parasitic capacitance <strong>C_p</strong> creating a self‑resonant frequency (SRF) above which they become capacitive. Capacitors have equivalent series resistance (ESR) and equivalent series inductance (ESL); the impedance minimum occurs at the series resonance <strong>f_sr = 1 / (2π √(C ESL))</strong>. In EMI filter simulations, include these parasitics to avoid unexpected resonance peaks that can amplify emissions at certain harmonics. A common exam trap: given a CM choke with <strong>L_cm = 10 mH</strong>, <strong>C_p = 10 pF</strong>, and Y‑capacitors <strong>C_y = 4.7 nF</strong>, compute the CM resonance frequency and verify it is below 150 kHz. The resonance is <strong>f_res = 1 / (2π √(L_cm (C_y/2 + C_p)))</strong> ≈ 33 kHz, satisfying the requirement.</p>
+
+<ul>
+<li>Assuming a state‑space model is controllable just because the transfer function has no pole‑zero cancellation; always test the controllability matrix rank.</li>
+<li>Neglecting the effect of coefficient quantization on pole locations in digital controllers; verify stability after rounding using the Jury test.</li>
+<li>Designing an LLC resonant converter without checking the ZVS condition at minimum load; the magnetizing current must be sufficient to discharge the switch output capacitance.</li>
+<li>Forgetting that OFDM cyclic prefix must exceed the maximum channel delay spread across all MIMO paths; otherwise ISI/ICI reappears.</li>
+<li>Using only the nominal inductance of an EMI choke and ignoring its parasitic capacitance, leading to an unexpected self‑resonance inside the regulated band.</li>
+<li>These traps highlight the areas where candidates most often lose marks.</li>
+</ul>
+<p>Mastering these advanced topics and their associated pitfalls will significantly improve problem‑solving accuracy in the examination.</p>
+<h3>Power System Stability and FACTS Devices</h3>
+<!-- passage-cartoon:b5bf0bbca709 -->
+<figure class="passage-cartoon" data-cartoon="b5bf0bbca709">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <polyline points="280,80 150,240 410,240 280,80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="60" y="160" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="440" y="160" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="250" y="30" width="60" height="30" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="14" y="280" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="60" text-anchor="middle" font-size="14" fill="#1f2937">Rotor Angle</text>
+  <text x="120" y="240" text-anchor="end" font-size="14" fill="#1f2937">Voltage</text>
+  <text x="440" y="240" text-anchor="start" font-size="14" fill="#1f2937">Frequency</text>
+  <text x="55" y="175" text-anchor="end" font-size="14" fill="#1f2937">SVC</text>
+  <text x="505" y="175" text-anchor="start" font-size="14" fill="#1f2937">STATCOM</text>
+  <text x="280" y="25" text-anchor="middle" font-size="14" fill="#1f2937">UPFC</text>
+  <text x="280" y="300" text-anchor="middle" font-size="14" fill="#fbf7ec">Power System Stability and FACTS Devices</text>
+</svg></div>
+  <figcaption>Power System Stability and FACTS Devices</figcaption>
+</figure>
+
+<p>Power system stability is classified into rotor angle stability, voltage stability, and frequency stability. Rotor angle stability concerns the ability of synchronous machines to remain in synchronism after a disturbance; it is further divided into transient stability (large disturbances, first few seconds) and small‑signal stability (low‑frequency oscillations, 0.1–2 Hz). Voltage stability relates to the ability of the network to maintain acceptable voltage profiles under load increase or contingency; the nose‑point of the PV curve marks the voltage collapse boundary. Frequency stability depends on the balance between generation and load and is governed by primary, secondary, and tertiary control loops.</p>
+<p>Flexible AC Transmission Systems (FACTS) provide fast, controllable reactive power support and power flow regulation. The Static VAR Compensator (SVC) uses thyristor‑controlled reactors (TCR) and thyristor‑switched capacitors (TSC) to inject or absorb reactive power with a response time of 20–40 ms. The Static Synchronous Compensator (STATCOM) employs a voltage‑source converter (VSC) with a DC capacitor, delivering continuous reactive current independent of system voltage, and can also provide active power if an energy storage element is added. The Unified Power Flow Controller (UPFC) combines a series VSC and a shunt VSC sharing a common DC link, enabling independent control of real and reactive power flow on a transmission line. The Interline Power Flow Controller (IPFC) links multiple series converters through a common DC bus, allowing power exchange among several lines.</p>
+<p>In transient stability studies, the equal‑area criterion gives a quick assessment: the accelerating area (integral of mechanical power minus electrical power during fault) must be smaller than the decelerating area after fault clearance. FACTS devices enlarge the decelerating area by boosting post‑fault electrical power. For small‑signal stability, eigenvalue analysis of the linearised system identifies poorly damped inter‑area modes; a properly tuned Power System Stabiliser (PSS) or a STATCOM with supplementary damping controller adds positive damping torque. Voltage stability margin is quantified by the loading margin to the saddle‑node bifurcation; SVC/STATCOM placement at weak buses (high participation factors in the Jacobian singular vector) yields the greatest improvement.</p>
+<p>Typical exam problems: (1) Given a two‑area system with a 400 km line, compute the critical clearing time using the equal‑area criterion before and after installing a STATCOM at the midpoint. (2) Derive the small‑signal model of a UPFC connected to a single‑machine infinite‑bus system and design a lead‑lag compensator to damp the 0.6 Hz inter‑area mode. (3) For a 500 kV system with a 10 % voltage dip at 0.8 pu loading, determine the required MVA rating of an SVC to restore voltage to 0.95 pu, assuming a linear V‑Q characteristic.</p>
+<div><table><caption>FACTS Device Comparison</caption><thead><tr><th>Device</th><th>Topology</th><th>Control Variable</th><th>Response Time</th><th>Typical Rating</th></tr></thead><tbody><tr><td>SVC</td><td>TCR + TSC</td><td>Reactive current</td><td>20–40 ms</td><td>±100 Mvar</td></tr><tr><td>STATCOM</td><td>VSC + DC capacitor</td><td>Reactive current (voltage independent)</td><td>&lt;5 ms</td><td>±200 Mvar</td></tr><tr><td>UPFC</td><td>Series VSC + Shunt VSC</td><td>P, Q, V, δ</td><td>&lt;5 ms</td><td>±300 Mvar series, ±200 Mvar shunt</td></tr><tr><td>IPFC</td><td>Multiple series VSCs</td><td>Power exchange among lines</td><td>&lt;5 ms</td><td>±150 Mvar per converter</td></tr></tbody></table></div>
+
+<h3>Advanced Digital Modulation and Coding Techniques</h3>
+<!-- passage-cartoon:11099b4c0dfa -->
+<figure class="passage-cartoon" data-cartoon="11099b4c0dfa">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <path d="M200,80 h160 v160 h-160 z M200,120 h160 M200,160 h160 M200,200 h160 M240,80 v160 M280,80 v160 M320,80 v160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M60,60 h80 v80 h-80 z M70,70 h60 M70,90 h60 M70,110 h60 M90,60 v80 M110,60 v80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M460,60 L520,100 M460,100 L520,60 M460,80 L520,80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M60,220 h80 v60 h-80 z M160,220 h80 v60 h-80 z M100,250 L160,250" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M460,260 v-60 M460,200 L450,210 M460,200 L470,210 M460,260 h40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="60" text-anchor="middle" font-size="14" fill="#1f2937">QAM Constellation</text>
+  <text x="100" y="40" text-anchor="middle" font-size="14" fill="#1f2937">LDPC Decoding</text>
+  <text x="490" y="40" text-anchor="middle" font-size="14" fill="#1f2937">Polar Codes</text>
+  <text x="100" y="210" text-anchor="middle" font-size="14" fill="#1f2937">Turbo Codes</text>
+  <text x="490" y="190" text-anchor="middle" font-size="14" fill="#1f2937">Coding Gain</text>
+  <text x="280" y="305" text-anchor="middle" font-size="12" fill="#1f2937">Advanced Digital Modulation and Coding Techniques</text>
+</svg></div>
+  <figcaption>Advanced Digital Modulation and Coding Techniques</figcaption>
+</figure>
+
+<p>Modern communication systems employ higher‑order constellations and capacity‑approaching codes. Quadrature Amplitude Modulation (QAM) maps bits onto a two‑dimensional grid; the average symbol energy for square M‑QAM is E_s = (2/3)(M‑1)d² where d is the minimum Euclidean distance. The symbol error probability in AWGN is approximated by P_s ≈ 4(1‑1/√M) Q(√(3 E_s/((M‑1)N₀))). For non‑square constellations (e.g., 32‑QAM, 128‑QAM) the exact distance spectrum must be used. Bit‑interleaved coded modulation (BICM) separates the binary encoder from the mapper, allowing iterative demapping and decoding; the extrinsic information transfer (EXIT) chart predicts convergence thresholds.</p>
+<p>Low‑Density Parity‑Check (LDPC) codes and polar codes dominate 5G and Wi‑Fi 6/7. An LDPC code is defined by a sparse parity‑check matrix H; belief‑propagation decoding on the Tanner graph iterates variable‑node and check‑node updates. The decoding threshold (in E_b/N₀) for a regular (3,6) LDPC ensemble is ≈1.1 dB from the Shannon limit. Polar codes achieve capacity on binary‑input memoryless channels via channel polarization; the successive‑cancellation list (SCL) decoder with CRC‑aided list size L=8 provides near‑ML performance at practical block lengths (N=1024). Turbo codes, though older, remain in LTE; their iterative MAP decoder exchanges extrinsic log‑likelihood ratios (LLRs) between two constituent recursive systematic convolutional (RSC) decoders.</p>
+<p>Coded modulation design uses the concept of Euclidean distance spectrum and the union bound. For a rate‑R code with minimum squared Euclidean distance d_min², the asymptotic coding gain over uncoded BPSK is G_c = 10 log₁₀(R d_min²) dB. In practice, the effective coding gain at a target BER (e.g., 10⁻⁵) is lower due to error floors. Multilevel coding (MLC) with multistage decoding (MSD) partitions the constellation into levels, each protected by a binary code of appropriate rate; the overall rate is the sum of level rates. This approach achieves the capacity of the constellation‑constrained channel.</p>
+<p>Exam‑style questions: (1) Compute the theoretical BER of 64‑QAM with Gray mapping at E_b/N₀ = 18 dB using the nearest‑neighbour approximation. (2) Given a (3,6) regular LDPC code of length 64800, estimate the number of iterations required for the error floor to appear at BER = 10⁻⁷. (3) Design a polar code of length 1024 and rate 1/2 for a BIAWGN channel at 2 dB E_b/N₀; list the frozen bit indices using the Bhattacharyya parameter approximation.</p>
+
+<div class="example-box"><div class="ex-title">Worked Example: Coding Gain of 16‑QAM with Rate‑3/4 LDPC</div><div class="ex-text">A system uses 16‑QAM (Gray mapped) and a rate‑3/4 LDPC code. The uncoded 16‑QAM requires E_b/N₀ = 14.5 dB to achieve BER = 10⁻⁵. The coded system operates at E_b/N₀ = 9.2 dB for the same BER. Compute the effective coding gain and the asymptotic coding gain assuming d_min² = 4 for the coded constellation.</div><div class="ex-soln">Effective coding gain = 14.5 dB – 9.2 dB = 5.3 dB. Asymptotic coding gain G_c = 10 log₁₀(R d_min²) = 10 log₁₀(0.75 × 4) = 10 log₁₀(3) ≈ 4.77 dB. The effective gain exceeds the asymptotic value because the LDPC code provides additional distance beyond the minimum and the iterative decoder exploits soft information.</div></div>
+
+<div class="tip-box"><div class="tip-title">Exam‑Day Strategy</div><div class="tip-text">Memorise the Q‑function approximation Q(x) ≈ (1/2) exp(‑x²/2) for x > 3 to quickly estimate error probabilities without a calculator. For LDPC and polar codes, remember the key design parameters: degree distribution for LDPC, frozen‑bit selection rule for polar. When a question asks for “coding gain”, clarify whether it expects effective (simulation‑based) or asymptotic (distance‑based) gain; state both if time permits.</div></div>
+
+<h3>Predictive and Sliding Mode Control of Power Converters</h3>
+<!-- passage-cartoon:aa9bf7b887fb -->
+<figure class="passage-cartoon" data-cartoon="aa9bf7b887fb">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="220" y="120" width="120" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="100" cy="100" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="460" y1="100" x2="520" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="30" x2="280" y2="70" stroke="#1f2937" stroke-width="3"/>
+  <line x1="260" y1="50" x2="300" y2="50" stroke="#1f2937" stroke-width="3"/>
+  <rect x="250" y="220" width="60" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="250" y="240" width="60" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="250" y="260" width="60" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="14" y1="300" x2="546" y2="300" stroke="#1f2937" stroke-width="2"/>
+  <text x="100" y="60" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">MPC</text>
+  <text x="500" y="80" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">SMC</text>
+  <text x="280" y="25" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Grid Current</text>
+  <text x="280" y="110" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Cost Function</text>
+  <text x="280" y="210" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">MMC Balancing</text>
+  <text x="280" y="290" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Predictive and Sliding Mode Control of Power Converters</text>
+</svg></div>
+  <figcaption>Predictive and Sliding Mode Control of Power Converters</figcaption>
+</figure>
+
+<p>Model Predictive Control (MPC) for power converters formulates a finite‑horizon optimisation at each sampling instant. The cost function typically penalises tracking error of inductor current and capacitor voltage, switching frequency deviation, and neutral‑point voltage imbalance in multilevel topologies. For a two‑level VSI, the discrete‑time model x(k+1) = A x(k) + B u(k) yields seven admissible voltage vectors (six active, one zero). Enumerating all vectors and evaluating the cost yields the optimal switching state; the computational burden is modest because the horizon is usually one step (dead‑beat predictive control). Extensions include multi‑step horizons with branch‑and‑bound pruning, and explicit MPC where the control law is pre‑computed as a piecewise‑affine function of the state.</p>
+<p>Sliding Mode Control (SMC) defines a sliding surface s(x) = 0 that enforces desired dynamics. For a buck converter, a common choice is s = i_L – i_ref + λ(v_C – v_ref). The control law u = u_eq – K sign(s) forces the trajectory onto the surface in finite time; u_eq is the equivalent control obtained by setting ṡ = 0. Chattering due to the discontinuous sign function is mitigated by a boundary layer (saturation) or higher‑order sliding modes (super‑twisting algorithm) that preserve robustness while reducing high‑frequency switching. The super‑twisting controller uses u = –α |s|¹ᐟ² sign(s) + v,  v̇ = –β sign(s), with α, β > 0 tuned for finite‑time convergence.</p>
+<p>Both techniques handle constraints naturally: MPC via explicit inclusion in the optimisation, SMC via reference governor or barrier functions. In grid‑connected converters, predictive current control with a cost J = |i_abc(k+1) – i_ref|² + λ |u(k) – u(k‑1)|² achieves fast current tracking and low THD. For modular multilevel converters (MMC), MPC balances submodule capacitor voltages while tracking the circulating current reference. SMC is favoured in high‑power DC‑DC converters where a fixed switching frequency is not mandatory; the variable frequency inherent to hysteresis‑based SMC can be regularised by a constant‑frequency sliding mode (CFSM) that adds a sawtooth modulator to the sliding surface.</p>
+<p>Typical examination tasks: (1) Derive the discrete‑time model of a three‑phase inverter with L‑filter and formulate the one‑step MPC cost for current tracking. (2) Design a super‑twisting sliding mode controller for a boost converter operating in CCM; specify α, β to guarantee convergence within 2 ms for a 20 % load step. (3) Compare the computational complexity (flops per sample) of enumerative MPC versus explicit MPC for a 3‑level NPC inverter.</p>
+
+<h3>Electrical Drives: Vector Control and Sensorless Operation</h3>
+<!-- passage-cartoon:7fd96b30753d -->
+<figure class="passage-cartoon" data-cartoon="7fd96b30753d">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  
+  <!-- Central Motor (FOC) -->
+  <circle cx="280" cy="160" r="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="230" y1="160" x2="330" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <!-- d-axis arrow (flux) -->
+  <path d="M 280 160 L 330 160 M 320 155 L 330 160 L 320 165" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- q-axis arrow (torque) -->
+  <path d="M 280 160 L 280 110 M 275 120 L 280 110 L 285 120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  
+  <!-- Top-Left: Induction Motor / Slip Frequency -->
+  <circle cx="120" cy="80" r="30" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="120" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Slip Freq</text>
+  
+  <!-- Top-Right: PMSM with Encoder -->
+  <circle cx="440" cy="80" r="30" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="460" y="50" width="20" height="15" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="440" y="40" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Encoder</text>
+  
+  <!-- Bottom-Left: MRAS -->
+  <rect x="80" y="230" width="60" height="30" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="160" y="230" width="60" height="30" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <path d="M 140 245 L 160 245 M 150 240 L 160 245 L 150 250" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="120" y="210" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">MRAS</text>
+  
+  <!-- Bottom-Right: HFSI -->
+  <polyline points="400,250 410,240 420,250 430,240 440,250 450,240 460,250 470,240 480,250" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <text x="440" y="210" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">HFSI</text>
+  
+  <!-- Central Labels -->
+  <text x="280" y="90" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">FOC</text>
+  <text x="340" y="150" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">dq Frame</text>
+  
+  <!-- Caption Strip -->
+  <rect x="14" y="280" width="532" height="26" fill="#e8e0d0" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="296" font-family="sans-serif" font-size="14" fill="#1f2937" text-anchor="middle">Electrical Drives: Vector Control and Sensorless Operation</text>
+</svg></div>
+  <figcaption>Electrical Drives: Vector Control and Sensorless Operation</figcaption>
+</figure>
+
+<p>Field‑Oriented Control (FOC) decouples torque and flux in AC machines by transforming stator currents to a synchronously rotating dq frame aligned with the rotor flux. For an induction motor, the rotor flux angle θ_r is obtained from the slip frequency ω_sl = (R_r/L_r) (i_qs/ψ_r) and the measured rotor speed ω_r: θ_r = ∫(ω_r + ω_sl) dt. The stator current references are i_ds* = ψ_r*/L_m (flux‑producing) and i_qs* = (2/3)(P/2)(L_m/ψ_r) T_e* (torque‑producing). PI regulators in the dq frame generate voltage references v_ds*, v_qs* which are inverse‑Park transformed to three‑phase voltages for the PWM inverter.</p>
+<p>Permanent Magnet Synchronous Motors (PMSM) use the rotor position directly from an encoder or resolver; the d‑axis is aligned with the permanent magnet flux. Maximum Torque Per Ampere (MTPA) operation for interior PMSM (IPMSM) requires solving i_ds* = (–ψ_f + √(ψ_f² + 8(L_q – L_d)² i_qs*²)) / (4(L_q – L_d)). Flux‑weakening extends the speed range by injecting negative d‑axis current; the voltage limit ellipse v_ds² + v_qs² ≤ V_max² defines the feasible current region.</p>
+<p>Sensorless methods eliminate the position sensor. Model‑Reference Adaptive System (MRAS) compares the output of a reference model (e.g., stator voltage model) with an adjustable model (e.g., current model) and adapts the estimated speed to minimise the error. High‑Frequency Signal Injection (HFSI) exploits magnetic saliency: a high‑frequency voltage vector is superimposed on the fundamental; the resulting current response contains position‑dependent components that are demodulated to extract rotor angle. For surface‑mounted PMSM (SPMSM) with negligible saliency, the back‑EMF observer (sliding‑mode or Luenberger) works above ~5 % rated speed; at low speeds, pulsating high‑frequency injection or INFORM (Integral of Flux) methods are used.</p>
+<p>Exam‑oriented problems: (1) Given an induction motor with R_s=0.5 Ω, R_r=0.4 Ω, L_s=L_r=0.05 H, L_m=0.045 H, rated flux 0.8 Wb, compute the slip frequency for a torque reference of 150 Nm at rated flux. (2) Derive the MTPA current trajectory for an IPMSM with ψ_f=0.12 Wb, L_d=0.8 mH, L_q=1.5 mH. (3) Design a sliding‑mode speed observer for a PMSM; specify the observer gain to guarantee finite‑time convergence of the position error within one electrical cycle.</p>
+
+<h3>High Voltage Engineering: Insulation Coordination and Surge Protection</h3>
+<!-- passage-cartoon:c8f96c0a3507 -->
+<figure class="passage-cartoon" data-cartoon="c8f96c0a3507">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  
+  <!-- Transformer (left) -->
+  <rect x="80" y="130" width="80" height="100" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="100" y1="130" x2="100" y2="100" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <line x1="140" y1="130" x2="140" y2="100" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Surge Arrester (right) -->
+  <rect x="400" y="110" width="40" height="120" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- MOV symbol inside arrester -->
+  <polyline points="410,200 415,180 420,200 425,180 430,200" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  
+  <!-- Lightning bolt striking arrester -->
+  <polyline points="420,30 410,80 425,80 415,110" fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Ground line -->
+  <line x1="14" y1="260" x2="546" y2="260" stroke="#1f2937" stroke-width="3"/>
+  <line x1="420" y1="230" x2="420" y2="260" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="5,3"/>
+  <polygon points="415,260 425,260 420,270" fill="#1f2937"/>
+  
+  <!-- Coordination margin indicator -->
+  <line x1="180" y1="100" x2="380" y2="100" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="180" y1="100" x2="180" y2="110" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="380" y1="100" x2="380" y2="110" stroke="#1f2937" stroke-width="2.5"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+  
+  <!-- Vertical lines for V90 and V10 -->
+  <line x1="180" y1="110" x2="180" y2="180" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2"/>
+  <line x1="380" y1="110" x2="380" y2="180" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,2"/>
+  
+  <!-- Small lightning impulse wave (top left) -->
+  <polyline points="50,50 55,40 60,50 65,40 70,50" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <!-- Small switching impulse wave (top right) -->
+  <polyline points="490,50 495,55 500,50 505,55 510,50" fill="none" stroke="#1f2937" stroke-width="2"/>
+  
+  <!-- GIS tank (bottom left) -->
+  <circle cx="100" cy="290" r="20" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="90" y1="290" x2="110" y2="290" stroke="#1f2937" stroke-width="1.5"/>
+  
+  <!-- Partial discharge pulse (bottom right) -->
+  <polyline points="460,285 465,275 470,285 475,275 480,285" fill="none" stroke="#1f2937" stroke-width="2"/>
+  
+  <!-- Labels -->
+  <text x="180" y="75" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">V90 Withstand</text>
+  <text x="380" y="75" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">V10 Protective</text>
+  <text x="280" y="120" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Margin M</text>
+  <text x="450" y="150" font-size="14" fill="#1f2937" text-anchor="start" font-family="sans-serif">MOV Arrester</text>
+  <text x="60" y="180" font-size="14" fill="#1f2937" text-anchor="start" font-family="sans-serif">BIL Level</text>
+  <text x="280" y="200" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">PR ≥ 1.2</text>
+  
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <text x="280" y="302" font-size="12" fill="#fbf7ec" text-anchor="middle" font-family="sans-serif">High Voltage Engineering: Insulation Coordination and Surge Protection</text>
+</svg></div>
+  <figcaption>High Voltage Engineering: Insulation Coordination and Surge Protection</figcaption>
+</figure>
+
+<p>Insulation coordination ensures that the withstand voltage of equipment exceeds the expected overvoltages with a suitable safety margin. The statistical approach defines the withstand voltage as the voltage with a 90 % probability of withstand (V<sub>9</sub>0) and the protective level of the surge arrester as the voltage with a 10 % probability of exceedance (V<sub>1</sub>0). The coordination margin is M = V<sub>9</sub>0 / V<sub>1</sub>0 – 1; typical values are 0.15–0.25 for transmission class. Overvoltages are classified as temporary (power‑frequency, switching) and transient (lightning, switching surges). Lightning impulse withstand is tested with a 1.2/50 µs wave; switching impulse uses a 250/2500 µs wave.</p>
+<p>Surge arresters based on metal‑oxide varistors (MOV) provide non‑linear V‑I characteristics: I = k V^α with α ≈ 30–50. The protective level U_p is the residual voltage at the nominal discharge current (e.g., 10 kA for distribution, 20 kA for transmission). Arrester energy capability is rated in kJ/kV of rated voltage; it must absorb the energy of the worst‑case switching surge (typically 2–5 kJ/kV). Proper grading ensures that the arrester protective level is below the equipment withstand voltage for all relevant overvoltage waveforms.</p>
+<p>Insulation design of transformers uses the concept of insulation levels: Basic Insulation Level (BIL) for lightning, and <span class="model-fix" style="color:#34d399;border-bottom:1px dotted #34d399" title="CWIL is the withstand level for chopped-wave lightning impulse, not for switching impulse; switching impulse uses a separate level (switching impulse withstand voltage).">Chopped Wave Insulation Level (CWIL) for chopped-wave lightning</span>. The insulation coordination curve plots the equipment withstand characteristic (e.g., V‑t curve for transformer insulation) against the overvoltage probability density. The protective margin is verified by the “protective ratio” PR = V_withstand / U_p ≥ 1.2 for self‑restoring insulation, ≥ 1.5 for non‑self‑restoring.</p>
+<p>Gas‑Insulated Substations (GIS) use SF₆ at 0.4–0.6 MPa; the uniform field breakdown strength is ≈ 89 kV/cm at 0.5 MPa. Field‑non‑uniformity factors (e.g., protrusion factor) reduce the effective strength; the design field is limited to 20–30 kV/cm. Partial discharge (PD) measurement (IEC 60270) detects inception voltage (PDIV) and extinction voltage (PDEV); the acceptance criterion for GIS is typically PDIV ≥ 1.3 × rated phase‑to‑ground voltage with PD magnitude < 5 pC.</p>
+<p>Typical exam questions: (1) For a 400 kV system with a lightning impulse withstand of 1300 kV and an MOV arrester rated 336 kV (U_p = 950 kV at 10 kA), compute the coordination margin and verify compliance. (2) Determine the required SF₆ pressure for a GIS busbar with a maximum field of 25 kV/cm, given a protrusion factor of 1.5. (3) Explain the difference between BIL and CWIL and why chopped‑wave testing is more severe for transformer insulation.</p>
+
+<ul>
+<li>Assuming the equal‑area criterion applies to multi‑machine systems without checking the centre‑of‑inertia reference; the criterion is strictly single‑machine‑infinite‑bus.</li>
+<li>Using the asymptotic coding gain formula for LDPC or polar codes without accounting for the error floor; the effective gain at target BER is the relevant metric.</li>
+<li>Neglecting the effect of sampling delay in predictive control; a one‑sample delay adds a pole at z = 0 and can destabilise the dead‑beat controller.</li>
+<li>Designing a sliding surface without verifying the reachability condition (ṡ sign(s) < 0) for the full operating range; parameter variations can violate it.</li>
+<li>Applying the MRAS speed estimator at zero speed without a high‑frequency injection scheme; the back‑EMF observer loses observability.</li>
+<li>Using the nominal BIL value for coordination while ignoring the statistical nature of lightning overvoltages; the 90 % withstand voltage must be used.</li>
+<li>Overlooking the energy rating of surge arresters for switching surges; a lightning‑rated arrester may fail under prolonged switching energy.</li>
+</ul>
+<p>These sections provide the depth and exam-focused detail needed for Electrical Engineering Paper II mastery.</p>        <script>
+        (function(){try{
+          var m=document.getElementById("lesson-meta");if(!m)return;
+          var cur=m.getAttribute("data-version")||"";
+          var label=m.getAttribute("data-updated-label")||"";
+          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");
+          var k="vlymbooq-lesson-seen:"+location.pathname;
+          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}
+          var box=document.getElementById("lesson-new");
+          if(prev&&prev.v&&prev.v!==cur){
+            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});
+            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";
+            if(added.length){html+="New since your last visit:<ul style=\"margin:6px 0 8px;padding-left:18px\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}
+            else{html+="The explanations and practice were revised.";}
+            html+="<button type=\"button\" id=\"lesson-new-ok\" style=\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.9em;cursor:pointer\">Got it</button>";
+            box.innerHTML=html;box.hidden=false;
+            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};
+            document.getElementById("lesson-new-ok").onclick=save;
+            return; // keep the old version stored until acknowledged
+          }
+          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));
+        }catch(e){}})();
+        </script>
+                <!-- course-addon:start -->
+<h3>Power System Protection: Distance Relaying and Differential Protection</h3>
+<p>Distance protection remains the primary scheme for transmission line protection because its reach is fundamentally independent of source impedance. A mho characteristic on the R‑X plane is defined by <strong>|Z − Z<sub>set</sub>/2| = |Z<sub>set</sub>/2|</strong>, where Z<sub>set</sub> is the replica impedance. The relay measures apparent impedance Z<sub>app</sub> = V/I at the relaying point; if Z<sub>app</sub> falls inside the characteristic, a trip signal is issued. Zone‑1 is typically set at 80‑85 % of line impedance to avoid overreach from fault resistance and CT/PT errors. Zone‑2 covers the remaining 15‑20 % of the protected line plus 50 % of the shortest adjacent line, with a 0.3‑0.5 s delay. Zone‑3 provides remote backup, set at 120‑150 % of the protected line plus the longest adjacent line, delayed 0.6‑1.0 s. Modern numerical relays implement quadrilateral characteristics that separate resistive and reactive reach, improving performance for high‑resistance earth faults.</p>
+<p>Differential protection applies Kirchhoff’s current law to a defined zone: the vector sum of all currents entering the zone must be zero under normal and external fault conditions. For a transformer, the differential current I<sub>diff</sub> = I<sub>HV</sub> − (N<sub>HV</sub>/N<sub>LV</sub>)·I<sub>LV</sub> (after vector group compensation). A percentage‑differential characteristic with slope settings (typically 20 % for normal loading, 40‑50 % for through‑fault stability) restrains operation during CT saturation. High‑impedance busbar differential schemes use a stabilizing resistor R<sub>stab</sub> = V<sub>s</sub>/I<sub>set</sub> where V<sub>s</sub> is the maximum voltage across the CT secondary during an external fault. Numerical relays perform phasor‑based differential calculation with adaptive slope restraint and harmonic restraint (2nd harmonic for transformer inrush, 5th harmonic for overexcitation).</p>
+<p>Communication‑assisted schemes such as Permissive Overreach Transfer Trip (POTT) and Directional Comparison Blocking (DCB) use pilot channels (power line carrier, fiber, or microwave) to exchange directional decisions. POTT allows Zone‑2 to trip instantaneously if the remote end also sees a forward fault, eliminating the Zone‑2 time delay for internal faults. DCB sends a block signal when the remote end sees a reverse fault, preventing overreach. IEC 61850 GOOSE messaging provides sub‑4 ms peer‑to‑peer communication, enabling wide‑area backup protection and adaptive reclosing.</p>
+<div><table><caption>Typical Distance Relay Settings for a 220 kV Line (Z<sub>line</sub> = 30 Ω)</caption><thead><tr><th>Zone</th><th>Reach (% of Z<sub>line</sub>)</th><th>Time Delay (s)</th><th>Purpose</th></tr></thead><tbody><tr><td>Zone‑1</td><td>80‑85 %</td><td>Instantaneous</td><td>Primary protection</td></tr><tr><td>Zone‑2</td><td>120‑130 % (incl. 50 % next line)</td><td>0.3‑0.5</td><td>Remote backup</td></tr><tr><td>Zone‑3</td><td>150‑180 % (incl. longest adjacent)</td><td>0.6‑1.0</td><td>Wide‑area backup</td></tr></tbody></table></div>
+
+<h3>HVDC Transmission: Line‑Commutated and Voltage‑Source Converter Topologies</h3>
+<p>Line‑Commutated Converter (LCC) HVDC uses thyristor valves that require a strong AC voltage for natural commutation. The DC voltage is V<sub>dc</sub> = (3√2/π)·V<sub>LL</sub>·cos α − (3/π)·X<sub>c</sub>·I<sub>dc</sub>, where α is the firing angle (0°–180°) and X<sub>c</sub> is the commutating reactance. Power reversal is achieved by shifting α beyond 90° (inverter operation). LCC stations consume reactive power ≈ 0.5 p.u. of active power, necessitating shunt capacitors, SVCs, or STATCOMs. Harmonic generation follows characteristic orders h = n·p ± 1 (p = pulse number, typically 12), requiring AC filters tuned to 11th, 13th, 23rd, 25th harmonics and DC side smoothing reactors to limit ripple.</p>
+<p>Voltage‑Source Converter (VSC) HVDC employs IGBTs with pulse‑width modulation (PWM), enabling independent control of active and reactive power. The converter behaves as a controllable voltage source behind a coupling reactance X<sub>c</sub>. The AC side current is I<sub>ac</sub> = (V<sub>ac</sub> − V<sub>conv</sub>)/jX<sub>c</sub>. By adjusting the magnitude and phase of V<sub>conv</sub>, the converter can supply or absorb reactive power without additional equipment. VSC‑HVDC uses two‑level or modular multilevel converter (MMC) topologies. MMC consists of series‑connected sub‑modules (half‑bridge or full‑bridge) per phase arm, each with a capacitor. The arm voltage is synthesized by inserting the appropriate number of sub‑modules, yielding near‑sinusoidal waveforms with low harmonic distortion and no need for large AC filters. MMC also provides fault‑blocking capability when full‑bridge sub‑modules are used.</p>
+<p>Control hierarchy for VSC‑HVDC: outer DC voltage control (master‑slave or voltage‑margin), inner current control in dq‑frame with decoupling terms ωL<sub>c</sub>i<sub>q</sub> and −ωL<sub>c</sub>i<sub>d</sub>, and phase‑locked loop (PLL) for grid synchronization. For weak grids (short‑circuit ratio < 3), PLL bandwidth must be reduced and virtual impedance or synchronous‑condenser functionality added to maintain stability. LCC‑HVDC control uses constant extinction angle (CEA) control at the inverter (γ ≈ 15°–18°) and constant current control at the rectifier, with power reversal coordinated by a telecommunication link.</p>
+<div><table><caption>Key Comparison: LCC‑HVDC vs VSC‑HVDC (MMC)</caption><thead><tr><th>Feature</th><th>LCC‑HVDC</th><th>VSC‑HVDC (MMC)</th></tr></thead><tbody><tr><td>Commutation</td><td>Natural (AC voltage)</td><td>Forced (IGBT PWM)</td></tr><tr><td>Reactive Power</td><td>Consumes ~0.5 p.u.</td><td>Independent control</td></tr><tr><td>Harmonics</td><td>High, needs AC filters</td><td>Low, filter‑less possible</td></tr><tr><td>Black‑Start Capability</td><td>No</td><td>Yes (with full‑bridge SM)</td></tr><tr><td>Typical Power Rating</td><td>> 1000 MW</td><td>100‑2000 MW (scalable)</td></tr><tr><td>DC Fault Response</td><td>Requires DC breaker</td><td>Self‑blocking (full‑bridge)</td></tr></tbody></table></div>
+
+<div class="example-box"><div class="ex-title">Worked Example: LCC‑HVDC Firing Angle Calculation</div><div class="ex-text">A 12‑pulse LCC rectifier operates with AC line‑to‑line RMS voltage 400 kV, commutating reactance per valve X<sub>c</sub> = 0.15 p.u. on 1000 MVA base, and DC current 2 kA. Compute the firing angle α required to deliver 1500 MW at the rectifier terminal. Assume ideal smoothing reactor.</div><div class="ex-soln">Base impedance Z<sub>base</sub> = V<sub>LL</sub>²/S<sub>base</sub> = (400 kV)²/1000 MVA = 160 Ω. X<sub>c</sub> = 0.15 × 160 = 24 Ω. Ideal no‑load DC voltage V<sub>dc0</sub> = (3√2/π)·V<sub>LL</sub> = 1.35·400 = 540 kV. Voltage drop ΔV = (3/π)·X<sub>c</sub>·I<sub>dc</sub> = 0.955·24·2 = 45.8 kV. Required DC voltage V<sub>dc</sub> = P/I<sub>dc</sub> = 1500 MW/2 kA = 750 kV. Since V<sub>dc</sub> > V<sub>dc0</sub>, the rectifier cannot deliver this power with given AC voltage; the maximum deliverable power is P<sub>max</sub> = V<sub>dc0</sub>·I<sub>dc</sub> − ΔV·I<sub>dc</sub> = (540−45.8)·2 = 988 MW. Therefore the specified 1500 MW is infeasible. If the target were 800 MW, V<sub>dc</sub> = 400 kV, then cos α = (V<sub>dc</sub>+ΔV)/V<sub>dc0</sub> = (400+45.8)/540 = 0.825, α = 34.4°.</div></div>
+
+<div class="tip-box"><div class="tip-title">Exam‑Day Strategy</div><div class="tip-text">When a problem asks for firing angle or extinction angle, first compute the ideal no‑load DC voltage V<sub>dc0</sub> and the commutating voltage drop ΔV. Check feasibility: required V<sub>dc</sub> must lie between V<sub>dc0</sub>−ΔV (α=0°) and −V<sub>dc0</sub>−ΔV (α=180°). If outside, state infeasibility and compute maximum power. This quick sanity check earns partial credit even if the final numeric answer is not reached.</div></div>
+
+<h3>Multi‑Level Converter Topologies: Neutral‑Point‑Clamped, Flying Capacitor, and Modular Multilevel Converters</h3>
+<p>Neutral‑Point‑Clamped (NPC) converters split the DC bus into two series capacitors, creating a neutral point. Each phase leg contains four switches and two clamping diodes per level. For a three‑level NPC, the phase voltage can assume +V<sub>dc</sub>/2, 0, −V<sub>dc</sub>/2. The main advantage is reduced dv/dt stress on switches (half the DC bus voltage). However, the neutral‑point potential can drift due to unequal charging of the two capacitors, especially at low power factors. Balancing algorithms inject a zero‑sequence voltage component or adjust switching state redundancy (e.g., choosing between P‑O‑N and O‑P‑N for zero voltage) to maintain capacitor voltage symmetry. NPC converters are widely used in medium‑voltage drives (2.3‑6.6 kV) and grid‑connected applications up to 10 MVA.</p>
+<p>Flying Capacitor (FC) converters replace clamping diodes with floating capacitors charged to specific voltage levels. A three‑level FC phase leg uses one flying capacitor per phase, charged to V<sub>dc</sub>/2. The capacitor voltage is naturally balanced by the switching sequence because each state either charges or discharges the capacitor by the same amount over a fundamental period. FC converters offer more switching state redundancy than NPC, enabling better balancing and lower common‑mode voltage. The drawback is increased capacitor count and voltage rating for higher levels; a five‑level FC requires three capacitors per phase leg. FC topologies are favored in high‑power, medium‑voltage applications where modularity and fault tolerance are critical.</p>
+<p>Modular Multilevel Converter (MMC) has become the standard for VSC‑HVDC and high‑voltage motor drives. Each phase consists of two arms (upper and lower) with N series sub‑modules (SMs). Half‑bridge SMs provide two voltage levels (0, V<sub>cap</sub>), while full‑bridge SMs provide three (−V<sub>cap</sub>, 0, +V<sub>cap</sub>) and enable DC fault blocking. The arm voltage is controlled by inserting a variable number of SMs, and the circulating current (common‑mode current) is suppressed by a dedicated controller that injects a second‑harmonic voltage component. Capacitor voltage balancing is achieved by sorting SMs based on measured capacitor voltage and selecting the required number of SMs with highest (for insertion) or lowest (for bypass) voltages. MMC scalability allows voltage levels from ±200 kV to ±800 kV with hundreds of SMs per arm, and the modular structure simplifies maintenance and redundancy.</p>
+<div><table><caption>Multi‑Level Topology Comparison</caption><thead><tr><th>Parameter</th><th>3‑Level NPC</th><th>3‑Level FC</th><th>MMC (Half‑Bridge)</th></tr></thead><tbody><tr><td>Switch Voltage Stress</td><td>V<sub>dc</sub>/2</td><td>V<sub>dc</sub>/2</td><td>V<sub>dc</sub>/N (per SM)</td></tr><tr><td>Capacitor Count (per phase)</td><td>2 (DC bus split)</td><td>1 flying</td><td>N per arm (2N total)</td></tr><tr><td>Voltage Balancing</td><td>Active (redundancy)</td><td>Natural + active</td><td>Sorting algorithm</td></tr><tr><td>Scalability to High Voltage</td><td>Limited (≤ 5‑level)</td><td>Limited (≤ 5‑level)</td><td>Excellent (hundreds of levels)</td></tr><tr><td>Common‑Mode Voltage</td><td>Moderate</td><td>Low</td><td>Very low (with proper PWM)</td></tr></tbody></table></div>
+
+<h3>Power Quality: Harmonic Standards, Sources, and Active Filter Design</h3>
+<p>Power quality standards define permissible harmonic distortion levels at the point of common coupling (PCC). IEEE 519‑2014 specifies Total Harmonic Distortion (THD) limits for voltage (≤ 5 % for ≤ 69 kV, ≤ 3 % for > 69 kV) and current (dependent on short‑circuit ratio I<sub>sc</sub>/I<sub>L</sub>). IEC 61000‑3‑2/‑3‑12 set equipment emission limits for low‑voltage apparatus. Harmonic sources include six‑pulse rectifiers (characteristic harmonics 5th, 7th, 11th, 13th), twelve‑pulse rectifiers (11th, 13th, 23rd, 25th), adjustable‑speed drives with diode front‑ends, arc furnaces (interharmonics), and saturated transformers (even harmonics). Non‑characteristic harmonics arise from firing angle asymmetry, commutation overlap, and unbalanced AC supply.</p>
+<p>Passive filters (tuned LC branches) provide low‑impedance paths for specific harmonic orders. A single‑tuned filter for the 5th harmonic has resonant frequency f<sub>r</sub> = 5·f<sub>1</sub> and quality factor Q = X<sub>L</sub>/R. The filter reactive power Q<sub>f</sub> = V²/X<sub>C</sub> at fundamental frequency contributes to power factor correction. Detuned filters (typically 4.2nd or 4.7th) avoid parallel resonance with system inductance. However, passive filters are bulky, fixed‑tuned, and can amplify harmonics if system impedance changes.</p>
+<p>Active Power Filters (APF) inject compensating currents to cancel load harmonics and/or reactive power. Shunt APF (most common) connects in parallel at PCC; its reference current is extracted using the p‑q theory (instantaneous active/reactive power) or synchronous reference frame (dq) method. The control bandwidth must exceed the highest harmonic to be compensated (typically up to 25th, 1.25 kHz). Switching frequency f<sub>sw</sub> is chosen 20‑30 times the highest harmonic (e.g., 20‑30 kHz). The DC‑link capacitor voltage is regulated by a PI controller that adds a small fundamental active current component. For three‑phase four‑wire systems, a split‑capacitor or four‑leg inverter topology handles zero‑sequence harmonics (triplens). Series APF (Dynamic Voltage Restorer) mitigates voltage sags and harmonics by injecting a series voltage via a coupling transformer.</p>
+<div><table><caption>IEEE 519‑2014 Current Distortion Limits (I<sub>sc</sub>/I<sub>L</sub> Ratio)</caption><thead><tr><th>I<sub>sc</sub>/I<sub>L</sub></th><th>h < 11</th><th>11 ≤ h < 17</th><th>17 ≤ h < 23</th><th>23 ≤ h < 35</th><th>35 ≤ h</th><th>TDD</th></tr></thead><tbody><tr><td>< 20</td><td>4.0 %</td><td>2.0 %</td><td>1.5 %</td><td>0.6 %</td><td>0.3 %</td><td>5.0 %</td></tr><tr><td>20‑50</td><td>7.0 %</td><td>3.5 %</td><td>2.5 %</td><td>1.0 %</td><td>0.5 %</td><td>8.0 %</td></tr><tr><td>50‑100</td><td>10.0 %</td><td>4.5 %</td><td>4.0 %</td><td>1.5 %</td><td>0.7 %</td><td>12.0 %</td></tr><tr><td>100‑1000</td><td>12.0 %</td><td>5.5 %</td><td>5.0 %</td><td>2.0 %</td><td>1.0 %</td><td>15.0 %</td></tr><tr><td>> 1000</td><td>15.0 %</td><td>7.0 %</td><td>6.0 %</td><td>2.5 %</td><td>1.4 %</td><td>20.0 %</td></tr></tbody></table></div>
+
+<h3>Wide‑Area Monitoring and Control: Phasor Measurement Units and Synchrophasor Applications</h3>
+<p>Phasor Measurement Units (PMUs) provide time‑synchronized voltage and current phasors at reporting rates of 30‑60 samples/s (50/60 Hz systems) compliant with IEEE C37.118.1‑2011. A PMU measures the positive‑sequence phasor V<sub>1</sub> = |V<sub>1</sub>|∠θ using a discrete Fourier transform (DFT) or a cosine‑weighted filter over a one‑cycle window. The time stamp is derived from a GPS receiver with ≤ 1 µs accuracy. The resulting synchrophasor data stream (typically 30‑60 frames/s) enables wide‑area situational awareness, oscillation detection, and model validation.</p>
+<p>Wide‑Area Monitoring Systems (WAMS) aggregate PMU data via a Phasor Data Concentrator (PDC) using IEC 61850‑90‑5 or IEEE C37.118.2 protocols. Applications include: (1) Real‑time oscillation monitoring — modal analysis (Prony, Matrix Pencil) on ring‑down or ambient data identifies inter‑area modes (0.1‑0.7 Hz) and local modes (0.8‑2.0 Hz). Damping ratio estimation triggers alarms when ζ < 3 %. (2) Voltage stability assessment — the Thevenin equivalent at load buses is estimated from PMU measurements; the L‑index or V‑Q sensitivity indicates proximity to collapse. (3) Adaptive relaying — distance relay reach settings are adjusted based on measured system impedance trajectories during swings, preventing mal‑operation. (4) Wide‑Area Damping Control (WADC) — supplementary signals from remote PMUs modulate FACTS devices (TCSC, SVC) or HVDC power order to damp inter‑area oscillations. The control design uses residue‑based input‑output selection and robust H‑∞ synthesis to handle time delays (typically 50‑150 ms round‑trip).</p>
+<p>Data quality management is critical: missing frames, bad time stamps, and measurement noise degrade algorithm performance. IEEE C37.118.1 defines Total Vector Error (TVE) ≤ 1 % for compliance. PMU placement optimization uses observability analysis (topological and numerical) to minimize the number of PMUs while ensuring full network observability, often formulated as a binary integer programming problem. Cybersecurity of synchrophasor data is addressed by IEC 62351 and IEEE C37.240, employing encryption, authentication, and intrusion detection at the PDC level.</p>
+<div><table><caption>Typical PMU Performance Requirements (IEEE C37.118.1)</caption><thead><tr><th>Parameter</th><th>Requirement</th></tr></thead><tbody><tr><td>Reporting Rate</td><td>30, 60 frames/s (50/60 Hz)</td></tr><tr><td>Time Synchronization Accuracy</td><td>≤ 1 µs (UTC)</td></tr><tr><td>Total Vector Error (TVE)</td><td>≤ 1 % (steady state)</td></tr><tr><td>Frequency Accuracy</td><td>≤ 0.005 Hz</td></tr><tr><td>ROCOF Accuracy</td><td>≤ 0.1 Hz/s</td></tr><tr><td>Latency (PMU to PDC)</td><td>≤ 50 ms (typical)</td></tr></tbody></table></div>
+
+<ul>
+<li>Assuming distance relay Zone‑1 reach can be set to 100 % of line impedance; overreach due to fault resistance and CT saturation makes 80‑85 % the practical limit.</li>
+<li>Confusing LCC extinction angle γ with firing angle α; γ = 180° − α − μ (μ = overlap angle) and is controlled at the inverter, not the rectifier.</li>
+<li>Neglecting neutral‑point voltage balancing in NPC converters; unbalanced capacitor voltages cause uneven device stress and output voltage distortion.</li>
+<li>Using a single‑tuned passive filter at the exact harmonic frequency without checking for parallel resonance with system inductance; detuning to 4.2‑4.7 × fundamental is standard practice.</li>
+<li>Treating PMU reporting rate as the control bandwidth for WADC; the effective bandwidth is limited by communication latency and PDC processing, typically < 5 Hz.</li>
+<li>Applying IEEE 519 current limits at the equipment terminals instead of the PCC; limits are defined at the point of common coupling with the utility.</li>
+<li>Overlooking the need for zero‑sequence current compensation in four‑wire active filters; triplen harmonics (3rd, 9th) flow in the neutral and require a four‑leg or split‑capacitor topology.</li></ul>
+<!-- course-addon:end --></div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-paper1.html" class="btn btn-primary">&#x2190; Electrical Engineering Paper I: Core Topics</a>
+                    <a href="../index.html" class="btn btn-success">&#x2190; Course Home</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":3901,"text":"Which of the following is NOT a valid KVL equation?","options":[{"l":"a","t":"ΣV = 0 around a closed loop","c":false},{"l":"b","t":"ΣIR = ΣE","c":false},{"l":"c","t":"ΣV = 0 around any closed loop","c":false},{"l":"d","t":"ΣI = 0 at a node","c":true}],"sol":"ΣI = 0 at a node is KCL (Kirchhoff's Current Law), not KVL (Kirchhoff's Voltage Law). KVL states that algebraic sum of voltages around a closed loop is zero."},{"id":3902,"text":"Thevenin's equivalent resistance is found by:","options":[{"l":"a","t":"Shorting all voltage sources and opening current sources","c":true},{"l":"b","t":"Opening all voltage sources and shorting current sources","c":false},{"l":"c","t":"Shorting all sources","c":false},{"l":"d","t":"Opening all sources","c":false}],"sol":"To find Thevenin resistance: turn off all independent sources - short voltage sources (replace with short circuit), open current sources (replace with open circuit)."},{"id":3903,"text":"Maximum power transfer theorem states:","options":[{"l":"a","t":"Maximum power when R_L = R_th","c":true},{"l":"b","t":"Maximum power when R_L = 2R_th","c":false},{"l":"c","t":"Maximum power when R_L = 0","c":false},{"l":"d","t":"Maximum power when R_L → ∞","c":false}],"sol":"Maximum power transfer occurs when load resistance equals source resistance (R_L = R_th). Maximum power = V_th²/(4R_th)."},{"id":3904,"text":"For a series RLC circuit at resonance, impedance is:","options":[{"l":"a","t":"Minimum","c":true},{"l":"b","t":"Maximum","c":false},{"l":"c","t":"Zero","c":false},{"l":"d","t":"Infinite","c":false}],"sol":"At resonance, inductive reactance equals capacitive reactance (X_L = X_C), so impedance Z = R (minimum). Current is maximum."},{"id":3905,"text":"Which of the following is NOT a valid KVL equation?","options":[{"l":"a","t":"ΣV = 0 around a closed loop","c":false},{"l":"b","t":"ΣIR = ΣE","c":false},{"l":"c","t":"ΣV = 0 around any closed loop","c":false},{"l":"d","t":"ΣI = 0 at a node","c":true}],"sol":"ΣI = 0 at a node is KCL (Kirchhoff's Current Law), not KVL (Kirchhoff's Voltage Law). KVL states that algebraic sum of voltages around a closed loop is zero."},{"id":3906,"text":"A DC chopper circuit acts as a variable DC voltage source by chopping a fixed input. If the input voltage (V_s) is 100V and the duty cycle (δ = t_on/T) is set to 0.5, what is the average output voltage assuming continuous load current?","options":[{"l":"a","t":"25V","c":false},{"l":"b","t":"50V","c":true},{"l":"c","t":"75V","c":false},{"l":"d","t":"100V","c":false}],"sol":"For a standard step-down (Buck) chopper operating in Continuous Conduction Mode (CCM), the relationship between output and input voltage is defined by V_o = δ × V_s. Given V_s = 100V and δ = 0.5, the calculation is 0.5 × 100V = 50V. The freewheeling diode ensures current continuity during the off-time, maintaining this linear relationship. If the current were discontinuous, the output would depend on load resistance, but the problem specifies continuous current."},{"id":3907,"text":"In a single-phase full-bridge inverter using IGBTs, the switch opens while driving an inductive load. What is the primary function of the freewheeling diode (or body diode) connected anti-parallel to the switch?","options":[{"l":"a","t":"To increase the switching frequency for better efficiency","c":false},{"l":"b","t":"To block reverse voltage from the DC source","c":false},{"l":"c","t":"To provide a path for inductive current and prevent high-voltage spikes","c":true},{"l":"d","t":"To act as a capacitor to smooth the output ripple","c":false}],"sol":"When the semiconductor switch (IGBT/MOSFET) opens, the inductive load attempts to maintain current flow due to its property L(di/dt). This causes the voltage across the inductor to reverse polarity. The freewheeling diode becomes forward-biased by this reversed voltage, creating a closed loop for the current to circulate through the load and diode. This bypasses the switch, preventing destructive high-voltage spikes (arcing) that would otherwise occur if the current had nowhere to go."},{"id":3908,"text":"A communication system transmits information by varying a carrier parameter. If a 10 MHz carrier is modulated by a single-tone sine wave of frequency 5 kHz, what is the required bandwidth for Amplitude Modulation (AM)?","options":[{"l":"a","t":"5 kHz","c":false},{"l":"b","t":"10 kHz","c":true},{"l":"c","t":"15 kHz","c":false},{"l":"d","t":"20 kHz","c":false}],"sol":"For Amplitude Modulation (AM), the bandwidth is determined solely by the highest modulating frequency (f_m). The formula is BW = 2 × f_m. Here, f_m = 5 kHz. Therefore, BW = 2 × 5 kHz = 10 kHz. This bandwidth accommodates the upper and lower sidebands generated around the carrier frequency. Note that the carrier frequency itself (10 MHz) does not add to the bandwidth width."},{"id":3909,"text":"Which of the following statements correctly describes the 'Capture Effect' phenomenon specific to Frequency Modulation (FM) systems?","options":[{"l":"a","t":"It allows multiple weak signals to be received simultaneously with equal clarity","c":false},{"l":"b","t":"It causes the signal-to-noise ratio to degrade rapidly below a threshold level","c":false},{"l":"c","t":"It enables a stronger signal on the same frequency to suppress a weaker one automatically","c":true},{"l":"d","t":"It requires complex Pulse Width Modulation to generate a pure sine wave","c":false}],"sol":"The Capture Effect is a unique characteristic of FM reception. When two signals occupy the same frequency, the receiver locks onto and demodulates only the stronger signal, effectively suppressing the weaker one. This provides inherent noise immunity and interference rejection compared to AM. The 'Threshold Effect' mentioned in the text refers to the rapid degradation of SNR when the signal drops below a certain level, which is distinct from the capture effect."},{"id":3910,"text":"In the context of satellite communication or cellular networks, what is the fundamental operational difference between FDMA and CDMA multiple access techniques?","options":[{"l":"a","t":"FDMA divides the spectrum by time slots while CDMA uses frequency bands","c":false},{"l":"b","t":"FDMA assigns specific frequency bands to users while CDMA allows simultaneous sharing using spreading codes","c":true},{"l":"c","t":"FDMA uses linear polarization while CDMA uses circular polarization","c":false},{"l":"d","t":"FDMA is used for uplink only whereas CDMA is used for downlink only","c":false}],"sol":"Frequency Division Multiple Access (FDMA) allocates distinct, non-overlapping frequency bands to different users. In contrast, Code Division Multiple Access (CDMA) allows all users to transmit simultaneously over the same frequency band at the same time. The distinction between them is achieved using unique spreading codes assigned to each user in CDMA, which enables the receiver to separate signals based on code correlation rather than frequency separation."},{"id":3911,"text":"In the diagonal (modal) canonical form of a linear time-invariant system with distinct eigenvalues, what is the necessary and sufficient condition for complete state controllability?","options":[{"l":"a","t":"The system matrix A must be diagonalizable.","c":false},{"l":"b","t":"The controllability matrix must have full rank equal to the system order.","c":false},{"l":"c","t":"The input matrix B must have non-zero entries in every row corresponding to a modal state.","c":true},{"l":"d","t":"The transfer function derived from the model must have no pole-zero cancellations.","c":false}],"sol":"In the modal canonical form, the system dynamics are decoupled into independent modes. The controllability matrix rank test simplifies to checking the input matrix B. Since A is diagonal, the controllability matrix rows correspond directly to the rows of B scaled by eigenvalues. A mode is controllable if and only if the corresponding row in B is non-zero. Therefore, for complete controllability, every row of B (every modal direction) must have a non-zero entry. Option A is insufficient as diagonalizability does not guarantee controllability. Option B is the general definition but not the specific simplified condition for this canonical form. Option D relates to minimal realizations from transfer functions, not the internal modal structure."},{"id":3913,"text":"For an LLC resonant converter to maintain Zero Voltage Switching (ZVS) at minimum load, which condition regarding the magnetizing current is essential?","options":[{"l":"a","t":"The magnetizing current must be zero to minimize circulating energy.","c":false},{"l":"b","t":"The magnetizing current must be sufficient to discharge the switch output capacitance.","c":true},{"l":"c","t":"The magnetizing current must exceed the peak resonant current during the switching transition.","c":false},{"l":"d","t":"The magnetizing current must equal the reflected load current at minimum load.","c":false}],"sol":"The lesson identifies a specific examination trap: designing an LLC converter without verifying the ZVS condition at minimum load. It explicitly states that the magnetizing current must be sufficient to discharge the switch output capacitance. At light loads, the resonant current decreases, and the energy stored in the magnetizing inductance becomes the primary source for charging/discharging the parasitic capacitances (Coss) of the switches during dead time. If the magnetizing current is too small, the voltage across the switch cannot reach zero before the gate signal arrives, resulting in hard switching and increased losses. Options A, C, and D describe incorrect or irrelevant current relationships for ZVS initiation."},{"id":3914,"text":"In a MIMO-OFDM system, what is the critical requirement for the cyclic prefix length to prevent Inter-Symbol Interference (ISI) and Inter-Carrier Interference (ICI)?","options":[{"l":"a","t":"It must exceed the symbol duration of a single OFDM subcarrier.","c":false},{"l":"b","t":"It must exceed the maximum channel delay spread across all MIMO paths.","c":true},{"l":"c","t":"It must be shorter than the channel coherence time.","c":false},{"l":"d","t":"It must be equal to the inverse of the subcarrier spacing.","c":false}],"sol":"The lesson highlights a common trap: forgetting that the OFDM cyclic prefix must exceed the maximum channel delay spread across all MIMO paths. In a MIMO system, each transmit-receive antenna pair has a potentially different channel impulse response and delay spread. The cyclic prefix acts as a guard interval; if its length is shorter than the longest significant multipath delay among all spatial channels, the orthogonality of subcarriers is destroyed (causing ICI) and symbols overlap (causing ISI). Option A describes the useful symbol time, not the guard interval requirement. Option C relates to time variation (Doppler), not multipath delay. Option D defines the subcarrier spacing relationship, not the CP length."},{"id":3915,"text":"The common-mode (CM) resonance frequency of an EMI input filter comprising a CM choke (inductance Lcm, parasitic capacitance Cp) and Y-capacitors (Cy) is correctly given by which formula?","options":[{"l":"a","t":"f_res = 1 / (2π √(Lcm × Cy))","c":false},{"l":"b","t":"f_res = 1 / (2π √(Lcm × (Cy/2 + Cp)))","c":true},{"l":"c","t":"f_res = 1 / (2π √(Lcm × (Cy + Cp)))","c":false},{"l":"d","t":"f_res = 1 / (2π √(Lcm × Cp))","c":false}],"sol":"The lesson provides a specific worked example for this calculation: f_res = 1 / (2π √(Lcm (Cy/2 + Cp))). The Y-capacitors (Cy) are connected from each line to ground. For common-mode currents, the two Y-capacitors appear in series, resulting in an equivalent capacitance of Cy/2 to ground. This series combination is in parallel with the choke's parasitic capacitance Cp. The total effective capacitance resonating with Lcm is therefore (Cy/2 + Cp). Option A ignores both the series division of Cy and the parasitic Cp. Option C incorrectly assumes Cy capacitors are in parallel for CM currents. Option D ignores the Y-capacitors entirely."},{"id":3916,"text":"For a single-input nonlinear system ẋ = f(x) + g(x)u with output y = h(x), what is the necessary condition for full state feedback linearization via static state feedback?","options":[{"l":"a","t":"Relative degree r = n (system dimension)","c":true},{"l":"b","t":"Relative degree r < n","c":false},{"l":"c","t":"System is minimum phase","c":false},{"l":"d","t":"Zero dynamics are asymptotically stable","c":false}],"sol":"For a single-input nonlinear system ẋ = f(x) + g(x)u, full state feedback linearization via static feedback requires the relative degree r to equal the system dimension n. If r = n, the diffeomorphism z = Φ(x) with z₁ = h(x), z₂ = L_f h(x), …, z_n = L_f^{n-1} h(x) transforms the system into the normal form (chain of integrators). The control law u = (v - L_f^n h(x)) / L_g L_f^{n-1} h(x) then yields the linear input-output map y^{(n)} = v. If r < n, only partial linearization is possible, requiring dynamic extension. Minimum-phase zero dynamics are necessary for internal stability but do not enable full linearization if r < n."},{"id":3917,"text":"In a Modular Multilevel Converter (MMC), what is the primary consequence of omitting a circulating current suppression controller?","options":[{"l":"a","t":"Increased fundamental frequency output voltage ripple","c":false},{"l":"b","t":"Uncontrolled second-harmonic arm currents and capacitor voltage ripple","c":true},{"l":"c","t":"Loss of neutral-point voltage balance in submodules","c":false},{"l":"d","t":"Inability to synthesize multilevel voltage waveform","c":false}],"sol":"In an MMC, circulating current flows between the upper and lower arms of a phase leg without contributing to the AC output power. This current contains a dominant second-harmonic component (twice the fundamental frequency). Without a dedicated circulating current suppression controller (typically a PI or resonant controller in the dq-frame), this second-harmonic current remains uncontrolled. It causes significant ripple in the submodule capacitor voltages, increases semiconductor losses, and stresses the arm inductors. The suppression controller injects a common-mode voltage component to actively damp this circulating current."},{"id":3918,"text":"For a MIMO channel where the transmitter has only statistical Channel State Information (CSIT) and the receiver has perfect instantaneous CSIR, which power allocation strategy achieves ergodic capacity?","options":[{"l":"a","t":"Water-filling over instantaneous channel eigenvalues","c":false},{"l":"b","t":"Beamforming along the strongest eigenmode","c":false},{"l":"c","t":"Equal power allocation across all transmit antennas","c":true},{"l":"d","t":"Water-filling over average channel eigenvalues","c":false}],"sol":"Ergodic capacity with only Channel State Information at the Receiver (CSIR) and no instantaneous CSIT is achieved by equal power allocation across all transmit antennas. Water-filling power allocation requires instantaneous knowledge of the channel eigenvalues at the transmitter to allocate more power to stronger spatial modes. With only statistical CSIT (channel distribution), the transmitter cannot adapt power to specific channel realizations. Since the channel is unknown at the transmitter, the optimal input covariance matrix is a scaled identity matrix, corresponding to uniform power distribution. Beamforming requires instantaneous CSIT to align with the strongest eigenmode."},{"id":3919,"text":"Why is the improved Generalized Steinmetz Equation (iGSE) preferred over the simple Steinmetz equation for core loss calculation in high-frequency magnetic components with non-sinusoidal excitation?","options":[{"l":"a","t":"Simple Steinmetz equation overestimates losses for non-sinusoidal excitation","c":false},{"l":"b","t":"Simple Steinmetz equation underestimates losses by 30-50% for non-sinusoidal excitation","c":true},{"l":"c","t":"iGSE accounts for proximity effect in multi-layer windings","c":false},{"l":"d","t":"iGSE eliminates the need for skin depth calculations in conductors","c":false}],"sol":"The simple Steinmetz equation (SE) is empirically derived for purely sinusoidal flux density waveforms. In power electronics, magnetic components experience non-sinusoidal, often pulsed or PWM, excitation. Applying the simple SE to such waveforms underestimates the core losses significantly, typically by 30–50%. The improved Generalized Steinmetz Equation (iGSE) addresses this by incorporating the time derivative of flux density (dB/dt), enabling accurate loss prediction for arbitrary periodic waveforms. Proximity effect and skin depth are winding loss phenomena related to conductor geometry and frequency, not core loss modeling limitations of the Steinmetz equation."},{"id":3920,"text":"In a power quality monitor compliant with IEC 61000-4-30 Class A, what is the primary function of a PLL-based frequency tracking algorithm during DFT-based harmonic analysis?","options":[{"l":"a","t":"To increase the ADC sampling rate to 12.8 kHz","c":false},{"l":"b","t":"To resample the waveform to a fixed number of samples per cycle, preventing spectral leakage due to frequency deviations","c":true},{"l":"c","t":"To apply a Hanning window for spectral leakage reduction","c":false},{"l":"d","t":"To compute the short-term flicker severity Pst","c":false}],"sol":"IEC 61000-4-30 Class A permits a ±0.5% frequency tolerance. A fixed sampling rate (e.g., 12.8 kHz) with a fixed window length (N=256) yields exact 50 Hz bin spacing only at nominal frequency. Grid frequency deviations cause the signal period to mismatch the DFT window, resulting in spectral leakage that spreads harmonic energy across bins and violates Class A accuracy limits. A PLL-based frequency tracking algorithm measures the instantaneous fundamental frequency and controls a resampling process (or adjusts the sampling clock) to maintain exactly N samples per cycle. This coherent sampling ensures harmonic components fall precisely into DFT bins, eliminating leakage."},{"id":3921,"text":"In small‑signal stability analysis, a mode is considered poorly damped and a primary target for a Power System Stabilizer when its damping ratio falls below:","options":[{"l":"a","t":"0.02","c":false},{"l":"b","t":"0.05","c":true},{"l":"c","t":"0.10","c":false},{"l":"d","t":"0.20","c":false}],"sol":"The lesson states that a mode is poorly damped when its damping ratio ζ = –σ/√(σ²+ω²) falls below 0.05. Such modes are the primary target for Power System Stabilizers (PSS). Therefore the threshold value is 0.05."},{"id":3922,"text":"For a single‑machine infinite‑bus system subjected to a temporary three‑phase fault, the equal‑area criterion requires that the accelerating area A₁ be:","options":[{"l":"a","t":"greater than the decelerating area A₂","c":false},{"l":"b","t":"equal to the decelerating area A₂","c":false},{"l":"c","t":"less than the decelerating area A₂","c":true},{"l":"d","t":"zero","c":false}],"sol":"The equal‑area criterion (EAC) gives a quick analytical check for a SMIB system: the accelerating area A₁ (integral of Pₘ–Pₑ during fault) must be less than the decelerating area A₂ (integral after fault clearing). If A₁ < A₂ the system remains stable; otherwise it loses synchronism."},{"id":3923,"text":"What limits the reactive current a STATCOM can inject at very low AC voltage?","options":[{"l":"a","t":"DC link voltage","c":false},{"l":"b","t":"Converter rating","c":true},{"l":"c","t":"AC system impedance","c":false},{"l":"d","t":"Transformer tap position","c":false}],"sol":"The lesson highlights an examiner trap: assuming a STATCOM can supply unlimited reactive current at zero voltage. In practice, the STATCOM’s current limit is set by the converter rating, which caps the maximum reactive current irrespective of voltage level."},{"id":3924,"text":"The energy available for synthetic inertia from a wind turbine is primarily limited by:","options":[{"l":"a","t":"Rotor kinetic energy","c":false},{"l":"b","t":"DC‑link capacitor size","c":true},{"l":"c","t":"Grid frequency deviation","c":false},{"l":"d","t":"Pitch controller bandwidth","c":false}],"sol":"The lesson warns against overlooking the energy limitation of synthetic inertia when sizing H_syn for a wind farm with a small DC‑link capacitor. The DC‑link capacitor stores the energy that can be released as synthetic inertia; its size therefore directly limits the available energy."},{"id":3925,"text":"For non‑self‑restoring insulation, the safety factor applied to lightning over‑voltages (K_l) is:","options":[{"l":"a","t":"1.15","c":false},{"l":"b","t":"1.25","c":false},{"l":"c","t":"1.30","c":false},{"l":"d","t":"1.50","c":true}],"sol":"The lesson specifies that for non‑self‑restoring insulation (solid dielectrics) the safety factors are higher: K_s = 1.3 for switching and K_l = 1.5 for lightning over‑voltages. Hence the lightning safety factor K_l is 1.50."},{"id":3926,"text":"Which FACTS device provides continuous reactive current independent of system voltage and has a response time of less than 5 ms?","options":[{"l":"a","t":"Static VAR Compensator (SVC)","c":false},{"l":"b","t":"Static Synchronous Compensator (STATCOM)","c":true},{"l":"c","t":"Unified Power Flow Controller (UPFC)","c":false},{"l":"d","t":"Interline Power Flow Controller (IPFC)","c":false}],"sol":"The STATCOM uses a Voltage Source Converter (VSC) with a DC capacitor. Unlike the SVC which uses thyristor-controlled reactors and thyristor-switched capacitors, the STATCOM generates reactive current electronically. This allows it to deliver continuous reactive current even at low system voltages, independent of the voltage magnitude. The text explicitly states the STATCOM response time is less than 5 ms, compared to 20-40 ms for the SVC. The UPFC and IPFC are more complex devices combining series and shunt converters for power flow control, not solely for reactive current injection with voltage independence."},{"id":3927,"text":"In 5G New Radio, which channel coding scheme is used for data channels and which for control channels?","options":[{"l":"a","t":"LDPC for data, Polar for control","c":true},{"l":"b","t":"Polar for data, LDPC for control","c":false},{"l":"c","t":"Turbo for data, LDPC for control","c":false},{"l":"d","t":"LDPC for both data and control","c":false}],"sol":"The lesson text states that 5G New Radio (NR) uses LDPC (Low-Density Parity-Check) codes for data channels and polar codes for control channels. This marks a shift from 4G LTE which used Turbo codes for data. LDPC codes offer better throughput and parallelism for high data rates, while polar codes are capacity-achieving for small block lengths typical of control information. The other options incorrectly swap the assignments or reference older standards like Turbo codes."},{"id":3928,"text":"What is the effect of a one-sample delay in Model Predictive Control of power converters?","options":[{"l":"a","t":"It improves steady-state accuracy","c":false},{"l":"b","t":"It adds a pole at z = 0 and can destabilise the dead-beat controller","c":true},{"l":"c","t":"It eliminates chattering in the output","c":false},{"l":"d","t":"It reduces the computational burden","c":false}],"sol":"The text highlights a common pitfall in predictive control: neglecting the effect of sampling delay. It explicitly states that a one-sample delay adds a pole at z = 0 in the discrete-time domain. This additional pole can destabilise a dead-beat controller which relies on placing all poles at the origin for finite-time settling. The delay effectively introduces a phase lag that reduces the stability margin. Options A, C, and D describe benefits or unrelated effects not associated with sampling delay in this context."},{"id":3929,"text":"Why does the Model Reference Adaptive System (MRAS) speed estimator based on back-EMF fail at zero speed?","options":[{"l":"a","t":"The back-EMF amplitude becomes zero, leading to loss of observability","c":true},{"l":"b","t":"The stator resistance drops to zero","c":false},{"l":"c","t":"The inverter switching frequency becomes too high","c":false},{"l":"d","t":"The flux linkage saturates","c":false}],"sol":"The MRAS speed estimator relies on the back-EMF voltage induced in the stator windings, which is proportional to the rotor speed. At zero or very low speeds, the back-EMF amplitude becomes negligible or zero, resulting in a loss of observability for the observer. The text specifically mentions this limitation and notes that a high-frequency injection scheme is required to enable sensorless operation at zero speed. The other options describe unrelated phenomena such as resistance changes or saturation."},{"id":3930,"text":"What is the typical range of the coordination margin (M) for transmission class insulation coordination?","options":[{"l":"a","t":"0.05 to 0.10","c":false},{"l":"b","t":"0.15 to 0.25","c":true},{"l":"c","t":"0.30 to 0.40","c":false},{"l":"d","t":"0.50 to 0.60","c":false}],"sol":"The coordination margin M is defined in the text as M = V90 / V10 - 1, where V90 is the statistical withstand voltage (90% withstand) and V10 is the protective level of the surge arrester (10% probability of exceedance). The lesson explicitly states that typical values for this margin are 0.15 to 0.25 for transmission class equipment. This margin ensures that the arrester protective level is sufficiently below the equipment withstand voltage to account for statistical variations in both overvoltage magnitude and insulation strength."}];
+        var answered={},correctCount=0,lessonSlug="paper2";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.9em\">Practice questions for this lesson are being written. The theory above is complete.</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.9em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("upsc-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("upsc-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("upsc-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+<script>
+/* vlymbooq-lesson-watch */
+(function(){try{
+  var body=document.querySelector(".lesson-body");if(!body)return;
+  var heads=[].slice.call(body.querySelectorAll("h2,h3")).map(function(h){return (h.textContent||"").replace(/\s+/g," ").trim();}).filter(Boolean);
+  if(!heads.length)return;
+  var key="vlymbooq-lesson-seen:"+location.pathname;
+  var prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  var save=function(){try{localStorage.setItem(key,JSON.stringify({h:heads,at:Date.now()}));}catch(e){}};
+  var lower=function(a){return a.map(function(x){return String(x).toLowerCase();});};
+  if(!prev||!Array.isArray(prev.h)||!prev.h.length){save();return;}
+  var oldL=lower(prev.h),newL=lower(heads);
+  var added=heads.filter(function(x){return oldL.indexOf(x.toLowerCase())===-1;});
+  var gone=prev.h.filter(function(x){return newL.indexOf(String(x).toLowerCase())===-1;});
+  if(!added.length&&!gone.length){save();return;}
+  var box=document.createElement("div");
+  box.id="lesson-watch-banner";
+  box.style.cssText="margin:0 0 18px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;font-size:.88em;color:#dbeafe;line-height:1.5";
+  var html="<strong>This lesson changed since your last visit.</strong> ";
+  if(added.length){
+    html+="New sections:<ul style=\"margin:6px 0 8px;padding-left:18px\">";
+    added.slice(0,8).forEach(function(x){var d=document.createElement("div");d.textContent=x;html+="<li>"+d.innerHTML+"</li>";});
+    html+="</ul>";
+  }else{html+="Existing sections were revised.";}
+  html+="<button type=\"button\" style=\"background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.92em;cursor:pointer\">Got it</button>";
+  box.innerHTML=html;
+  box.querySelector("button").onclick=function(){save();if(box.parentNode)box.parentNode.removeChild(box);};
+  body.insertBefore(box,body.firstChild);
+}catch(e){}})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

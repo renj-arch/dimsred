@@ -1,0 +1,121 @@
+name: Paper Solve (agent answers official PYQ)
+
+# The official-key ingestor (ingest-official-paper.py) can only ship answers
+# it can parse from an official answer-key PDF. Some UPSC keys are scanned
+# images with no text layer, so those papers could never be keyed. This lane
+# closes that gap honestly: it downloads the OFFICIAL question paper
+# (data/official-paper-sources.json, status need-solve), parses the questions
+# with the proven QP parser, and has the local model solve them in batches.
+#
+# Fail-closed: scripts/apply-paper-solve.js runs every candidate through the
+# deterministic revalidator (scripts/lib/invented-quality.js) and only merges
+# clean items into data/papers.json, labelled source=agent-solved (the green
+# "official paper" badge is driven by `official`, which stays false). The
+# publish step is skipped if the gate fails — no `if: always()`.
+#
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b).
+
+on:
+  schedule:
+    - cron: '53 2 * * *'   # once a day, off the busy invent block
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'Ignored: hosted routes choose their own model'
+        required: false
+        default: 'qwen3.5:9b'
+      paper_id:
+        description: 'Solve only this paper id (default: first need-solve entry)'
+        required: false
+        default: ''
+
+concurrency:
+  group: paper-solve
+  cancel-in-progress: false
+
+permissions:
+  models: read
+  contents: write
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data
+            papers.html
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Python + pypdf (QP parser)
+        run: |
+          python3 --version
+          pip install --user pypdf
+
+      - name: Solve official paper with the agent
+        timeout-minutes: 125
+        env:
+          NVAPI: '1'
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ: '1'
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER: '1'
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOLVE_DEADLINE_MIN: '100'
+          SOLVE_BATCH: '5'
+        run: |
+          if [ -n "${{ inputs.paper_id }}" ]; then
+            python3 scripts/solve-paper-agent.py "${{ inputs.paper_id }}"
+          else
+            python3 scripts/solve-paper-agent.py
+          fi
+
+      # Gate: revalidate every candidate; hard failures are loud and the
+      # publish step is skipped when this exits non-zero on rejected input.
+      - name: Gate agent-solved candidates
+        id: gate
+        run: node scripts/apply-paper-solve.js --check
+
+      - name: Apply gated candidates to papers.json
+        if: steps.gate.outcome == 'success'
+        run: node scripts/apply-paper-solve.js
+
+      # Fail-closed provenance audit of the whole papers.json: every answered
+      # question must carry an honest source label and agent-solved items must
+      # never have official=true. Publish is skipped if this fails.
+      - name: Provenance gate on papers.json
+        id: prov
+        if: steps.gate.outcome == 'success'
+        run: node scripts/check-papers-provenance.js
+
+      - name: Publish solved paper questions
+        if: steps.gate.outcome == 'success' && steps.prov.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          # Only add files that exist (a run where the QP download failed or no
+          # candidate survived the gate writes no candidates file — run
+          # #41415587800 failed here on `git add` of a missing pathspec), and
+          # skip the push entirely when nothing changed.
+          git add data/papers.json papers.html
+          [ -f data/paper-solve-candidates.json ] && git add data/paper-solve-candidates.json || true
+          [ -f data/official-paper-sources.json ] && git add data/official-paper-sources.json || true
+          if git diff --cached --quiet; then
+            echo "nothing changed (no candidates survived the gate) — skipping publish"
+            exit 0
+          fi
+          bash scripts/ci-push.sh "paper-solve: ${{ inputs.model || 'qwen3.5:9b' }} agent-solved official PYQ answers (run #${{ github.run_number }})"

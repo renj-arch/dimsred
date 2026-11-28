@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Current Affairs Quiz — DIMSRED</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--bg:#0a0e17;--card:#111827;--border:#1e293b;--accent:#3b82f6;--accent2:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:700px;margin:40px auto;padding:16px}
+.page-header{text-align:center;margin-bottom:24px}
+.quiz-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;min-height:400px}
+.q-date{font-size:12px;color:var(--muted);margin-bottom:8px}
+.q-topic{display:inline-block;background:rgba(139,92,246,.15);color:var(--accent2);padding:4px 10px;border-radius:20px;font-size:11px;margin-bottom:12px}
+.q-text{font-size:17px;line-height:1.7;margin-bottom:20px;font-weight:600}
+.q-options{display:flex;flex-direction:column;gap:10px}
+.q-opt{padding:12px 16px;border:2px solid var(--border);border-radius:10px;background:rgba(255,255,255,.03);cursor:pointer;transition:all .15s;font-size:15px;display:flex;align-items:center}
+.q-opt input{margin-right:12px;accent-color:var(--accent)}
+.q-opt:hover{border-color:var(--accent);background:rgba(59,130,246,.08)}
+.q-opt.selected{border-color:var(--accent);background:rgba(59,130,246,.15)}
+.q-opt.correct{border-color:var(--green);background:rgba(16,185,129,.15);color:var(--green)}
+.q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.15);color:var(--red)}
+.q-explain{margin-top:16px;padding:14px;background:rgba(255,255,255,.02);border-radius:8px;display:none}
+.q-explain.show{display:block}
+.q-sol-label{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;display:block}
+.btn-submit{background:var(--accent);color:#fff;border:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px;width:100%;margin-top:16px}
+.btn-submit:hover{opacity:.9}
+.btn-next{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 24px;border-radius:8px;cursor:pointer;margin-top:12px;width:100%}
+.btn-next:hover{border-color:var(--accent);color:var(--accent)}
+.result-banner{padding:16px;border-radius:10px;margin-top:16px;text-align:center;display:none}
+.result-banner.show{display:block}
+.result-score{font-size:28px;font-weight:800}
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+a.back-link{color:var(--accent);text-decoration:none;font-weight:600}
+a.back-link:hover{text-decoration:underline}
+.score-good{color:var(--green)}.score-avg{color:var(--yellow)}.score-bad{color:var(--red)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h1>📰 Daily Current Affairs Quiz</h1>
+        <p>5-10 questions every day from PIB, The Hindu, and official sources. Covers Polity, Economy, Science, Environment, and Governance.</p>
+      </div>
+      <a href="index.html" class="back-link">← Home</a>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="q-date" id="quizDate"></div>
+    <div class="q-topic" id="quizTopic">Topic</div>
+    <div class="q-text" id="quizQuestion">Loading question...</div>
+    <div class="q-options" id="quizOptions"></div>
+    <button class="btn-submit" id="submitBtn">Submit Answer</button>
+    <div class="q-explain" id="quizExplain"></div>
+    <button class="btn-next" id="nextBtn" style="display:none">Next Question →</button>
+  </div>
+
+  <div class="result-banner" id="resultBanner"></div>
+
+  <div style="margin-top:20px;text-align:center">
+    <a href="performance.html" style="text-decoration:none">View Performance Dashboard →</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var questions = [];
+  var currentIndex = 0;
+  var score = 0;
+  var answered = false;
+
+  function loadQuiz(){
+    function norm(d){
+      var raw = (d && d.questions) || [];
+      return raw.map(function(q){
+        var opts = Array.isArray(q.options) ? q.options.map(function(o){ return String(o); }) : [];
+        var correct = -1;
+        if (q.correct != null) correct = q.correct;
+        else if (q.answer != null) correct = opts.findIndex(function(o){ return o.trim().toLowerCase() === String(q.answer).trim().toLowerCase(); });
+        return {
+          date: String(q.date || q.pubDate || '').slice(0, 10),
+          question: String(q.question || q.q || ''),
+          options: opts,
+          correct: correct,
+          explanation: q.explanation || q.solution || q.fact || '',
+          topic: q.topic || q.subject || q.category || 'Current Affairs',
+          source: q.source || 'PIB'
+        };
+      }).filter(function(q){
+        if (q.question.length < 25) return false;
+        if (/\.\.\.\s*$/.test(q.question)) return false;
+        if (q.options.length < 3 || q.correct < 0) return false;
+        // Reject options that differ only by punctuation/ordinal suffix, and
+        // number-only options (date/number fill-blanks like the "Money Market
+        // Operations as on November _____ 2026" item: 19 / 20 / 19, / 19th).
+        var keys = q.options.map(function(o){ return String(o).trim().toLowerCase().replace(/\b(st|nd|rd|th)\b/g, '').replace(/[^a-z0-9]/g, ''); });
+        if (new Set(keys).size !== keys.length) return false;
+        if (keys.every(function(k){ return /^\d{1,6}$/.test(k); })) return false;
+        if (/_____/.test(q.question) && keys.every(function(k){ return /^\d{1,6}$/.test(k); })) return false;
+        return true;
+      });
+    }
+    // data/quiz.json is refreshed by the daily PIB lane; the old
+    // current-affairs-quiz.json was a frozen 8-question file (the same Article
+    // 368 question every day). Fall back only if the fresh file is empty.
+    return fetch('data/quiz.json?' + Date.now()).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+      questions = norm(d);
+      if(!questions.length) throw 0;
+    }).catch(function(){
+      return fetch('data/current-affairs-quiz.json').then(function(r){ return r.json(); }).then(function(d){ questions = norm(d); });
+    }).then(function(){
+      if(!questions.length){
+        document.getElementById('quizQuestion').textContent = 'No questions available yet.';
+        return;
+      }
+      // Take the most recent batch, then 10 for this session: the set changes
+      // as the lane adds today's questions.
+      questions.sort(function(a,b){ return String(b.date).localeCompare(String(a.date)); });
+      questions = questions.slice(0, 40).sort(function(){ return 0.5 - Math.random(); }).slice(0, 10);
+      renderQuestion();
+    }).catch(function(e){
+      document.getElementById('quizQuestion').textContent = 'Could not load quiz data.';
+      console.error(e);
+    });
+  }
+
+  function renderQuestion(){
+    var q = questions[currentIndex];
+    if(!q) return;
+    document.getElementById('quizDate').textContent = q.date;
+    document.getElementById('quizTopic').textContent = q.topic + ' · ' + q.source;
+    document.getElementById('quizQuestion').textContent = (currentIndex+1) + '. ' + q.question;
+    var optsEl = document.getElementById('quizOptions');
+    optsEl.innerHTML = '';
+    q.options.forEach(function(opt, i){
+      var label = document.createElement('label');
+      label.className = 'q-opt';
+      var radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'caq';
+      radio.value = i;
+      var span = document.createElement('span');
+      span.textContent = String.fromCharCode(65+i) + ') ' + opt;
+      label.appendChild(radio);
+      label.appendChild(span);
+      optsEl.appendChild(label);
+    });
+    answered = false;
+    document.getElementById('submitBtn').style.display = 'inline-block';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('quizExplain').className = 'q-explain';
+    document.getElementById('quizExplain').innerHTML = '';
+    document.getElementById('resultBanner').className = 'result-banner';
+    document.getElementById('resultBanner').style.display = 'none';
+  }
+
+  function submitAnswer(){
+    if(answered) return;
+    var q = questions[currentIndex];
+    var selected = document.querySelector('input[name="caq"]:checked');
+    if(!selected){ alert('Please select an option.'); return; }
+    var optIndex = parseInt(selected.value);
+    answered = true;
+    var isCorrect = optIndex === q.correct;
+    if(isCorrect) score++;
+    
+    var labels = document.querySelectorAll('.q-opt');
+    labels.forEach(function(l, i){
+      l.classList.remove('selected');
+      if(i === q.correct) l.classList.add('correct');
+      else if(i === optIndex) l.classList.add('wrong');
+    });
+
+    var explain = document.getElementById('quizExplain');
+    explain.className = 'q-explain show';
+    explain.innerHTML = '<span class="q-sol-label">💡 Explanation:</span> ' + q.explanation;
+
+    var banner = document.getElementById('resultBanner');
+    banner.className = 'result-banner show';
+    var pct = Math.round((score/(currentIndex+1))*100);
+    var cls = pct >= 70 ? 'score-good' : pct >= 40 ? 'score-avg' : 'score-bad';
+    banner.innerHTML = '<div style="font-size:13px;color:var(--muted);margin-bottom:6px">Score so far</div>' +
+      '<div class="result-score '+cls+'">'+score+' / '+(currentIndex+1)+'</div>' +
+      '<div style="font-size:12px;color:var(--muted);margin-top:4px">'+pct+'%</div>';
+
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+
+    var key = 'caq_progress';
+    var prog = JSON.parse(localStorage.getItem(key) || '{}');
+    prog.score = score;
+    prog.total = currentIndex + 1;
+    prog.lastDate = q.date;
+    localStorage.setItem(key, JSON.stringify(prog));
+  }
+
+  function nextQuestion(){
+    currentIndex++;
+    if(currentIndex >= questions.length){
+      document.getElementById('quizOptions').innerHTML = '';
+      document.getElementById('submitBtn').style.display = 'none';
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('quizQuestion').textContent = 'Quiz Complete!';
+      document.getElementById('quizExplain').innerHTML = '<div class="q-sol-label">Final Score:</div><div style="font-size:28px;font-weight:800">'+score+' / '+questions.length+'</div>';
+      document.getElementById('quizExplain').className = 'q-explain show';
+      document.getElementById('resultBanner').innerHTML = '<div style="font-size:13px;color:var(--muted);margin-bottom:6px">Daily Quiz Complete</div>' +
+        '<div class="result-score">'+Math.round((score/questions.length)*100)+'%</div>';
+      document.getElementById('resultBanner').className = 'result-banner show';
+      document.getElementById('resultBanner').style.display = 'block';
+      return;
+    }
+    renderQuestion();
+  }
+
+  // Wire up buttons (functions are inside this IIFE, so inline onclick won't reach them)
+  document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+  document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+
+  loadQuiz();
+})();
+</script>
+<!-- vlymbooq-watermark --><style>#vlymbooq-mark{position:fixed;right:12px;bottom:10px;z-index:60;font:600 11px/1 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,230,208,.34);text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none;user-select:none}</style><div id="vlymbooq-mark" aria-hidden="true">vlymbooq</div></body>
+</html>

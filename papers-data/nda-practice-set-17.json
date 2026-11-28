@@ -1,0 +1,622 @@
+{
+ "folder": "nda",
+ "slug": "practice-set-17",
+ "title": "NDA Practice Set 17",
+ "pageTitle": "NDA Practice Set 17 — Solved Paper",
+ "pageDesc": "Free NDA practice paper set 17 with detailed solutions. Pattern: Mathematics.",
+ "meta": "15 Q · 19 min · 38 marks · Mathematics pattern",
+ "timerMinutes": 19,
+ "totalMarks": 15,
+ "createdDate": "2026-11-28",
+ "blueprint": {
+  "paper": "maths",
+  "name": "Mathematics",
+  "total": 120,
+  "marks": 300,
+  "duration": 150,
+  "negative": 0.333333,
+  "source": "NDA Paper I Mathematics: 120 questions, 300 marks, 150 minutes; negative 1/3.",
+  "provisional": false,
+  "sections": [
+   {
+    "name": "Mathematics",
+    "count": 15,
+    "bank": [
+     "Mathematics"
+    ]
+   }
+  ]
+ },
+ "sections": [
+  {
+   "name": "Mathematics",
+   "color": "#a855f7"
+  }
+ ],
+ "questions": [
+  {
+   "section": "Mathematics",
+   "text": "If A = [[2,3],[1,4]], what is det(A^2)?",
+   "options": [
+    {
+     "label": "A",
+     "text": "5",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "10",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "25",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "30",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: det(A^2) = (det A)^2. det A = 2*4 - 3*1 = 5, so det(A^2) = 25. Full: Compute A^2 = [[7,18],[6,19]], then determinant = 7*19 - 18*6 = 133 - 108 = 25.",
+   "topic": "Matrices",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-28T00:08:15.251Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 911,
+   "q": 1
+  },
+  {
+   "section": "Mathematics",
+   "text": "What is the distance between the points (1, 2) and (4, 6)?",
+   "options": [
+    {
+     "label": "A",
+     "text": "6",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "7",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "8",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "5",
+     "correct": true
+    }
+   ],
+   "solution": "Shortcut: Δx = 3, Δy = 4 → distance = √(3²+4²) = √25 = 5 (recognize 3-4-5 Pythagorean triple). Full solution: Apply distance formula √[(4-1)²+(6-2)²] = √(9+16) = 5.",
+   "topic": "Coordinate Geometry",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-28T00:04:03.594Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 905,
+   "q": 2
+  },
+  {
+   "id": 837,
+   "q": 3,
+   "section": "Mathematics",
+   "text": "A shopkeeper sells a cricket bat with a marked price of ₹5,000. He offers two alternatives: Scheme A: 15% discount followed by a further 10% discount on the reduced price. Scheme B: A single flat discount of x%. To make the final selling price identical in both schemes, what is the value of x?",
+   "options": [
+    {
+     "label": "A",
+     "text": "25%",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "23.5%",
+     "correct": true
+    },
+    {
+     "label": "C",
+     "text": "22.5%",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "24%",
+     "correct": false
+    }
+   ],
+   "solution": "Discount A = 15%. Remaining = 85%.\nDiscount B = 10%. Remaining = 90%.\nCombined Remaining = 85% x 90% = 0.85 x 0.90 = 0.765.\nTotal Discount = 1 - 0.765 = 0.235.\nx = 23.5%."
+  },
+  {
+   "section": "Mathematics",
+   "text": "The number of trailing zeroes in <span class=\"math\">100!</span> (factorial 100) is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "20",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "25",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "24",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "30",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Trailing zeroes in <span class=\"math\">n!</span> = Sum of quotients of <span class=\"math\">n</span> divided by powers of 5. <span class=\"math\">\\lfloor 100/5 \\rfloor + \\lfloor 100/25 \\rfloor + \\lfloor 100/125 \\rfloor = 20 + 4 + 0 = 24</span>. Full Solution: A trailing zero is produced by a factor of 10 = 2 × 5. In factorials, factors of 2 are more frequent than 5, so we count factors of 5. Multiples of 5 up to 100: <span class=\"math\">\\lfloor 100/5 \\rfloor = 20</span>. Multiples of 25 (extra factor of 5): <span class=\"math\">\\lfloor 100/25 \\rfloor = 4</span>. Multiples of 125: <span class=\"math\">\\lfloor 100/125 \\rfloor = 0</span>. Total factors of 5 = <span class=\"math\">20 + 4 = 24</span>. Hence, 24 trailing zeroes.",
+   "topic": "Permutations and Combinations",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-26T00:15:47.237Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 840,
+   "q": 4
+  },
+  {
+   "section": "Mathematics",
+   "text": "A polygon has 44 diagonals. The number of its sides is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "11",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "10",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "12",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "8",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Diagonals = n(n-3)/2 = 44 ⇒ n² - 3n - 88 = 0 ⇒ (n-11)(n+8) = 0 ⇒ n = 11. Full Solution: Number of diagonals in an n-sided polygon is given by ⁿC₂ - n = n(n-1)/2 - n = n(n-3)/2. Given n(n-3)/2 = 44 ⇒ n² - 3n = 88 ⇒ n² - 3n - 88 = 0. Factorizing: (n - 11)(n + 8) = 0. Since n > 0, n = 11. Thus, the polygon has 11 sides.",
+   "topic": "Permutations and Combinations",
+   "difficulty": "easy",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-28T00:05:26.357Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 909,
+   "q": 5
+  },
+  {
+   "section": "Mathematics",
+   "text": "If f(x) = x³ + 2x² - 5x + 7, what is f'(2)?",
+   "options": [
+    {
+     "label": "A",
+     "text": "15",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "13",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "17",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "11",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Differentiate termwise: f'(x) = 3x² + 4x - 5. Plug x=2: 3·4 + 8 - 5 = 12 + 8 - 5 = 15. Full solution: Compute derivative using power rule and evaluate.",
+   "topic": "Differential Calculus",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-28T00:04:06.529Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 906,
+   "q": 6
+  },
+  {
+   "id": 838,
+   "q": 7,
+   "section": "Mathematics",
+   "text": "A bank offers a special 'Festival Savings Scheme' where the interest rate for the first year is 5% per annum on the principal. However, the interest earned in the first year is added to the principal at the end of the year. If a customer deposits ₹10,000 and closes the account after exactly one year, what is the total amount received?",
+   "options": [
+    {
+     "label": "A",
+     "text": "₹10,500",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "₹10,525",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "₹10,600",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "₹10,400",
+     "correct": false
+    }
+   ],
+   "solution": "Simple Interest = (P * R * T) / 100.\nSubstituting values: P = 10000, R = 5%, T = 1 year.\nSI = (10000 * 5 * 1) / 100.\nSI = 500.\nTotal Amount = Principal + Interest = 10000 + 500 = 10500."
+  },
+  {
+   "id": 915,
+   "q": 8,
+   "section": "Mathematics",
+   "text": "A retailer marks up a commodity by 25% above its cost price. He then offers a discount of x% on this marked price. If the final selling price equals the original cost price plus half of the initial profit he would have made had there been no discount, what is the value of x?",
+   "options": [
+    {
+     "label": "A",
+     "text": "10",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "12",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "15",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "20",
+     "correct": false
+    }
+   ],
+   "solution": "Let Cost Price (CP) = Rs. 100.\nInitial Profit (if no discount) = Marked Price - CP = 125 - 100 = 25.\nHalf of this initial profit = 25 / 2 = 12.5.\nTarget Selling Price = CP + Half Initial Profit = 100 + 12.5 = 112.5.\nMarked Price (MP) = 125.\nDiscount Amount = MP - SP = 125 - 112.5 = 12.5.\nDiscount Percentage (x) = (Discount / MP) * 100 = (12.5 / 125) * 100 = 10%."
+  },
+  {
+   "section": "Mathematics",
+   "text": "The derivative of y = ln(sin x) at x = π/6 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "1/√3",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "√3/2",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "√3",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "2/√3",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: dy/dx = cot x. At π/6, cot = √3. Full: dy/dx = (1/sin x)·cos x = cot x; substitute x=π/6 gives cos(π/6)/sin(π/6) = (√3/2)/(1/2) = √3.",
+   "topic": "Calculus",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-28T00:08:18.010Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 912,
+   "q": 9
+  },
+  {
+   "section": "Mathematics",
+   "text": "If A is a square matrix of order 3 such that \\(|A| = 4\\), then the value of \\(|\\text{adj}(\\text{adj } A)|\\) is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "16",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "64",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "256",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "1024",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use the direct formula \\(|\\text{adj}(\\text{adj } A)| = |A|^{(n-1)^2}\\). Here \\(n=3\\), so \\((3-1)^2 = 4\\). Answer = \\(4^4 = 256\\). Full Solution: For a square matrix of order \\(n\\), \\(|\\text{adj } A| = |A|^{n-1}\\). Given \\(|A|=4\\) and \\(n=3\\), \\(|\\text{adj } A| = 4^{2} = 16\\). Now \\(|\\text{adj}(\\text{adj } A)| = |\\text{adj } A|^{n-1} = 16^{2} = 256\\).",
+   "topic": "Matrices & Determinants",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-28T00:10:39.587Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 918,
+   "q": 10
+  },
+  {
+   "section": "Mathematics",
+   "text": "The area of the triangle with vertices A(1, 2, 3), B(2, 3, 1) and C(3, 1, 2) is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "3√3",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "9/2",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "3√3/2",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "√3",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Area = ½ |→AB × →AC|. →AB = (1, 1, -2), →AC = (2, -1, -1). Cross product = −3ı − 3Ĳ − 3ĳ. Magnitude = √(9+9+9) = 3√3. Area = ½ × 3√3 = 3√3/2. Full Solution: Vectors →AB = (2-1, 3-2, 1-3) = (1, 1, -2) and →AC = (3-1, 1-2, 2-3) = (2, -1, -1). Cross product →AB × →AC = det[[ı, Ĳ, ĳ], [1, 1, -2], [2, -1, -1]] = ı(-1-2) - Ĳ(-1+4) + ĳ(-1-2) = -3ı - 3Ĳ - 3ĳ. Magnitude = √((-3)²+(-3)²+(-3)²) = √27 = 3√3. Area of triangle = ½ |→AB × →AC| = 3√3/2.",
+   "topic": "Vector Algebra",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-28T00:09:46.556Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 916,
+   "q": 11
+  },
+  {
+   "section": "Mathematics",
+   "text": "The value of the definite integral ∫₀⁰ⁿ₂ π/2 (sin x)/(sin x + cos x) dx is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "π/4",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "π/2",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "π",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "0",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use King's Property ∫₀⁰ⁿ₂ f(x)dx = ∫₀⁰ⁿ₂ f(a-x)dx. Let I be the integral. Replacing x by π/2 - x gives I = ∫₀⁰ⁿ₂ (cos x)/(sin x + cos x) dx. Adding both forms: 2I = ∫₀⁰ⁿ₂ 1 dx = π/2 ⇒ I = π/4. Full Solution: Let I = ∫₀⁰ⁿ₂ sin x/(sin x+cos x) dx. Substitute x → π/2 - x, using sin(π/2-x)=cos x, cos(π/2-x)=sin x. I = ∫₀⁰ⁿ₂ cos x/(sin x+cos x) dx. Add the two equations: 2I = ∫₀⁰ⁿ₂ (sin x+cos x)/(sin x+cos x) dx = ∫₀⁰ⁿ₂ dx = [x]₀⁰ⁿ₂π/2 = π/2. Hence I = π/4.",
+   "topic": "Definite Integration",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-28T00:09:34.864Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 914,
+   "q": 12
+  },
+  {
+   "id": 904,
+   "q": 13,
+   "section": "Mathematics",
+   "text": "A suburban train covers a distance of 120 km in 2 hours at its scheduled speed. On the return journey, due to signal disruptions at exactly 5 platforms encountered, the train incurs a fixed 'delay penalty' of 4 minutes for every platform passed. If the train maintains the exact same average speed between these platforms as it did on the outbound journey, how much total time is required for the entire return trip?",
+   "options": [
+    {
+     "label": "A",
+     "text": "2 hours",
+     "correct": false
+    },
+    {
+     "label": "B",
+     "text": "2 hours 10 minutes",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "2 hours 20 minutes",
+     "correct": true
+    },
+    {
+     "label": "D",
+     "text": "2 hours 30 minutes",
+     "correct": false
+    }
+   ],
+   "solution": "1. Outbound average speed = 120 km / 2 hrs = 60 km/hr.\n2. Return journey distance is also 120 km.\n3. Ideal time for return trip at 60 km/hr = 120/60 = 2 hours (120 mins).\n4. Delay penalty = 4 minutes per platform * 5 platforms = 20 minutes.\n5. Total time = Ideal time + Penalty = 120 mins + 20 mins = 140 mins."
+  },
+  {
+   "section": "Mathematics",
+   "text": "If A is a square matrix of order 3 such that |A| = 2, then the value of |adj(adj A)| is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "16",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "32",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "64",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "128",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Use formula |adj A| = |A|^(n-1). For n=3, |adj A| = 2^2 = 4. Then |adj(adj A)| = |adj A|^(n-1) = 4^2 = 16. Full Solution: Given |A|=2 and order n=3. Determinant of adjoint is |adj A| = |A|^(n-1) = 2^2 = 4. Treating adj A as a new matrix of order 3, |adj(adj A)| = |adj A|^(3-1) = 4^2 = 16.",
+   "topic": "Matrices & Determinants",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "NVIDIA NIM nvidia/nemotron-3-ultra-550b-a55b",
+   "generatedAt": "2026-11-17T00:08:39.753Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {
+    "headers": [],
+    "rows": []
+   },
+   "chartData": {
+    "type": "bar",
+    "labels": [],
+    "datasets": []
+   },
+   "id": 402,
+   "q": 14
+  },
+  {
+   "section": "Mathematics",
+   "text": "The perpendicular distance from the point (3,4) to the line 3x + 4y - 10 = 0 is:",
+   "options": [
+    {
+     "label": "A",
+     "text": "3",
+     "correct": true
+    },
+    {
+     "label": "B",
+     "text": "2",
+     "correct": false
+    },
+    {
+     "label": "C",
+     "text": "4",
+     "correct": false
+    },
+    {
+     "label": "D",
+     "text": "5",
+     "correct": false
+    }
+   ],
+   "solution": "Shortcut: Distance = |Ax0+By0+C|/√(A^2+B^2) = |3·3+4·4-10|/5 = |9+16-10|/5 = 15/5 = 3. Full: Plug into formula: numerator = 15, denominator = √(9+16)=5, distance = 3.",
+   "topic": "Coordinate Geometry",
+   "difficulty": "medium",
+   "source": "model",
+   "model": "OpenRouter nvidia/nemotron-3-ultra-550b-a55b:free",
+   "generatedAt": "2026-11-28T00:08:21.196Z",
+   "reviewed": false,
+   "imageUrl": null,
+   "tableData": {},
+   "chartData": {},
+   "id": 913,
+   "q": 15
+  }
+ ],
+ "totalQuestions": 15
+}
