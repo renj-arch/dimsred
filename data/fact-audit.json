@@ -1,290 +1,61 @@
 {
- "generatedAt": "2026-11-28T09:17:37.454Z",
+ "generatedAt": "2026-11-28T09:42:21.659Z",
  "lessonsAudited": 18,
- "flagged": 28,
- "applied": 18,
- "modelCalls": 19,
- "modelFailures": 38,
+ "flagged": 5,
+ "applied": 3,
+ "modelCalls": 8,
+ "modelFailures": 33,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "upsc/course/opt-philosophy/lesson-overview.html",
-   "quote": "Suddhadvaita (Nimbarka) where the distinction is nominal",
-   "problem": "Nimbarka's school is Dvaitadvaita (Bhedabheda), not Suddhadvaita; Suddhadvaita is Vallabha's school. Also, Nimbarka holds difference and non-difference as real, not nominal.",
-   "correction": "Dvaitadvaita (Nimbarka) where difference and non-difference are both real",
+   "file": "cgl/course/quant/lesson-speed-distance.html",
+   "quote": "Relative speed = |S₁ S₂|",
+   "problem": "The formula incorrectly concatenates the speeds instead of taking their difference.",
+   "correction": "Relative speed = |S₁ − S₂|",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Nimbarka's school is Dvaitadvaita (Bhedabheda), not Shuddhadvaita (Vallabha). Nimbarka holds difference/non-difference as real.",
+   "verifierReason": "Original lacks operator; |S1−S2| is correct for same-direction relative speed.",
    "applied": false
   },
   {
-   "file": "upsc/course/opt-philosophy/lesson-overview.html",
-   "quote": "each defended by a vyāpti (invariable concomitance) and a hetu (reason)",
-   "problem": "Vyāpti and hetu are criteria specific to inference (anumāna); they do not defend perception, comparison, or testimony.",
-   "correction": "inference defended by vyāpti and hetu; other pramāṇas have distinct grounds",
+   "file": "cgl/course/ga/lesson-indian-geography.html",
+   "quote": "Iron ore (hematite and magnetite) reserves exceed 25 billion tonnes",
+   "problem": "India's iron ore reserves are much lower; the figure 25 billion tonnes refers to total resources (approx. 22.5 billion tonnes), not reserves.",
+   "correction": "Iron ore (hematite and magnetite) resources are about 22.5 billion tonnes",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Vyapti and hetu are constitutive of anumana only; pratyaksha, upamana, shabda have distinct grounds (sannikarsha, sadrisya, aptavakya).",
+   "verifierReason": "IBM data: total iron ore resources ~22.5 Bt; reserves ~5.5 Bt. Quote confuses reserves with resources.",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/ga/lesson-indian-geography.html",
+   "quote": "Godavari (2018)",
+   "problem": "The Godavari Water Disputes Tribunal was constituted in 1969, not 2018.",
+   "correction": "Godavari (1969)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Godavari Water Disputes Tribunal constituted 1969 per ISRWD Act; 2018 is incorrect.",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/ga/lesson-indian-geography.html",
+   "quote": "1,186 blocks were classified as over‑exploited in the 2022 assessment",
+   "problem": "The 2022 groundwater assessment reported 1,006 over‑exploited blocks; 1,186 was the 2017 figure.",
+   "correction": "1,006 blocks were classified as over‑exploited in the 2022 assessment",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "CGWB 2022 assessment: 1,006 over-exploited units; 1,186 was 2017 figure.",
+   "applied": true
+  },
+  {
+   "file": "cgl/course/ga/lesson-indian-geography.html",
+   "quote": "in 2023‑24, MSP procurement covered 43 million tonnes of wheat and 55 million tonnes of rice",
+   "problem": "Wheat procurement in 2023‑24 was about 26.2 million tonnes; 43 million tonnes was the 2021‑22 figure.",
+   "correction": "in 2023‑24, MSP procurement covered about 26 million tonnes of wheat and 55 million tonnes of rice",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "FCI data: RMS 2023-24 wheat procurement 26.2 Mt; 43 Mt was 2021-22. Rice ~55 Mt correct.",
    "applied": false
-  },
-  {
-   "file": "upsc/course/opt-nepali/lesson-overview.html",
-   "quote": "Standard Nepali (Khas-Kurukh)",
-   "problem": "Kurukh is a Dravidian language (Oraon), not a name for the Nepali language.",
-   "correction": "Standard Nepali (Khas Kura)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Kurukh is Dravidian (Oraon); Nepali was historically Khas Kura.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-nepali/lesson-overview.html",
-   "quote": "the Siddhi Narasimha Malla inscription (c. 1380)",
-   "problem": "Siddhi Narasimha Malla ruled 1620–1661; the date 1380 is anachronistic.",
-   "correction": "the Siddhi Narasimha Malla inscription (c. 1654)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Siddhi Narasimha Malla ruled 1620–1661; 1380 anachronistic.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-nepali/lesson-overview.html",
-   "quote": "the 1932 Sajha edition",
-   "problem": "Sajha Prakashan was founded in 1964; no edition existed in 1932.",
-   "correction": "a later Sajha edition",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Sajha Prakashan founded 1964; 1932 edition impossible.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-nepali/lesson-overview.html",
-   "quote": "the 1932 edition’s deliberate removal",
-   "problem": "Sajha Prakashan founded in 1964; 1932 edition is impossible.",
-   "correction": "a later edition’s deliberate removal",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Same as (3); 1932 edition impossible.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-philosophy/lesson-overview.html",
-   "quote": "Anti‑realism takes several forms: instrumentalism (theories are merely predictive tools), constructive empiricism (van Fraassen’s view that science aims at empirical adequacy), and structural realism ",
-   "problem": "Structural realism is a realist position (epistemic or ontic), not a form of anti-realism. It is incorrectly classified under anti-realism.",
-   "correction": "Anti‑realism takes several forms: instrumentalism (theories are merely predictive tools) and constructive empiricism (van Fraassen’s view that science aims at empirical adequacy); structural realism (",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Structural realism (epistemic/ontic) is a variant of scientific realism, not anti-realism. The correction correctly reclassifies it.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-odia/lesson-overview.html",
-   "quote": "Gopinath Mohanty's Paraja , which foregrounds the Dongria Kondh's relationship with the Niyamgiri hills",
-   "problem": "Paraja (1945) is a novel about the Paraja tribe of the Koraput region, not the Dongria Kondh of the Niyamgiri hills. The Dongria Kondh are a distinct tribe associated with Niyamgiri in Kalahandi/Rayagada districts.",
-   "correction": "Gopinath Mohanty's Paraja, which foregrounds the Paraja tribe's relationship with their forest environment",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Paraja (1945) depicts the Paraja tribe of Koraput, not the Dongria Kondh of Niyamgiri.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "distributes legislative, executive and financial powers between the Union and the States through the Seventh Schedule",
-   "problem": "The Seventh Schedule only distributes legislative powers; executive powers follow legislative powers, and financial powers are distributed under separate constitutional provisions (Articles 268–293).",
-   "correction": "distributes legislative powers between the Union and the States through the Seventh Schedule; executive powers follow legislative powers, and financial powers are distributed under separate provisions",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Seventh Schedule allocates only legislative powers; executive and financial powers are governed by other constitutional provisions.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "the 2023 BIMSTEC summit",
-   "problem": "The 5th BIMSTEC summit was held in 2022 (Colombo), not 2023. There was no BIMSTEC summit in 2023.",
-   "correction": "the 2022 BIMSTEC summit",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "5th BIMSTEC summit held 2022 Colombo; no summit in 2023",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "“class‑within‑class” test",
-   "problem": "The Indra Sawhney (1992) decision introduced the \"creamy layer\" exclusion, not a \"class‑within‑class\" test.",
-   "correction": "“creamy layer” exclusion",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Indra Sawhney (1992) introduced creamy layer exclusion, not class-within-class test",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "1998 Rajiv Gandhi Action Plan",
-   "problem": "The Rajiv Gandhi Action Plan for a nuclear‑weapon‑free world was presented in 1988, not 1998.",
-   "correction": "1988 Rajiv Gandhi Action Plan",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Rajiv Gandhi Action Plan for nuclear-free world presented at UNGA June 1988",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "2005 Islamabad Summit (13th)",
-   "problem": "The 13th SAARC summit (2005) was held in Dhaka, not Islamabad.",
-   "correction": "2005 Dhaka Summit (13th)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "13th SAARC summit held Dhaka 2005, not Islamabad",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "the 2011 Addu Summit (17th) admitted Afghanistan",
-   "problem": "Afghanistan was admitted to SAARC at the 14th summit in New Delhi (2007), not at the 17th summit in Addu (2011).",
-   "correction": "Afghanistan was admitted at the 2007 New Delhi Summit (14th)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Afghanistan admitted at 14th SAARC summit New Delhi 2007",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "Integrated Space Cell (2021) and the Defence Space Agency (2022)",
-   "problem": "The Defence Space Agency was established in 2019, not 2022; the Integrated Space Cell was set up later (c. 2021). The order and years are incorrect.",
-   "correction": "Defence Space Agency (2019) and the Integrated Space Cell (2021)",
-   "confidence": "medium",
-   "verified": true,
-   "verifierReason": "Defence Space Agency established 2019; Integrated Space Cell set up 2021"
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "and its later refinements ( Town of Greece v. Galloway , 2014) require government action to have a secular purpose, neither advance nor inhibit religion, and avoid excessive entanglement",
-   "problem": "Town of Greece v. Galloway (2014) did not refine the Lemon test; it applied a historical-practice standard, not the Lemon framework.",
-   "correction": "and its later refinements (e.g., Agostini v. Felton, 1997) require government action to have a secular purpose, neither advance nor inhibit religion, and avoid excessive entanglement",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Town of Greece used historical practice, not Lemon; Agostini (1997) correctly refined Lemon's entanglement prong.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "the European Union, China, and 24 other members established the Multi‑Party Interim Appeal Arbitration Arrangement (MPIA) in 2020",
-   "problem": "The MPIA was established in 2020 by the EU and 16 other WTO members; China was not an initial participant and the number 24 is incorrect.",
-   "correction": "the European Union and 16 other members established the Multi‑Party Interim Appeal Arbitration Arrangement (MPIA) in 2020",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "MPIA launched by EU + 16 WTO members in 2020; China joined later, not initially.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "major economies such as the United States, India, and Brazil have not joined",
-   "problem": "Brazil is a participant in the MPIA; only the United States and India (among major economies) have not joined.",
-   "correction": "major economies such as the United States and India have not joined",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Brazil was an initial MPIA participant (2020); only US and India among major economies absent.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-overview.html",
-   "quote": "the CPTPP incorporates a standing appellate tribunal",
-   "problem": "The CPTPP provides for an appellate review mechanism (Article 28.19), not a standing appellate tribunal.",
-   "correction": "the CPTPP provides for an appellate review mechanism",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "CPTPP Art. 28.19 creates ad hoc appellate review, not a standing tribunal.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psychology/lesson-overview.html",
-   "quote": "flanked by two human attendants",
-   "problem": "The Pashupati Seal depicts a figure surrounded by animals (tiger, elephant, rhinoceros, buffalo, deer), not human attendants.",
-   "correction": "flanked by animals",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Pashupati Seal shows a central figure surrounded by animals (tiger, elephant, rhino, buffalo, deer), not human attendants.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psychology/lesson-overview.html",
-   "quote": "Upper Paleolithic revolution (c. 40,000 BCE). Before this era, hominids used tools for immediate survival (pebble tools). The shift to figurines, cave paintings (Lascaux), and burial rites",
-   "problem": "Lascaux cave paintings date to ~17,000 BCE, not 40,000 BCE; pebble tools are from the Lower Paleolithic (c. 2.6 mya), not the period immediately preceding the Upper Paleolithic (which used Middle Paleolithic/Mousterian tools).",
-   "correction": "Upper Paleolithic revolution (c. 40,000 BCE). Before this era, hominids used Middle Paleolithic tools. The shift to figurines, cave paintings (e.g., Chauvet), and burial rites",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Lascaux is ~17k BCE; Chauvet ~32k BCE fits Upper Paleolithic onset. Pebble tools are Lower Paleolithic; Middle Paleolithic (Mousterian) precedes Upper Paleolithic.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psychology/lesson-overview.html",
-   "quote": "retain items loading ≥ 0.40 on the target factor and 0.95, RMSEA < 0.06);",
-   "problem": "CFI > 0.95 and RMSEA < 0.06 are confirmatory factor analysis (CFA) model-fit indices, not item-retention thresholds for exploratory factor analysis (EFA). The sentence conflates EFA and CFA criteria.",
-   "correction": "retain items loading ≥ 0.40 on the target factor and < 0.30 on non-target factors; (5) confirmatory factor analysis (CFA) on a fresh sample (N ≥ 300) to verify factor structure (CFI > 0.95, RMSEA < 0.",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "CFI/RMSEA are CFA fit indices, not EFA item-retention thresholds. Correction properly separates EFA cross-loading rules from CFA model-fit criteria.",
-   "applied": false
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-paper2.html",
-   "quote": "produced disengagement at Pangong Tso, Gogra‑Hot Springs, and Depsang",
-   "problem": "Depsang disengagement has not been achieved as of 2024; only Pangong Tso and Gogra‑Hot Springs have seen disengagement.",
-   "correction": "produced disengagement at Pangong Tso and Gogra‑Hot Springs",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Depsang disengagement not achieved as of 2024; only Pangong Tso (Feb 2021) and Gogra-Hot Springs (Aug 2021) saw disengagement.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-paper2.html",
-   "quote": "the 2015 India‑Japan Nuclear Cooperation Agreement and the 2016 India‑Australia Civil Nuclear Agreement",
-   "problem": "India‑Japan Nuclear Cooperation Agreement was signed in 2016 (entered into force 2017); India‑Australia Civil Nuclear Agreement was signed in 2014 (entered into force 2015).",
-   "correction": "the 2016 India‑Japan Nuclear Cooperation Agreement and the 2014 India‑Australia Civil Nuclear Agreement",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "India-Japan N-deal signed Nov 2016 (in force 2017); India-Australia N-deal signed Sep 2014 (in force 2015). Original years swapped.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-paper2.html",
-   "quote": "The 2022‑2023 “Nuclear Security Summit” participation",
-   "problem": "The Nuclear Security Summit process ended in 2016; there was no summit in 2022‑2023.",
-   "correction": "The 2016 Nuclear Security Summit participation",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Nuclear Security Summit series ended after 2016 Washington summit; no summits held in 2022-2023.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-paper2.html",
-   "quote": "2021 “NewSpace India Limited (NSIL)”",
-   "problem": "NSIL was incorporated in 2019, not 2021.",
-   "correction": "2019 “NewSpace India Limited (NSIL)”",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "NSIL incorporated in March 2019, not 2021. Correction accurate.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-paper2.html",
-   "quote": "coal cess (₹400 per tonne since 2010)",
-   "problem": "The coal cess was ₹50/tonne in 2010 and raised to ₹400 in 2016; it was not ₹400 since 2010.",
-   "correction": "coal cess (₹400 per tonne from 2016)",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "Coal cess was ₹50/tonne in 2010, raised to ₹400 in 2016. Correction accurate.",
-   "applied": true
-  },
-  {
-   "file": "upsc/course/opt-psir/lesson-paper2.html",
-   "quote": "2024 “Carbon Border Adjustment Mechanism” (CBAM) of the EU",
-   "problem": "The EU CBAM regulation entered into force in 2023 (transitional phase from 2023), not 2024.",
-   "correction": "2023 “Carbon Border Adjustment Mechanism” (CBAM) of the EU",
-   "confidence": "high",
-   "verified": true,
-   "verifierReason": "EU CBAM regulation entered into force May 2023, transitional phase from Oct 2023. Correction accurate.",
-   "applied": true
   }
  ]
 }
