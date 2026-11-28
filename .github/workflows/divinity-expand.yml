@@ -20,6 +20,8 @@ concurrency:
 
 permissions:
   contents: write
+  # Self-chaining: the lane dispatches its own next run while topics remain.
+  actions: write
 
 jobs:
   expand:
@@ -51,7 +53,9 @@ jobs:
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           COUNT: ${{ github.event.inputs.count || '3' }}
-        run: node scripts/expand-divinity.js --count "$COUNT"
+        run: |
+          set -o pipefail
+          node scripts/expand-divinity.js --count "$COUNT" 2>&1 | tee /tmp/lane.log
 
       - name: Publish the divinity hub
         env:
@@ -63,3 +67,26 @@ jobs:
           git add divinity.html 2>/dev/null || true
           git add -f data/divinity-state.json 2>/dev/null || true
           bash scripts/ci-push.sh "divinity: verified topics added"
+
+      # Self-chain while topics remain; the daily cron is the restart net.
+      - name: Queue the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REMAIN=$(node scripts/expand-divinity.js --remaining | grep -o 'LANE_REMAINING=[0-9]*' | tail -1 | cut -d= -f2)
+          DONE=$(grep -o 'LANE_DONE=[0-9]*' /tmp/lane.log 2>/dev/null | tail -1 | cut -d= -f2)
+          echo "remaining=${REMAIN:-?} done=${DONE:-0}"
+          if [ -z "$REMAIN" ] || [ "$REMAIN" -le 0 ]; then
+            echo "::notice::Divinity lane complete — every topic is written."; exit 0
+          fi
+          if [ "${DONE:-0}" -le 0 ]; then
+            echo "::warning::no progress this run; not chaining — the cron will retry."; exit 0
+          fi
+          for i in 1 2 3; do
+            if gh workflow run divinity-expand.yml --ref main -f count="${{ github.event.inputs.count || '3' }}"; then
+              echo "Queued the next Divinity run."; exit 0
+            fi
+            echo "Dispatch attempt $i failed; retrying..."; sleep 10
+          done
+          echo "::warning::could not dispatch the next run"
