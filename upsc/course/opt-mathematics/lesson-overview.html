@@ -1135,9 +1135,90 @@
 <p>The Euler equations for an inviscid, incompressible fluid are ∂<strong>u</strong>/∂<em>t</em> + (<strong>u</strong>·∇)<strong>u</strong> = −(1/<em>ρ</em>)∇<em>p</em> + <strong>f</strong>, ∇·<strong>u</strong> = 0. Taking the curl gives the vorticity equation ∂<strong>ω</strong>/∂<em>t</em> + (<strong>u</strong>·∇)<strong>ω</strong> = (<strong>ω</strong>·∇)<strong>u</strong> where <strong>ω</strong> = ∇×<strong>u</strong>. The term (<strong>ω</strong>·∇)<strong>u</strong> represents vortex stretching and tilting; in two-dimensional flow it vanishes, so vorticity is materially conserved: D<strong>ω</strong>/D<em>t</em> = 0. Kelvin's circulation theorem states that for barotropic flow with conservative body forces, the circulation Γ = ∮<sub>C</sub> <strong>u</strong>·d<strong>r</strong> around a closed material curve remains constant with time. This follows from ∮<sub>C</sub> (D<strong>u</strong>/D<em>t</em>)·d<strong>r</strong> = 0 when the acceleration is a gradient. Helmholtz's vortex theorems: (1) vortex lines move with the fluid (vortex lines are material lines), (2) the strength of a vortex tube (flux of vorticity through a cross-section) is constant along its length, (3) a vortex tube cannot end in the fluid — it must extend to boundaries or form a closed loop. For irrotational flow (<strong>ω</strong> = 0), a velocity potential <em>φ</em> exists with <strong>u</strong> = ∇<em>φ</em>, and incompressibility gives Laplace's equation ∇²<em>φ</em> = 0. The Bernoulli equation for unsteady potential flow is ∂<em>φ</em>/∂<em>t</em> + ½|∇<em>φ</em>|² + <em>p</em>/<em>ρ</em> + <em>χ</em> = <em>F</em>(<em>t</em>) where <em>χ</em> is the potential of body forces. For steady flow, this reduces to the familiar <em>p</em> + ½<em>ρ</em>|<strong>u</strong>|² + <em>ρ</em><em>χ</em> = constant along streamlines (and everywhere for irrotational flow). The method of images and conformal mapping solve Laplace's equation in simple geometries. For a source of strength <em>m</em> at the origin in 3D, <em>φ</em> = −<em>m</em>/(4π<em>r</em>), <strong>u</strong> = (<em>m</em>/(4π<em>r</em>²)) <strong>e</strong><sub>r</sub>. A dipole (doublet) of moment <strong>μ</strong> has <em>φ</em> = −<strong>μ</strong>·<strong>r</strong>/(4π<em>r</em>³). The flow past a sphere of radius <em>a</em> with uniform stream <em>U</em> is <em>φ</em> = <em>U</em>(<em>r</em> + <em>a</em>³/(2<em>r</em>²)) cos <em>θ</em>. The pressure distribution from Bernoulli gives d'Alembert's paradox: zero drag in steady inviscid flow. In two dimensions, complex potential <em>w</em>(<em>z</em>) = <em>φ</em> + i<em>ψ</em> where <em>ψ</em> is the stream function. The flow past a cylinder with circulation Γ is <em>w</em> = <em>U</em>(<em>z</em> + <em>a</em>²/<em>z</em>) − (iΓ/(2π)) log <em>z</em>. The Kutta-Joukowski theorem states lift per unit span <em>L</em> = <em>ρ</em><em>U</em>Γ. The Blasius-Chaplygin formulas give force and moment from contour integrals of <em>w</em>'². Boundary layer theory (Prandtl) resolves d'Alembert's paradox by introducing viscosity in a thin layer near the body; the displacement thickness <em>δ</em>* and momentum thickness <em>θ</em> characterise the layer's effect on the outer inviscid flow.</p>
 
 <h3>Tensor Calculus: Covariant Differentiation, Curvature, and Geodesics</h3>
+<!-- passage-cartoon:51d8a532d62b -->
+<figure class="passage-cartoon" data-cartoon="51d8a532d62b">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central manifold -->
+  <ellipse cx="280" cy="160" rx="120" ry="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Geodesic curve -->
+  <path d="M160,160 Q280,100 400,160" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Christoffel symbol (L-shape) -->
+  <path d="M80,60 H110 M80,60 V30" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Riemann tensor (grid) -->
+  <path d="M460,40 V80 M440,60 H480" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Covariant derivative (nabla triangle) -->
+  <path d="M80,260 L100,230 L120,260 Z" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Einstein tensor (balance) -->
+  <path d="M420,260 H500 M420,260 V240 M500,260 V240" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption line -->
+  <line x1="14" y1="295" x2="546" y2="295" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="95" y="25" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Christoffel symbols</text>
+  <text x="460" y="25" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Riemann tensor</text>
+  <text x="100" y="220" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Covariant derivative</text>
+  <text x="460" y="220" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Einstein tensor</text>
+  <text x="280" y="250" font-size="14" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Geodesic</text>
+  <!-- Section title -->
+  <text x="280" y="300" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">
+    <tspan>Tensor Calculus: Covariant Differentiation,</tspan>
+    <tspan x="280" dy="1.2em">Curvature, and Geodesics</tspan>
+  </text>
+</svg></div>
+  <figcaption>Tensor Calculus: Covariant Differentiation, Curvature, and Geodesics</figcaption>
+</figure>
+
 <p>In a Riemannian manifold with metric tensor <em>g</em><sub>ij</sub>, the Christoffel symbols of the second kind are Γ<sup>k</sup><sub>ij</sub> = ½<em>g</em><sup>kl</sup>(∂<sub>i</sub><em>g</em><sub>jl</sub> + ∂<sub>j</sub><em>g</em><sub>il</sub> − ∂<sub>l</sub><em>g</em><sub>ij</sub>). The covariant derivative of a vector <em>v</em><sup>i</sup> is ∇<sub>j</sub><em>v</em><sup>i</sup> = ∂<sub>j</sub><em>v</em><sup>i</sup> + Γ<sup>i</sup><sub>jk</sub><em>v</em><sup>k</sup>; for a covector <em>w</em><sub>i</sub>, ∇<sub>j</sub><em>w</em><sub>i</sub> = ∂<sub>j</sub><em>w</em><sub>i</sub> − Γ<sup>k</sup><sub>ij</sub><em>w</em><sub>k</sub>. The metric is covariantly constant: ∇<sub>k</sub><em>g</em><sub>ij</sub> = 0. The Riemann curvature tensor is R<sup>l</sup><sub>ijk</sub> = ∂<sub>j</sub>Γ<sup>l</sup><sub>ik</sub> − ∂<sub>k</sub>Γ<sup>l</sup><sub>ij</sub> + Γ<sup>l</sup><sub>jm</sub>Γ<sup>m</sup><sub>ik</sub> − Γ<sup>l</sup><sub>km</sub>Γ<sup>m</sup><sub>ij</sub>. Its symmetries: R<sup>l</sup><sub>ijk</sub> = −R<sup>l</sup><sub>ikj</sub>, R<sub>lijk</sub> = −R<sub>ljik</sub>, R<sub>lijk</sub> = R<sub>klij</sub>, and the first Bianchi identity R<sup>l</sup><sub>[ijk]</sub> = 0. The Ricci tensor is <em>R</em><sub>ij</sub> = R<sup>k</sup><sub>ikj</sub>; the scalar curvature is <em>R</em> = <em>g</em><sup>ij</sup><em>R</em><sub>ij</sub>. The Einstein tensor <em>G</em><sub>ij</sub> = <em>R</em><sub>ij</sub> − ½<em>Rg</em><sub>ij</sub> is divergence-free (∇<sup>i</sup><em>G</em><sub>ij</sub> = 0) by the contracted Bianchi identity. Geodesics are curves <em>x</em><sup>i</sup>(<em>s</em>) that parallel-transport their tangent vector: d²<em>x</em><sup>i</sup>/d<em>s</em>² + Γ<sup>i</sup><sub>jk</sub> (d<em>x</em><sup>j</sup>/d<em>s</em>)(d<em>x</em><sup>k</sup>/d<em>s</em>) = 0. They extremise the arc length ∫ √(<em>g</em><sub>ij</sub> d<em>x</em><sup>i</sup> d<em>x</em><sup>j</sup>). The geodesic deviation equation D²<em>ξ</em><sup>i</sup>/D<em>s</em>² = R<sup>i</sup><sub>jkl</sub> <em>u</em><sup>j</sup> <em>ξ</em><sup>k</sup> <em>u</em><sup>l</sup> describes how neighbouring geodesics accelerate relative to each other, where <em>ξ</em> is the separation vector and <em>u</em> the tangent. For a 2D surface with Gaussian curvature <em>K</em>, the Riemann tensor has only one independent component: R<sub>1212</sub> = <em>K</em> det(<em>g</em>). The Gauss-Bonnet theorem relates total curvature to topology: ∫<sub>M</sub> <em>K</em> d<em>A</em> + ∫<sub>∂M</sub> <em>k</em><sub>g</sub> d<em>s</em> = 2π χ(<em>M</em>). In general relativity, the field equations are <em>G</em><sub>ij</sub> = 8π<em>G</em><em>T</em><sub>ij</sub>/<em>c</em>⁴. For UPSC, the key computational skills are: computing Christoffel symbols for a given metric (e.g., spherical, cylindrical, or a 2D surface metric), writing the geodesic equations, and computing the Riemann and Ricci tensors for simple metrics. A typical problem: given the metric d<em>s</em>² = d<em>r</em>² + <em>f</em>(<em>r</em>)² d<em>θ</em>², find the Gaussian curvature <em>K</em> = −<em>f</em>''/<em>f</em> and the geodesic equations.</p>
 
 <h3>Numerical Methods for Partial Differential Equations: Finite Difference and Finite Element Discretisation</h3>
+<!-- passage-cartoon:f78cc822ea46 -->
+<figure class="passage-cartoon" data-cartoon="f78cc822ea46">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central balance: scheme spectrum -->
+  <line x1="160" y1="160" x2="400" y2="160" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="280,140 270,160 290,160" fill="#1f2937"/>
+  <line x1="180" y1="160" x2="180" y2="165" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="170" y="165" width="20" height="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="380" y1="160" x2="380" y2="165" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="370" y="165" width="20" height="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Labels for central balance -->
+  <text x="180" y="125" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">FTCS: r ≤ ½</text>
+  <text x="280" y="105" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Crank-Nicolson</text>
+  <text x="380" y="125" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">BTCS: Tridiagonal</text>
+  <!-- Top-left: Wave equation CFL -->
+  <line x1="80" y1="70" x2="180" y2="70" stroke="#1f2937" stroke-width="2"/>
+  <line x1="130" y1="40" x2="130" y2="100" stroke="#1f2937" stroke-width="2"/>
+  <path d="M80,70 Q100,50 120,70 T160,70 T180,70" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <text x="130" y="25" font-size="13" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Wave: CFL λ ≤ 1</text>
+  <!-- Top-right: Poisson 5-point stencil + SOR -->
+  <circle cx="460" cy="70" r="4" fill="#1f2937"/>
+  <circle cx="430" cy="70" r="3" fill="#1f2937"/>
+  <circle cx="490" cy="70" r="3" fill="#1f2937"/>
+  <circle cx="460" cy="40" r="3" fill="#1f2937"/>
+  <circle cx="460" cy="100" r="3" fill="#1f2937"/>
+  <line x1="460" y1="70" x2="430" y2="70" stroke="#1f2937" stroke-width="2"/>
+  <line x1="460" y1="70" x2="490" y2="70" stroke="#1f2937" stroke-width="2"/>
+  <line x1="460" y1="70" x2="460" y2="40" stroke="#1f2937" stroke-width="2"/>
+  <line x1="460" y1="70" x2="460" y2="100" stroke="#1f2937" stroke-width="2"/>
+  <text x="460" y="25" font-size="13" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Poisson: SOR ω_opt</text>
+  <!-- Bottom-left: FEM triangular mesh + hat function -->
+  <line x1="80" y1="260" x2="140" y2="260" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="140" y1="260" x2="110" y2="300" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="110" y1="300" x2="80" y2="260" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M80,260 L110,230 L140,260" stroke="#1f2937" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
+  <text x="110" y="220" font-size="13" fill="#1f2937" text-anchor="middle" font-family="sans-serif">FEM: Hat Functions</text>
+  <!-- Bottom-right: Error convergence (no label) -->
+  <line x1="430" y1="260" x2="510" y2="260" stroke="#1f2937" stroke-width="2"/>
+  <line x1="430" y1="260" x2="430" y2="300" stroke="#1f2937" stroke-width="2"/>
+  <path d="M430,300 Q450,280 470,270 T510,260" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Caption strip -->
+  <line x1="14" y1="295" x2="546" y2="295" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="308" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">PDEs: Finite Difference &amp; FEM</text>
+</svg></div>
+  <figcaption>Numerical Methods for Partial Differential Equations: Finite Difference and Finite Element Discretisation</figcaption>
+</figure>
+
 <p>The numerical solution of PDEs is a core component of the Numerical Analysis section of Paper II. For the heat equation <em>u</em><sub>t</sub> = <em>α</em><em>u</em><sub>xx</sub> on [0,<em>L</em>] with Dirichlet conditions, the explicit FTCS scheme is <em>u</em><sub>i</sub><sup>n+1</sup> = <em>u</em><sub>i</sub><sup>n</sup> + <em>r</em>(<em>u</em><sub>i+1</sub><sup>n</sup> − 2<em>u</em><sub>i</sub><sup>n</sup> + <em>u</em><sub>i−1</sub><sup>n</sup>) where <em>r</em> = <em>α</em>Δ<em>t</em>/Δ<em>x</em>². Von Neumann stability analysis substitutes <em>u</em><sub>i</sub><sup>n</sup> = <em>ξ</em><sup>n</sup> e<sup>ik<sub>i</sub>Δx</sup> giving amplification factor <em>ξ</em> = 1 − 4<em>r</em> sin²(<em>k</em>Δ<em>x</em>/2). Stability requires |<em>ξ</em>| ≤ 1 for all <em>k</em>, yielding <em>r</em> ≤ ½. The implicit BTCS scheme <em>u</em><sub>i</sub><sup>n+1</sup> − <em>r</em>(<em>u</em><sub>i+1</sub><sup>n+1</sup> − 2<em>u</em><sub>i</sub><sup>n+1</sup> + <em>u</em><sub>i−1</sub><sup>n+1</sup>) = <em>u</em><sub>i</sub><sup>n</sup> is unconditionally stable but requires solving a tridiagonal system at each step. The Crank-Nicolson scheme averages the two: <em>u</em><sub>i</sub><sup>n+1</sup> − <em>u</em><sub>i</sub><sup>n</sup> = ½<em>r</em>(δ²<sub>x</sub><em>u</em><sub>i</sub><sup>n+1</sup> + δ²<sub>x</sub><em>u</em><sub>i</sub><sup>n</sup>), giving second-order accuracy in both time and space and unconditional stability. For the wave equation <em>u</em><sub>tt</sub> = <em>c</em>²<em>u</em><sub>xx</sub>, the explicit central-difference scheme <em>u</em><sub>i</sub><sup>n+1</sup> = 2<em>u</em><sub>i</sub><sup>n</sup> − <em>u</em><sub>i</sub><sup>n−1</sup> + <em>λ</em>²(<em>u</em><sub>i+1</sub><sup>n</sup> − 2<em>u</em><sub>i</sub><sup>n</sup> + <em>u</em><sub>i−1</sub><sup>n</sup>) with <em>λ</em> = <em>c</em>Δ<em>t</em>/Δ<em>x</em> is stable iff <em>λ</em> ≤ 1 (CFL condition). For elliptic equations like Poisson's equation ∇²<em>u</em> = <em>f</em>, the standard five-point stencil on a uniform grid gives a sparse linear system <em>A</em><strong>u</strong> = <strong>b</strong>. Iterative methods (Gauss-Seidel, SOR) are preferred for large systems; the optimal SOR parameter for a square grid is <em>ω</em><sub>opt</sub> ≈ 2/(1 + sin(πΔ<em>x</em>)). The finite element method (FEM) uses a variational formulation: find <em>u</em> ∈ <em>H</em>¹₀ such that <em>a</em>(<em>u</em>,<em>v</em>) = <em>L</em>(<em>v</em>) for all <em>v</em> ∈ <em>H</em>¹₀, where <em>a</em>(<em>u</em>,<em>v</em>) = ∫ ∇<em>u</em>·∇<em>v</em> and <em>L</em>(<em>v</em>) = ∫ <em>fv</em>. The domain is partitioned into elements (triangles in 2D, tetrahedra in 3D), and the solution is approximated by piecewise polynomials (typically linear or quadratic). The stiffness matrix <em>K</em><sub>ij</sub> = <em>a</em>(<em>φ</em><sub>j</sub>,<em>φ</em><sub>i</sub>) and load vector <em>F</em><sub>i</sub> = <em>L</em>(<em>φ</em><sub>i</sub>) are assembled element-wise. The Galerkin orthogonality property <em>a</em>(<em>u</em>−<em>u</em><sub>h</sub>,<em>v</em><sub>h</sub>) = 0 implies the FEM solution is the best approximation in the energy norm. Error estimates: ||<em>u</em>−<em>u</em><sub>h</sub>||<sub>H¹</sub> ≤ <em>Ch|<em>u</em>|<sub>H²</sub> for linear elements. Examiners test: deriving finite difference stencils from Taylor expansions, performing stability analysis, setting up the tridiagonal matrix for implicit schemes, and writing the weak form for a given BVP. A common question: "Derive the Crank-Nicolson scheme for the heat equation and prove it is unconditionally stable using von Neumann analysis." Another: "Formulate the finite element equations for −<em>u</em>'' = <em>f</em> on (0,1) with <em>u</em>(0)=<em>u</em>(1)=0 using linear hat functions."</em></p>
 
 <ul>
@@ -1152,6 +1233,33 @@
 <li>In FEM, forgetting that the test functions must vanish on Dirichlet boundaries (essential boundary conditions) while Neumann conditions are natural and appear in the load vector.</li>
 </ul>
 <h3>Sturm‑Liouville Theory and Eigenfunction Expansions</h3>
+<!-- passage-cartoon:dec978bd6916 -->
+<figure class="passage-cartoon" data-cartoon="dec978bd6916">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="200" y="100" width="160" height="100" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="150" x2="280" y2="50" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="280" cy="50" r="6" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="280" y1="150" x2="280" y2="250" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="260" y1="250" x2="300" y2="250" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="280" y1="150" x2="100" y2="150" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="100" y1="140" x2="100" y2="130" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="100" y1="160" x2="100" y2="170" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="280" y1="150" x2="460" y2="150" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M460,150 Q500,130 530,150" fill="none" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="240" y1="180" x2="260" y2="180" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="250" y1="170" x2="250" y2="190" stroke="#1f2937" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="70" y="260" width="60" height="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+  <text x="280" y="35" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Eigenvalues λₙ</text>
+  <text x="380" y="150" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="start">Eigenfunctions φₙ</text>
+  <text x="220" y="165" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="end">Orthogonality</text>
+  <text x="280" y="270" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Expansion</text>
+  <text x="100" y="285" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Rayleigh Quotient</text>
+  <text x="280" y="308.3" font-size="11" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Sturm‑Liouville Theory and Eigenfunction Expansions</text>
+</svg></div>
+  <figcaption>Sturm‑Liouville Theory and Eigenfunction Expansions</figcaption>
+</figure>
+
 <p>Sturm‑Liouville problems form the backbone of separation of variables for linear PDEs and provide a rigorous foundation for Fourier‑type series. A regular Sturm‑Liouville problem on <em>a</em> ≤ <em>x</em> ≤ <em>b</em> is written as</p>
 <p><em>−</em>(<em>p</em>(<em>x</em>) <em>y</em>′)′ + <em>q</em>(<em>x</em>) <em>y</em> = <em>λ</em> <em>w</em>(<em>x</em>) <em>y</em></p>
 <p>with <em>p</em>, <em>q</em>, <em>w</em> continuous, <em>p</em> > 0, <em>w</em> > 0, and separated homogeneous boundary conditions <em>α</em>₁ <em>y</em>(<em>a</em>) + <em>α</em>₂ <em>y</em>′(<em>a</em>) = 0, <em>β</em>₁ <em>y</em>(<em>b</em>) + <em>β</em>₂ <em>y</em>′(<em>b</em>) = 0. The eigenvalues <em>λ</em>₁ < <em>λ</em>₂ < … are real, simple, and tend to +∞. The corresponding eigenfunctions {<em>φ</em>ₙ} are orthogonal with respect to the weight <em>w</em>: ∫ₐᵇ <em>φ</em>ₘ <em>φ</em>ₙ <em>w</em> <em>dx</em> = 0 for <em>m</em> ≠ <em>n</em>. Completeness holds: any piecewise smooth <em>f</em> satisfying the boundary conditions expands as <em>f</em>(<em>x</em>) = Σ <em>c</em>ₙ <em>φ</em>ₙ(<em>x</em>) with <em>c</em>ₙ = ∫ₐᵇ <em>f</em> <em>φ</em>ₙ <em>w</em> <em>dx</em> / ∫ₐᵇ <em>φ</em>ₙ² <em>w</em> <em>dx</em>. Convergence is uniform on closed subintervals where <em>f</em> is continuous (Weierstrass‑type theorem).</p>
@@ -1159,6 +1267,45 @@
 <p>Examiners also test the connection with Green’s functions: the Green’s function <em>G</em>(<em>x</em>,<em>ξ</em>) for the operator <em>L</em> = −(<em>p</em> <em>y</em>′)′ + <em>q</em> <em>y</em> with the same boundary conditions admits the eigenfunction expansion <em>G</em>(<em>x</em>,<em>ξ</em>) = Σ <em>φ</em>ₙ(<em>x</em>) <em>φ</em>ₙ(<em>ξ</em>) / (<em>λ</em>ₙ ∫ <em>w</em> <em>φ</em>ₙ²). This representation is essential for solving inhomogeneous boundary value problems and for proving the spectral theorem for compact self‑adjoint operators.</p>
 
 <h3>Conformal Mapping and the Riemann Mapping Theorem</h3>
+<!-- passage-cartoon:edb2a1ff740a -->
+<figure class="passage-cartoon" data-cartoon="edb2a1ff740a">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central: Irregular domain → Unit Disc -->
+  <path d="M60,100 Q40,140 70,190 Q50,240 110,250 Q160,260 190,210 Q220,160 180,100 Q200,60 130,50 Q80,40 60,100" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="220" y1="160" x2="300" y2="160" stroke="#1f2937" stroke-width="3" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 Z" fill="#1f2937"/></marker></defs>
+  <circle cx="380" cy="160" r="60" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Angle preservation curves -->
+  <path d="M90,70 Q110,50 130,70" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M90,70 Q100,90 110,110" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M410,70 Q430,50 450,70" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M410,70 Q420,90 430,110" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Strip → Half-plane → Disc sequence -->
+  <rect x="50" y="200" width="80" height="40" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="140" y1="220" x2="170" y2="220" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M180,200 A30,30 0 0,1 180,260 A30,30 0 0,1 180,200" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="220" y1="220" x2="250" y2="220" stroke="#1f2937" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <circle cx="300" cy="220" r="20" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Poisson integral symbol -->
+  <path d="M460,200 Q480,190 480,220 Q480,250 460,240" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <line x1="460" y1="200" x2="460" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <line x1="450" y1="195" x2="490" y2="195" stroke="#1f2937" stroke-width="1.5"/>
+  <line x1="450" y1="245" x2="490" y2="245" stroke="#1f2937" stroke-width="1.5"/>
+  <!-- Labels -->
+  <text x="220" y="57.2" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#1f2937">Riemann Mapping Theorem</text>
+  <text x="260" y="145" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1f2937">Conformal Map f(z)</text>
+  <text x="110" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1f2937">Angles Preserved</text>
+  <text x="430" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1f2937">Angles Preserved</text>
+  <text x="150" y="270" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1f2937">Strip → Disc</text>
+  <text x="470" y="270" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#1f2937">Poisson Integral</text>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="283.8" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#fbf7ec">Conformal Mapping &amp; Riemann Mapping Theorem</text>
+</svg></div>
+  <figcaption>Conformal Mapping and the Riemann Mapping Theorem</figcaption>
+</figure>
+
 <p>Conformal mappings preserve angles locally and are the primary tool for solving two‑dimensional Laplace and Poisson equations on irregular domains. A function <em>f</em> analytic on a domain <em>D</em> is conformal at <em>z</em>₀ iff <em>f</em>′(<em>z</em>₀) ≠ 0. The Riemann Mapping Theorem states that any simply connected proper subdomain <em>D</em> ⊂ ℂ is conformally equivalent to the unit disc <em>𝔻</em> = {<em>z</em> : |<em>z</em>| < 1}. The proof uses normal families and the extremal problem of maximising |<em>f</em>′(0)| among injective analytic maps <em>f</em> : <em>D</em> → <em>𝔻</em> with <em>f</em>(0) = 0. The maximiser is the required conformal map.</p>
 <p>Standard elementary maps include the Möbius transformation <em>T</em>(<em>z</em>) = (<em>az</em>+<em>b</em>)/(<em>cz</em>+<em>d</em>) (ad−bc ≠ 0) which maps circles/lines to circles/lines and the upper half‑plane to the disc. The Schwarz‑Christoffel formula gives an explicit conformal map from <em>𝔻</em> (or the upper half‑plane) onto a polygon with interior angles <em>α</em>ₖπ: <em>f</em>(<em>z</em>) = <em>A</em> ∫ ∏ (<em>ζ</em>−<em>ζ</em>ₖ)<sup><em>α</em>ₖ−1</sup> <em>dζ</em> + <em>B</em>. For a rectangle, the map involves elliptic integrals. In UPSC, a common problem is to find the conformal map from the strip 0 < Im <em>z</em> < π onto the upper half‑plane (answer: <em>e</em><sup><em>z</em></sup>) and then solve Dirichlet’s problem on the strip by transferring boundary data.</p>
 <p>Boundary behaviour is governed by Carathéodory’s theorem: if ∂<em>D</em> is a Jordan curve, the conformal map extends continuously to the closure. The Poisson integral formula on the disc, <em>u</em>(<em>re</em><sup><em>iθ</em></sup>) = (1/2π) ∫₀<sup>2π</sup> <em>P</em>_<em>r</em>(<em>θ</em>−<em>φ</em>) <em>u</em>(<em>e</em><sup><em>iφ</em></sup>) <em>dφ</em> with <em>P</em>_<em>r</em>(<em>ψ</em>) = (1−<em>r</em>²)/(1−2<em>r</em> cos <em>ψ</em>+<em>r</em>²), solves the Dirichlet problem. Via a conformal map <em>φ</em> : <em>D</em> → <em>𝔻</em>, the solution on <em>D</em> is <em>u</em> ∘ <em>φ</em>. Examiners often ask to construct the Green’s function for a simply connected domain using the conformal map: <em>G</em>_<em>D</em>(<em>z</em>,<em>ζ</em>) = log |(<em>φ</em>(<em>z</em>)−<em>φ</em>(<em>ζ</em>))/(1−<em>φ</em>(<em>ζ</em>) <em>φ</em>(<em>z</em>))|.</p>
