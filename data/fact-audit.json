@@ -1,10 +1,41 @@
 {
- "generatedAt": "2026-11-28T22:21:33.680Z",
+ "generatedAt": "2026-11-28T22:28:53.710Z",
  "lessonsAudited": 18,
- "flagged": 0,
+ "flagged": 3,
  "applied": 0,
- "modelCalls": 4,
- "modelFailures": 53,
+ "modelCalls": 6,
+ "modelFailures": 61,
  "deadlineHit": false,
- "problems": []
+ "problems": [
+  {
+   "file": "cds/course/maths/lesson-percentage.html",
+   "quote": "Equating P (1 + r/100)ⁿ = P (1 + R/100)ⁿ (where R is the simple rate per period)",
+   "problem": "Simple interest formula is incorrectly given as compound interest; simple interest amount is P(1 + nR/100), not P(1+R/100)^n.",
+   "correction": "Equating P (1 + r/100)ⁿ = P (1 + nR/100) (where R is the simple rate per period)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original uses compound interest formula P(1+R/100)^n for simple interest; correction correctly uses simple interest formula P(1+nR/100).",
+   "applied": false
+  },
+  {
+   "file": "cds/course/maths/lesson-number-system.html",
+   "quote": "0 ≤ r b",
+   "problem": "Missing '<' symbol in the remainder theorem inequality; it should be 0 ≤ r < b.",
+   "correction": "0 ≤ r < b",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original quote '0 ≤ r b' is syntactically invalid; correction '0 ≤ r < b' states the Division Algorithm remainder condition correctly.",
+   "applied": false
+  },
+  {
+   "file": "cds/course/maths/lesson-number-system.html",
+   "quote": "reducing each to x ≡ c i (mod m i ) (provided gcd(a i ,m i ) | b i )",
+   "problem": "After dividing by d = gcd(a_i, m_i), the modulus becomes m_i/d, not m_i. The reduced congruence is x ≡ c_i (mod m_i/d), not modulo m_i.",
+   "correction": "reducing each to x ≡ c_i (mod m_i/d_i) where d_i = gcd(a_i, m_i)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original quote incorrectly retains modulus m_i; dividing congruence by gcd(a_i,m_i) reduces modulus to m_i/d_i.",
+   "applied": false
+  }
+ ]
 }
