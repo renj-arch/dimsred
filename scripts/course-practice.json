@@ -167503,6 +167503,33 @@
         }
       ],
       "sol": "The design tensile strength is Tallow = Tult / (RF_ID × RF_CR × RF_D). RF_ID accounts for installation damage, RF_CR for long‑term creep (based on 10 000‑hour test at 20 % Tult), and RF_D for chemical/biological durability. No additional factor RF_T is defined in the code, and omitting any of the three factors would give an unconservative allowable strength."
+    },
+    {
+      "id": 130,
+      "text": "In the Newton-Raphson scheme for non-linear finite element analysis, which matrix is updated at each iteration to solve for the displacement increment?",
+      "options": [
+        {
+          "l": "a",
+          "t": "Global stiffness matrix K",
+          "c": false
+        },
+        {
+          "l": "b",
+          "t": "Tangent stiffness matrix Kt",
+          "c": true
+        },
+        {
+          "l": "c",
+          "t": "Mass matrix M",
+          "c": false
+        },
+        {
+          "l": "d",
+          "t": "Damping matrix C",
+          "c": false
+        }
+      ],
+      "sol": "The Newton-Raphson method solves the non-linear equilibrium equation by iteratively updating the tangent stiffness matrix Kt. At each iteration, the system Kt Δu = R is solved, where R = Fext - Fint is the residual force vector. The global stiffness matrix K is constant in linear analysis. The mass matrix M and damping matrix C are used in dynamic analysis (M ü + C u̇ + K u = F(t)), not in the static non-linear Newton-Raphson update."
     }
   ],
   "opt-economics/overview": [
