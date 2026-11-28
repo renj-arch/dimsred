@@ -38,6 +38,7 @@ for (const flag of Object.keys(ROUTES)) {
   if (process.env[ROUTES[flag]] && process.env[flag] !== '0') process.env[flag] = '1';
 }
 const hosted = require('./lib/hosted');
+const { parseLesson } = require('./lib/lesson-doc');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -415,6 +416,17 @@ async function main() {
     }
     // Mark this lesson done and publish immediately, so a cancellation keeps it.
     state.lessons[rel] = new Date().toISOString();
+    // Record the exact prose version that was audited, and whether it is clean,
+    // so downstream lanes (lecture video) can require an audit that matches the
+    // current content instead of trusting a bare timestamp.
+    try {
+      if (!state.hashes || typeof state.hashes !== 'object') state.hashes = {};
+      if (!state.clean || typeof state.clean !== 'object') state.clean = {};
+      const fresh = fs.readFileSync(file, 'utf8');
+      const doc = parseLesson(fresh, { rel });
+      state.hashes[rel] = doc.proseHash;
+      state.clean[rel] = !results.some((r) => r.file === rel && !r.applied);
+    } catch (e) { console.error('  ' + rel + ': could not record audit hash - ' + e.message); }
     saveJson(STATE, state);
     saveReport();
   }
