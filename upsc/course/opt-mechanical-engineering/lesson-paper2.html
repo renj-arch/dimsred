@@ -968,6 +968,61 @@
 <p>Design codes such as ASME Section XI, API 579‑1/ASME FFS‑1, and BS 7910 provide assessment procedures that incorporate safety factors on <strong>K<sub>IC</sub></strong>, inspection intervals, and flaw‑acceptance criteria. In practice, the interaction between fatigue and creep at elevated temperatures (e.g., in turbine discs) requires a time‑dependent fracture mechanics approach where the C* integral replaces <strong>K</strong> for steady‑state creep crack growth. Understanding the transition from LEFM to EPFM, the role of constraint (T‑stress), and the effect of overload‑induced retardation are essential for credible life‑prediction in high‑integrity mechanical systems.</p>
 
 <h3>Advanced Casting Simulation and Defect Prediction</h3>
+<!-- passage-cartoon:c51800c16785 -->
+<figure class="passage-cartoon" data-cartoon="c51800c16785">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central simulation domain -->
+  <rect x="180" y="60" width="200" height="180" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Casting shape inside -->
+  <path d="M200,100 h160 v140 h-160 z M200,140 h-40 v40 h40 z" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Porosity spots -->
+  <circle cx="250" cy="150" r="4" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="320" cy="180" r="4" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="120" r="4" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Hot tear zigzag -->
+  <polyline points="300,160 310,155 320,160 330,155 340,160" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Top-left: Mesh grid -->
+  <g stroke="#1f2937" stroke-width="2.5">
+    <line x1="50" y1="50" x2="50" y2="110"/>
+    <line x1="70" y1="50" x2="70" y2="110"/>
+    <line x1="90" y1="50" x2="90" y2="110"/>
+    <line x1="110" y1="50" x2="110" y2="110"/>
+    <line x1="130" y1="50" x2="130" y2="110"/>
+    <line x1="50" y1="50" x2="130" y2="50"/>
+    <line x1="50" y1="70" x2="130" y2="70"/>
+    <line x1="50" y1="90" x2="130" y2="90"/>
+    <line x1="50" y1="110" x2="130" y2="110"/>
+  </g>
+  <!-- Top-right: Niyama graph -->
+  <g stroke="#1f2937" stroke-width="2.5">
+    <line x1="430" y1="50" x2="430" y2="110"/>
+    <line x1="430" y1="110" x2="510" y2="110"/>
+    <polyline points="430,110 450,90 470,70 490,60 510,55" fill="none"/>
+  </g>
+  <!-- Bottom-left: Riser feeding path -->
+  <g stroke="#1f2937" stroke-width="2.5">
+    <rect x="70" y="210" width="20" height="30" fill="none"/>
+    <line x1="80" y1="240" x2="80" y2="260"/>
+    <polygon points="75,260 80,270 85,260" fill="#1f2937"/>
+  </g>
+  <!-- Bottom-right: Thermocouple validation -->
+  <g stroke="#1f2937" stroke-width="2.5">
+    <line x1="470" y1="210" x2="470" y2="260"/>
+    <circle cx="470" cy="260" r="5" fill="none"/>
+  </g>
+  <!-- Labels -->
+  <text x="90" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Navier-Stokes flow</text>
+  <text x="470" y="30" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Niyama criterion</text>
+  <text x="90" y="190" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Feeding path</text>
+  <text x="470" y="190" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Validation</text>
+  <text x="390" y="150" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Hot tearing</text>
+  <!-- Section title caption -->
+  <text x="280" y="305" font-size="12" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Advanced Casting Simulation and Defect Prediction</text>
+</svg></div>
+  <figcaption>Advanced Casting Simulation and Defect Prediction</figcaption>
+</figure>
+
 <p>Modern casting simulation couples thermal, fluid‑flow, and solidification physics to predict macro‑ and micro‑scale defects before a pattern is cut. The governing equations are the Navier‑Stokes equations for melt flow, the energy equation with latent heat release, and a solute‑transport equation for alloy segregation. Commercial codes (e.g., ProCAST, MAGMAsoft, Flow‑3D Cast) solve these equations on unstructured meshes using finite‑volume or finite‑element discretisation. Key output fields include temperature history, solid fraction evolution, velocity vectors, and pressure distribution.</p>
 <p>Solidification shrinkage is the primary driver of porosity. The Niyama criterion <strong>G/√R</strong> (thermal gradient <strong>G</strong> divided by the square root of cooling rate <strong>R</strong>) identifies regions prone to shrinkage porosity; values below a material‑specific threshold (≈ 0.3 °C·s<sup>½</sup>/cm for Al‑Si alloys) flag high‑risk zones. Feeding efficiency is evaluated by tracking the liquid‑feeding path from risers to the solidifying front; a pressure‑drop criterion (ΔP > ρ g h) indicates insufficient feeding. Gas porosity is predicted by modelling dissolved hydrogen (or nitrogen) precipitation using Sievert’s law and local pressure fields; the critical hydrogen concentration for pore nucleation is typically 0.1–0.2 ml/100 g Al.</p>
 <p>Hot tearing (solidification cracking) is assessed through the Rappaz‑Drezet‑Gremaud (RDG) criterion, which integrates the strain rate over the brittle temperature range (coherency point to solidus) weighted by the liquid‑film thickness. A critical value of the integral (≈ 10⁻⁴ s⁻¹ for many aluminium alloys) separates safe from susceptible conditions. Segregation patterns (macro‑segregation channels, micro‑segregation cells) are obtained from the solute‑transport equation coupled with the Scheil‑Gulliver or lever‑rule solidification models; these predictions guide homogenisation heat‑treatment design.</p>
@@ -987,6 +1042,43 @@
 </div>
 
 <h3>Micro‑Machining and Ultra‑Precision Manufacturing</h3>
+<!-- passage-cartoon:7b84247bd6a1 -->
+<figure class="passage-cartoon" data-cartoon="7b84247bd6a1">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central micro-tool -->
+  <path d="M275 140 L280 155 L285 140 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M280 155 Q300 150 320 160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Left ruler (size effect) -->
+  <line x1="60" y1="150" x2="140" y2="150" stroke="#1f2937" stroke-width="3"/>
+  <line x1="60" y1="145" x2="60" y2="155" stroke="#1f2937" stroke-width="3"/>
+  <line x1="100" y1="145" x2="100" y2="155" stroke="#1f2937" stroke-width="3"/>
+  <line x1="140" y1="145" x2="140" y2="155" stroke="#1f2937" stroke-width="3"/>
+  <!-- Right spindle (diamond turning) -->
+  <circle cx="460" cy="150" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="440" y1="150" x2="480" y2="150" stroke="#1f2937" stroke-width="2"/>
+  <line x1="460" y1="130" x2="460" y2="170" stroke="#1f2937" stroke-width="2"/>
+  <!-- Top femtosecond laser -->
+  <polyline points="280,60 270,70 290,80 270,90 290,100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Bottom interferometer (metrology) -->
+  <line x1="240" y1="230" x2="320" y2="230" stroke="#1f2937" stroke-width="3"/>
+  <line x1="240" y1="250" x2="320" y2="250" stroke="#1f2937" stroke-width="3"/>
+  <line x1="260" y1="230" x2="260" y2="250" stroke="#1f2937" stroke-width="2"/>
+  <line x1="280" y1="230" x2="280" y2="250" stroke="#1f2937" stroke-width="2"/>
+  <line x1="300" y1="230" x2="300" y2="250" stroke="#1f2937" stroke-width="2"/>
+  <!-- Labels -->
+  <text x="280" y="130" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Micro-machining</text>
+  <text x="90.7" y="150" text-anchor="end" font-size="14" font-family="sans-serif" fill="#1f2937">Size effect</text>
+  <text x="438.5" y="150" text-anchor="start" font-size="14" font-family="sans-serif" fill="#1f2937">Diamond turning</text>
+  <text x="280" y="40" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Femtosecond laser</text>
+  <text x="280" y="260" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">Metrology</text>
+  <!-- Caption strip -->
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="305" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Micro‑Machining and Ultra‑Precision Manufacturing</text>
+</svg></div>
+  <figcaption>Micro‑Machining and Ultra‑Precision Manufacturing</figcaption>
+</figure>
+
 <p>Micro‑machining encompasses material removal processes where the characteristic dimension (uncut chip thickness, tool edge radius, feature size) lies in the 1–999 µm regime. At this scale, the ratio of tool edge radius to uncut chip thickness becomes significant, leading to a pronounced size effect: specific cutting energy rises sharply as the chip thickness approaches the tool edge radius because a larger fraction of the work goes into ploughing rather than shearing. The minimum chip thickness <strong>h<sub>min</sub></strong> is often approximated as 0.1–0.3 times the tool edge radius; below this threshold, material removal transitions to elastic‑plastic deformation without chip formation.</p>
 <p>Diamond turning and micro‑milling are the principal deterministic micro‑machining methods. Single‑point diamond tools with edge radii of 50–200 nm achieve surface roughness <strong>R<sub>a</sub></strong> < 5 nm on non‑ferrous metals and infrared optics. Tool wear is monitored via in‑situ force dynamometry and acoustic emission; flank wear land width <strong>VB</strong> > 5 µm typically degrades form accuracy beyond tolerance. Micro‑milling uses solid carbide or PCD end mills with diameters down to 50 µm; spindle speeds of 60,000–200,000 rpm are required to maintain adequate cutting speeds. Run‑out and dynamic balancing become critical; a run‑out of 1 µm at 100,000 rpm generates a centrifugal force that can exceed the tool’s bending stiffness, causing chatter.</p>
 <p>Non‑traditional micro‑machining includes laser ablation, focused ion beam (FIB), and electrochemical micro‑machining (EMM). Femtosecond lasers (pulse width < 500 fs) enable cold ablation with heat‑affected zones < 1 µm, suitable for micro‑fluidic channels in glass and polymers. FIB provides sub‑10 nm resolution for mask repair and TEM sample preparation but suffers from low material‑removal rates (≈ 10⁴ µm³/s). EMM uses a micro‑electrode (10–100 µm) and pulsed voltage to achieve high aspect‑ratio micro‑holes in conductive alloys without thermal damage; the process is governed by Faraday’s law and the inter‑electrode gap dynamics.</p>
@@ -1037,6 +1129,26 @@
 </div>
 
 <h3>Advanced Welding Processes: Friction Stir Welding and Laser Beam Welding</h3>
+<!-- passage-cartoon:7da0e7d11fbf -->
+<figure class="passage-cartoon" data-cartoon="7da0e7d11fbf">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <line x1="280" y1="14" x2="280" y2="306" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="140" cy="120" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="130" y="150" width="20" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="140" y="80" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">FSW Tool</text>
+  <text x="140" y="220" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Rotational Speed</text>
+  <rect x="400" y="80" width="40" height="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="420" y1="100" x2="420" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <rect x="415" y="200" width="10" height="50" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <text x="420" y="60" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">LBW Beam</text>
+  <text x="420" y="260" text-anchor="middle" font-size="14" fill="#1f2937" font-family="sans-serif">Laser Power</text>
+  <rect x="14" y="280" width="532" height="26" fill="#fbf7ec" stroke="#1f2937" stroke-width="0.5"/>
+  <text x="280" y="274" text-anchor="middle" font-size="12" fill="#1f2937" font-family="sans-serif">Advanced Welding Processes: FSW &amp; LBW</text>
+</svg></div>
+  <figcaption>Advanced Welding Processes: Friction Stir Welding and Laser Beam Welding</figcaption>
+</figure>
+
 <p>Friction stir welding (FSW) joins materials in the solid state by a rotating non‑consumable tool that generates frictional heat and plastic deformation. The tool consists of a shoulder (diameter 12–25 mm) and a pin (length 0.8–1.2 × plate thickness). Process parameters: rotational speed ω (200–800 rev/min), traverse speed v (50–300 mm/min), axial force F_z (5–15 kN). The heat input per unit length Q = μ F_z ω / v (μ ≈ 0.3–0.5 for aluminium alloys). For AA6061‑T6, a typical window is ω = 400 rev/min, v = 150 mm/min, giving Q ≈ 1.2 kJ/mm, producing a fine‑grained nugget (grain size 5–10 µm) with hardness 80–90 % of base metal.</p>
 <p>Defects in FSW include tunnel defects (insufficient heat, low ω/v ratio), kissing bonds (oxide layers not disrupted), and root flaws (inadequate pin length). Tool design (threaded pin, scrolled shoulder) improves material flow and reduces defects. Post‑weld heat treatment (solutionising at 530 °C, ageing at 160 °C) restores T6 temper in heat‑treatable alloys.</p>
 <p>Laser beam welding (LBW) uses a high‑power density beam (10⁶–10⁷ W/cm²) for keyhole or conduction mode welding. Key parameters: laser power P (2–10 kW), welding speed v (1–10 m/min), focal position relative to surface (–1 to +1 mm), shielding gas (Ar, He, N₂). The keyhole aspect ratio (depth/width) is governed by the dimensionless number Π = P/(ρ c v d²) where d is beam diameter; Π > 1 favours keyhole. For 304L stainless steel, P = 4 kW, v = 3 m/min, d = 0.4 mm yields a penetration of 3 mm with a width of 0.6 mm.</p>

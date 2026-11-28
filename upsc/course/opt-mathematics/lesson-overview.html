@@ -1002,6 +1002,43 @@
 <p>Typical exam questions: formulate the dual of a given primal, prove strong duality using Farkas’ lemma, perform one simplex iteration by hand, compute shadow prices from the final tableau, and determine the effect of increasing a resource by a given amount. A clear tabular presentation of the simplex tableau with labelled rows and columns is essential for full credit.</p>
 
 <h3>Integral Transforms: Laplace and Fourier Techniques for Partial Differential Equations</h3>
+<!-- passage-cartoon:c974de83fe6b -->
+<figure class="passage-cartoon" data-cartoon="c974de83fe6b">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central transform box -->
+  <rect x="180" y="110" width="200" height="100" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left Laplace box -->
+  <rect x="50" y="130" width="60" height="60" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Right Fourier box -->
+  <rect x="450" y="130" width="60" height="60" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Top heat equation wave -->
+  <path d="M200 40 Q240 20 280 40 T360 40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Bottom wave equation wave -->
+  <path d="M200 280 Q240 260 280 280 T360 280" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Left arrow -->
+  <line x1="110" y1="160" x2="175" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="175,160 165,155 165,165" fill="#1f2937"/>
+  <!-- Right arrow -->
+  <line x1="380" y1="160" x2="445" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="445,160 435,155 435,165" fill="#1f2937"/>
+  <!-- Top arrow -->
+  <line x1="280" y1="50" x2="280" y2="100" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="280,100 275,90 285,90" fill="#1f2937"/>
+  <!-- Bottom arrow -->
+  <line x1="280" y1="210" x2="280" y2="270" stroke="#1f2937" stroke-width="3"/>
+  <polygon points="280,270 275,260 285,260" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="80" y="115" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Laplace Transform</text>
+  <text x="480" y="115" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Fourier Transform</text>
+  <text x="280" y="23.2" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Heat Equation</text>
+  <text x="280" y="260" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Wave Equation</text>
+  <!-- Section title strip -->
+  <text x="280" y="300" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Integral Transforms</text>
+</svg></div>
+  <figcaption>Integral Transforms: Laplace and Fourier Techniques for Partial Differential Equations</figcaption>
+</figure>
+
 <p>Integral transforms convert differential equations into algebraic equations, a technique heavily tested in the PDE portion of Paper II. The Laplace transform <strong>ℒ{f(t)} = F(s) = ∫<sub>0</sub>^∞ e<sup>−st</sup> f(t) dt</strong> is defined for functions of exponential order. Its key properties — linearity, differentiation <strong>ℒ{f'(t)} = sF(s)−f(0)</strong>, integration, convolution <strong>ℒ{f*g} = F(s)G(s)</strong>, and the initial/final value theorems — enable the solution of linear ODEs with constant coefficients and of PDEs on semi‑infinite domains.</p>
 <p>The Fourier transform <strong>ℱ{f(x)} = F(ω) = ∫<sub>−∞</sub>^∞ e<sup>−iωx</sup> f(x) dx</strong> and its inverse are used for problems on the whole line. The transform of a derivative is <strong>ℱ{f'(x)} = iω F(ω)</strong>, turning differential operators into multiplication by polynomials. For the heat equation <strong>u_t = α u<sub>xx</sub></strong> on <strong>ℝ</strong> with initial data <strong>u(x,0)=φ(x)</strong>, the Fourier transform yields <strong>û_t = −α ω² û</strong>, giving <strong>û(ω,t)=φ̂(ω) e<sup>−α ω² t</sup></strong>. Inverting produces the Gaussian convolution <strong>u(x,t)= (4παt)<sup>−1/2</sup> ∫ e<sup>−(x−y)²/(4αt)</sup> φ(y) dy</strong>.</p>
 <p>On finite intervals, Fourier series replace the transform. The method of separation of variables leads to eigenfunction expansions; the coefficients are determined by orthogonality of sines and cosines. For the wave equation <strong>u<sub>tt</sub>=c² u<sub>xx</sub></strong> with Dirichlet boundary conditions, the solution is a superposition of standing waves <strong>∑ (A_n cos(nπct/L)+B_n sin(nπct/L)) sin(nπx/L)</strong>. The Laplace transform in time combined with Fourier series in space handles non‑homogeneous boundary conditions and forcing terms.</p>
