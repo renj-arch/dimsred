@@ -1,41 +1,320 @@
 {
- "generatedAt": "2026-11-28T18:56:01.678Z",
+ "generatedAt": "2026-11-28T19:17:23.551Z",
  "lessonsAudited": 18,
- "flagged": 3,
- "applied": 1,
- "modelCalls": 9,
- "modelFailures": 50,
+ "flagged": 31,
+ "applied": 2,
+ "modelCalls": 17,
+ "modelFailures": 47,
  "deadlineHit": false,
  "problems": [
   {
-   "file": "neet/course/physics/lesson-magnetism-and-emi.html",
-   "quote": "diamagnetic (χ 0, small), and ferromagnetic",
-   "problem": "Missing paramagnetic classification; diamagnetic susceptibility is negative (χ < 0), not zero.",
-   "correction": "diamagnetic (χ < 0, small), paramagnetic (χ > 0, small), and ferromagnetic",
+   "file": "neet/course/physics/lesson-properties-of-matter.html",
+   "quote": "n 1 shear‑thickening",
+   "problem": "Missing inequality sign; shear-thickening condition is n > 1, not n 1.",
+   "correction": "n > 1 shear‑thickening",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original omits paramagnetism and incorrectly states diamagnetic susceptibility as zero; correction accurately lists three classes with correct susceptibility signs.",
+   "verifierReason": "Shear-thickening power-law fluids require n > 1; original missing '>' sign.",
    "applied": false
   },
   {
-   "file": "neet/course/physics/lesson-motion-in-a-plane.html",
-   "quote": "the time t = –|r₀|/|v| must be positive",
-   "problem": "Sign error in collision time formula: if r₀ is anti-parallel to v, the collision time is t = |r₀|/|v|, not –|r₀|/|v|.",
-   "correction": "the time t = |r₀|/|v| must be positive",
+   "file": "neet/course/physics/lesson-properties-of-matter.html",
+   "quote": "subsonic (M 1), and hypersonic (M ≫ 1)",
+   "problem": "Missing inequality sign for subsonic and missing supersonic regime; should be M < 1 for subsonic and include supersonic (M > 1).",
+   "correction": "subsonic (M < 1), supersonic (M > 1), and hypersonic (M ≫ 1)",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original formula gives negative time; correction yields positive collision time for anti-parallel vectors.",
+   "verifierReason": "Subsonic is M < 1; original missing '<' and omitted supersonic regime (M > 1).",
    "applied": false
   },
   {
-   "file": "neet/course/physics/lesson-thermal-physics.html",
-   "quote": "The tangent slope equals each component's chemical potential; the intercepts give the phase molar Gibbs energies.",
-   "problem": "The tangent slope is the difference in chemical potentials (μ₁−μ₂), not each component's chemical potential; the intercepts give the chemical potentials μ₁ and μ₂, not the phase molar Gibbs energies.",
-   "correction": "The tangent slope equals the difference in chemical potentials (μ₁−μ₂); the intercepts give the chemical potentials μ₁ and μ₂.",
+   "file": "neet/course/physics/lesson-properties-of-matter.html",
+   "quote": "ṁ_max = A* p₀ √(γ/(R T₀)) (2/(γ+1)) (γ+1)/(2(γ−1))",
+   "problem": "Missing exponentiation; the factor (2/(γ+1)) should be raised to the power (γ+1)/(2(γ-1)).",
+   "correction": "ṁ_max = A* p₀ √(γ/(R T₀)) (2/(γ+1))^((γ+1)/(2(γ-1)))",
    "confidence": "high",
    "verified": true,
-   "verifierReason": "Original misstates tangent slope and intercepts; correction correctly gives slope = μ1-μ2, intercepts = μ1, μ2.",
+   "verifierReason": "Choked mass flow formula requires exponent (γ+1)/(2(γ-1)) on (2/(γ+1)); original shows multiplication.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "Z 1 at low pressures (attraction dominates), Z 1 at high pressures (volume dominates). At Boyle temperature, Z 1 over a range of pressures.",
+   "problem": "Missing inequality signs for compressibility factor Z. Should be Z < 1 at low pressures, Z > 1 at high pressures, and Z = 1 at Boyle temperature.",
+   "correction": "Z < 1 at low pressures (attraction dominates), Z > 1 at high pressures (volume dominates). At Boyle temperature, Z = 1 over a range of pressures.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing inequality signs; correction matches real gas behavior.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "R = universal gas constant = 8.314 J mol 1 K 1",
+   "problem": "Units for universal gas constant missing negative exponents; should be J mol^{-1} K^{-1}.",
+   "correction": "R = universal gas constant = 8.314 J mol^{-1} K^{-1}",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Units missing negative exponents; correction uses standard SI units."
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "k = R/N A = 1.38 10 23 J/K",
+   "problem": "Boltzmann constant value missing multiplication sign and negative exponent; should be 1.38 × 10^{-23} J/K.",
+   "correction": "k = R/N_A = 1.38 × 10^{-23} J/K",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Boltzmann constant missing × and negative exponent; correction matches CODATA value.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "1 atm = 1.013 10 5 Pa), 1 mole of an ideal gas occupies 22.4 L (2.24 10 2 m&sup3;)",
+   "problem": "Pressure conversion missing ×10^5; volume conversion has wrong exponent (10^2 instead of 10^{-2}).",
+   "correction": "1 atm = 1.013 × 10^5 Pa), 1 mole of an ideal gas occupies 22.4 L (2.24 × 10^{-2} m^3)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Pressure missing ×10^5, volume exponent wrong; correction gives correct conversions.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "P = (1/3)(Nm/V) v&sup2; = (1/3) v&sup2;",
+   "problem": "Final expression incorrectly drops the factor Nm/V (density).",
+   "correction": "P = (1/3)(Nm/V) v^2 = (1/3) ρ v^2",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Final expression drops density factor; correction restores ρ.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "v rms = (3RT/M) = (3kT/m)",
+   "problem": "Root mean square speed formula missing square root.",
+   "correction": "v_rms = √(3RT/M) = √(3kT/m)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "RMS speed formula missing square root; correction adds √.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "v rms : v avg : v mp = 3 : (8/ ) : 2 1.732 : 1.596 : 1.414",
+   "problem": "Symbolic ratio missing square roots and π; should be √3 : √(8/π) : √2.",
+   "correction": "v_rms : v_avg : v_mp = √3 : √(8/π) : √2 ≈ 1.732 : 1.596 : 1.414",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Ratio missing square roots and π; correction gives correct symbolic ratio.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "= kT / ( 2 d&sup2; P)",
+   "problem": "Mean free path formula missing π and √2; correct formula is kT/(√2 π d^2 P).",
+   "correction": "= kT / (√2 π d^2 P)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Mean free path missing π and √2; correction matches kinetic theory.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "f(v) = 4 N(m/2 kT) 3/2 v&sup2; e mv&sup2;/(2kT)",
+   "problem": "Maxwell-Boltzmann distribution formula missing π in normalization, missing minus sign in exponent, and incorrect constant factor.",
+   "correction": "f(v) = 4π N (m/(2π kT))^{3/2} v^2 e^{-mv^2/(2kT)}",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "MB distribution missing π, minus sign, wrong constant; correction is standard formula.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "W = (P 1 V 1 P 2 V 2 )/( 1) = nR(T 1 T 2 )/( 1). For expansion, W 0 (work done by system) and T decreases. For compression, W 0 (work done on system) and T increases.",
+   "problem": "Adiabatic work formula missing minus signs, γ (gamma), and inequality signs.",
+   "correction": "W = (P1V1 - P2V2)/(γ - 1) = nR(T1 - T2)/(γ - 1). For expansion, W > 0 (work done by system) and T decreases. For compression, W < 0 (work done on system) and T increases.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Adiabatic work missing γ, minus signs, inequalities; correction is standard thermodynamics.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-thermodynamics.html",
+   "quote": "The fraction of heat used for work is W/Q = R/C p = 1/ * ( 1) = ( 1)/ .",
+   "problem": "Fraction of heat used for work is garbled; should be W/Q = R/Cp = (γ-1)/γ.",
+   "correction": "W/Q = R/Cp = (γ-1)/γ",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Fraction garbled; correction gives correct (γ-1)/γ.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "Wave speed (v) speed of propagation (v = f )",
+   "problem": "Wave speed formula missing wavelength; v = fλ, not v = f",
+   "correction": "v = fλ",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original v=f misses wavelength; correction v=fλ is standard wave equation.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v = (T/ )",
+   "problem": "Missing square root; speed of transverse wave on string is v = √(T/μ)",
+   "correction": "v = √(T/μ)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original v=T/μ missing square root; correction v=√(T/μ) is correct for string waves.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v = ( P/ ) = ( RT/M)",
+   "problem": "Missing square root; speed of sound in gas is v = √(γP/ρ) = √(γRT/M)",
+   "correction": "v = √(γP/ρ) = √(γRT/M)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original v=P/ρ=RT/M misses γ and square root; correction v=√(γP/ρ)=√(γRT/M) is correct for sound in gas.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v t = v 0 (1 + t/273)",
+   "problem": "Incorrect temperature dependence; correct is v_t = v_0 √(1 + t/273) ≈ v_0 + 0.6t m/s",
+   "correction": "v_t = v_0 √(1 + t/273) ≈ v_0 + 0.6t m/s",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original v_t=v_0(1+t/273) misses square root; correction v_t=v_0√(1+t/273)≈v_0+0.6t is correct.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "v = (Y/ ) for longitudinal waves, v = (G/ ) for transverse waves. In liquids: v = (B/ )",
+   "problem": "Missing square root; correct formulas are v = √(Y/ρ), v = √(G/ρ), v = √(B/ρ)",
+   "correction": "v = √(Y/ρ), v = √(G/ρ), v = √(B/ρ)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original formulas miss square root and density; corrections v=√(Y/ρ), √(G/ρ), √(B/ρ) are standard.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "I = &frac12; v 2 A 2",
+   "problem": "Intensity formula missing density ρ and angular frequency ω; correct is I = ½ ρ v ω² A²",
+   "correction": "I = ½ ρ v ω² A²",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original I=½v²A² misses ρ and ω²; correction I=½ρvω²A² is correct for wave intensity.",
+   "applied": false
+  },
+  {
+   "file": "neet/course/physics/lesson-waves.html",
+   "quote": "I = &frac12; v 2 A 2 where is the density of the medium, v is the wave speed, and is the angular frequency",
+   "problem": "Written formula lacks ρ and ω²; correct is I = ½ ρ v ω² A²",
+   "correction": "I = ½ ρ v ω² A²",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original formula lacks ρ and ω² despite text; correction I=½ρvω²A² is accurate.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/english/lesson-grammar.html",
+   "quote": "In formal writing, each and every are preferred over each and every as a redundant pair.",
+   "problem": "The sentence is garbled and factually incorrect: it claims \"each and every\" are preferred over themselves as a redundant pair. The intended rule is that the redundant pair \"each and every\" should be avoided; either \"each\" or \"every\" is used alone.",
+   "correction": "In formal writing, the redundant pair \"each and every\" is avoided; \"each\" or \"every\" is preferred.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original is nonsensical self-contradiction; correction states standard style rule correctly.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/english/lesson-grammar.html",
+   "quote": "reversing them changes the logical relation and is considered ungrammatical in standard usage",
+   "problem": "Reversing the clauses in a comparative correlative yields a grammatical sentence with a different logical relation; it is not considered ungrammatical.",
+   "correction": "reversing them changes the logical relation but remains grammatical",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Comparative correlatives remain grammatical when reversed; only logical relation changes.",
    "applied": true
+  },
+  {
+   "file": "rbi/course/english/lesson-grammar.html",
+   "quote": "Reduction is impossible when the relative clause contains a modal or a perfect tense",
+   "problem": "Perfect passive relative clauses can be reduced to past participle phrases (e.g., 'the files sent' from 'the files which have been sent'), though the perfect aspect is lost; only modal clauses resist reduction.",
+   "correction": "Reduction is possible but loses the perfect aspect with perfect tense; modal clauses cannot be reduced",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Perfect passive relatives reduce to past participles (losing perfect aspect); modals block reduction.",
+   "applied": true
+  },
+  {
+   "file": "rbi/course/english/lesson-grammar.html",
+   "quote": "Pied‑piping is mandatory in formal writing when the relative pronoun is whom or which and the preposition is monosyllabic",
+   "problem": "There is no grammatical rule requiring pied-piping with monosyllabic prepositions; the choice between pied-piping and stranding is a matter of register, not syllable count.",
+   "correction": "Pied‑piping is preferred in formal writing with whom or which, but stranding is also acceptable",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "No rule mandates pied-piping for monosyllabic prepositions; register determines choice.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/english/lesson-grammar.html",
+   "quote": "*The child was looked after is standard",
+   "problem": "The asterisk incorrectly marks a grammatical passive sentence as ungrammatical; the sentence is standard.",
+   "correction": "The child was looked after is standard",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Asterisk wrongly marks grammatical passive as ungrammatical; correction removes asterisk.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/english/lesson-grammar.html",
+   "quote": "* every book that you read is acceptable",
+   "problem": "The asterisk incorrectly marks a grammatical sentence as ungrammatical.",
+   "correction": "every book that you read is acceptable",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Asterisk wrongly marks grammatical quantified sentence as ungrammatical; correction removes asterisk.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/english/lesson-grammar.html",
+   "quote": "Quantifiers such as every, each resist post‑modification by relative clauses",
+   "problem": "Quantifiers like every and each allow restrictive relative clauses (e.g., 'every book that you read').",
+   "correction": "Quantifiers such as every, each allow restrictive relative clauses but resist non‑restrictive ones.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original overgeneralizes; every/each allow restrictive but not non-restrictive relatives.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/ga/lesson-current-affairs.html",
+   "quote": "The retail CBDC pilot (e₹‑R) commenced on 1 February 2023",
+   "problem": "The retail CBDC pilot actually commenced on 1 December 2022, not 1 February 2023.",
+   "correction": "The retail CBDC pilot (e₹‑R) commenced on 1 December 2022",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Pilot e₹‑R was launched on 1 Dec 2022, not 1 Feb 2023.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/ga/lesson-current-affairs.html",
+   "quote": "Non‑compliance attracts penalties up to ₹ 25 lakh under Section 44 of the IT Act.",
+   "problem": "Section 44 of the IT Act prescribes a penalty up to ₹1.5 lakh for failure to furnish information to the Controller/Certifying Authority; penalties for non‑compliance with CERT‑In directions are under Section 70B(7) (up to ₹1 lakh) or Section 45 (up to ₹25 lakh).",
+   "correction": "Non‑compliance attracts penalties up to ₹ 25 lakh under Section 45 of the IT Act.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Penalty of up to ₹25 lakh for non‑compliance with CERT‑In directions is under Section 45 of the IT Act, not Section 44.",
+   "applied": false
+  },
+  {
+   "file": "rbi/course/ga/lesson-current-affairs.html",
+   "quote": "raising the offset obligation from 30 % to 50 % of the contract value for deals above ₹ 2,000 crore",
+   "problem": "The Defence Offset Policy (2020) retained the offset obligation at 30% for contracts above ₹2,000 crore; it did not raise it to 50%.",
+   "correction": "keeping the offset obligation at 30 % of the contract value for deals above ₹ 2,000 crore",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Defence Offset Policy 2020 retained 30% offset for contracts >₹2,000 cr; it was not raised to 50%.",
+   "applied": false
   }
  ]
 }
