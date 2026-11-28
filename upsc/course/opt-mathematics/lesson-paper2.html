@@ -638,6 +638,47 @@ This theorem is the justification for using the Normal distribution to approxima
 <p>Integer linear programming (ILP) requires some or all variables to be integers. The LP relaxation (dropping integrality) provides a lower bound for minimisation problems. Branch‑and‑bound systematically explores a search tree: at each node solve the LP relaxation; if the solution is integral, it is a candidate; otherwise pick a fractional variable and create two sub‑problems with added constraints x ≤ ⌊x*⌋ and x ≥ ⌈x*⌉. Cutting‑plane methods (Gomory cuts) generate valid inequalities that cut off the current fractional optimum without removing any integer feasible point. A matrix is totally unimodular if every square sub‑determinant is 0, 1, or −1; if the constraint matrix is totally unimodular and the right‑hand side is integral, the LP relaxation yields an integral optimum — this characterises network flow problems. The maximum flow problem on a directed graph with capacities c(u,v) seeks a flow f satisfying capacity and conservation constraints that maximises the value leaving the source. The Ford‑Fulkerson augmenting‑path algorithm terminates with a maximum flow when no augmenting path exists; the Edmonds‑Karp implementation uses BFS to guarantee O(VE²) time. The max‑flow min‑cut theorem states that the maximum flow value equals the minimum capacity of an s‑t cut. Minimum‑cost flow adds a cost per unit flow on each arc; the successive shortest augmenting path algorithm (with potentials to handle negative costs) finds the optimal flow in O(F E log V) where F is the total flow. These algorithms are foundational to combinatorial optimisation.</p>
 
 <h3>Numerical Linear Algebra: Eigenvalue Computation and Matrix Conditioning</h3>
+<!-- passage-cartoon:8ecc4a0079fc -->
+<figure class="passage-cartoon" data-cartoon="8ecc4a0079fc">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central matrix grid -->
+  <rect x="180" y="80" width="200" height="160" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="246.67" y1="80" x2="246.67" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <line x1="313.33" y1="80" x2="313.33" y2="240" stroke="#1f2937" stroke-width="3"/>
+  <line x1="180" y1="133.33" x2="380" y2="133.33" stroke="#1f2937" stroke-width="3"/>
+  <line x1="180" y1="186.67" x2="380" y2="186.67" stroke="#1f2937" stroke-width="3"/>
+  <!-- Power method arrow (top) -->
+  <path d="M200,40 Q280,20 360,40" stroke="#1f2937" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1f2937"/>
+    </marker>
+  </defs>
+  <!-- QR algorithm squares (right) -->
+  <rect x="440" y="140" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="440" y="140" width="40" height="40" stroke="#1f2937" stroke-width="3" fill="none" transform="rotate(45 460 160)"/>
+  <!-- Gershgorin discs (bottom) -->
+  <circle cx="220" cy="260" r="25" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="260" r="25" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="340" cy="260" r="25" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Condition number scale (left) -->
+  <line x1="60" y1="160" x2="140" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <line x1="100" y1="140" x2="100" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="80" y1="180" x2="120" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="280" y="23.2" font-size="14" fill="#1f2937" text-anchor="middle">Power Method</text>
+  <text x="461.6" y="160" font-size="14" fill="#1f2937" text-anchor="start">QR Algorithm</text>
+  
+  <text x="129.2" y="160" font-size="14" fill="#1f2937" text-anchor="end">Condition Number</text>
+  <text x="280" y="283.4" font-size="13" fill="#fbf7ec" text-anchor="middle">Eigenvalue Computation &amp; Matrix Conditioning</text>
+</svg></div>
+  <figcaption>Numerical Linear Algebra: Eigenvalue Computation and Matrix Conditioning</figcaption>
+</figure>
+
 <p>Eigenvalue problems arise in stability analysis, vibration modes, and principal component analysis. The power method iterates x<sub>k+1</sub> = A x<sub>k</sub> / ‖A x<sub>k</sub>‖ to converge to the dominant eigenpair (λ₁, v₁) provided |λ₁| > |λ₂|. Inverse iteration with shift μ solves (A−μI) y = x<sub>k</sub> and normalises to target the eigenvalue nearest μ. The QR algorithm repeatedly factors A<sub>k</sub> = Q<sub>k</sub> R<sub>k</sub> and sets A<sub>k+1</sub> = R<sub>k</sub> Q<sub>k</sub>; with shifts (Francis QR) it converges cubically to a Schur form revealing all eigenvalues. For symmetric matrices, the tridiagonal QR algorithm is standard. Gershgorin’s circle theorem bounds eigenvalues: each λ lies in at least one disc D(a<sub>ii</sub>, R<sub>i</sub>) where R<sub>i</sub> = Σ<sub>j≠i</sub> |a<sub>ij</sub>|. The condition number of a matrix A in the 2‑norm is κ₂(A) = ‖A‖₂ ‖A⁻¹‖₂ = σ<sub>max</sub>/σ<sub>min</sub>; it measures the sensitivity of the solution of Ax = b to perturbations in A or b. For eigenvalue problems, the Bauer–Fike theorem states that for diagonalizable A = V Λ V⁻¹, any eigenvalue μ of A+E satisfies min<sub>λ∈σ(A)</sub> |μ−λ| ≤ κ(V) ‖E‖. Backward error analysis shows that a computed eigenpair (λ̃, ṽ) is the exact eigenpair of a slightly perturbed matrix A+ΔA with ‖ΔA‖/‖A‖ ≈ ε<sub>mach</sub>. These concepts guide the choice of algorithm and the interpretation of numerical results.</p>
 
 <ul>
