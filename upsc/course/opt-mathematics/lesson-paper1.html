@@ -190,6 +190,33 @@
 <p>For a linear operator <strong>T : V → V</strong> on a finite-dimensional space, a scalar <strong>λ</strong> is an eigenvalue if there exists a non-zero vector <strong>v</strong> such that <strong>T(v) = λv</strong>; such a <strong>v</strong> is an eigenvector. The eigenvalues are precisely the roots of the characteristic polynomial <strong>p(λ) = det(T - λI)</strong>, which is a monic polynomial of degree dim <strong>V</strong>. Over <strong>C</strong>, the polynomial splits completely, guaranteeing at least one eigenvalue; over <strong>R</strong>, it may not split, which is why real operators can lack eigenvalues (e.g., a rotation in <strong>R<sup>2</sup></strong>). The algebraic multiplicity of an eigenvalue is its multiplicity as a root of the characteristic polynomial; the geometric multiplicity is the dimension of the corresponding eigenspace ker(<strong>T - λI</strong>). The geometric multiplicity never exceeds the algebraic multiplicity. The Cayley-Hamilton theorem states that every linear operator satisfies its own characteristic polynomial: <strong>p(T) = 0</strong>. This theorem is not merely a formal substitution; it implies that any polynomial in <strong>T</strong> can be reduced to a polynomial of degree less than dim <strong>V</strong>, and it provides a method to compute the inverse of an invertible operator as a polynomial in that operator.</p>
 
 <h2>Inner Product Spaces and Canonical Forms</h2>
+<!-- passage-cartoon:263af3de9148 -->
+<figure class="passage-cartoon" data-cartoon="263af3de9148">
+  <div class="pc-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central axes: orthonormal basis -->
+  <path d="M 180 160 L 380 160 M 370 155 L 380 160 L 370 165 M 280 60 L 280 260 M 275 70 L 280 60 L 285 70" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Gram-Schmidt process -->
+  <path d="M 60 120 L 140 80 M 60 120 L 100 120 M 100 120 L 140 80 M 140 80 L 140 120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Adjoint operator (transpose) -->
+  <path d="M 420 80 L 500 80 L 500 160 L 420 160 Z M 420 80 L 500 160 M 490 150 L 500 160 L 490 170" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Spectral theorem (diagonal) -->
+  <path d="M 60 280 L 140 200 M 70 270 L 80 260 M 100 240 L 110 230 M 130 210 L 140 200" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Jordan canonical form (staircase blocks) -->
+  <path d="M 420 280 L 460 280 L 460 240 L 420 240 Z M 460 240 L 500 240 L 500 200 L 460 200 Z M 500 200 L 540 200 L 540 160 L 500 160 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="30" font-size="14" fill="#1f2937" text-anchor="middle">Inner Product</text>
+  <text x="100" y="70" font-size="14" fill="#1f2937" text-anchor="middle">Gram-Schmidt</text>
+  <text x="460" y="70" font-size="14" fill="#1f2937" text-anchor="middle">Adjoint</text>
+  <text x="100" y="210" font-size="14" fill="#1f2937" text-anchor="middle">Spectral Theorem</text>
+  <text x="460" y="210" font-size="14" fill="#1f2937" text-anchor="middle">Jordan Form</text>
+  <!-- Caption strip -->
+  <line x1="14" y1="290" x2="546" y2="290" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="304" font-size="12" fill="#1f2937" text-anchor="middle">Inner Product Spaces and Canonical Forms</text>
+</svg></div>
+  <figcaption>Inner Product Spaces and Canonical Forms</figcaption>
+</figure>
+
 
 <h3>2.1 Inner Products, Norms, and Orthogonality</h3>
 <p>An inner product on a vector space <strong>V</strong> over <strong>F</strong> (<strong>R</strong> or <strong>C</strong>) is a map <strong>⟨·, ·⟩ : V × V → F</strong> that is linear in the first argument, conjugate symmetric (<strong>⟨u, v⟩ = ⟨v, u⟩</strong>), and positive definite (<strong>⟨v, v⟩ > 0</strong> for <strong>v ≠ 0</strong>). It induces a norm <strong>||v|| = √⟨v, v⟩</strong> and a notion of angle via the Cauchy-Schwarz inequality <strong>|⟨u, v⟩| ≤ ||u|| ||v||</strong>. Two vectors are orthogonal if their inner product is zero. An orthonormal set is a set of mutually orthogonal unit vectors. The Gram-Schmidt orthogonalization process takes any linearly independent set and produces an orthonormal set with the same span; this algorithm is constructive and guarantees that every finite-dimensional inner product space has an orthonormal basis. Bessel's inequality states that for any orthonormal set <strong>{e<sub>i</sub>}</strong> and any vector <strong>v</strong>, the sum of squares of Fourier coefficients <strong>|⟨v, e<sub>i</sub>⟩|<sup>2</sup></strong> is bounded by <strong>||v||<sup>2</sup></strong>. When the orthonormal set is a basis, equality holds — this is Parseval's identity, which generalizes the Pythagorean theorem to infinite sums and underlies Fourier series theory.</p>

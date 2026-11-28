@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon: Additive Manufacturing Process Modeling and Defect Prediction | vlymbooq</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+body{background:#09090b;color:#fafafa;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:0 auto;padding:24px}
+a{color:#a78bfa;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:#111113;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;transition:border-color .2s}
+.card:hover{border-color:#a78bfa}
+.card .fr{background:#fbf7ec;border-radius:8px;padding:6px}
+.card svg{width:100%;height:auto;display:block}
+.card .t{font-size:.82em;color:#d4d4d8;margin:8px 2px 2px;line-height:1.35}
+.card .l{font-size:.7em;color:#71717a;margin:0 2px 6px}
+.hero{background:#fbf7ec;border-radius:12px;padding:14px;margin:16px 0}
+.hero svg{width:100%;height:auto;display:block}
+.meta{color:#a1a1aa;font-size:.85em;line-height:1.6}
+h1{font-size:1.5em;margin:0 0 6px}
+</style></head><body><div class="wrap"><p><a href="/cartoons/">← All cartoons</a></p>
+<h1>Additive Manufacturing Process Modeling and Defect Prediction</h1>
+<p class="meta">Mechanical Engineering Optional: Syllabus, Sources &amp;amp; Strategy · <a href="/upsc/course/opt-mechanical-engineering/lesson-overview">Read the lesson →</a></p>
+<div class="hero"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Laser source -->
+  <path d="M280 30 L250 120 L310 120 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="280" y1="15" x2="280" y2="30" stroke="#1f2937" stroke-width="3"/>
+  <!-- Melt pool -->
+  <ellipse cx="280" cy="140" rx="45" ry="18" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Keyhole -->
+  <path d="M280 140 L275 180 L285 180 Z" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="280" y1="180" x2="280" y2="210" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,3"/>
+  <!-- Powder particles -->
+  <g stroke="#1f2937" stroke-width="1.5" fill="#1f2937">
+    <circle cx="220" cy="155" r="2"/><circle cx="240" cy="160" r="2"/><circle cx="260" cy="150" r="2"/>
+    <circle cx="300" cy="155" r="2"/><circle cx="320" cy="160" r="2"/><circle cx="340" cy="150" r="2"/>
+    <circle cx="230" cy="170" r="2"/><circle cx="270" cy="175" r="2"/><circle cx="310" cy="170" r="2"/>
+  </g>
+  <!-- LOF pores (left) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <path d="M120 140 Q110 130 115 120 Q125 115 130 125 Q135 135 125 140 Z"/>
+    <path d="M160 160 Q150 155 155 145 Q165 140 170 150 Q175 160 165 165 Z"/>
+    <circle cx="140" cy="180" r="8"/>
+  </g>
+  <!-- Keyhole pores (left lower) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <circle cx="130" cy="210" r="6"/>
+    <circle cx="160" cy="220" r="5"/>
+    <circle cx="115" cy="225" r="4"/>
+  </g>
+  <!-- Residual stress arrows (right) -->
+  <g stroke="#1f2937" stroke-width="3" fill="#1f2937">
+    <path d="M380 100 Q420 90 450 100" marker-end="url(#arrow)"/>
+    <path d="M380 140 Q430 130 460 140" marker-end="url(#arrow)"/>
+    <path d="M380 180 Q420 190 450 180" marker-end="url(#arrow)"/>
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <path d="M0 0 L8 3 L0 6 Z" fill="#1f2937"/>
+      </marker>
+    </defs>
+  </g>
+  <!-- In-situ monitoring sensors (top) -->
+  <rect x="130" y="35" width="40" height="25" rx="3" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="150" y1="35" x2="150" y2="20" stroke="#1f2937" stroke-width="2"/>
+  <circle cx="150" cy="15" r="6" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="390" y="35" width="40" height="25" rx="3" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M410 35 L410 20 L425 20" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <rect x="425" y="12" width="15" height="12" stroke="#1f2937" stroke-width="1.5" fill="none"/>
+  <!-- Optimization parameters (bottom) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <line x1="80" y1="260" x2="200" y2="260"/>
+    <line x1="80" y1="260" x2="80" y2="290"/>
+    <polyline points="80,280 100,270 120,275 140,265 160,268 180,260 200,255" fill="none"/>
+    <!-- Pareto front (bottom right) -->
+    <line x1="360" y1="260" x2="480" y2="260"/>
+    <line x1="360" y1="260" x2="360" y2="290"/>
+    <polyline points="360,280 385,270 410,265 435,260 460,258 480,255" fill="none"/>
+    <circle cx="410" cy="265" r="4" stroke="#1f2937" stroke-width="2.5" fill="#1f2937"/>
+    <circle cx="435" cy="260" r="4" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+    <circle cx="460" cy="258" r="4" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  </g>
+  <!-- Labels -->
+  <text x="280" y="25" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#1f2937">LPBF Melt Pool</text>
+  <text x="280" y="220" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#1f2937">Keyhole Porosity</text>
+  <text x="446.8" y="140" text-anchor="start" font-size="13" font-family="sans-serif" fill="#1f2937">Residual Stress</text>
+  <text x="280" y="41.1" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">In-Situ Monitoring</text>
+  <text x="140" y="255" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Energy Density</text>
+  <text x="420" y="255" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1f2937">Pareto Front</text>
+  <!-- Section title strip -->
+  <rect x="14" y="300" width="532" height="16" fill="#1f2937"/>
+  <text x="280" y="294.3" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#fbf7ec">Additive Manufacturing Process Modeling and Defect Prediction</text>
+</svg></div>
+<p class="meta">Additive Manufacturing Process Modeling and Defect Prediction</p></div></body></html>
