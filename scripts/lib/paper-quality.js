@@ -6,7 +6,10 @@ function optText(o) {
   return String(typeof o === 'string' ? o : (o && (o.text || o.t)) || '').trim();
 }
 function norm(s) {
-  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  // Unicode-aware: keep letters/digits in any script. The old ASCII-only
+  // normaliser collapsed every Malayalam/Devanagari option to "" and flagged
+  // correct bilingual questions as duplicates.
+  return String(s || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 }
 function badQuestion(q) {
   if (!q) return 'missing';
