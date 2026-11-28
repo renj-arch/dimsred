@@ -20,6 +20,8 @@ concurrency:
 
 permissions:
   contents: write
+  # Self-chaining: the lane dispatches its own next run while work remains.
+  actions: write
 
 jobs:
   explain:
@@ -51,7 +53,9 @@ jobs:
           GEMINI: '1'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           LIMIT: ${{ github.event.inputs.limit || '12' }}
-        run: node scripts/explain-options.js --limit "$LIMIT"
+        run: |
+          set -o pipefail
+          node scripts/explain-options.js --limit "$LIMIT" 2>&1 | tee /tmp/lane.log
 
       - name: Publish explanations
         env:
@@ -62,3 +66,26 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git add -f data/question-explain.json 2>/dev/null || true
           bash scripts/ci-push.sh "explain-options: why the right one is right and the others wrong"
+
+      # Self-chain while unanswered questions remain; cron is the restart net.
+      - name: Queue the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REMAIN=$(node scripts/explain-options.js --remaining | grep -o 'LANE_REMAINING=[0-9]*' | tail -1 | cut -d= -f2)
+          DONE=$(grep -o 'LANE_DONE=[0-9]*' /tmp/lane.log 2>/dev/null | tail -1 | cut -d= -f2)
+          echo "remaining=${REMAIN:-?} done=${DONE:-0}"
+          if [ -z "$REMAIN" ] || [ "$REMAIN" -le 0 ]; then
+            echo "::notice::Explain Options lane complete — every question is explained."; exit 0
+          fi
+          if [ "${DONE:-0}" -le 0 ]; then
+            echo "::warning::no progress this run; not chaining — the cron will retry."; exit 0
+          fi
+          for i in 1 2 3; do
+            if gh workflow run explain-options.yml --ref main -f limit="${{ github.event.inputs.limit || '12' }}"; then
+              echo "Queued the next Explain Options run."; exit 0
+            fi
+            echo "Dispatch attempt $i failed; retrying..."; sleep 10
+          done
+          echo "::warning::could not dispatch the next run"

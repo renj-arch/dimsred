@@ -120,6 +120,12 @@ function extractJson(t) {
 }
 
 async function main() {
+  if (process.argv.includes('--remaining')) {
+    const st = loadState();
+    const done = new Set(st.done || []);
+    console.log('LANE_REMAINING=' + TOPICS.filter(([k]) => !done.has(k)).length);
+    return;
+  }
   if (!DRY && !require('./lib/hosted').enabled()) { console.error('no model route'); process.exitCode = 1; return; }
   const hosted = DRY ? null : require('./lib/hosted');
   const state = loadState();
@@ -168,5 +174,6 @@ async function main() {
     console.log('  + ' + title);
   }
   if (!DRY) console.log('divinity: added ' + added.length + ', done ' + state.done.length + '/' + TOPICS.length);
+  if (!DRY) console.log('LANE_DONE=' + added.length + ' LANE_REMAINING=' + Math.max(0, TOPICS.length - state.done.length));
 }
 main().catch((e) => { console.error(e && e.stack || e); process.exitCode = 1; });

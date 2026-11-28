@@ -25,6 +25,8 @@ concurrency:
 
 permissions:
   contents: write
+  # Self-chaining: the lane dispatches its own next run while cartoons remain.
+  actions: write
 
 jobs:
   audit:
@@ -58,9 +60,10 @@ jobs:
           LIMIT: ${{ github.event.inputs.limit || '12' }}
           APPLY: ${{ github.event.inputs.apply || 'true' }}
         run: |
+          set -o pipefail
           ARGS="--limit $LIMIT"
           if [ "$APPLY" = "true" ]; then ARGS="$ARGS --apply"; fi
-          node scripts/audit-cartoons.js $ARGS
+          node scripts/audit-cartoons.js $ARGS 2>&1 | tee /tmp/lane.log
 
       - name: Publish the cartoon audit
         env:
@@ -72,3 +75,26 @@ jobs:
           git add -f data/cartoon-audit.json 2>/dev/null || true
           git add upsc/course 2>/dev/null || true
           bash scripts/ci-push.sh "cartoon-audit: labels checked against their passages"
+
+      # Self-chain while unaudited cartoons remain; cron is the restart net.
+      - name: Queue the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REMAIN=$(node scripts/audit-cartoons.js --remaining | grep -o 'LANE_REMAINING=[0-9]*' | tail -1 | cut -d= -f2)
+          DONE=$(grep -o 'LANE_DONE=[0-9]*' /tmp/lane.log 2>/dev/null | tail -1 | cut -d= -f2)
+          echo "remaining=${REMAIN:-?} done=${DONE:-0}"
+          if [ -z "$REMAIN" ] || [ "$REMAIN" -le 0 ]; then
+            echo "::notice::Cartoon audit lane complete — every cartoon label is checked."; exit 0
+          fi
+          if [ "${DONE:-0}" -le 0 ]; then
+            echo "::warning::no progress this run; not chaining — the cron will retry."; exit 0
+          fi
+          for i in 1 2 3; do
+            if gh workflow run cartoon-fact-audit.yml --ref main -f limit="${{ github.event.inputs.limit || '12' }}" -f apply="${{ github.event.inputs.apply || 'true' }}"; then
+              echo "Queued the next Cartoon Fact Audit run."; exit 0
+            fi
+            echo "Dispatch attempt $i failed; retrying..."; sleep 10
+          done
+          echo "::warning::could not dispatch the next run"
