@@ -601,6 +601,40 @@ This theorem is the justification for using the Normal distribution to approxima
 <p>The characteristic function of a random variable <em>X</em> is <strong>φ<sub>X</sub>(t) = E[e<sup>itX</sup>]</strong>. It always exists, uniquely determines the distribution, and converts convolution into multiplication: φ<sub>X+Y</sub>(t) = φ<sub>X</sub>(t) φ<sub>Y</sub>(t) for independent <em>X,Y</em>. The inversion formula <strong>f(x) = (1/2π) ∫ e<sup>−itx</sup> φ(t) dt</strong> recovers the density when φ is integrable. Lévy’s continuity theorem states that a sequence of distributions converges weakly iff their characteristic functions converge pointwise to a function continuous at 0. This theorem underpins the characteristic‑function proof of the Central Limit Theorem: for i.i.d. variables with mean 0 and variance σ², φ<sub>S<sub>n</sub>/√n</sub>(t) = [φ(t/√n)]<sup>n</sup> → e<sup>−σ²t²/2</sup>, the characteristic function of N(0,σ²). Stable distributions are those for which a linear combination of independent copies has the same distribution up to location and scale; their characteristic functions have the Lévy–Khintchine form <strong>φ(t) = exp[ i t μ − |c t|<sup>α</sup> (1 − i β sign(t) tan(πα/2)) ]</strong> for α ≠ 1, with 0 < α ≤ 2. The Law of Large Numbers follows from φ<sub>X̄<sub>n</sub></sub>(t) = [φ(t/n)]<sup>n</sup> → e<sup>i t μ</sup>, the characteristic function of the degenerate distribution at μ. Understanding these tools allows one to prove limit theorems without moment assumptions and to identify domains of attraction for stable laws.</p>
 
 <h3>Advanced Linear Programming: Integer Programming and Network Flow Algorithms</h3>
+<!-- passage-cartoon:f53fba9bbdbc -->
+<figure class="passage-cartoon" data-cartoon="f53fba9bbdbc">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central binary tree for Branch-and-bound -->
+  <circle cx="280" cy="120" r="12" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="280" y1="132" x2="240" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="132" x2="320" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="240" cy="180" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="320" cy="180" r="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Cutting plane scissors near left child -->
+  <path d="M230 170 L215 155 M215 155 L210 160 M215 155 L220 150" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- LP relaxation box -->
+  <rect x="200" y="70" width="80" height="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Max‑flow network on right -->
+  <line x1="380" y1="140" x2="460" y2="140" stroke="#1f2937" stroke-width="3"/>
+  <line x1="460" y1="140" x2="460" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <line x1="460" y1="200" x2="380" y2="200" stroke="#1f2937" stroke-width="3"/>
+  <line x1="380" y1="200" x2="380" y2="140" stroke="#1f2937" stroke-width="3"/>
+  <!-- Arrow indicating flow -->
+  <polygon points="420,140 415,145 425,145" fill="#1f2937"/>
+  <polygon points="420,200 415,195 425,195" fill="#1f2937"/>
+  <!-- Labels -->
+  <text x="240" y="60" font-family="sans-serif" font-size="14" fill="#1f2937">LP relaxation</text>
+  <text x="260" y="210" font-family="sans-serif" font-size="14" fill="#1f2937">Branch‑and‑bound</text>
+  <text x="190" y="190" font-family="sans-serif" font-size="14" fill="#1f2937">Cutting plane</text>
+  <text x="420" y="230" font-family="sans-serif" font-size="14" fill="#1f2937">Max‑flow</text>
+  <!-- Caption strip -->
+  <rect x="14" y="306" width="532" height="14" fill="#e5e2da"/>
+  <text x="280" y="300" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Advanced Linear Programming</text>
+</svg></div>
+  <figcaption>Advanced Linear Programming: Integer Programming and Network Flow Algorithms</figcaption>
+</figure>
+
 <p>Integer linear programming (ILP) requires some or all variables to be integers. The LP relaxation (dropping integrality) provides a lower bound for minimisation problems. Branch‑and‑bound systematically explores a search tree: at each node solve the LP relaxation; if the solution is integral, it is a candidate; otherwise pick a fractional variable and create two sub‑problems with added constraints x ≤ ⌊x*⌋ and x ≥ ⌈x*⌉. Cutting‑plane methods (Gomory cuts) generate valid inequalities that cut off the current fractional optimum without removing any integer feasible point. A matrix is totally unimodular if every square sub‑determinant is 0, 1, or −1; if the constraint matrix is totally unimodular and the right‑hand side is integral, the LP relaxation yields an integral optimum — this characterises network flow problems. The maximum flow problem on a directed graph with capacities c(u,v) seeks a flow f satisfying capacity and conservation constraints that maximises the value leaving the source. The Ford‑Fulkerson augmenting‑path algorithm terminates with a maximum flow when no augmenting path exists; the Edmonds‑Karp implementation uses BFS to guarantee O(VE²) time. The max‑flow min‑cut theorem states that the maximum flow value equals the minimum capacity of an s‑t cut. Minimum‑cost flow adds a cost per unit flow on each arc; the successive shortest augmenting path algorithm (with potentials to handle negative costs) finds the optimal flow in O(F E log V) where F is the total flow. These algorithms are foundational to combinatorial optimisation.</p>
 
 <h3>Numerical Linear Algebra: Eigenvalue Computation and Matrix Conditioning</h3>

@@ -381,6 +381,106 @@
 <p>Key design data that frequently appear in examination questions: critical point of water 22.06 MPa, 374 °C; typical supercritical boiler pressure 24–30 MPa; gas‑turbine inlet temperature 1500–1650 °C; HRSG pinch point 10–15 °C; reheat pressure ratio 0.2–0.3; number of feed‑water heaters 5–7. Mastery of these numbers, together with the ability to sketch T‑s and h‑s diagrams for each configuration, is essential for high‑scoring answers.</p>
 
 <h3>Advanced Fluid Machinery: Cavitation, Surge, and Control Strategies</h3>
+<!-- passage-cartoon:78ab9da9d860 -->
+<figure class="passage-cartoon" data-cartoon="78ab9da9d860">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central compressor cross-section -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Casing -->
+    <path d="M140 80 L140 240 Q140 260 160 260 L400 260 Q420 260 420 240 L420 80 Q420 60 400 60 L160 60 Q140 60 140 80"/>
+    <!-- Impeller -->
+    <circle cx="280" cy="160" r="50" stroke-width="2.5"/>
+    <g stroke-width="2">
+      <line x1="280" y1="160" x2="320" y2="130"/>
+      <line x1="280" y1="160" x2="325" y2="160"/>
+      <line x1="280" y1="160" x2="320" y2="190"/>
+      <line x1="280" y1="160" x2="260" y2="120"/>
+      <line x1="280" y1="160" x2="240" y2="160"/>
+      <line x1="280" y1="160" x2="260" y2="200"/>
+    </g>
+    <!-- Shaft -->
+    <line x1="80" y1="160" x2="140" y2="160" stroke-width="4"/>
+    <line x1="420" y1="160" x2="480" y2="160" stroke-width="4"/>
+    <!-- Suction pipe -->
+    <path d="M140 160 L80 160 L80 100" stroke-width="3" fill="none"/>
+    <!-- Discharge pipe -->
+    <path d="M420 160 L480 160 L480 220" stroke-width="3" fill="none"/>
+    <!-- Inducer upstream -->
+    <circle cx="100" cy="160" r="15" stroke-width="2" fill="none"/>
+    <line x1="90" y1="160" x2="110" y2="160" stroke-width="1.5"/>
+    <line x1="100" y1="150" x2="100" y2="170" stroke-width="1.5"/>
+  </g>
+  <!-- Cavitation bubbles (left) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none" opacity="0.7">
+    <circle cx="60" cy="130" r="6"/>
+    <circle cx="50" cy="150" r="4"/>
+    <circle cx="70" cy="165" r="5"/>
+    <circle cx="45" cy="180" r="3"/>
+    <circle cx="65" cy="115" r="4"/>
+    <!-- Collapse lines -->
+    <line x1="55" y1="125" x2="65" y2="135" stroke-width="1"/>
+    <line x1="65" y1="125" x2="55" y2="135" stroke-width="1"/>
+  </g>
+  <!-- Surge cycle arrow loop (right) -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+      </marker>
+    </defs>
+    <path d="M440 120 Q480 120 480 160 Q480 200 440 200 Q400 200 400 160 Q400 120 440 120"/>
+    <path d="M440 160 L400 160" stroke-dasharray="6,4"/>
+  </g>
+  <!-- Recycle valve (top right) -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <rect x="380" y="40" width="60" height="30" rx="3"/>
+    <line x1="380" y1="55" x2="440" y2="55" stroke-width="2"/>
+    <line x1="410" y1="40" x2="410" y2="70" stroke-width="2"/>
+    <!-- PID box -->
+    <rect x="450" y="35" width="70" height="40" rx="3" stroke-width="2"/>
+    <text x="485" y="58" font-family="Georgia, serif" font-size="11" text-anchor="middle" fill="#1f2937">PID</text>
+    <text x="485" y="70" font-family="Georgia, serif" font-size="9" text-anchor="middle" fill="#1f2937">0.5s</text>
+  </g>
+  <!-- Stall cells on blades (small rotating arrows) -->
+  <g stroke="#1f2937" stroke-width="1.5" fill="none" opacity="0.8">
+    <path d="M290 130 Q300 125 310 130" marker-end="url(#arrow)"/>
+    <path d="M290 160 Q300 155 310 160" marker-end="url(#arrow)"/>
+    <path d="M290 190 Q300 185 310 190" marker-end="url(#arrow)"/>
+    <path d="M250 140 Q240 135 230 140" marker-end="url(#arrow)"/>
+    <path d="M250 180 Q240 175 230 180" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Performance map sketch (bottom) -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <line x1="160" y1="250" x2="380" y2="250"/> <!-- x-axis -->
+    <line x1="160" y1="250" x2="160" y2="180"/> <!-- y-axis -->
+    <!-- Surge line -->
+    <path d="M170 240 Q220 220 280 210 Q330 205 370 210" stroke="#1f2937" stroke-width="2.5" stroke-dasharray="4,3"/>
+    <!-- Operating point -->
+    <circle cx="300" cy="225" r="4" fill="#1f2937"/>
+    <!-- Surge margin arrow -->
+    <line x1="300" y1="225" x2="270" y2="215" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+  <!-- Variable geometry diffuser vanes -->
+  <g stroke="#1f2937" stroke-width="2" fill="none">
+    <line x1="420" y1="140" x2="450" y2="130"/>
+    <line x1="420" y1="160" x2="450" y2="160"/>
+    <line x1="420" y1="180" x2="450" y2="190"/>
+  </g>
+  <!-- Labels -->
+  <text x="70.4" y="95" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">Cavitation Bubbles</text>
+  <text x="60" y="215" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">NPSHa &gt; NPSHr</text>
+  <text x="460" y="115" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">Surge Cycle</text>
+  <text x="410" y="30" font-family="Georgia, serif" font-size="13" text-anchor="middle" fill="#1f2937">Recycle Valve</text>
+  <text x="280" y="110" font-family="Georgia, serif" font-size="12" text-anchor="middle" fill="#1f2937">Stall Cells</text>
+  <text x="270" y="175" font-family="Georgia, serif" font-size="12" text-anchor="middle" fill="#1f2937">Surge Line</text>
+  <!-- Section title strip -->
+  <rect x="14" y="290" width="532" height="26" fill="#1f2937" rx="2"/>
+  <text x="280" y="283.5" font-family="Georgia, serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#fbf7ec">Advanced Fluid Machinery</text>
+</svg></div>
+  <figcaption>Advanced Fluid Machinery: Cavitation, Surge, and Control Strategies</figcaption>
+</figure>
+
 <p>Cavitation occurs when the local static pressure in a liquid falls below its vapor pressure, causing vapor bubbles to form and collapse violently. The cavitation number σ = (p_inlet – p_vapor) / (½ ρ V²) quantifies the propensity; values below 0.3–0.5 typically indicate inception. In centrifugal pumps, the net positive suction head available (NPSHa) must exceed the net positive suction head required (NPSHr) by a safety margin of at least 0.5 m. NPSHr is a function of impeller geometry, rotational speed, and flow rate; manufacturers provide NPSHr curves. To avoid cavitation, designers increase suction pipe diameter, reduce suction lift, cool the liquid, or employ an inducer — a low‑pressure‑rise axial impeller upstream of the main impeller.</p>
 <p>Surge is a system‑level instability in axial and centrifugal compressors characterized by a cyclic reversal of flow when the operating point moves left of the surge line on the compressor map. The surge line connects points of zero slope on the pressure‑ratio versus mass‑flow curves at constant speed. During surge, the compressor delivers high pressure at low flow, the downstream system cannot absorb the energy, flow reverses, pressure collapses, and the cycle repeats at 1–10 Hz. The consequences include blade fatigue, bearing damage, and process upset. Anti‑surge control uses a recycle valve that opens when the operating point approaches the surge margin (typically 10 % of the distance to the surge line). Modern digital controllers implement a surge‑margin estimator based on real‑time measurements of inlet pressure, temperature, and shaft speed, adjusting the recycle valve position with a PID loop tuned for a 0.5 s response.</p>
 <p>Stall, distinct from surge, is a local flow separation on the blade suction side that creates a rotating stall cell. Rotating stall precedes surge in many axial compressors and can be detected by high‑frequency pressure transducers. Active stall control employs air injection or variable stator vanes to re‑energize the boundary layer. In centrifugal compressors, diffuser vane angle adjustment (variable geometry diffuser) extends the stable operating range toward lower flows.</p>
@@ -399,6 +499,103 @@
 </div>
 
 <h3>Finite Element Method Fundamentals for Structural Analysis in UPSC</h3>
+<!-- passage-cartoon:b561fe532cab -->
+<figure class="passage-cartoon" data-cartoon="b561fe532cab">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central: Cantilever with mesh refinement -->
+  <g stroke="#1f2937" stroke-width="3" fill="none">
+    <!-- Coarse mesh left -->
+    <rect x="30" y="60" width="120" height="80" stroke-width="2.5"/>
+    <line x1="30" y1="100" x2="150" y2="100" stroke-width="2"/>
+    <line x1="90" y1="60" x2="90" y2="140" stroke-width="2"/>
+    <line x1="30" y1="80" x2="150" y2="80" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="30" y1="120" x2="150" y2="120" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="60" y1="60" x2="60" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="120" y1="60" x2="120" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <!-- Fine mesh right -->
+    <rect x="200" y="60" width="120" height="80" stroke-width="2.5"/>
+    <line x1="200" y1="100" x2="320" y2="100" stroke-width="2"/>
+    <line x1="260" y1="60" x2="260" y2="140" stroke-width="2"/>
+    <line x1="200" y1="70" x2="320" y2="70" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="200" y1="80" x2="320" y2="80" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="200" y1="90" x2="320" y2="90" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="200" y1="110" x2="320" y2="110" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="200" y1="120" x2="320" y2="120" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="200" y1="130" x2="320" y2="130" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="215" y1="60" x2="215" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="230" y1="60" x2="230" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="245" y1="60" x2="245" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="275" y1="60" x2="275" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="290" y1="60" x2="290" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="305" y1="60" x2="305" y2="140" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <!-- Fixed support left -->
+    <line x1="25" y1="55" x2="25" y2="145" stroke-width="5"/>
+    <line x1="20" y1="55" x2="30" y2="55" stroke-width="5"/>
+    <line x1="20" y1="145" x2="30" y2="145" stroke-width="5"/>
+    <!-- Load arrow right -->
+    <line x1="330" y1="100" x2="360" y2="100" stroke-width="3" marker-end="url(#arrow)"/>
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L9,3 z" fill="#1f2937"/>
+      </marker>
+    </defs>
+    <!-- Stress contour lines -->
+    <path d="M30,100 Q90,70 150,100" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.7"/>
+    <path d="M200,100 Q260,75 320,100" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.7"/>
+    <path d="M200,100 Q260,85 320,100" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.5"/>
+  </g>
+  <!-- Left: Element types -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <!-- Q4 -->
+    <rect x="30" y="170" width="50" height="50"/>
+    <circle cx="55" cy="195" r="3" fill="#1f2937"/>
+    <circle cx="55" cy="170" r="3" fill="#1f2937"/>
+    <circle cx="30" cy="195" r="3" fill="#1f2937"/>
+    <circle cx="30" cy="170" r="3" fill="#1f2937"/>
+    <!-- Q8 -->
+    <rect x="100" y="170" width="50" height="50"/>
+    <circle cx="125" cy="195" r="3" fill="#1f2937"/>
+    <circle cx="125" cy="170" r="3" fill="#1f2937"/>
+    <circle cx="100" cy="195" r="3" fill="#1f2937"/>
+    <circle cx="100" cy="170" r="3" fill="#1f2937"/>
+    <circle cx="125" cy="182.5" r="3" fill="#1f2937"/>
+    <circle cx="112.5" cy="195" r="3" fill="#1f2937"/>
+    <circle cx="100" cy="182.5" r="3" fill="#1f2937"/>
+    <circle cx="112.5" cy="170" r="3" fill="#1f2937"/>
+    <!-- H8 wireframe -->
+    <rect x="170" y="170" width="50" height="50"/>
+    <rect x="185" y="155" width="50" height="50"/>
+    <line x1="170" y1="170" x2="185" y2="155"/>
+    <line x1="220" y1="170" x2="235" y2="155"/>
+    <line x1="220" y1="220" x2="235" y2="205"/>
+    <line x1="170" y1="220" x2="185" y2="205"/>
+  </g>
+  <!-- Right: Convergence plot -->
+  <g stroke="#1f2937" stroke-width="2.5" fill="none">
+    <line x1="380" y1="220" x2="380" y2="170" stroke-width="2"/>
+    <line x1="380" y1="220" x2="480" y2="220" stroke-width="2"/>
+    <path d="M380,220 L400,200 L420,190 L440,185 L460,182 L480,181" stroke-width="2" fill="none"/>
+    <!-- 2% line -->
+    <line x1="380" y1="185" x2="480" y2="185" stroke-width="1" stroke-dasharray="4,4" opacity="0.6"/>
+  </g>
+  <!-- Top: Equation -->
+  <text x="280" y="40" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#1f2937">K u = F</text>
+  <!-- Labels -->
+  <text x="90" y="55" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#1f2937">Coarse Mesh</text>
+  <text x="260" y="55" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#1f2937">Fine Mesh</text>
+  <text x="55" y="259.1" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#1f2937">Q4 Shear Locking</text>
+  <text x="125" y="244.6" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#1f2937">Q8 Mid-side Nodes</text>
+  <text x="195" y="230" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#1f2937">H8 Hexahedron</text>
+  <text x="430" y="165" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#1f2937">2% Convergence</text>
+  <text x="430" y="235" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#1f2937">h-Refinement</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="280" width="532" height="26" fill="#1f2937"/>
+  <text x="280" y="273.8" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#fbf7ec">Finite Element Method Fundamentals for Structural Analysis in UPSC</text>
+</svg></div>
+  <figcaption>Finite Element Method Fundamentals for Structural Analysis in UPSC</figcaption>
+</figure>
+
 <p>The finite element method (FEM) converts a continuous domain into a discrete set of elements connected at nodes. For linear static analysis, the governing equation is K u = F, where K is the global stiffness matrix assembled from element stiffness matrices k_e, u is the nodal displacement vector, and F is the applied load vector. Each element stiffness matrix derives from the principle of virtual work: k_e = ∫_V Bᵀ D B dV, where B is the strain‑displacement matrix and D is the material constitutive matrix (for isotropic elasticity, D = E/(1‑ν²) [[1, ν, 0],[ν, 1, 0],[0, 0, (1‑ν)/2]] in plane stress). Numerical integration uses Gauss quadrature; a 2 × 2 rule for quadrilaterals and a 3‑point rule for triangles are standard.</p>
 <p>Element choice dictates accuracy and computational cost. The 4‑node bilinear quadrilateral (Q4) suffers from shear locking in bending; the 8‑node serendipity quadrilateral (Q8) and the 9‑node Lagrangian quadrilateral (Q9) alleviate this by including mid‑side nodes. For 3‑D solids, the 8‑node hexahedron (H8) is the workhorse; the 20‑node quadratic hexahedron (H20) captures stress gradients more accurately. In beam and shell structures, Timoshenko beam elements (including shear deformation) and Mindlin‑Reissner shell elements (including transverse shear) are preferred over Euler‑Bernoulli and Kirchhoff‑Love formulations for thick members.</p>
 <p>Convergence is assessed by mesh refinement studies: h‑refinement (smaller elements) and p‑refinement (higher‑order shape functions). The energy norm error ‖u‑u_h‖_E should decrease at a rate O(h^p) for p‑th order elements. A practical rule for UPSC problems: if the stress at a critical location changes by less than 2 % between two successive meshes, the solution is considered converged. Singularities at re‑entrant corners (e.g., a 270° notch) produce infinite theoretical stresses; the FEM stress grows with mesh refinement. The J‑integral or the displacement‑extrapolation method yields a mesh‑independent fracture parameter.</p>
@@ -507,6 +704,66 @@
 <p>Pinch analysis, formalised by Linnhoff and co‑workers in the late 1970s, provides a systematic thermodynamic framework for designing heat‑exchanger networks (HENs) that achieve minimum utility consumption. The method constructs hot and cold composite curves from stream data (supply temperature, target temperature, heat‑capacity flow rate). The point of closest approach between the curves defines the pinch temperature; the minimum hot‑utility duty equals the enthalpy deficit above the pinch, while the minimum cold‑utility duty equals the surplus below it. A key design rule is that no heat may cross the pinch — doing so increases both utility loads. The grand composite curve extends the concept by plotting net heat flow versus shifted temperature, enabling the selection of appropriate utility levels (steam pressures, refrigeration temperatures) and the identification of opportunities for heat‑pump integration. In practice, the problem is often solved as a mixed‑integer linear program (MILP) where binary variables represent the existence of a match between a hot and a cold stream, and continuous variables represent heat‑load allocation. The transshipment model discretises the temperature interval into stages, enforcing energy balances at each stage and allowing the optimizer to choose the number of exchangers, their areas, and the utility split. Capital‑cost correlations (e.g., area cost ∝ A<sup>0.6</sup>) are added to the objective to trade off utility savings against exchanger count. Industrial case studies (e.g., crude‑oil preheat trains) often show 20–30 % utility reduction when a pinch‑based network replaces a heuristic design. The method also highlights retrofit opportunities: by plotting the existing network on the composite curves, “cross‑pinch” heat transfers become visible and can be eliminated through stream splitting or repiping. Modern software (Aspen Energy Analyzer, SuperTarget) automates curve construction, MILP formulation, and area targeting, but the examiner expects the candidate to derive the pinch temperature manually for a small stream set and to explain why a proposed match violates the pinch rule.</p>
 
 <h3>Vibration Control in Rotating Machinery: Balancing and Active Damping</h3>
+<!-- passage-cartoon:dafaa7d23db1 -->
+<figure class="passage-cartoon" data-cartoon="dafaa7d23db1">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central rotor shaft -->
+  <line x1="80" y1="160" x2="480" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <!-- Rotor disk -->
+  <circle cx="280" cy="160" r="35" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Two balancing planes -->
+  <circle cx="200" cy="160" r="8" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <circle cx="360" cy="160" r="8" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Correction masses on planes -->
+  <rect x="192" y="115" width="16" height="12" stroke="#1f2937" stroke-width="2.5" fill="#1f2937"/>
+  <rect x="352" y="115" width="16" height="12" stroke="#1f2937" stroke-width="2.5" fill="#1f2937"/>
+  <!-- Vibration waves left (unbalance) -->
+  <path d="M 80 140 Q 100 130 120 140 Q 140 150 160 140" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <path d="M 80 180 Q 100 190 120 180 Q 140 170 160 180" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- AMB symbols right (horseshoe magnets) -->
+  <path d="M 420 130 Q 440 130 440 150 Q 440 170 420 170" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <path d="M 420 150 Q 400 150 400 170 Q 400 190 420 190" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- SFD damper cylinder -->
+  <rect x="450" y="130" width="20" height="60" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <line x1="450" y1="160" x2="470" y2="160" stroke="#1f2937" stroke-width="2"/>
+  <!-- ISO grade scale top -->
+  <line x1="140" y1="50" x2="420" y2="50" stroke="#1f2937" stroke-width="2"/>
+  <circle cx="140" cy="50" r="4" fill="#1f2937"/>
+  <circle cx="210" cy="50" r="4" fill="#1f2937"/>
+  <circle cx="280" cy="50" r="4" fill="#1f2937"/>
+  <circle cx="350" cy="50" r="4" fill="#1f2937"/>
+  <circle cx="420" cy="50" r="4" fill="#1f2937"/>
+  <!-- Diagnostic bottom: orbit plot -->
+  <ellipse cx="180" cy="260" rx="25" ry="15" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <path d="M 180 260 Q 190 250 200 260 Q 210 270 200 260" stroke="#1f2937" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <!-- FFT bars -->
+  <rect x="340" y="250" width="12" height="30" stroke="#1f2937" stroke-width="2" fill="#1f2937"/>
+  <rect x="360" y="240" width="12" height="40" stroke="#1f2937" stroke-width="2" fill="#1f2937"/>
+  <rect x="380" y="255" width="12" height="25" stroke="#1f2937" stroke-width="2" fill="#1f2937"/>
+  <!-- Notch filter curve -->
+  <path d="M 460 240 Q 470 240 475 255 Q 480 270 490 270" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Influence coefficient matrix (small grid) -->
+  <rect x="80" y="80" width="40" height="40" stroke="#1f2937" stroke-width="1.5" fill="none"/>
+  <line x1="100" y1="80" x2="100" y2="120" stroke="#1f2937" stroke-width="1"/>
+  <line x1="80" y1="100" x2="120" y2="100" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="140" y="35" font-size="13" fill="#1f2937" text-anchor="middle">ISO G-Grades</text>
+  <text x="80" y="70" font-size="12" fill="#1f2937" text-anchor="middle">Influence Matrix</text>
+  <text x="120" y="135" font-size="13" fill="#1f2937" text-anchor="middle">Mass Unbalance</text>
+  <text x="280" y="100" font-size="14" fill="#1f2937" text-anchor="middle">Two-Plane Balance</text>
+  <text x="420" y="120" font-size="13" fill="#1f2937" text-anchor="middle">AMB + PID</text>
+  <text x="460" y="195" font-size="13" fill="#1f2937" text-anchor="middle">Hybrid Damping</text>
+  
+  <text x="370" y="235" font-size="12" fill="#1f2937" text-anchor="middle">Order FFT</text>
+  <text x="480" y="235" font-size="12" fill="#1f2937" text-anchor="middle">Notch Filter</text>
+  <!-- Bottom caption strip -->
+  <rect x="14" y="298" width="532" height="18" fill="#1f2937"/>
+  <text x="280" y="291.8" font-size="13" fill="#fbf7ec" text-anchor="middle">Vibration Control in Rotating Machinery</text>
+</svg></div>
+  <figcaption>Vibration Control in Rotating Machinery: Balancing and Active Damping</figcaption>
+</figure>
+
 <p>Rotating machinery vibration originates from mass unbalance, misalignment, bearing defects, and rotor‑stator interaction. The ISO 1940‑1 standard defines balance quality grades (G 0.4, G 1, G 2.5, G 6.3, G 16) based on the permissible residual specific unbalance e_per = G × 9549 / N (where N is the service speed in rpm). For a 3000 rpm turbine rotor, a G 2.5 grade permits e_per ≈ 8 µm, corresponding to a residual unbalance mass‑radius product of a few gram‑millimetres. Two‑plane (dynamic) balancing on a rigid rotor is performed by measuring vibration at two axial planes, solving the influence‑coefficient matrix, and adding correction masses. Flexible rotors require modal balancing: the rotor is run at several speeds, the response at each critical speed is recorded, and correction masses are placed to minimise the modal amplitudes. Active magnetic bearings (AMBs) provide real‑time control forces; the control law typically uses a proportional‑integral‑derivative (PID) controller augmented with a notch filter tuned to the first bending mode. The AMB stiffness and damping are programmable, allowing the rotor to operate safely through critical speeds without mechanical contact. In high‑speed compressors, squeeze‑film dampers (SFDs) supply passive damping; the damper film thickness, clearance, and lubricant viscosity determine the damping coefficient, often modelled using the short‑bearing Reynolds equation. Recent research integrates AMBs with SFDs in a hybrid configuration: the AMB supplies stiffness and active damping at low frequencies, while the SFD handles high‑frequency subsynchronous vibrations. Diagnostic techniques include orbit plots, full‑spectrum cascades, and order‑tracking FFTs. The examiner frequently asks for the derivation of the influence‑coefficient matrix for a two‑plane balance, the calculation of permissible residual unbalance for a given G‑grade, and the explanation of why a notch filter is essential in AMB control loops.</p>
 
 <div class="example-box">
