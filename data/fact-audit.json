@@ -1,10 +1,259 @@
 {
- "generatedAt": "2026-11-28T22:43:11.467Z",
+ "generatedAt": "2026-11-28T23:06:38.795Z",
  "lessonsAudited": 18,
- "flagged": 0,
- "applied": 0,
- "modelCalls": 1,
- "modelFailures": 116,
+ "flagged": 25,
+ "applied": 13,
+ "modelCalls": 14,
+ "modelFailures": 56,
  "deadlineHit": false,
- "problems": []
+ "problems": [
+  {
+   "file": "upsc/course/opt-dogri/lesson-overview.html",
+   "quote": "a rhymed, matra‑based form of 24 + 24 matras per line",
+   "problem": "The doha metre has 24 matras per line (13+11), not 24+24 matras per line.",
+   "correction": "a rhymed, matra‑based form of 24 matras per line (13+11)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Doha metre has 24 matras per line (13+11), not 48. Correction is accurate.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-dogri/lesson-overview.html",
+   "quote": "Dogri dramatic practice originates in the itinerant Bhand Pather folk theatre",
+   "problem": "Bhand Pather is a Kashmiri folk theatre form, not Dogri; it is performed in the Kashmir Valley, not the Jammu hills.",
+   "correction": "Dogri dramatic practice originates in local folk theatre, not the Kashmiri Bhand Pather",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Bhand Pather is Kashmiri folk theatre, not Dogri. Correction correctly removes the error.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-dogri/lesson-overview.html",
+   "quote": "Early Bhakti poets such as Baba Jitto invoke the river as a witness to social injustice",
+   "problem": "Baba Jitto is a folk hero and martyr, not a Bhakti poet; he did not compose poetry.",
+   "correction": "Early Dogri poets invoke the river as a witness to social injustice",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Baba Jitto is a folk hero/martyr, not a Bhakti poet. Correction replaces with generic accurate statement.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-dogri/lesson-overview.html",
+   "quote": "Contemporary poets such as Neerja Mattoo extend this lineage by integrating scientific terminology",
+   "problem": "Neerja Mattoo is a Kashmiri writer and academic, not a Dogri poet.",
+   "correction": "Contemporary Dogri poets extend this lineage by integrating scientific terminology",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Neerja Mattoo is a Kashmiri writer/academic, not a Dogri poet. Correction is accurate.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-commerce-accountancy/lesson-overview.html",
+   "quote": "Recent amendments (2023) require additional disclosure of the methodology used to determine the fair value of intangible assets acquired in a business combination, including the use of market particip",
+   "problem": "The 2023 amendments to Ind AS did not introduce this disclosure; it was already required by Ind AS 103 (paragraph B64).",
+   "correction": "Ind AS 103 requires disclosure of the methodology used to determine the fair value of intangible assets acquired in a business combination, including the use of market participant assumptions.",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "Ind AS 103 (2015) already required fair value methodology disclosures for intangibles per para B64; 2023 amendments did not add this."
+  },
+  {
+   "file": "upsc/course/opt-commerce-accountancy/lesson-overview.html",
+   "quote": "Ind AS 103, revised in 2015 and effective for business combinations with acquisition dates on or after 1 April 2016",
+   "problem": "Ind AS 103 was issued/notified in 2015, not revised (there was no prior Ind AS 103 to revise).",
+   "correction": "Ind AS 103, issued in 2015 and effective for business combinations with acquisition dates on or after 1 April 2016",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Ind AS 103 was first notified in 2015 (G.S.R. 111(E)), not revised; no prior Ind AS 103 existed.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-commerce-accountancy/lesson-overview.html",
+   "quote": "Ind AS 19 (revised 2015) governs accounting for employee benefits",
+   "problem": "Ind AS 19 was issued in 2015, not revised (it replaced the old AS 15).",
+   "correction": "Ind AS 19 (issued 2015) governs accounting for employee benefits",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Ind AS 19 was first notified in 2015, replacing AS 15; there was no earlier Ind AS 19 to revise.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-economics/lesson-paper1.html",
+   "quote": "The 15th Finance Commission (2020‑25) increased the states’ share to 41 %",
+   "problem": "The 15th Finance Commission reduced the states' share from 42% (14th FC) to 41%, not increased.",
+   "correction": "The 15th Finance Commission (2020‑25) set the states’ share at 41 %",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "14th FC gave 42%, 15th FC reduced to 41%; 'increased' is false",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-economics/lesson-paper1.html",
+   "quote": "where the informal share exceeds 80 % of non‑agricultural employment",
+   "problem": "Recent PLFS data shows urban informal non-agricultural employment share around 70‑75%, not exceeding 80%.",
+   "correction": "where the informal share is about 70‑75 % of non‑agricultural employment",
+   "confidence": "medium",
+   "verified": true,
+   "verifierReason": "PLFS 2022-23 shows informal non-agri share ~74%, not >80%"
+  },
+  {
+   "file": "upsc/course/opt-economics/lesson-paper1.html",
+   "quote": "When MAC and MD are linear, the optimal tax is t* = (a MD - a MAC ) / (b MAC + b MD ) where a and b are intercepts and slopes.",
+   "problem": "The formula for the optimal Pigouvian tax under linear marginal abatement cost (MAC) and marginal damage (MD) is incorrect. The correct optimal tax equals MAC(Q*) where Q* = (a_MD - a_MAC)/(b_MAC - b_MD), yielding t* = (b_MAC a_MD - a_MAC b_MD)/(b_MAC - b_MD).",
+   "correction": "When MAC and MD are linear, the optimal tax is t* = (b_MAC a_MD - a_MAC b_MD)/(b_MAC - b_MD) where a and b are intercepts and slopes.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original formula dimensionally wrong; correction matches standard intersection of linear MAC and MD.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-economics/lesson-paper1.html",
+   "quote": "a sufficient condition is r on average, which makes the debt ratio self‑stabilising even with a modest primary deficit.",
+   "problem": "The phrase is missing the inequality \"< g\". The sufficient condition for debt self-stabilisation is that the nominal interest rate r is less than the nominal GDP growth rate g on average (r < g).",
+   "correction": "a sufficient condition is r < g on average, which makes the debt ratio self‑stabilising even with a modest primary deficit.",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original missing inequality; r<g is standard sufficient condition for debt self-stabilization.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-english-literature/lesson-paper2.html",
+   "quote": "the Edwardian crisis of identity",
+   "problem": "The only late‑19th‑century work discussed is Wilde’s Dorian Gray (1890), which is Victorian/fin‑de‑siècle, not Edwardian (1901‑1910); no Edwardian text is analysed.",
+   "correction": "the fin‑de‑siècle crisis of identity",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Dorian Gray (1890) is Victorian; Edwardian era begins 1901. 'Fin-de-siècle' correctly describes 1890s.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-economics/lesson-paper1.html",
+   "quote": "Subsequent extensions include momentum (UMD), profitability (RMW), and investment (CMA) factors (Fama‑French five‑factor model, 2015).",
+   "problem": "The Fama-French five-factor model (2015) adds profitability (RMW) and investment (CMA) factors, but does not include momentum (UMD). Momentum is a separate factor from Carhart (1997) four-factor model.",
+   "correction": "Subsequent extensions include profitability (RMW) and investment (CMA) factors (Fama‑French five‑factor model, 2015); momentum (UMD) is a separate factor from Carhart (1997).",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "FF5 (2015) adds RMW, CMA only; UMD is Carhart (1997).",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-electrical-engineering/lesson-paper2.html",
+   "quote": "Bernard K. Bose, Power Electronics",
+   "problem": "Author name is incorrect; the standard reference author is Bimal K. Bose.",
+   "correction": "Bimal K. Bose, Power Electronics",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Bimal K. Bose is the renowned power electronics author; Bernard K. Bose does not exist in this field.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-electrical-engineering/lesson-paper2.html",
+   "quote": "The Stevedore's Inverter or specific industrial inverters",
+   "problem": "\"Stevedore's Inverter\" is not a real term; likely a corruption of \"stepped-wave inverter\" or similar.",
+   "correction": "Stepped-wave inverters or specific industrial inverters",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Stevedore's Inverter is not a technical term; stepped-wave inverter is standard terminology for multi-level waveform inverters.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-geography/lesson-overview.html",
+   "quote": "the role of the Western Ghats’ rain shadow in shaping the coffee‑tea belt of Karnataka",
+   "problem": "Coffee‑tea belt lies on the windward (rain‑receiving) side of the Western Ghats, not in the rain shadow.",
+   "correction": "the role of the Western Ghats’ orographic rainfall in shaping the coffee‑tea belt of Karnataka",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Coffee‑tea belt in Karnataka (Kodagu, Chikmagalur) lies on windward slopes receiving orographic rain, not in rain shadow.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-geography/lesson-overview.html",
+   "quote": "Census of India (2011, with 2021 provisional releases)",
+   "problem": "The 2021 Census was postponed and no provisional releases exist; only the 2011 Census is available.",
+   "correction": "Census of India (2011)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "2021 Census postponed indefinitely; no provisional releases exist. Only 2011 Census data is official.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-geography/lesson-overview.html",
+   "quote": "NSSO 78th round (2020‑21) data on slum population percentages",
+   "problem": "Slum population data comes from the Census, not from NSSO rounds.",
+   "correction": "Census 2011 data on slum population percentages",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Slum population percentages are from Census 2011; NSSO 78th round (2020‑21) did not collect slum population data.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-geography/lesson-overview.html",
+   "quote": "rocky shores (CRZ‑I), sandy beaches (CRZ‑II), mangroves (CRZ‑III), and developed waterfronts (CRZ‑IV)",
+   "problem": "CRZ 2019 categories are: CRZ‑I ecologically sensitive, CRZ‑II developed areas, CRZ‑III rural areas, CRZ‑IV water areas; the given mapping is incorrect.",
+   "correction": "CRZ‑I (ecologically sensitive), CRZ‑II (developed), CRZ‑III (rural), CRZ‑IV (water areas)",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "CRZ 2019 categories: I=ecologically sensitive, II=developed, III=rural, IV=water areas; original mapping is incorrect.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-electrical-engineering/lesson-overview.html",
+   "quote": "driven by economies of scale and thin-film technology breakthroughs",
+   "problem": "The dramatic decline in solar module prices from 2010 to 2020 was primarily driven by massive scale-up of crystalline silicon manufacturing, not thin-film technology breakthroughs. Thin-film market share actually declined during this period.",
+   "correction": "driven by economies of scale in crystalline silicon manufacturing",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Original incorrectly credits thin-film breakthroughs; price drop driven by c-Si scale-up.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-electrical-engineering/lesson-overview.html",
+   "quote": "The Kyoto Protocol (1997) and the subsequent Paris Agreement (2015) set binding targets for greenhouse gas emissions",
+   "problem": "The Paris Agreement does not set binding emission targets; it establishes binding procedural obligations (e.g., submitting NDCs), but the emission reduction targets themselves (NDCs) are not legally binding under international law.",
+   "correction": "The Kyoto Protocol (1997) set binding emission targets for developed countries, while the Paris Agreement (2015) established binding procedural obligations with nationally determined contributions",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Paris Agreement has binding procedural obligations, not binding emission targets.",
+   "applied": true
+  },
+  {
+   "file": "upsc/course/opt-electrical-engineering/lesson-overview.html",
+   "quote": "Paper II of the Electrical Engineering optional covers Analog Electronics, Digital Electronics, Communication Systems, Power Electronics, and Microprocessors (including analog, digital, and power elec",
+   "problem": "The official UPSC Paper II syllabus lists five topics: Analog and Digital Electronics, Communication Systems, Control Systems, Power Electronics, and Measurements. Microprocessors is a subtopic under Digital Electronics, not a separate top-level topic, and Control Systems and Measurements are omitte",
+   "correction": "Paper II covers Analog and Digital Electronics, Communication Systems, Control Systems, Power Electronics, and Measurements",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "UPSC EE Paper II syllabus lists Control Systems & Measurements, not Microprocessors as top-level.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-english-literature/lesson-overview.html",
+   "quote": "reflects the rise of the 'box‑set' and the licensing act of 1737",
+   "problem": "The 'box‑set' (realistic three‑walled interior set) is a 19th‑century innovation, not an 18th‑century development.",
+   "correction": "reflects the licensing act of 1737 and evolving scenic practices",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "Box-set is 19th-century; 1737 Licensing Act is 18th-century. Original conflates eras.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-english-literature/lesson-overview.html",
+   "quote": "Book I, line 1 'Of Man's first disobedience' vs. 1674 'Of Man's first disobedience, and the fruit'",
+   "problem": "The 1667 first edition also reads 'Of Mans first disobedience, and the fruit'; the example misstates the variant.",
+   "correction": "Book I, line 1 'Of Mans first disobedience, and the fruit' (1667) vs. 1674 'Of Man's first disobedience, and the fruit'",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "1667 edition reads 'Of Mans first disobedience, and the fruit'; original omits 'and the fruit'.",
+   "applied": false
+  },
+  {
+   "file": "upsc/course/opt-electrical-engineering/lesson-overview.html",
+   "quote": "typically 10‑50 µs for a 10 kHz switching frequency",
+   "problem": "A 10 kHz switching frequency corresponds to a 100 µs period; the sampling instant is typically equal to the switching period (100 µs) or half of it (50 µs), not 10‑50 µs.",
+   "correction": "typically 100 µs for a 10 kHz switching frequency",
+   "confidence": "high",
+   "verified": true,
+   "verifierReason": "10 kHz period = 100 µs. Sampling period typically equals switching period (100 µs) or half (50 µs). 10-50 µs range is incorrect for sampling period.",
+   "applied": false
+  }
+ ]
 }
