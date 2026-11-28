@@ -324,11 +324,93 @@
 <p>Consider the proof of the Cauchy-Schwarz inequality: |⟨ u, v ⟩|<sup>2</sup> ≤ ⟨ u, u ⟩ ⟨ v, v ⟩. A common mistake is to assume equality holds for all vectors. The correct approach involves considering the quadratic polynomial P(t) = ⟨ u + tv, u + tv ⟩ which must be non-negative for all real t (since it is an inner product). Expanding this gives A t<sup>2</sup> + B t + C ≥ 0, where A = ⟨ v, v ⟩, B = 2Re⟨ u, v ⟩, and C = ⟨ u, u ⟩. Since the discriminant of a non-negative quadratic must be non-positive (B<sup>2</sup> - 4AC ≤ 0), substituting back yields the inequality. This logical chain—defining the polynomial, establishing its non-negativity, expanding, and analyzing the discriminant—is what examiners look for. Merely writing the inequality without derivation loses marks.</p>
 <p>Similarly, in Linear Algebra, when asked to find the Smith Normal Form of a matrix over a PID, one must explicitly state the algorithm: perform elementary row and column operations (swapping rows/cols, adding multiples, multiplying by units) to reduce the diagonal entries such that each divides the next.</p>
 <h3>Linear Algebra as the Backbone of Mechanics and PDEs</h3>
+<!-- passage-cartoon:2e1138dc1b84 -->
+<figure class="passage-cartoon" data-cartoon="2e1138dc1b84">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central backbone -->
+  <line x1="280" y1="50" x2="280" y2="250" stroke="#1f2937" stroke-width="3.5"/>
+  <!-- Vertebrae -->
+  <rect x="240" y="70" width="80" height="12" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="240" y="110" width="80" height="12" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="240" y="150" width="80" height="12" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="240" y="190" width="80" height="12" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="240" y="230" width="80" height="12" rx="3" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Left building: Mechanics -->
+  <rect x="50" y="140" width="100" height="120" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="45,140 155,140 100,100" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Right building: PDEs -->
+  <rect x="410" y="140" width="100" height="120" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <polygon points="405,140 515,140 460,100" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Top-left: Inertia tensor -->
+  <ellipse cx="100" cy="60" rx="35" ry="20" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="65" y1="60" x2="135" y2="60" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="100" y1="40" x2="100" y2="80" stroke="#1f2937" stroke-width="2" stroke-dasharray="4,3"/>
+  <!-- Top-right: Sturm-Liouville -->
+  <text x="460" y="60" font-family="Georgia,serif" font-size="14" fill="#1f2937" text-anchor="middle">L u = λ u</text>
+  <line x1="420" y1="75" x2="500" y2="75" stroke="#1f2937" stroke-width="1.5"/>
+  <!-- Bottom-left: Matrix exponential -->
+  <g transform="translate(80,240)">
+    <rect x="0" y="0" width="20" height="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+    <rect x="22" y="0" width="20" height="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+    <rect x="0" y="22" width="20" height="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+    <rect x="22" y="22" width="20" height="20" fill="none" stroke="#1f2937" stroke-width="2"/>
+    <text x="6" y="21.6" font-family="Georgia,serif" font-size="12" fill="#1f2937">exp</text>
+  </g>
+  <!-- Bottom-right: Quadratic form bowl -->
+  <path d="M430,280 Q460,240 490,280" fill="none" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M440,275 Q460,245 480,275" fill="none" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <!-- Labels -->
+  <text x="280" y="40" font-family="Georgia,serif" font-size="14" fill="#1f2937" text-anchor="middle">Eigenvalue Bridge</text>
+  <text x="100" y="25" font-family="Georgia,serif" font-size="12" fill="#1f2937" text-anchor="middle">Inertia Tensor</text>
+  <text x="460" y="25" font-family="Georgia,serif" font-size="12" fill="#1f2937" text-anchor="middle">Sturm-Liouville</text>
+  <text x="100" y="295" font-family="Georgia,serif" font-size="12" fill="#1f2937" text-anchor="middle">Matrix Exponential</text>
+  <text x="460" y="295" font-family="Georgia,serif" font-size="12" fill="#1f2937" text-anchor="middle">Quadratic Form</text>
+  <text x="280" y="95" font-family="Georgia,serif" font-size="13" fill="#1f2937" text-anchor="middle">Spectral Theorem</text>
+  <!-- Caption strip -->
+  
+  
+</svg></div>
+  <figcaption>Linear Algebra as the Backbone of Mechanics and PDEs</figcaption>
+</figure>
+
 <p>Linear algebra supplies the language in which both the mechanics portion of Paper II and the partial differential equations of Paper II are expressed. The eigenvalue problem for a real symmetric matrix appears directly in the analysis of small oscillations of a rigid body: the inertia tensor is a symmetric positive‑definite matrix, its principal axes are the eigenvectors, and the principal moments are the eigenvalues. In the same way, the separation of variables for the heat equation or wave equation reduces the PDE to a Sturm–Liouville eigenvalue problem, where the differential operator is self‑adjoint on a suitable Hilbert space. Understanding the spectral theorem for compact self‑adjoint operators therefore gives a unified view of normal modes in mechanics and Fourier series solutions of PDEs. Aspirants should practice moving between the matrix formulation (finite‑dimensional) and the operator formulation (infinite‑dimensional) because examiners frequently ask for a proof that the eigenfunctions of a regular Sturm–Liouville problem form an orthogonal basis, mirroring the finite‑dimensional orthogonal diagonalisation theorem.</p>
 <p>A second bridge is the use of matrix exponentials to solve systems of linear ODEs, which is a core topic in Paper I. The same exponential map appears in the solution of linear PDEs with constant coefficients via the Fourier transform: the transformed PDE becomes an ODE in the transform variable, and its solution involves the exponential of a matrix symbol. When a question asks for the fundamental solution of the heat equation, writing the solution as the convolution of the initial data with the Gaussian kernel is equivalent to applying the matrix exponential of the Laplacian operator discretised on a grid. Recognising this parallel allows a candidate to reuse the computation of exp(At) for a constant matrix A, a skill honed in the Linear Algebra section, to answer a PDE question without re‑deriving the kernel from scratch.</p>
 <p>Finally, the concept of a quadratic form unifies the kinetic energy in Lagrangian mechanics and the energy functional associated with an elliptic PDE. In mechanics the kinetic energy T = ½ q̇ᵀ M q̇ is a quadratic form in the generalized velocities with the mass matrix M. In the calculus of variations, the Dirichlet integral ∫|∇u|² is a quadratic functional on the Sobolev space H¹₀. The Euler–Lagrange equation derived from the latter is the Poisson equation, while the former yields the equations of motion M q̈ + K q = 0 after adding a potential energy quadratic form ½ qᵀ K q. Mastery of the theory of quadratic forms — Sylvester’s law of inertia, simultaneous diagonalisation, and the min‑max principle — therefore pays dividends across three distinct syllabus blocks.</p>
 
 <h3>Contour Integration and Residue Theory in Complex Analysis</h3>
+<!-- passage-cartoon:b3b34c4eaadb -->
+<figure class="passage-cartoon" data-cartoon="b3b34c4eaadb">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central keyhole contour -->
+  <circle cx="280" cy="160" r="100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <circle cx="280" cy="160" r="20" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="300" y1="158" x2="380" y2="158" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="300" y1="162" x2="380" y2="162" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Pole at z=-1 with cross -->
+  <circle cx="180" cy="160" r="5" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="175" y1="155" x2="185" y2="165" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="175" y1="165" x2="185" y2="155" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Jordan's lemma semicircle (top-left) -->
+  <path d="M 90,80 A 60,60 0 0,1 210,80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Indented contour (bottom-right) -->
+  <path d="M 410,240 A 20,20 0 0,1 450,240" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Aspirant figure (bottom-left) -->
+  <circle cx="80" cy="230" r="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="80" y1="245" x2="80" y2="270" stroke="#1f2937" stroke-width="3"/>
+  <rect x="50" y="250" width="40" height="30" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Labels -->
+  <text x="280" y="40" text-anchor="middle" font-size="14" fill="#1f2937">Keyhole Contour</text>
+  <text x="390" y="155" font-size="14" fill="#1f2937">Branch Cut</text>
+  <text x="180" y="130" text-anchor="middle" font-size="14" fill="#1f2937">Residue Theorem</text>
+  <text x="150" y="24" text-anchor="middle" font-size="14" fill="#1f2937">Jordan's Lemma</text>
+  <text x="430" y="270" text-anchor="middle" font-size="14" fill="#1f2937">Indented Contour</text>
+  <text x="280" y="304" text-anchor="middle" font-size="14" fill="#1f2937">Contour Integration and Residue Theory</text>
+</svg></div>
+  <figcaption>Contour Integration and Residue Theory in Complex Analysis</figcaption>
+</figure>
+
 <p>Contour integration is the computational engine of the Complex Analysis section of Paper II. The syllabus expects fluency with Cauchy’s integral theorem, Cauchy’s integral formula, the residue theorem, and the evaluation of real integrals by closing contours in the complex plane. A typical examiner’s twist is to present an integral that looks elementary but requires a careful choice of branch cut for a multivalued function such as z^α or log z. For instance, ∫₀^∞ x<sup>s‑1</sup>/(1+x) dx with 0 < Re(s) < 1 is evaluated by integrating f(z)=z<sup>s‑1</sup>/(1+z) around a keyhole contour that avoids the branch cut along the positive real axis. The candidate must state the branch of the logarithm, verify that the contributions from the large and small circles vanish, and then apply the residue at z = ‑1. Skipping the justification of the vanishing arcs or the branch choice leads to loss of marks even if the final Beta‑function value is correct.</p>
 <p>Another frequent pattern is the use of Jordan’s lemma to handle integrals of the form ∫<sub>‑∞</sub><sup>∞</sup> e<sup>i a x</sup> f(x) dx where f is a rational function decaying sufficiently fast. The lemma requires that the maximum of |f(z)| on the semicircular arc tends to zero as the radius grows. A common trap is to apply the lemma when f has poles on the real axis; in that case the contour must be indented and the contribution of the small semicircles gives half‑residues. The examiner may also ask for the principal value of an integral with a simple pole on the real line, testing whether the candidate knows the indentation rule and the factor of π i versus 2π i.</p>
 <p>Higher‑order poles appear in problems that ask for the coefficient of a Laurent expansion or for the evaluation of integrals involving derivatives of analytic functions. The formula Res(f, z₀) = 1/(m‑1)! lim<sub>z→z₀</sub> d<sup>m‑1</sup>/dz<sup>m‑1</sup> [(z‑z₀)^m f(z)] must be quoted and applied correctly. A subtle point: when the integrand contains a factor like (z‑z₀)^k in the numerator, the order of the pole reduces, and the candidate must recompute the order before applying the formula. Practising a variety of pole orders, branch cuts, and indented contours builds the pattern recognition needed to finish a 20‑mark question within the allotted time.</p>
