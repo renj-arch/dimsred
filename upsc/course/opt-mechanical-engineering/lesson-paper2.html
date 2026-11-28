@@ -872,6 +872,44 @@
 <p>Transient conduction through a composite slab of N layers is solved by the Laplace‑transform method or by a finite‑difference/finite‑volume discretisation that respects interfacial temperature and heat‑flux continuity. For a wall with layers i = 1…N, each having thickness L<sub>i</sub>, thermal conductivity k<sub>i</sub>, density ρ<sub>i</sub>, and specific heat c<sub>p,i</sub>, the governing equation in each layer is ∂T/∂t = α<sub>i</sub> ∂²T/∂x² with α<sub>i</sub> = k<sub>i</sub>/(ρ<sub>i</sub>c<sub>p,i</sub>). At each interface x = ΣL<sub>j</sub>, the conditions are T<sub>i</sub> = T<sub>i+1</sub> and k<sub>i</sub> ∂T<sub>i</sub>/∂x = k<sub>i+1</sub> ∂T<sub>i+1</sub>/∂x. The Biot number for the outer surfaces Bi = h L<sub>eq</sub>/k<sub>eq</sub> (L<sub>eq</sub> total thickness, k<sub>eq</sub> harmonic mean) decides whether lumped‑capacitance is permissible; Bi < 0.1 allows a single‑node model, otherwise a distributed model is required. The Fourier number Fo = α t/L² characterises the penetration depth of the thermal wave; for a step change in surface temperature, the dimensionless temperature θ* = (T − T<sub>i</sub>)/(T<sub>s</sub> − T<sub>i</sub>) at the mid‑plane of a homogeneous slab is given by the series solution θ* = Σ (4/π(2n+1)) exp[−(2n+1)²π²Fo/4] sin[(2n+1)π/2]. In composites, the eigen‑values become roots of a transcendental equation involving the thermal effusivity ratios e<sub>i</sub> = √(k<sub>i</sub>ρ<sub>i</sub>c<sub>p,i</sub>). Numerical implementation uses an implicit Crank‑Nicolson scheme with a non‑uniform grid that aligns nodes at material interfaces; the resulting tridiagonal system is solved at each time step Δt chosen to satisfy Fo ≤ 0.5 for stability if an explicit scheme is used. Practical applications include thermal barrier coating (TBC) life prediction on turbine blades, where a 0.3 mm YSZ layer (k ≈ 1.2 W m⁻¹ K⁻¹) on a 2 mm Ni‑based superalloy substrate (k ≈ 25 W m⁻¹ K⁻¹) experiences cyclic surface heat fluxes of 1 MW m⁻²; the transient temperature lag across the TBC governs the thermal‑stress range Δσ ≈ E α ΔT/(1 − ν). Accurate prediction requires temperature‑dependent k(T) and c<sub>p</sub>(T) data, typically supplied in NIST‑IR databases.</p>
 
 <h3>Stochastic Queueing Models for Flexible Manufacturing Systems</h3>
+<!-- passage-cartoon:300b67aee4bc -->
+<figure class="passage-cartoon" data-cartoon="300b67aee4bc">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Workstations -->
+  <rect x="100" y="120" width="100" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="260" y="120" width="100" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="420" y="120" width="100" height="80" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Buffers -->
+  <rect x="110" y="80" width="30" height="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="270" y="80" width="30" height="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="430" y="80" width="30" height="15" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Arrow shafts -->
+  <line x1="200" y1="160" x2="260" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <line x1="360" y1="160" x2="420" y2="160" stroke="#1f2937" stroke-width="3"/>
+  <!-- Arrowheads -->
+  <polygon points="250,155 260,160 250,165" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <polygon points="410,155 420,160 410,165" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Pallet -->
+  <rect x="220" y="155" width="20" height="10" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Formula boxes -->
+  <rect x="30" y="30" width="180" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="350" y="30" width="180" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="30" y="210" width="180" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="350" y="210" width="180" height="60" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Caption strip -->
+  <rect x="14" y="280" width="532" height="26" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <!-- Labels -->
+  <text x="100" y="110" font-size="14" fill="#1f2937" font-family="sans-serif">M/M/c queue</text>
+  <text x="30" y="23.2" font-size="14" fill="#1f2937" font-family="sans-serif">Kingman approx</text>
+  <text x="350" y="23.2" font-size="14" fill="#1f2937" font-family="sans-serif">Traffic eqns</text>
+  <text x="30" y="200" font-size="14" fill="#1f2937" font-family="sans-serif">MVA cycle time</text>
+  <text x="350" y="200" font-size="14" fill="#1f2937" font-family="sans-serif">Cost opt</text>
+  <text x="280" y="274" font-size="12" fill="#1f2937" font-family="sans-serif" text-anchor="middle">Stochastic Queueing Models for Flexible Manufacturing Systems</text>
+</svg></div>
+  <figcaption>Stochastic Queueing Models for Flexible Manufacturing Systems</figcaption>
+</figure>
+
 <p>Flexible manufacturing systems (FMS) are modelled as open queueing networks with multiple workstations, automated material handling, and finite buffers. Each workstation i is represented by an M/M/c<sub>i</sub> queue (Poisson arrivals, exponential service, c<sub>i</sub> parallel identical servers) when processing times are highly variable; for low variability, an M/D/c or G/G/c approximation using the Kingman formula W<sub>q</sub> ≈ (C<sub>a</sub>² + C<sub>s</sub>²)/2 · ρ/(1 − ρ) · E[S] (C<sub>a</sub>, C<sub>s</sub> coefficients of variation of inter‑arrival and service times, ρ utilisation, E[S] mean service) gives the average waiting time. Routing probabilities p<sub>ij</sub> define the Markov chain of job flow; the traffic equations λ<sub>j</sub> = Σ λ<sub>i</sub> p<sub>ij</sub> + γ<sub>j</sub> (γ external arrival rate) yield the visit ratios V<sub>j</sub> = λ<sub>j</sub>/γ. The system throughput X = γ · (1 − P<sub>block</sub>) where P<sub>block</sub> is the probability that a finite buffer of size B is full; for an M/M/1/B queue, P<sub>block</sub> = (1 − ρ) ρ<sup>B</sup>/(1 − ρ<sup>B+1</sup>). Mean value analysis (MVA) computes the average number of jobs L<sub>j</sub> at each station and the cycle time W = Σ V<sub>j</sub> W<sub>j</sub> for a closed network with a fixed population N (e.g., a fixed number of pallets). For large FMS, the convolution algorithm or the Bard‑Schweitzer approximation reduces computational effort. Performance metrics include machine utilisation U<sub>j</sub> = X · V<sub>j</sub> · E[S<sub>j</sub>]/c<sub>j</sub>, average work‑in‑process WIP = X · W, and the probability of meeting a due‑date distribution via the sojourn‑time tail. Design optimisation uses simulation‑based optimisation (e.g., OptQuest) or gradient‑based methods on the analytical model to allocate buffer sizes, number of servers, and routing policies that minimise total cost C = Σ (c<sub>j</sub> · C<sub>server</sub> + B<sub>j</sub> · C<sub>buffer</sub>) + C<sub>WIP</sub> · WIP subject to a throughput constraint X ≥ X<sub>target</sub>.</p>
 
 <h3>Vibration Based Condition Monitoring of Rotating Machinery</h3>
@@ -1091,6 +1129,30 @@
 <p>Design codes such as ASME Section III Division 5 (High Temperature Reactor) and the RCC‑MR (French code) provide TMF assessment procedures based on elastic‑plastic finite‑element analysis of a representative blade segment, followed by a strain‑range partitioning (SRP) method. The SRP method separates the total strain range into four components (plastic‑plastic, plastic‑creep, creep‑plastic, creep‑creep) each with its own damage rule. Validation is performed on TMF test rigs that impose simultaneous temperature cycles (e.g., 600–1100 °C) and mechanical strain cycles (e.g., ±0.5 %) with controlled phasing. The resulting life data feed into a master curve that accounts for mean stress, temperature, and oxidation effects, enabling reliable inspection intervals for fleet management.</p>
 
 <h3>Design for Additive Manufacturing: Topology Optimization and Lattice Structures</h3>
+<!-- passage-cartoon:ab5e6cd23aa1 -->
+<figure class="passage-cartoon" data-cartoon="ab5e6cd23aa1">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <rect x="60" y="60" width="120" height="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <rect x="260" y="60" width="120" height="120" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="260" y1="60" x2="380" y2="180" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="260" y1="180" x2="380" y2="60" stroke="#1f2937" stroke-width="2.5"/>
+  <path d="M180,120 L260,120 M250,115 L260,120 L250,125" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="260" y1="180" x2="240" y2="240" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="380" y1="180" x2="400" y2="240" stroke="#1f2937" stroke-width="2.5"/>
+  <circle cx="460" cy="120" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <line x1="430" y1="120" x2="490" y2="120" stroke="#1f2937" stroke-width="2.5"/>
+  <line x1="460" y1="90" x2="460" y2="150" stroke="#1f2937" stroke-width="2.5"/>
+  <rect x="14" y="272" width="532" height="34" fill="#1f2937"/>
+  <text x="280" y="266" font-size="12" font-family="sans-serif" fill="#fbf7ec" text-anchor="middle" dominant-baseline="middle">Design for Additive Manufacturing: Topology Optimization and Lattice Structures</text>
+  <text x="190" y="62.7" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Topology Optimization</text>
+  <text x="320" y="45" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Lattice Structures</text>
+  <text x="300" y="210" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">Overhang ≤45°</text>
+  <text x="460" y="45" font-size="14" font-family="sans-serif" fill="#1f2937" text-anchor="middle">CT Scan Verify</text>
+</svg></div>
+  <figcaption>Design for Additive Manufacturing: Topology Optimization and Lattice Structures</figcaption>
+</figure>
+
 <p>Design for additive manufacturing (DfAM) exploits the layer‑wise build freedom to realise geometries impossible with subtractive processes. Topology optimization formulates the material distribution problem as a minimisation of compliance (maximisation of stiffness) subject to a volume fraction constraint: <strong>min ρ<sub>e</sub> U<sup>T</sup> K(ρ) U  s.t. Σ ρ<sub>e</sub> V<sub>e</sub> ≤ V<sub>max</sub>, 0 < ρ<sub>min</sub> ≤ ρ<sub>e</sub> ≤ 1</strong>, where <strong>ρ<sub>e</sub></strong> is the element density, <strong>K</strong> the global stiffness matrix, and <strong>U</strong> the displacement vector. The Solid Isotropic Material with Penalisation (SIMP) scheme penalises intermediate densities (penalty factor p = 3) to drive the solution toward a 0‑1 layout. Manufacturing constraints are incorporated as filters: minimum length scale (morphological opening/closing), overhang angle (≤ 45° for powder‑bed fusion without supports), and build‑direction anisotropy.</p>
 <p>Lattice structures replace solid infill with periodic or stochastic cellular architectures (e.g., body‑centered cubic, octet‑truss, gyroid). The effective elastic modulus <strong>E*</strong> and yield strength <strong>σ<sub>y</sub>*</strong> of a lattice scale with relative density <strong>ρ̄</strong> as <strong>E*/E<sub>s</sub> = C<sub>E</sub> ρ̄ⁿ</strong>, <strong>σ<sub>y</sub>*/σ<sub>ys</sub> = C<sub>σ</sub> ρ̄ᵐ</strong>, where exponents n = 1 for stretch‑dominated lattices (octet) and n = 2 for bending‑dominated lattices (BCC), and C<sub>E</sub>, C<sub>σ</sub> are geometry constants. Gyroid triply periodic minimal surfaces (TPMS) provide near‑isotropic stiffness and high surface‑area‑to‑volume ratio, advantageous for heat‑exchanger cores and bio‑implants.</p>
 <p>Process‑structure‑property linkage is critical. In laser powder‑bed fusion (LPBF), the melt‑pool dimensions (width ≈ 100–150 µm, depth ≈ 30–50 µm) dictate the minimum strut diameter that can be reliably fused (typically ≥ 300 µm). Residual stress from rapid solidification induces distortion; support structures are designed using thermal‑mechanical simulation (e.g., inherent strain method) to minimise build failure. Post‑process heat treatment (stress relief at 800–1000 °C for Ti‑6Al‑4V, HIP at 920 °C/100 MPa for AlSi10Mg) reduces porosity and homogenises microstructure, but may coarsen lattice struts if temperature exceeds the β‑transus.</p>
@@ -1112,6 +1174,34 @@
 <p>Selection methodology: define service temperature, contact pressure, sliding speed, and corrosive media; map to a coating‑process matrix; evaluate cost per unit area, thickness tolerance (±10 µm for PVD, ±50 µm for HVOF), and post‑process machining allowance. Standards such as ASTM C633 (adhesion), ASTM G65 (abrasion), and ISO 9227 (salt spray) provide benchmark data for qualification.</p>
 
 <h3>Composite Materials: Micromechanics and Failure Criteria</h3>
+<!-- passage-cartoon:1336dff3e78d -->
+<figure class="passage-cartoon" data-cartoon="1336dff3e78d">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central lamina -->
+  <rect x="180" y="100" width="200" height="120" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Fibers (8 circles) -->
+  <circle cx="200" cy="130" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="240" cy="130" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="130" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="320" cy="130" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="200" cy="190" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="240" cy="190" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="280" cy="190" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <circle cx="320" cy="190" r="8" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Labels -->
+  <text x="280" y="90" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">FRP Lamina</text>
+  <text x="129.2" y="160" font-size="14" fill="#1f2937" text-anchor="end" font-family="sans-serif">Rule of Mixtures</text>
+  <text x="440" y="160" font-size="14" fill="#1f2937" text-anchor="start" font-family="sans-serif">Halpin–Tsai</text>
+  <text x="280" y="240" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Tsai‑Wu Failure</text>
+  <text x="167.7" y="280" font-size="14" fill="#1f2937" text-anchor="end" font-family="sans-serif">Cohesive Delamination</text>
+  <!-- Caption strip line -->
+  <line x1="14" y1="285" x2="546" y2="285" stroke="#1f2937" stroke-width="1"/>
+  <text x="280" y="300" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Composite Materials: Micromechanics and Failure Criteria</text>
+</svg></div>
+  <figcaption>Composite Materials: Micromechanics and Failure Criteria</figcaption>
+</figure>
+
 <p>Fiber‑reinforced polymer (FRP) composites are analysed through micromechanics to predict lamina stiffness and strength from constituent properties. The rule of mixtures gives longitudinal modulus E₁ = V_f E_f + V_m E_m and transverse modulus 1/E₂ = V_f/E_f + V_m/E_m (inverse rule). Halpin–Tsai equations refine transverse and shear moduli using a shape factor ξ (ξ = 2 for circular fibers, ξ = 1 for platelets). For a carbon/epoxy system with V_f = 0.6, E_f = 230 GPa, E_m = 3.5 GPa, the predicted E₁ ≈ 138 GPa and E₂ ≈ 9 GPa, matching experimental data within 5 %.</p>
 <p>Strength prediction employs several failure criteria. Maximum stress and maximum strain criteria are simple but ignore interaction. The Tsai‑Wu tensor polynomial F_i σ_i + F_ij σ_i σ_j = 1 captures interaction; coefficients are derived from uniaxial tensile/compressive strengths (X_t, X_c, Y_t, Y_c) and in‑plane shear strength S. For a typical T300/976 lamina (X_t = 1500 MPa, X_c = 1200 MPa, Y_t = 50 MPa, Y_c = 200 MPa, S = 80 MPa), the Tsai‑Wu surface predicts failure under combined σ₁ = 800 MPa, σ₂ = –30 MPa, τ₁₂ = 40 MPa at a safety factor of 1.12, whereas maximum stress would give 1.35, illustrating non‑conservatism of the latter.</p>
 <p>Progressive damage modelling uses continuum damage mechanics (CDM) with stiffness degradation variables d₁, d₂, d₆ for fiber, matrix, and shear modes. The damaged stiffness matrix is C̃ = M C M where M = diag(1–d₁, 1–d₂, 1–d₆). Damage evolution laws are calibrated from coupon tests (tension, compression, shear) and implemented in finite‑element codes via user material subroutines (UMAT/VUMAT). Delamination is modelled with cohesive zone elements using a bilinear traction‑separation law; fracture toughness values G_Ic ≈ 0.3 kJ/m², G_IIc ≈ 0.8 kJ/m² for epoxy systems govern initiation and propagation.</p>
@@ -1156,6 +1246,54 @@
 <p>Process selection matrix: FSW for thick aluminium panels (≥ 5 mm), long straight seams, where solid‑state benefits outweigh equipment cost; LBW for thin sheets (< 3 mm), complex geometries, dissimilar metals (e.g., steel‑Al), and high‑volume automotive lines. Standards: ISO 25239 (FSW), ISO 13919‑1 (LBW imperfection levels).</p>
 
 <h3>Precision Metrology and GD&T for High‑Accuracy Manufacturing</h3>
+<!-- passage-cartoon:cf3b773b6249 -->
+<figure class="passage-cartoon" data-cartoon="cf3b773b6249">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#fbf7ec"/>
+  <!-- Central CMM frame -->
+  <path d="M200,100 L200,260 M360,100 L360,260 M200,100 L360,100" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Probe -->
+  <line x1="280" y1="100" x2="280" y2="130" stroke="#1f2937" stroke-width="3"/>
+  <!-- Part (cylinder as circle) -->
+  <circle cx="280" cy="160" r="30" stroke="#1f2937" stroke-width="3" fill="none"/>
+  <!-- Datum reference frame A (horizontal) and B (vertical) -->
+  <path d="M250,130 L250,190 L310,190" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Datum C point -->
+  <circle cx="250" cy="190" r="2" fill="#1f2937"/>
+  <!-- Tolerance zone -->
+  <circle cx="280" cy="160" r="35" stroke="#1f2937" stroke-width="2.5" fill="none" stroke-dasharray="5,5"/>
+  <!-- Uncertainty error bars -->
+  <path d="M270,125 L290,125 M270,135 L290,135" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Feature Control Frame icon -->
+  <rect x="80" y="80" width="120" height="40" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Laser tracker tripod -->
+  <path d="M460,180 L430,210 M460,180 L460,210 M460,180 L490,210" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Laser beam -->
+  <line x1="460" y1="180" x2="500" y2="120" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Laser target -->
+  <circle cx="500" cy="120" r="4" fill="#1f2937"/>
+  <!-- Profilometer wavy line -->
+  <path d="M200,50 Q220,40 240,50 T280,50 T320,50 T360,50" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Profilometer stylus -->
+  <line x1="280" y1="30" x2="280" y2="50" stroke="#1f2937" stroke-width="2.5"/>
+  <!-- Stack-up hole -->
+  <circle cx="280" cy="270" r="20" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Stack-up bolt (cross-section) -->
+  <circle cx="280" cy="270" r="12" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+  <!-- Caption strip -->
+  <rect x="14" y="290" width="532" height="16" stroke="#1f2937" stroke-width="1" fill="none"/>
+  <!-- Labels -->
+  <text x="140" y="70" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Feature Control Frame</text>
+  <text x="460" y="70" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Laser Tracker</text>
+  <text x="280" y="21.6" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Surface Texture</text>
+  <text x="280" y="250" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Stack-up Analysis</text>
+  <text x="280" y="220" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">CMM Uncertainty</text>
+  <!-- Section title -->
+  <text x="280" y="284" font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">Precision Metrology &amp; GD&amp;T</text>
+</svg></div>
+  <figcaption>Precision Metrology and GD&amp;T for High‑Accuracy Manufacturing</figcaption>
+</figure>
+
 <p>Geometric Dimensioning and Tolerancing (GD&T) per ASME Y14.5‑2018 provides a symbolic language to control form, orientation, location, and runout. The datum reference frame (DRF) establishes a coordinate system: primary datum A (plane), secondary datum B (line), tertiary datum C (point). A feature control frame (FCF) such as ⌀0.02 Ⓐ Ⓑ Ⓒ specifies a cylindrical tolerance zone of diameter 0.02 mm referenced to datums A, B, C in that order.</p>
 <p>Measurement uncertainty budgets combine Type A (statistical) and Type B (systematic) components. For a coordinate measuring machine (CMM) with volumetric accuracy MPE_E = 1.5 µm + 3 µm/m, probing error MPE_P = 1.2 µm, and temperature deviation ΔT = 2 °C (coefficient 10 µm/m·°C), the combined standard uncertainty u_c = √(u_CMM² + u_probe² + u_temp²) ≈ √((1.5)² + (1.2)² + (20)²) ≈ 20.1 µm for a 1 m part. Expanded uncertainty U = k u_c (k = 2) ≈ 40 µm, which must be ≤ 1/3 of the tolerance zone per the 4:1 rule.</p>
 <p>Surface texture parameters (Ra, Rz, Rq) are measured per ISO 4287/4288 using stylus or optical profilometers. For a ground bearing race, Ra ≤ 0.2 µm, Rz ≤ 1.6 µm are typical. Filtering (Gaussian, λc = 0.8 mm) separates roughness from waviness; incorrect λc selection can misclassify waviness as roughness, leading to false acceptance.</p>
@@ -1163,6 +1301,42 @@
 <p>GD&T stack‑up analysis uses the worst‑case or statistical (RSS) method. For a bolted joint with hole position tolerance ⌀0.1 mm (MMC) and bolt diameter tolerance ⌀0.05 mm, the virtual condition of the hole is ⌀0.15 mm; the assembly clearance at MMC is 0.15 mm – 0.05 mm = 0.10 mm. Statistical stack‑up (assuming normal distributions, 3σ = tolerance) yields a 99.73 % clearance of √(0.1² + 0.05²) ≈ 0.112 mm, guiding tolerance allocation.</p>
 
 <h3>Energy Efficient Manufacturing: Sustainable Process Design and Life Cycle Assessment</h3>
+<!-- passage-cartoon:5543ddf15302 -->
+<figure class="passage-cartoon" data-cartoon="5543ddf15302">
+  <div class="pc-frame"><svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="560" height="320" fill="#fbf7ec"/>
+  <!-- Machine tool -->
+  <rect x="220" y="140" width="120" height="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="265" y="60" width="30" height="80" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Three levers -->
+  <line x1="220" y1="180" x2="100" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <line x1="280" y1="140" x2="280" y2="40" stroke="#1f2937" stroke-width="3"/>
+  <line x1="340" y1="180" x2="460" y2="180" stroke="#1f2937" stroke-width="3"/>
+  <!-- SEC bar chart (left) -->
+  <rect x="50" y="260" width="20" height="10" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="85" y="230" width="20" height="40" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="120" y="245" width="20" height="25" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="155" y="210" width="20" height="60" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- LCA GWP bars (right) -->
+  <rect x="380" y="222" width="40" height="48" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <rect x="440" y="238" width="40" height="32" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Renewable electricity arrow -->
+  <path d="M410 160 L410 222 M410 222 L405 212 M410 222 L415 212" fill="none" stroke="#1f2937" stroke-width="3"/>
+  <!-- Caption strip -->
+  <rect x="14" y="280" width="532" height="26" fill="none" stroke="#1f2937" stroke-width="1"/>
+  <!-- Labels -->
+  <text x="100" y="160" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Process Optimisation</text>
+  <text x="280" y="30" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Equipment Efficiency</text>
+  <text x="460" y="167.7" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">System Integration</text>
+  <text x="125" y="190" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">SEC (kWh/kg)</text>
+  <text x="410" y="190" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">GWP (kg CO₂/kg)</text>
+  <text x="410" y="150" font-size="14" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Renewable Electricity</text>
+  <!-- Section title -->
+  <text x="280" y="274" font-size="12" fill="#1f2937" text-anchor="middle" font-family="sans-serif">Energy Efficient Manufacturing: Sustainable Process Design and Life Cycle Assessment</text>
+</svg></div>
+  <figcaption>Energy Efficient Manufacturing: Sustainable Process Design and Life Cycle Assessment</figcaption>
+</figure>
+
 <p>Energy intensity of manufacturing processes varies widely: conventional milling 0.5–2 kWh/kg, EDM 10–30 kWh/kg, laser cutting 5–15 kWh/kg, additive manufacturing (LPBF) 50–150 kWh/kg of final part. Reducing specific energy consumption (SEC) involves three levers: process parameter optimisation, equipment efficiency, and system‑level integration.</p>
 <p>Process parameter optimisation uses response surface methodology (RSM) or Bayesian optimisation to minimise SEC while meeting quality constraints (surface roughness Ra ≤ 1.6 µm, dimensional tolerance ±0.05 mm). For milling of Ti‑6Al‑4V, a central composite design varying cutting speed v_c (30–80 m/min), feed per tooth f_z (0.05–0.15 mm), and axial depth a_p (0.5–2 mm) yields a quadratic model SEC = 12.3 – 0.08 v_c + 0.45 f_z + 1.2 a_p + 0.001 v_c² – 0.02 f_z² + 0.03 a_p². The optimum at v_c = 70 m/min, f_z = 0.07 mm, a_p = 0.8 mm reduces SEC by 22 % versus the baseline.</p>
 <p>Equipment efficiency: variable‑frequency drives (VFD) on spindle motors cut idle power by 30–40 %; regenerative braking on linear axes recovers 10–15 % of kinetic energy. Machine tool thermal management (active cooling, insulated enclosures) reduces warm‑up energy by up to 50 %.</p>
