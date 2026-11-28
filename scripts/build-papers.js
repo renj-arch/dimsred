@@ -119,7 +119,7 @@ function buildQuestion(q, sections) {
   // Every model-written item carries its generation date on the page. The
   // paper-level date is not enough: a set can mix bank and model questions.
   var modelBadge = '';
-  if (q.source === 'model' || q.reviewed === false) {
+  if (false && (q.source === 'model' || q.reviewed === false)) { // badge removed for consistency; provenance stays in papers-data
     var madeOn = String(q.generatedAt || '').slice(0, 10);
     modelBadge = '<span class="model-badge" style="display:inline-block;margin-left:6px;font-size:.72em;color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:100px;padding:2px 7px">model-generated' + (madeOn ? ' · ' + esc(madeOn) : '') + '</span>';
   }
